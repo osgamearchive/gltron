@@ -28,9 +28,9 @@ namespace Sound {
 					   _system->GetAudioInfo(),
 					   _buffersize );
     if(sample == NULL) {
-      printf("failed loading sample from '%s': %s\n", filename, 
-	     Sound_GetError());
-      exit(1);
+      fprintf(stderr, "[error] failed loading sample from '%s': %s\n", 
+	      filename, Sound_GetError());
+      exit(1); // FIXME: handle failed decoding gracefully
     }
     
     Sound_DecodeAll(sample);

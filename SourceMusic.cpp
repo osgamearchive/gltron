@@ -30,8 +30,9 @@ namespace Sound {
 			      _system->GetAudioInfo(),
 			      _buffersize );
     if(_sample == NULL) {
-      printf("failed loading sample: %s\n", Sound_GetError());
-      exit(1);
+      fprintf(stderr, "[error] failed loading sample: %s\n", 
+	      Sound_GetError());
+      exit(1); // FIXME: handle corrupt sample gracefully
     }
 
     _position = 0;
@@ -40,6 +41,7 @@ namespace Sound {
   }
 
   void SourceMusic::Load(char *filename) {
+    // FIXME: grow buffer as needed
 #define BUFSIZE 10 * 1024 * 1024
     gzFile file = gzopen(filename, "r");
     if(_mem != NULL) free(_mem);
@@ -77,7 +79,6 @@ namespace Sound {
       _position = 0;
       _decoded = 0;
       _decoded += Sound_Decode(_sample);
-#warning "can the buffer may have changed after decoding?"
       buffer = (Uint8*) _sample->buffer;
       // fprintf(stderr, "decoded %d bytes\n", _decoded);
       if(len <= _decoded) {
