@@ -52,7 +52,7 @@ void doLookAt(float *cam, float *target, float *up) {
   glTranslatef( -cam[0], -cam[1], -cam[2]);
 }
 
-void drawText(FontTex* ftx, int x, int y, int size, const char *text) {
+void drawText(FontTex* ftx, float x, float y, float size, const char *text) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_TEXTURE_2D);
