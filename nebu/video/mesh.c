@@ -25,9 +25,14 @@ void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, 0, pMesh->pTexCoords);
 	}
+	if(pMesh->vertexformat & NEBU_MESH_NORMAL) {
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glNormalPointer(GL_FLOAT, 0, pMesh->pNormals);
+	}
 	glDrawElements(GL_TRIANGLES, 3 * pMesh->nTriangles, GL_UNSIGNED_INT, pMesh->pTriangles);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
@@ -55,6 +60,7 @@ void nebu_Mesh_ComputeNormals(nebu_Mesh *pMesh)
 
 	if(!pMesh->pNormals)
 		pMesh->pNormals = (float*) malloc( 3 * sizeof(float) * pMesh->nVertices );
+	pMesh->vertexformat |= NEBU_MESH_NORMAL;
 
 	memset(pMesh->pNormals, 0, 3 * sizeof(float) * pMesh->nVertices);
 	for(i = 0; i < pMesh->nTriangles; i++)
