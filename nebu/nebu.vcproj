@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="nebu"
 	SccProjectName=""
 	SccLocalPath="">
@@ -53,6 +53,12 @@
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
@@ -66,7 +72,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./include;../lua/include"
-				PreprocessorDefinitions="_LIB,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;"
+				PreprocessorDefinitions="_LIB;WIN32;_DEBUG;VERSION=\&quot;0.63alpha1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -75,6 +81,7 @@
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
+				WarnAsError="TRUE"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -99,135 +106,179 @@
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
-			<File
-				RelativePath=".\audio\SoundSystem.cpp">
-			</File>
-			<File
-				RelativePath=".\audio\Source.cpp">
-			</File>
-			<File
-				RelativePath=".\audio\Source3D.cpp">
-			</File>
-			<File
-				RelativePath=".\audio\SourceCopy.cpp">
-			</File>
-			<File
-				RelativePath=".\audio\SourceEngine.cpp">
-			</File>
-			<File
-				RelativePath=".\audio\SourceMusic.cpp">
-			</File>
-			<File
-				RelativePath=".\audio\SourceSample.cpp">
-			</File>
-			<File
-				RelativePath="audio\audio_system.c">
-			</File>
-			<File
-				RelativePath=".\video\console.c">
-			</File>
-			<File
-				RelativePath=".\filesystem\directory-win32.c">
-			</File>
-			<File
-				RelativePath=".\filesystem\file_io.c">
-			</File>
-			<File
-				RelativePath=".\filesystem\filesystem.c">
-			</File>
-			<File
-				RelativePath=".\filesystem\findpath.c">
-			</File>
-			<File
-				RelativePath=".\input\input_system.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;../lua/include;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\base\matrix.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="video\mesh.c">
-			</File>
-			<File
-				RelativePath=".\video\pixels.c">
-			</File>
-			<File
-				RelativePath=".\video\png_texture.c">
-			</File>
-			<File
-				RelativePath=".\base\random.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\scripting\scripting.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;./include/scripting;../lua/include;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\base\system.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\input\system_keynames.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;../lua/include;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\base\util.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\base\vector.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\video\video_system.c">
-			</File>
+			<Filter
+				Name="video"
+				Filter="">
+				<File
+					RelativePath=".\video\2d.c">
+				</File>
+				<File
+					RelativePath=".\video\console.c">
+				</File>
+				<File
+					RelativePath=".\video\font.c">
+				</File>
+				<File
+					RelativePath="video\mesh.c">
+				</File>
+				<File
+					RelativePath=".\video\mesh_3ds.c">
+				</File>
+				<File
+					RelativePath=".\video\pixels.c">
+				</File>
+				<File
+					RelativePath=".\video\video_system.c">
+				</File>
+			</Filter>
+			<Filter
+				Name="base"
+				Filter="">
+				<File
+					RelativePath=".\base\matrix.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\base\png_texture.c">
+				</File>
+				<File
+					RelativePath=".\base\random.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\base\surface.c">
+				</File>
+				<File
+					RelativePath=".\base\system.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\base\util.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\base\vector.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="filesystem"
+				Filter="">
+				<File
+					RelativePath=".\filesystem\directory-win32.c">
+				</File>
+				<File
+					RelativePath=".\filesystem\file_io.c">
+				</File>
+				<File
+					RelativePath=".\filesystem\filesystem.c">
+				</File>
+				<File
+					RelativePath=".\filesystem\findpath.c">
+				</File>
+			</Filter>
+			<Filter
+				Name="audio"
+				Filter="">
+				<File
+					RelativePath="audio\audio_system.c">
+				</File>
+				<File
+					RelativePath=".\audio\SoundSystem.cpp">
+				</File>
+				<File
+					RelativePath=".\audio\Source.cpp">
+				</File>
+				<File
+					RelativePath=".\audio\Source3D.cpp">
+				</File>
+				<File
+					RelativePath=".\audio\SourceCopy.cpp">
+				</File>
+				<File
+					RelativePath=".\audio\SourceEngine.cpp">
+				</File>
+				<File
+					RelativePath=".\audio\SourceMusic.cpp">
+				</File>
+				<File
+					RelativePath=".\audio\SourceSample.cpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="input"
+				Filter="">
+				<File
+					RelativePath=".\input\input_system.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;../lua/include;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\input\system_keynames.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;../lua/include;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="scripting"
+				Filter="">
+				<File
+					RelativePath=".\scripting\scripting.c">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							AdditionalIncludeDirectories="./include;./include/base;./include/scripting;../lua/include;$(NoInherit)"/>
+					</FileConfiguration>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -236,122 +287,160 @@
 				RelativePath=".\include\Nebu.h">
 			</File>
 			<File
-				RelativePath=".\include\Nebu_base.h">
-			</File>
-			<File
 				RelativePath=".\include\Nebu_configuration.h">
-			</File>
-			<File
-				RelativePath=".\include\Nebu_filesystem.h">
-			</File>
-			<File
-				RelativePath=".\include\Nebu_input.h">
-			</File>
-			<File
-				RelativePath=".\include\Nebu_scripting.h">
-			</File>
-			<File
-				RelativePath=".\include\Nebu_video.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_Sound.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_SoundSystem.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_Source.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_Source3D.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_SourceCopy.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_SourceEngine.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_SourceMusic.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_SourceSample.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_Vector3.h">
-			</File>
-			<File
-				RelativePath=".\include\audio\nebu_audio_system.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_callbacks.h">
 			</File>
 			<File
 				RelativePath=".\include\video\nebu_console.h">
 			</File>
 			<File
-				RelativePath=".\include\video\nebu_extgl.h">
-			</File>
-			<File
-				RelativePath=".\include\filesystem\nebu_file_io.h">
-			</File>
-			<File
-				RelativePath=".\include\filesystem\nebu_filesystem.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_geom.h">
+				RelativePath=".\include\Nebu_input.h">
 			</File>
 			<File
 				RelativePath=".\include\input\nebu_input_system.h">
 			</File>
 			<File
-				RelativePath=".\include\video\nebu_light.h">
-			</File>
-			<File
-				RelativePath="include\base\nebu_math.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_matrix.h">
-			</File>
-			<File
-				RelativePath="include\video\nebu_mesh.h">
-			</File>
-			<File
-				RelativePath=".\include\video\nebu_png_texture.h">
-			</File>
-			<File
 				RelativePath=".\include\video\nebu_quad.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_random.h">
-			</File>
-			<File
-				RelativePath=".\include\video\nebu_renderer_gl.h">
-			</File>
-			<File
-				RelativePath=".\include\scripting\nebu_scripting.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_system.h">
 			</File>
 			<File
 				RelativePath=".\include\input\nebu_system_keynames.h">
 			</File>
-			<File
-				RelativePath=".\include\base\nebu_types.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_util.h">
-			</File>
-			<File
-				RelativePath=".\include\base\nebu_vector.h">
-			</File>
-			<File
-				RelativePath=".\include\video\nebu_video_system.h">
-			</File>
-			<File
-				RelativePath=".\include\video\nebu_video_types.h">
-			</File>
+			<Filter
+				Name="base"
+				Filter="">
+				<File
+					RelativePath=".\include\Nebu_base.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_callbacks.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_geom.h">
+				</File>
+				<File
+					RelativePath="include\base\nebu_math.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_matrix.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_quat.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_random.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_surface.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_system.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_types.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_util.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_vector.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_Vector3.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="audio"
+				Filter="">
+				<File
+					RelativePath=".\include\audio\nebu_audio_system.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_Sound.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_SoundSystem.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_Source.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_Source3D.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_SourceCopy.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_SourceEngine.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_SourceMusic.h">
+				</File>
+				<File
+					RelativePath=".\include\audio\nebu_SourceSample.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="video"
+				Filter="">
+				<File
+					RelativePath=".\include\video\nebu_2d.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_extgl.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_font.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_light.h">
+				</File>
+				<File
+					RelativePath="include\video\nebu_mesh.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_mesh_3ds.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_png_texture.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_png_texture.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_renderer_gl.h">
+				</File>
+				<File
+					RelativePath=".\include\Nebu_video.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_video_system.h">
+				</File>
+				<File
+					RelativePath=".\include\video\nebu_video_types.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="filesystem"
+				Filter="">
+				<File
+					RelativePath=".\include\filesystem\nebu_file_io.h">
+				</File>
+				<File
+					RelativePath=".\include\Nebu_filesystem.h">
+				</File>
+				<File
+					RelativePath=".\include\filesystem\nebu_filesystem.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="scripting"
+				Filter="">
+				<File
+					RelativePath=".\include\scripting\nebu_scripting.h">
+				</File>
+				<File
+					RelativePath=".\include\Nebu_scripting.h">
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
