@@ -74,13 +74,17 @@ extern "C" {
 	}
       }
     }
+
     if(sample_recognizer->IsPlaying()) {
       if (game2->settingsCache.show_recognizer) {
+	sample_recognizer->UnPause();
 	Point p, v;
 	getRecognizerPositionVelocity(&p, &v);
 	// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
 	recognizerEngine->_location = Vector3(p.x, p.y, 10.0f);
 	recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
+      } else {
+	sample_recognizer->Pause();
       }
     }
 
