@@ -1,6 +1,8 @@
 #include "video/video.h"
 #include "video/explosion.h" 
 
+#include "base/nebu_math.h"
+
 #define IMPACT_RADIUS_DELTA 0.025f
 #define IMPACT_MAX_RADIUS 25.0f 
 
@@ -55,31 +57,31 @@ static void drawShockwaves(float radius) {
 
 static void drawSpires(float radius) {
   int i;
-  float left[3], right[3];
-  float zunit[3] = {0, 0, 1};
+  vec3 right, left;
+  vec3 zUnit = { { 0, 0, 1} };
   
-  float vectors[NUM_SPIRES][3] = {
-    {  1.00f,  0.20f,  0.00f  },
-    {  0.80f,  0.25f,  0.00f  },
-    {  0.90f,  0.50f,  0.00f  },
-    {  0.70f,  0.50f,  0.00f  },
-    {  0.52f,  0.45f,  0.00f  },
-    {  0.65f,  0.75f,  0.00f  },
-    {  0.42f,  0.68f,  0.00f  },
-    {  0.40f,  1.02f,  0.00f  },
-    {  0.20f,  0.90f,  0.00f  },
-    {  0.08f,  0.65f,  0.00f  },
-    {  0.00f,  1.00f,  0.00f  }, /* vertical spire */
-    { -0.08f,  0.65f,  0.00f  },
-    { -0.20f,  0.90f,  0.00f  },
-    { -0.40f,  1.02f,  0.00f  },
-    { -0.42f,  0.68f,  0.00f  },
-    { -0.65f,  0.75f,  0.00f  },
-    { -0.52f,  0.45f,  0.00f  },
-    { -0.70f,  0.50f,  0.00f  },
-    { -0.90f,  0.50f,  0.00f  },
-    { -0.80f,  0.30f,  0.00f  },
-    { -1.00f,  0.20f,  0.00f  }
+  vec3 vectors[NUM_SPIRES] = {
+    { {  1.00f,  0.20f,  0.00f  } },
+    { {  0.80f,  0.25f,  0.00f  } },
+    { {  0.90f,  0.50f,  0.00f  } },
+    { {  0.70f,  0.50f,  0.00f  } },
+    { {  0.52f,  0.45f,  0.00f  } },
+    { {  0.65f,  0.75f,  0.00f  } },
+    { {  0.42f,  0.68f,  0.00f  } },
+    { {  0.40f,  1.02f,  0.00f  } },
+    { {  0.20f,  0.90f,  0.00f  } },
+    { {  0.08f,  0.65f,  0.00f  } },
+    { {  0.00f,  1.00f,  0.00f  } }, /* vertical spire */
+    { { -0.08f,  0.65f,  0.00f  } },
+    { { -0.20f,  0.90f,  0.00f  } },
+    { { -0.40f,  1.02f,  0.00f  } },
+    { { -0.42f,  0.68f,  0.00f  } },
+    { { -0.65f,  0.75f,  0.00f  } },
+    { { -0.52f,  0.45f,  0.00f  } },
+    { { -0.70f,  0.50f,  0.00f  } },
+    { { -0.90f,  0.50f,  0.00f  } },
+    { { -0.80f,  0.30f,  0.00f  } },
+    { { -1.00f,  0.20f,  0.00f  } }
   };
 
   glColor3f(1, 1, 1);
@@ -90,16 +92,18 @@ static void drawSpires(float radius) {
   glBegin(GL_TRIANGLES);
   
   for (i=0; i < NUM_SPIRES; i++) {
-    normcrossprod(vectors[i], zunit, right);
-    normcrossprod(zunit, vectors[i], left);
+		vec3_Cross(&right, vectors + i, &zUnit);
+		vec3_Normalize(&right, &right);
+		vec3_Scale(&right, &right, SPIRE_WIDTH);
 
-    vmul(right, SPIRE_WIDTH);
-    vmul(left, SPIRE_WIDTH);
+		vec3_Cross(&left, &zUnit, vectors + i);
+		vec3_Normalize(&left, &left);
+		vec3_Scale(&left, &left, SPIRE_WIDTH);
 
     glColor4f(1,1,1,0.0);
-    glVertex3fv(right);
-    glVertex3f(radius * vectors[i][0], radius * vectors[i][1], 0.0);
-    glVertex3fv(left);
+    glVertex3fv(right.v);
+    glVertex3f(radius * vectors[i].v[0], radius * vectors[i].v[1], 0.0);
+    glVertex3fv(left.v);
   } 
   
   glEnd();

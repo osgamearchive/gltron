@@ -1,6 +1,8 @@
 #include "video/video.h"
 #include "game/game.h"
 
+#include "base/nebu_math.h"
+
 void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 							Visual *d, float dim) {
   float mat[4*4];

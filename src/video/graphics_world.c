@@ -9,7 +9,7 @@ void drawWalls(void) {
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	nebu_Mesh_Render(gWorld->arena);
+	nebu_Mesh_DrawGeometry(gWorld->arena);
 	video_Shader_Cleanup(& gWorld->arena_shader);
 
   glDisable(GL_BLEND);

@@ -4,13 +4,13 @@
 
 /* globals */
 Game main_game;
-Game *game;
+Game *game = NULL;
 Game2 main_game2;
-Game2 *game2;
-Visual *gScreen;
-video_level *gWorld;
+Game2 *game2 = NULL;
+Visual *gScreen = NULL;
+video_level *gWorld = NULL;
 int gViewportType;
-PlayerVisual *gPlayerVisuals;
+PlayerVisual *gPlayerVisuals = NULL;
 Input gInput;
 
 SettingsCache gSettingsCache;
@@ -22,12 +22,12 @@ FontTex *guiFtx = NULL;
 FontTex *gameFtx = NULL;
 int fontID = 6;
 
-Mesh* recognizer_quad;
+gltron_Mesh* recognizer_quad;
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
 float rec_spec_color[] = {0.05f, 0.14f, 0.05f, 0.50f};
 
-Mesh* recognizer;
-Mesh* lightcycle[LC_LOD];
+gltron_Mesh* recognizer;
+gltron_Mesh* lightcycle[LC_LOD];
 char *lc_lod_names[] = {
   "lightcycle-high.obj",
   "lightcycle-med.obj",

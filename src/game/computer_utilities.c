@@ -182,7 +182,7 @@ void ai_getConfig(int player, int target,
 		vec3_Normalize(&v3, &v3);
 	
 		cosphi = vec3_Dot(&v1, &v2);
-		clamp(&cosphi, -1, 1);
+		nebu_Clamp(&cosphi, -1, 1);
 		phi = (float) acos(cosphi);
 		if(vec3_Dot(&v3, &up) > 0)
 			phi = 2 * (float) M_PI - phi;

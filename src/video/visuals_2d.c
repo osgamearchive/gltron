@@ -1,6 +1,8 @@
 #include "video/video.h"
 #include "game/game.h"
 
+#include "base/nebu_math.h"
+
 /* draw a 2d map */
 
 void draw2D( Visual *d ) {
@@ -54,7 +56,7 @@ void draw2D( Visual *d ) {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glColor4f(0.7f, 0.7f, 0.7f, 0.3f);
 
-			nebu_Mesh_Render(gWorld->floor);
+			nebu_Mesh_DrawGeometry(gWorld->floor);
 			/*
 			glBegin(GL_QUADS);
 			glVertex2f(0, 0);

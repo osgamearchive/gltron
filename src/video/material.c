@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "zlib.h"
 
-void loadDefaultMaterial(Material *pMaterial) {
+void loadDefaultMaterial(gltron_Mesh_Material *pMaterial) {
   float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0 };
   float diffuse[] = { 1.0, 1.0, 0.0, 1.0 };
   float specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -20,8 +20,8 @@ void loadDefaultMaterial(Material *pMaterial) {
   pMaterial->map_diffuse = NULL;
 }
 
-void readMaterialLibraryFromFile(char *filename, Mesh *pMesh) {
-  Material *pMaterials; 
+void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh) {
+  gltron_Mesh_Material *pMaterials; 
   int iMaterial;
 
   char buf[BUF_SIZE];
@@ -44,7 +44,7 @@ void readMaterialLibraryFromFile(char *filename, Mesh *pMesh) {
   }
   free(path);
 
-  pMaterials = malloc( MAX_MATERIALS * sizeof( Material ) );
+  pMaterials = malloc( MAX_MATERIALS * sizeof( gltron_Mesh_Material ) );
   iMaterial = -1;
 
   while( gzgets(f, buf, sizeof(buf)) ) {
@@ -86,15 +86,17 @@ void readMaterialLibraryFromFile(char *filename, Mesh *pMesh) {
   }
 	
   pMesh->nMaterials = iMaterial + 1;
-  pMesh->pMaterials = malloc( sizeof(Material) *  pMesh->nMaterials );
+  pMesh->pMaterials = malloc( sizeof(gltron_Mesh_Material) *  
+															pMesh->nMaterials );
   for(i = 0; i < pMesh->nMaterials; i++) {
-    memcpy( pMesh->pMaterials + i, pMaterials + i, sizeof(Material) );
+    memcpy( pMesh->pMaterials + i, pMaterials + i, 
+						sizeof(gltron_Mesh_Material) );
   }
 
   free(pMaterials);
 }
 
-void readMaterialLibrary(char *buf, Mesh *pMesh) {
+void readMaterialLibrary(char *buf, gltron_Mesh *pMesh) {
   char filename[BUF_SIZE];
   if(sscanf(buf, " mtllib %s ", filename) != 1) {
     fprintf(stderr, "*** failing parsing filename from %s\n", buf);
@@ -103,7 +105,7 @@ void readMaterialLibrary(char *buf, Mesh *pMesh) {
   readMaterialLibraryFromFile(filename, pMesh);
 }
 
-void setMaterial(char *buf, Mesh *pMesh, int *iGroup) {
+void setMaterial(char *buf, gltron_Mesh *pMesh, int *iGroup) {
   char name[BUF_SIZE];
   int i;
 
@@ -122,7 +124,7 @@ void setMaterial(char *buf, Mesh *pMesh, int *iGroup) {
   }
 }
 
-void SetMaterialColor(Mesh *pMesh, char *name, ColorType eType,
+void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name, ColorType eType,
 		      float pColor[4]) {
   int i;
 
@@ -143,13 +145,4 @@ void SetMaterialColor(Mesh *pMesh, char *name, ColorType eType,
     }
   }
 }
-
-/*
-void copyMaterialColors(Material *pIn, Material *pOut) {
-  memcpy(pOut->ambient, pIn->ambient, sizeof( ambient ));
-  memcpy(pOut->diffuse, pIn->diffuse, sizeof( diffuse ));
-  memcpy(pOut->specular, pIn->specular, sizeof( specular ));
-  pOut->shininess = pIn->shininess;
-}
-*/
 

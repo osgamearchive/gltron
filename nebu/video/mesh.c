@@ -17,7 +17,7 @@ static void normalize(float *v)
 	}
 }
 
-void nebu_Mesh_Render(nebu_Mesh *pMesh)
+void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, pMesh->pVertices);

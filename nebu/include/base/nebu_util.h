@@ -1,20 +1,17 @@
 #ifndef NEBU_UTIL_H
 #define NEBU_UTIL_H
 
-/* small utility macros & functions */
+/* small utility datastructures & functions */
 
-#include "base/nebu_types.h"
-#include <math.h>
+typedef struct nebu_List nebu_List;
+struct nebu_List {
+  void *data;
+  nebu_List* next;
+};
 
-#define COS(X)	cos( (X) * M_PI/180.0 )
-#define SIN(X)	sin( (X) * M_PI/180.0 )
+void nebu_RandomPermutation( int N, int *nodes );
+void nebu_Clamp( float *f, float min, float max );
 
-#ifndef M_PI
-#define M_PI 3.141592654
-#endif
-
-void randomPermutation( int N, int *nodes );
-void clamp( float *f, float min, float max );
-void addList(List **l, void* data);
+void nebu_List_AddTail(nebu_List **l, void* data);
 
 #endif

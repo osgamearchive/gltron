@@ -1,6 +1,8 @@
 #include "video/video.h"
 #include "game/game.h"
 
+#include "base/nebu_math.h"
+
 void drawAI(Visual *d) {
   char ai[] = "computer player";
 

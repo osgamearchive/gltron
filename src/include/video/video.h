@@ -78,17 +78,6 @@ enum {
   TRILINEAR
 };
 
-#define PI ((float) M_PI)
-#ifdef WIN32
-#define floorf (float)floor
-#define fabsf (float)fabs
-#define sqrtf (float)sqrt
-#define cosf (float) cos
-#define sinf (float) sin
-#define acosf (float) acos
-#define tanf (float) tan
-#endif
-
 #define B_HEIGHT 0
 #define CYCLE_HEIGHT 8
 #define RECOGNIZER_HEIGHT 50
@@ -153,12 +142,12 @@ extern int* quadBufIndex;
 
 #define LC_LOD 3
 extern char *lc_lod_names[];
-extern Mesh *recognizer;
-extern Mesh *recognizer_quad;
+extern gltron_Mesh *recognizer;
+extern gltron_Mesh *recognizer_quad;
 extern float rec_outline_color[3];
 extern float rec_spec_color[4];
 
-extern Mesh *lightcycle[];
+extern gltron_Mesh *lightcycle[];
 
 extern video_level *gWorld;
 

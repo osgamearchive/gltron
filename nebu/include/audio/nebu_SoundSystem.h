@@ -2,7 +2,7 @@
 #define NEBU_Sound_System_H
 
 extern "C" {
-	#include "base/nebu_types.h"
+	#include "base/nebu_util.h"
 }
 
 #include "audio/nebu_Source.h"
@@ -45,7 +45,7 @@ namespace Sound {
     SDL_AudioSpec *_spec;
     Sound_AudioInfo _info;
     Listener _listener;
-    List _sources;
+    nebu_List _sources;
     int _mix_music;
     int _mix_fx;
     int _status;

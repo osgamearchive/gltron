@@ -1,6 +1,8 @@
 #include "video/video.h"
 #include "input/input.h"
 
+#include "base/nebu_math.h"
+
 static void writeCamDefaults(Camera *cam, int type) {
   cam_defaults[cam->type.type][type] = cam->movement[type];
 }

@@ -7,8 +7,8 @@
 
 void initArtpacks(void) {
   const char *art_path;
-  List *artList;
-  List *p;
+  nebu_List *artList;
+  nebu_List *p;
   int i;
 
   art_path = getDirectory( PATH_ART );
@@ -48,17 +48,13 @@ void loadArt(void) {
 
   initTexture(gScreen);
   initFonts();
+
+  video_LoadLevel();
 }
 
 void reloadArt(void) {
   printf("[status] reloading art\n");
   deleteTextures(gScreen);
-
-	video_FreeLevel(gWorld);
-	gWorld = video_CreateLevel();
-	if(gWorld->scalable)
-		video_ScaleLevel(gWorld, 600.0f);
-
   loadArt();
 }
     

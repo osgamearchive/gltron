@@ -1,6 +1,8 @@
 #include "video/video.h"
 #include "game/game.h"
 
+#include "base/nebu_math.h"
+
 #include "Nebu_input.h"
 #include "Nebu_scripting.h"
 

@@ -8,8 +8,20 @@
 #include "stdlib.h"
 #include "zlib.h"
 
-extern void readMaterialLibrary(char *buf, Mesh *pMesh);
-extern void setMaterial(char *buf, Mesh *pMesh, int *iGroup);
+typedef struct {
+  int vertex[3];
+  int normal[3];
+  int material;
+} face;
+
+typedef struct {
+ int vertex[4];
+ int normal[4];
+ int material;
+} quadFace;
+
+extern void readMaterialLibrary(char *buf, gltron_Mesh *pMesh);
+extern void setMaterial(char *buf, gltron_Mesh *pMesh, int *iGroup);
 
 void readVector(char *buf, vec3 *pVertex ) {
   if( sscanf(buf, " %f %f %f ", 
@@ -47,7 +59,7 @@ void readQuadFace(char *buf, quadFace *pFace, int *iFace, int iGroup) {
   }
 }
 
-Mesh* readMeshFromFile(const char *filename, MeshType iType) {
+gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iType) {
   // allocate some buffers
   // vertices, normals
 
@@ -58,7 +70,7 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
   face *pFaces = NULL;
   int iFaceSize = 0;
 
-  Mesh *pMesh = malloc( sizeof(Mesh) );
+  gltron_Mesh *pMesh = malloc( sizeof(gltron_Mesh) );
   int iGroup = 0;
   int iVertex = 0, iNormal = 0, iFace = 0;
 
@@ -256,12 +268,12 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
       break;
     }
   }
-  computeBBox(pMesh);
+  gltron_Mesh_ComputeBBox(pMesh);
 
   return pMesh;
 }
 
-void drawModel(Mesh *pMesh, MeshType iType) {
+void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
   int i;
   int iFaceSize = 0;
   GLenum primitive = GL_TRIANGLES;
@@ -303,7 +315,7 @@ void drawModel(Mesh *pMesh, MeshType iType) {
 
 }
 
-void drawModelExplosion(Mesh *pMesh, float fRadius) {
+void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius) {
   int i, j, k;
 #define EXP_VECTORS 10
   float vectors[][3] = {
@@ -354,38 +366,24 @@ void drawModelExplosion(Mesh *pMesh, float fRadius) {
   }
 }
 
-void computeBBox(Mesh *pMesh) {
+void gltron_Mesh_ComputeBBox(gltron_Mesh *pMesh) {
   int i, j;
   vec3 vMin, vMax, vSize;
 
-  vcopy(pMesh->pVertices, vMin.v);
-  vcopy(pMesh->pVertices, vMax.v);
+  vec3_Copy(&vMin, (vec3*) pMesh->pVertices);
+  vec3_Copy(&vMax, (vec3*) pMesh->pVertices);
 
   for(i = 0; i < pMesh->nVertices; i++) {
     for(j = 0; j < 3; j++) {
       if(vMin.v[j] > pMesh->pVertices[3 * i + j])
-	vMin.v[j] = pMesh->pVertices[3 * i + j];
+				vMin.v[j] = pMesh->pVertices[3 * i + j];
       if(vMax.v[j] < pMesh->pVertices[3 * i + j])
-	vMax.v[j] = pMesh->pVertices[3 * i + j];
+				vMax.v[j] = pMesh->pVertices[3 * i + j];
     }
-    /*
-    if(
-       vMin.v[0] <= pMesh->pVertices[3 * i + 0] &&
-       vMin.v[1] <= pMesh->pVertices[3 * i + 1] &&
-       vMin.v[2] <= pMesh->pVertices[3 * i + 2]
-       )
-      vcopy(pMesh->pVertices + 3 * i, vMin.v);
-    if(
-       vMax.v[0] >= pMesh->pVertices[3 * i + 0] &&
-       vMax.v[1] >= pMesh->pVertices[3 * i + 1] &&
-       vMax.v[2] >= pMesh->pVertices[3 * i + 2]
-       )
-      vcopy(pMesh->pVertices + 3 * i, vMax.v);
-    */
   }
   
-  vsub(vMax.v, vMin.v, vSize.v);
-  vcopy(vMin.v, pMesh->BBox.vMin.v);
-  vcopy(vSize.v, pMesh->BBox.vSize.v);
-  pMesh->BBox.fRadius=length(pMesh->BBox.vSize.v)/10;
+  vec3_Sub(&vSize, &vMax, &vMin);
+  vec3_Copy(&pMesh->BBox.vMin, &vMin);
+  vec3_Copy(&pMesh->BBox.vSize, &vSize);
+  pMesh->BBox.fRadius=vec3_Length(& pMesh->BBox.vSize)/10;
 }

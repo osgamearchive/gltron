@@ -27,11 +27,11 @@ int isHiddenFile(WIN32_FIND_DATA *search)
 List* readDirectoryContents(const char *dirname, const char *prefix) {
 	WIN32_FIND_DATA search;
 	HANDLE hSearch;
-	List *l, *p;
+	nebu_List *l, *p;
 	char *filename, *searchStr;
 	int   len, prefixLen = 0;
 
-	p = malloc(sizeof(List));
+	p = malloc(sizeof(nebu_List));
 	p->next= NULL;
 	l = p;
 
@@ -61,7 +61,7 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
 		filename = malloc(len);
 		memcpy(filename, search.cFileName, len);
 		p->data = filename;
-		p->next = malloc(sizeof(List));
+		p->next = malloc(sizeof(nebu_List));
 		p = p->next;
 		p->next = NULL;
 
@@ -75,7 +75,7 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
 			filename = malloc(len);
 			memcpy(filename, search.cFileName, len);
 			p->data = filename;
-			p->next = malloc(sizeof(List));
+			p->next = malloc(sizeof(nebu_List));
 			p = p->next;
 			p->next = NULL;
 		}

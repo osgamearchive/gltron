@@ -26,7 +26,7 @@ namespace Sound {
     if(_status == eUninitialized) 
       return;
 
-    List* p;
+    nebu_List* p;
     int sources_mixed = 0;
     for(p = & _sources; p->next != NULL; p = p->next) {
       Source* s = (Source*) p->data;
@@ -46,23 +46,23 @@ namespace Sound {
   }
 
   void System::AddSource(Source* source) { 
-    List* p;
+    nebu_List* p;
     for(p = & _sources; p->next != NULL; p = p->next);
-    p->next = new List;
+    p->next = new nebu_List;
     p->next->next = NULL;
     p->data = source;
   }
 
   void System::Idle(void) {
 		/* idle processing */
-		List *p;
+		nebu_List *p;
 		for(p = & _sources; p->next != NULL; p = p->next) {
 			Source *source = (Source*) p->data;
 			// check if source is removable & has stopped playing
 			if(source->IsRemovable() && !source->IsPlaying()) {
 				// get rid of data
 				p->data = p->next->data;
-				List *tmp = p->next;
+				nebu_List *tmp = p->next;
 				p->next = p->next->next;
 				delete tmp;
 				delete source;

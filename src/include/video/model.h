@@ -26,32 +26,32 @@ typedef struct {
   float shininess;
   char *name;
   char *map_diffuse;
-} Material;
+} gltron_Mesh_Material;
 
 typedef struct {
   vec3 vMin;
   vec3 vSize;
   float fRadius;
-} BoundingBox;
+} gltron_Mesh_BoundingBox;
 
 typedef struct {
   GLfloat *pVertices;
   GLfloat *pNormals;
   GLshort **ppIndices;
   int nVertices, nNormals, nMaterials;
-  Material* pMaterials;
+  gltron_Mesh_Material* pMaterials;
   int *pnFaces;
-  BoundingBox BBox;
-} Mesh;
+  gltron_Mesh_BoundingBox BBox;
+} gltron_Mesh;
 
 typedef enum {
   TRI_MESH,
   QUAD_MESH
-} MeshType;
+} gltron_MeshType;
     
-extern Mesh* readMeshFromFile(const char* filename, MeshType type);
-extern void drawModel(Mesh* pMesh, MeshType type);
-extern void drawModelExplosion(Mesh *pMesh, float fRadius);
+extern gltron_Mesh* gltron_Mesh_LoadFromFile(const char* filename, gltron_MeshType type);
+extern void gltron_Mesh_Draw(gltron_Mesh* pMesh, gltron_MeshType type);
+extern void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius);
 
 typedef enum {
   eAmbient = 0,
@@ -59,10 +59,10 @@ typedef enum {
   eSpecular
 } ColorType;
 
-extern void SetMaterialColor(Mesh *pMesh, char *name, ColorType eType,
-			     float pColor[4]);
+extern void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name, 
+																				 ColorType eType, float pColor[4]);
 
-extern void computeBBox(Mesh* pMesh);
+extern void gltron_Mesh_ComputeBBox(gltron_Mesh* pMesh);
 
 extern int polycount;
 

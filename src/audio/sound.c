@@ -1,5 +1,6 @@
 #include "game/gltron.h"
 #include "filesystem/path.h"
+#include "Nebu_filesystem.h"
 
 #define NUM_GAME_FX 3
 
@@ -89,8 +90,8 @@ void Sound_setFxVolume(float volume) {
 
 void Sound_initTracks(void) {
   const char *music_path;
-  List *soundList;
-  List *p;
+  nebu_List *soundList;
+  nebu_List *p;
   int i;
 
   music_path = getDirectory( PATH_MUSIC );

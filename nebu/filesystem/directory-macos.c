@@ -6,10 +6,10 @@
 /* this structure is defined in nebu/base/nebu_types.h */
 /* we declare it here because GLTron's headers conflict with */
 /* the macos headers used below (Mac OS headers define "Point") */
-typedef struct List List;
-struct List {
+typedef struct nebu_List List;
+struct nebu_List {
   void *data;
-  List* next;
+  nebu_List* next;
 };
 
 /* macintosh code by Darrell Walisser */
@@ -57,7 +57,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    StringPtr filename;							  
    int   len;
    
-   List *l = (List*) user_data;
+   nebu_List *l = (nebu_List*) user_data;
 	/* filter invisible files & folders */
    if ( (cpb_ptr->hFileInfo.ioFlFndrInfo.fdFlags & kIsInvisible) == 0) {	
    	
@@ -75,7 +75,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    	l->data = (char*) malloc (sizeof(char) * len + 1);  							  
       strcpy ((char*)l->data, (const char*)filename);
       
-      l->next = (List*) malloc (sizeof (List));
+      l->next = (nebu_List*) malloc (sizeof (nebu_List));
       if (l == NULL) {
   	    fprintf (stderr, "iterateProc: out of memory\n");
   		exit (-1);
@@ -87,7 +87,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
 
 List* readDirectoryContents(const char *dirname, const char *prefix) {
 
-  List *l;
+  nebu_List *l;
   OSErr err;
   char *path;
   
@@ -115,7 +115,7 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
   }
   
   l = NULL;
-  l = (List*) malloc(sizeof(List));
+  l = (nebu_List*) malloc(sizeof(nebu_List));
   if (l == NULL) {
   	fprintf (stderr, "readDirectoryContents: out of memory\n");
   	exit (-1);

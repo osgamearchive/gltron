@@ -95,7 +95,7 @@ static void loadModels(void) {
 	/* load recognizer model */
 	path = getPath(PATH_DATA, "recognizer.obj");
 	if(path != NULL) {
-		recognizer = readMeshFromFile(path, TRI_MESH);
+		recognizer = gltron_Mesh_LoadFromFile(path, TRI_MESH);
 		/* old code did normalize & invert normals & rescale to size = 60 */
 	} else {
 		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
@@ -106,7 +106,7 @@ static void loadModels(void) {
 	/* load recognizer quad model (for recognizer outlines) */
 	path = getPath(PATH_DATA, "recognizer_quad.obj");
 	if(path != NULL) {
-		recognizer_quad = readMeshFromFile(path, QUAD_MESH);
+		recognizer_quad = gltron_Mesh_LoadFromFile(path, QUAD_MESH);
 		/* old code did normalize & invert normals & rescale to size = 60 */
 	} else {
 		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
@@ -118,7 +118,7 @@ static void loadModels(void) {
 	for(i = 0; i < LC_LOD; i++) {
 		path = getPath(PATH_DATA, lc_lod_names[i]);
 		if(path != NULL) {
-			lightcycle[i] = readMeshFromFile(path, TRI_MESH);
+			lightcycle[i] = gltron_Mesh_LoadFromFile(path, TRI_MESH);
 		} else {
 			fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
 			exit(1); /* OK: critical, installation corrupt */
@@ -157,10 +157,20 @@ void initGameScreen(void) {
   d->vp_w = d->w; d->vp_h = d->h;
 }
 
+void video_LoadLevel(void) {
+	printf("[status] load/reload video data\n");
 
-void resetVideoData(void) {
+	if(gWorld)
+		video_FreeLevel(gWorld);
+	gWorld = video_CreateLevel();
+	if(gWorld->scalable)
+		video_ScaleLevel(gWorld, getSettingf("grid_size"));
+}
+	
+void video_ResetData(void) {
+	printf("[status] reset video data\n");
+
   /* for each player */
-
   int i;
   for(i = 0; i < game->players; i++) {
 		PlayerVisual *pV = gPlayerVisuals + i;
@@ -182,7 +192,6 @@ void resetVideoData(void) {
 		} else {
 			pV->exp_radius = EXP_RADIUS_MAX;
 		}
-
   }
 }
 

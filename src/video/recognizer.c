@@ -1,5 +1,6 @@
 #include "video/video.h"
-#include <math.h>
+
+#include "base/nebu_math.h"
 
 static float alpha = 0;
 
@@ -67,7 +68,7 @@ void drawRecognizerShadow(void) {
 
   /* render */
 
-  drawModel(recognizer, TRI_MESH);
+  gltron_Mesh_Draw(recognizer, TRI_MESH);
 
   /* restore */
 
@@ -112,7 +113,7 @@ void drawRecognizer(void) {
 
   glEnable(GL_NORMALIZE);
   glColor3f(0.0, 0.0, 0.0);
-  drawModel(recognizer, TRI_MESH);
+  gltron_Mesh_Draw(recognizer, TRI_MESH);
 
   glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -124,7 +125,7 @@ void drawRecognizer(void) {
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glEnable(GL_BLEND);
   glEnable(GL_LINE_SMOOTH);
-  drawModel(recognizer_quad, QUAD_MESH);
+  gltron_Mesh_Draw(recognizer_quad, QUAD_MESH);
   glDisable(GL_LINE_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

@@ -41,7 +41,7 @@ typedef struct Game2 {
   int players;
   int *startPositions;
   SystemTime time;
-  List events;
+  nebu_List events;
   FILE *record;
   FILE *play;
   // Input input;

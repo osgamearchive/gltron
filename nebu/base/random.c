@@ -14,13 +14,13 @@
 static int seed = 42;
 
 /* Seeds the random number generator with the seed s */
-void tsrand(unsigned int s)
+void nebu_srand(unsigned int s)
 {
 	seed = s % PERIOD;
 }
 
 /* Calculates a new random number */
-int trand(void)
+int nebu_rand(void)
 {
 	seed = A * (seed % Q) - R * (long)(seed / Q);
 	if(seed < 0)
@@ -30,8 +30,8 @@ int trand(void)
 }
 
 /* Bonus function, returns a random number in [0..1) */
-double tfrand(void)
+float nebu_randf(void)
 {
-	return (double)trand()/PERIOD;
+	return (double)nebu_rand()/PERIOD;
 }
 

@@ -1,4 +1,4 @@
-#include "base/nebu_types.h"
+#include "base/nebu_util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,12 +10,12 @@
 #include <errno.h>
 #include <unistd.h>
 
-List* readDirectoryContents(const char *dirname, const char *prefix) {
+nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
   DIR *dir;
   struct dirent *entry;
-  List *l, *p;
+  nebu_List *l, *p;
 
-  l = (List*) malloc(sizeof(List));
+  l = (nebu_List*) malloc(sizeof(nebu_List));
   p = l;
   p->next = NULL;
 
@@ -31,7 +31,7 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
 		name = malloc(strlen(entry->d_name) + 1);
 		memcpy(name, entry->d_name, strlen(entry->d_name) + 1);
 		p->data = name;
-		p->next = (List*) malloc(sizeof(List));
+		p->next = (nebu_List*) malloc(sizeof(nebu_List));
 		p = p->next;
 		p->next = NULL;
       }

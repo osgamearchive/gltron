@@ -231,9 +231,9 @@ int applyWallAcceleration(int player, int dt) {
   do physics, create CRASH and STOP events
 */
 
-List* doMovement(int mode, int dt) {
+nebu_List* doMovement(int mode, int dt) {
   int i;
-  List *l = NULL;
+  nebu_List *l = NULL;
 
   for(i = 0; i < game->players; i++) {
 		Data *data = game->player[i].data;
@@ -329,8 +329,8 @@ List* doMovement(int mode, int dt) {
 */
 
 void Game_Idle(void) {
-  List *l;
-  List *p;
+  nebu_List *l;
+  nebu_List *p;
   int i;
   int dt;
   int t;
@@ -429,7 +429,7 @@ void Game_Idle(void) {
 
 void createEvent(int player, event_type_e eventType) {
   GameEvent *e;
-  List *p = &(game2->events);
+  nebu_List *p = &(game2->events);
 
   /* move to the end of the event list */
   while (p->next)
@@ -438,7 +438,7 @@ void createEvent(int player, event_type_e eventType) {
   /* TODO: handle failed malloc */
   e = (GameEvent*) malloc(sizeof(GameEvent));
   p->data = e;
-  p->next = (List*) malloc(sizeof(List));
+  p->next = (nebu_List*) malloc(sizeof(nebu_List));
   p->next->next = NULL;
   e->type = eventType;
 	getPositionFromIndex(&e->x, &e->y, player);

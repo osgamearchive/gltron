@@ -1,12 +1,6 @@
 #ifndef NEBU_BASIC_TYPES_H
 #define NEBU_BASIC_TYPES_H
 
-typedef struct List List;
-struct List {
-  void *data;
-  List* next;
-};
-
 typedef struct {
   unsigned int current;
   unsigned int lastFrame;

@@ -86,6 +86,8 @@ extern int default_arena_sizes[];
 
 /* ai -> computer.c */
 
+void loadLevel(void);
+
 extern void initGameAI(int level);
 extern void doComputer(int player, int target);
 
@@ -93,7 +95,7 @@ extern void resetScores(void);
 
 extern void doTurn(GameEvent* e, int direction);
 
-extern List* doMovement(int mode, int dt);
+extern nebu_List* doMovement(int mode, int dt);
 extern void writePosition(int player);
 
 extern void initGameStructures(void);
@@ -106,8 +108,9 @@ extern void exitGame(void);
 
 extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
-extern void resetVideoData(void);
+extern void video_ResetData(void);
 extern void resetPlayerData(void);
+extern void video_LoadLevel(void);
 
 extern void doCameraMovement(void);
 extern void initCamera(Camera *cam, Data *data, int type);
