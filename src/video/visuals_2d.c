@@ -45,33 +45,39 @@ void draw2D( Visual *d ) {
 		glTranslatef(border_left, border_bottom, 0);
 
 		{
+			/*
 			float w = grid_width;
 			float h = grid_height;
+			*/
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glBegin(GL_QUADS);
 			glColor4f(0.7f, 0.7f, 0.7f, 0.3f);
+
+			nebu_Mesh_Render(gWorld->floor);
+			/*
+			glBegin(GL_QUADS);
 			glVertex2f(0, 0);
 			glVertex2f(w, 0);
 			glVertex2f(w, h);
 			glVertex2f(0, h);
 			glEnd();
+			*/
 		}
 		
 		glDisable(GL_LIGHTING);
 		// glDisable(GL_BLEND);
 		glEnable(GL_BLEND);
 		{
-				float w = grid_width;
-				float h = grid_height;
 				glColor3f(1, 1, 1);
-				glBegin(GL_LINE_LOOP);
-				glVertex3f( 0, 0, 0 );
-				glVertex3f( w, 0, 0 );
-				glVertex3f( w, h, 0 );
-				glVertex3f( 0, h, 0 );
+				glBegin(GL_LINES);
+				for(i = 0; i < game2->level->nBoundaries; i++) {
+					vec2 v;
+					segment2 *s = game2->level->boundaries + i;
+					vec2_Add(&v, & s->vStart, & s->vDirection);
+					glVertex2fv(s->vStart.v);
+					glVertex2fv(v.v);
+				}
 				glEnd();
 		}
 		for(i = 0; i < game->players; i++) {
