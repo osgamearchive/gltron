@@ -33,7 +33,7 @@ void mouseCredits (int buttons, int state, int x, int y)
 {
 	if ( state == SYSTEM_MOUSEPRESSED ) {
 		SystemExit();
-		exit(0);
+		SystemExitLoop(RETURN_QUIT);
 	}
 }
 
@@ -42,7 +42,7 @@ void keyCredits(int state, int k, int x, int y)
 	if(state == SYSTEM_KEYSTATE_UP)
 		return;
   SystemExit();
-	exit(0);
+	SystemExitLoop(RETURN_QUIT);
 }
 
 void idleCredits(void) {
@@ -56,7 +56,7 @@ void drawCredits(void) {
   int h;
   int i;
   float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 } };
-  time = SystemGetElapsedTime() - coffset;
+  time = nebu_Time_GetElapsed() - coffset;
 
   glClearColor(.0, .0, .0, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -74,11 +74,11 @@ void drawCredits(void) {
 }
 void displayCredits(void) {
   drawCredits();
-  SystemSwapBuffers();
+  nebu_Video_SwapBuffers();
 }
 
 void initCredits(void) {
-  coffset = SystemGetElapsedTime();
+  coffset = nebu_Time_GetElapsed();
 }
 
 Callbacks creditsCallbacks = { 

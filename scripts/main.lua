@@ -1,6 +1,6 @@
 -- loop until RETURN_QUIT code is sent
 
-RETURN_GAME_LAUNCH = 0
+RETURN_QUIT = 0
 RETURN_GAME_END = 1
 RETURN_GAME_PAUSE = 2
 RETURN_GAME_UNPAUSE = 3
@@ -10,7 +10,7 @@ RETURN_GUI_PROMPT = 6
 RETURN_TIMEDEMO = 7
 RETURN_TIMEDEMO_ABORT = 8
 RETURN_CREDITS = 9
-RETURN_QUIT = 10
+RETURN_GAME_LAUNCH = 10
 RETURN_GUI_ESCAPE = 11
 RETURN_PROMPT_ESCAPE = 12
 RETURN_PAUSE_ESCAPE = 13
@@ -53,7 +53,10 @@ while 1 do
 	if(next_callback[ status ]) then
 		 callback = next_callback[ status ]
 	else
-		if(status == 10) then
+		if(status == RETURN_QUIT) then
+			write(format("[lua] clean exit\n"))
+			exit()
+                else
 			write(format("[lua] unhandled callback (%d)\n", status))
 			exit()
 		end
