@@ -1,7 +1,8 @@
-#include "game/game.h"
-#include "game/ai.h"
 #include <math.h>
 #include <float.h>
+
+#include "game/game.h"
+#include "game/ai.h"
 
 #ifndef FLT_MAX
 #define FLT_MAX 10000.0f
@@ -25,9 +26,9 @@ void ai_getClosestOpponent(int player, int* opponent, float *distance) {
 			float d;
 
 			getPositionFromIndex(v_opponent.v + 0, v_opponent.v + 1, i);
-			vec2Sub(&diff, &v_player, &v_opponent);
+			vec2_Sub(&diff, &v_player, &v_opponent);
 			// use manhattan distance instead of euclidean distance
-			d = fabs(diff.v[0]) + fabs(diff.v[1]);
+			d = (float) ( fabs(diff.v[0]) + fabs(diff.v[1]) );
 			// d = vec2Length(&diff);
 			if(d < *distance) {
 				*opponent = i;
@@ -53,7 +54,7 @@ void ai_getDistances(int player, AI_Distances *distances) {
 	getPositionFromIndex(vPos.v + 0, vPos.v + 1, player);
 
 	for(i = 0; i < eMax; i++) {
-		vec2Copy(&segments[i].vStart, &vPos);
+		vec2_Copy(&segments[i].vStart, &vPos);
 	}
 
 	segments[eFront].vDirection.v[0] = dirsX[data->dir];
@@ -64,7 +65,7 @@ void ai_getDistances(int player, AI_Distances *distances) {
 	segments[eRight].vDirection.v[1] = dirsY[dirRight];
 	segments[eBackleft].vDirection.v[0] = dirsX[dirLeft] - dirsX[data->dir];
 	segments[eBackleft].vDirection.v[1] = dirsY[dirLeft] - dirsY[data->dir];
-	vec2Normalize(&segments[eBackleft].vDirection,
+	vec2_Normalize(&segments[eBackleft].vDirection,
 								&segments[eBackleft].vDirection);
 	*front = FLT_MAX;
 	*left = FLT_MAX;
@@ -116,10 +117,10 @@ void ai_getDistances(int player, AI_Distances *distances) {
 	// update debug render segments
 	{
 		AI *ai = game->player[player].ai;
-		vec2Copy(&ai->front.vStart, &vPos);
-		vec2Copy(&ai->left.vStart, &vPos);
-		vec2Copy(&ai->right.vStart, &vPos);
-		vec2Copy(&ai->backleft.vStart, &vPos);
+		vec2_Copy(&ai->front.vStart, &vPos);
+		vec2_Copy(&ai->left.vStart, &vPos);
+		vec2_Copy(&ai->right.vStart, &vPos);
+		vec2_Copy(&ai->backleft.vStart, &vPos);
 		
 		ai->front.vDirection.v[0] = *front * dirsX[data->dir];
 		ai->front.vDirection.v[1] = *front * dirsY[data->dir];
@@ -129,9 +130,9 @@ void ai_getDistances(int player, AI_Distances *distances) {
 		ai->right.vDirection.v[1] = *right * dirsY[dirRight];
 		ai->backleft.vDirection.v[0] = dirsX[dirLeft] - dirsX[data->dir];
 		ai->backleft.vDirection.v[1] = dirsY[dirLeft] - dirsY[data->dir];
-		vec2Normalize(&ai->backleft.vDirection,
+		vec2_Normalize(&ai->backleft.vDirection,
 									&ai->backleft.vDirection);
-		vec2Scale(&ai->backleft.vDirection, 
+		vec2_Scale(&ai->backleft.vDirection, 
 							&ai->backleft.vDirection,
 							*backleft);
 	}
@@ -169,7 +170,7 @@ void ai_getConfig(int player, int target,
 		float phi;
 		int i;
 
-		vec2Sub(&diff, &config->player.vStart, &config->opponent.vStart);
+		vec2_Sub(&diff, &config->player.vStart, &config->opponent.vStart);
 		v1.v[0] = diff.v[0];
 		v1.v[1] = diff.v[1];
 		v1.v[2] = 0;
@@ -178,20 +179,20 @@ void ai_getConfig(int player, int target,
 		v2.v[1] = config->opponent.vDirection.v[1];
 		v2.v[2] = 0;
 
-		vec3Normalize(&v1, &v1);
-		vec3Normalize(&v2, &v2);
+		vec3_Normalize(&v1, &v1);
+		vec3_Normalize(&v2, &v2);
 
-		vec3Cross(&v3, &v1, &v2);
-		vec3Normalize(&v3, &v3);
+		vec3_Cross(&v3, &v1, &v2);
+		vec3_Normalize(&v3, &v3);
 	
-		cosphi = vec3Dot(&v1, &v2);
+		cosphi = vec3_Dot(&v1, &v2);
 		clamp(&cosphi, -1, 1);
-		phi = acos(cosphi);
-		if(vec3Dot(&v3, &up) > 0)
-			phi = 2 * M_PI - phi;
+		phi = (float) acos(cosphi);
+		if(vec3_Dot(&v3, &up) > 0)
+			phi = 2 * (float) M_PI - phi;
 	
 		for(i = 0; i < 8; i++) {
-			phi -= M_PI / 4;
+			phi -= (float) M_PI / 4;
 			if(phi < 0) {
 				config->location = i;
 				break;
@@ -206,10 +207,10 @@ void ai_getConfig(int player, int target,
 		seg1.vDirection = config->opponent.vDirection;
 		seg2.vStart = config->player.vStart;
 		vec2_Orthogonal( &seg2.vDirection, &config->opponent.vDirection );
-		vec2Normalize( &seg2.vDirection, &seg2.vDirection );
-		vec2Scale( &seg2.vDirection, 
+		vec2_Normalize( &seg2.vDirection, &seg2.vDirection );
+		vec2_Scale( &seg2.vDirection, 
 							 &seg2.vDirection,
-							 vec2Length( &config->player.vDirection )
+							 vec2_Length( &config->player.vDirection )
 							 );
 							 
 		segment2_Intersect( &config->intersection, 
