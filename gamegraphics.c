@@ -1,7 +1,6 @@
 #include "gltron.h"
 #include "skybox.h"
 #include "recognizer.h"
-#include "floor.h"
 #include "explosion.h"
 
 // static float arena[] = { 1.0, 1.2, 1, 0.0 };
@@ -362,6 +361,10 @@ void drawCam(Player *p, Visual *d) {
   /* glDepthMask(GL_FALSE); */
 
   /* shadows on the floor: cycle, recognizer, trails */
+  if (game2->settingsCache.show_recognizer) {
+    drawRecognizerShadow();
+  }
+
   for(i = 0; i < game->players; i++) {
     int lod = playerVisible(p, game->player + i);
 		if (lod >= 0) {
@@ -374,12 +377,8 @@ void drawCam(Player *p, Visual *d) {
 		if (game->player[i].data->trail_height > 0 )
 			drawTrailShadow(game->player + i);
 	}
-
+	
   glDepthMask(GL_TRUE);
-  if (game2->settingsCache.show_recognizer) {
-    drawRecognizerShadow();
-  }
-
   glEnable(GL_DEPTH_TEST);
 
   if (game2->settingsCache.show_recognizer &&
@@ -398,9 +397,6 @@ void drawCam(Player *p, Visual *d) {
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonOffset(1,1);
 
-#if 0
-  doTrails(p);
-#else
 	{
 		TrailMesh mesh;
 		mesh.pVertices = (vec3*) malloc(1000 * sizeof(vec3));
@@ -408,20 +404,17 @@ void drawCam(Player *p, Visual *d) {
 		mesh.pColors = (unsigned char*) malloc(1000 * 4 * sizeof(float));
 		mesh.pTexCoords = (vec2*) malloc(1000 * sizeof(vec2));
 		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
+
 		for(i = 0; i < game->players; i++) {
 			if (game->player[i].data->trail_height > 0 ) {
-					trailGeometry(game->player + i, &mesh);
-					glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-					trailRender(game->player + i, &mesh, 
-											game->screen->textures[TEX_DECAL]);
-					bowGeometry(game->player + i, &mesh, 0, 0);
-					glColor3f(1.0f, 1.0f, 1.0f);
-					glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-					glEnable(GL_BLEND);
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-					trailRender(game->player + i, &mesh, 
-											game->screen->textures[TEX_TRAIL]);
-					glDisable(GL_BLEND);
+				int vOffset = 0;
+				int iOffset = 0;
+				mesh.iUsed = 0;
+				trailGeometry(game->player + i, &mesh, &vOffset, &iOffset);
+				bowGeometry(game->player + i, &mesh, &vOffset, &iOffset);
+				trailStatesNormal(game->player + i, game->screen->textures[TEX_DECAL]);
+				trailRender(&mesh);
+				trailStatesRestore();
 			}
 		}
 		free(mesh.pVertices);
@@ -430,7 +423,6 @@ void drawCam(Player *p, Visual *d) {
 		free(mesh.pTexCoords);
 		free(mesh.pIndices);
 	}
-#endif
 
   glDisable(GL_POLYGON_OFFSET_FILL);
 
