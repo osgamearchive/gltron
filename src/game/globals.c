@@ -43,6 +43,7 @@ unsigned char* colmap = NULL;
 unsigned char* debugtex = NULL;
 int ogl_debugtex;
 int colwidth;
+segment2 walls[4];
 
 int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
