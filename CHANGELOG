@@ -1,5 +1,9 @@
 to 0.59
 visible changes
+- different arena sizes (menu item)
+
+to 0.59beta
+visible changes
 - Arena size is now a variable (game->settins->grid_size or grid_size
   in gltron.ini)
 - cam chase speed scales with cycle speed now

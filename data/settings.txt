@@ -1,7 +1,7 @@
 2
 f1
 speed
-i31
+i32
 show_help
 show_fps
 show_wall
@@ -33,4 +33,4 @@ grid_size
 playEffects
 use_mipmaps
 game_speed
-
+arena_size

@@ -137,10 +137,11 @@ typedef struct Settings {
 
   /* these gettings affect the gameplay */
   int erase_crashed;
-  int game_speed;
+  int game_speed; /* index */
   float speed;
   float current_speed;
   int grid_size;
+  int arena_size; /* index */
 } Settings;
 
 typedef struct Game {

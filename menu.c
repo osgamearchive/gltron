@@ -24,9 +24,17 @@ void changeAction(char *name) {
     initFonts();
     initTexture(game->screen);
   }
-  if(strstr(name, "game_speed") == name)
+  if(strstr(name, "game_speed") == name) {
     game->settings->current_speed = 
       default_speeds[ game->settings->game_speed ];
+    initData();
+  }
+  if(strstr(name, "arena_size") == name) {
+    game->settings->grid_size = 
+      default_arena_sizes[ game->settings->arena_size ];
+    initData();
+  }
+  
   if(strstr(name, "resetScores") == name)
     resetScores();
   if(strstr(name, "ai_player") == name) {
@@ -100,18 +108,21 @@ void menuAction(Menu *activated) {
 	  changeAction(activated->szName + 4);
 	}
 	break;
-      case 'l': {
-	char buf[64];
-	int max_value;
-	int dummy;
-	sscanf(activated->szName, "stl_%d_%d_%s", &dummy, &max_value, buf);
-	piValue = getVi(buf);
-	(*piValue)++;
-	if(*piValue > max_value) *piValue = 0;
-	initMenuCaption(activated);
-	changeAction(buf);
-	break;
-      }
+      case 'l':
+	{
+	  char buf[64];
+	  int max_value;
+	  int dummy;
+	  sscanf(activated->szName, "stl_%d_%d_%s", &dummy, &max_value, buf);
+	  piValue = getVi(buf);
+	  if(piValue != 0) {
+	    (*piValue)++;
+	    if(*piValue > max_value) *piValue = 0;
+	    initMenuCaption(activated);
+	    changeAction(buf);
+	    break;
+	  }
+	}
       }
       break;
     case 'p':
@@ -126,7 +137,9 @@ void menuAction(Menu *activated) {
 
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom" };
 static char *player_list[] = { "human", "computer", "none" };
-static char **clists[] = { speed_list, player_list };
+static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme" };
+
+static char **clists[] = { speed_list, player_list, arena_list };
 
 void initMenuCaption(Menu *m) {
   int *piValue;

@@ -135,6 +135,7 @@ extern int dirsX[];
 extern int dirsY[];
 
 extern float default_speeds[];
+extern int default_arena_sizes[];
 
 extern int lasttime; 
 extern double dt; /* milliseconds since last frame */

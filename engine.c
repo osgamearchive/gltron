@@ -255,9 +255,13 @@ void initData() {
   game->winner = -1;
   /* colmap */
   /* game->settings->grid_size MUST be divisible by 8 */
+
+  /* TODO: check if grid_size/colwidth has changed and 
+   *       reallocate colmap accordingly */
   colwidth = game->settings->grid_size / 8;
-  if(colmap == NULL) 
-    colmap = (unsigned char*) malloc(colwidth * game->settings->grid_size);
+  if(colmap != 0)
+    free(colmap);
+  colmap = (unsigned char*) malloc(colwidth * game->settings->grid_size);
   for(i = 0; i < colwidth * game->settings->grid_size; i++)
     *(colmap + i) = 0;
 

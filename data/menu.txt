@@ -28,13 +28,17 @@ Game
 xreset
 Start Game
 
-7
+8
 xsub
 Game Settings
 
 0
 stl_0_3_game_speed
 Game speed:  %s
+
+0
+stl_2_4_arena_size
+Arena size:  %s
 
 0
 sti_fast_finish

@@ -75,6 +75,7 @@ void initSettingData(char *filename) {
   si[28].value = &(game->settings->playEffects);
   si[29].value = &(game->settings->use_mipmaps);
   si[30].value = &(game->settings->game_speed);
+  si[31].value = &(game->settings->arena_size);
 
   sf[0].value = &(game->settings->speed);
 }
@@ -121,6 +122,7 @@ void initMainGameSettings(char *filename) {
   game->settings->speed = 7.0;
   game->settings->game_speed = 1; /* normal */
   /* game->settings->grid_size MUST be divisible by 8 */
+  game->settings->arena_size = 1;
   game->settings->grid_size = 240;
   game->settings->width = 640;
   game->settings->height = 480;
@@ -192,6 +194,8 @@ void initMainGameSettings(char *filename) {
     fclose(f);
   }
 
+  game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
+
   /* sanity check: speed, grid_size */
   if(game->settings->speed <= 0) {
     fprintf(stderr, "[gltron] sanity check failed: speed = %.2ff\n",
@@ -213,6 +217,7 @@ void initMainGameSettings(char *filename) {
   game->settings->current_speed = default_speeds[ game->settings->game_speed ];
   printf("[gltron] speed set to %.2f (level %d)\n",
 	 game->settings->current_speed, game->settings->game_speed);
+
 }
 
 void saveSettings() {

@@ -39,6 +39,7 @@ int polycount;
 
 /* default settings */
 
+int default_arena_sizes[] = { 160, 240, 400, 600, 1200 };
 float default_speeds[] = { 5.0, 6.5, 8.5, 12.0, 0.0 };
 /* float colors_alpha[][4] = { { 1.0, 0.2, 0.4 , 0.4}, { 0.2, 0.3, 1.0, 0.4}, */
 float colors_alpha[][4] = { { .8, 0.1, 0.2 , 0.6}, { 0.856, 0.42, 0.25, 0.6},
