@@ -80,8 +80,10 @@ void drawMenu(Visual *d) {
       int time = SystemGetElapsedTime() & 4095; 
       t = sinf( time * PI / 2048.0 ) / 2.0f + 0.5f;
 
-      scripting_GetFloatArray("menu_item_active1", active1, 4);
-      scripting_GetFloatArray("menu_item_active2", active2, 4);
+			scripting_GetGlobal("menu_item_active1", NULL);
+      scripting_GetFloatArrayResult(active1, 4);
+			scripting_GetGlobal("menu_item_active2", NULL);
+      scripting_GetFloatArrayResult(active2, 4);
 
       for(j = 0; j < 4; j++) {
 	color[j] = t * active1[j] + (1 - t) * active2[j];
@@ -91,7 +93,8 @@ void drawMenu(Visual *d) {
 	 t, color[0], color[1], color[2]); */
     } else {
       float color[4];
-      scripting_GetFloatArray("menu_item", color, 4);
+			scripting_GetGlobal("menu_item", NULL);
+      scripting_GetFloatArrayResult(color, 4);
       glColor4fv(color);
     }
 

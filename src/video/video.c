@@ -167,11 +167,14 @@ void resetVideoData(void) {
     {
       char name[32];
       sprintf(name, "model_diffuse_%d", i);
-      scripting_GetFloatArray(name, pV->pColorDiffuse, 4);
+			scripting_GetGlobal(name, NULL);
+      scripting_GetFloatArrayResult(pV->pColorDiffuse, 4);
       sprintf(name, "model_specular_%d", i);
-      scripting_GetFloatArray(name, pV->pColorSpecular, 4);
+			scripting_GetGlobal(name, NULL);
+      scripting_GetFloatArrayResult(pV->pColorSpecular, 4);
       sprintf(name, "trail_diffuse_%d", i);
-      scripting_GetFloatArray(name, pV->pColorAlpha, 4);
+			scripting_GetGlobal(name, NULL);
+      scripting_GetFloatArrayResult(pV->pColorAlpha, 4);
     }
 		if(game->player[i].ai->active != AI_NONE) {
 			pV->impact_radius = 0.0;

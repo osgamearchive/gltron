@@ -34,7 +34,8 @@ void loadArt(void) {
 
 	runScript(PATH_SCRIPTS, "artpack.lua"); // load default art settings
 
-  scripting_GetStringSetting("current_artpack", &artpack);
+	scripting_GetGlobal("settings", "current_artpack", NULL);
+  scripting_GetStringResult(&artpack);
   fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
 	
   path = getArtPath(artpack, "artpack.lua");

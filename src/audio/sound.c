@@ -37,7 +37,8 @@ void Sound_loadFX(void) {
 void Sound_reloadTrack(void) {
   char *song;
   char *path;
-  scripting_GetStringSetting("current_track", &song);
+	scripting_GetGlobal("settings", "current_track", NULL);
+  scripting_GetStringResult(&song);
   fprintf(stderr, "[sound] loading song %s\n", song);
   path = getPath( PATH_MUSIC, song );
   free(song);
