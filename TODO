@@ -5,12 +5,8 @@ TODO list
 
 Bugs [high priority]:
 
-- fall back to non-stencil when not available (e.g. 16bpp X)
-
-Bugs [low priority]:
-
-- tweak LOD values so the lightcycle stays detailed within camera
-  clamp range [ LIM ]
+- make sure all shadow stuff gets drawn with stencil on (if stencil 
+  configured). make sure color is the same!
 
 Features [high priority]:
 
@@ -21,7 +17,26 @@ Features [high priority]:
   (serious OS 9 problem, for example), this allows handling of large mp3 files
   too and gets rid of the fixed size buffer
 
-Features [medium priority, or easily implemented]:
+Documentation & Packaging:
+
+- decide about artpacks & sound & music included
+- Tune diffuse / specular materials for the lightcycle, trail & recognizers
+  [ nicolas, kokido ]
+- compile decent ChangeLog
+- document tools used. included 'sponsor' message for 3d exploration [ Andreas ]
+
+Optimizations/Cleanups [high priority]
+
+- look at #if 0,#endif and remove obsolete code
+- check various TODOs, FIXMEs and #warnings in the code
+- resolve this:
+  The recognizer shadow suffers from z-buffer artefacts (Andreas)
+  solutions: try to optain 24bit visual, don't zclear and change frustum for
+  the recognizer, render recognizer shadow to texture, and project it onto
+  floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
+  decide about defaults)
+
+Features [medium priority]
 
 - fast finish should be relative to the arena size (or really finish instantly)
 - fix camera zoom generally (speed / settings)
@@ -29,8 +44,20 @@ Features [medium priority, or easily implemented]:
 - add speed boost / variable speed
 - Add new starting positions, e.g. 3 against one
 
+Optimizations/Cleanups [medium priority]
+
+- seperate game from engine a bit more
+- delete the sound object in Audio_Quit to allow restarting the whole
+  sound system without memory leaks
+
+Bugs [low priority]:
+
+- tweak LOD values so the lightcycle stays detailed within camera
+  clamp range [ LIM ]
+
 Features [low priority]:
 
+- add (merge) software mouse cursor (from networking branch)
 - add more special effects (reflections etc.)
 - create default graphics settings to choose from: low/medium/high
 - explosion is missing alpha blending right now
@@ -43,34 +70,6 @@ Features [low priority]:
 - quick way to restore sane camera angle (e.g. middle mouse button)
 - add armagetron style physics mod 
 - add (merge) software mouse cursor (from networking branch)
-
-Settings:
-
-- Tune diffuse / specular materials for the lightcycle, trail & recognizers
-  [ nicolas, kokido ]
-- Add trail & cycle shadow color to setting / artpack.ini [ Andreas ]
-
-Documentation:
-
-- add new default artpack author to CREDITS [ Andreas ]
-- add new programmers to CREDITS [ Andreas ]
-- compile decent ChangeLog
-
-Administrative:
-
-- document tools used. included 'sponsor' message for 3d exploration [ Andreas ]
-
-Optimizations/Cleanups [high priority]
-- seperate game from engine a bit more
-- look at #if 0,#endif and remove obsolete code
-- check various TODOs and #warnings in the code
-- delete the sound object in Audio_Quit to allow restarting the whole
-  sound system without memory leaks
-- The recognizer shadow suffers from z-buffer artefacts (Andreas)
-  solutions: try to optain 24bit visual, don't zclear and change frustum for
-  the recognizer, render recognizer shadow to texture, and project it onto
-  floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
-  decide about defaults)
 
 Optimizations/Cleanups [low priority]
 
