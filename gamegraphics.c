@@ -1,11 +1,87 @@
 #include "gltron.h"
 #include "geom.h"
 
+void rebuildDebugTex() {
+  int x, y;
+  int px = -1, py = -1;
+  float tx, ty;
+  int color;
+  unsigned char *source;
+  printf("rebuilding texture: %d -> ", SystemGetElapsedTime());
+  for(y = 0; y < game->settings->grid_size; y++) {
+    ty = (float) y * DEBUG_TEX_H / game->settings->grid_size;
+    for(x = 0; x < game->settings->grid_size; x++) {
+      tx = (float) x * DEBUG_TEX_W / game->settings->grid_size;
+      color = colmap [ y * colwidth + x];
+      /* printf("got %d for (%d, %d)\n", color, x, y); */
+      if(color != 0 || ((int)tx != px && (int)ty != py)) {
+	px = (int) tx; 
+	source = debugcolors[ color ];
+	memcpy(debugtex + (int)ty * DEBUG_TEX_W * 4 + px * 4, source, 4);
+      }
+    }
+    py = (int)ty;
+    /* } */
+  }
+  printf("%d\n", SystemGetElapsedTime());
+}
+
+#define MAP_SIZE 256.0
+
+void drawDebugLines(gDisplay *d) {
+  int i;
+  Player *p;
+  Data *data;
+  line *line;
+  int size;
+  float scale;
+
+  rasonly(d);
+  glTranslatef(10, 400, 0);
+  size = game->settings->grid_size;
+
+  scale = MAP_SIZE / size;
+
+  glPushMatrix();
+
+  glScalef(scale, scale, scale);
+  glColor3f(1.0, 1.0, 1.0);
+  glBegin(GL_LINE_LOOP);
+  glVertex2i(0, 0);
+  glVertex2i(size, 0);
+  glVertex2i(size, size);
+  glVertex2i(0, size);
+  glEnd();
+
+
+  for(i = 0; i < game->players; i++) {
+    p = &(game->player[i]);
+    data = p->data;
+    if(data->speed > 0) {
+      glBegin(GL_LINES);
+      glColor3fv(p->model->color_alpha);
+      line = &(data->trails[0]);
+      while(line != data->trail) {
+
+	glVertex2f(line->sx, line->sy);
+	glVertex2f(line->ex, line->ey);
+	line++;
+	polycount++;
+      }
+      glVertex2f(line->sx, line->sy);
+      glVertex2f(data->posx, data->posy);
+      glEnd();
+    }
+  }
+  glPopMatrix();
+}
+
 void drawDebugTex(gDisplay *d) {
+  glDisable(GL_DEPTH_TEST);
   /* build2DTex(); */
   /* fprintf(stderr, "%d ", SystemGetElapsedTime()); */
   rasonly(d);
-  glTranslatef(100, 100, 0);
+  glTranslatef(10, 100, 0);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -47,6 +123,14 @@ void drawDebugTex(gDisplay *d) {
   glEnd();
 
   glDisable(GL_TEXTURE_2D);
+
+  glBegin(GL_LINE_LOOP);
+  glVertex2i(0, 0);
+  glVertex2i(255, 0);
+  glVertex2i(255, 255);
+  glVertex2i(0, 255);
+  glEnd();
+
       /*
   int x = 100;
   int y = 100;
@@ -64,7 +148,8 @@ void drawDebugTex(gDisplay *d) {
   glEnd();
   polycount += 4;
   */
-  fprintf(stderr, "%d\n", SystemGetElapsedTime());
+  /* fprintf(stderr, "%d\n", SystemGetElapsedTime()); */
+  glEnable(GL_DEPTH_TEST);
 }
 
 void drawFPS(gDisplay *d) {
@@ -504,7 +589,7 @@ void drawCam(Player *p, gDisplay *d) {
     drawWalls(d);
 
   for(i = 0; i < game->players; i++)
-    drawTraces(&(game->player[i]), d, i);
+    drawTraces(&(game->player[i]), d);
 
   drawPlayers(p);
 
@@ -599,6 +684,3 @@ void initGLGame() {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }
-
-
-

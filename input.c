@@ -24,6 +24,7 @@ int reserved_keys[] = {
   SYSTEM_KEY_F1,
   SYSTEM_KEY_F2,
   SYSTEM_KEY_F3,
+  SYSTEM_KEY_F4,
   SYSTEM_KEY_F5,
   SYSTEM_KEY_F10,
   SYSTEM_KEY_F12
@@ -41,6 +42,7 @@ void keyGame(int k, int x, int y)
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;
+  case SYSTEM_KEY_F4: defaultDisplay(3); break;
 
   case SYSTEM_KEY_F10:
     game->settings->camType = (game->settings->camType + 1) % CAM_COUNT;

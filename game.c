@@ -113,6 +113,7 @@ void initModel(Player *p, int p_num) {
 }
 
 void defaultDisplay(int n) {
+  printf("set display to %d\n", n);
   game->settings->display_type = n;
   game->settings->content[0] = 0;
   game->settings->content[1] = 1;
@@ -139,3 +140,11 @@ void cycleDisplay(int p) {
   }
   changeDisplay();
 }
+
+
+
+
+
+
+
+

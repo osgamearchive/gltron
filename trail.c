@@ -1,6 +1,6 @@
 #include "gltron.h"
 
-void drawTraces(Player *p, gDisplay *d, int instance) {
+void drawTraces(Player *p, gDisplay *d) {
   line *line;
   float height;
   float bdist;

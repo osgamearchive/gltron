@@ -7,8 +7,7 @@
 
 /* todo: define the globals where I need them */
 /* declare them only in gltron.h */
-
-#include "globals.h"
+/* #include "globals.h" */
 
 void mouseWarp() {
   SystemWarpPointer(game->screen->w / 2, game->screen->h / 2);
@@ -36,8 +35,10 @@ void drawGame() {
     }
   }
 
-  if(game->settings->show_2d > 0)
+  if(game->settings->show_2d > 0) {
     drawDebugTex(game->screen);
+    drawDebugLines(game->screen);
+  }
   if(game->settings->show_fps)
     drawFPS(game->screen);
 
@@ -152,8 +153,6 @@ int main( int argc, char *argv[] ) {
 
   initGameStructures();
   resetScores();
-
-  initData();
 
   setupDisplay(game->screen);
   switchCallbacks(&guiCallbacks);

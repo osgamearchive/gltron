@@ -193,11 +193,12 @@ extern int screenshots;
 extern float colors_alpha[][4];
 extern float colors_trail[][4];
 extern float colors_model[][4];
+extern int vps;
 extern int vp_max[];
-extern float vp_x[3][4];
-extern float vp_y[3][4];
-extern float vp_w[3][4];
-extern float vp_h[3][4];
+extern float vp_x[4][4];
+extern float vp_y[4][4];
+extern float vp_w[4][4];
+extern float vp_h[4][4];
 extern unsigned char debugcolors[6][4];
 /* configure keys stuff */
 
@@ -348,7 +349,7 @@ extern void drawPause(gDisplay *d);
 /* extern void drawHelp(gDisplay *d); */
 
 extern void drawFloor(gDisplay *d);
-extern void drawTraces(Player *, gDisplay *d, int instance);
+extern void drawTraces(Player *, gDisplay *d);
 extern void drawPlayers(Player *);
 extern void drawWalls(gDisplay *d);
 

@@ -74,7 +74,6 @@ void initGameStructures() { /* called only once */
   }
 
   changeDisplay();
-  initData();
 }
 
 void initData() {
@@ -210,18 +209,13 @@ void moveStep(Data* data) {
 }
 
 void clearTrail(int player) {
-  int i, j;
-  unsigned char *source;
+  int i;
 
   for(i = 0; i < colwidth * game->settings->grid_size; i++)
     if(colmap[i] == player + 1)
       colmap[i] = 0;
 
-  source = debugcolors[ player + 1 ];
-  for(i = 0; i < DEBUG_TEX_W; i++)
-    for(j = 0; j < DEBUG_TEX_H; j++)
-      if(memcmp(debugtex + j * DEBUG_TEX_W * 4 + i * 4, source, 4) == 0) 
-	memcpy(debugtex + j * DEBUG_TEX_W * 4 + i * 4, debugcolors[ 0 ], 4);
+  rebuildDebugTex();
 }
 
 void crashPlayer(int player) {
@@ -297,6 +291,7 @@ void movePlayers() {
 	  writePosition(i);
 	}
       }
+      /* process turn */
       if(data->turn) {
 	newTrail(data);
 	data->last_dir = data->dir;

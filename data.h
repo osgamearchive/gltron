@@ -16,6 +16,55 @@ typedef struct callbacks {
   void (*mouseMotion)(int, int);
 } callbacks;
 
+typedef struct Grid {
+  int width, height;
+  unsigned char *data;
+} Grid;
+
+typedef struct RuleSet {
+  int eraseCrashed;
+  float speed;
+} RuleSet;
+
+typedef struct Time {
+  int current;
+  int lastFrame;
+  int offset; /* from SystemGetElapsedTime() */
+  int dt; /* current - lastFrame */
+
+  /* float timeScale; */
+} Time;
+
+enum {
+  EVENT_TURN = 1,
+  EVENT_CRASH = 2,
+  EVENT_STOP = 4
+};
+
+typedef struct GameEvent {
+  int type; /* what */
+  int player; /* who */
+  int x; /* where */
+  int y;
+} GameEvent;
+
+typedef struct History History;
+struct History {
+  int timestamp;
+  GameEvent event;
+  History *next;
+};
+  
+typedef struct Game2 {
+  Grid grid;
+  RuleSet rules;
+  int players;
+  int *startPositions;
+  Time time;
+  History *history;
+  History *current;
+} Game2;
+  
 typedef struct line {
   int sx, sy, ex, ey;
 } line;
