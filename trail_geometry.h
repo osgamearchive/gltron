@@ -15,9 +15,9 @@ typedef struct {
 
 void storeVertex(TrailMesh *pMesh, int offset, 
 								 Line *line, int bUseEnd, int trail_height);
-void storeIndices(unsigned short *pIndices, int offset);
+void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset);
 int cmpdir(Line *line1, Line *line2);
 void trailGeometry(Player *pPlayer, TrailMesh *pMesh);
-void trailRender(TrailMesh *pMesh);
+void trailRender(Player *pPlayer, TrailMesh *pMesh);
 
 #endif

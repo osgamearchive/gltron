@@ -7,11 +7,19 @@ void storeVertex(TrailMesh *pMesh, int offset,
 	vec3 v;
 	vec3 pvNormals[] = {
 		{ { 1, 0, 0 } },
-		{ { 0, 1, 0 } }
+		{ { -1, 0, 0 } },
+		{ { 0, 1, 0 } },
+		{ { 0, -1, 0 } }
 	};
 	
-	int iNormal = (line->sx == line->ex) ? 1 : 0;
-		
+	int iNormal;
+	if(line->sx == line->ex)
+		// iNormal = (line->sx <= line->ex) ? 0 : 1;
+		iNormal = 0;
+	else
+		// iNormal = (line->sy <= line->sy) ? 2 : 3;
+		iNormal = 2;
+	
 	if(!bUseEnd) {
 		v.v[0] = line->sx;
 		v.v[1] = line->sy;
@@ -29,11 +37,24 @@ void storeVertex(TrailMesh *pMesh, int offset,
 	vec3Copy(pNormals + 1, pvNormals + iNormal);
 }
 
-void storeIndices(unsigned short *pIndices, int offset) {
-	unsigned short pBase[] = { 0, 2, 3, 1 };
+void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset) {
+	unsigned short ppBase[2][4] = {
+		{ 0, 2, 3, 1 },
+		{ 0, 1, 3, 2 }
+	};
 	int i;
+	int winding;
+
+	if(pMesh->pVertices[vertexOffset].v[0] ==
+		 pMesh->pVertices[vertexOffset + 2].v[0])
+		winding = (pMesh->pVertices[vertexOffset].v[1] <= 
+							 pMesh->pVertices[vertexOffset + 2].v[1]) ? 0 : 1;
+	else
+		winding = (pMesh->pVertices[vertexOffset].v[0] < 
+							 pMesh->pVertices[vertexOffset + 2].v[0]) ? 1 : 0;
+	
 	for(i = 0; i < 4; i++) {
-		pIndices[i] = pBase[i] + offset;
+		pMesh->pIndices[i + indexOffset] = ppBase[winding][i] + vertexOffset;
 	}
 }
 
@@ -47,39 +68,41 @@ int cmpdir(Line *line1, Line *line2) {
 void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 	Data *pData = pPlayer->data;
 	int curVertex = 0, curIndex = 0;
-	unsigned short *pIndices = pMesh->pIndices;
 	int i;
 
-	for(i = 0; i < pData->trailCount; i++) {
+	for(i = 0; i < pData->trailOffset; i++) {
 		if(i == 0 || cmpdir(pData->trails + i - 1, pData->trails + i)) {
 			storeVertex(pMesh, curVertex, pData->trails + i, 0, pData->trail_height);
 			curVertex += 2;
 		}
 		storeVertex(pMesh, curVertex, pData->trails + i, 1,
 								pData->trail_height);
-		storeIndices(pIndices + curIndex, curVertex - 2);
+		storeIndices(pMesh, curIndex, curVertex - 2);
 		curVertex += 2;
 		curIndex += 4;
 	}
-#if 1
-	if(i > 1)
 	{
 		Line line;
-		line.sx = (pData->trail - 1)->ex;
-		line.sy = (pData->trail - 1)->ey;
+		line.sx = pData->trails[pData->trailOffset].sx;
+		line.sy = pData->trails[pData->trailOffset].sy;
 		line.ex = pData->iposx;
 		line.ey = pData->iposy;
+		
+		storeVertex(pMesh, curVertex, &line, 0,
+								pData->trail_height);
+		curVertex += 2;
+
 		storeVertex(pMesh, curVertex, &line, 1,
 								pData->trail_height);
-		storeIndices(pIndices + curIndex, curVertex - 4);
+		storeIndices(pMesh, curIndex, curVertex - 2);
 		curVertex += 2;
 		curIndex += 4;
 	}
-#endif
+
 	pMesh->iUsed = curIndex;
 }
 								 
-void trailRender(TrailMesh *pMesh) {
+void trailRender(Player *pPlayer, TrailMesh *pMesh) {
 	if(pMesh->iUsed == 0)
 		return;
 
@@ -93,14 +116,35 @@ void trailRender(TrailMesh *pMesh) {
 	glVertexPointer(3, GL_FLOAT, 0, pMesh->pVertices);
 	glNormalPointer(GL_FLOAT, 0, pMesh->pNormals);
 
+	// glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
+	glShadeModel(GL_SMOOTH);
+
 	{ 
-		float color[] = { 1, 1, .2, 1 }; 
+		float black[] = { 0, 0, 0, 1 };
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, 
+								 pPlayer->pColorAlpha);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
+	}
+	
+	// glCullFace(GL_BACK);
+	glDrawElements(GL_QUADS, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
+
+#if 0
+	{ 
+		float color[] = { 1, .2, .2, 1 }; 
 		float black[] = { 0, 0, 0, 1 };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
 	}
-	glShadeModel(GL_SMOOTH);
-	glDrawElements(GL_QUADS, pMesh->iUsed - 1, GL_UNSIGNED_SHORT, pMesh->pIndices);
+
+	glCullFace(GL_FRONT);
+	glDrawElements(GL_QUADS, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
+#endif
+
+	glCullFace(GL_BACK);
+	glDisable(GL_CULL_FACE);
+	
 	// glEnable(GL_LIGHTING);
 	checkGLError("trail");
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
