@@ -248,7 +248,6 @@ typedef struct Settings {
   int mouse_warp;
 
   int display_type; /* 0-2 -> 1, 2 or 4 displays on the screen */
-  int content[4]; /* max. 4 individual viewports on the screen */
   int windowMode; /* 0: fullscreen, non-zero: window mode */
   int bitdepth_32; /* 1: 32 bit rendering */
 

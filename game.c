@@ -46,10 +46,10 @@ void initDisplay(gDisplay *d, int type, int p, int onScreen) {
 }  
 
 static void defaultViewportPositions() {
-  game->settings->content[0] = 0;
-  game->settings->content[1] = 1;
-  game->settings->content[2] = 2;
-  game->settings->content[3] = 3;
+  viewport_content[0] = 0;
+  viewport_content[1] = 1;
+  viewport_content[2] = 2;
+  viewport_content[3] = 3;
 }
 
 
@@ -67,7 +67,7 @@ static void autoConfigureDisplay() {
   /* loop thru players and find the humans */
   for (i=0; i < game->players; i++) {
     if (game->player[i].ai->active == AI_HUMAN) {
-      game->settings->content[n_humans] = i;
+      viewport_content[n_humans] = i;
       n_humans++;
     }    
   }
@@ -112,7 +112,7 @@ void updateDisplay(ViewportType newVP) {
     game->player[i].display->onScreen = 0;
   }
   for (i = 0; i < vp_max[newVP]; i++) {
-       initDisplay(game->player[ game->settings->content[i] ].display, 
+       initDisplay(game->player[ viewport_content[i] ].display, 
 		   newVP, i, 1);
   }
 
@@ -151,10 +151,10 @@ void initGameScreen() {
 
 void cycleDisplay(int p) {
   int q;
-  q = (game->settings->content[p] + 1) % game->players;
-  while(q != game->settings->content[p]) {
+  q = (viewport_content[p] + 1) % game->players;
+  while(q != viewport_content[p]) {
     if(game->player[q].display->onScreen == 0)
-      game->settings->content[p] = q;
+      viewport_content[p] = q;
     else q = (q + 1) % game->players;
   }
   changeDisplay();

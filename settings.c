@@ -372,10 +372,10 @@ void initDefaultSettings() {
 
   game->settings->screenSaver = 0;
 
-  game->settings->content[0] = 0;
-  game->settings->content[1] = 1;
-  game->settings->content[2] = 2;
-  game->settings->content[3] = 3;
+  viewport_content[0] = 0;
+  viewport_content[1] = 1;
+  viewport_content[2] = 2;
+  viewport_content[3] = 3;
 
   game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
 

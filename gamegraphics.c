@@ -30,7 +30,7 @@ void drawGame() {
 #endif
 
   for(i = 0; i < vp_max[game->viewportType]; i++) {
-    p = &(game->player[ game->settings->content[i] ]);
+    p = &(game->player[ viewport_content[i] ]);
     if(p->display->onScreen == 1) {
       d = p->display;
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
