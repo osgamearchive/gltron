@@ -41,27 +41,31 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 	pause_message, pause_color_r, pause_color_g, pause_color_b)
 	config = getConfig(width / height)
 	-- speedometer
-	c_pushMatrix()
-	c_translate(config.Speed.x, config.Speed.y, 0)
-	c_drawHUDSurface(eHUD.Speed)
-	drawSpeedDigital(speed_digital, config.Speed_Text, HUDColors.Speed)
-	c_drawHUDMask(eHUD.MaskSpeed, 17)
-	drawSpeedAnalog(speed_analog, HUDSpeedDial.circle, HUDSpeedDial.angles)
-	c_drawHUDMask(eHUD.MaskTurbo, 18)
-	drawTurbo(booster, HUDTurbo.rect, HUDTurbo.ranges)
-	c_drawHUDMask(-1, -1)
-	c_popMatrix()
+	if settings.show_speed == 1 then
+		c_pushMatrix()
+		c_translate(config.Speed.x, config.Speed.y, 0)
+		c_drawHUDSurface(eHUD.Speed)
+		drawSpeedDigital(speed_digital, config.Speed_Text, HUDColors.Speed)
+		c_drawHUDMask(eHUD.MaskSpeed, 17)
+		drawSpeedAnalog(speed_analog, HUDSpeedDial.circle, HUDSpeedDial.angles)
+		c_drawHUDMask(eHUD.MaskTurbo, 18)
+		drawTurbo(booster, HUDTurbo.rect, HUDTurbo.ranges)
+		c_drawHUDMask(-1, -1)
+		c_popMatrix()
+	end
 	
 	-- 2d map
-	c_pushMatrix()
-	c_translate(config.MapFrame.x, config.MapFrame.y, 0)
-	c_drawHUDSurface(eHUD.Map)
-	c_translate(config.Map.x, config.Map.y, 0)
-	c_draw2D(
-		config.Map.w,
-		config.Map.h
-		)
-	c_popMatrix()
+	if settings.show_2d == 1 then
+		c_pushMatrix()
+		c_translate(config.MapFrame.x, config.MapFrame.y, 0)
+		c_drawHUDSurface(eHUD.Map)
+		c_translate(config.Map.x, config.Map.y, 0)
+		c_draw2D(
+			config.Map.w,
+			config.Map.h
+			)
+		c_popMatrix()
+	end
 	
 	-- Score
 	if(settings.show_scores == 1) then

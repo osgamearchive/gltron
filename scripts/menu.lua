@@ -35,6 +35,7 @@ Menu = {
    VideoMenu = { type = MenuC.type.menu, caption = "Video" },
    TextureMenu = { type = MenuC.type.menu, caption = "Texture Options" },
    DetailsMenu = { type = MenuC.type.menu, caption = "Detail Options" },
+   HudMenu = { type = MenuC.type.menu, caption = "HUD Options" },
    ScreenMenu = { type = MenuC.type.menu, caption = "Screen Options" },
    AudioMenu = { type = MenuC.type.menu, caption = "Audio" },
 
@@ -361,7 +362,7 @@ Menu = {
       read = function() return settings.lod; end,
       store = function(value) settings.lod = value; end
    },
-   -- Status Display
+   -- HUD
    FPS_Counter = {
       type = MenuC.type.list, caption = "FPS counter",
       labels = { "off", "on" },
@@ -382,6 +383,27 @@ Menu = {
       values = { 0, 1 },
       read = function() return settings.show_scores; end,
       store = function(value) settings.show_scores = value; end
+   },
+   HUD_Speed = {
+      type = MenuC.type.list, caption = "Speed/Turbo",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.show_speed; end,
+      store = function(value) settings.show_speed = value; end
+   },
+   HUD_Console = {
+      type = MenuC.type.list, caption = "Console",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.show_console; end,
+      store = function(value) settings.show_console = value; end
+   },
+   HUD_2d = {
+      type = MenuC.type.list, caption = "2D Map",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.show_2d; end,
+      store = function(value) settings.show_2d = value; end
    },
 
    -- Screen
@@ -574,16 +596,21 @@ Menu.Player4_KeyMenu.items = {
 }
 
 Menu.VideoMenu.items = {
+   	 "HudMenu",
+	 "DetailsMenu",
 	 "Level", "Artpack", 
 	 "Resolution", "WindowMode", "Apply",
-	 "DetailsMenu"
 	 --, "TimeDemo" 
 }
 
 Menu.DetailsMenu.items = {
    "Filtering", "AlphaTrails", "Halos", "Reflections",
     -- "Lightcycles",
-    "Recognizer", "Lod", "FPS_Counter", "AI_Status", "Scores"
+    "Recognizer", "Lod"
+}
+
+Menu.HudMenu.items = {
+   "HUD_Speed", "HUD_Console", "HUD_2d", "FPS_Counter", "AI_Status", "Scores"
 }
 
 Menu.AudioMenu.items = { 

@@ -57,11 +57,13 @@ settings.reflection = -1
 settings.show_recognizer = 1
 settings.show_impact = 1
 settings.lod = 1
-
+-- hud settings
 settings.show_fps = 0
+settings.show_speed = 1
 settings.show_console = 1
 settings.show_ai_status = 1
 settings.show_scores = 1
+settings.show_2d = 1
 
 -- screen options
 settings.width = 800
