@@ -1,8 +1,8 @@
 /* small utility functions */
 
 #include <stdlib.h>
-#include "nebu_random.h"
-#include "nebu_types.h"
+#include "base/nebu_random.h"
+#include "base/nebu_types.h"
 
 void randomPermutation( int N, int *nodes )
 {

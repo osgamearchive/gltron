@@ -1,4 +1,4 @@
-#include "nebu_matrix.h"
+#include "base/nebu_matrix.h"
 
 #include <assert.h>
 #include <stdlib.h>
