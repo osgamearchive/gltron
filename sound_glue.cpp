@@ -76,7 +76,7 @@ extern "C" {
 
     SDL_AudioSpec* spec = new SDL_AudioSpec;
     spec->freq = 22050;
-    spec->format = AUDIO_S16;
+    spec->format = AUDIO_S16SYS;
     spec->channels = 2;
     spec->samples = 1024;
 
