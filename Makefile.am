@@ -3,7 +3,7 @@
 EXTRA_DIST = CREDITS README.html README.lua COPYING ChangeLog INSTALL FAQ TODO
 
 # SUBDIRS = art data 
-SUBDIRS=lua
+SUBDIRS=lua data art sounds
 
 bin_PROGRAMS = gltron
 

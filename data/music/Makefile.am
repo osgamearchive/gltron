@@ -1,5 +1,3 @@
-musicdir = ${pkgdatadir}/music
+pkgdata_DATA = song_revenge_of_cats.it.gz
 
-music_DATA = song_revenge_of_cats.it.gz
-
-EXTRA_DIST = $(music_DATA)
+pkgdatadir = @datadir@/@PACKAGE@/data/music
