@@ -96,28 +96,28 @@ void parse_args(int argc, const char *argv[]) {
 	  setSettingi("height", 240);
 	  break;
 	case '2': 
-	  setSettingi("width", 400);
-	  setSettingi("height", 300);
-	  break;
-	case '3': 
 	  setSettingi("width", 512);
 	  setSettingi("height", 384);
 	  break;
-	case '4': 
+	case '3': 
 	  setSettingi("width", 640);
 	  setSettingi("height", 480);
 	  break;
-	case '5': 
+	case '4': 
 	  setSettingi("width", 800);
 	  setSettingi("height", 600);
 	  break;
-	case '6':
+	case '5':
 	  setSettingi("width", 1024);
 	  setSettingi("height", 768);
 	  break;
-	case '7': 
+	case '6': 
 	  setSettingi("width", 1280);
 	  setSettingi("height", 1024);
+	  break;
+	case '7': 
+	  setSettingi("width", 1600);
+	  setSettingi("height", 1200);
 	  break;
 	case 's':
 	  setSettingi("playMusic", 0);
@@ -136,12 +136,12 @@ void parse_args(int argc, const char *argv[]) {
 	  printf("-c\tdon't show ai status\n");
 	  printf("-C\tshow ai status (default: on)\n");
 	  printf("-1\tSet resolution to 320x240\n");
-	  printf("-2\tSet resolution to 400x300\n");
-	  printf("-3\tSet resolution to 512x384\n");
-	  printf("-4\tSet resolution to 640x480 (default)\n");
-	  printf("-5\tSet resolution to 800x600\n");
-	  printf("-6\tSet resolution to 1024x768\n");
-	  printf("-7\tSet resolution to 1280x1024\n");
+	  printf("-2\tSet resolution to 512x384\n");
+	  printf("-3\tSet resolution to 640x480\n");
+	  printf("-4\tSet resolution to 800x600 (default)\n");
+	  printf("-5\tSet resolution to 1024x768\n");
+	  printf("-6\tSet resolution to 1280x1024\n");
+	  printf("-7\tSet resolution to 1600x1200\n");
 
 	  printf("-s\tDon't play sound\n");
 	  /* printf("-v\tStart in demo/screensaver mode\n"); */
