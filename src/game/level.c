@@ -9,6 +9,37 @@ void game_FreeLevel(game_level *l) {
 	free(l);
 }
 
+void game_ScaleLevel(game_level *l, float fSize)
+{
+	int i;
+	for(i = 0; i < l->nBoundaries; i++)
+	{
+		vec2_Scale(& l->boundaries[i].vStart, &l->boundaries[i].vStart, fSize);
+		vec2_Scale(& l->boundaries[i].vDirection, &l->boundaries[i].vDirection, fSize);
+	}
+	for(i = 0; i < l->nSpawnPoints; i++)
+	{
+		vec2_Scale(& l->spawnPoints[i], & l->spawnPoints[i], fSize);
+	}
+
+	vec2_Scale(& l->boundingBox.vMin, & l->boundingBox.vMin, fSize);
+	vec2_Scale(& l->boundingBox.vMax, & l->boundingBox.vMax, fSize);
+}
+
+void computeBoundingBox(game_level *l)
+{
+	int i;
+
+	box2_Init(& l->boundingBox);
+	for(i = 0; i < l->nBoundaries; i++)
+	{
+		vec2 vEnd;
+		vec2_Add(&vEnd, & l->boundaries[i].vStart, & l->boundaries[i].vDirection);
+		box2_Extend(& l->boundingBox, & l->boundaries[i].vStart);
+		box2_Extend(& l->boundingBox, & vEnd);
+	}
+}
+
 game_level* game_CreateLevel(const char *name) {
 	int i;
 	game_level* l;
@@ -33,6 +64,8 @@ game_level* game_CreateLevel(const char *name) {
 	scripting_GetArraySize(& l->nSpawnPoints);
 	// copy spawnpoints into vec2's
 	l->spawnPoints = malloc(l->nSpawnPoints * sizeof(vec2));
+
+	// fixme, use scalability
 	for(i = 0; i < l->nSpawnPoints; i++) {
 		scripting_GetArrayIndex(i + 1);
 
@@ -76,5 +109,8 @@ game_level* game_CreateLevel(const char *name) {
 	scripting_PopTable(); // boundary
 
 	scripting_PopTable(); // level
+
+	computeBoundingBox(l);
+
 	return l;
 }
