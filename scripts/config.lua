@@ -1,13 +1,34 @@
--- sound
-playEffects = 1
-playMusic = 0
+-- game
+-- game rules
+speed = 8.5
+ai_level = 2
+grid_size = 720
+erase_crashed = 1
 
--- settings
+-- game settings
+fast_finish = 1
+camType = 3
+display_type = 3
+
+-- video
+-- texture settings
+show_floor_texture = 1
+show_wall = 1
+show_crash_texture = 1
+show_skybox = 1
+show_decals = 1
+use_mipmaps = 1
+mipmap_filter = 1
+stretch_textures = 1
+-- detail settings
+
+-- other settings
 show_gl_logo = 1
 windowMode = 1
 
--- game
-grid_size = 720
+-- audio
+playEffects = 1
+playMusic = 0
 
 -- colors
 
