@@ -33,14 +33,28 @@ void normcrossprod(float *v1, float *v2, float *out) {
 	normalize(out);
 }
 
+float scalarprod2(float *v1, float *v2) {
+	return v1[0] * v2[0] + v1[1] * v2[1];
+}
+
 float scalarprod(float *v1, float *v2) {
 	return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+}
+
+void vsub2(float *v1, float *v2, float *out) {
+	out[0] = v1[0] - v2[0];
+	out[1] = v1[1] - v2[1];
 }
 
 void vsub(float *v1, float *v2, float *out) {
 	out[0] = v1[0] - v2[0];
 	out[1] = v1[1] - v2[1];
 	out[2] = v1[2] - v2[2];
+}
+
+void vadd2(float *v1, float *v2, float *out) {
+	out[0] = v1[0] + v2[0];
+	out[1] = v1[1] + v2[1];
 }
 
 void vadd(float *v1, float *v2, float *out) {
