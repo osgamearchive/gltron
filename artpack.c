@@ -1,38 +1,35 @@
 #include "gltron.h"
 
-char **artpack_list;
-int artpack_index = 0;
-
 void initArtpacks() {
-  list *l, *p;
-  int i = 0, n = 0;
+  char *art_path;
+  list *artList;
+  list *p;
+  int i;
 
-  l = readDirectoryContents(PATH_ART, NULL);
-  for(p = l; p->next != NULL; p = p->next)
-    n++;
-
-  artpack_list = (char**) malloc((n + 1) * sizeof(char*));
-  
-  for(p = l; p->next != NULL; p = p->next) {
-    artpack_list[i] = (char*) malloc(strlen( (char*) p->data ) + 1);
-    memcpy(artpack_list[i], p->data, strlen( (char*) p->data ) + 1);
-    printf("loading artpack %s\n", artpack_list[i]);
-    if(strstr(artpack_list[i], "default") == artpack_list[i])
-      artpack_index = i;
-    i++;
-
+  art_path = getDirectory( PATH_ART );
+  artList = readDirectoryContents(art_path, NULL);
+  if(artList->next == NULL) {
+    fprintf(stderr, "no art files found...exiting\n");
+    exit(1);
   }
-  printf("loaded %d artpacks\n", i);
-  artpack_list[i] = NULL;
+  
+  i = 1;
+  for(p = artList; p->next != NULL; p = p->next) {
+    scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
+    i++;
+  }
+  scripting_Run("setupArtpacks()");
 }
 
 void loadArt() {
   char *path;
   char *artpack;
 
-  artpack = artpack_list[artpack_index];
-
+  scripting_GetString("current_artpack", &artpack);
+  fprintf(stderr, "loading artpack '%s'\n", artpack);
   path = getArtPath(artpack, "artpack.ini");
+  free(artpack);
+
   if(path != NULL) {
     scripting_RunFile(path);
     free(path);
