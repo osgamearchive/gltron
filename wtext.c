@@ -136,7 +136,7 @@ draw_wtext( Wtext *wtext )
       if( wtext->buffer[i][0] == '\0' ) //Why is this necessary?? !!!
 	return;
       //printf("line %d -> %s\n", i, wtext->buffer[i]);
-      ftxRenderString(gameFtx, wtext->buffer[i], strlen(wtext->buffer[i]));   
+      //ftxRenderString(gameFtx, wtext->buffer[i], strlen(wtext->buffer[i]));
       drawText(gameFtx, wtext->x, y, h, wtext->buffer[i]);   
     }
 }

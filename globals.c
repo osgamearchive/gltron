@@ -130,7 +130,11 @@ int *quadBufIndex;
 
 
 int game_textures = 17; /* 10 + 6 + debug texture */
+#ifdef __NETWORK__
+int n_textures = 12;
+#else
 int n_textures = 11;
+#endif
 
 texture_info textures[] = {
   { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR },
@@ -143,8 +147,10 @@ texture_info textures[] = {
   { 1, "gltron_crash", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_CRASH },
   { 1, "gltron_trail", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_TRAIL },
   { 1, "gltron_traildecal", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_DECAL },
-  { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX }
-
+  { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX },
+#ifdef __NETWORK__
+  { 1, "network", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_PREGAME }
+#endif
 };
 
 float shadow_color[] = { 0, 0, 0, .8 };

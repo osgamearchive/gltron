@@ -11,6 +11,7 @@ void initArtpacks() {
   for(p = l; p->next != NULL; p = p->next)
     n++;
 
+
   artpack_list = (char**) malloc((n + 1) * sizeof(char*));
   
   for(p = l; p->next != NULL; p = p->next) {
