@@ -1,6 +1,8 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+#define NEW_LEVEL_DRAW
+
 #include "game/camera.h"
 #include "video/fonttex.h"
 #include "video/model.h"
