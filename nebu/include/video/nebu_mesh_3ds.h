@@ -13,11 +13,11 @@
 
 #include "nebu_mesh.h"
 
-typedef Lib3dsFile nebu_Mesh_3DSFile;
+typedef Lib3dsFile nebu_Mesh_3ds_File;
 
-nebu_Mesh_3DSFile* nebu_Mesh_Load3DSFile(const char *filename);
-nebu_Mesh* nebu_Mesh_GetFrom3DSFile(nebu_Mesh_3DSFile *file);
-nebu_Mesh* nebu_Mesh_Load3DS(const char *filename);
-void nebu_Mesh_Free3DSFile(nebu_Mesh_3DSFile *file);
+nebu_Mesh_3ds_File* nebu_Mesh_3ds_LoadFile(const char *filename);
+nebu_Mesh* nebu_Mesh_3ds_GetFromFile(nebu_Mesh_3ds_File *file);
+nebu_Mesh* nebu_Mesh_3ds_Load(const char *filename);
+void nebu_Mesh_3ds_FreeFile(nebu_Mesh_3ds_File *file);
 
 #endif
