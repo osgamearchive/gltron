@@ -199,20 +199,6 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  if (spoke_time > 140 - (p->data->speed * 10) 
-      && game->pauseflag == PAUSE_GAME_RUNNING) {
-    if (pV->spoke_state == 1) {
-      pV->spoke_state = 0;
-      SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
-      SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
-    } else {
-      pV->spoke_state = 1;
-      SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
-      SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
-    }
-    pV->spoke_time = game2->time.current;
-  }
-
   if (game2->settingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
   }
@@ -225,6 +211,21 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
+    /* draw spoke animation */
+    if (spoke_time > 140 - (p->data->speed * 10) 
+        && game->pauseflag == PAUSE_GAME_RUNNING) {
+      if (pV->spoke_state == 1) {
+        pV->spoke_state = 0;
+        SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
+        SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
+      } else {
+        pV->spoke_state = 1;
+        SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
+        SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
+      }
+      pV->spoke_time = game2->time.current;
+    }
+    
     glEnable(GL_CULL_FACE);
     drawModel(cycle, TRI_MESH);
     glDisable(GL_CULL_FACE);
