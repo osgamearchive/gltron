@@ -16,7 +16,7 @@ new_wtext(int width, int height, int posx, int posy)
   wtext->current     = 0;
   wtext->cur_char    = 0;
 
-  wtext->buffer      = ( char ** ) malloc( wtext->height*(wtext->width+1) );
+  wtext->buffer      = ( char ** ) malloc( wtext->height * sizeof(char *) );
 
   //put blanck text for each line.
   for( i=0; i< wtext->height; ++i )
