@@ -30,7 +30,8 @@ void SystemInit(int *argc, char *argv[]) {
     fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
     exit(2);
   }
-  video_initialized = 1;
+  else video_initialized = 1;
+
   if(SDL_Init(SDL_INIT_AUDIO) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
   }
@@ -59,11 +60,11 @@ void SystemWarpPointer(int x, int y) {
 }
 
 void SystemHidePointer() {
-  SDL_ShowCursor(0);
+  /* SDL_ShowCursor(0); */
 }
 
 void SystemUnhidePointer() {
-  SDL_ShowCursor(1);
+  /* SDL_ShowCursor(1); */
 }
 
 void SystemMouse(int buttons, int state, int x, int y) {
