@@ -12,3 +12,4 @@ extern sgi_texture* load_sgi_texture(char *filename);
 extern void unload_sgi_texture(sgi_texture *tex);
 
 #endif
+

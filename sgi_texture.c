@@ -47,12 +47,12 @@ sgi_texture* load_sgi_texture(char *filename) {
 
   bpc = buf[3];  
 
-  if((buf[10] << 8) + buf[11] != 4) {
-    fprintf(stderr, ERR_PREFIX "number of channels is != 4 - not supported\n");
+  zsize = (buf[10] << 8) + buf[11];
+  if(zsize != 3 && zsize != 4) {
+    fprintf(stderr, ERR_PREFIX "number of channels is %d - not supported\n",
+	    zsize);
     return 0;
   }
-
-  zsize = (buf[10] << 8) + buf[11];
 
   x = (buf[6] << 8) + buf[7];
   y = (buf[8] << 8) + buf[9];

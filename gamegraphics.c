@@ -80,7 +80,7 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
   data = p->data;
   height = data->trail_height;
   if(height > 0) {
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     glColor4fv(p->model->color_alpha);
     /* glColor4f(0.5, 0.5, 0.5, 0.8); */
@@ -94,8 +94,14 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
       line++;
       polycount++;
     }
-    glVertex3f(line->ex, line->ey, 0.0);
-    glVertex3f(line->ex, line->ey, height);
+
+    /* modify end of trail */
+#define BOW_LENGTH 6
+    glVertex3f(line->ex - BOW_LENGTH * dirsX[ data->dir ], 
+	       line->ey - BOW_LENGTH * dirsY[ data->dir ], 0.0);
+    glVertex3f(line->ex - BOW_LENGTH * dirsX[ data->dir ], 
+	       line->ey - BOW_LENGTH * dirsY[ data->dir ], height);
+#undef BOW_LENGTH
     polycount += 2;
     glEnd();
 

@@ -9,6 +9,7 @@
 void loadTexture(char *filename, int format) {
   char *path;
   sgi_texture *tex;
+  GLint internal;
 
   path = getFullPath(filename);
   if(path != 0)
@@ -17,20 +18,26 @@ void loadTexture(char *filename, int format) {
     fprintf(stderr, "fatal: could not load %s, exiting...\n", filename);
     exit(1);
   }
+
+  if(tex->channels == 3) internal = GL_RGB;
+  else internal = GL_RGBA;
   /* TODO: build mipmaps the proper way, box filters suck */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   if(game->settings->use_mipmaps) {
     gluBuild2DMipmaps(GL_TEXTURE_2D, format, tex->width, tex->height, 
-		      GL_RGBA, GL_UNSIGNED_BYTE, tex->data);
+		      internal, GL_UNSIGNED_BYTE, tex->data);
   } else { 
     glTexImage2D(GL_TEXTURE_2D, 0, format, tex->width, tex->height, 0,
-		 GL_RGBA, GL_UNSIGNED_BYTE, tex->data);
+		 internal, GL_UNSIGNED_BYTE, tex->data);
   }
 
   free(tex->data);
   free(tex);
 }
 #endif
+
+/* the following code uses SDL_image to load the textures */
+/* currently not used */
 
 #ifdef SDL_TEX
 
@@ -91,16 +98,13 @@ int loadTexture(char *name, int wantedFormat) {
   /* TODO: build mipmaps the proper way, box filters suck */
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  /*   glTexImage2D(GL_TEXTURE_2D, 0, format, image->w, image->h, 0,
-       format, GL_UNSIGNED_BYTE, data); */
-  gluBuild2DMipmaps(GL_TEXTURE_2D, format, image->w, image->h, 
-                    format, GL_UNSIGNED_BYTE, data);
-
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  if(game->settings->use_mipmaps) {
+    gluBuild2DMipmaps(GL_TEXTURE_2D, format, image->w, image->h, 
+		      format, GL_UNSIGNED_BYTE, data);
+  } else { 
+    glTexImage2D(GL_TEXTURE_2D, 0, format, image->w, image->h, 0,
+		 format, GL_UNSIGNED_BYTE, data);
+  }
 
   free(data);
   SDL_FreeSurface(image);

@@ -207,11 +207,11 @@ void initData() {
     /* arrange players in circle around center */
     data->posx = game->settings->grid_size / 2 +
       game->settings->grid_size / 4 *
-      cos ( (float) (i * 2 * M_PI) / (float) game->players );
+      (float) cos ( (float) (i * 2 * M_PI) / (float) game->players );
 
     data->posy = game->settings->grid_size / 2 +
       game->settings->grid_size / 4 * 
-      sin ( (float) (i * 2 * M_PI) / (float) game->players );
+      (float) sin ( (float) (i * 2 * M_PI) / (float) game->players );
 
     cam->camType = game->settings->camType;
     cam->target[0] = data->posx;
@@ -431,6 +431,7 @@ void movePlayers() {
 	FACTOR * cos(i * M_PI / 4.0 + (float)(lasttime % FREQ) * 2.0 * M_PI / (float)FREQ);
 #undef FREQ
 #undef FACTOR
+
       newx = data->posx + dt / 100 * data->speed * dirsX[data->dir] * fs;
       newy = data->posy + dt / 100 * data->speed * dirsY[data->dir] * fs;
       
@@ -447,8 +448,8 @@ void movePlayers() {
 	    playGameFX(fx_crash);
 #endif
 	  /* set endpoint to collision coordinates */
-	  newx = x;
-	  newy = y;
+	  newx = (float)x;
+	  newy = (float)y;
 	  /* update scores; */
 	  if(game->settings->screenSaver != 1)
 	  for(j = 0; j < game->players; j++) {

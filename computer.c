@@ -5,14 +5,14 @@ int freeway(Data *data, int dir) {
   int wd = 20;
 
   for(i = 1; i < wd; i++)
-    if(getCol(data->posx + dirsX[dir] * i, data->posy + dirsY[dir] * i,
+    if(getCol((int)data->posx + dirsX[dir] * i, (int)data->posy + dirsY[dir] * i,
        colwidth, colmap)) break;
   return i;
 }
 
 void getDistPoint(Data *data, int d, int *x, int *y) {
-  *x = data->posx + dirsX[data->dir] * d;
-  *y = data->posy + dirsY[data->dir] * d;
+  *x = (int)data->posx + dirsX[data->dir] * d;
+  *y = (int)data->posy + dirsY[data->dir] * d;
 }
   
 void doComputer(Player *me, Data *him) {
@@ -69,10 +69,10 @@ void doComputer(Player *me, Data *him) {
   } else if(ai->moves >= maxmoves) {
     dir1 = (data->dir + 1) % 4;
     dir2 = (data->dir + 3) % 4;
-    d1 = abs(data->posx + dirsX[dir1] - him->posx) +
-      abs(data->posy + dirsY[dir1] - him->posy);
-    d2 = abs(data->posx + dirsX[dir2] - him->posx) +
-      abs(data->posy + dirsY[dir2] - him->posy);
+    d1 = abs((int)data->posx + dirsX[dir1] - (int)him->posx) +
+      abs((int)data->posy + dirsY[dir1] - (int)him->posy);
+    d2 = abs((int)data->posx + dirsX[dir2] - (int)him->posx) +
+      abs((int)data->posy + dirsY[dir2] - (int)him->posy);
     tvalue = (d1 < d2) ? 1 : 3;
     if(freeway(data, (data->dir + tvalue) % 4) > fd) {
       turn(data, tvalue);

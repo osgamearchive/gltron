@@ -20,7 +20,9 @@
 #include <windows.h>
 #define SOUND
 #define M_PI 3.141592654
+#undef SEPERATOR
 #define SEPERATOR '\\'
+#undef RC_NAME
 #define RC_NAME "gltron.ini"
 #endif
 
@@ -36,7 +38,9 @@
 #include <string.h>
 #include <console.h>
 #define M_PI 3.141592654
+#undef SEPERATOR
 #define SEPERATOR ':'
+#undef RC_NAME
 #define RC_NAME "gltron.ini"
 #endif
 

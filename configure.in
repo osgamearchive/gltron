@@ -6,12 +6,14 @@ dnl Checks for programs.
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lGL:
 LIBS='-L/usr/X11R6/lib'
+CC='gcc'
+AC_CHECK_LIB(m, main,, AC_MSG_ERROR(libm is needed))
+AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
 AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(OpenGL is needed))
 AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU should come with OpenGL))
 AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
 AC_CHECK_LIB(SDL, main,, AC_MSG_ERROR(SDL is needed, -lpthread))
 AC_CHECK_LIB(SDL_mixer, main,, AC_MSG_ERROR(SDL_mixer is needed))
-AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
 
 dnl Checks for header files.
 AC_HEADER_STDC
