@@ -8,6 +8,7 @@ Bugs:
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
 - preferences/snapshot directory isn't created if it doesn't exist
+- fix sound hiccup on exit (it's preventing e.g. restoring screen resolution)
 
 Features:
 
