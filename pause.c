@@ -87,7 +87,7 @@ void initPauseGL() {
 
 callbacks pauseCallbacks = {
   displayPause, idlePause, keyboardPause,
-  initPause, exitPause, initPauseGL, gameMouse, gameMouseMotion
+  initPause, exitPause, initPauseGL, gameMouse, gameMouseMotion, "pause"
 };
 
 void keyboardPrompt(int key, int x, int y) {
@@ -107,7 +107,7 @@ void exitPrompt() { }
 
 callbacks promptCallbacks = {
   displayPause, idlePause, keyboardPrompt,
-  initPrompt, exitPrompt, NULL, NULL, NULL
+  initPrompt, exitPrompt, NULL, NULL, NULL, "prompt"
 };
 
 

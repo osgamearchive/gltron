@@ -252,11 +252,11 @@ void guiMouseMotion(int mx, int my) {
 
 callbacks configureCallbacks = {
   displayConfigure, idleGui, keyboardConfigure, initGui, exitGui, initGLGui,
-  NULL, NULL
+  NULL, NULL, "configure"
 };
 
 callbacks guiCallbacks = {
   displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui, 
-  guiMouse, guiMouseMotion
+  guiMouse, guiMouseMotion, "gui"
 };
 

@@ -19,8 +19,11 @@ void initCallback(callbacks *cb) {
 
 
 void switchCallbacks(callbacks *new) {
-  exitCallback(last_callback);
+	if(current_callback)
+		fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
+  exitCallback(current_callback);
   SystemRegisterCallbacks(new);
+	fprintf(stderr, "callbacks: initializing %s\n", new->name);
   initCallback(new);
 
   last_callback = current_callback;
