@@ -17,7 +17,7 @@
  # along with  this program;  if not, write to the  Free Software Foundation,
  # Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  #
- # $Id: Makefile.am,v 1.1 2004/05/31 08:01:30 andi75 Exp $
+ # $Id: Makefile.am,v 1.2 2004/09/08 11:55:12 andi75 Exp $
  #
 
 lib3dsdir=$(includedir)/lib3ds
@@ -68,5 +68,6 @@ lib3ds_HEADERS = \
   camera.h \
   light.h \
   tracks.h \
-  node.h
+  node.h \
+  config.h
 
