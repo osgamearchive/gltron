@@ -56,8 +56,8 @@ namespace Sound {
 		list *p;
 		for(p = & _sources; p->next != NULL; p = p->next) {
 			Source *source = (Source*) p->data;
-			// check if source is removable
-			if(source->IsRemovable()) {
+			// check if source is removable & has stopped playing
+			if(source->IsRemovable() && !source->IsPlaying()) {
 				// get rid of data
 				p->data = p->next->data;
 				list *tmp = p->next;
