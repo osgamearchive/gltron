@@ -50,7 +50,9 @@ void initTexture(Visual *d) {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
+#ifndef GL_TEXTURE_MAX_ANISOTROPY_EXT
 #define GL_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
+#endif
 
 #if 0
 				if(renderer.ext_filter_anisotropic) {
