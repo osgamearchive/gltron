@@ -213,7 +213,7 @@ char *getArtPath(const char *artpack, const char *filename ) {
 }
     
 int fileExists(const char *path) {
-  FILE* f;
+  FILE *f;
   if((f = fopen(path, "r"))) {
     fclose(f);
     return 1;
