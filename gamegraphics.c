@@ -101,6 +101,7 @@ void initModelLights(int light) {
 void initTrailLights(int light) {
   /* doing my own lighting for that now */
   /* int light is currently ignored */
+  float amb[] = { 0.2, 0.2, 0.2, 1};
   setFactor3fv(amb);
   setLight4fv(arena);
 }
