@@ -119,9 +119,7 @@ settings.keys = {
    }
 }
 
--- colors
--- most of these settings have been moved to art/default/artpack.lua
-
-clear_color = { 0, 0, 0, 0 }
-
-
+-- these tables are not serialized to RCNAME (yet)
+-- some values are set in artpack.lua
+video = {} 
+video.settings = {}

@@ -4,11 +4,12 @@ menu_item_active1 = { .5, 1, 0, 1 }
 menu_item_active2 = { 1, 0, 0, 1 }
 
 -- texture settings
-settings.show_floor_texture = 1
-settings.show_wall = 1
-settings.show_crash_texture = 1
-settings.show_skybox = 1
-settings.show_decals = 1
+video.settings.show_floor_texture = 1
+video.settings.show_wall = 1
+video.settings.show_crash_texture = 1
+video.settings.show_skybox = 1
+video.settings.show_decals = 1
+video.settings.stretch_textures = 1
 
 -- lightcycle colors
 model_diffuse_0 = { 1.000, 0.550, 0.140, 1.000 }
@@ -25,7 +26,5 @@ trail_diffuse_0 = { 1.000, 0.850, 0.140, 0.600 }
 trail_diffuse_1 = { 0.750, 0.020, 0.020, 0.600 }
 trail_diffuse_2 = { 0.120, 0.520, 0.600, 0.600 }
 trail_diffuse_3 = { 0.700, 0.700, 0.700, 0.600 }
-
-settings.stretch_textures = 1
 
 clear_color = { 0, 0, 0, 0 }
