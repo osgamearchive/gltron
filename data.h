@@ -25,6 +25,7 @@ typedef struct Grid {
 typedef struct RuleSet {
   int eraseCrashed;
   float speed;
+  int grid_size;
 } RuleSet;
 
 typedef struct Time {
@@ -180,7 +181,6 @@ typedef struct gDisplay {
   /* software rendering stuff */
   unsigned char *pixelGui;
   fontbmp *bitfont;
-  Artpack artpack;
 } gDisplay;
 
 typedef struct Player {
