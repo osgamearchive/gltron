@@ -22,7 +22,6 @@ typedef struct {
 } screenshot_info_t;
 
 static FILE *fp;
-static char filename[PATH_MAX];
 
 static void user_write_data(png_structp png_ptr,
 		     png_bytep data, png_size_t length) {
@@ -85,12 +84,20 @@ static int writePixmapToPng(screenshot_info_t *screenshot, char *fname) {
 /*
     getNextFilename - find the next free filename in series.
  */
-static void getNextFilename(char *fname, const char *suffix, int *start_at) {
+static char* getNextFilename(const char *suffix, int *start_at) {
+  char *path = NULL;
+  char fname[PATH_MAX];
   do {
+    if(path != NULL)
+      free(path);
+
     (*start_at)++;
     sprintf(fname, "%s-%s-%d%s", SCREENSHOT_PREFIX, VERSION, *start_at, 
             suffix);
-  } while (fileExists(fname));
+    path = getPossiblePath( PATH_SNAPSHOTS, fname );
+  } while ( fileExists(path));
+
+  return path;
 }
   
 static int captureScreenToPixmap(screenshot_info_t *img, gDisplay *display) { 
@@ -108,38 +115,44 @@ static int captureScreenToPixmap(screenshot_info_t *img, gDisplay *display) {
 void doPngScreenShot(gDisplay *display) {
   screenshot_info_t screenshot;
   static int last_png_num; /* store last free file index. */
+  char *path;
+  path = getNextFilename(".png", &last_png_num);
+  if(path != NULL) {
+    if (captureScreenToPixmap(&screenshot, display) != 0) {
+      fprintf(stderr, "Error capturing screenshot\n");
+      return;
+    }
   
-  getNextFilename(filename, ".png", &last_png_num);
-  if (captureScreenToPixmap(&screenshot, display) != 0) {
-    fprintf(stderr, "Error capturing screenshot\n");
-    return;
+    if (writePixmapToPng(&screenshot, path) != 0) {
+      fprintf(stderr, "Error writing screenshot %s\n", path);
+    } else {
+      fprintf(stderr, "Screenshot written to %s\n", path);
+    }
+    free(screenshot.pixmap);
+    free(path);
   }
-  
-  if (writePixmapToPng(&screenshot, filename) != 0) {
-    fprintf(stderr, "Error writing screenshot %s\n", filename);
-  } else {
-    fprintf(stderr, "Screenshot written to %s\n", filename);
-  }
-  
-  free(screenshot.pixmap);
 }
 
 void doBmpScreenShot(gDisplay *display) {
   screenshot_info_t screenshot;
   static int last_bmp_num; /* store last free file index. */
+  char *path;
+  path = getNextFilename(".bmp", &last_bmp_num);
+  if(path != NULL) {
+    if (captureScreenToPixmap(&screenshot, display) != 0) {
+      fprintf(stderr, "Error capturing screenshot\n");
+      return;
+    }
   
-  getNextFilename(filename, ".bmp", &last_bmp_num);
-  if (captureScreenToPixmap(&screenshot, display) != 0) {
-    fprintf(stderr, "Error capturing screenshot\n");
-    return;
+    if (SystemWriteBMP(path, screenshot.width, screenshot.height,
+		       screenshot.pixmap) != 0) {
+      fprintf(stderr, "Error writing screenshot %s\n", path);
+    } else {
+      fprintf(stderr, "Screenshot written to %s\n", path);
+    }
+  
+    free(screenshot.pixmap);
+    free(path);
   }
-  
-  if (SystemWriteBMP(filename, screenshot.width, screenshot.height,
-      screenshot.pixmap) != 0) {
-    fprintf(stderr, "Error writing screenshot %s\n", filename);
-  } else {
-    fprintf(stderr, "Screenshot written to %s\n", filename);
-  }
-  
-  free(screenshot.pixmap);
 }
+
