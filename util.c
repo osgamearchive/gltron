@@ -12,8 +12,8 @@ void randomPermutation( int N, int *nodes )
     int s, t;
     int tmp;
     t = N - 1 - i;
-    // s = (int) ((float)( t + 1 ) * rand() / (RAND_MAX + 1.0f));
-    s = rand() % (t + 1);
+    // s = (int) ((float)( t + 1 ) * trand() / (RAND_MAX + 1.0f));
+    s = trand() % (t + 1);
     tmp = nodes[t];
     nodes[t] = nodes[s];
     nodes[s] = tmp;

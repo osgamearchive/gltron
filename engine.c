@@ -154,7 +154,7 @@ void initPlayerData() {
     data->iposy = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
     if(i == 0) data->iposy -= 1;
     /* randomize starting direction */
-    data->dir = rand() & 3;
+    data->dir = trand() & 3;
     /* data->dir = startdir[i]; */
     data->last_dir = data->dir;
     data->posx = data->iposx;
