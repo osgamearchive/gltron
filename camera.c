@@ -5,7 +5,7 @@ static void writeCamDefaults(Camera *cam, int type) {
   cam_defaults[cam->type->type][type] = cam->movement[type];
 }
 
-#define CLAMP_R_MIN 5
+#define CLAMP_R_MIN 6
 #define CLAMP_R_MAX 45
 #define CLAMP_CHI_MIN M_PI / 8
 #define CLAMP_CHI_MAX 3 * M_PI / 8
