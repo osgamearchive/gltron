@@ -37,8 +37,10 @@ void mouseCredits (int buttons, int state, int x, int y)
 	}
 }
 
-void keyCredits(int k, int x, int y)
+void keyCredits(int state, int k, int x, int y)
 {
+	if(state == SYSTEM_KEYSTATE_UP)
+		return;
   SystemExit();
 	exit(0);
 }
@@ -78,7 +80,6 @@ void displayCredits() {
 void initCredits() {
   coffset = SystemGetElapsedTime();
 }
-
 
 Callbacks creditsCallbacks = { 
   displayCredits, idleCredits, keyCredits, initCredits, 

@@ -18,7 +18,10 @@ void displayPause() {
   SystemSwapBuffers();
 }
 
-void keyboardPause(int key, int x, int y) {
+void keyboardPause(int state, int key, int x, int y) {
+	if(state == SYSTEM_KEYSTATE_UP)
+		return;
+
   switch(key) {
   case 27:
 		SystemExitLoop(RETURN_PAUSE_ESCAPE);
@@ -81,7 +84,10 @@ Callbacks pauseCallbacks = {
   initPause, exitPause, initPauseGL, gameMouse, gameMouseMotion, "pause"
 };
 
-void keyboardPrompt(int key, int x, int y) {
+void keyboardPrompt(int state, int key, int x, int y) {
+	if(state == SYSTEM_KEYSTATE_UP)
+		return;
+
   switch(key) {
   case 27:
   case SYSTEM_KEY_TAB:

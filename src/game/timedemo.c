@@ -71,7 +71,10 @@ void idleTimedemo(void) {
 	game2->time.lastFrame += 20;
 }
 
-void keyTimedemo(int key, int x, int y) {
+void keyTimedemo(int state, int key, int x, int y) {
+	if(state == SYSTEM_KEYSTATE_UP)
+		return;
+
 	if(key == 27)
 		SystemExitLoop(RETURN_TIMEDEMO_ABORT);
 }

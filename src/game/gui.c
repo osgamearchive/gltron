@@ -129,14 +129,20 @@ void idleGui() {
   SystemPostRedisplay(); /* animate menu */
 }
 
-void keyboardConfigure(int key, int x, int y) {
-  scripting_RunFormat("settings.keys[ configure_player ][ configure_event ]"
-		      "= %d", key);
-	SystemExitLoop(RETURN_PROMPT_ESCAPE);
+void keyboardConfigure(int state, int key, int x, int y) {
+	if(state == SYSTEM_KEYSTATE_DOWN) {
+		scripting_RunFormat("settings.keys[ configure_player ][ configure_event ]"
+												"= %d", key);
+		SystemExitLoop(RETURN_PROMPT_ESCAPE);
+	}
 }
 
-void keyboardGui(int key, int x, int y) {
+void keyboardGui(int state, int key, int x, int y) {
   char *pMenuName;
+
+	if(state == SYSTEM_KEYSTATE_UP)
+		return;
+
   scripting_Run("return Menu.current");
   scripting_GetStringResult(&pMenuName);
 
