@@ -166,12 +166,6 @@ enum {
   CAM_FREE_CHI 
 };
 
-typedef struct CameraMovement {
-  float r;
-  float phi;
-  float chi;
-} CameraMovement;
-
 typedef struct CameraType {
   int interpolated_cam;
   int interpolated_target;
@@ -183,7 +177,7 @@ typedef struct CameraType {
 typedef struct Camera {
   float cam[3];
   float target[3];
-  CameraMovement *movement;
+  float movement[3]; /* indices CAM_R, CAM_CHI, CAM_PHI */
   CameraType *type;
 } Camera;
 

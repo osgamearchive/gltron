@@ -9,10 +9,14 @@ static float cam_park_pos[4][2] = {
 
 static float park_height = 80.0;
 
+void writeCamDefaults(Camera *cam, int type) {
+  cam_defaults[cam->type->type][type] = cam->movement[type];
+}
+
 void initCircleCamera(Camera *cam) {
-  cam->movement->r = cam_defaults[CAM_CIRCLE][CAM_R];
-  cam->movement->chi = cam_defaults[CAM_CIRCLE][CAM_CHI];
-  cam->movement->phi = cam_defaults[CAM_CIRCLE][CAM_PHI];
+  cam->movement[CAM_R] = cam_defaults[CAM_CIRCLE][CAM_R];
+  cam->movement[CAM_CHI] = cam_defaults[CAM_CIRCLE][CAM_CHI];
+  cam->movement[CAM_PHI] = cam_defaults[CAM_CIRCLE][CAM_PHI];
 
   cam->type->interpolated_cam = 0;
   cam->type->interpolated_target = 0;
@@ -24,12 +28,9 @@ void initCircleCamera(Camera *cam) {
 
 
 void initFollowCamera(Camera *cam) {
-  cam->movement->r = cam_defaults[CAM_FOLLOW][CAM_R];
-  cam->movement->chi = cam_defaults[CAM_FOLLOW][CAM_CHI];
-  cam->movement->phi = cam_defaults[CAM_FOLLOW][CAM_PHI];
-  cam->movement->r = CAM_FOLLOW_DIST;
-  cam->movement->chi = M_PI / 4;
-  cam->movement->phi = M_PI / 72;
+  cam->movement[CAM_R] = cam_defaults[CAM_FOLLOW][CAM_R];
+  cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
+  cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
 
   cam->type->interpolated_cam = 1;
   cam->type->interpolated_target = 0;
@@ -41,12 +42,9 @@ void initFollowCamera(Camera *cam) {
 
 
 void initCockpitCamera(Camera *cam) {
-  cam->movement->r = cam_defaults[CAM_COCKPIT][CAM_R];
-  cam->movement->chi = cam_defaults[CAM_COCKPIT][CAM_CHI];
-  cam->movement->phi = cam_defaults[CAM_COCKPIT][CAM_PHI];
-  cam->movement->r = CAM_COCKPIT_Z;
-  cam->movement->chi = 0;
-  cam->movement->phi = 0;
+  cam->movement[CAM_R] = cam_defaults[CAM_COCKPIT][CAM_R];
+  cam->movement[CAM_CHI] = cam_defaults[CAM_COCKPIT][CAM_CHI];
+  cam->movement[CAM_PHI] = cam_defaults[CAM_COCKPIT][CAM_PHI];
 
   cam->type->interpolated_cam = 0;
   cam->type->interpolated_target = 1;
@@ -58,9 +56,9 @@ void initCockpitCamera(Camera *cam) {
 
 
 void initFreeCamera(Camera *cam) {
-  cam->movement->r = cam_defaults[CAM_FREE][CAM_R];
-  cam->movement->chi = cam_defaults[CAM_FREE][CAM_CHI];
-  cam->movement->phi = cam_defaults[CAM_FREE][CAM_PHI];
+  cam->movement[CAM_R] = cam_defaults[CAM_FREE][CAM_R];
+  cam->movement[CAM_CHI] = cam_defaults[CAM_FREE][CAM_CHI];
+  cam->movement[CAM_PHI] = cam_defaults[CAM_FREE][CAM_PHI];
 
   cam->type->interpolated_cam = 0;
   cam->type->interpolated_target = 0;
@@ -86,41 +84,6 @@ void initCamera(Camera *cam, Data *data, int type) {
   cam->cam[0] = data->posx + CAM_CIRCLE_DIST;
   cam->cam[1] = data->posy;
   cam->cam[2] = CAM_CIRCLE_Z;
-}
-
-void interpolate(float *dest, float *source) {
-  /* horrible
-  int i;
-  for(i = 0; i < 3; i++)
-    dest[i] = source[i] + 0.1 * (dest[i] - source[i]);
-  */
-
-  /* also horrible
-  float d, dcamx, dcamy;
-  int dt;
-
-  dt = game2->time.dt;
-
-  d = sqrt((dest[0] - source[0]) * (dest[0] - source[0]) +
-	   (dest[1] - source[1]) * (dest[1] - source[1]));
-  if(d != 0) {
-    dcamx = (float)dt * CAM_FOLLOW_SPEED_FACTOR *
-      game->settings->current_speed * (dest[0] - source[0]) / d;
-    dcamy = (float)dt * CAM_FOLLOW_SPEED_FACTOR *
-      game->settings->current_speed * (dest[1] - source[1]) / d;
-
-    if((dest[0] - source[0] > 0 && dest[0] - source[0] < dcamx) ||
-       (dest[0] - source[0] < 0 && dest[0] - source[0] > dcamx)) {
-      source[0] = dest[0];
-    } else source[0] += dcamx;
-
-    if((dest[1] - source[1] > 0 && dest[1] - source[1] < dcamy) ||
-       (dest[1] - source[1] < 0 && dest[1] - source[1] > dcamy)) {
-      source[1] = dest[1];
-    } else source[1] += dcamy;
-  }
-  source[2] = dest[2];
-  */
 }
   
 void doCameraMovement() {
@@ -168,21 +131,25 @@ void doCameraMovement() {
       /* that means, check for mouse input mainly */
       if(cam->type->freedom[CAM_FREE_R]) {
 	if(game2->input.mouse1 == 1)
-	  cam->movement->r += CAM_DR * game2->time.dt / 1000.0;
+	  cam->movement[CAM_R] += CAM_DR * game2->time.dt / 1000.0;
 	if(game2->input.mouse2 == 1)
-	  cam->movement->r -= CAM_DR * game2->time.dt / 1000.0;
+	  cam->movement[CAM_R] -= CAM_DR * game2->time.dt / 1000.0;
+	writeCamDefaults(cam, CAM_R);
       }
       if(cam->type->freedom[CAM_FREE_PHI]) {
-	cam->movement->phi += - game2->input.mousex * MOUSE_CX;
+	cam->movement[CAM_PHI] += - game2->input.mousex * MOUSE_CX;
+	writeCamDefaults(cam, CAM_CHI);
       }
       if(cam->type->freedom[CAM_FREE_CHI]) {
-	cam->movement->chi += game2->input.mousey * MOUSE_CY;
+	cam->movement[CAM_CHI] += game2->input.mousey * MOUSE_CY;
+	writeCamDefaults(cam, CAM_PHI);
       }
+
       /* ok, now let's calculate the new camera destination coordinates */
       /* also, perform some camera dependant movement */
       switch(cam->type->type) {
       case CAM_TYPE_CIRCLING: /* Andi-cam */
-	cam->movement->phi += CAM_SPEED * game2->time.dt;
+	cam->movement[CAM_PHI] += CAM_SPEED * game2->time.dt;
 	tdest[0] = data->posx;
 	tdest[1] = data->posy;
 	tdest[2] = B_HEIGHT;
@@ -209,9 +176,9 @@ void doCameraMovement() {
 	break;
       }
 
-      phi = cam->movement->phi;
-      chi = cam->movement->chi;
-      r = cam->movement->r;
+      phi = cam->movement[CAM_PHI];
+      chi = cam->movement[CAM_CHI];
+      r = cam->movement[CAM_R];
 
       if(cam->type->coupled) {
 	int time;
