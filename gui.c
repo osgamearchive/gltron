@@ -74,14 +74,15 @@ void drawGuiLogo() {
   glsize *= game->screen->vp_w / 512.0;
   
   glEnable(GL_TEXTURE_2D);
-  glPushMatrix();
-  glTranslatef(pos[0] - glpos + glsize * font_shift[0], 
-	       pos[1] + glsize * font_shift[1], 0);
-  glScalef(glsize, glsize, glsize);
-  glColor3f(0.2, 0.4, 0.8);
-  ftxRenderString(gameFtx, "gl", 2);
-  glPopMatrix();
-  
+  if(game->settings->show_gl_logo == 1) {
+    glPushMatrix();
+    glTranslatef(pos[0] - glpos + glsize * font_shift[0], 
+		 pos[1] + glsize * font_shift[1], 0);
+    glScalef(glsize, glsize, glsize);
+    glColor3f(0.2, 0.4, 0.8);
+    ftxRenderString(gameFtx, "gl", 2);
+    glPopMatrix();
+  }
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_LOGO]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
