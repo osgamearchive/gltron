@@ -861,7 +861,7 @@ void drawPause(gDisplay *display) {
   if ((game->pauseflag & PAUSE_GAME_FINISHED) && game->winner != -1) {
     if (game->winner >= -1) {
 
-      float* player_color = game->player[game->winner].pColorDiffuse;
+      float* player_color = game->player[game->winner].pColorAlpha;
 
       /* 
          make the 'Player wins' message oscillate between 
