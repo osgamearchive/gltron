@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 vec4* vec4Add(vec4 *pOut, const vec4 *pV1, const vec4 *pV2) {
   pOut->v[0] = pV1->v[0] + pV2->v[0];
@@ -189,9 +190,72 @@ float vec2Length(const vec2 *pV) {
 	return l;
 }
 
+int segment2_findT(float *t, const segment2 *s, const vec2 *v) {
+	float epsilon = 0.001;
+	if( fabs(s->vDirection.v[0]) > fabs(s->vDirection.v[1]) ) {
+		*t = (v->v[0] - s->vStart.v[0]) / s->vDirection.v[0];
+		if( fabs(v->v[1] - (s->vStart.v[1] + *t * s->vDirection.v[1])) >
+				epsilon ) {
+			return 1;
+		}
+	} else {
+		*t = (v->v[1] - s->vStart.v[1]) / s->vDirection.v[1];
+		if( fabs(v->v[0] - (s->vStart.v[0] + *t * s->vDirection.v[0])) >
+				epsilon ) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
 vec2* segment2_IntersectParallel(vec2 *pOut, float *t1, float *t2,
 												 const segment2 *s1, const segment2 *s2) {
-	return NULL;
+	// if the lines don't overlap, return NULL
+	// else find t2 for t1 == 0
+	// if t2 in [0,1] return t2, t1 = 0
+	// else find t1 for t2 == 0 and t2 == 1
+	// if t1 < 0 return NULL (no intersection)
+	// else return the smaller t1 and the corresponding t2
+
+	vec2 v; float t;
+
+	// if the lines don't overlap, return NULL
+	// else find t2 for t1 == 0
+	vec2Copy(&v, &s1->vStart);
+	if(segment2_findT(t2, s2, &v)) {
+		// printf("[vector] are not collinear\n");
+		return NULL;
+	}
+	
+	// if t2 in [0,1] return t2, t1 = 0
+	if(*t2 >= 0 && *t2 <= 1) {
+		vec2Copy(pOut, &s1->vStart);
+		*t1 = 0;
+		return pOut;
+	}
+	// else find t1 for t2 == 0 and t2 == 1
+	vec2Copy(&v, &s2->vStart);
+	if(segment2_findT(t1, s1, &v))
+		return NULL;
+	// if t1 < 0 return NULL (no intersection)
+	if(*t1 < 0) return NULL;
+	vec2Add(&v, &s2->vStart, &s2->vDirection);
+	if(segment2_findT(&t, s1, &v))
+		return NULL;
+	assert(t >= 0);
+	
+	if(*t1 > 1 && t > 1)
+		return NULL;
+	// else return the smaller t1 and the corresponding t2
+	if(t < *t1) {
+		*t1 = t;
+		*t2 = 1;
+		vec2Copy(pOut, &v);
+	} else {
+		*t2 = 0;
+		vec2Copy(pOut, &s2->vStart);
+	}
+	return pOut;
 }
 
 vec2* segment2_IntersectNonParallel(vec2 *pOut, float *t1, float *t2,
@@ -200,6 +264,7 @@ vec2* segment2_IntersectNonParallel(vec2 *pOut, float *t1, float *t2,
 	vec3 tmp1, tmp2;
 	vec3 vIntersection;
 	
+	// compute the homogenous line coordinates
 	tmp1.v[0] = s1->vStart.v[0];
 	tmp1.v[1] = s1->vStart.v[1];
 	tmp1.v[2] = 1;
@@ -215,11 +280,14 @@ vec2* segment2_IntersectNonParallel(vec2 *pOut, float *t1, float *t2,
 	tmp2.v[1] = s2->vStart.v[1] + s2->vDirection.v[1];
 	tmp2.v[2] = 1;
 	vec3Cross(&v2, &tmp1, &tmp2);
+
+	// compute the intersection in homogenous coordinates and
+	// project back to 2d
 	vec3Cross(&vIntersection, &v1, &v2);
 	pOut->v[0] = vIntersection.v[0] / vIntersection.v[2];
 	pOut->v[1] = vIntersection.v[1] / vIntersection.v[2];
 	
-	// TODO compute t1, t2
+	// compute t1, t2
 	if(fabs(s1->vDirection.v[0]) > fabs(s1->vDirection.v[1]))
 		*t1 = (pOut->v[0] - s1->vStart.v[0]) / s1->vDirection.v[0];
 	else
@@ -237,9 +305,16 @@ vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
 	// check if s1, s2 are parallel
 	vec2 tmp;
 	if( vec2Dot(&s1->vDirection, 
-							vec2_Orthogonal(&tmp, & s2->vDirection) ) == 0)
-		return segment2_IntersectParallel(pOut, t1, t2, s1, s2);
-	else
-		return segment2_IntersectNonParallel(pOut, t1, t2, s1, s2);	
+							vec2_Orthogonal(&tmp, & s2->vDirection) ) < 0.1) {
+		// printf("[vector] lines are parallel\n");
+		pOut = segment2_IntersectParallel(pOut, t1, t2, s1, s2);
+		if(!pOut) {
+			*t1 = 0;
+			*t2 = 0;
+		}
+	}	else {
+		pOut = segment2_IntersectNonParallel(pOut, t1, t2, s1, s2);
+	}
+	return pOut;
 }
 
