@@ -143,6 +143,7 @@ void keyboardGui(int key, int x, int y) {
   switch(key) {
   case 27:
     if(strcmp(pMenuName, "RootMenu")) {
+			// not in the root menu -> go up one menu
       scripting_Run("Menu.GotoParent()");
     } else {
 			SystemExitLoop(RETURN_GUI_ESCAPE);
