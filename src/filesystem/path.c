@@ -36,7 +36,7 @@ void initDirectories(void) {
 
 #ifdef LOCAL_DATA
   #ifdef macintosh
-  sprintf(data_dir, "data");
+  sprintf(data_dir, ":data");
   sprintf(art_dir, ":art");
   sprintf(scripts_dir, ":scripts");
   sprintf(music_dir, ":music");
