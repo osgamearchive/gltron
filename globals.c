@@ -66,6 +66,7 @@ int    me;
 
 netEventList neteventlist = NULL;
 
+int    packet_type = HEADER;
 #endif
 
 /* settings stuff */

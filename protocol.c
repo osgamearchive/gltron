@@ -271,15 +271,27 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
       return cantsendpacket;
     }
 
-  buff = malloc(PACKETSIZE);
+  buff = malloc(PACKETSIZE);  //Allocate mac packet size...
 
-  printf("packet size %d ( float is %d )\n", sizeof(Packet), sizeof(float));
+  //printf("packet size %d ( float is %d )\n", sizeof(Packet), sizeof(float));
 
+  //First : we send the header
+  SDLNet_Write32(packet->type, buff);
+  printf("sending header: %d\n", packet->type);
+  if( ( SDLNet_TCP_Send(sock, buff, 4)) < 4 )
+    {
+      free(buff);
+      buff=NULL;
+      return connectionclosed;
+    }
+
+  //Parse packet to send
   len =  Net_preparepacket(packet, buff);
   printf("sending packet size: %d\n", len);
   printf("type %d from %d\n", packet->type, packet->which);
-  //Packet must be the same size...
-  if( ( SDLNet_TCP_Send(sock, buff, PACKETSIZE)) < PACKETSIZE )
+
+  //Send the packet itself...
+  if( ( SDLNet_TCP_Send(sock, buff, len)) < len )
     {
       free(buff);
       buff=NULL;
@@ -373,31 +385,99 @@ Net_handlepacket(Packet* packet, void *buf)
   }
 }
 
+int
+get_packetsize( int type )
+{
+  switch(type) {
+  case LOGIN:
+    return 4 + 4 + 9 + 9;
+    break;
+  case LOGINREP:
+    return 4 + 4 + 4 + 32;
+    break;
+  case USERINFO:
+    return 4 + 4 + 4 + 4 + 4 + 9;
+    break;
+  case SERVERINFO:
+    return 4 + 4 + 4 + 4;
+    break;
+  case CHAT:
+    return 4 + 4 + 32 + 4;
+    break;
+  case GAMERULES:
+    return 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 +  4; 
+    break;
+  case STARTPOS:
+    return 4 + 4 + MAX_PLAYERS * 4 *  3;
+    break;
+  case NETRULES:
+    return 4 + 4 + 4 + 4;
+    break;
+  case SCORE:
+    return 4 + 4 + 4 + MAX_PLAYERS * 4;
+    break;
+  case SNAPSHOT:
+    return 4 + 4;
+    break;
+  case EVENT:
+    return 4 + 4 + 4 + 4 + 4 + 4 + 4;
+    break;
+  case ACTION:
+    return 4 + 4 + 4 + 4;
+    break;
+  }
+  return 0;
+}
+
 
 int
-Net_receivepacket( Packet *packet, TCPsocket sock )
+Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
 {
-  int   rLen;
+  int   rLen, len;
   void *buff;
 
   if( packet == NULL )
     {
       return cantgetpacket;
     }
-  buff =  malloc(PACKETSIZE);
-
-
-  rLen = SDLNet_TCP_Recv(sock, (void *) buff, PACKETSIZE);
-
-  if( rLen < PACKETSIZE )
+  printf("getting packet for %d, type %d\n", which, slots[which].packet);
+  if( type == HEADER )
     {
-      free(buff);
-      buff=NULL;
-      return connectionclosed;
+      buff =  malloc(4);
+      rLen = SDLNet_TCP_Recv(sock, (void *) buff, 4);
+      if( rLen < 4 )
+	{
+	  free(buff);
+	  buff=NULL;
+	  return connectionclosed;
+	}
+      //parse
+      slots[which].packet=SDLNet_Read32(buff);
+      printf("get a header, next packet for %d is %d\n", which, slots[which].packet);
+    } else {
+
+      //Type of packet is type! so we know len of the packet
+      len = get_packetsize(type);
+
+      buff =  malloc(len);
+
+
+      rLen = SDLNet_TCP_Recv(sock, (void *) buff, len);
+      
+      if( rLen < len )
+	{
+	  free(buff);
+	  buff=NULL;
+	  return connectionclosed;
+	}
+      
+      //Only do the work if necessary
+      Net_handlepacket(packet, buff);
+      slots[which].packet=HEADER;
+      printf("get a packet size is %d\n", len);
     }
 
-  //Only do the work if necessary
-  Net_handlepacket(packet, buff);
+
 
   free(buff);
   buff=NULL;

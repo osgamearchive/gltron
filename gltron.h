@@ -545,11 +545,16 @@ int    me;
 
 netEventList neteventlist;
 
-extern void handleServer( void );
-extern void login       ( char* );
-extern void drawMessage ( char* );
-extern void drawMessage ( char* );
-extern void displayPregame();
+int    packet_type;
+
+extern void  handleServer      ( void );
+extern void  login             ( char* );
+extern void  drawMessage       ( char* );
+extern void  displayPregame    ( void );
+extern void  drawChat          ( char* );
+extern char* getInputEntry     ( void );
+extern void  drawGuiBackground ( void );
+extern void  drawGuiLogo       ( void );
 #endif
 
 #endif

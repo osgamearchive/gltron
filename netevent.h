@@ -11,10 +11,13 @@ typedef struct snetEventList {
 
 
 /** Creates */
-netEventList    createNetEventList( void );
-GameEvent*      getNetEvent();
-void            addNetEvent( GameEvent *e);
+netEventList    createNetEventList ( void );
+GameEvent*      getNetEvent        ( void );
+void            addNetEvent        ( GameEvent* );
 
 /** Getters */
-int             getPlayer        ( int );
-int             getWhich         ( int );
+int             getPlayer          ( int );
+int             getWhich           ( int );
+
+/** Inits */
+void            initNetEventList    ( netEventList );

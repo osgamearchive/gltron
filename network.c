@@ -11,7 +11,10 @@ login(char *name)
   for(i=0;i<4;++i)
     {
       slots[i].active=0;
+      slots[i].packet=HEADER;    
     }
+
+  packet_type = HEADER;
 
   if( Net_getmainsock()!=NULL  )
     {
@@ -229,9 +232,9 @@ do_gamerules(Packet packet)
   game->settings->grid_size   = packet.infos.gamerules.grid_size;
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
   game2->time                 = packet.infos.gamerules.time;
-  
- 
+  printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
 }
+
 void
 do_startpos(Packet packet)
 {
@@ -252,9 +255,9 @@ void
 do_event(Packet packet)
 {
   addNetEvent(&packet.infos.event.event);
-  fprintf(stderr, "get event: %d %d %d %d %d\n", packet.infos.event.event.type,
+  fprintf(stderr, "get event: %d %d %d %d %d ( current time %d )\n", packet.infos.event.event.type,
 	  packet.infos.event.event.player, packet.infos.event.event.x,
-	  packet.infos.event.event.y, packet.infos.event.event.timestamp);
+	  packet.infos.event.event.y, packet.infos.event.event.timestamp, game2->time.current);
 }
 
 
@@ -325,11 +328,19 @@ handleServer()
   Packet packet;
   
   //Get the packet...
-  if( Net_receivepacket(&packet, Net_getmainsock()) != 0 )
+  if( Net_receivepacket(&packet, Net_getmainsock(), me, packet_type) != 0 )
     {
       //Connection perdu
       connectionLost();
     }
+  if( packet_type == HEADER )
+    {
+      packet_type = slots[me].packet;
+      return;
+    }
+  
+  packet_type = slots[me].packet;
+
   printf("recieve a packet. Type: %d. Serverstate: %d.\n", packet.type, serverstate);
   switch( serverstate )
     {

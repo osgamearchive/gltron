@@ -11,6 +11,7 @@ start_server()
     {
       slots[i].active = 0;   //slots is inactive
       slots[i].sock   = 0;   //So no sock..
+      slots[i].packet = HEADER;
     }
 
   //Alocate the sock
@@ -484,14 +485,18 @@ void
 handle_client(int which)
 {
   Packet         packet;
+  int            type = slots[which].packet;
 
   //Get the packet...
-  if( Net_receivepacket(&packet, slots[which].sock) != 0 )
+  if( Net_receivepacket(&packet, slots[which].sock, which, type) != 0 )
     {
       //Connection perdu
       do_lostplayer(which);
       return;
     }
+
+  if( type == HEADER ) //It's an header, do not need to handle things;..
+    return;
   
   printf("+ handle_client. Type %d, Which %d\n", packet.type, packet.which);
   switch( sState )
@@ -555,6 +560,7 @@ handle_connection()
       slots[which].sock = newsock;
       slots[which].peer = *SDLNet_TCP_GetPeerAddress(newsock); //Get remote address
       slots[which].active = -1;
+      slots[which].packet = HEADER;
 
       Net_addsocket( slots[which].sock );
       printf("New Connection on slot %d\n", which);

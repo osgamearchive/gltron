@@ -7,7 +7,7 @@
 
 #define BROADCAST  -1        //Used when chat is not private.
 
-#define PACKETSIZE  56       //Size of packet
+#define PACKETSIZE  56       //Size of biggest packet
 
 //Enums-----------------------------------------------------------------------
 /** Possible errors */
@@ -59,6 +59,10 @@ typedef enum packettype
     EVENT,                   //Event
     ACTION                   //This is a simple action.
   } PacketType;
+
+enum {
+    HEADER  = 255            //This is an header, say type of next packet
+};
 
 /** the Packet him self using union */
 typedef struct packet {
@@ -130,6 +134,7 @@ typedef struct {
   int           points;      //points of the player
   int           color;       //color of the player
   int           player;      //Equiv player ( for the client )
+  int           packet;      //Next Packet type
   int           isMaster;    //If it's a master
 } Slots;
 
@@ -156,4 +161,4 @@ TCPsocket Net_getmainsock        ( void );
 /** Send a packet */
 int       Net_sendpacket         ( Packet* , TCPsocket );
 /** Receive a packet */
-int       Net_receivepacket      ( Packet *, TCPsocket );
+int       Net_receivepacket      ( Packet *, TCPsocket, int, int );
