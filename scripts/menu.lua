@@ -272,6 +272,14 @@ Menu = {
       read = function() return settings.show_recognizer; end,
       store = function(value) settings.show_recognizer = value; end
    },
+   ImpactAnimation = {
+
+      type = MenuC.type.list, caption = "Impact Animation",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.show_impact; end,
+      store = function(value) settings.show_impact = value; end
+   }, 
    CycleLod = {
       type = MenuC.type.list, caption = "Cycle LOD",
       labels = { "ugly", "low", "high", "ultra-high" },
@@ -490,8 +498,8 @@ Menu.TextureMenu.items = {
    "Decals", "Mipmaps", "Filtering", "WallScaling"
 }
 Menu.DetailsMenu.items = {
-   "AlphaTrails", "Halos", "Lightcycles", "Recognizer", "CycleLod", "ShadowLod", "ShadowStyle",
-   "FPS_Counter", "AI_Status", "Scores"
+   "AlphaTrails", "Halos", "Lightcycles", "Recognizer", "ImpactAnimation", 
+   "CycleLod", "ShadowLod", "ShadowStyle", "FPS_Counter", "AI_Status", "Scores"
 }
 Menu.ScreenMenu.items = {
    "_320x240", "_512x384", "_640x480", "_800x600", "_1024x768", "_1280x1024",

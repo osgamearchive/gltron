@@ -37,6 +37,7 @@ settings.alpha_trails = 0
 settings.show_glow = 1
 settings.show_model = 1
 settings.show_recognizer = 1
+settings.show_impact = 0
 settings.lod = 1
 settings.shadow_lod = 1
 settings.show_fps = 0
