@@ -110,11 +110,11 @@ xsub
 Player 1
 
 0
-sk_0_3
+sk_0_1
 Turn left  - %s
 
 0
-sk_0_1
+sk_0_2
 Turn right - %s
 
 2
@@ -122,11 +122,11 @@ xsub
 Player 2
 
 0
-sk_1_3
+sk_1_1
 Turn left  - %s
 
 0
-sk_1_1
+sk_1_2
 Turn right - %s
 
 2
@@ -134,11 +134,11 @@ xsub
 Player 3
 
 0
-sk_2_3
+sk_2_1
 Turn left  - %s
 
 0
-sk_2_1
+sk_2_2
 Turn right - %s
 
 2
@@ -146,11 +146,11 @@ xsub
 Player 4
 
 0
-sk_3_3
+sk_3_1
 Turn left  - %s
 
 0
-sk_3_1
+sk_3_2
 Turn right - %s
 
 # 0
