@@ -87,10 +87,10 @@ void keyGame(int state, int k, int x, int y)
 			scripting_GetIntegerResult( &key );
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
-					printf("glance left down\n");
+					// printf("glance left down\n");
 					game->player[i].camera->movement[CAM_PHI_OFFSET] = PI / 2.0f;
 				}	else {
-					printf("glance left up\n");
+					// printf("glance left up\n");
 					game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
 				}
 				return;
@@ -100,10 +100,10 @@ void keyGame(int state, int k, int x, int y)
 			scripting_GetIntegerResult( &key );
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
-					printf("glance right down\n");
+					// printf("glance right down\n");
 					game->player[i].camera->movement[CAM_PHI_OFFSET] = - PI / 2.0f;
 				} else {
-					printf("glance right up\n");
+					// printf("glance right up\n");
 					game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
 				}
 				return;
@@ -113,11 +113,11 @@ void keyGame(int state, int k, int x, int y)
 			scripting_GetIntegerResult( &key );
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
-					printf("boost down\n");
+					// printf("boost down\n");
 					if(game->player[i].data->booster > getSettingf("booster_min"))
 						game->player[i].data->boost_enabled = 1;
 				} else {
-					printf("boost up\n");
+					// printf("boost up\n");
 					game->player[i].data->boost_enabled = 0;
 				}
 				return;
@@ -127,11 +127,11 @@ void keyGame(int state, int k, int x, int y)
 			scripting_GetIntegerResult( &key );
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
-					printf("wall_buster down\n");
+					// printf("wall_buster down\n");
 					if(game->player[i].data->wall_buster > getSettingf("wall_buster_min"))
 						game->player[i].data->wall_buster_enabled = 1;
 				} else {
-					printf("wall_buster up\n");
+					// printf("wall_buster up\n");
 					game->player[i].data->wall_buster_enabled = 0;
 				}
 				return;

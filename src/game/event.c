@@ -15,49 +15,49 @@
 */
 
 int processEvent(GameEvent* e) {
-  int value = 0;
+	int value = 0;
 
 #ifdef RECORD
-  if(game2->mode == GAME_SINGLE_RECORD) {
-    writeEvent(e);
-  }
+	if(game2->mode == GAME_SINGLE_RECORD) {
+		writeEvent(e);
+	}
 #endif
-  switch(e->type) {
-  case EVENT_TURN_LEFT:
-    doTurn(e, TURN_LEFT);
-    break;
-  case EVENT_TURN_RIGHT:
-    doTurn(e, TURN_RIGHT);
-    break;
-  case EVENT_CRASH: 
-    displayMessage(TO_CONSOLE, "player %d crashed", e->player + 1);
-    doCrashPlayer(e);
-    break;
-  case EVENT_STOP:
-    // displayMessage(TO_STDOUT, "game stopped");
+	switch(e->type) {
+	case EVENT_TURN_LEFT:
+		doTurn(e, TURN_LEFT);
+		break;
+	case EVENT_TURN_RIGHT:
+		doTurn(e, TURN_RIGHT);
+		break;
+	case EVENT_CRASH: 
+		displayMessage(TO_CONSOLE, "player %d crashed", e->player + 1);
+		doCrashPlayer(e);
+		break;
+	case EVENT_STOP:
+		// displayMessage(TO_STDOUT, "game stopped");
 #ifdef RECORD
-    if(game2->mode == GAME_SINGLE_RECORD) {
-      stopRecording();
-      game2->mode = GAME_SINGLE;
-    } else if(game2->mode == GAME_PLAY) {
-      stopPlaying();
-      game2->mode = GAME_SINGLE;
-    }
+		if(game2->mode == GAME_SINGLE_RECORD) {
+			stopRecording();
+			game2->mode = GAME_SINGLE;
+		} else if(game2->mode == GAME_PLAY) {
+			stopPlaying();
+			game2->mode = GAME_SINGLE;
+		}
 #endif
-    if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
-      game->winner = e->player;
-      displayMessage(TO_CONSOLE, "winner: %d", game->winner + 1);
-    } else {
-      game->winner = -2;
-      displayMessage(TO_CONSOLE, "everyone died! no one wins!");
-    }
+		if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
+			game->winner = e->player;
+			displayMessage(TO_CONSOLE, "winner: %d", game->winner + 1);
+		} else {
+			game->winner = -2;
+			displayMessage(TO_CONSOLE, "everyone died! no one wins!");
+		}
 		nebu_System_ExitLoop(RETURN_GAME_END);
-    game->pauseflag = PAUSE_GAME_FINISHED;
-    value = 1;
-    break;
-  }
-  free(e);
-  return value;
+		game->pauseflag = PAUSE_GAME_FINISHED;
+		value = 1;
+		break;
+	}
+	free(e);
+	return value;
 }
 
 int crashTestPlayers(int i, const segment2 *movement) {
@@ -255,72 +255,77 @@ int applyWallAcceleration(int player, int dt) {
 	}
 }
 
-/*! \fn static void doMovement(int mode, int dt)
-  do physics, create CRASH and STOP events
+/*! \fn void doMovement(int dt)
+	\param dt	time for this tick
+
+	do physics, create CRASH and STOP events
 */
 
-void doMovement(int mode, int dt) {
-  int i;
+void doMovement(int dt)
+{
+	int i;
 
-  for(i = 0; i < game->players; i++) {
+	for(i = 0; i < game->players; i++) { // foreach player
 		Data *data = game->player[i].data;
 		PlayerVisual *pV = gPlayerVisuals + i;
-    if(data->speed > 0) { /* still alive */
+		if(data->speed > 0) { // still alive
 			float fs;
 			float t;
 
-			// speed boost:
 			float deccel = 0;
-			if(getSettingf("wall_accel_on") == 1) {
+			if(getSettingf("wall_accel_on") == 1) { // wall acceleration
 				if(!applyWallAcceleration(i, dt)) {
 					deccel = getSettingf("wall_accel_decrease");
 				}
 				else {
 					deccel = -1; // forbid deacceleration for booster
 				}
-			}
-			if(getSettingf("wall_buster_on") == 1) {
+			} // wall acceleration
+
+			if(getSettingf("wall_buster_on") == 1) { // wall buster
 				// printf("applying wallbuster for player %i\n");
 				applyWallBuster(i, dt);
-			}
-			if(getSettingf("booster_on") == 1) {
+			} // wall buster
+
+			if(getSettingf("booster_on") == 1) { // booster
 				if(!applyBooster(i, dt) && deccel != -1) {
 					float d = getSettingf("booster_decrease");
 					deccel = d > deccel ? d : deccel;
 				} else {
 					deccel = -1;
 				}
-			}
+			} // booster
+
 			if(deccel > 0)
 				applyDecceleration(i, dt, deccel);
 
 			// if(i == 0)
 			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
-				
-      fs = 1.0f - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
-				cosf(i * PI / 4.0f + 
-						(game2->time.current % SPEED_OZ_FREQ) * 
-						2.0f * PI / SPEED_OZ_FREQ);
 
-      t = dt / 100.0f * data->speed * fs;
-			
-			{
+			fs = 1.0f - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
+				cosf(i * PI / 4.0f + 
+				(game2->time.current % SPEED_OZ_FREQ) * 
+				2.0f * PI / SPEED_OZ_FREQ);
+
+			t = dt / 100.0f * data->speed * fs;
+
+			{	// movement
 				segment2 *current = data->trails + data->trailOffset;
 				segment2 movement;
 				int crash = 0;
 				float x, y;
-				
+
 				getPositionFromData(&x, &y, data);
 				movement.vStart.v[0] = x;
 				movement.vStart.v[1] = y;
 				movement.vDirection.v[0] = t * dirsX[data->dir];
 				movement.vDirection.v[1] = t * dirsY[data->dir];
-				
+
 				current->vDirection.v[0] += t * dirsX[data->dir];
 				current->vDirection.v[1] += t * dirsY[data->dir];
-				
-				if(!data->wall_buster_enabled) {
-					crash = crash || crashTestPlayers(i, &movement);
+
+				if(!data->wall_buster_enabled) { // collision detection against players
+					crash = crashTestPlayers(i, &movement);
 					if(crash) {
 						printf("player %d crashed into other players \n", i);
 						printf("%f %f %f %f\n",
@@ -328,10 +333,10 @@ void doMovement(int mode, int dt) {
 							movement.vStart.v[1],
 							movement.vDirection.v[0],
 							movement.vDirection.v[1]);
-					}
-				}
-				if(!crash) {
-					crash = crash || crashTestWalls(i, &movement);
+					} // crash debug output
+				} // collision detection against players
+				if(!crash) { // collision detection against walls
+					crash = crashTestWalls(i, &movement);
 					if(crash) {
 						printf("player %d crashed into the walls\n", i);
 						printf("%f %f %f %f\n",
@@ -339,38 +344,37 @@ void doMovement(int mode, int dt) {
 							movement.vStart.v[1],
 							movement.vDirection.v[0],
 							movement.vDirection.v[1]);
-					}
-				}
-			}
-    } else { /* already crashed */
-      if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
+					} // crash debut output
+				} // collision detection against walls
+			} // movement
+		} // still alive
+		else { // already crashed
+			if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
 				data->trail_height -= (dt * TRAIL_HEIGHT) / 1000.0f;
-      if(pV->exp_radius < EXP_RADIUS_MAX)
+			if(pV->exp_radius < EXP_RADIUS_MAX)
 				pV->exp_radius += dt * EXP_RADIUS_DELTA;
-      else if (data->speed == SPEED_CRASHED) {
+			else if (data->speed == SPEED_CRASHED) { // done exploding
 				int winner = -1;
 
 				data->speed = SPEED_GONE;
 				game->running--;
-				if(game->running <= 1) { /* all dead, find survivor */
+				if(game->running <= 1) { // all dead
+					/* find survivor, create winner event */
 					int i;
 					float maxSpeed = SPEED_GONE;
-					/* create winner event */
 					for(i = 0; i < game->players; i++) {
 						if(game->player[i].data->speed >= maxSpeed) {
 							winner = i;
 							maxSpeed = game->player[i].data->speed;
 						}
 					}
-					if(mode) {
-						createEvent(winner, EVENT_STOP);
-						/* a stop event is the last event that happens */
-						return;
-					}
-				}
-      }
-    }      
-  }
+					createEvent(winner, EVENT_STOP);
+					/* a stop event is the last event that happens */
+					return;
+				} // all dead
+			} // done exploding
+		} // already crashed
+	} // foreach player
 }
  
 /*! \fn void idleGame( void )
@@ -380,83 +384,81 @@ void doMovement(int mode, int dt) {
 */
 
 void Game_Idle(void) {
-  nebu_List *l;
-  nebu_List *p;
-  int i;
-  int dt;
-  int t;
+	nebu_List *p;
+	int i;
+	int dt; // time since last frame
+	int t; // time for a single tick to be processed
 
-	switch(game2->mode) {
-	case GAME_SINGLE:
-#ifdef RECORD
-	case GAME_SINGLE_RECORD:
-#endif
-		/* check for fast finish */
-    
-		if (gSettingsCache.fast_finish == 1) {
-			int factors[4] = { 4, 6, 12, 25 };
-			int threshold[4] = { 0, 300, 600, 800 };
-			int factor = 1;
-			for(i = 0; i < 4; i++) {
-				if(box2_Diameter(&game2->level->boundingBox) > 
-					threshold[i])
-					factor = factors[i];
+	/* check for fast finish */
+	if (gSettingsCache.fast_finish != 1)
+	{
+		// time since last idle processing
+		dt = game2->time.dt;
+	}
+	else
+	{
+		// compute an acceleration factor (speedup time by factor 4/6/12/25)
+		// depending on the size of the arena
+		int factors[4] = { 4, 6, 12, 25 };
+		int threshold[4] = { 0, 300, 600, 800 };
+		int factor = 1;
+		for(i = 0; i < 4; i++)
+		{
+			if(box2_Diameter(&game2->level->boundingBox) > threshold[i])
+				factor = factors[i];
+		}
+		for (i = 0; i < game->players; i++)
+		{
+			if (game->player[i].ai->active != AI_COMPUTER &&
+				gPlayerVisuals[i].exp_radius < EXP_RADIUS_MAX)
+			{
+				factor = 1;
 			}
-			for (i = 0; i < game->players; i++) {
-				if (game->player[i].ai->active != AI_COMPUTER &&
-						gPlayerVisuals[i].exp_radius < EXP_RADIUS_MAX) {
-					factor = 1;
+		}
+		dt = game2->time.dt * factor;
+	} 
+
+	while(dt > 0) {
+		// chop time since last frame into ticks of maximally PHYSICS_RATE milliseconds
+		if(dt > PHYSICS_RATE) t = PHYSICS_RATE;
+		else t = dt;
+
+		/* run AI */
+		for(i = 0; i < game->players; i++)
+		{
+			if(game->player[i].ai != NULL)
+			{
+				if(game->player[i].ai->active == AI_COMPUTER &&
+					PLAYER_IS_ACTIVE(&game->player[i]))
+				{
+					doComputer(i, 0);
+					// schedules events (e.g. turns)
 				}
 			}
-			dt = game2->time.dt * factor;
-		} else { 
-			dt = game2->time.dt;
 		}
 
-		while(dt > 0) {
-			if(dt > PHYSICS_RATE) t = PHYSICS_RATE;
-			else t = dt;
-
-			/* run AI */
-			for(i = 0; i < game->players; i++)
-				if(game->player[i].ai != NULL)
-					if(game->player[i].ai->active == AI_COMPUTER &&
-						 PLAYER_IS_ACTIVE(&game->player[i])) {
-						doComputer(i, 0);
-					}
-
-			/* process any outstanding events (turns, etc) */
-			for(p = &(game2->events); p->next != NULL; p = p->next) {
-				if(processEvent((GameEvent*) p->data)) return;
-			}
-
-			/* free events */
-			p = game2->events.next;
-			while(p != NULL) {
-				l = p;
-				p = p->next;
-				free(l);
-			}
-			game2->events.next = NULL;
-
-			doMovement(1, t); /* this can generate new events */
-
-			dt -= PHYSICS_RATE;
+		/* process any outstanding events (turns, etc) */
+		for(p = &(game2->events); p->next != NULL; p = p->next) {
+			if(processEvent((GameEvent*) p->data))
+				// a STOP event was encountered, exiting
+				// TODO: fix, because this leaks the list element, and also all unprocessed turn events!
+				return;
 		}
-		break;
-#ifdef RECORD
-	case GAME_PLAY_NETWORK:
-		/* fall through to GAME_PLAY */
-	case GAME_PLAY:
-		getEvents(); 
-		l = doMovement(0, game2->time.dt); /* this won't generate new events */
-		if(l != NULL) {
-			fprintf(stderr, "something is seriously wrong - ignoring events\n");
+
+		/* free list items (processed events are already freed in processEvents */
+		p = game2->events.next;
+		while(p != NULL) {
+			nebu_List *l = p;
+			p = p->next;
+			free(l);
 		}
-		break;
-#endif /* RECORD */
+		game2->events.next = NULL;
+
+		doMovement(t); /* this can generate new events */
+
+		dt -= t;
 	}
-    
+
 	doCameraMovement();
 	doRecognizerMovement();
 }
@@ -467,20 +469,22 @@ void Game_Idle(void) {
 */
 
 void createEvent(int player, event_type_e eventType) {
-  GameEvent *e;
-  nebu_List *p = &(game2->events);
+	GameEvent *e;
+	nebu_List *p = &(game2->events);
 
-  /* move to the end of the event list */
-  while (p->next)
-    p = p->next;
+	/* move to the end of the event list */
+	while (p->next)
+		p = p->next;
 
-  /* TODO: handle failed malloc */
-  e = (GameEvent*) malloc(sizeof(GameEvent));
-  p->data = e;
-  p->next = (nebu_List*) malloc(sizeof(nebu_List));
-  p->next->next = NULL;
-  e->type = eventType;
+	// add event to list
+	e = (GameEvent*) malloc(sizeof(GameEvent));
+	p->data = e;
+	p->next = (nebu_List*) malloc(sizeof(nebu_List));
+	p->next->next = NULL;
+
+	// store event information
+	e->type = eventType;
 	getPositionFromIndex(&e->x, &e->y, player);
-  e->player = player;
-  e->timestamp = game2->time.current;
+	e->player = player;
+	e->timestamp = game2->time.current;
 }

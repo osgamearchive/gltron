@@ -98,7 +98,7 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 		- pause message r,g,b colors
 	*/
 
-	sprintf(temp, "drawHUD(%d, %d, %d, \"%s\", %f, %f, %f, %d, \"%s\", %f, %f, %f)",
+	sprintf(temp, "drawHUD(%d, %d, %d, \"%s\", %f, %f, %f, %f, %d, \"%s\", %f, %f, %f)",
 		pV->display.vp_w, pV->display.vp_h,
 		gSettingsCache.show_scores ? p->data->score : -1,
 		gSettingsCache.show_ai_status ?
@@ -106,6 +106,7 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 		p->data->speed,
 		p->data->speed / (2 * game2->rules.speed),
 		p->data->booster / getSettingf("booster_max"),
+		p->data->wall_buster / getSettingf("wall_buster_max"),
 		getFPS(),
 		pause_message,
 		pause_color[0],

@@ -42,9 +42,9 @@ void idleTimedemo(void) {
 		}
 		game2->events.next = NULL;
 
-		doMovement(1, t);
-                // TODO: process events
-        }
+		doMovement(t);
+        // TODO: process events
+	}
 	
 	game2->time.dt = 20;
 	doCameraMovement();
