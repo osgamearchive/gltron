@@ -14,7 +14,7 @@ void idlePause() {
     {
       switchCallbacks(&gameCallbacks);
     } else {
-      if( isConnected && Net_checkSocks() )
+      if( isConnected && Net_checksocks() )
 	{
 	  handleServer();
 	}
@@ -43,7 +43,9 @@ void displayPause() {
 }
 
 void keyboardPause(int key, int unicode, int x, int y) {
-  int i;
+  int      i;
+  Packet   packet;
+
   switch(key) {
   case 27:
     switchCallbacks(&guiCallbacks);
@@ -53,7 +55,9 @@ void keyboardPause(int key, int unicode, int x, int y) {
     if( serverstate == preGameState && isConnected  )
 	{
 	  printf("\nAsk to start the game\n");
-	  Send_header( startGame, me, 0, 0 );
+	  packet.which=me;
+	  packet.type=ACTION;
+	  packet.infos.action.type=STARTGAME;
 	  return;
 	}
     

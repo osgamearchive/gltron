@@ -22,7 +22,6 @@ float default_speeds[] = { 5.0, 6.5, 8.5, 12.0, 0.0 };
 /** server globals */
 
 //main server socket ( listening incoming connexion )
-TCPsocket         servsock=NULL;
 //SocketSet for locking every sockets.
 SDLNet_SocketSet  socketset=NULL;
 //NbUsers connected and logged.
@@ -30,6 +29,6 @@ int               nbUsers=0;
 //Server state.
 int               sState=-1; //-1 means server is down...
 //Slots infos
-tSslots           slots[MAX_PLAYERS];
-//Net settins :: Ugly, change that...
-netGameSettings   netSettings;
+Slots             slots[MAX_PLAYERS];
+
+int server_port=23460;

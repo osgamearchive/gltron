@@ -101,6 +101,10 @@ int main( int argc, char *argv[] ) {
   goto_installpath(argv[0]);
 #endif
 
+#ifdef __NETWORK__
+  Net_init();
+#endif
+
   /* initialize artpack list before loading settigns! */
   initArtpacks();
 

@@ -21,7 +21,7 @@ void keyPregame(int k, int unicode, int x, int y)
 
 void idlePregame() {
   SystemPostRedisplay();
-  if( isConnected && Net_checkSocks() )
+  if( isConnected && Net_checksocks() )
     {
       handleServer();
     }
@@ -59,7 +59,7 @@ void initPregame() {
 
 void cleanPregame()
 {
-  fprintf(stderr, "pregame: deconnecting...\n");
+  //fprintf(stderr, "pregame: deconnecting...\n");
   //Net_deconnect();
 }
 

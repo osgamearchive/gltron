@@ -79,11 +79,6 @@ typedef png_texture texture;
 /* resource management */
 #include "texture.h"
 
-#ifdef __NETWORK__
-#include <SDL/SDL_net.h>
-#include "protocol.h"
-#endif
-
 extern int game_textures;
 extern int n_textures;
 extern texture_info textures[];
@@ -179,6 +174,12 @@ enum {
 #define SCREENSAVER_WAIT 2000
 
 #define PAUSE_GAME_FINISHED 1
+
+#ifdef __NETWORK__
+#include <SDL/SDL_net.h>
+#include "protocol.h"
+#include "netevent.h"
+#endif
 
 extern char** artpack_list;
 extern int artpack_index;
@@ -533,19 +534,21 @@ extern void ftxRenderString(fonttex *ftx, char *string, int len);
 /* can't get max_ascent, max_descent yet */
 
 #ifdef __NETWORK__
-tslots slots[4]; //slots of the server.
+Slots  slots[MAX_PLAYERS]; //slots of the server.
 int    nbUsers; 
 int    serverstate;
 char   name[255];
-tnetGameSettings netSettings;
-
-int    isConnected;
+int    isLogged;
 int    sChat;
 char   mesg[255];
 int    me;
+int    netrulenbwins;
+int    netruletime;
+
 netEventList neteventlist;
 
 extern void handleServer( void );
+extern void login       ( char* );
 #endif
 
 #endif

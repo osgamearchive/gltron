@@ -6,310 +6,247 @@ void
 login(char *name)
 {
   int           i;
+  Packet        packet;
 
   for(i=0;i<4;++i)
     {
       slots[i].active=0;
     }
 
-  if( Net_SockisValid()  )
+  if( Net_getmainsock()!=NULL  )
     {
       //Sending welcome to the server.
-      Send_welcom(name, 1); //TODO: put gltron version here...
+      //TODO: put gltron version here...
+      packet.which=me;
+      packet.type=LOGIN;
+      strcpy(packet.infos.login.version, VERSION);
+      strcpy(packet.infos.login.nick, name);
+      printf("+ send login\n");
+      Net_sendpacket(&packet, Net_getmainsock());
+      printf("- send login\n");
     }
   neteventlist = createNetEventList();
 }
 
-//get login answer
-int
-doLoginNetEvent(int accepted, int which, int len, int time)
-{
-  char message[512];
-  int  i;
-
-  //which must be serverid
-  if( which != SERVERID )
-    {
-
-      fprintf(stderr, "Getting a packet from the server but has an id different from -1!!.\n");
-      return corruptedPacket;
-    }
-  
-  //Get a message from the server
-  Recv_Buff(message, len); //Getting Welcome message from Server.
-
-  if( ! accepted )
-    { 
-      fprintf(stderr, "Connection refused: %s", message);
-      return loginNotAccepted;
-    }
-
-
-  //sprintf(message, "%s\n", message);
-  //drawConsoleLines(messages, 0);
-
-  //Get login info.
-  Recv_login( &serverstate, &nbUsers );
-
-  print_serverState(serverstate);
-
-  //get our info, who we are, etc...
-  which = Recv_who(slots);
-  me = which;
-  slots[me].player=0;
-
-  
-  
-  //are we the master?
-  if( slots[which].isMaster )
-    {
-      fprintf(stderr, "You 're the game Master\n");
-    }
-      fprintf(stderr, "Cycle's color is: %d ( %s )\n", slots[which].color, slots[which].name);
-
-
-  //Getting users list.
-  fprintf(stderr, "%d players in the game\n", nbUsers);
-
-  for(i=0; i<nbUsers; ++i)
-    {
-      which = Recv_who(slots);
-      slots[which].player=(which==0)?me:which;
-    }
-  nbUsers++;
-  return noErr;
-}
-
-//Get a magic event, for connection.
-int
-doMagicNetEvent()
-{
-  int err = noErr;
-  err = Send_header(magic, SERVERID, 0, 0);
-  //now we can logging in.
- login(game->settings->nickname); //logging in
-  return err;
-}
-
-// S1 join
-int
-doJoinNetEvent()
-{
-  int  err = noErr;
-  int  which = Recv_who(slots);
-
-  fprintf(stderr, "%s join the game\n", slots[which].name);
-  nbUsers++;
-  return err;
-}
-
-//S& part
-int
-doPartNetEvent(int which)
-{
-  int err = noErr;
-  fprintf(stderr, "%s part\n", slots[which].name);
-  slots[which].active = 0;
-  nbUsers--;
-  return err;
-}
-
-//Server change state...
-int
-doChgeStateNetEvent()
-{
-  int err = noErr;
-  int newState; 
-  Data   *data;
-
-  Recv_chgeState(&newState);
-  fprintf(stderr, "Server has changed state:");
-
-  print_serverState(newState);
-  if( newState == preGameState )
-    {
-      if( serverstate != gameState ) {
-	Recv_netGameSettings(&netSettings);
-	printNetGameSettings(&netSettings);
-      }
-    }
-  serverstate = newState;
-  if( serverstate == gameState)
-    {
-      
-      game->settings->ai_player1=( slots[0].active ) ? 0 : 2;
-      game->settings->ai_player2=( slots[1].active ) ? 0 : 2;
-      game->settings->ai_player3=( slots[2].active ) ? 0 : 2;
-      game->settings->ai_player4=( slots[3].active ) ? 0 : 2;
-      printf("nbUsers: %d\n", nbUsers);
-      game->players=nbUsers;
-
-      //starting the game...
-      printf("initData with %d players\n", game->players);
-      initData();
-      if( Recv_rules() != noErr )//getting rules from server...
-	fprintf(stderr, "got an error while reading rules\n");
-      else
-	fprintf(stderr, "rules set...\n");
-      //game->players=game2->players;
-      
-      if( applyGameInfo() )//applying gamerules
-	fprintf(stderr, "got an error while applying GameInfo\n");
-
-      data = game->player[getWhich(me)].data;
-      //data = (Data *)game2->startPositions[0];
-
-      printf("init position with x: %d y: %d direction: %d\n", data->iposx,
-	                                                        data->iposy,
-	                                                        data->dir);
-
-      fprintf(stderr, "starting the game\n");
-      printf("grid size: %d\n", game->settings->grid_size);
-      game2->mode = GAME_PLAY;
-      switchCallbacks(&pauseCallbacks);
-    }
-  return err;
-}
-
-//Had a game event during playing...
-int
-doGameNetEvent(  )
-{
-  GameEvent   *e;
-  int err = noErr;
-
-  e = Recv_gameEvent();
-  if( e == NULL )
-    return noErr;
-  addNetEvent(e);
-
-  fprintf(stderr, "%d %d %d %d %d\n", e->type, e->player, 
-  	 e->x, e->y, e->timestamp);
-
-  switch( e->type )
-  {
-  case EVENT_TURN_LEFT:
-    fprintf(stderr, "%s has turn left.\n", slots[e->player].name);
-    break;
-  case EVENT_TURN_RIGHT:
-    fprintf(stderr,"%s has turn right.\n", slots[e->player].name);
-    break;
-  case EVENT_CRASH:
-    fprintf(stderr,"%s has crashed.\n", slots[e->player].name);
-    break;
-  case EVENT_STOP:
-    fprintf(stderr,"%s is the winner.\n", slots[e->player].name);
-    break;
-  default:
-    fprintf(stderr,"Unknown game event.\n");
-    break;
-  }
-
-  return err;
-}
-
-int
-doChatNetEvent(int len, int which)
-{
-  int err=noErr;
-  char mesg[255];
-  
-  Recv_chat(len, mesg);
-  mesg[len]='\0';
-  fprintf(stderr,"%s ( %d ) > %s\n", slots[which].name, which, mesg); 
-  //sprintf(mesg,"%s ( %d ) > %s\n", slots[which].name, which, mesg); 
-  //drawConsoleLines(mesg, 3);
-  return err;
-}
-
-
 void
 connectionLost()
 {
+  fprintf(stderr, "connection lost\n");
   isConnected=0;
-  Net_deconnect();
+  Net_disconnect();
   switchCallbacks(&guiCallbacks);
+}
+
+void
+do_loginrep(Packet packet)
+{
+  if( packet.infos.loginrep.accept != 1 )
+    {
+      printf("login refused : %s.\n",packet.infos.loginrep.message);
+      restoreCallbacks();
+      return;
+    }
+  printf("logged...\n%s\n", packet.infos.loginrep.message);
+  isLogged=1;
+  me = packet.which;
+  switchCallbacks(&netPregameCallbacks);
+}
+
+void
+do_serverinfo(Packet packet)
+{
+  nbUsers = packet.infos.serverinfo.players;
+
+  //check if we changed state
+  if( serverstate != packet.infos.serverinfo.serverstate )
+    {
+      serverstate=packet.infos.serverinfo.serverstate;
+      switch(serverstate)
+	{
+	case preGameState:
+	  switchCallbacks(&netPregameCallbacks);
+	  break;
+	case gameState:
+	  //game->players = game2->players;
+	  applyGameInfo();
+	  game2->mode = GAME_PLAY;
+	  switchCallbacks(&pauseCallbacks);
+	  break;
+	}
+    }
+}
+
+void
+do_userinfo(Packet packet)
+{
+  int which = packet.infos.userinfo.which;
+  //Just put in the slots...
+
+  if( slots[which].active == -1 )
+    {
+      printf("%s join\n", packet.infos.userinfo.nick);
+    }
+
+  slots[which].active   = 1;
+  strcpy(slots[which].name, packet.infos.userinfo.nick);
+  slots[which].points   = 0;
+  slots[which].color    = packet.infos.userinfo.color;
+  slots[which].isMaster = packet.infos.userinfo.ismaster;
+
+}
+
+void
+do_chat( Packet packet )
+{
+  if( packet.infos.chat.which == BROADCAST )
+    {
+      printf("%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+    } else {
+      printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+    }
+}
+
+void
+do_action(Packet packet)
+{
+  switch( packet.infos.action.type )
+    {
+    case JOIN:
+      slots[packet.infos.action.which].active=-1;
+      nbUsers++;
+      break;
+    case PART:
+      slots[packet.infos.action.which].active=0;
+      nbUsers--;
+      break;
+    }
+}
+
+void
+do_netrules(Packet packet)
+{
+  Packet rep;
+
+  rep.which     = SERVERID;
+  rep.type      = NETRULES;
+  netrulenbwins = rep.infos.netrules.nbWins;
+  netruletime   = rep.infos.netrules.time;
+}
+
+void
+do_gamerules(Packet packet)
+{
+  int   i, j;
+
+  game->settings->ai_player1= ( slots[0].active ) ? 0 : 2;
+  game->settings->ai_player2= ( slots[1].active ) ? 0 : 2;
+  game->settings->ai_player3= ( slots[2].active ) ? 0 : 2;
+  game->settings->ai_player4= ( slots[3].active ) ? 0 : 2;
+  
+  initData();
+  
+  game2->players              = packet.infos.gamerules.players;
+  game2->rules.speed          = packet.infos.gamerules.speed;
+  game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
+  game->settings->game_speed  = packet.infos.gamerules.gamespeed;
+  game->settings->grid_size   = packet.infos.gamerules.grid_size;
+  game->settings->arena_size  = packet.infos.gamerules.arena_size;
+  game2->time                 = packet.infos.gamerules.time;
+  //Startpos
+  printf("+ %d players, getting start positions \n", game2->players);
+  game2->startPositions = ( int *)malloc(3*game2->players *sizeof(int));
+  for(i=0; i<game2->players; ++i)
+    {
+      j = getPlayer(i);
+      game2->startPositions[3*i+0]=packet.infos.gamerules.startPos[3*j+0];
+      game2->startPositions[3*i+1]=packet.infos.gamerules.startPos[3*j+1];
+      game2->startPositions[3*i+2]=packet.infos.gamerules.startPos[3*j+2];
+    }
+}
+
+void
+do_event(Packet packet)
+{
+  addNetEvent(&packet.infos.event.event);
 }
 
 
 /** Handle network traffic. */
 void
-handleServer()
+do_preGameState( Packet packet )
 {
-  int         len;
-  int         which;
-  int         type;
-  int         time;
-
-  //get header to see what's about, who, when. 
-  if( (Recv_header(&type, &which, &len, &time) )!= noErr )
+  switch( packet.type )
     {
-      //Net_deconnect();
-      fprintf(stderr,"Connection lost\n");
-      connectionLost();
-      //exit(2);
-      //Connection 's lost.
-    } else {
-      switch( type )
-	{
-	case loginAccept: //login accept
-	  if( doLoginNetEvent(1, which, len, time) != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    } else {
-	      switchCallbacks(&netPregameCallbacks);
-	    }
-	  break;
-	case loginRefuse://login refused
-	  if( doLoginNetEvent(0, which, len, time) != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	case magic:
-	  if( doMagicNetEvent() != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	case joinPlayer:
-	  if(doJoinNetEvent() != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	case leftPlayer:
-	  if(doPartNetEvent(which) != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	case gameEvent:
-	  if(doGameNetEvent() != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	case chgeState:
-	  if(doChgeStateNetEvent() != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	case chat:
-	  if(doChatNetEvent(len, which) != noErr )
-	    {
-	      //exit(2);
-	      connectionLost();
-	    }
-	  break;
-	}
+    case LOGINREP:
+      do_loginrep(packet);
+      break;
+    case USERINFO:
+      do_userinfo(packet);
+      break;
+    case SERVERINFO:
+      do_serverinfo(packet);
+      break;
+    case CHAT:
+      do_chat(packet);
+      break;
+    case GAMERULES:
+      do_gamerules(packet);
+      break;
+    case NETRULES:
+      do_netrules(packet);
+      break;
+    case SCORE:
+      break;
+    case ACTION: //Is for PART
+      do_action(packet);
+      break;
+    default:
+      fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
+      break;
     }
 }
+
+void
+do_gameState( Packet packet )
+{
+  switch( packet.type )
+    {
+    case EVENT:
+      do_event(packet);
+      break;
+    case SNAPSHOT:
+      break;
+    case SERVERINFO:
+      do_serverinfo(packet);
+      break;
+    default:
+      fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
+      break;
+    }
+}
+
+
+void
+handleServer()
+{
+  Packet packet;
+  
+  //Get the packet...
+  if( Net_receivepacket(&packet, Net_getmainsock()) != 0 )
+    {
+      //Connection perdu
+      connectionLost();
+    }
+  printf("recieve a packet. Type: %d. Serverstate: %d.\n", packet.type, serverstate);
+  switch( serverstate )
+    {
+    case preGameState:
+      do_preGameState(packet);
+      break;
+    case gameState:
+      do_gameState(packet);
+      break;
+    default:
+      fprintf(stderr, "Unknown server state %d\n", serverstate);
+    }
+}  

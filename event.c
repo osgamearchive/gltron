@@ -154,7 +154,7 @@ void idleGame( void ) {
 
   if(updateTime() == 0) return;
 #ifdef __NETWORK__
-  if( isConnected && Net_checkSocks() )
+  if( isConnected && Net_checksocks() )
     {
       handleServer();
     }

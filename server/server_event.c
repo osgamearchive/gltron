@@ -1,11 +1,14 @@
 #include "server_gltron.h"
 
 int processEvent(GameEvent* e) {
-  int value = 0;
-  Data *data;
+  int      value = 0;
+  Data     *data;
+  Packet   rep;
+  /**
   int  i;
   int  sState = preGameState;
   pServRepHdr    serverRep;
+  */
 
   //if(game2->mode == GAME_PLAY) {
     writeEvent(e);
@@ -55,7 +58,11 @@ int processEvent(GameEvent* e) {
     game2->mode = GAME_NETWORK_RECORD;
     
     //go to pregame state...
-
+    rep.which=SERVERID;
+    rep.type=SERVERINFO;
+    rep.infos.serverinfo.serverstate=preGameState;
+    
+    /*
     serverRep = (pServRepHdr) malloc( sizeof(tServRepHdr) );
     
     serverRep->which = SERVERID;
@@ -69,6 +76,7 @@ int processEvent(GameEvent* e) {
 	  }
       }
     free(serverRep);
+    */
     value = 1;
     break;
   }

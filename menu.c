@@ -151,6 +151,8 @@ void menuAction(Menu *activated, int type) {
 	{
 	case 't':
 	  printf("connect menu chosen\n");
+	  isConnected=0;
+	  isLogged=0;
 	  switchCallbacks(&netConnectCallbacks);
 	  break;
 	case 's':

@@ -13,19 +13,21 @@ initkeyreading()
 void
 handlecommand(char *command, char *params)
 {
+  Packet   packet;
+
   //check commands here.
   switch( command[0] )
     {
     case 's'://start
-      //TODO: ask for starting the server.
-       
-      //if( isConnected && ( serverstate == preGameState ) && slots[me].isMaster )
-      //{
+      if( serverstate == preGameState && isConnected  )
+	{
 	  printf("\nAsk to start the game\n");
-	  Send_header( startGame, me, 0, 0 );
-	  //  }
+	  packet.which=me;
+	  packet.type=ACTION;
+	  packet.infos.action.type=STARTGAME;
+	  Net_sendpacket(&packet, Net_getmainsock());	  
+	}
       break;
-      //test...
     }
 }
 
@@ -104,7 +106,7 @@ void displaykeyboardreading() {
 
 void idlekeyboardreading()
 {  
-  if( isConnected && Net_checkSocks() )
+  if( isConnected && Net_checksocks() )
     {
       handleServer();
     }

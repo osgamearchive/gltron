@@ -11,7 +11,6 @@
 #define GLTRON_H
 #include "server_data.h"
 #include "server_system.h"
-#include "protocol.h"
 
 /* use enums, not magic */
 
@@ -51,6 +50,7 @@ enum {
 #define PAUSE_GAME_FINISHED 1
 
 
+#include "protocol.h"
 
 extern char messages[80];
 
@@ -121,8 +121,8 @@ extern void initDefaultSettings();
 
 /* demo stuff */
 /* record.c */
-extern int readDemoInfo();
-extern int writeDemoInfo();
+extern int  readDemoInfo();
+extern int  writeDemoInfo();
 extern void resetScores();
 
 extern void movePlayers();
@@ -138,9 +138,9 @@ extern TCPsocket         servsock;
 extern SDLNet_SocketSet  socketset;
 extern int               nbUsers;
 extern int               sState;
-extern tSslots           slots[MAX_PLAYERS];
-extern netGameSettings   netSettings;
+extern Slots             slots[MAX_PLAYERS];
 
+extern int server_port;
 #endif
 
 

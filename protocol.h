@@ -1,172 +1,153 @@
-/** Author: Nicolas Deniaud ( nicolas.deniaud@wanadoo.fr ) */
+/** Author: Nicolas Deniaud ( nicolas.deniaud@wanadoo.fr )
+    This describle the protocol used by gltron to talk with the server.
+*/
 
-#ifndef __PROTOCOLE__
-#define __PROTOCOLE__
+//Defines---------------------------------------------------------------------
+#define SERVERID   -1        //This is the server id
 
-//Defines---------------------------------------------------------------
-#define    loginAccept  1  //Login accepté
-#define    loginRefuse  2  //Login refusé
-#define    observer     3  //Etat d'observer
-#define    participate  4  //Etat de participant
-#define    waitState    5  //Etat d'attente
-#define    preGame      6  //Etat de prejeux
-#define    startGame    7  //Démarrage de la partie
-#define    stopGame     8  //Arret de la partie
-#define    pauseGame    9  //Mise en pause de la partie
-#define    resumeGame   10 //Arret de la pause
-#define    snapshot     11 //Envoi d'un snapShot
-#define    joinPlayer   12 //Un joueur vient de rejoindre
-#define    leftPlayer   13 //Un joueur vient de quitter
-#define    turnRight    14 //Un joueur vient de tourner à droite
-#define    turnLeft     15 //Un joueur vient de tourner à gauche
-#define    crash        16 //Un joueur vient de se crasher
-#define    ping         17 //Résultat d'un ping
-#define    quitGame     18 //Le joueur quitte le jeu
-#define    chat         19 //c du chat...
-#define    gameEvent    20 //C un event du jeu
-#define    chgeState    21 //Changement d'état du serveur
-#define    preGameState 22 //Etat de preGame
-#define    gameState    23 //partie commencée
+#define BROADCAST  -1        //Used when chat is not private.
 
+//Enums-----------------------------------------------------------------------
+/** Possible errors */
+enum {
+  connectionclosed =  -1,    //The connection has been closed.
+  connectionlost   =  -2,    //Same as connectionClosed, but we don't know why!
+  cantfindhost     =  -3,    //We can't find host!
+  cantconnect      =  -4,    //Can't connect means connection refused.
+  cantallocsockset =  -5,    //We can't allocate a SocketSet.
+  corruptedpacket  =  -6,    //means a paquet is not as we expected...
+  loginnotaccepted =  -7,    //login was refused for a reason...
+  cantsendpacket   =  -8,    //Cant send a packet...
+  cantgetpacket    =  -9,    //Can't get a packet
+  unknownerror     = -255    //Unknown Error...
+};
 
-//#define SERVER_PORT     23460 use game->settings->port instead.
-#define SERVERID        -1
+/** Server state */
+enum {
+  waitState,                 //Server has init all, and wait his 1st player
+  preGameState,              //Server wait for players and to start game
+  gameState                  //Game is running
+};
 
-#define magic           255
+/** Actions */
+enum {
+  TURNRIGHT,                //Ask to turn right
+  TURNLEFT,                 //Ask to turn left
+  STARTGAME,                //Ask to start game
+  PART,                     //Someone left
+  JOIN                      //Someone join
+};
 
-//Status
-#define connected       255
+//Typedefs--------------------------------------------------------------------
 
-//Erreurs
-#ifndef noErr
-#define noErr           0
-#endif
+/** PacketType  */
+typedef enum packettype
+  {
+    LOGIN,                   //Asking for login.
+    LOGINREP,                //The answer.
+    USERINFO,                //Infos of a user.
+    SERVERINFO,              //Infos of the server.
+    CHAT,                    //Chat public and private.
+    GAMERULES,               //Game rules and settings.
+    NETRULES,                //Net rules: rules that set the server behaviour.
+    SCORE,                   //Score at the end of a game.
+    SNAPSHOT,                //Snapshot ( quite same as EVENT )
+    EVENT,                   //Event
+    ACTION                   //This is a simple action.
+  } PacketType;
 
+/** the Packet him self using union */
+typedef struct packet {
+  PacketType   type;         //The type of the packet.
+  int          which;        //Who send the packet.
+  union        infos         //Additional infos
+  {
+    struct {
+      char     version[255]; //Version of gltron.
+      char     nick[255];    //Nickname to use in the game.
+    } login;                 //Type LOGIN
+    struct {
+      int      accept;       //1 if login accepted, else 0.
+      char     message[255]; //A message from the server.
+    } loginrep;              //Type LOGINREP
+    struct {
+      int      which;        //who are we talking about?
+      int      ismaster;     //Is he the game master?
+      int      color;        //server decide players's color.
+      char     nick[255];    //His nickname.
+    } userinfo;              //Type USERINFO
+    struct {
+      int      serverstate;  //The server state.
+      int      players;      //Who many players are connected.
+    } serverinfo;            //Type SERVERINFO
+    struct {
+      char     mesg[1024];   //The message
+      int      which;        //destination of the message.
+    } chat;                  //Type CHAT
+    struct {
+      int      players;      //how many players
+      float    speed;        //game speed
+      int      eraseCrashed; //1 if erase Crashed player.
+      int      startPos[MAX_PLAYERS*3]; //startposition of players
+      Time     time;         //ot synchronize
+      int      gamespeed;    //The game speed
+      int      grid_size;    //grid size
+      int      arena_size;   //arena_size
+    } gamerules;             //Type GAMERULES
+    struct {
+      int      nbWins;       //NbWins before getting score
+      int      time;         //How many time before stopping game.
+    } netrules;
+    struct {
+      int     winner;        //Who is the winner
+      int     points[MAX_PLAYERS]; //Points for each player.
+    } score;
+    struct {
+      GameEvent events[4];   //4 events
+    } snapshot;              //Type SNAPSHOT
+    struct {
+      GameEvent event;       //event
+    } event;                 //Type EVENT
+    struct {
+      int type;              //Which action?
+      int which;             //To which if necessary.
+    } action;
+  } infos;
+} Packet;
 
-#define connectClosed    -1
-#define connectLost      -2
-#define cantfindhost     -3
-#define cantconnect      -4
-#define cantallocsockset -5
-#define corruptedPacket  -6
-#define loginNotAccepted -7
-#define unkownError      -254
+//Server slots
+typedef struct {
+  int           active;      //Slot is active?
+  TCPsocket     sock;        //client's socket
+  IPaddress     peer;        //client's address
+  char          name[255];   //nickname of the client
+  int           points;      //points of the player
+  int           color;       //color of the player
+  int           player;      //Equiv player ( for the client )
+  int           isMaster;    //If it's a master
+} Slots;
 
+//Globals---------------------------------------------------------------------
+extern int isConnected;
+int netrulenbwins;
+int netruletime;
 
-//Typedefs-------------------------------------------------------------------------------------
-typedef struct sWelcom
-{
-  char       name[255];  //Nom du gars qui se connecte
-  int        vers;       //Version de gltron ( pour les comptatibilités )
-} tWelcom, *pWelcom;
+//Prototypes------------------------------------------------------------------
 
-typedef struct sServRepHdr
-{
-  int which;             //De qui vient la réponse ( -1 si c le serveur )
-  int type;              //Type de la réponse
-  int len;               //Longueur de la réponse
-  int time;              //temps
-} tServRepHdr, *pServRepHdr ;
+/** Core functions */
+void      Net_init               ( void );
+void      Net_cleanup            ( void );
+int       Net_connect            ( char*, int );
+void      Net_disconnect         ( void );
+void      Net_closesock          ( TCPsocket );
+int       Net_allocsocks         ( void );
+int       Net_readysock          ( TCPsocket );
+int       Net_checksocks         ( void );
+int       Net_addsocket          ( TCPsocket );
+int       Net_delsocket          ( TCPsocket );
+TCPsocket Net_getmainsock        ( void );
 
-
-typedef struct sLogin
-{
-  int state;             //Etat du server
-  int nbUsers;           //Nombre d'utilisateurs déjà connecté
-
-} tLogin, *pLogin;
-
-typedef struct sWho
-{
-  int  which;            //De qui on parle
-  int  pingIt;           //Le ping du gars
-  int  color;            //Sa couleur
-  int  isMaster;         //Si c le maître de la partie
-  char name[255];        //Nom du gars
-}  tWho, *pWho;
-
-typedef struct sslots {
-  int      active;       //Le slot est il actif?
-  Uint8    name[255];    //Nom de l'utilisateur
-  int      color;        //Couleur de la moto
-  int      pingIt;       //Ping de l'utilisateur
-  int      isMaster;     //Est ce le maitre du jeu
-  int      player;       //player in the game.
-} tslots, *pslots;
-
-
-typedef struct sSslots
-{
-  int        active;      //le client est connecté
-  TCPsocket  sock;        //socket avec ce client
-  IPaddress  peer;        //adresse du client
-  char       name[256];   //nom du client
-  int        color;       //couleur du client
-  int        pingIt;      //ping du joueur
-  int        isMaster;    //est le maitre ?
-} tSslots, pSslots;
-
-typedef struct snetGameSettings {
-  Grid    grid;          //taille de l'art
-  RuleSet rule;          //vitesse...
-  int     timeR;         //Le temps de la partie, si 0 illimité.
-  int     nbGames;        //nbre de parties par jeu.
-} tnetGameSettings, *netGameSettings;
-
-typedef struct scnetEventList *cnetEventList;
-typedef struct scnetEventList {
-  GameEvent       event;
-  cnetEventList   next;
-} tcnetEventList;
-
-typedef struct snetEventList {
-  cnetEventList head;
-} tnetEventList, *netEventList;
-
-//Prototypes
-
-/** Fonctions Generales */
-void Net_init            ( void );
-void Net_cleanup         ( void );
-int  Net_connect         ( char *, int);
-void Net_deconnect       ( void );
-int  Net_allocSocks      ( void );
-int  Net_checkSocks      ( void );
-int  Net_SockisValid     ( void );
-
-/** Sends */
-int  Send_welcom         ( char*, int );
-int  Send_header         ( int, int, int, int );
-int  Send_login          ( int, int );
-int  Send_who            ( int, int, int, int, char* );
-int  Send_chat           ( char *);
-int  Send_Buff           ( char *);
-int  Send_chgeState      ( int );
-
-/** Recvs */
-int  Recv_header         ( int *, int *, int *, int * );
-int  Recv_login          ( int *, int * );
-int  Recv_who            ( pslots ); 
-int  Recv_chat           ( int, char *);
-//char* Recv_chat( int  );
-void Recv_Buff           ( char *, int );
-int Recv_rules           ( void );
-
-GameEvent* Recv_gameEvent();
-int  Recv_chgeState      ( int * );
-int  Recv_netGameSettings( netGameSettings );
-
-/** Creates */
-netGameSettings createNetGameSettings  ( void );
-void            defaultNetGameSettings ( netGameSettings );
-netEventList    createNetEventList( void );
-GameEvent*      getNetEvent();
-void             addNetEvent( GameEvent *e);
-/** Prints */
-void print_serverState     ( int );
-void printNetGameSettings  ( netGameSettings );
-
-/** Getters */
-int getPlayer        ( int );
-int getWhich         ( int );
-#endif
+/** Send a packet */
+int       Net_sendpacket         ( Packet* , TCPsocket );
+/** Receive a packet */
+int       Net_receivepacket      ( Packet *, TCPsocket );

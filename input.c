@@ -34,7 +34,8 @@ int reserved_keys[] = {
 
 void keyGame(int k, int unicode, int x, int y)
 {
-  int i;
+  int     i;
+  Packet  packet;
 
   switch (k) {
     /* case 'q': SystemExit(); break; */
@@ -81,10 +82,13 @@ void keyGame(int k, int unicode, int x, int y)
 	      {
 		createTurnEvent(p, key_actions[i].turn);
 	      } else {
+		packet.which=getWhich(me);
+		packet.type=ACTION;
 		if( key_actions[i].turn == TURN_LEFT )
-		  Send_header( turnLeft, getWhich(me), 0, 0);
+		  packet.infos.action.type=TURNLEFT;
 		else
-		  Send_header( turnRight, getWhich(me), 0, 0);
+		  packet.infos.action.type=TURNRIGHT;
+		Net_sendpacket(&packet, Net_getmainsock());
 		  
 	      }
 	  }

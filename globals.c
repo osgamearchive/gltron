@@ -55,14 +55,11 @@ int menutime;
 
 /* Networks stuff */
 #ifdef __NETWORK__
-tslots slots[4]; //slots of the server.
+Slots  slots[4]; //slots of the server.
 
 int    nbUsers = 0; 
-int    serverstate = -1;
+int    serverstate = preGameState;
 char   name[255];
-tnetGameSettings netSettings;
-
-int    isConnected = 0;
 int    sChat       = 0;
 char   mesg[255] = "";
 int    me;

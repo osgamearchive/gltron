@@ -9,43 +9,37 @@ void mouseConnect (int buttons, int state, int x, int y)
       switchCallbacks(&guiCallbacks);
 }
 
-void keyConnect(int k, int unicode, int x, int y)
-{
-  int status;
-  int serverport = strtol(game->settings->port, (char**) NULL, 10);
 
-  switch( k )
+
+void idleConnect() {
+  int serverport = strtol(game->settings->port, (char**) NULL, 10);
+  int status;
+  SystemPostRedisplay();
+  if( isConnected && Net_checksocks() )
     {
-    case 13:
+      handleServer();
+    }
+  
+  if( ! isConnected )
+    {
       status = Net_connect(game->settings->server, serverport);
-      isConnected = status;
-      if( status != connected )
+      if( status )
 	{
 	  isConnected = 0;
 	  restoreCallbacks();	  
 	}
-      Net_allocSocks();
-
-      break;
-    case 'k':
-      Net_deconnect();
-      restoreCallbacks();
-      break;
-    default:
-      restoreCallbacks();
-      //switchCallbacks(&guiCallbacks);
-      break;
+      Net_allocsocks();
+      login(game->settings->nickname);
     }
 }
-
-void idleConnect() {
-  SystemPostRedisplay();
-  if( isConnected && Net_checkSocks() )
+void keyConnect(int k, int unicode, int x, int y)
+{
+  if( k == SDLK_ESCAPE )
     {
-      handleServer();
+      Net_disconnect();
+      restoreCallbacks();
     }
 }
-
 
 void drawConnect() {
   int time;
@@ -80,12 +74,10 @@ void displayConnect() {
 
 void initConnect() {
   coffset = SDL_GetTicks();
-  Net_init();
 }
 
 void cleanConnect()
 {
-  //Net_deconnect();
 }
 
 callbacks netConnectCallbacks = {
