@@ -10,6 +10,9 @@ static int lod_dist[][4] = {
   { 1, 5, 100, 0 }
 };
 
+#ifdef __NETWORK__
+static void drawPlayersName(gDisplay *d);
+#endif
 
 void drawGame() {
   GLint i;
@@ -29,6 +32,10 @@ void drawGame() {
       d = p->display;
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
       drawCam(p, d);
+#ifdef __NETWORK__
+  if( game2->mode == GAME_NETWORK_PLAY )
+    drawPlayersName(game->screen);
+#endif
       glDisable(GL_DEPTH_TEST);
       glDepthMask(GL_FALSE);
       if(game->settings->show_scores)
@@ -41,12 +48,16 @@ void drawGame() {
     glEnable(GL_DEPTH_TEST);
   }
 
+
   if(game->settings->show_2d > 0) {
     drawDebugTex(game->screen);
     drawDebugLines(game->screen);
   }
+
+
   if(game->settings->show_fps)
     drawFPS(game->screen);
+  
 
   drawConsole(game->screen);
   /*
@@ -94,6 +105,28 @@ void drawText(fonttex* ftx, int x, int y, int size, char *text) {
     glDisable(GL_BLEND);
     polycount += 2 * strlen(text); /* quads are two triangles */
   }
+}
+
+void drawText3D(fonttex* ftx, int x, int y, int z, int size, char *text) {
+   if(game->settings->softwareRendering) {
+     //...
+   } else {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
+
+    glPushMatrix();
+
+    //Move to the right position
+    glTranslatef(x, y, z);
+    glScalef(size, size, size);
+    ftxRenderString(ftx, text, strlen(text));
+  
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    polycount += 2 * strlen(text); /* quads are two triangles */
+  } 
 }
 
 void initModelLights(int light) {
@@ -289,7 +322,76 @@ void drawConsole(gDisplay *d) {
   if(game->settings->softwareRendering) lines = 1;
   consoleDisplay(drawConsoleLines, lines);
 }
+
+#ifdef __NETWORK__  
+void
+drawPlayersName(gDisplay *d)
+{
+  Data *data;
+  int   lod;
+  int   i;
+  int   x, y;
+  int   j, k, l;
+  float projection_matrix[16], camera_matrix[16], res[16], view[16], v[4], v2[4];
+
+  /**
+     modelview_matrix * posx : camera coordinates
+     viewport_transformation ( projection_matrix * camera_matrix * posx ) : screen coordinates
+   */
   
+  //glMatrixMode(GL_PROJECTION);
+  //glMatrixMode(GL_MODELVIEW);
+  //glLoadIdentity();
+  
+  glGetFloatv(GL_PROJECTION_MATRIX, projection_matrix);
+  glGetFloatv(GL_VIEWPORT, view);
+  glGetFloatv(GL_MODELVIEW_MATRIX, camera_matrix);
+    
+
+  //is player visible?
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      lod = playerVisible(&(game->player[0]), &(game->player[i]));
+      if(lod >= 0) 
+	{
+	  //find screen coordinates
+	  data = game->player[i].data;
+	  //doLookAt(p->camera->cam, p->camera->target, up);
+	  
+	  v[0]=data->posx;
+	  v[1]=data->posy;
+	  v[2]=0.0;
+	  v[3]=1.0;
+	  for(k=0; k<4; ++k)
+	    {
+	      //printf("( ");
+	      for(l=0; l<4; ++l)
+		{
+		  res[k+l*4]=projection_matrix[k]*camera_matrix[l*4]+
+		    projection_matrix[k+4]*camera_matrix[l*4+1]+
+		    projection_matrix[k+8]*camera_matrix[l*4+2]+
+		    projection_matrix[k+12]*camera_matrix[l*4+3];
+		  //printf(" %f ", projection_matrix[k+4*l]);
+		}
+	      // printf(" )\n");
+	    }
+	  for(k=0; k<4; ++k)
+	    {
+	      v2[k]=res[k]*v[0]+res[k+4]*v[1]
+		+res[k+8]*v[2]+res[k+12]*v[3];
+	    }
+	  x=view[0] + view[3] * (v2[0]/v2[3] + 1) / 2;
+	  y=view[1] + view[2] * (v2[1]/v2[3] + 1) / 2;
+	  j=getWhich(i);
+	  //world coord are data->posx, data->posy, 0
+	  rasonly(d);
+	  //printf("printing %s at %d and %d\n", slots[j].name, x, y);
+	  drawText(gameFtx, x, y, 20, slots[j].name);
+	}
+    }
+    
+}
+#endif
 void drawFPS(gDisplay *d) {
 #define FPS_HSIZE 20
   /* draws FPS in upper left corner of Display d */

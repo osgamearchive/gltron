@@ -1039,7 +1039,7 @@ do_starting()
       rep.infos.serverinfo.players     = nbUsers;
 
       printf("timetostart %d\n", timetostart);
-      if( timetostart >= 0 )
+      if( timetostart > 0 )
 	{
 	  //start the server
 	  starting=0;
