@@ -117,7 +117,7 @@ char* getHome() {
 
 void initDirectories() {
   if(PREF_DIR[0] != '~')
-    sprintf(preferences_dir, "PREF_DIR");
+    sprintf(preferences_dir, PREF_DIR);
   else
     sprintf(preferences_dir, "%s%s", getHome(), PREF_DIR + 1);
 
