@@ -158,7 +158,7 @@ void initPlayerData() {
 
     /* if player is playing... */
     if(ai->active != AI_NONE) {
-      data->speed = getSettingf("current_speed");
+      data->speed = getSettingf("speed");
       data->trail_height = TRAIL_HEIGHT;
       data->exp_radius = 0;
     } else {
@@ -205,7 +205,7 @@ void initData() {
   /* lasttime = SystemGetElapsedTime(); */
   game->pauseflag = 0;
 
-  game2->rules.speed = getSettingf("current_speed");
+  game2->rules.speed = getSettingf("speed");
   game2->rules.eraseCrashed = getSettingi("erase_crashed");
   game2->rules.grid_size = getSettingi("grid_size");
 
