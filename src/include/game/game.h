@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "game_data.h"
+#include "game_level.h"
 #include "engine.h"
 #include "event.h"
 
