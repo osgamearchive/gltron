@@ -47,51 +47,61 @@ void saveSettings(void) {
 #endif
 
 	scripting_Run("save()");
+	scripting_Run("write \"save_completed = 1\\n\"");
 	scripting_Run("writeto()"); // select stdout again
 }
 
 int getSettingi(const char *name) {
-  int value;
-  if( scripting_GetIntegerSetting(name, &value) ) {
-    /* does not exit, return default */
-    fprintf(stderr, "no default known for '%s'!\n", name);
-    assert(0);
-    return 0;
-  }
+	return (int) getSettingf(name);
+}
 
-  return value;
+int getVideoSettingi(const char *name) {
+	return (int) getVideoSettingf(name);
 }
 
 float getSettingf(const char *name) {
   float value;
-  if( scripting_GetFloatSetting(name, &value) ) {
+  if( scripting_GetGlobal("settings", name, NULL) ) {
     /* does not exit, return default */
-    fprintf(stderr, "no default known for '%s'!\n", name);
+    fprintf(stderr, "error accessing setting '%s'!\n", name);
     assert(0);
     return 0;
   }
-
-  return value;
+	if( scripting_GetFloatResult(&value) ) {
+		fprintf(stderr, "error reading setting '%s'!\n", name);
+		assert(0);
+		return 0;
+	}
+	return value;
 }
 
-int isSettingf(const char *name) {
-	float value;
-	return (scripting_GetFloatSetting(name, &value) == 0);
+float getVideoSettingf(const char *name) {
+  float value;
+  if( scripting_GetGlobal("video", "settings", name, NULL) ) {
+    /* does not exit, return default */
+    fprintf(stderr, "error accessing setting '%s'!\n", name);
+    assert(0);
+    return 0;
+  }
+	if( scripting_GetFloatResult(&value) ) {
+		fprintf(stderr, "error reading setting '%s'!\n", name);
+		assert(0);
+		return 0;
+	}
+	return value;
 }
 
-int isSettingi(const char *name) {
-	int value;
-	return (scripting_GetIntegerSetting(name, &value) == 0);
+int isSetting(const char *name) {
+	scripting_GetGlobal("settings", name, NULL);
+	return ! scripting_IsNilResult();
 }
 
 void setSettingf(const char *name, float f) {
-  // printf("setting '%s' to %.2f\n", name, f);
-  scripting_SetFloatSetting( name, f );
+  scripting_SetFloat( f, name, "settings", NULL );
 }
 
 void setSettingi(const char *name, int i) {
-  // printf("setting '%s' to %d\n", name, i);
-  scripting_SetFloatSetting( name, (float)i );
+	setSettingf(name, (float)i);
 }
 
 void updateSettingsCache(void) {
@@ -103,21 +113,24 @@ void updateSettingsCache(void) {
   gSettingsCache.show_fps = getSettingi("show_fps");
   gSettingsCache.show_console = getSettingi("show_console");
   gSettingsCache.softwareRendering = getSettingi("softwareRendering");
-  gSettingsCache.show_floor_texture = getSettingi("show_floor_texture");
   gSettingsCache.line_spacing = getSettingi("line_spacing");
-  gSettingsCache.show_decals = getSettingi("show_decals");
   gSettingsCache.alpha_trails = getSettingi("alpha_trails");
   gSettingsCache.antialias_lines = getSettingi("antialias_lines");
   gSettingsCache.turn_cycle = getSettingi("turn_cycle"); 
   gSettingsCache.light_cycles = getSettingi("light_cycles"); 
   gSettingsCache.lod = getSettingi("lod"); 
   gSettingsCache.fov = getSettingi("fov"); 
-  gSettingsCache.stretch_textures = getSettingi("stretch_textures"); 
-  gSettingsCache.show_skybox = getSettingi("show_skybox"); 
-  gSettingsCache.show_recognizer = getSettingi("show_recognizer");
+
+  gSettingsCache.show_floor_texture = getVideoSettingi("show_floor_texture");
+  gSettingsCache.show_skybox = getVideoSettingi("show_skybox"); 
+  gSettingsCache.show_wall = getVideoSettingi("show_wall");
+  gSettingsCache.stretch_textures = getVideoSettingi("stretch_textures"); 
+  gSettingsCache.show_decals = getVideoSettingi("show_decals");
+
   gSettingsCache.show_impact = getSettingi("show_impact");
   gSettingsCache.show_glow = getSettingi("show_glow"); 
-  gSettingsCache.show_wall = getSettingi("show_wall");
+  gSettingsCache.show_recognizer = getSettingi("show_recognizer");
+
   gSettingsCache.fast_finish = getSettingi("fast_finish");
   gSettingsCache.fov = getSettingf("fov");
   gSettingsCache.znear = getSettingf("znear");
@@ -126,6 +139,7 @@ void updateSettingsCache(void) {
   gSettingsCache.playMusic = getSettingi("playMusic");
 	gSettingsCache.map_ratio_w = getSettingf("map_ratio_w");
 	gSettingsCache.map_ratio_h = getSettingf("map_ratio_h");
-	
-  scripting_GetFloatArray("clear_color", gSettingsCache.clear_color, 4);
+
+	scripting_GetGlobal("clear_color", NULL);
+  scripting_GetFloatArrayResult(gSettingsCache.clear_color, 4);
 }
