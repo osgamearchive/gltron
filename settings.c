@@ -135,6 +135,7 @@ void updateSettingsCache() {
   game2->settingsCache.stretch_textures = getSettingi("stretch_textures"); 
   game2->settingsCache.show_skybox = getSettingi("show_skybox"); 
   game2->settingsCache.show_recognizer = getSettingi("show_recognizer");
+  game2->settingsCache.show_impact = getSettingi("show_impact");
   game2->settingsCache.show_glow = getSettingi("show_glow"); 
   game2->settingsCache.show_crash_texture = getSettingi("show_crash_texture");
   game2->settingsCache.show_wall = getSettingi("show_wall");

@@ -26,6 +26,7 @@ typedef struct SettingsCache {
   int stretch_textures;
   int show_skybox;
   int show_recognizer;
+  int show_impact;
   int show_glow;
   int show_crash_texture;
   int show_wall;
