@@ -173,8 +173,99 @@ WallScaling = {
    values = { 0, 1 },
    store = function(value) stretch_textures = value; end
 }
+
 -- Detail
-   
+AlphaTrails = {
+   Menu.type.list, caption = "Transparent trails",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_alpha = value; end
+}
+Halos = {
+   Menu.type.list, caption = "Halos",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_glow = value; end
+}
+Lightcycles = {
+   Menu.type.list, caption = "Lightcycles",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_model = value; end
+}
+Recognizer = {
+   Menu.type.list, caption = "Recognizers",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_recognizer = value; end
+}
+CycleLod = {
+   Menu.type.list, caption = "Cycle LOD",
+   labels = { "ugly", "low", "high" },
+   values = { 0, 1, 2 },
+   store = function(value) lod = value; end
+}
+ShadowLod = {
+   Menu.type.list, caption = "Shadow LOD",
+   labels = { "normal", "high" },
+   values = { 0, 1 },
+   store = function(value) shadow_lod = value; end
+}
+FPS_Counter = {
+   Menu.type.list, caption = "FPS counter",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_fps = value; end
+}
+AI_Status = {
+   Menu.type.list, caption = "AI status",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_ai_status = value; end
+}
+Scores = {
+   Menu.type.list, caption = "Scores",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) show_scores = value; end
+}
+
+-- Screen
+-- TODO: fill in the rest of the items
+
+-- Audio
+Music = {
+   Menu.type.list, caption = "Music",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) playMusic = value; end
+}
+FX = {
+   Menu.type.list, caption = "Sound FX",
+   labels = { "off", "on" },
+   values = { 0, 1 },
+   store = function(value) playEffects = value; end
+}
+Music_Volume = {
+   Menu.type.slider, caption = "Music Volume",
+   boundaries = { low = 0.0, high = 1.0 }
+   step = { 0.05 }
+   store = function(value) musicVolume = value; c_UpdateVolume(); end
+   stringValue = function() return format "%02d%%"; end
+}
+FX_Volume = {
+   Menu.type.slider, caption = "FX Volume",
+   boundaries = { low = 0.0, high = 1.0 }
+   step = { 0.05 }
+   store = function(value) fxVolume = value; c_UpdateVolume(); end
+}
+Song = {
+   Menu.type.list, caption = "Song",
+   labels = { } -- initialized by directory listing code
+   values = { } -- initialized by directory listing code
+   store = function(value) song = value; c_reloadMusic(); end
+}
+
 -- Menu entries
 RootMenu.items = { GameMenu, VideoMenu, AudioMenu, Quit }
 
