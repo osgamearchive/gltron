@@ -84,8 +84,8 @@ Quad *quadBuf;
 int *quadBufIndex;
 #endif
 
-int game_textures = 17; /* 10 + 6 + debug texture */
-int n_textures = 11;
+int game_textures = 18; /* 11 + 6 + debug texture */
+int n_textures = 12;
 
 texture_info textures[] = {
   { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR, 64 },
@@ -107,7 +107,9 @@ texture_info textures[] = {
   { 1, "gltron_traildecal", GL_RGBA, 
     GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_DECAL, 1 },
   { 6, "skybox", GL_RGB, 
-    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX, 1 }
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX, 1 },
+  { 1, "gltron_impact", GL_RGBA, GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_IMPACT, 1 },
+
 };
 
 float shadow_color[] = { 0, 0, 0, .8 };

@@ -380,6 +380,7 @@ static void drawImpact(Player *p) {
   glColor3f(0.68, 0, 0);
   
   drawShockwaves(&(p->data->shockwave_radius));
+  drawImpactGlow(p->data->spire_radius);
   drawSpires(&(p->data->spire_radius));
   glPopMatrix();
   glEnable(GL_LIGHTING);

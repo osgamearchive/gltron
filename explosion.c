@@ -115,3 +115,36 @@ void drawSpires(float *spire_radius) {
   *spire_radius += SPIRE_SPEED;
 }
 
+#define GLOW_START_OPACITY 1.2f
+#define GLOW_INTENSITY 1.0f
+#define GLOW_MAX_RADIUS 25 
+
+void drawImpactGlow(float glow_radius) {
+
+  float opacity;
+  
+  if (glow_radius > GLOW_MAX_RADIUS) {
+    return;
+  }
+
+  opacity = GLOW_START_OPACITY - (glow_radius / GLOW_MAX_RADIUS);
+  
+  glPushMatrix();
+  glScalef(glow_radius, glow_radius, 1.0f);
+  
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_IMPACT]);
+  glEnable(GL_TEXTURE_2D);
+
+  glColor4f(GLOW_INTENSITY, GLOW_INTENSITY, GLOW_INTENSITY, opacity);
+  glDepthMask(0);
+  glBegin(GL_POLYGON);
+  glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
+  glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
+  glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
+  glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
+  glEnd();
+  glDepthMask(1);
+  glPopMatrix();
+  glDisable(GL_TEXTURE_2D);
+}
+
