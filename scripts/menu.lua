@@ -143,43 +143,35 @@ Menu = {
    -- PlayerX_Key
    Player1_Left = { 
       type = MenuC.type.key, caption = "Player 1 Left",
-      -- value = keys.player1.left,
-      store = function(value) keys.player1.left = value; end
-   },
+      player = 1, event = "left"
+  },
    Player1_Right = { 
       type = MenuC.type.key, caption = "Player 1 Right",
-      -- value = keys.player1.right,
-      store = function(value) keys.player1.right = value; end
+      player = 1, event = "right"
    },
    Player2_Left = { 
       type = MenuC.type.key, caption = "Player 2 Left",
-      -- value = keys.player2.left,
-      store = function(value) keys.player2.left = value; end
+      player = 2, event = "left"
    },
    Player2_Right = { 
       type = MenuC.type.key, caption = "Player 2 Right",
-      -- value = keys.player2.right,
-      store = function(value) keys.player2.right = value; end
+      player = 2, event = "right"
    },
    Player3_Left = { 
       type = MenuC.type.key, caption = "Player 3 Left",
-      -- value = keys.player3.left,
-      store = function(value) keys.player3.left = value; end
+      player = 3, event = "left"
    },
    Player3_Right = { 
       type = MenuC.type.key, caption = "Player 3 Right",
-      -- value = keys.player3.right,
-      store = function(value) keys.player3.right = value; end
+      player = 3, event = "right"
    },
    Player4_Left = { 
       type = MenuC.type.key, caption = "Player 4 Left",
-      -- value = keys.player4.left,
-      store = function(value) keys.player4.left = value; end
+      player = 4, event = "left"
    },
    Player4_Right = { 
       type = MenuC.type.key, caption = "Player 4 Right",
-      -- value = keys.player4.right,
-      store = function(value) keys.player4.right = value; end
+      player = 4, event = "right"
    },
 
    -- TODO: fill in the rest of the items

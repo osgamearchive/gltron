@@ -45,6 +45,27 @@ playMusic = 1
 fxVolume = 0.3
 musicVolume = 0.3
 
+-- keys
+
+keys = { 
+   { -- player 1
+      left = 97, -- lower case 'a'
+      right = 115, -- lower case 's'
+   },
+   { -- player 2
+      left = 106, -- lower case 'j'
+      right = 107 -- lower case 'k'
+   },
+   { -- player 3
+      left = 276, -- cursor left
+      right = 275, -- cursor right
+   },
+   { -- player 4
+      left = 260, -- keypad left/keypad 4
+      right = 262, -- keybad right/keypad 6
+   }
+}
+
 -- colors
 
 -- this setting is usually overridden in artpack.ini

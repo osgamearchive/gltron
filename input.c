@@ -6,26 +6,6 @@
 /* I hear people are reading this file because they couldn't find the
    manual! Go to http://www.gltron.org/ */
 
-typedef struct {
-  int player;
-  int turn;
-  int key;
-} keyAction;
-
-/* default actions */
-#define KEY_ACTIONS_N 8
-
-keyAction key_actions[KEY_ACTIONS_N] = {
-  { 0, EVENT_TURN_LEFT, 'a' },
-  { 0, EVENT_TURN_RIGHT, 's' },
-  { 1, EVENT_TURN_LEFT, 'k' },
-  { 1, EVENT_TURN_RIGHT, 'l' },
-  { 2, EVENT_TURN_LEFT, '5' },
-  { 2, EVENT_TURN_RIGHT, '6' },
-  { 3, EVENT_TURN_LEFT, SYSTEM_KEY_LEFT },
-  { 3, EVENT_TURN_RIGHT, SYSTEM_KEY_RIGHT }
-};
-
 int reserved_keys[] = {
   'q', 27, ' ',
   SYSTEM_KEY_F1,
@@ -82,16 +62,23 @@ void keyGame(int k, int x, int y)
     */
 
   default: 
-    for(i = 0; i < KEY_ACTIONS_N; i++) {
-      if(k == key_actions[i].key) {
-	int p;
-	p = key_actions[i].player;
-	if(PLAYER_IS_ACTIVE(&game->player[p]))
-	  createEvent(p, key_actions[i].turn);
-	return;
+    for( i = 0; i < game->players; i++) {
+      if(PLAYER_IS_ACTIVE(&game->player[i])) {
+	int key;
+	scripting_RunFormat("return keys[%d].left", i + 1);
+	scripting_GetIntegerResult( &key );
+	if(key == k) {
+	  createEvent(i, EVENT_TURN_LEFT);
+	  return;
+	}
+	scripting_RunFormat("return keys[%d].right", i + 1);
+	scripting_GetIntegerResult( &key );
+	if(key == k) {
+	  createEvent(i, EVENT_TURN_RIGHT);
+	  return;
+	}
       }
     }
-    
     displayMessage(TO_STDERR, "key '%s' is not bound", SystemGetKeyName(k));
   }
 }

@@ -61,9 +61,18 @@ MenuAction[ MenuC.type.slider ] = function( menu )
    end
 end
 
+MenuAction[ MenuC.type.key ] = function ( menu )
+   local player = Menu[menu].player
+   local event = Menu[menu].event
+   configure_player = player
+   configure_event = event
+   c_configureKeyboard()
+end
+
 GetMenuValue[ MenuC.type.key ] = function ( menu )
-   -- TODO not implemented
-   return "unknown key"
+   local player = Menu[menu].player
+   local event = Menu[menu].event
+   return c_getKeyName( keys[ player ][ event ] )
 end
 
 GetMenuValue[ MenuC.type.action ] = function ( menu )
@@ -78,6 +87,4 @@ end
 GetMenuValueString = function ( menu )
    return GetMenuValue[ Menu[menu].type ]( menu )
 end
-
-
 

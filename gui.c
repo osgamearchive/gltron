@@ -152,21 +152,7 @@ void idleGui() {
 }
 
 void keyboardConfigure(int key, int x, int y) {
-#if 0
-  *configureKeyEntry = key;
-  initMenuCaption(configureKeyMenu);
-#endif
-
-#ifdef SOUND
-#if 0
-  playMenuFX(fx_action);
-#endif
-#endif
-   drawGuiBackground();
-   drawGuiLogo();
-   drawMenu(game->screen);
-   rasonly(game->screen);
-   SystemSwapBuffers();
+  scripting_RunFormat("keys[ configure_player ][ configure_event ] = %d", key);
   restoreCallbacks();
 }
 

@@ -63,6 +63,21 @@ int c_restoreDefaults(lua_State *L) {
   return 0;
 }
 
+int c_configureKeyboard(lua_State *L) {
+  switchCallbacks(&configureCallbacks);
+  return 0;
+}
+
+int c_getKeyName(lua_State *L) {
+  int top = lua_gettop(L);
+  if(lua_isnumber(L, top)) {
+    lua_pushstring(L, SystemGetKeyName( lua_tonumber(L, top) ));
+  } else {
+    lua_pushstring(L, "error");
+  }
+  return 1;
+}
+
 void init_c_interface(lua_State *L) {
   lua_register(L, "c_quitGame", c_quitGame);
   lua_register(L, "c_resetGame", c_resetGame);
@@ -73,4 +88,12 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_reloadTrack", c_reloadTrack);
   lua_register(L, "c_reloadArtpack", c_reloadArtpack);
   lua_register(L, "c_restoreDefaults", c_restoreDefaults);
+  lua_register(L, "c_configureKeyboard", c_configureKeyboard);
+  lua_register(L, "c_getKeyName", c_getKeyName);
 }
+
+
+
+
+
+
