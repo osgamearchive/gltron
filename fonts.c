@@ -3,7 +3,7 @@
 char *gameDefault;
 void initFonts() {
   char *path;
-  FILE *f;
+  file_handle file;
   char buf[100];
   char gamefont[100];
   char guifont[100];
@@ -14,14 +14,14 @@ void initFonts() {
 
   path = getPath(PATH_DATA, "fonts.txt");
   if(path != NULL) {
-    f = fopen(path, "r");
-    while(fgets(buf, sizeof(buf), f) != NULL) {
+    file = file_open(path, "r");
+    while(file_gets(file, buf, sizeof(buf)) != NULL) {
       if(sscanf(buf, "game: %s ", gamefont) == 1)
 	game = gamefont;
       else if(sscanf(buf, "menu: %s ", guifont) == 1)
 	gui = guifont;
     }
-    fclose(f);
+    file_close(file);
     free(path);
   } else {
     fprintf(stderr, "can't load fonts.txt\n");

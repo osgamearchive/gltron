@@ -2,9 +2,9 @@
 
 #define FTX_ERR "[fonttex error]: "
 
-void getLine(char *buf, int size, FILE *f) {
+void getLine(char *buf, int size, file_handle file) {
   do {
-    fgets(buf, size, f);
+    file_gets(file, buf, size);
   } while( buf[0] == '\n' || buf[0] == '#');
 }
 
@@ -15,7 +15,7 @@ void fbmpUnloadFont(fontbmp *fbmp) {
 
 fontbmp* fbmpLoadFont(char *filename) {
   char *path;
-  FILE *file;
+  file_handle file;
   char buf[100];
   int len;
   fontbmp *fbmp;
@@ -25,7 +25,7 @@ fontbmp* fbmpLoadFont(char *filename) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
     return NULL;
   }
-  file = fopen(path, "r");
+  file = file_open(path, "r");
   free(path);
 
   fbmp = (fontbmp*) malloc(sizeof(fontbmp));
@@ -43,13 +43,13 @@ fontbmp* fbmpLoadFont(char *filename) {
      memcpy(fbmp->bitmapName, buf, len); */
   fbmp->tex = loadTextureData(buf);
 
-  fclose(file);
+  file_close(file);
   return fbmp;
 }
 
 fonttex *ftxLoadFont(char *filename) {
   char *path;
-  FILE *file;
+  file_handle file;
   char buf[100];
 
   int i;
@@ -61,7 +61,7 @@ fonttex *ftxLoadFont(char *filename) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
     return NULL;
   }
-  file = fopen(path, "r");
+  file = file_open(path, "r");
   free(path);
 
   /* TODO(5): check for EOF errors in the following code */
@@ -104,7 +104,7 @@ fonttex *ftxLoadFont(char *filename) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   }
 
-  fclose(file);
+  file_close(file);
   return ftx;
 }
 
