@@ -31,6 +31,9 @@ void initScripting(void) {
 	runScript(PATH_SCRIPTS, "path.lua");
 
 	runScript(PATH_SCRIPTS, "video.lua");
+
+	/* not so basic scripting stuff */
+	runScript(PATH_SCRIPTS, "gauge.lua");
 }
 
 void initConfiguration(int argc, const char *argv[])
