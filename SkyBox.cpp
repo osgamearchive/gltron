@@ -1,18 +1,19 @@
 #include "gltron.h"
+#include "SkyBox.h"
 
-void enableSkyboxTexture() {
+void SkyBox::enableTexture() {
   glEnable(GL_TEXTURE_2D);
 }
 
-void disableSkyboxTexture() {
+void SkyBox::disableTexture() {
   glDisable(GL_TEXTURE_2D);
 }
 
-void bindSkyboxTexture(int index) {
+void SkyBox::bindTexture(int index) {
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[ TEX_SKYBOX + index ]);
 }
 
-void skybox() {
+void SkyBox::draw() {
   /* 
      matrices are: 
      projection: perspective projection 
@@ -49,7 +50,7 @@ void skybox() {
   glDepthMask(GL_FALSE);
   glColor3f(1.0, 1.0, 1.0);
   for(i = 0; i < 6; i++) {
-    bindSkyboxTexture(i);
+    SkyBox::bindTexture(i);
     glBegin(GL_QUADS);
     for(j = 0; j < 4; j++) {
       glTexCoord2fv( uv[j] );
@@ -60,3 +61,4 @@ void skybox() {
   glDisable(GL_TEXTURE_2D);
   glDepthMask(GL_TRUE);
 }
+

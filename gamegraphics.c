@@ -1,4 +1,5 @@
 #include "gltron.h"
+#include "skybox_glue.h"
 
 static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
@@ -866,7 +867,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* skybox, walls, floor */
   if(game->settings->show_skybox)
-    skybox();
+    SkyBox_draw();
 
   if(game->settings->show_wall == 1)
     drawWalls(d);
