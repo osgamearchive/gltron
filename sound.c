@@ -12,8 +12,14 @@
 // static Mix_Chunk *menu_fx[NUM_MENU_FX];
 
 static char *game_fx_names[] = {
+
+#ifdef macintosh 
+  "game_engine.wav",
+  "game_crash.wav"
+#else
   "game_engine.ogg",
   "game_crash.ogg"
+#endif
 };
 
 void loadFX() {

@@ -134,7 +134,7 @@ int main( int argc, char *argv[] ) {
 
   if(l->next != NULL) {
     char *tmp;
-    tmp = malloc(strlen(path) + 1 + /* seperator */
+    tmp = (char*)malloc(strlen(path) + 1 + /* seperator */
 		 strlen((char*) l->data) + 1);
     sprintf(tmp, "%s%c%s", path, SEPERATOR, 
 	    (char*) l->data);

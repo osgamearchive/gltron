@@ -313,17 +313,17 @@ void writePosition(int player) {
 }
 
 void newTrail(Data* data) {
-  line *new;
+  line *newline;
 
   data->trail->ex = data->iposx;
   data->trail->ey = data->iposy;
 
-  new = data->trail + 1; /* new line */
+  newline = data->trail + 1; /* new line */
 
-  new->sx = data->iposx;
-  new->sy = data->iposy;
+  newline->sx = data->iposx;
+  newline->sy = data->iposy;
 
-  data->trail = new;
+  data->trail = newline;
 }
       
 void doTurn(Data *data, int time) {

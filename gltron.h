@@ -104,6 +104,7 @@ extern void reloadArt(void);
 /* do Sound */
 #ifdef SOUND
 #include "sound.h"
+#include "sound_glue.h"
 #endif
 
 /* use enums, not magic */
@@ -401,7 +402,7 @@ extern void parse_args(int argc, char *argv[]);
 /* settings -> settings.c */
 
 extern void loadIniFile(char *name);
-extern void initMainGameSettings();
+extern void initMainGameSettings(char *path);
 extern void initDefaultSettings();
 extern void saveSettings();
 
@@ -530,6 +531,16 @@ extern void ftxRenderString(fonttex *ftx, char *string, int len);
 /*                               char *string, int len, int *width); */
 /* can't get max_ascent, max_descent yet */
 
+/* macFuncs.c macintosh-specific (Mac OS 9/Classic) functions */
+#ifdef macintosh
+    void setupHomeEnvironment();
+#endif
+
+/* menu sound enumerations */
+enum {
+	fx_action,
+	fx_highlight
+};
 #endif
 
 

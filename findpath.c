@@ -24,12 +24,14 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+#ifndef macintosh
+#    include <unistd.h>
+#endif
 
 #define PATH_MAX 8192
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(macintosh)
 void goto_installpath(char *argv0)
 {
     char temppath[PATH_MAX];
@@ -73,7 +75,7 @@ void goto_installpath(char *argv0)
             strcat(temppath, argv0);
 
             /* See if it exists, and update path */
-            if ( access(temppath, X_OK) == 0 ) {
+            if ( itemExists(temppath) ) {
                 ++found;
             }
             path = last+1;

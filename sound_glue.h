@@ -1,4 +1,8 @@
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void Audio_EnableEngine(void);
 void Audio_DisableEngine(void);
 void Audio_Idle(void);
@@ -13,3 +17,6 @@ void Audio_StopMusic();
 void Audio_SetMusicVolume(float volume);
 void Audio_SetFxVolume(float volume);
 
+#ifdef __cplusplus
+}
+#endif

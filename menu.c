@@ -50,7 +50,7 @@ void changeAction(char *name) {
       }      
       if(c == game->settings->soundIndex) {
 	path = getFullPath(MUSIC_DIR);
-	tmp = malloc(strlen(path) + 1 + /* seperator */
+	tmp = (char*)malloc(strlen(path) + 1 + /* seperator */
 		     strlen((char*) p->data) + 1);
 	sprintf(tmp, "%s%c%s", path, SEPERATOR, 
 		(char*) p->data);
@@ -432,7 +432,7 @@ Menu* loadMenu(FILE* f, char* buf, Menu* parent, int level) {
 	
   /* printf("menu '%s': %d entries\n", m->szName, m->nEntries); */
   if(m->nEntries > 0) { /* contains a submenu */
-    m->pEntries = malloc(sizeof(Menu*) * m->nEntries);
+    m->pEntries = (Menu**)malloc(sizeof(Menu*) * m->nEntries);
     for(i = 0; i < m->nEntries; i++) { /* load these sub menus */
       /* printf("loading menu number %d\n", i); */
       if(i > 10) {
@@ -464,7 +464,7 @@ void initMenuCaptions() {
   head->next = t;
 
   while(head->next != z) {
-    t = head->next;
+    t = (node*)head->next;
     head->next = t->next;
     m = (Menu*) t->data;
     free(t);
@@ -532,7 +532,7 @@ Menu** loadMenuFile(char *filename) {
     head->next = t;
     sp++;
     while(head->next != z) {
-      t = head->next;
+      t = (node*)head->next;
       head->next = t->next;
       m = (Menu*) t->data;
       free(t);

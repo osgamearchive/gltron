@@ -4,7 +4,7 @@
 #include "Sound.h"
 
 #include "Source.h"
-#include "System.h"
+#include "SoundSystem.h"
 
 namespace Sound {
   class SourceMusic : public Source {

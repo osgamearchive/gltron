@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(macintosh)
 #include <unistd.h>
 #endif
 

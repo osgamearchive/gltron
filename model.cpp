@@ -81,7 +81,7 @@ Mesh* readMeshFromFile(char *filename) {
   for(int i = 0; i < pMesh->nMaterials; i++) {
     pMesh->pnFaces[ i ] = 0;
   }
-  for(i = 0; i < iFace; i++) {
+  for(int i = 0; i < iFace; i++) {
     pMesh->pnFaces[ pFaces[i].material ] += 1;
   }
 
@@ -89,7 +89,7 @@ Mesh* readMeshFromFile(char *filename) {
 
   // initialize lookup[ vertex ][ normal ] table
   int **lookup = new int*[ iVertex ];
-  for(i = 0; i < iVertex; i++) {
+  for(int i = 0; i < iVertex; i++) {
     lookup[i] = new int[ iNormal ];
     for(int j = 0; j < iNormal; j++) {
       lookup[i][j] = -1;
@@ -97,7 +97,7 @@ Mesh* readMeshFromFile(char *filename) {
   }
   
   int nVertices = 0;
-  for(i = 0; i < iFace; i++) {
+  for(int i = 0; i < iFace; i++) {
     for(int j = 0; j < 3; j++) {
       int vertex = pFaces[i].vertex[j] - 1;
       int normal = pFaces[i].normal[j] - 1;
@@ -113,7 +113,7 @@ Mesh* readMeshFromFile(char *filename) {
   pMesh->nVertices = nVertices;
   pMesh->pVertices = new GLfloat[ 3 * nVertices ];
   pMesh->pNormals = new GLfloat[ 3 * nVertices ];
-  for(i = 0; i < iVertex; i++) {
+  for(int i = 0; i < iVertex; i++) {
     for(int j = 0; j < iNormal; j++) {
       int vertex = lookup[ i ][ j ];
       if(vertex != -1 ) {
@@ -128,12 +128,12 @@ Mesh* readMeshFromFile(char *filename) {
   // build indices (per Material)
   int *face = new int[ pMesh->nMaterials ];
   pMesh->ppIndices = new GLshort*[ pMesh->nMaterials];
-  for(i = 0; i < pMesh->nMaterials; i++) {
+  for(int i = 0; i < pMesh->nMaterials; i++) {
     pMesh->ppIndices[i] = new GLshort[ 3 * pMesh->pnFaces[i] ];
     face[i] = 0;
   }
 
-  for(i = 0; i < iFace; i++) {
+  for(int i = 0; i < iFace; i++) {
     int material = pFaces[i].material;
     for(int j = 0; j < 3; j++) {
       int vertex = pFaces[i].vertex[j] - 1;

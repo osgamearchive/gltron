@@ -5,6 +5,9 @@
 
 #include <Folders.h>
 #include "FullPath.h" /* MoreFiles Library */
+#include <stdlib.h>
+#include <string.h>
+#include "SDL.h"
 
 void setupHomeEnvironment () {
 

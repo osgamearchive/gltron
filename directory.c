@@ -75,7 +75,7 @@ static char *filter_prefix = NULL;
 pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
 								  Boolean *quit_flag,
 								  void *user_data) {
-	char *filename;							  
+   StringPtr filename;							  
    int   len;
    
    list *l = (list*) user_data;
@@ -87,14 +87,14 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    	filename = cpb_ptr->hFileInfo.ioNamePtr + 1;
    	
    	/* filter file names if necessary */
-   	if ( filter_prefix && (strstr (filename, filter_prefix) != filename) )
+   	if ( filter_prefix && (strstr ((const char*)filename, filter_prefix) != (const char*)filename) )
    		return;
    	
    	while (l->next != NULL)
    	   l=l->next;
    	
    	l->data = (char*) malloc (sizeof(char) * len + 1);  							  
-      strcpy (l->data, filename);
+      strcpy ((char*)l->data, (const char*)filename);
       
       l->next = (list*) malloc (sizeof (list));
       l->next->next = NULL;
@@ -114,9 +114,9 @@ list* readDirectoryContents(char *dirname, char *prefix) {
   FSSpec spec;
 
   if (*dirname != ':')
-    sprintf (relPath, "%c:%s", strlen(dirname) + 1, dirname);
+    sprintf ((char*)relPath, "%c:%s", strlen(dirname) + 1, dirname);
   else
-    sprintf (relPath, "%c%s", strlen(dirname) , dirname);
+    sprintf ((char*)relPath, "%c%s", strlen(dirname) , dirname);
 
   err = GetApplicationDirectory (&vRefNum, &dirID);
   if (err != noErr) {
@@ -149,7 +149,7 @@ list* readDirectoryContents(char *dirname, char *prefix) {
 
 char *getMusicPath(char *name) {
   char *path;
-  path = malloc(strlen(subdir) + 1 + strlen(name) + 1);
+  path = (char*)malloc(strlen(subdir) + 1 + strlen(name) + 1);
   sprintf(path, "%s%c%s", subdir, SEPERATOR, name);
   return path;
 }

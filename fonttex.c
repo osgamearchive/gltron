@@ -78,11 +78,11 @@ fonttex *ftxLoadFont(char *filename) {
   getLine(buf, sizeof(buf), file);
   len = strlen(buf) + 1;
 
-  ftx->fontname = malloc(len);
+  ftx->fontname = (char*)malloc(len);
   memcpy(ftx->fontname, buf, len);
 
   /* prepare space for texture IDs  */
-  ftx->texID = (unsigned int*) malloc(ftx->nTextures * sizeof(unsigned int));
+  ftx->texID = (GLuint*) malloc(ftx->nTextures * sizeof(unsigned int));
   glGenTextures(ftx->nTextures, ftx->texID);
 
   /* the individual textures */

@@ -116,7 +116,7 @@ typedef struct fontbmp {
 
 typedef struct fonttex {
   // sgi_texture **textures;
-  int nTextures;
+  GLint nTextures;
   
   int texwidth; /* texture width */
   int width; /* character width */
@@ -124,7 +124,7 @@ typedef struct fonttex {
   int lower; /* lowest ascii character (normally: 32) */
   int upper; /* highest ascii character (normally: 126) */
 
-  unsigned int *texID;
+  GLuint *texID;
 
   char *fontname;
   char *bitmapname;

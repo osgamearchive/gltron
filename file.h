@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 extern char* getFullPath(char *filename);
+extern int   fileExists (const char* path);
 
 #ifdef __cplusplus
 }
