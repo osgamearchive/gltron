@@ -132,7 +132,10 @@ int main( int argc, char *argv[] ) {
     path = getPath(PATH_SCRIPTS, "video.lua");
     scripting_RunFile(path);
     free(path);
-
+    
+    path = getPath(PATH_SCRIPTS, "joystick.lua");
+    scripting_RunFile(path);
+    free(path);
   }
 
   /* initialize some global variables */
@@ -167,9 +170,6 @@ int main( int argc, char *argv[] ) {
 
   /* sanity check some settings */
   checkSettings();
-
-	/* joystick threshold */
-	joy_threshold = getSettingi("joy_threshold");
 	
   /* intialize the settings cache, remember to do that everytime you
      change something */
