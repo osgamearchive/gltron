@@ -15,6 +15,7 @@ extern "C" {
 #include <GL/gl.h>
 #include "geom.h"
 #include "file.h"
+#include "vector.h"
 
 typedef struct {
   float ambient[4];
