@@ -28,22 +28,14 @@ settings.display_type = 3
 -- video
 settings.artpacks = { }
 settings.current_artpack = "classic"
--- texture settings
-settings.show_floor_texture = 1
-settings.show_wall = 1
-settings.show_crash_texture = 1
-settings.show_skybox = 1
-settings.show_decals = 1
-settings.use_mipmaps = 1
-settings.mipmap_filter = 1
-settings.stretch_textures = 1
 -- detail settings
+settings.mipmap_filter = 3
 settings.alpha_trails = 0
 settings.show_glow = 1
 settings.show_recognizer = 1
 settings.show_impact = 1
 settings.lod = 1
-settings.shadow_lod = 1
+
 settings.show_fps = 0
 settings.show_console = 1
 settings.show_ai_status = 1
