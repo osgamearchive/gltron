@@ -31,11 +31,11 @@ int processEvent(GameEvent* e) {
     data = game->player[e->player].data;
     data->posx = data->iposx = e->x;
     data->posy = data->iposy = e->y;
-    displayMessage(TO_CONSOLE | TO_STDERR, "player %d crashed", e->player + 1);
+    displayMessage(TO_CONSOLE | TO_STDOUT, "player %d crashed", e->player + 1);
     doCrashPlayer(e);
     break;
   case EVENT_STOP:
-    displayMessage(TO_STDERR, "game stopped");
+    displayMessage(TO_STDOUT, "game stopped");
 #ifdef RECORD
     if(game2->mode == GAME_SINGLE_RECORD) {
       stopRecording();
