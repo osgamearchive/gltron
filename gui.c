@@ -180,11 +180,12 @@ void keyboardGui(int key, int x, int y) {
     if(strcmp(pMenuName, "RootMenu")) {
       scripting_Run("Menu.GotoParent()");
     } else {
-      /* exit */
-      SystemQuit();
+      restoreCallbacks(); // back to game
+      /* SystemQuit(); */ /* exit */
     }
     break;
-  case ' ':
+  case ' ': 
+  case SYSTEM_KEY_RETURN:
     scripting_Run("Menu.Action()");
     break;
   case SYSTEM_KEY_UP:
