@@ -641,7 +641,7 @@ void drawCam(Player *p, gDisplay *d) {
   int i;
 
   float arena[] = { 1.0, 1.0, 1, 0.0 };
-  glLightfv(GL_LIGHT0, GL_POSITION, arena);
+
 
   /* 
   if (d->fog == 1) {
@@ -658,7 +658,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-
+  glLightfv(GL_LIGHT0, GL_POSITION, arena);
   glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
   gluLookAt(p->camera->cam[0], p->camera->cam[1], p->camera->cam[2],
 	    p->camera->target[0], p->camera->target[1], p->camera->target[2],
