@@ -13,6 +13,13 @@ typedef struct {
   char**           buffer;            //text buffer
 } Wtext;
 
+typedef struct CHistory *History;
+
+typedef struct CHistory {
+  char             *text;            //text
+  History           next;            //next text
+} CHistory;
+
 typedef struct {
   int              width;             //width of the text in pix
   int              height;            //height of the text in pix
@@ -25,6 +32,8 @@ typedef struct {
   int              offset;
   int              wstart;            //used to scroll
   int              wend;              
+  History          history;
+  int              h_num;             //history number
   char*            buffer;            //text buffer  
 } Wintext;
 

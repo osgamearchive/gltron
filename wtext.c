@@ -1,5 +1,9 @@
 #include "gltron.h"
 
+static void up_wintext( Wintext *wintext );
+static void down_wintext( Wintext *wintext );
+static int history_length_wintext(Wintext *wintext);
+
 Wtext *
 new_wtext(int width, int height, int posx, int posy, int nblines)
 {
@@ -189,6 +193,9 @@ new_wintext ( int width, int height, int posx, int posy, int nbchars, int maxcha
 
   wintext->buffer[0] = '\0';
 
+  wintext->history = NULL;
+  wintext->h_num = 0;
+
   return wintext;
 }
 
@@ -234,9 +241,11 @@ key_wintext(Wintext *wintext, int charcode, int unicode)
 	  break;
 	case SDLK_UP:
 	  printf("going up\n");
+	  up_wintext(wintext);
 	  break;
         case SDLK_DOWN:
 	  printf("going down\n");
+	  down_wintext(wintext);
 	  break;
         case SDLK_RIGHT:
 	  printf("going right\n");
@@ -374,11 +383,10 @@ draw_wintext(Wintext *wintext)
       if( len > wintext->nbchars )
 	len = wintext->nbchars;
       x+= len*h - 1;
-      glVertex2d(x,y);	// Left Side Of Horizontal Line
+      glVertex2d(x,y);	        // Left Side Of Horizontal Line
       glVertex2d(x,y+h);	// Right Side Of Horizontal Line
       glEnd();	
-
-
+      glLineWidth(1.0f);
     }
   free(tmp);
   tmp=NULL;
@@ -397,8 +405,105 @@ get_wintext(Wintext *wintext)
 void
 clear_wintext(Wintext *wintext)
 {
+  History  history;
+  if( strlen(wintext->buffer) == 0 )
+    return;
+  history = ( History ) malloc( sizeof(CHistory));
+  if( history != NULL )
+    {
+      history->next = wintext->history;
+      history->text = ( char *) malloc( strlen(wintext->buffer)+1);
+      strcpy(history->text, wintext->buffer);
+
+      wintext->history=history;      
+      wintext->h_num=history_length_wintext(wintext)+1;
+      printf("clear -> num=%d\n", wintext->h_num);
+    }
+
   strcpy(wintext->buffer, "");
   wintext->cur_char    = 0;
   wintext->wstart      = 0;
   wintext->wend        = 0;
+}
+
+void
+up_wintext( Wintext *wintext )
+{
+  History history;
+  int     num;
+  //first clear the wintext
+  num=wintext->h_num;
+  if( num == history_length_wintext(wintext)+1)
+    clear_wintext(wintext);
+  wintext->h_num=num;
+  if( wintext->h_num > 1 )
+    {
+      history = wintext->history;
+      num = history_length_wintext(wintext)-wintext->h_num+1;
+      printf("num %d size %d( %d )\n", num, history_length_wintext(wintext), wintext->h_num);
+      while( history && (num-->0)) { history=history->next;}
+      if( history == NULL )
+	return;
+      strcpy(wintext->buffer, history->text);
+      wintext->h_num--;
+
+      //adjust wstart and wend
+      wintext->wstart=0;
+      if( strlen(wintext->buffer) > wintext->nbchars )
+	wintext->wend = wintext->nbchars;
+      else
+	wintext->wend = strlen(wintext->buffer);
+    } else {      
+      wintext->h_num=1;
+    }
+  
+}
+void
+down_wintext( Wintext *wintext )
+{
+  History history;
+  int     num;
+
+  //first clear the wintext
+/*   num=wintext->h_num; */
+/*   if( num == history_length_wintext(wintext)+1) */
+/*     clear_wintext(wintext); */
+/*   wintext->h_num=num; */
+  if( wintext->h_num < history_length_wintext(wintext) )
+    {
+      history = wintext->history;
+      num = history_length_wintext(wintext)-wintext->h_num;
+      printf("num %d size %d( %d )\n", num, history_length_wintext(wintext), wintext->h_num);
+      while( history && (--num>0)) { history=history->next;}
+      if( history == NULL )
+	return;
+      strcpy(wintext->buffer, history->text);
+      wintext->h_num++;
+
+      //adjust wstart and wend
+      wintext->wstart=0;
+      if( strlen(wintext->buffer) > wintext->nbchars )
+	wintext->wend = wintext->nbchars;
+      else
+	wintext->wend = strlen(wintext->buffer);
+    } else {
+      printf("came to first entry\n");
+      strcpy(wintext->buffer, "");
+      wintext->cur_char    = 0;
+      wintext->wstart      = 0;
+      wintext->wend        = 0;
+      wintext->h_num       = history_length_wintext(wintext);
+    }
+}
+
+int
+history_length_wintext(Wintext *wintext)
+{
+  int      size = 0;
+  History  history;
+
+  history = wintext->history;
+  while( history ) { size++; history=history->next; }
+
+  return size;
 }
