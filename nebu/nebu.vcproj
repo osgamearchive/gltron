@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;D:\Documents and Settings\andreas\My Documents\gltron\lua\include&quot;;&quot;D:\Documents and Settings\andreas\My Documents\gltron\nebu\include&quot;"
+				AdditionalIncludeDirectories="./include;../lua/include"
 				PreprocessorDefinitions="WIN32,NDEBUG,_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include"
+				AdditionalIncludeDirectories="./include;../lua/include"
 				PreprocessorDefinitions="_LIB,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

@@ -67,7 +67,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;D:\Documents and Settings\andreas\My Documents\gltron\lua\include&quot;"
+				AdditionalIncludeDirectories="./include"
 				PreprocessorDefinitions="WIN32,NDEBUG,_LIB"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"

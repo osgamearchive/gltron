@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./src/include,./nebu/include,./lua/include"
+				AdditionalIncludeDirectories="src/include;lua/include;nebu/include"
 				PreprocessorDefinitions="_WINDOWS,PREF_DIR=\&quot;.\&quot;,SNAP_DIR=\&quot;\&quot;,DATA_DIR=\&quot;\&quot;,LOCAL_DATA=\&quot;\&quot;,SEPARATOR=&apos;\\&apos;,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;,SEPERATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;D:\Documents and Settings\andreas\My Documents\gltron\src\include&quot;;&quot;D:\Documents and Settings\andreas\My Documents\gltron\nebu\include&quot;;&quot;D:\Documents and Settings\andreas\My Documents\gltron\lua\include&quot;"
+				AdditionalIncludeDirectories="src/include;lua/include;nebu/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;PREF_DIR=\&quot;.\&quot;,SNAP_DIR=\&quot;\&quot;,DATA_DIR=\&quot;\&quot;,LOCAL_DATA=\&quot;\&quot;,SEPARATOR=&apos;\\&apos;,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;,SEPERATOR=&apos;\\&apos;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
