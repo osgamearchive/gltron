@@ -11,17 +11,6 @@ struct list {
   list* next;
 };
 
-typedef struct callbacks {
-  void (*display)(void);
-  void (*idle)(void);
-  void (*keyboard)(int, int, int);
-  void (*init)(void);
-  void (*exit)(void);
-  void (*initGL)(void);
-  void (*mouse)(int, int, int, int);
-  void (*mouseMotion)(int, int);
-} callbacks;
-
 typedef struct Grid {
   int width, height;
   unsigned char *data;
@@ -169,6 +158,7 @@ typedef struct AI {
   int moves;
   long lasttime;
   int danger;
+  int lastx, lasty;
 } AI;
 
 typedef struct {
@@ -254,8 +244,9 @@ typedef struct Settings {
   int content[4]; /* max. 4 individual viewports on the screen */
   int windowMode; /* 0: fullscreen, non-zero: window mode */
 
-  int fov;
-  int width;
+  int fov; /* field ov view (vertical angle) */
+  float znear; /* the near z-Plane */
+  int width; /* screen width & height */
   int height;
 
   int playMusic;
