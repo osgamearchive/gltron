@@ -14,9 +14,9 @@ AI_Parameters ai_params = {
 	// minTurnTime, time to pass between turns, in milliseconds
 	{ 600, 400, 200, 100 },
 	// maxSegLength 
-	{ 0.6, 0.3, 0.3, 0.3 },
+	{ 0.6f, 0.3f, 0.3f, 0.3f },
 	// critical
-	{ 0.2, 0.08037, 0.08037, 0.08037 },
+	{ 0.2f, 0.08037f, 0.08037f, 0.08037f },
 	// spiral, turns until a spiral is detected
 	{ 10, 10, 10, 10 },
 	// rlDelta
@@ -157,7 +157,8 @@ void doComputer(int player, int target) {
 	ai_getClosestOpponent(player, &opponent, &d);
 	if(opponent == -1 || d > OPP_MAX_DIST || distances.front < d ||
 		 game->player[opponent].ai == NULL ||
-		 game->player[opponent].ai->active == 1) { 
+		 game->player[opponent].ai->active == 1 ||
+		 gSettingsCache.ai_level == 0 /* dumb setting */) { 
 		// only fight humans
 		// printf("inactive, closest opponent: %d, distance %.2f, front %.2f\n", 
 		//	 opponent, d, distances.front);
