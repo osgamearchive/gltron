@@ -47,6 +47,7 @@ int c_video_restart(lua_State *L) {
 
 int c_update_settings_cache(lua_State *L) {
   updateSettingsCache();
+  return 0;
 }
 
 int c_update_audio_volume(lua_State *L) { 
