@@ -19,6 +19,10 @@ namespace Sound {
     _sample = Sound_NewSample(_rwops, NULL,
 			      _system->GetAudioInfo(),
 			      _buffersize );
+    if(_sample == NULL) {
+      printf("failed loading sample: %s\n", Sound_GetError());
+      exit(1);
+    }
 
     _position = 0;
     _decoded = _buffersize;
@@ -26,7 +30,7 @@ namespace Sound {
   }
 
   void SourceMusic::Load(char *filename) {
-#define BUFSIZE 1024 * 1024
+#define BUFSIZE 10 * 1024 * 1024
     gzFile file = gzopen(filename, "r");
     if(_mem != NULL) free(_mem);
     _mem = (void*) malloc(BUFSIZE);
