@@ -1,4 +1,4 @@
-SUBDIRS = lua nebu src art data music scripts
+SUBDIRS = lua nebu src art data music scripts levels
 
 bin_PROGRAMS = gltron
 

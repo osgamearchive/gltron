@@ -4,7 +4,7 @@ dnl initialisation
 AC_INIT(src/gltron.c)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE(gltron, 0.70)
+AM_INIT_AUTOMAKE(gltron, 0.71-beta-5)
 
 AC_PREFIX_DEFAULT("/usr/local")
 
@@ -185,4 +185,5 @@ AC_OUTPUT([Makefile \
 	data/Makefile \
 	music/Makefile \
 	scripts/Makefile \
+	levels/Makefile \
 	])
