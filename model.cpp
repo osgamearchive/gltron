@@ -91,6 +91,9 @@ Mesh* readQuadMeshFromFile(const char *filename) {
       break;
     }
   }
+  
+  gzclose(f);
+
   printf("vertices: %d, normals: %d, faces: %d\n", iVertex, iNormal, iFace);
 
   // count each material
@@ -219,6 +222,9 @@ Mesh* readTriMeshFromFile(const char *filename) {
       break;
     }
   }
+
+  gzclose(f);
+  
   printf("vertices: %d, normals: %d, faces: %d\n", iVertex, iNormal, iFace);
 
   // count each material
