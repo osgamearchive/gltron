@@ -443,16 +443,14 @@ void drawCycle(Player *p, int lod) {
     glDisable(GL_CULL_FACE);
 
   } else if(p->data->exp_radius < EXP_RADIUS_MAX) {
-    float alpha;
    
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
-      (float) EXP_RADIUS_MAX;
 
     if (game2->settingsCache.show_impact) {
       drawImpact(p);
     }
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
