@@ -15,6 +15,8 @@ namespace Sound {
 
   void System::Callback(Uint8* data, int len) {
     // printf("callback got called for %d bytes of data\n", len);
+    // ensure silence
+    memset(data, 0, len);
     list* p;
     for(p = & _sources; p->next != NULL; p = p->next) {
       Source* s = (Source*) p->data;
@@ -24,7 +26,9 @@ namespace Sound {
 	     (s->GetType() & eSoundFX && ! _mix_fx ) ||
 	     (s->GetType() & eSoundMusic && ! _mix_music) )
 	   )
+	  {
 	     s->Mix(data, len);
+	  }
 	// fprintf(stderr, "done mixing\n");
       } else {
 	// check if source is removable
