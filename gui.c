@@ -142,7 +142,7 @@ void idleGui() {
 void keyboardConfigure(int key, int x, int y) {
   scripting_RunFormat("settings.keys[ configure_player ][ configure_event ]"
 		      "= %d", key);
-  restoreCallbacks();
+	SystemExitLoop(RETURN_PROMPT_ESCAPE);
 }
 
 void keyboardGui(int key, int x, int y) {
@@ -155,8 +155,7 @@ void keyboardGui(int key, int x, int y) {
     if(strcmp(pMenuName, "RootMenu")) {
       scripting_Run("Menu.GotoParent()");
     } else {
-      restoreCallbacks(); // back to game
-      /* SystemQuit(); */ /* exit */
+			SystemExitLoop(RETURN_GUI_ESCAPE);
     }
     break;
   case ' ': 

@@ -205,10 +205,11 @@ int main( int argc, char *argv[] ) {
 #endif
 
   /* switch callbacks twice to establish stack */
-    switchCallbacks(&guiCallbacks);
-    switchCallbacks(&guiCallbacks);
-
-    SystemMainLoop();
+	{ 
+		char *path;
+		path = getPath(PATH_SCRIPTS, "main.lua");
+		scripting_RunFile(path);
+	}
 
   return 0;
 }
@@ -216,8 +217,6 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
 };
-
-
 
 
 

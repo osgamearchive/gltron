@@ -27,11 +27,11 @@ void keyGame(int k, int x, int y)
   switch (k) {
     /* case 'q': SystemExit(); break; */
   case 27:
-    switchCallbacks(&pauseCallbacks);
-    switchCallbacks(&guiCallbacks);
+		SystemExitLoop(RETURN_GAME_ESCAPE);
     break;
-  case ' ': switchCallbacks(&pauseCallbacks); break;
-
+  case ' ':
+		SystemExitLoop(RETURN_GAME_PAUSE);
+		break;
   case SYSTEM_KEY_F1: changeDisplay(0); break;
   case SYSTEM_KEY_F2: changeDisplay(1); break;
   case SYSTEM_KEY_F3: changeDisplay(2); break;

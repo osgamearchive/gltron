@@ -19,11 +19,11 @@ void initCallback(callbacks *cb) {
 
 
 void switchCallbacks(callbacks *new) {
-	if(current_callback)
-		fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
+	// if(current_callback)
+	// fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
   exitCallback(current_callback);
   SystemRegisterCallbacks(new);
-	fprintf(stderr, "callbacks: initializing %s\n", new->name);
+	// fprintf(stderr, "callbacks: initializing %s\n", new->name);
   initCallback(new);
 
   last_callback = current_callback;
@@ -49,19 +49,24 @@ void restoreCallbacks() {
   initCallback(current_callback);
 }
 
-void chooseCallback(char *name) {
-  /* maintain a table of names of callbacks */
-  /* lets hardcode the names for all known modes in here */
+#define N_CALLBACKS 7
+callbacks *callbackList[N_CALLBACKS] = {
+	&gameCallbacks, &guiCallbacks, &pauseCallbacks, &configureCallbacks,
+	&promptCallbacks, &creditsCallbacks, &timedemoCallbacks
+};
 
-  /* TODO(3): incorporate model stuff */
-  /*
-    if(strcmp(name, "chooseModel") ==  0) {
-    fprintf(stderr, "change callbacks to chooseModel\n");
-    switchCallbacks(&chooseModelCallbacks);
-    }
-  */
-  if(strcmp(name, "gui") == 0) {
-    /* fprintf(stderr, "change callbacks to gui\n"); */
-    switchCallbacks(&guiCallbacks);
-  }
+void setCallback(const char *name) {
+	int i;
+
+	for(i = 0; i < N_CALLBACKS; i++) {
+		if(strcmp( callbackList[i]->name, name ) == 0)
+			break;
+	}
+	if(i == N_CALLBACKS) {
+		fprintf(stderr, "fatal: no callback named '%s' found\n");
+		exit(1); // OK: programmer error, critical
+	}
+	switchCallbacks(callbackList[i]);
 }
+
+

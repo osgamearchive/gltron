@@ -8,12 +8,16 @@ void idlePause() {
 #endif
   game2->time.dt = 0;
   doCameraMovement();
-  if(getSettingi("screenSaver") && stoptime != 0 &&
-     SystemGetElapsedTime() - stoptime > 2000) {
-    initData();
-    stoptime = 0;
-    switchCallbacks(&gameCallbacks);
-  }
+	
+	/*
+  // if(getSettingi("screenSaver") && stoptime != 0 &&
+	// SystemGetElapsedTime() - stoptime > 2000) {
+	// initData();
+	// stoptime = 0;
+	// switchCallbacks(&gameCallbacks);
+	// }
+	*/
+
 
   scripting_RunGC();
   SystemPostRedisplay();
@@ -29,7 +33,7 @@ void displayPause() {
 void keyboardPause(int key, int x, int y) {
   switch(key) {
   case 27:
-    switchCallbacks(&guiCallbacks);
+		SystemExitLoop(RETURN_PAUSE_ESCAPE);
     break;
   case SYSTEM_KEY_F1: changeDisplay(0); break;
   case SYSTEM_KEY_F2: changeDisplay(1); break;
@@ -46,12 +50,15 @@ void keyboardPause(int key, int x, int y) {
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
 
-  case SYSTEM_KEY_TAB: switchCallbacks(&promptCallbacks); break;
+  case SYSTEM_KEY_TAB: 
+	// SystemExitLoop(RETURN_MENU_PROMPT);
+		break;
+
 	default:
     if(game->pauseflag & PAUSE_GAME_FINISHED)
       initData();
     /* lasttime = SystemGetElapsedTime(); */
-    switchCallbacks(&gameCallbacks);
+    SystemExitLoop(RETURN_GAME_UNPAUSE);
     break;
   }
 }
@@ -94,7 +101,7 @@ void keyboardPrompt(int key, int x, int y) {
   switch(key) {
   case 27:
   case SYSTEM_KEY_TAB:
-    restoreCallbacks();
+		SystemExitLoop(RETURN_PAUSE_ESCAPE);
     break;
   case SYSTEM_KEY_RETURN:
     /* promptEvaluate(); */
