@@ -8,6 +8,7 @@ static SDL_Surface *screen;
 static int width, height;
 static int flags;
 static int fullscreen;
+static int video_initialized = 0;
 
 void SystemExit() {
   fprintf(stderr, "shutting down sound now\n");
@@ -25,9 +26,13 @@ void SystemExit() {
 }
 
 void SystemInit(int *argc, char *argv[]) {
-  if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0 ){
-    fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-    exit(1);
+  if(SDL_Init(SDL_INIT_VIDEO) < 0 ){
+    fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
+    exit(2);
+  }
+  video_initialized = 1;
+  if(SDL_Init(SDL_INIT_AUDIO) < 0 ){
+    fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
   }
   /* atexit(SystemExit); */
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
@@ -124,6 +129,12 @@ void SystemInitWindow(int x, int y, int w, int h) {
 void SystemInitDisplayMode(int f, unsigned char full) {
   flags = f;
   fullscreen = full;
+  if(!video_initialized) {
+    if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+      fprintf(stderr, "can't initialize Video: %s\n", SDL_GetError());
+      exit(2);
+    }
+  }
   if(flags & SYSTEM_DOUBLE)
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
   if(flags & SYSTEM_DEPTH)
@@ -132,6 +143,7 @@ void SystemInitDisplayMode(int f, unsigned char full) {
 
 int SystemCreateWindow(char *name) {
   int f = SDL_OPENGL;
+
   if(fullscreen & SYSTEM_FULLSCREEN)
     f |= SDL_FULLSCREEN;
   if( (screen = SDL_SetVideoMode( width, height, 0, f )) == NULL ) {
@@ -143,6 +155,8 @@ int SystemCreateWindow(char *name) {
 
 void SystemDestroyWindow(int id) {
   SDL_FreeSurface(screen);
+  SDL_QuitSubSystem(SDL_INIT_VIDEO);
+  video_initialized = 0;
 }
 
 void SystemReshapeFunc(void(*reshape)(int, int)) {
