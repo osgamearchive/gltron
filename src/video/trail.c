@@ -180,6 +180,8 @@ void drawTrailShadow(Player* p, PlayerVisual *pV) {
 	int iOffset = 0;
 	TrailMesh mesh;
 
+	nebu_Video_CheckErrors("before drail shadows\n");
+
 	/* transformation */
 	glPushMatrix();
 	glMultMatrixf(shadow_matrix);
@@ -206,4 +208,6 @@ void drawTrailShadow(Player* p, PlayerVisual *pV) {
 
 	/* restore */
 	glPopMatrix();
+
+	nebu_Video_CheckErrors("after trail shadows");
 }

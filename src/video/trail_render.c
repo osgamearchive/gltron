@@ -52,12 +52,14 @@ void trailRender(TrailMesh *pMesh) {
 	if(pMesh->iUsed == 0)
 		return;
 	
+	nebu_Video_CheckErrors("before trail va setup");
+
 	glVertexPointer(3, GL_FLOAT, 0, pMesh->pVertices);
 	glNormalPointer(GL_FLOAT, 0, pMesh->pNormals);
 	glTexCoordPointer(2, GL_FLOAT, 0, pMesh->pTexCoords);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, pMesh->pColors);
 
-	nebu_Video_CheckErrors("texcoord pointer");
+	nebu_Video_CheckErrors("after trail va setup");
 
 	glDrawElements(GL_TRIANGLES, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
 	glDisableClientState(GL_VERTEX_ARRAY);

@@ -344,6 +344,8 @@ void drawPlanarShadows(Player *p) {
 void drawWorld(Player *p, PlayerVisual *pV) {
 	int i;
 
+	nebu_Video_CheckErrors("before world");
+
 	setupLights(eWorld);
 
 	if (gSettingsCache.show_recognizer &&
@@ -394,6 +396,8 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 	for(i = 0; i < game->players; i++)
 		if (game->player[i].data->trail_height > 0 )
 			drawTrailLines(game->player + i, gPlayerVisuals + i);
+
+	nebu_Video_CheckErrors("after world");
 }
 
 static float getReflectivity() {
