@@ -232,7 +232,7 @@ Menu = {
       store = function(value) settings.use_mipmaps = value; end
    },
    Filtering = {
-      type = MenuC.type.list, caption = "Mitmap filter",
+      type = MenuC.type.list, caption = "Mipmap filter",
       labels = { "bilinear", "trilinear" },
       values = { 0, 1 },
       read = function() return settings.mipmap_filter; end,
