@@ -2,71 +2,108 @@
 #include "SourceMusic.h"
 #include "SourceCopy.h"
 #include "Source3D.h"
+#include "SourceEngine.h"
 #include "Source.h"
 
 #include "gltron.h"
 
-Sound::System *sound = NULL;
-Sound::SourceMusic *music = NULL;
-Sound::SourceSample *crash = NULL;
-Sound::SourceSample *engine = NULL;
+static Sound::System *sound = NULL;
+static Sound::SourceMusic *music = NULL;
+static Sound::SourceSample *sample_crash = NULL;
+static Sound::SourceSample *sample_engine = NULL;
+static Sound::SourceSample *sample_recognizer = NULL;
 
-Sound::Source3D *players[PLAYERS];
-Sound::Source3D *recognizerEngine;
+static Sound::Source3D *players[PLAYERS];
+static Sound::Source3D *recognizerEngine;
+
+#define V 5.0f
+#define TURNLENGTH 250.0f
 
 extern "C" {
 
 #include "sound_glue.h"
 
   void Audio_EnableEngine(void) {
-    engine->Start();
+    sample_engine->Start();
+    sample_recognizer->Start();
     printf("turning on engine sound\n");
   }
 
   void Audio_DisableEngine(void) {
-    engine->Stop();
+    sample_engine->Stop();
+    sample_recognizer->Stop();
     printf("turning off engine sound\n");
   }
 
   void Audio_Idle(void) { 
-#if 1
     // iterate over all the players and update the engines
-    if(engine->IsPlaying()) {
-#define V 5
+    if(sample_engine->IsPlaying()) {
       for(int i = 0; i < PLAYERS; i++) {
+	int dt = game2->time.current - game->player[i].data->turn_time;
+      
 	Player *p;
 	Sound::Source3D *p3d;
 	p3d = players[i];
 	p = game->player + i;
 	p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
-	p3d->_velocity = Vector3(V * dirsX[p->data->dir],
-				 V * dirsY[p->data->dir],
-				 0);
+	if(dt < TURN_LENGTH) {
+	  float t = (float)dt / TURNLENGTH;
+
+	  float vx = (1 - t) * dirsX[p->data->last_dir] +
+	    t * dirsX[p->data->dir];
+	  float vy = (1 - t) * dirsY[p->data->last_dir] +
+	    t * dirsY[p->data->dir];
+	  p3d->_velocity = Vector3(V * vx, V * vy, 0);
+	} else {
+	  p3d->_velocity = Vector3(V * dirsX[p->data->dir], 
+				   V * dirsY[p->data->dir], 
+				   0);
+	}
+
+	if(i == 0) {
+	  if( dt < TURNLENGTH ) {
+	    float t = (float)dt / TURNLENGTH;
+	    float speedShift = ( 1 - t ) * 0.4 + t * 0.3;
+	    float pitchShift = ( 1 - t ) * 0.9 + t * 1.0;
+	    ( (Sound::SourceEngine*) p3d )->_speedShift = speedShift;
+	    ( (Sound::SourceEngine*) p3d )->_pitchShift = pitchShift;
+	  } else {
+	  ( (Sound::SourceEngine*) p3d )->_speedShift = 0.3;
+	  ( (Sound::SourceEngine*) p3d )->_pitchShift = 1.0;
+	  }
+	}
       }
-#ifdef RECOGNIZER_SOUND
+    }
+    if(sample_recognizer->IsPlaying()) {
       if (game2->settingsCache.show_recognizer) {
 	Point p, v;
 	getRecognizerPositionVelocity(&p, &v);
-	recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
+	// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
+	recognizerEngine->_location = Vector3(p.x, p.y, 20.0f);
 	recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
       }
-#endif
-
-      Sound::Listener& listener = sound->GetListener();
-      listener._location = players[0]->_location;
-      listener._velocity = players[0]->_velocity;
-      listener._direction = players[0]->_velocity;
-
-#undef V
     }
-#endif
+
+    Sound::Listener& listener = sound->GetListener();
+
+    listener._location = Vector3(game->player[0].camera->cam);
+    listener._direction = 
+      Vector3(game->player[0].camera->target) -
+      Vector3(game->player[0].camera->cam);
+    // listener._location = players[0]->_location;
+    // listener._direction = players[0]->_velocity;
+    listener._velocity = players[0]->_velocity;
+
+    listener._up = Vector3(0, 0, 1);
+
+
     sound->SetMixMusic(game2->settingsCache.playMusic);
     sound->SetMixFX(game2->settingsCache.playEffects);
     sound->Idle();
   }
 
   void Audio_CrashPlayer(int player) {
-    Sound::SourceCopy *copy = new Sound::SourceCopy(crash);
+    Sound::SourceCopy *copy = new Sound::SourceCopy(sample_crash);
     copy->Start();
     copy->SetRemovable();
     copy->SetType(Sound::eSoundFX);
@@ -91,8 +128,6 @@ extern "C" {
       fprintf(stderr, "[error] %s\n", SDL_GetError());
       exit(1); // FIXME: shutdown sound system instead
     }
-
-    SDL_PauseAudio(0);
 
   }
 
@@ -127,8 +162,9 @@ extern "C" {
   }
   
   void Audio_SetFxVolume(float volume) {
-    engine->SetVolume(volume);
-    crash->SetVolume(volume);
+    sample_engine->SetVolume(volume);
+    sample_crash->SetVolume(volume);
+    sample_recognizer->SetVolume(volume);
   }
 
   void Audio_StartEngine(int iPlayer) {
@@ -138,36 +174,42 @@ extern "C" {
   void Audio_StopEngine(int iPlayer) {
     players[iPlayer]->Stop();
   }
-    
+ 
   void Audio_LoadPlayers() {
     for(int i = 0; i < PLAYERS; i++) {
-      players[i] = new Sound::Source3D(sound, engine);
-      players[i]->SetType(Sound::eSoundFX);
-      if(i != 0)
+      if(i != 0) {
+	players[i] = new Sound::Source3D(sound, sample_engine);
+	players[i]->SetType(Sound::eSoundFX);
 	sound->AddSource(players[i]);
+      } else {
+	players[i] = new Sound::SourceEngine(sound, sample_engine);
+	players[i]->SetType(Sound::eSoundFX);
+	sound->AddSource(players[i]);
+      }
     }
-#ifdef RECOGNIZER_SOUND
-    recognizerEngine = new Sound::Source3D(sound, engine);
+    recognizerEngine = new Sound::Source3D(sound, sample_recognizer);
+    recognizerEngine->SetType(Sound::eSoundFX);
     recognizerEngine->Start();
-    recognizerEngine->SetType(eSoundFX);
     sound->AddSource(recognizerEngine);
-#endif
   }
+
   void Audio_LoadSample(char *name, int number) {
     switch(number) {
     case 0:
-      engine = new Sound::SourceSample(sound);
-      engine->Load(name);
+      sample_engine = new Sound::SourceSample(sound);
+      sample_engine->Load(name);
       break;
     case 1:
-      crash = new Sound::SourceSample(sound);
-      crash->Load(name);
-      Audio_LoadPlayers();
+      sample_crash = new Sound::SourceSample(sound);
+      sample_crash->Load(name);
+      break;
+    case 2:
+      sample_recognizer = new Sound::SourceSample(sound);
+      sample_recognizer->Load(name);
       break;
     default:
       /* programmer error, but non-critical */
       fprintf(stderr, "[error] unkown sample %d: '%s'\n", number, name);
     }
   }
-
 }
