@@ -3,6 +3,7 @@
 
 /* some geometric routines always needed */
 
+/*
 typedef struct {
   float v[4];
 } vec4;
@@ -10,6 +11,7 @@ typedef struct {
 typedef struct {
   float v[3];
 } vec3;
+*/
 
 typedef struct {
   int vertex[3];
