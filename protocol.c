@@ -16,6 +16,7 @@ int isConnected = 0;
 
 
 static void *pos;
+
 #define ADD_STRING(x) memcpy(pos, x, sizeof(x)); pos += sizeof(x)
 #define ADD_INT(x) SDLNet_Write32(x, pos); pos += 4
 #define GET_STRING(x, y) memcpy(x, y, sizeof(x)); y += sizeof(x)
@@ -275,7 +276,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
   len =  Net_preparepacket(packet, buff);
   printf("sending packet size: %d\n", len);
   printf("type %d from %d\n", packet->type, packet->which);
-  //Packet mus be the same size...
+  //Packet must be the same size...
   if( ( SDLNet_TCP_Send(sock, buff, PACKETSIZE)) < PACKETSIZE )
     {
       free(buff);

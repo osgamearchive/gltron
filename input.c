@@ -44,7 +44,15 @@ void keyGame(int k, int unicode, int x, int y)
   case 27:
 #ifdef __NETWORK__
     if( isConnected )
-      Net_disconnect();
+      {
+	fprintf(stderr, "exit network game\n");
+	isConnected=0;
+	isLogged=0;
+	Net_disconnect();
+	serverstate=preGameState; //We hope that next time server will be to preGameState
+
+	//TODO: see how not to came back to this callBack when doing lot of esc in gui!
+      }
 
 #endif
     switchCallbacks(&pauseCallbacks);

@@ -1,5 +1,5 @@
 #include "gltron.h"
-#define MAX_CHARS 1024
+#define MAX_CHARS 31
 static char buff[MAX_CHARS]; //TODO Defines MAX_CHARS
 static int  nbreads;
 

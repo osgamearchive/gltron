@@ -59,6 +59,8 @@ int processEvent(GameEvent* e) {
     
     game2->mode = GAME_NETWORK_RECORD;
     //go to pregame state...
+    sState = preGameState;
+
     rep.which=SERVERID;
     rep.type=SERVERINFO;
     rep.infos.serverinfo.serverstate=preGameState;

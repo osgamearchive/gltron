@@ -8,8 +8,8 @@ static char chat[1024]   = "";
 
 void mousePregame (int buttons, int state, int x, int y)
 {
-    if ( state == SYSTEM_MOUSEPRESSED )
-      switchCallbacks(&guiCallbacks);
+  //if ( state == SYSTEM_MOUSEPRESSED )
+      //  switchCallbacks(&guiCallbacks);
 }
 
 void keyPregame(int k, int unicode, int x, int y)
@@ -20,8 +20,13 @@ void keyPregame(int k, int unicode, int x, int y)
       switchCallbacks(&keyboardreadingCallbacks);
       break;
     case SDLK_ESCAPE:
+      fprintf(stderr, "exit network game\n");
+      isConnected=0;
+      isLogged=0;
       Net_disconnect();
-      switchCallbacks(&guiCallbacks);
+      serverstate=preGameState; //We hope that next time server will be to preGameState
+      switchCallbacks(&guiCallbacks);      
+      //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
       
     }

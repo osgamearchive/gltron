@@ -35,6 +35,7 @@ connectionLost()
   isConnected=0;
   isLogged=0;
   Net_disconnect();
+  serverstate=preGameState; //We hope that next time server will be to preGameState
   switchCallbacks(&guiCallbacks);
 }
 
@@ -96,7 +97,14 @@ do_userinfo(Packet packet)
     {
       printf("%s join\n", packet.infos.userinfo.nick);
       sprintf(mesg, "%s join\n", packet.infos.userinfo.nick);
-      drawMessage(mesg);
+      printf("%s", mesg);
+      if( serverstate == preGameState )
+	{
+	  drawMessage(mesg);
+	} else if ( serverstate == gameState )
+	  {
+	    consoleAddLine(mesg);
+	  }
     }
 
   slots[which].active   = 1;
@@ -140,6 +148,8 @@ void
 do_action(Packet packet)
 {
   char mesg[255];
+  int  i;
+
   switch( packet.infos.action.type )
     {
     case JOIN:
@@ -149,8 +159,29 @@ do_action(Packet packet)
     case PART:
       slots[packet.infos.action.which].active=0;
       sprintf(mesg, "%s part\n", slots[packet.infos.action.which].name);
-      drawMessage(mesg);
+      printf("%s", mesg);
+      if( serverstate == preGameState )
+	{
+	  drawMessage(mesg);
+	} else if ( serverstate == gameState )
+	  {
+	    consoleAddLine(mesg);
+	  }
       nbUsers--;
+      break;
+    case CHGEGAMEMASTER:
+      //for a reason ( certainly 'cause game master has leave ), Game Master has changed
+      //new Game Master is packet.infos.action.which
+
+      //Search for old game Master if he still connected and put it not GM
+      for(i=0;i<MAX_PLAYERS; ++i)
+	{
+	  if( (slots[i].active == 1) && (slots[i].isMaster == 1) )
+	    {
+	      slots[i].isMaster = 0;
+	    }
+	}
+      slots[packet.infos.action.which].isMaster=1;
       break;
     }
 }
@@ -268,6 +299,9 @@ do_gameState( Packet packet )
       break;
     case SERVERINFO:
       do_serverinfo(packet);
+      break;
+    case ACTION:
+      do_action(packet);
       break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);

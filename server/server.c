@@ -57,6 +57,8 @@ void
 stop_server()
 {
   Net_cleanup();
+  //TODO: See how things work when brutal disconnect? why not say to player that server will shutdown
+  //May be with a message ( eg: server maintenance, etc... )
 }
 
 void
@@ -71,25 +73,65 @@ do_lostplayer(int which )
       slots[which].active=0;
       nbUsers--;
 
-      //Say to other...
-      rep.which=SERVERID;
-      rep.type=ACTION;
-      rep.infos.action.type=PART;
-      rep.infos.action.which=which;
+      printf("%s part.\n", slots[which].name);
 
-      printf("%s nous quitte.\n", slots[which].name);
-
-      //TODO: If it was the game master, change that
-
-      for(i=0; i< 4; ++i)
+      //TODO: if there is no1 left, init game to default #done
+      //and go to waitState.
+      if( nbUsers == 0 )
 	{
-	  if( slots[i].active == 1 )
-	    {	 
-	      Net_sendpacket(&rep, slots[i].sock);
+	  //change to waitState
+	  sState=waitState;
+
+	  //init NetRules
+	  netrulenbwins = 5;
+	  netruletime   = -1;
+    
+	  //Change game mode... nothing to do with game things...
+	  game2->mode = GAME_NETWORK_RECORD;
+	} else {
+	  
+	  //TODO: If it was the game master, change that #done
+	  if( slots[which].isMaster )
+	    {
+	      //In this case, we need a new master, otherwise game is blocked
+	      //And no1 can start game.
+	      
+	      //search for an active slot
+	      i=-1;
+	      while( slots[++i].active != 1 && i <= MAX_PLAYERS ) { }
+	      //i is our new master
+	      slots[i].isMaster=1;
+	      
+	      //Say to other...
+	      rep.which=SERVERID;
+	      rep.type=ACTION;
+	      rep.infos.action.type=CHGEGAMEMASTER;
+	      rep.infos.action.which=i;	 //Means i is the new Game Master
+	        
+	      printf("Changing Game Master, new one is %d", rep.infos.action.which);
+
+	      for(i=0; i< 4; ++i)
+		{
+		  if( slots[i].active == 1 )
+		    {	 
+		      Net_sendpacket(&rep, slots[i].sock);
+		    }
+		}	      
+	    }
+	  
+	  //Say to other...
+	  rep.which=SERVERID;
+	  rep.type=ACTION;
+	  rep.infos.action.type=PART;
+	  rep.infos.action.which=which;	  
+	  for(i=0; i< 4; ++i)
+	    {
+	      if( slots[i].active == 1 )
+		{	 
+		  Net_sendpacket(&rep, slots[i].sock);
+		}
 	    }
 	}
-      //TODO: if there is no1 left, init game to default
-      //and go to waitState.
 
     }
   Net_delsocket(slots[which].sock);
@@ -112,12 +154,12 @@ do_login( int which, Packet packet )
 
   if( ! check_version(packet.infos.login.version) )
     {
-      printf("version mauvaise: %s\n", packet.infos.login.version);
+      printf("wrong version: %s\n", packet.infos.login.version);
       //Send the reponse deny...
       rep.which  = SERVERID;
       rep.type   = LOGINREP;
       rep.infos.loginrep.accept = 0;
-      strcpy(rep.infos.loginrep.message, "La version de gltron est incompatible.\n");
+      strcpy(rep.infos.loginrep.message, "wrong gltron version.\n");
       Net_sendpacket(&rep, slots[which].sock);
       Net_closesock(slots[which].sock);
       Net_delsocket(slots[which].sock);
@@ -133,7 +175,7 @@ do_login( int which, Packet packet )
       slots[which].isMaster = 0;
     }
 
-  //TODO Search for the game master...
+  //TODO Search for the game master... : is it necessary?
 
   //Accept the connection
   rep.which  = which;
@@ -165,7 +207,7 @@ do_login( int which, Packet packet )
 
   //TODO : Check for dupplicate login  
   strcpy(slots[which].name, packet.infos.login.nick);
-  printf("Connection de %s sur le slot %d\n", slots[which].name, which);
+  printf("Connection from %s one slot %d\n", slots[which].name, which);
 
   //TODO: if nick already exists, change and send...
   strcpy(rep.infos.userinfo.nick, slots[which].name); //TODO: get right color..

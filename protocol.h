@@ -37,7 +37,8 @@ enum {
   TURNLEFT,                 //Ask to turn left
   STARTGAME,                //Ask to start game
   PART,                     //Someone left
-  JOIN                      //Someone join
+  JOIN,                     //Someone join
+  CHGEGAMEMASTER            //One server say that game master has changed
 };
 
 //Typedefs--------------------------------------------------------------------
