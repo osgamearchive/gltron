@@ -66,12 +66,12 @@ void shutdownDisplay(gDisplay *d) {
 }
 
 void setupDisplay(gDisplay *d) {
-  printf("trying to create window\n");
+  fprintf(stderr, "trying to create window\n");
   d->win_id = initWindow();
-  printf("window created\n");
+  fprintf(stderr, "window created\n");
   printRendererInfo();
   /* printf("win_id is %d\n", d->win_id); */
-  printf("loading art...\n");
+  fprintf(stderr, "loading art\n");
   loadArt();
 
   initBitmaps(game->screen);
@@ -174,3 +174,11 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion
 };
+
+
+
+
+
+
+
+
