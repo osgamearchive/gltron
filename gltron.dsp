@@ -75,7 +75,7 @@ PostBuild_Cmds=copy Release\gltron.exe gltron.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./src/include" /I "./nebu/include" /D "_WINDOWS" /D PREF_DIR=\".\" /D SNAP_DIR=\".\" /D DATA_DIR=\".\" /D LOCAL_DATA=\"\" /D SEPARATOR='\\' /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /D SEPERATOR='\\' /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./src/include" /I "./nebu/include" /I "./lua5/include" /D "_WINDOWS" /D PREF_DIR=\".\" /D SNAP_DIR=\".\" /D DATA_DIR=\".\" /D LOCAL_DATA=\"\" /D SEPARATOR='\\' /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /D SEPERATOR='\\' /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -86,7 +86,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib SDLmain.lib sdl.lib libpng.lib zlib.lib sdl_sound.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib glew32.lib opengl32.lib SDLmain.lib sdl.lib libpng.lib libz.lib sdl_sound.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
@@ -146,6 +146,10 @@ SOURCE=.\src\game\computer.c
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\game\computer_utilities.c
 # End Source File
 # Begin Source File
 
@@ -237,7 +241,7 @@ SOURCE=.\src\video\fonts.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\video\fonttex.c
+SOURCE=.\src\game\game.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
@@ -252,18 +256,7 @@ SOURCE=.\src\video\fonttex.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\game\game.c
-
-!IF  "$(CFG)" == "gltron - Win32 Release"
-
-# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
-
-!ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
-
-# ADD CPP /I "./lua/include"
-
-!ENDIF 
-
+SOURCE=.\src\game\game_level.c
 # End Source File
 # Begin Source File
 
@@ -415,22 +408,6 @@ SOURCE=.\src\game\init.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\game\init_sdl.c
-
-!IF  "$(CFG)" == "gltron - Win32 Release"
-
-# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
-
-!ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
-
-# ADD CPP /I "./nebu/include./lua/include"
-# SUBTRACT CPP /I "./nebu/include"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
 SOURCE=.\src\input\input.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
@@ -443,6 +420,10 @@ SOURCE=.\src\input\input.c
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\video\level.c
 # End Source File
 # Begin Source File
 

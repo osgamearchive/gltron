@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./include" /D "_LIB" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./include" /I "../lua5/include" /D "_LIB" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.71\" /D PATH_SEPARATOR='\\' /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -87,6 +87,18 @@ PostBuild_Cmds=copy Debug\nebu.lib nebu.lib
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\video\2d.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\audio_system.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\video\camera.c
+# End Source File
 # Begin Source File
 
 SOURCE=.\video\console.c
@@ -154,18 +166,7 @@ SOURCE=.\filesystem\findpath.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\base\geom.c
-
-!IF  "$(CFG)" == "nebu - Win32 Release"
-
-# ADD CPP /I "./include" /I "../lua/include"
-
-!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
-
-# ADD CPP /I "./include/base"
-
-!ENDIF 
-
+SOURCE=.\video\font.c
 # End Source File
 # Begin Source File
 
@@ -199,6 +200,14 @@ SOURCE=.\base\matrix.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\video\mesh.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\video\mesh_3ds.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\video\pixels.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
@@ -212,16 +221,11 @@ SOURCE=.\video\pixels.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\video\png_texture.c
+SOURCE=.\base\png_texture.c
+# End Source File
+# Begin Source File
 
-!IF  "$(CFG)" == "nebu - Win32 Release"
-
-# ADD CPP /I "./include" /I "../lua/include"
-
-!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
-
-!ENDIF 
-
+SOURCE=.\base\quat.c
 # End Source File
 # Begin Source File
 
@@ -237,6 +241,10 @@ SOURCE=.\base\random.c
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=.\video\scene.c
 # End Source File
 # Begin Source File
 
@@ -343,6 +351,14 @@ SOURCE=.\audio\SourceSample.cpp
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=.\base\spline.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\base\surface.c
 # End Source File
 # Begin Source File
 
