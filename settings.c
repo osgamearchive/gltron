@@ -61,7 +61,13 @@ void saveSettings() {
   scripting_RunFile(script);
   free(script);
 
+  /* fixme */
+#ifndef WIN32
   path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
+#else
+  path = "gltron.ini";
+#endif
+
   if(path != NULL) {
     scripting_RunFormat("writeto(\"%s\")", path);
     scripting_Run("save()");
