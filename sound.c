@@ -37,7 +37,7 @@ void loadFX() {
   }
 }
 
-reloadTrack() {
+void reloadTrack() {
   char *song;
   char *path;
   scripting_GetString("current_track", &song);
@@ -97,7 +97,7 @@ void setFxVolume(float volume) {
 }
 
 void initSoundTracks() {
-  char *music_path;
+  const char *music_path;
   list *soundList;
   list *p;
   int i;
