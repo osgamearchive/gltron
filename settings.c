@@ -28,10 +28,10 @@ void initMainGameSettings() {
 
   /* initialize some struct members */
 
-  game2->input.mouse1 = 0;
-  game2->input.mouse2 = 0;
-  game2->input.mousex = 0;
-  game2->input.mousey = 0;
+  gInput.mouse1 = 0;
+  gInput.mouse2 = 0;
+  gInput.mousex = 0;
+  gInput.mousey = 0;
 }
 
 void checkSettings() {

@@ -40,8 +40,8 @@ void keyGame(int k, int x, int y)
   case SYSTEM_KEY_F5: saveSettings(); break;
 
   case SYSTEM_KEY_F10: nextCameraType(); break;
-  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
-  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
+  case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;
 
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
@@ -88,9 +88,6 @@ void parse_args(int argc, const char *argv[]) {
 	case 'g': setSettingi("show_glow", 0); break;
 	case 'w': setSettingi("show_wall", 0); break;
 	case 'C': setSettingi("show_ai_status", 1); break;
-#if 0
-	case 'v': setSettingi("screenSaver", 1); break;
-#endif
 	case 'i': setSettingi("windowMode", 1); break;
 	case 'O': setSettingi("softwareRendering", 1); break;
 	case '1': /* default is 4 */

@@ -131,19 +131,19 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
 	}
 
   if(cam->type->freedom[CAM_FREE_R]) {
-    if(game2->input.mouse1 == 1)
+    if(gInput.mouse1 == 1)
       cam->movement[CAM_R] += (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
-    if(game2->input.mouse2 == 1)
+    if(gInput.mouse2 == 1)
       cam->movement[CAM_R] -= (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
     writeCamDefaults(cam, CAM_R);
   }
 
   if(cam->type->freedom[CAM_FREE_PHI]) {
-    cam->movement[CAM_PHI] += - game2->input.mousex * MOUSE_CX;
+    cam->movement[CAM_PHI] += - gInput.mousex * MOUSE_CX;
     writeCamDefaults(cam, CAM_CHI);
   }
   if(cam->type->freedom[CAM_FREE_CHI]) {
-    cam->movement[CAM_CHI] += game2->input.mousey * MOUSE_CY;
+    cam->movement[CAM_CHI] += gInput.mousey * MOUSE_CY;
     writeCamDefaults(cam, CAM_PHI);
   }
   /* done with mouse movement, now clamp the camera to legal values */
@@ -217,7 +217,7 @@ void doCameraMovement() {
 
   for(i = 0; i < game->players; i++) {
       
-    cam = game->player[i].camera;
+    cam = gPlayerVisuals[i].camera;
     data = game->player[i].data;
     p = game->player + i;
 
@@ -228,9 +228,8 @@ void doCameraMovement() {
   }
 
   /* mouse events consumed */
-  game2->input.mousex = 0;
-  game2->input.mousey = 0;
-
+  gInput.mousex = 0;
+  gInput.mousey = 0;
 }
 
 void nextCameraType() {
@@ -245,7 +244,7 @@ void nextCameraType() {
   
   for (i = 0; i < game->players; i++) {
     if (game->player[i].ai->active == AI_HUMAN) {
-      initCamera(game->player[i].camera, game->player[i].data, new_cam_type);
+      initCamera(gPlayerVisuals[i].camera, game->player[i].data, new_cam_type);
     }
   }
 

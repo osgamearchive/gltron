@@ -53,8 +53,6 @@ int processEvent(GameEvent* e) {
       displayMessage(TO_CONSOLE, "everyone died! no one wins!");
     }
 		SystemExitLoop(RETURN_GAME_END);
-    /* screenSaverCheck(0); */
-    stoptime = SystemGetElapsedTime();
     game->pauseflag = PAUSE_GAME_FINISHED;
     value = 1;
     break;

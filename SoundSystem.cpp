@@ -1,4 +1,5 @@
 #include "SoundSystem.h"
+#include <string.h>
 
 namespace Sound {
   System::System(SDL_AudioSpec *spec) { 

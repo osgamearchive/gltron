@@ -1,4 +1,5 @@
 #include "gltron.h"
+#include "switchCallbacks.h"
 
 #include "lua.h"
 #include "lualib.h"
@@ -26,7 +27,7 @@ int c_resetCamera(lua_State *L) {
   Data *data;
 
   for(i = 0; i < game->players; i++) {
-    cam = game->player[i].camera;
+    cam = gPlayerVisuals[i].camera;
     data = game->player[i].data;
 
     camType = (game->player[i].ai->active == AI_COMPUTER) ? 
@@ -38,8 +39,8 @@ int c_resetCamera(lua_State *L) {
 
 int c_video_restart(lua_State *L) {
   initGameScreen();
-  shutdownDisplay( game->screen );
-  setupDisplay( game->screen );
+  shutdownDisplay( gScreen );
+  setupDisplay( gScreen );
   updateCallbacks();
   changeDisplay(-1);
   return 0;

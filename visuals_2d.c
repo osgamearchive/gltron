@@ -73,6 +73,7 @@ void draw2D( Visual *d ) {
 		}
 		for(i = 0; i < game->players; i++) {
 				Player *p = &game->player[i];
+				PlayerVisual *pV = gPlayerVisuals + i;
 				Line* trail;
 				
 				// fixme: check if trails vanish
@@ -87,11 +88,11 @@ void draw2D( Visual *d ) {
            */
           glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     
-          glColor4f(p->pColorAlpha[0], p->pColorAlpha[1], p->pColorAlpha[2],
+          glColor4f(pV->pColorAlpha[0], pV->pColorAlpha[1], pV->pColorAlpha[2],
                     p->data->trail_height / TRAIL_HEIGHT);
         } else {
           glBlendFunc(GL_ONE, GL_ONE);
-          glColor3fv(p->pColorAlpha);
+          glColor3fv(pV->pColorAlpha);
         }
         
         glPointSize(2);

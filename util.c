@@ -2,6 +2,9 @@
 
 #include <stdlib.h>
 #include "random.h"
+#include "basic_types.h"
+#include "file.h"
+#include "scripting.h"
 
 void randomPermutation( int N, int *nodes )
 {
@@ -26,3 +29,23 @@ void clamp( float *f, float min, float max )
   if(*f < min) *f = min;
   else if(*f > max) *f = max;
 }
+
+void addList(List **l, void* data) {
+	List *p;
+	if(*l == NULL) {
+		*l = (List*) malloc(sizeof(List));
+		(*l)->next = NULL;
+	}
+	for(p = *l; p->next != NULL; p = p->next);
+	p->next = (List*) malloc(sizeof(List));
+	p->next->next = NULL;
+	p->data = data;
+}
+
+void runScript(int ePath, const char *name) {
+	char *s;
+	s = getPath(ePath, name);
+	scripting_RunFile(s);
+	free(s);
+}
+

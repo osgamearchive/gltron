@@ -6,6 +6,11 @@ Game *game;
 Game2 main_game2;
 Game2 *game2;
 
+Visual *gScreen;
+int gViewportType;
+PlayerVisual *gPlayerVisuals;
+Input gInput;
+
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 
 /* TexFont *txf = NULL; */
@@ -48,10 +53,6 @@ float cam_defaults[][3] =  {
   { CAM_CIRCLE_DIST, M_PI / 3, 0 } /* free */
 };
 
-/* screensaver hack */
-int stoptime = 0;
-/* menu hack */
-int menutime;
 /* int lasttime; 
    double dt; */
 /* milliseconds since last frame */

@@ -526,7 +526,9 @@ Menu.TextureMenu.items = {
    "Decals", "Mipmaps", "Filtering", "WallScaling"
 }
 Menu.DetailsMenu.items = {
-   "AlphaTrails", "Halos", "Lightcycles", "Recognizer", "ImpactAnimation", 
+   "AlphaTrails", "Halos",
+    -- "Lightcycles",
+    "Recognizer", "ImpactAnimation", 
    "CycleLod", "ShadowLod", "ShadowStyle", "FPS_Counter", "AI_Status", "Scores"
 }
 Menu.ScreenMenu.items = {

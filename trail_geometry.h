@@ -18,9 +18,11 @@ void storeVertex(TrailMesh *pMesh, int offset,
 								 float fSegLength, float fTotalLength);
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset);
 int cmpdir(Line *line1, Line *line2);
-void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
+void trailGeometry(Player *pPlayer, PlayerVisual *pV,
+									 TrailMesh *pMesh,
 								 int *pVertexOffset, int *pIndexOffset);
-void bowGeometry(Player *pPlayer, TrailMesh *pMesh,
+void bowGeometry(Player *pPlayer, PlayerVisual *pV,
+								 TrailMesh *pMesh,
 								 int *pVertexOffset, int *pIndexOffset);
 void trailRender(TrailMesh *pMesh);
 void trailStatesNormal(Player *pPlayer, int texture);

@@ -15,7 +15,7 @@ void guiProjection(int x, int y) {
   checkGLError("gui.c guiProj - proj");
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glViewport(game->screen->vp_x, game->screen->vp_y,
+  glViewport(gScreen->vp_x, gScreen->vp_y,
 	     x, y);
   checkGLError("gui.c guiProj - end");
 }
@@ -26,10 +26,10 @@ void drawGuiBackground() {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  rasonly(game->screen);
+  rasonly(gScreen);
 
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_GUI]);
+  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_GUI]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
   glColor3f(1.0, 1.0, 1.0);
@@ -39,38 +39,37 @@ void drawGuiBackground() {
   glVertex2f(0, 0);
 
   glTexCoord2f(1.0, 0.0);
-  glVertex2f(game->screen->vp_w, 0);
+  glVertex2f(gScreen->vp_w, 0);
 
   glTexCoord2f(1.0, .75);
-  glVertex2f(game->screen->vp_w, game->screen->vp_h);
+  glVertex2f(gScreen->vp_w, gScreen->vp_h);
 
   glTexCoord2f(0.0, .75);
-  glVertex2f(0, game->screen->vp_h);
+  glVertex2f(0, gScreen->vp_h);
 
   glEnd();
 }
 
 void drawGuiLogo() {
-  float pos[] = { 512 - 10 - 256, 384 - 64 };
-  float size[] = { 256, 64 };
+  float pos[] = { 512 - 10 - 320, 384 - 80 };
+  float size[] = { 320, 80 };
   float glpos = 64;
   float glsize = 32;
-  float font_shift[] = { 0.5, 0.00 };
 
   checkGLError("gui logo start");
   
-  rasonly(game->screen);
+  rasonly(gScreen);
 
-  pos[0] *= game->screen->vp_w / 512.0;
-  pos[1] *= game->screen->vp_h / 384.0;
-  size[0] *= game->screen->vp_w / 512.0;
-  size[1] *= game->screen->vp_h / 384.0;
-  glpos *= game->screen->vp_w / 512.0;
-  glsize *= game->screen->vp_w / 512.0;
+  pos[0] *= gScreen->vp_w / 512.0;
+  pos[1] *= gScreen->vp_h / 384.0;
+  size[0] *= gScreen->vp_w / 512.0;
+  size[1] *= gScreen->vp_h / 384.0;
+  glpos *= gScreen->vp_w / 512.0;
+  glsize *= gScreen->vp_w / 512.0;
   
   glEnable(GL_TEXTURE_2D);
 
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_LOGO]);
+  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_LOGO]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
   glEnable(GL_BLEND);
@@ -79,18 +78,22 @@ void drawGuiLogo() {
   glColor3f(1.0, 1.0, 1.0);
   glBegin(GL_QUADS);
 
-  glTexCoord2f(0.0, 0.0);
-  glVertex2f(pos[0], pos[1]);
+	{ 
+		// float texy = 1.0f - 256.0f / 320.0f;
+		float texy = 0.0f;
+		glTexCoord2f(0.0, texy);
+		glVertex2f(pos[0], pos[1]);
 
-  glTexCoord2f(1.0, 0.0);
-  glVertex2f(pos[0] + size[0], pos[1]);
+		glTexCoord2f(1.0, texy);
+		glVertex2f(pos[0] + size[0], pos[1]);
 
-  glTexCoord2f(1.0, 1.0);
-  glVertex2f(pos[0] + size[0], pos[1] + size[1]);
+		glTexCoord2f(1.0, 1.0);
+		glVertex2f(pos[0] + size[0], pos[1] + size[1]);
 
-  glTexCoord2f(0.0, 1.0);
-  glVertex2f(pos[0], pos[1] + size[1]);
-
+		glTexCoord2f(0.0, 1.0);
+		glVertex2f(pos[0], pos[1] + size[1]);
+	}
+	
   glEnd();
 
   glDisable(GL_BLEND);
@@ -101,7 +104,7 @@ void drawGuiLogo() {
 void displayGui() {
   drawGuiBackground();
   drawGuiLogo();
-  drawMenu(game->screen);
+  drawMenu(gScreen);
 
   SystemSwapBuffers();  
 }
@@ -110,12 +113,12 @@ void displayConfigure() {
   char message[] = "Press a key for this action!";
   drawGuiBackground();
   drawGuiLogo();
-  drawMenu(game->screen);
+  drawMenu(gScreen);
 
-  rasonly(game->screen);
+  rasonly(gScreen);
   glColor3f(1.0, 1.0, 1.0);
-  drawText(guiFtx, game->screen->vp_w / 6, 20,
-	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+  drawText(guiFtx, gScreen->vp_w / 6, 20,
+	   gScreen->vp_w / (6.0 / 4.0 * strlen(message)), message);
   SystemSwapBuffers();
 }
 
@@ -189,8 +192,8 @@ void keyboardGui(int key, int x, int y) {
 		case SYSTEM_JOY_LEFT + SYSTEM_JOY_OFFSET:
     scripting_Run("Menu.Left()");
     break;
-  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
-  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
+  case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;
   default: 
     // printf("got key %d\n", key);
 		break;
@@ -203,8 +206,6 @@ void initGui() {
   SystemUnhidePointer();
 
   updateSettingsCache();
-
-  menutime = SystemGetElapsedTime();
 }
 
 void exitGui() {

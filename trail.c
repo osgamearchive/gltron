@@ -76,7 +76,7 @@ float getSegmentUV(Line *line) {
    the alpha value is reduced with increasing distance to the player
 */
 
-void drawTrailLines(Player *p) {
+void drawTrailLines(Player *p, PlayerVisual *pV) {
   Line *line;
   float height;
 
@@ -89,7 +89,7 @@ void drawTrailLines(Player *p) {
   float trail_top[] = { 1.0, 1.0, 1.0, 1.0 };
 
   data = p->data;
-  cam = p->camera;
+  cam = pV->camera;
 
   height = data->trail_height;
   if(height <= 0) return;
@@ -161,7 +161,7 @@ void drawTrailLines(Player *p) {
    at (-1,-1,1,0) (I hope that's correct)
 */
 
-void drawTrailShadow(Player* p) {
+void drawTrailShadow(Player* p, PlayerVisual *pV) {
   /* states */
 
   if(game2->settingsCache.use_stencil) {
@@ -194,8 +194,8 @@ void drawTrailShadow(Player* p) {
 		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
 		mesh.iUsed = 0;
 		
-		trailGeometry(p, &mesh, &vOffset, &iOffset);
-		bowGeometry(p, &mesh, &vOffset, &iOffset);
+		trailGeometry(p, pV, &mesh, &vOffset, &iOffset);
+		bowGeometry(p, pV, &mesh, &vOffset, &iOffset);
 		trailStatesShadowed();
 		trailRender(&mesh);
 		// no states restore, because we're drawing shadowed geometry
@@ -217,57 +217,3 @@ void drawTrailShadow(Player* p) {
   glPopMatrix();
 }
 
-void drawTrailBow(Player *p) {
-  Data *data;
-  float height;
-  float ex, ey, sx, sy;
-  int bdist;
-
-  data = p->data;
-  height = data->trail_height;
-  if(height < 0) return;
-
-  if(PLAYER_IS_ACTIVE(p)) {
-    glEnable(GL_TEXTURE_2D);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_TRAIL]);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  }
-
-
-  bdist = PLAYER_IS_ACTIVE(p) ? 2 : 3;
-
-  sx = getSegmentEndX(data, 0);
-  sy = getSegmentEndY(data, 0);
-
-  ex = getSegmentEndX(data, bdist);
-  ey = getSegmentEndY(data, bdist);
-
-    /* quad fading from white to model color, bow texture */
-  glBegin(GL_QUADS);
-
-  /* glTexCoord2f(TEX_SPLIT, 0.0); */
-  glTexCoord2f(0.0, 0.0);
-	glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(sx, sy, 0.0);
-
-  glTexCoord2f(1.0, 0.0);
-	glColor3fv(p->pColorDiffuse);
-  glVertex3f(ex, ey, 0.0);
-
-  glTexCoord2f(1.0, 1.0);
-	glColor3fv(p->pColorDiffuse);
-  glVertex3f(ex, ey, height);
-
-  /* glTexCoord2f(TEX_SPLIT, 1.0); */
-  glTexCoord2f(0.0, 1.0);
-	glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(sx, sy, height);
-  glEnd();
-
-  polycount += 4;
-
-  glDisable(GL_BLEND);
-  glDisable(GL_TEXTURE_2D);
-}

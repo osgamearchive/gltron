@@ -13,7 +13,7 @@ void initClientData() {
   Data *data;
 
   for(i = 0; i < game->players; i++) {
-    cam = game->player[i].camera;
+    cam = gPlayerVisuals[i].camera;
     data = game->player[i].data;
 
     camType = (game->player[i].ai->active == AI_COMPUTER) ? CAM_CIRCLE : game2->settingsCache.camType;
@@ -22,11 +22,11 @@ void initClientData() {
     {
       char name[32];
       sprintf(name, "model_diffuse_%d", i);
-      scripting_GetFloatArray(name, game->player[i].pColorDiffuse, 4);
+      scripting_GetFloatArray(name, gPlayerVisuals[i].pColorDiffuse, 4);
       sprintf(name, "model_specular_%d", i);
-      scripting_GetFloatArray(name, game->player[i].pColorSpecular, 4);
+      scripting_GetFloatArray(name, gPlayerVisuals[i].pColorSpecular, 4);
       sprintf(name, "trail_diffuse_%d", i);
-      scripting_GetFloatArray(name, game->player[i].pColorAlpha, 4);
+      scripting_GetFloatArray(name, gPlayerVisuals[i].pColorAlpha, 4);
     }
     if( game->player[i].data->speed > 0)
       Audio_StartEngine(i);
@@ -35,11 +35,11 @@ void initClientData() {
 
 void initDisplay(Visual *d, int type, int p, int onScreen) {
   int field;
-  field = game->screen->vp_w / 32;
-  d->h = game->screen->h;
-  d->w = game->screen->w;
-  d->vp_x = game->screen->vp_x + vp_x[type][p] * field;
-  d->vp_y = game->screen->vp_y + vp_y[type][p] * field;
+  field = gScreen->vp_w / 32;
+  d->h = gScreen->h;
+  d->w = gScreen->w;
+  d->vp_x = gScreen->vp_x + vp_x[type][p] * field;
+  d->vp_y = gScreen->vp_y + vp_y[type][p] * field;
   d->vp_w = vp_w[type][p] * field;
   d->vp_h = vp_h[type][p] * field;
   d->onScreen = onScreen;
@@ -114,19 +114,19 @@ void changeDisplay(int view) {
 void updateDisplay(int vpType) {
   int i;
 
-  game->viewportType = vpType;
+  gViewportType = vpType;
 
   for (i = 0; i < game->players; i++) {
-    game->player[i].display->onScreen = 0;
+    gPlayerVisuals[i].display->onScreen = 0;
   }
   for (i = 0; i < vp_max[vpType]; i++) {
-       initDisplay(game->player[ viewport_content[i] ].display, 
+       initDisplay(gPlayerVisuals[ viewport_content[i] ].display, 
 		   vpType, i, 1);
   }
 
 }
 
-void initGame() { /* called when game mode is entered */
+void enterGame() { /* called when game mode is entered */
   updateSettingsCache();
 
   SystemHidePointer();
@@ -141,19 +141,10 @@ void exitGame() {
   /* fprintf(stderr, "exit game\n"); */
 }
 
-void initGameScreen() {
-  Visual *d;
-  d = game->screen;
-  d->w = getSettingi("width");
-  d->h = getSettingi("height"); 
-  d->vp_x = 0; d->vp_y = 0;
-  d->vp_w = d->w; d->vp_h = d->h;
-}
-
 void gameMouseMotion(int x, int y) {
   if(x != MOUSE_ORIG_X || y != MOUSE_ORIG_Y) {
-    game2->input.mousex += x - MOUSE_ORIG_X;
-    game2->input.mousey += y - MOUSE_ORIG_Y;
+    gInput.mousex += x - MOUSE_ORIG_X;
+    gInput.mousey += y - MOUSE_ORIG_Y;
     /* fprintf(stderr, "Mouse: dx: %d\tdy: %d\n", 
        x - MOUSE_ORIG_Y, y - MOUSE_ORIG_Y); */
     /* 
@@ -168,11 +159,11 @@ void gameMouseMotion(int x, int y) {
 
 void gameMouse(int buttons, int state, int x, int y) {
   if(state == SYSTEM_MOUSEPRESSED) {
-    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) game2->input.mouse1 = 1;
-    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) game2->input.mouse2 = 1;
+    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) gInput.mouse1 = 1;
+    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) gInput.mouse2 = 1;
   } else if(state == SYSTEM_MOUSERELEASED) {
-    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) game2->input.mouse1 = 0;
-    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) game2->input.mouse2 = 0;
+    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) gInput.mouse1 = 0;
+    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) gInput.mouse2 = 0;
   }
 
   /*
@@ -190,8 +181,6 @@ void gameMouse(int buttons, int state, int x, int y) {
   /* fprintf(stderr, "new cam_r: %.2f\n", cam_r); */
 }
 
-
-
-
-
-
+Callbacks gameCallbacks = { 
+  displayGame, idleGame, keyGame, enterGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
+};

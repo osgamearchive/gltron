@@ -7,6 +7,9 @@
 
 #include "gltron.h"
 
+#include "SDL.h"
+#include "SDL_sound.h"
+
 static Sound::System *sound = NULL;
 static Sound::SourceMusic *music = NULL;
 static Sound::SourceSample *sample_crash = NULL;
@@ -88,10 +91,10 @@ extern "C" {
 
     Sound::Listener& listener = sound->GetListener();
 
-    listener._location = Vector3(game->player[0].camera->cam);
+    listener._location = Vector3(gPlayerVisuals[0].camera->cam);
     listener._direction = 
-      Vector3(game->player[0].camera->target) -
-      Vector3(game->player[0].camera->cam);
+      Vector3(gPlayerVisuals[0].camera->target) -
+      Vector3(gPlayerVisuals[0].camera->cam);
     // listener._location = players[0]->_location;
     // listener._direction = players[0]->_velocity;
     listener._velocity = players[0]->_velocity;

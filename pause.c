@@ -7,23 +7,13 @@ void idlePause() {
   game2->time.dt = 0;
   doCameraMovement();
 	
-	/*
-  // if(getSettingi("screenSaver") && stoptime != 0 &&
-	// SystemGetElapsedTime() - stoptime > 2000) {
-	// initData();
-	// stoptime = 0;
-	// switchCallbacks(&gameCallbacks);
-	// }
-	*/
-
-
   scripting_RunGC();
   SystemPostRedisplay();
 }
 
 void displayPause() {
   drawGame();
-  drawPause(game->screen);
+  drawPause(gScreen);
 
   SystemSwapBuffers();
 }
@@ -42,8 +32,8 @@ void keyboardPause(int key, int x, int y) {
 
   case SYSTEM_KEY_F10: nextCameraType(); break;
 
-  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
-  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
+  case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;
     
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;

@@ -22,7 +22,7 @@ void drawWalls() {
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_BLEND);
 #define T_TOP 1.0
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL1]);
+  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL1]);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(0.0, 0.0, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(0.0, 0.0, h);
@@ -30,7 +30,7 @@ void drawWalls() {
   glTexCoord2f(0.0, 0.0); glVertex3f(game2->rules.grid_size, 0.0, 0.0);
   glEnd();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL2]);
+  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL2]);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(game2->rules.grid_size, 0.0, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(game2->rules.grid_size, 0.0, h);
@@ -40,7 +40,7 @@ void drawWalls() {
   glVertex3f(game2->rules.grid_size, game2->rules.grid_size, 0.0);
   glEnd();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL3]);
+  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL3]);
   glBegin (GL_QUADS);
   glTexCoord2f(t, 0.0); 
   glVertex3f(game2->rules.grid_size, game2->rules.grid_size, 0.0);
@@ -50,7 +50,7 @@ void drawWalls() {
   glTexCoord2f(0.0, 0.0); glVertex3f(0.0, game2->rules.grid_size, 0.0);
   glEnd();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL4]);
+  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL4]);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(0.0, game2->rules.grid_size, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(0.0, game2->rules.grid_size, h);

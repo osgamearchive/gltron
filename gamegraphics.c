@@ -19,8 +19,6 @@ static float NoSpokeColor[4] = {0.0, 0.0, 0.0, 1.0};
 
 void drawGame() {
   GLint i;
-  Visual *d;
-  Player *p;
 
   polycount = 0;
 
@@ -38,12 +36,14 @@ void drawGame() {
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   }
 
-  for(i = 0; i < vp_max[game->viewportType]; i++) {
-    p = &(game->player[ viewport_content[i] ]);
-    if(p->display->onScreen == 1) {
-      d = p->display;
+  for(i = 0; i < vp_max[gViewportType]; i++) {
+		Player *p = game->player + viewport_content[i];
+		PlayerVisual *pV = gPlayerVisuals + viewport_content[i];
+		Visual *d = pV->display;
+	
+    if(d->onScreen == 1) {
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
-			drawCam(p, d);
+			drawCam(p, pV);
       glDisable(GL_DEPTH_TEST);
       glDepthMask(GL_FALSE);
       if (game2->settingsCache.show_scores)
@@ -57,10 +57,10 @@ void drawGame() {
   }
 
   if (game2->settingsCache.show_fps)
-    drawFPS(game->screen);
+    drawFPS(gScreen);
 
 	if(game2->settingsCache.show_console)
-		drawConsole(game->screen);
+		drawConsole(gScreen);
 
   /* printf("%d polys\n", polycount); */
 }
@@ -180,7 +180,7 @@ void drawCycleShadow(Player *p, int lod, int drawTurn) {
   glPopMatrix();
 }
 
-void drawCycle(Player *p, int lod, int drawTurn) {
+void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   Mesh *cycle;
   unsigned int  time, turn_time;
   cycle = lightcycle[lod];
@@ -204,8 +204,8 @@ void drawCycle(Player *p, int lod, int drawTurn) {
 
 	setupLights(eCycles);
 	
-  SetMaterialColor(cycle, "Hull", eDiffuse, p->pColorDiffuse); 
-  SetMaterialColor(cycle, "Hull", eSpecular, p->pColorSpecular); 
+  SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
+  SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
   if (time > (120 - (p->data->speed * 10))) {
     if (p->data->spoke_state == 1) {
@@ -253,7 +253,7 @@ void drawCycle(Player *p, int lod, int drawTurn) {
   glPopMatrix();
 }
  
-int playerVisible(Player *eye, Player *target) {
+int playerVisible(PlayerVisual *eye, Player *target) {
   float v1[3];
   float v2[3];
   float tmp[3];
@@ -294,7 +294,7 @@ int playerVisible(Player *eye, Player *target) {
     return i;
 }
 
-void drawPlayers(Player *p) {
+void drawPlayers(Player *p, PlayerVisual *pV) {
   int i;
 
   for(i = 0; i < game->players; i++) {
@@ -305,16 +305,17 @@ void drawPlayers(Player *p) {
 				p == &game->player[i])
 			drawTurn = 0;
 
-		lod = playerVisible(p, &(game->player[i]));
+		lod = playerVisible(pV, &(game->player[i]));
 		if (lod >= 0) { 
-			drawCycle(&(game->player[i]), lod, drawTurn);
+			drawCycle(game->player + i, gPlayerVisuals + i, lod, drawTurn);
 		}
 	}
 }
 
-void drawCam(Player *p, Visual *d) {
+void drawCam(Player *p, PlayerVisual* pV) {
   int i;
   float up[3] = { 0, 0, 1 };
+	Visual *d = pV->display;
   
   glColor3f(0.0, 1.0, 0.0);
 	
@@ -326,9 +327,9 @@ void drawCam(Player *p, Visual *d) {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   /* set positions for GL lights in world coordinates */
-  glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
+  glLightfv(GL_LIGHT1, GL_POSITION, pV->camera->cam);
 
-  doLookAt(p->camera->cam, p->camera->target, up);
+  doLookAt(pV->camera->cam, pV->camera->target, up);
   glDisable(GL_LIGHTING);
   glDisable(GL_BLEND);
 
@@ -347,7 +348,7 @@ void drawCam(Player *p, Visual *d) {
   /* floor */
   if (game2->settingsCache.show_floor_texture) {
     drawFloorTextured(game2->rules.grid_size,
-                      game->screen->textures[TEX_FLOOR]);
+                      gScreen->textures[TEX_FLOOR]);
   } else {
     /* should this be an artpack setting? */
     float line_color[] = {1.0, 1.0, 1.0};
@@ -366,7 +367,7 @@ void drawCam(Player *p, Visual *d) {
   }
 
   for(i = 0; i < game->players; i++) {
-    int lod = playerVisible(p, game->player + i);
+    int lod = playerVisible(pV, game->player + i);
 		if (lod >= 0) {
 			int drawTurn = 1;
 			if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
@@ -375,7 +376,7 @@ void drawCam(Player *p, Visual *d) {
 			drawCycleShadow(game->player + i, lod, drawTurn);
 		}
 		if (game->player[i].data->trail_height > 0 )
-			drawTrailShadow(game->player + i);
+			drawTrailShadow(game->player + i, gPlayerVisuals + i);
 	}
 	
   glDepthMask(GL_TRUE);
@@ -390,7 +391,7 @@ void drawCam(Player *p, Visual *d) {
     drawWalls();
   }
 
-  drawPlayers(p);
+  drawPlayers(p, pV);
 
 	setupLights(eWorld);
 
@@ -410,9 +411,11 @@ void drawCam(Player *p, Visual *d) {
 				int vOffset = 0;
 				int iOffset = 0;
 				mesh.iUsed = 0;
-				trailGeometry(game->player + i, &mesh, &vOffset, &iOffset);
-				bowGeometry(game->player + i, &mesh, &vOffset, &iOffset);
-				trailStatesNormal(game->player + i, game->screen->textures[TEX_DECAL]);
+				trailGeometry(game->player + i, gPlayerVisuals + i,
+											&mesh, &vOffset, &iOffset);
+				bowGeometry(game->player + i, gPlayerVisuals + i,
+										&mesh, &vOffset, &iOffset);
+				trailStatesNormal(game->player + i, gScreen->textures[TEX_DECAL]);
 				trailRender(&mesh);
 				trailStatesRestore();
 			}
@@ -428,7 +431,7 @@ void drawCam(Player *p, Visual *d) {
 
   for(i = 0; i < game->players; i++)
     if (game->player[i].data->trail_height > 0 )
-			drawTrailLines(&(game->player[i]));
+			drawTrailLines(game->player + i, gPlayerVisuals + i);
 
   /* transparent stuff */
   /* draw the glow around the other players: */
@@ -438,7 +441,8 @@ void drawCam(Player *p, Visual *d) {
     
     for (i = 0; i < game->players; i++) {
       if (p != game->player + i && PLAYER_IS_ACTIVE(game->player + i)) {
-	      drawGlow(p, game->player + i, d, TRAIL_HEIGHT * 4);
+	      drawGlow(pV->camera, game->player + i, gPlayerVisuals + i,
+								 d, TRAIL_HEIGHT * 4);
       }
       
     glDisable(GL_BLEND);

@@ -56,14 +56,14 @@ void drawCredits() {
   glClearColor(.0, .0, .0, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  rasonly(game->screen);
-  h = game->screen->vp_h / (24 * 1.5);
+  rasonly(gScreen);
+  h = gScreen->vp_h / (24 * 1.5);
   for(i = 0; i < time / 250; i++) {
     glColor3fv(colors[i % 2]);
     if(credits[i] == NULL) 
       break;
     x = 10;
-    y = game->screen->vp_h - 1.5 * h * (i + 1);
+    y = gScreen->vp_h - 1.5 * h * (i + 1);
     drawText(gameFtx, x, y, h, credits[i]);
   }
 }

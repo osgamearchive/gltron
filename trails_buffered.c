@@ -36,7 +36,7 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
 
   if(PLAYER_IS_ACTIVE(p)) {
     q->type |= QUAD_TEXTURE | QUAD_TEX_MODULATE | QUAD_ALPHA_TEST;
-    q->texture_id = game->screen->textures[TEX_TRAIL];
+    q->texture_id = gScreen->textures[TEX_TRAIL];
   }
 
   bdist = PLAYER_IS_ACTIVE(p) ? 2 : 3;
@@ -83,7 +83,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
   if(p->data->trail_height <= 0) return;
 
-  tex = game->screen->textures[TEX_DECAL];
+  tex = gScreen->textures[TEX_DECAL];
 
   data = p->data;
   height = data->trail_height;

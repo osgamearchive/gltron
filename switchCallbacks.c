@@ -1,5 +1,5 @@
+#include "switchCallbacks.h"
 #include "system.h"
-#include "callbacks.h"
 
 Callbacks *last_callback = NULL;
 Callbacks *current_callback = NULL;

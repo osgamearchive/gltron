@@ -1,4 +1,5 @@
 #include "SourceMusic.h"
+#include <string.h>
 
 namespace Sound {
   SourceMusic::SourceMusic(System *system) { 

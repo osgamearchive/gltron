@@ -42,13 +42,13 @@ void loadArt() {
     free(path);
   }
 
-  initTexture(game->screen);
+  initTexture(gScreen);
   initFonts();
 }
 
 void reloadArt() {
   printf("[status] reloading art\n");
-  deleteTextures(game->screen);
+  deleteTextures(gScreen);
   loadArt();
 }
     

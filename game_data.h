@@ -3,8 +3,24 @@
 
 #include "basic_types.h"
 #include "settings.h"
-#include "client_data.h"
 #include "camera.h"
+
+#define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
+
+enum {
+  GAME_SINGLE = 1,
+#ifdef RECORD
+  GAME_SINGLE_RECORD = 2,
+  GAME_PLAY = 4,
+  GAME_PLAY_NETWORK = 8,
+  GAME_NETWORK_RECORD
+#endif
+};
+
+enum {
+  BILINEAR = 0,
+  TRILINEAR = 1
+};
 
 typedef struct Grid {
   int width, height;
@@ -35,13 +51,11 @@ typedef struct Game2 {
   List events;
   FILE *record;
   FILE *play;
-  Input input;
+  // Input input;
 } Game2;
 
 typedef struct Data {
-  // int iposx, iposy;
   float posx, posy;
-	// float t;
   
   int dir; int last_dir;
 
@@ -59,13 +73,11 @@ typedef struct Data {
  
   Line *trails;
 	int trailOffset;
-  // Line *trail; /* current trail */
-	// int trailCount;
 } Data;
 
 typedef struct AI {
   int active;
-  int tdiff; /*  */
+  int tdiff;
   int moves;
   long lasttime;
   int danger;
@@ -74,18 +86,10 @@ typedef struct AI {
 
 typedef struct Player {
   Data *data;
-  Visual *display;
-  Camera *camera;
   AI *ai;
-
-  float pColorDiffuse[4];
-  float pColorSpecular[4];
-  float pColorAlpha[4];
 } Player;
 
 typedef struct Game {
-  Visual *screen;
-  int viewportType;
   Player *player;
   int players; /* number of players - currently limited to 4 somewhere */
   int winner; /* who won this round */

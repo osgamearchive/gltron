@@ -1,6 +1,7 @@
 #include "gltron.h"
 
-void drawGlow(Player *pCam, Player *pTarget, Visual *d, float dim) {
+void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
+							Visual *d, float dim) {
   float mat[4*4];
   float alpha, dist;
 
@@ -24,9 +25,9 @@ void drawGlow(Player *pCam, Player *pTarget, Visual *d, float dim) {
 
 	{
 		vec3 v;
-		v.v[0] = pTarget->data->posx - pCam->camera->cam[0];
-		v.v[1] = pTarget->data->posy - pCam->camera->cam[1];
-		v.v[2] = 0 - pCam->camera->cam[2];
+		v.v[0] = pTarget->data->posx - pCam->cam[0];
+		v.v[1] = pTarget->data->posy - pCam->cam[1];
+		v.v[2] = 0 - pCam->cam[2];
 		dist = vec3Length(&v);
 	}
 	{
@@ -38,9 +39,9 @@ void drawGlow(Player *pCam, Player *pTarget, Visual *d, float dim) {
 		// printf("dist: %.2f, alpha: %.2f\n", dist, alpha);
 	}
   glBegin(GL_TRIANGLE_FAN);
-  glColor4f(pTarget->pColorDiffuse[0], 
-						pTarget->pColorDiffuse[1], 
-						pTarget->pColorDiffuse[2],
+  glColor4f(pV->pColorDiffuse[0], 
+						pV->pColorDiffuse[1], 
+						pV->pColorDiffuse[2],
 						alpha);
 
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
@@ -62,9 +63,9 @@ void drawGlow(Player *pCam, Player *pTarget, Visual *d, float dim) {
 
 
   glBegin(GL_TRIANGLES);
-  glColor4f(pTarget->pColorDiffuse[0], 
-						pTarget->pColorDiffuse[1], 
-						pTarget->pColorDiffuse[2],
+  glColor4f(pV->pColorDiffuse[0], 
+						pV->pColorDiffuse[1], 
+						pV->pColorDiffuse[2],
 						alpha);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
@@ -72,9 +73,9 @@ void drawGlow(Player *pCam, Player *pTarget, Visual *d, float dim) {
   glVertex3f(dim*cos(-0.2*3.1415/5.0),
 	     TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0);
 
-  glColor4f(pTarget->pColorDiffuse[0], 
-						pTarget->pColorDiffuse[1], 
-						pTarget->pColorDiffuse[2],
+  glColor4f(pV->pColorDiffuse[0], 
+						pV->pColorDiffuse[1], 
+						pV->pColorDiffuse[2],
 						alpha);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);

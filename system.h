@@ -1,7 +1,7 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-#include "gltron.h"
+#include "callbacks.h"
 
 #include <SDL.h>
 #include <SDL_types.h>
@@ -74,8 +74,6 @@ enum {
 
 /* system specific functions (basically, an SDL/glut wrapper) */
 
-extern void SystemInit(int *argc, const char *argv[]);
-extern void SystemExit();
 extern void SystemPostRedisplay();
 extern unsigned int SystemGetElapsedTime();
 extern void SystemSwapBuffers();
@@ -101,5 +99,6 @@ extern void SystemMouseMotion(int x, int y);
 
 extern int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels);
 
+extern void SystemExit();
 extern void SystemQuit();
 #endif

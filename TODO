@@ -18,7 +18,6 @@ Bugs [high priority]:
 Andreas:
 
 - new trail rendering:
- replace bow texture with geometry
  redo depth sorting using index buffers
 - fix Makefile.am and configure.in for win32 compiles (*-win32.c versions)
 
@@ -61,6 +60,7 @@ Andreas:
 - decent 2D overlay handling in scene management
 - seperate game from engine a bit more
 - check various TODOs and FIXMEs in the code
+- switch from cockpit to third person view upon death
 
 Bugs [low priority]:
 

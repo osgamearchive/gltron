@@ -1,13 +1,12 @@
 #ifndef Sound_H
 #define Sound_H
 
-#include "gltron.h"
-
 #include "SDL.h"
 #include "SDL_sound.h"
 
 #include <zlib.h>
 #include <assert.h>
+#include <stdlib.h>
 
 extern void Sound_loadFX();
 extern void Sound_init();

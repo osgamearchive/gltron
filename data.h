@@ -7,28 +7,6 @@
 
 /* general data structures */
   
-typedef struct {
-  GLint nTextures;
-  
-  int texwidth; /* texture width */
-  int width; /* character width */
-
-  int lower; /* lowest ascii character (normally: 32) */
-  int upper; /* highest ascii character (normally: 126) */
-
-  GLuint *texID;
-
-  char *fontname;
-  char *bitmapname;
-  int bitmapTexwidth;
-  int bitmapWidth; /* character width */
-} FontTex;
-
-typedef struct {
-  char *path;
-  /* char *name; currently ignored */
-} Artpack;
-
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
 enum {

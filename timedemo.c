@@ -119,8 +119,8 @@ void initTimedemo() {
 	for(i = 0; i < game->players; i++) {
 		game->player[i].ai->active = AI_COMPUTER;
 		// set all camera phi values to 0
-		game->player[i].camera->movement[CAM_PHI] = M_PI / 18;
-		game->player[i].camera->movement[CAM_CHI] = M_PI / 3;
+		gPlayerVisuals[i].camera->movement[CAM_PHI] = M_PI / 18;
+		gPlayerVisuals[i].camera->movement[CAM_CHI] = M_PI / 3;
 	}
 	
   SystemHidePointer();

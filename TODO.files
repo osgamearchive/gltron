@@ -1,3 +1,6 @@
+This file has become out-of-date after the recent reworking.
+It's probably much much worse.
+
 All files are reasonably clean, but poorly documented, unless
 mentioned otherwise.
 
@@ -97,9 +100,6 @@ findpath.c		Ok
 
 	Contains GPL'd goto_installpath() 
 
-floor.c			Ok
-floor.h
-
 fonts.c			Ok, but uses lots of globals
 fonttex.c		Ok
 	
@@ -120,23 +120,26 @@ gltron.c		Ok
 
 gltron.h		Chaotic
 
-graphics_fx.c
+graphics_fx.c		Ok
 graphics_fx.h
-graphics_hud.c
+
+graphics_hud.c		Needs a lot of improvement (placement/size/look)
 graphics_hud.h
-graphics_lights.c
+
+graphics_lights.c		Ok
 graphics_lights.h
 
 	Enum: LightTypes
 
-graphics_utility.c
-graphics_utility.h
-graphics_world.c
-graphics_world.h
+graphics_utility.h	Ok
+graphics_utility.c	doPerspecitve, doLookAt, rasonly, drawText
 
-gui.c
+graphics_world.h		Ok
+graphics_world.c		Draws Walls & Floor
 
-input.c
+gui.c		Ok - perhaps split in graphics / UI handling
+
+input.c		parses commandline args, handles in-game input
 
 light.c
 light.h

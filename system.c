@@ -3,6 +3,10 @@
 #include "system.h"
 #include "system_keynames.h"
 
+#include "Sound.h"
+#include "configuration.h"
+#include "game.h"
+
 static int redisplay = 0;
 static Callbacks *current = 0;
 static int return_code = -1;
@@ -10,7 +14,7 @@ static SDL_Surface *screen;
 static int width, height;
 static int flags;
 static int fullscreen;
-static int video_initialized = 0;
+extern int video_initialized;
 
 void SystemExit() {
   fprintf(stderr, "[system] shutting down sound now\n");
@@ -20,37 +24,6 @@ void SystemExit() {
   SDL_Quit();
   fprintf(stderr, "[system] exiting application\n");
   exit(0); /* OK: end of program */
-}
-
-void SystemInit(int *argc, const char *argv[]) {
-  if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0 ){
-    fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
-    exit(1); /* OK: critical, no visual */
-  }
-  else video_initialized = 1;
-
-  if(SDL_Init(SDL_INIT_AUDIO) < 0 ){
-    fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
-    /* FIXME: disable sound system */
-  }
-	/* keyboard */
-  SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
-	
-	{
-		int i;
-		SDL_Joystick *joy;
-		int joysticks = SDL_NumJoysticks();
-		
-		/* joystick, currently at most 2 */
-		if(joysticks > 2)
-			joysticks = 2;
-		
-		for(i = 0; i < joysticks; i++) {
-			joy = SDL_JoystickOpen(i);
-		}
-		if(i)
-			SDL_JoystickEventState(SDL_ENABLE);
-	}
 }
 
 void SystemGrabInput() {

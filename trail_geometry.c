@@ -11,22 +11,22 @@ void float2ubyte(unsigned char* pubColor, float *pfColor) {
 	pubColor[3] = (unsigned char)(pfColor[3] * 255.0f);
 }
 		 
-void storeColor(TrailMesh *pMesh, int offset, Player *p, int type) {
+void storeColor(TrailMesh *pMesh, int offset, PlayerVisual *pV, int type) {
   float color[] = { 0, 0, 0, 1 };
 	float white[] = { 1, 1, 1, 1 };
 
 	switch(type) {
 	case COLOR_TRAIL:
 		if(game2->settingsCache.alpha_trails)
-			memcpy(color, p->pColorAlpha, 4 * sizeof(float));
+			memcpy(color, pV->pColorAlpha, 4 * sizeof(float));
 		else
-			memcpy(color, p->pColorAlpha, 3 * sizeof(float));
+			memcpy(color, pV->pColorAlpha, 3 * sizeof(float));
 		break;
 	case COLOR_BRIGHT:
 		memcpy(color, white, 3 * sizeof(float));
 		break;
 	case COLOR_CYCLE:
-		memcpy(color, p->pColorDiffuse, 3 * sizeof(float));
+		memcpy(color, pV->pColorDiffuse, 3 * sizeof(float));
 		break;
 	}
 	float2ubyte(pMesh->pColors + 4 * offset, color);
@@ -106,7 +106,8 @@ int cmpdir(Line *line1, Line *line2) {
 	return 1;
 }
 
-void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
+void trailGeometry(Player *pPlayer, PlayerVisual* pV,
+									 TrailMesh *pMesh,
 									 int *pvOffset, int *piOffset) {
 	Data *pData = pPlayer->data;
 	int curVertex = *pvOffset, curIndex = *piOffset;
@@ -121,14 +122,14 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
 			storeVertex(pMesh, curVertex, pData->trails + i, 0, 
 									0, pData->trail_height, 
 									fSegLength, fTotalLength);
-			storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+			storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
 			curVertex += 2;
 		}
 			
 		storeVertex(pMesh, curVertex, pData->trails + i, 1,
 								0, pData->trail_height,
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
@@ -151,13 +152,13 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
 		storeVertex(pMesh, curVertex, &line, 0,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
 		curVertex += 2;
 		
 		storeVertex(pMesh, curVertex, &line, 1,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
@@ -177,13 +178,13 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
 		storeVertex(pMesh, curVertex, &line, 0,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeVertex(pMesh, curVertex, &line, 1,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pPlayer, COLOR_BRIGHT);
+		storeColor(pMesh, curVertex, pV, COLOR_BRIGHT);
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
@@ -195,7 +196,7 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
 	*pvOffset = curVertex;
 }
 
-void bowGeometry(Player *pPlayer,
+void bowGeometry(Player *pPlayer, PlayerVisual *pV,
 								 TrailMesh *pMesh, int *pvOffset, int *piOffset) {
 	Data *pData = pPlayer->data;
 	Line line;
@@ -217,7 +218,7 @@ void bowGeometry(Player *pPlayer,
 		storeVertex(pMesh, vOffset, &line, t, 
 								fFloor * pData->trail_height, fTop * pData->trail_height, 
 								DECAL_WIDTH, 0);
-		storeColor(pMesh, vOffset, pPlayer, COLOR_BRIGHT);
+		storeColor(pMesh, vOffset, pV, COLOR_BRIGHT);
 		vOffset += 2;
 		if(i) {
 			storeIndices(pMesh, iOffset, vOffset - 4);
@@ -227,7 +228,7 @@ void bowGeometry(Player *pPlayer,
 	storeVertex(pMesh, vOffset, &line, 1, 
 							0.2f * pData->trail_height, 0.3f * pData->trail_height, 
 							DECAL_WIDTH, 0);
-	storeColor(pMesh, vOffset, pPlayer, COLOR_CYCLE);
+	storeColor(pMesh, vOffset, pV, COLOR_CYCLE);
 	vOffset += 2;
 	storeIndices(pMesh, iOffset, vOffset - 4);
 

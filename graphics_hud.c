@@ -34,7 +34,7 @@ void drawPause(Visual *display) {
   if ((game->pauseflag & PAUSE_GAME_FINISHED) && game->winner != -1) {
     if (game->winner >= -1) {
 
-      float* player_color = game->player[game->winner].pColorAlpha;
+      float* player_color = gPlayerVisuals[game->winner].pColorAlpha;
 
       /* 
          make the 'Player wins' message oscillate between 
@@ -55,7 +55,7 @@ void drawPause(Visual *display) {
     message = pause;
   }
 
-  rasonly(game->screen);
+  rasonly(gScreen);
   drawText(gameFtx, display->vp_w / 6, 20, 
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
 }
@@ -123,11 +123,11 @@ void drawConsoleLines(char *line, int call) {
   int length;
   /* fprintf(stdout, "%s\n", line); */
   length = strlen(line);
-  while(length * size > game->screen->vp_w / 2 - CONSOLE_X_OFF)
+  while(length * size > gScreen->vp_w / 2 - CONSOLE_X_OFF)
     size--;
     
   if(*line != 0) 
-    drawText(gameFtx, CONSOLE_X_OFF, game->screen->vp_h - 20 * (call + 1),
+    drawText(gameFtx, CONSOLE_X_OFF, gScreen->vp_h - 20 * (call + 1),
 	     size, line);
 }
 
@@ -138,7 +138,7 @@ void drawConsole(Visual *d) {
   
   if (game2->settingsCache.softwareRendering) { 
     lines = 1;
-  } else if (game->screen->vp_h < 600) {
+  } else if (gScreen->vp_h < 600) {
     lines = 3;
   } else {
     lines = 5;
