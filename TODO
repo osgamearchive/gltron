@@ -4,12 +4,18 @@ bugs:
 (4 / 1) trail bows are writing to z-buffer, creating visible artefacts
 (5 / 2) transparent trails are drawn in the wrong order (artefacts) 
 (5 / 5) key definitions are not saved to .gltronrc
-(4 / 4 / 1) switching resolution leaks memory
+(6) switching resolution still leaks a little memory
+(3) trails intersect after crash
+(2) demo playpack is broken after interrupt (Escape) 
+(4) bow isn't perfectly joining trail
+(4) don't show resolutions that can't be accelerated
 possible bugs:
 (0) more memory leaks
 (0) failing malloc's arent caught, might lock up application/system
 (0) some attributes are not saved to .gltronrc
 todo: 
+(0) do my own lighting for trails
+(0) fix ugly console message passing
 (1) implement networking
 (0) fix bitmap bug to allow even faster software rendering
 (0) implement one of the two top-down views and arrange HUD
@@ -28,7 +34,6 @@ todo:
 (0) add option to select GL_NEAREST_MIPMAP_LINEAR since Mesa is buggy
 at release time:
 (0) decide with floor texture to use
-(0) remove stupid compiler warnings (fix include files)
 (0) create RPM files for various linux distributions
 (0) proper documentation
 other stuff
