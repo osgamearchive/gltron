@@ -151,11 +151,21 @@ void doCameraMovement() {
       /* first, process all movement commands */
       /* that means, check for mouse input mainly */
       if(cam->type->freedom[CAM_FREE_R]) {
-	if(game2->input.mouse1 == 1)
-	  cam->movement[CAM_R] += (CAM_DR*cam->movement[CAM_R]/2.0) * game2->time.dt / 1000.0;
-	if(game2->input.mouse2 == 1)
-	  cam->movement[CAM_R] -= (CAM_DR*cam->movement[CAM_R]/2.0) * game2->time.dt / 1000.0;
-	writeCamDefaults(cam, CAM_R);
+	static Uint32 last=0;
+	Uint32 dt;
+	if(game2->time.dt)
+	  dt=game2->time.dt;
+	else
+	  dt=SDL_GetTicks()-last;
+	if(last) {
+	  last=SDL_GetTicks();
+	  if(game2->input.mouse1 == 1)
+	    cam->movement[CAM_R] += (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
+	  if(game2->input.mouse2 == 1)
+	    cam->movement[CAM_R] -= (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
+	  writeCamDefaults(cam, CAM_R);
+	}
+	last=SDL_GetTicks();
       }
       if(cam->type->freedom[CAM_FREE_PHI]) {
 	cam->movement[CAM_PHI] += - game2->input.mousex * MOUSE_CX;
