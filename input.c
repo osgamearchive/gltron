@@ -4,9 +4,16 @@
 #include "console.h"
 
 /* I hear people are reading this file because they couldn't find the
-   manual! Go to http://www.ards.net/Andreas/gltron.html#usage         */
+   manual! Go to http://www.gltron.org/ */
+
+typedef struct {
+  int player;
+  int turn;
+  int key;
+} keyAction;
 
 /* default actions */
+#define KEY_ACTIONS_N 8
 
 keyAction key_actions[KEY_ACTIONS_N] = {
   { 0, EVENT_TURN_LEFT, 'a' },
@@ -19,7 +26,6 @@ keyAction key_actions[KEY_ACTIONS_N] = {
   { 3, EVENT_TURN_RIGHT, SYSTEM_KEY_RIGHT }
 };
 
-#define KEY_RESERVED_N 8
 int reserved_keys[] = {
   'q', 27, ' ',
   SYSTEM_KEY_F1,
