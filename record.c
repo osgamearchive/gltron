@@ -56,7 +56,9 @@ void stopPlaying() {
 
 GameEvent* readEvent() {
   //printf("+ read event...\n");
+#ifdef __NETWORK__
   return getNetEvent();
+#endif
   //printf("- read event...\n");
 }
 
@@ -68,8 +70,10 @@ void getEvents() {
     //printf("%d < %d...\n", latest->timestamp, game2->time.current);
     while(latest->timestamp < game2->time.current) {
       /* TODO: check if it's safe to ignore the return value here */
+#ifdef __NETWORK__
       printf("event change player %d to %d\n", latest->player, getPlayer(latest->player));
       latest->player = getPlayer(latest->player);
+#endif
       fprintf(stderr, "process : %d %d %d %d %d\n", latest->type, latest->player, 
   	 latest->x, latest->y, latest->timestamp);
       processEvent(latest);

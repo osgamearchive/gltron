@@ -202,7 +202,7 @@ int applyGameInfo() {
     fprintf(stderr, "more players in demo than allowed\n");
     return 1;
   }
-  game->running;
+  game->running = game2->players;
 
   //game->players=game2->players;
   for(i = 0; i < game2->players; i++) {

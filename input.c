@@ -35,7 +35,9 @@ int reserved_keys[] = {
 void keyGame(int k, int unicode, int x, int y)
 {
   int     i;
+#ifdef __NETWORK__
   Packet  packet;
+#endif
 
   switch (k) {
     /* case 'q': SystemExit(); break; */
@@ -88,9 +90,12 @@ void keyGame(int k, int unicode, int x, int y)
 	p = key_actions[i].player;
 	if(game->player[p].data->speed > 0)
 	  {
+#ifdef __NETWORK__
 	    if( ! isConnected )
 	      {
+#endif
 		createTurnEvent(p, key_actions[i].turn);
+#ifdef __NETWORK__
 	      } else {
 		packet.which=getWhich(me);
 		packet.type=ACTION;
@@ -101,6 +106,7 @@ void keyGame(int k, int unicode, int x, int y)
 		Net_sendpacket(&packet, Net_getmainsock());
 		  
 	      }
+#endif
 	  }
 	return;
       }

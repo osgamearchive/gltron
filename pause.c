@@ -44,7 +44,9 @@ void displayPause() {
 
 void keyboardPause(int key, int unicode, int x, int y) {
   int      i;
+#ifdef __NETWORK__
   Packet   packet;
+#endif
 
   switch(key) {
   case 27:
