@@ -64,6 +64,7 @@ extern void reloadArt(void);
 /* graphics libs */
 // #include "extgl.h"
 // #include <GL/gl.h>
+#define NO_SDL_GLEXT
 #include "SDL_opengl.h"
 // #include <GL/glext.h>
 

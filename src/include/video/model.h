@@ -12,6 +12,7 @@ extern "C" {
 
 #define BUF_SIZE 120
 
+#define NO_SDL_GLEXT
 #include "SDL_opengl.h"
 // #include <GL/gl.h>
 
