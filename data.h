@@ -171,6 +171,11 @@ typedef struct AI {
   int danger;
 } AI;
 
+typedef struct {
+  char *path;
+  char *name;
+} Artpack;
+
 typedef struct gDisplay {
   int win_id;     /* nur das globale Window hat eine */
   int h, w;       /* window */
@@ -183,21 +188,12 @@ typedef struct gDisplay {
   int onScreen;
 
   /* texture ID */
-  unsigned int texFloor; 
-  unsigned int texWall_1;
-  unsigned int texWall_2;
-  unsigned int texWall_3;
-  unsigned int texWall_4;
-  unsigned int texGui;
-  unsigned int texLogo;
-  unsigned int texCrash;
-  unsigned int texTrail;
-  unsigned int texTrailDecal;
-  unsigned int texDebug;
+  unsigned int *textures;
+
   /* software rendering stuff */
   unsigned char *pixelGui;
   fontbmp *bitfont;
-  
+  Artpack artpack;
 } gDisplay;
 
 typedef struct Player {
@@ -212,7 +208,7 @@ typedef struct Player {
    .gltronrc) then
    1) add it to Settings in data.h
    2) add it to settings.txt
-   3) add pointer to initSettingsData() in settings.c
+   3) add pointer to initSettingData() in settings.c
    4) add a default to initMainGameSettings() in settings.c
    5) make a menu entry in menu.txt
 */
@@ -244,6 +240,8 @@ typedef struct Settings {
   int turn_cycle; /* smooth turning */
   int line_spacing; /* space between lines when the floor texture is
 		       disabled */
+
+  int stretch_textures;
   int use_mipmaps; /* enable / disable mipmapping */
   int mipmap_filter; /* bilinear / trilinear */
 
