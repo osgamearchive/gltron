@@ -33,7 +33,7 @@ settings.use_mipmaps = 1
 settings.mipmap_filter = 1
 settings.stretch_textures = 1
 -- detail settings
-settings.alpha_trails = 1
+settings.alpha_trails = 0
 settings.show_glow = 1
 settings.show_model = 1
 settings.show_recognizer = 1
