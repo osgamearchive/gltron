@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D PREF_DIR=\"\" /D SNAP_DIR=\"\" /D DATA_DIR=\"\" /D SEPARATOR='\\' /D VERSION=\"0.70alpha1\" /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D PREF_DIR=\".\" /D SNAP_DIR=\".\" /D DATA_DIR=\".\" /D SEPARATOR='\\' /D VERSION=\"0.70alpha1\" /FD /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -56,6 +56,10 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib sdlmain.lib sdl.lib zlib.lib libpng.lib sdl_sound.lib msvcrt.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib
 # SUBTRACT LINK32 /pdb:none /debug
+# Begin Special Build Tool
+SOURCE="$(InputPath)"
+PostBuild_Cmds=copy Release\gltron.exe gltron.exe
+# End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -71,7 +75,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./src/include" /I "./nebu/include" /D "_WINDOWS" /D PREF_DIR=\"\" /D SNAP_DIR=\"\" /D DATA_DIR=\"\" /D LOCAL_DATA=\"\" /D SEPARATOR='\\' /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /D SEPERATOR='\\' /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./src/include" /I "./nebu/include" /D "_WINDOWS" /D PREF_DIR=\".\" /D SNAP_DIR=\".\" /D DATA_DIR=\".\" /D LOCAL_DATA=\"\" /D SEPARATOR='\\' /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /D SEPERATOR='\\' /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
