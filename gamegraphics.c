@@ -546,9 +546,12 @@ void drawCycleShadow(Player *p, int lod) {
   glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
   glRotatef(90, 0, 0, 1);
 
-  glDisable(GL_CULL_FACE);
-  if(p->data->exp_radius == 0)
+  if(p->data->exp_radius == 0) {
+    glEnable(GL_CULL_FACE);
     drawModel(cycle);
+    glDisable(GL_CULL_FACE);
+  }
+
   glPolygonOffset(0, 0);
   glPopMatrix();
 }
@@ -591,13 +594,13 @@ void drawCycle(Player *p, int lod) {
   glDepthMask(GL_TRUE);
 
   if(p->data->exp_radius == 0) {
-    glEnable(GL_CULL_FACE);
     glEnable(GL_NORMALIZE);
 
     glScalef(10, 10, 10);
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
     glRotatef(90, 0, 0, 1);
 
+    glEnable(GL_CULL_FACE);
     drawModel(cycle);
     glDisable(GL_CULL_FACE);
   }
@@ -806,7 +809,6 @@ void drawWalls(gDisplay *d) {
   polycount += 8;
 
   glDisable(GL_TEXTURE_2D);
-
   glDisable(GL_CULL_FACE);
 }
 
@@ -865,12 +867,9 @@ void drawCam(Player *p, gDisplay *d) {
   glDepthMask(GL_FALSE);
   glDisable(GL_DEPTH_TEST);
 
-  /* skybox, walls, floor */
+  /* skybox, floor */
   if(game->settings->show_skybox)
     SkyBox_draw();
-
-  if(game->settings->show_wall == 1)
-    drawWalls(d);
 
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
@@ -889,7 +888,9 @@ void drawCam(Player *p, gDisplay *d) {
       glPushMatrix();
       glMultMatrixf(shadow_matrix);
       glColor4fv(shadow_color);
+      glEnable(GL_CULL_FACE);
       drawRecognizers(0);
+      glDisable(GL_CULL_FACE);
       glPopMatrix();
     }
 
@@ -906,6 +907,9 @@ void drawCam(Player *p, gDisplay *d) {
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
   glDepthMask(GL_FALSE);
 #endif
+
+  if(game->settings->show_wall == 1)
+    drawWalls(d);
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
@@ -942,17 +946,24 @@ void drawCam(Player *p, gDisplay *d) {
   glDisable(GL_BLEND);
 
   if(game->settings->show_recognizer) {
-    /* glClear(GL_DEPTH_BUFFER_BIT); */
+#if DEPTH_CLEAR
+    glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
+#endif
     glDepthMask(GL_TRUE);
 
+#if DEPTH_CLEAR
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     doPerspective(game->settings->fov, d->vp_w / d->vp_h,
 		  game->settings->znear * 2, game->settings->grid_size * 6.5);
 
     glMatrixMode(GL_MODELVIEW);
+#endif
+
+    glEnable(GL_CULL_FACE);
     drawRecognizers(1);
+    glDisable(GL_CULL_FACE);
   }
 }
 
