@@ -138,7 +138,6 @@ void updateSettingsCache() {
   game2->settingsCache.show_recognizer = getSettingi("show_recognizer");
   game2->settingsCache.show_impact = getSettingi("show_impact");
   game2->settingsCache.show_glow = getSettingi("show_glow"); 
-  game2->settingsCache.show_crash_texture = getSettingi("show_crash_texture");
   game2->settingsCache.show_wall = getSettingi("show_wall");
   game2->settingsCache.fast_finish = getSettingi("fast_finish");
   game2->settingsCache.fov = getSettingf("fov");
@@ -146,5 +145,8 @@ void updateSettingsCache() {
   game2->settingsCache.camType = getSettingi("camType");
   game2->settingsCache.playEffects = getSettingi("playEffects");
   game2->settingsCache.playMusic = getSettingi("playMusic");
+	game2->settingsCache.map_ratio_w = getSettingf("map_ratio_w");
+	game2->settingsCache.map_ratio_h = getSettingf("map_ratio_h");
+	
   scripting_GetFloatArray("clear_color", game2->settingsCache.clear_color, 4);
 }

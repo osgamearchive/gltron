@@ -29,7 +29,6 @@ typedef struct SettingsCache {
   int show_recognizer;
   int show_impact;
   int show_glow;
-  int show_crash_texture;
   int show_wall;
   int fast_finish;
   int playMusic;
@@ -37,6 +36,7 @@ typedef struct SettingsCache {
   int camType;
   float znear;
   float clear_color[4];
+	float map_ratio_w, map_ratio_h;
 } SettingsCache;
 
 
