@@ -3,7 +3,7 @@
 
 extern void setupLights(int type);
 
-enum lighTypes {
+enum {
 	eCycles = 0,
 	eRecognizer,
 	eWorld

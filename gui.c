@@ -218,7 +218,7 @@ void initGui() {
 }
 
 void exitGui() {
-  glShadeModel( game->screen->shademodel );
+  glShadeModel( GL_SMOOTH );
 }
 
 void initGLGui() {
@@ -245,12 +245,12 @@ void guiMouseMotion(int mx, int my) {
   /* TODO: add mouse cursor, highlighted areas, etc. */
 }
 
-callbacks configureCallbacks = {
+Callbacks configureCallbacks = {
   displayConfigure, idleGui, keyboardConfigure, initGui, exitGui, initGLGui,
   NULL, NULL, "configure"
 };
 
-callbacks guiCallbacks = {
+Callbacks guiCallbacks = {
   displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui, 
   guiMouse, guiMouseMotion, "gui"
 };

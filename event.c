@@ -67,10 +67,10 @@ int processEvent(GameEvent* e) {
   do physics, create CRASH and STOP events
 */
 
-list* doMovement(int mode, int dt) {
+List* doMovement(int mode, int dt) {
   int i;
   Data *data;
-  list *l = NULL;
+  List *l = NULL;
 
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
@@ -145,8 +145,8 @@ list* doMovement(int mode, int dt) {
 */
 
 void idleGame(void) {
-  list *l;
-  list *p;
+  List *l;
+  List *p;
   int i;
   int dt;
   int t;
@@ -256,7 +256,7 @@ void idleGame(void) {
 
 void createEvent(int player, event_type_e eventType) {
   GameEvent *e;
-  list *p = &(game2->events);
+  List *p = &(game2->events);
 
   /* move to the end of the event list */
   while (p->next)
@@ -265,7 +265,7 @@ void createEvent(int player, event_type_e eventType) {
   /* TODO: handle failed malloc */
   e = (GameEvent*) malloc(sizeof(GameEvent));
   p->data = e;
-  p->next = (list*) malloc(sizeof(list));
+  p->next = (List*) malloc(sizeof(List));
   p->next->next = NULL;
   e->type = eventType;
   e->x = game->player[player].data->posx;

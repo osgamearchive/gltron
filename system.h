@@ -86,7 +86,7 @@ extern void SystemGrabInput();
 extern void SystemUngrabInput();
 extern int SystemMainLoop();
 extern void SystemExitLoop(int return_code);
-extern void SystemRegisterCallbacks(callbacks*);
+extern void SystemRegisterCallbacks(Callbacks* callbacks);
 extern void SystemSetGamma(float r, float g, float b);
 extern void SystemInitWindow(int x, int y, int w, int h);
 extern void SystemInitDisplayMode(int flags, unsigned char fullscreen);

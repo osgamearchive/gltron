@@ -2,7 +2,7 @@
 #include "scripting.h"
 #include <string.h>
 
-void drawMenu(gDisplay *d) {
+void drawMenu(Visual *d) {
   /* draw Menu pCurrent */
 
   int i;

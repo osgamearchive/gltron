@@ -1,13 +1,13 @@
 #include "gltron.h"
 
-void checkGLError(char *where) {
+void checkGLError(const char *where) {
   int error;
   error = glGetError();
   if(error != GL_NO_ERROR)
     printf("[glError: %s] - %d\n", where, error);
 }
 
-void rasonly(gDisplay *d) {
+void rasonly(Visual *d) {
   /* do rasterising only (in local display d) */
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -51,7 +51,7 @@ void doLookAt(float *cam, float *target, float *up) {
   glTranslatef( -cam[0], -cam[1], -cam[2]);
 }
 
-void drawText(fonttex* ftx, int x, int y, int size, char *text) {
+void drawText(FontTex* ftx, int x, int y, int size, const char *text) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_TEXTURE_2D);

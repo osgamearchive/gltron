@@ -1,7 +1,7 @@
 #include "gltron.h"
 
 #ifndef TEST
-unsigned char* loadPixels(const char *filename, gDisplay *d) {
+unsigned char* loadPixels(const char *filename, Visual *d) {
   texture* tex;
   /* load a texture, scale it to the appropriate size */
   tex = loadTextureData(filename);
@@ -56,7 +56,7 @@ unsigned char *scalePixelBitmap(unsigned char *source, int sw, int sh,
   return data;
 }
 
-unsigned char *scalePixels(unsigned char *source, int sw, int sh, 
+unsigned char *scalePixels(const unsigned char *source, int sw, int sh, 
 			   int posx, int posy, int width, int height,
 			   int dw, int dh, int bytes) {
   int x, y;

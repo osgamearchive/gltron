@@ -100,7 +100,7 @@ static char* getNextFilename(const char *suffix, int *start_at) {
   return path;
 }
   
-static int captureScreenToPixmap(screenshot_info_t *img, gDisplay *display) { 
+static int captureScreenToPixmap(screenshot_info_t *img, Visual *display) { 
   img->width = display->w;
   img->height = display->h;
   if (!(img->pixmap = malloc(img->width * 
@@ -112,7 +112,7 @@ static int captureScreenToPixmap(screenshot_info_t *img, gDisplay *display) {
   return 0;
 }
 
-void doPngScreenShot(gDisplay *display) {
+void doPngScreenShot(Visual *display) {
   screenshot_info_t screenshot;
   static int last_png_num; /* store last free file index. */
   char *path;
@@ -133,7 +133,7 @@ void doPngScreenShot(gDisplay *display) {
   }
 }
 
-void doBmpScreenShot(gDisplay *display) {
+void doBmpScreenShot(Visual *display) {
   screenshot_info_t screenshot;
   static int last_bmp_num; /* store last free file index. */
   char *path;

@@ -3,13 +3,13 @@
 
 #include "gltron.h"
 
-extern void drawAI(gDisplay *d);
-extern void drawPause(gDisplay *d);
+extern void drawAI(Visual *d);
+extern void drawPause(Visual *d);
 
-extern void drawScore(Player *p, gDisplay *d);
-extern void drawFPS(gDisplay *d);
+extern void drawScore(Player *p, Visual *d);
+extern void drawFPS(Visual *d);
 
 extern void drawConsoleLines(char *line, int call);
-extern void drawConsole(gDisplay *d);
+extern void drawConsole(Visual *d);
 
 #endif

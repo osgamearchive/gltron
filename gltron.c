@@ -73,14 +73,14 @@ void reshape(int x, int y) {
   changeDisplay(-1);
 }
 
-void shutdownDisplay(gDisplay *d) {
+void shutdownDisplay(Visual *d) {
   deleteTextures(d);
   deleteFonts();
   SystemDestroyWindow(d->win_id);
   // printf("[video] window destroyed\n");
 }
 
-void setupDisplay(gDisplay *d) {
+void setupDisplay(Visual *d) {
   // fprintf(stderr, "[video] trying to create window\n");
   d->win_id = initWindow();
   // fprintf(stderr, "[video] window created\n");
@@ -192,7 +192,7 @@ int main( int argc, char *argv[] ) {
   return 0;
 }
 
-callbacks gameCallbacks = { 
+Callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
 };
 

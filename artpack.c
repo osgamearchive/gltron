@@ -2,8 +2,8 @@
 
 void initArtpacks() {
   const char *art_path;
-  list *artList;
-  list *p;
+  List *artList;
+  List *p;
   int i;
 
   art_path = getDirectory( PATH_ART );

@@ -1,6 +1,6 @@
 #include "gltron.h"
 
-#define FTX_ERR "[fonttex error]: "
+#define FTX_ERR "[FontTex error]: "
 
 void getLine(char *buf, int size, file_handle file) {
   do {
@@ -8,14 +8,14 @@ void getLine(char *buf, int size, file_handle file) {
   } while( buf[0] == '\n' || buf[0] == '#');
 }
 
-fonttex *ftxLoadFont(char *filename) {
+FontTex *ftxLoadFont(const char *filename) {
   char *path;
   file_handle file;
   char buf[100];
 
   int i;
   int len;
-  fonttex *ftx;
+  FontTex *ftx;
   
   path = getPath(PATH_DATA, filename);
   if(path == NULL) {
@@ -28,7 +28,7 @@ fonttex *ftxLoadFont(char *filename) {
   /* TODO(5): check for EOF errors in the following code */
   
   /* nTextures, texture width, char width */
-  ftx = (fonttex*) malloc(sizeof(fonttex));
+  ftx = (FontTex*) malloc(sizeof(FontTex));
   getLine(buf, sizeof(buf), file);
   sscanf(buf, "%d %d %d ", &(ftx->nTextures), &(ftx->texwidth), &(ftx->width));
   /* lowest character, highest character */
@@ -69,7 +69,7 @@ fonttex *ftxLoadFont(char *filename) {
   return ftx;
 }
 
-void ftxUnloadFont(fonttex *ftx) {
+void ftxUnloadFont(FontTex *ftx) {
   glDeleteTextures(ftx->nTextures, ftx->texID);
 
   free(ftx->texID);
@@ -135,7 +135,7 @@ J     74    |           32768      0  32768  800080
 K     75    -           32768      0  16384  800040
 */
 
-void ftxRenderString(fonttex *ftx, char *string, int len) {
+void ftxRenderString(FontTex *ftx, const char *string, int len) {
   int i;
   int bound = -1;
   int index;
@@ -189,8 +189,5 @@ w);
     glVertex2f(i, 1);
     glEnd();
   }
-  /* checkGLError("fonttex.c ftxRenderString\n"); */
+  /* checkGLError("FontTex.c ftxRenderString\n"); */
 }
-
-
-

@@ -39,7 +39,7 @@ namespace Sound {
     SDL_AudioSpec *_spec;
     Sound_AudioInfo _info;
     Listener _listener;
-    list _sources;
+    List _sources;
     int _mix_music;
     int _mix_fx;
     int _status;

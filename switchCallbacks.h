@@ -2,7 +2,7 @@
 #define SWITCHCALLBACKS_H
 
 extern void restoreCallbacks();
-extern void switchCallbacks(callbacks*);
+extern void switchCallbacks(Callbacks* callbacks);
 extern void updateCallbacks();
 
 extern void setCallback(const char *name);

@@ -95,7 +95,7 @@ extern "C" {
 
 	extern int game_textures;
 	extern int n_textures;
-	extern texture_info textures[];
+	extern TextureInfo textures[];
 
 	/* artpack stuff */
 
@@ -249,8 +249,8 @@ extern "C" {
 	extern Mesh *lightcycle[];
 
 	/* extern TexFont *txf; */
-	extern fonttex *gameFtx;
-	extern fonttex *guiFtx;
+	extern FontTex *gameFtx;
+	extern FontTex *guiFtx;
 	extern int fontID;
 #define MAX_FONTS 17
 
@@ -287,13 +287,13 @@ extern "C" {
 	extern float shadow_color[4];
 	extern float shadow_matrix[16];
 
-	extern callbacks gameCallbacks;
-	extern callbacks guiCallbacks;
-	extern callbacks pauseCallbacks;
-	extern callbacks configureCallbacks;
-	extern callbacks promptCallbacks;
-	extern callbacks creditsCallbacks;
-	extern callbacks timedemoCallbacks;
+	extern Callbacks gameCallbacks;
+	extern Callbacks guiCallbacks;
+	extern Callbacks pauseCallbacks;
+	extern Callbacks configureCallbacks;
+	extern Callbacks promptCallbacks;
+	extern Callbacks creditsCallbacks;
+	extern Callbacks timedemoCallbacks;
 
 	/* function prototypes */
 	/* TODO: sort these */
@@ -302,14 +302,14 @@ extern "C" {
 
 	extern void getEvents();
 	extern void writeEvent(GameEvent *e);
-	extern int startRecording(char *filename);
+	extern int startRecording(const char *filename);
 	extern void stopRecording();
-	extern int startPlaying(char *filename);
+	extern int startPlaying(const char *filename);
 	extern void stopPlaying();
 
 	/* engine.c */
 
-	extern void addList(list **l, void *data);
+	extern void addList(List **l, void *data);
 	extern void updateSettingsCache();
 	extern int updateTime();
 	extern int getCol(int x, int y);
@@ -324,7 +324,7 @@ extern "C" {
 	extern void clearTrails(Data *data);
 	extern void doTurn(GameEvent* e, int direction);
 
-	extern list* doMovement(int mode, int dt);
+	extern List* doMovement(int mode, int dt);
 	extern void writePosition(int player);
 
 	/* gltron.c */
@@ -332,9 +332,9 @@ extern "C" {
 	/* gamegraphics.c */
 
 	extern void initClientData();
-	extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
+	extern void initDisplay(Visual *d, int type, int p, int onScreen);
 	extern void changeDisplay(int view);
-	extern void updateDisplay(ViewportType VPtype); 
+	extern void updateDisplay(int vpType); 
 	/* vp types defined in data.h */
 
 	extern void gameMouseMotion(int x, int y);
@@ -346,8 +346,8 @@ extern "C" {
 	extern void displayGame();
 	extern void initGLGame();
 
-	extern void shutdownDisplay(gDisplay *d);
-	extern void setupDisplay(gDisplay *d);
+	extern void shutdownDisplay(Visual *d);
+	extern void setupDisplay(Visual *d);
 
 	extern int colldetect(float sx, float sy, float ex, float ey, int dir, int *x, int *y);
 
@@ -364,16 +364,16 @@ extern "C" {
 
 	/* texture initializing -> texture.c */
 
-	extern void initTexture(gDisplay*);
-	extern void deleteTextures(gDisplay*);
+	extern void initTexture(Visual*);
+	extern void deleteTextures(Visual*);
 
 	/* texture loading -> load_texture.c */
 	/* uses sgi_texture.c or sdl_texture.c */
 	extern void loadTexture(const char *filename, int format);
 
 	/* screenshot.c */
-	extern void doBmpScreenShot(gDisplay *display);
-	extern void doPngScreenShot(gDisplay *display);
+	extern void doBmpScreenShot(Visual *display);
+	extern void doPngScreenShot(Visual *display);
 
 	/* help -> character.c */
 
@@ -388,7 +388,7 @@ extern "C" {
 	/* keyboard -> input.c */
 
 	extern void keyGame(int key, int x, int y);
-	extern void parse_args(int argc, char *argv[]);
+	extern void parse_args(int argc, const char *argv[]);
 
 	/* settings -> settings.c */
 
@@ -401,19 +401,19 @@ extern "C" {
 	/* menu -> menu.c */
 
 	extern void menuAction(Menu* activated, int type);
-	extern Menu** loadMenuFile(char* filename);
-	extern void drawMenu(gDisplay *d);
+	extern Menu** loadMenuFile(const char* filename);
+	extern void drawMenu(Visual *d);
 	extern void showMenu();
 	extern void removeMenu();
 	extern void initMenuCaptions();
 	extern void initMenuCaption(Menu *m);
-	extern int* getVi(char *szName);
-	extern float* getVf(char *szName);
+	extern int* getVi(const char *szName);
+	extern float* getVf(const char *szName);
 
 	/* file handling -> file.c */
 #include "file.h"
 
-	extern list* readDirectoryContents(const char *dirname, char *prefix);
+	extern List* readDirectoryContents(const char *dirname, const char *prefix);
 
 	/* findpath.c, GPL'd code */
 	extern void goto_installpath(const char *executable);
@@ -426,26 +426,24 @@ extern "C" {
 
 	/* probably common graphics stuff -> graphics.c */
 
-	extern void checkGLError(char *where);
-	extern void rasonly(gDisplay *d);
+	extern void rasonly(Visual *d);
 
-	extern void drawText(fonttex* ftx, int x, int y, int size, char *text);
 	extern int hsv2rgb(float, float, float, float*, float*, float*);
 	extern void colorDisc();
 
 	/* gltron game graphics -> gamegraphics.c */
 	extern void rebuildDebugTex();
-	extern void drawDebugLines(gDisplay *d);
-	extern void drawDebugTex(gDisplay *d);
-	/* extern void drawHelp(gDisplay *d); */
+	extern void drawDebugLines(Visual *d);
+	extern void drawDebugTex(Visual *d);
+	/* extern void drawHelp(Visual *d); */
 	extern void drawPlayers(Player *);
-	extern void drawCam(Player *p, gDisplay *d);
+	extern void drawCam(Player *p, Visual *d);
 
-	extern void draw2D( gDisplay *d );
+	extern void draw2D( Visual *d );
 		
 	/* trail.c */
-	/* extern void drawTrails(Player *p, Player *p_eye, gDisplay *d); */
-	extern void drawTrailBow(Player *p, int flag);
+	/* extern void drawTrails(Player *p, Player *p_eye, Visual *d); */
+	extern void drawTrailBow(Player *p);
 	extern void drawTrailLines(Player *p);
 	extern void doTrails(Player *p);
 	extern void drawTrailShadow(Player *p);
@@ -456,7 +454,7 @@ extern "C" {
 	extern float getSegmentEndX(Data *data, int type);
 	extern float getSegmentEndY(Data *data, int type);
 
-	extern void checkQuad2D(char *flags, int q, int n);
+	extern void checkQuad2D(const char *flags, int q, int n);
 
 	/* clip.c */
 	int testfrustum(float *x, float *y, float *p, float *a, float *b);
@@ -471,8 +469,9 @@ extern "C" {
 
 
 	/* pixel stuff */
-	extern unsigned char* loadPixels(const char *filename, gDisplay *d);
-	extern unsigned char* scalePixels(unsigned char *source, int sw, int sh,
+	extern unsigned char* loadPixels(const char *filename, Visual *d);
+	extern unsigned char* scalePixels(const unsigned char *source, 
+																		int sw, int sh,
 																		int x, int y, int w, int h,
 																		int dw, int dh, int bytes);
 
@@ -490,11 +489,11 @@ extern "C" {
 
 	extern void movePlayers();
 
-	/* fonttex stuff */
+	/* FontTex stuff */
 	extern texture* loadTextureData(const char *filename);
 	extern void freeTextureData(texture *tex);
-	extern fonttex *ftxLoadFont(char *filename);
-	extern void ftxUnloadFont(fonttex *ftx);
+	extern FontTex *ftxLoadFont(const char *filename);
+	extern void ftxUnloadFont(FontTex *ftx);
 	extern void loadTexture(const char *filename, int format);
 
 	/* It's not necessary to bind the texture explicitly. */
@@ -503,10 +502,10 @@ extern "C" {
 	/* ftxRenderString will take care of that */
 	/* extern void ftxBindFontTexture(fontTex *ftx); */
 
-	extern void ftxRenderString(fonttex *ftx, char *string, int len);
+	extern void ftxRenderString(FontTex *ftx, const char *string, int len);
 
 	/* extern void ftxGetStringWidth(fontTex *ftx, */
-	/*                               char *string, int len, int *width); */
+	/*                               const char *string, int len, int *width); */
 	/* can't get max_ascent, max_descent yet */
 
 	/* menu sound enumerations */

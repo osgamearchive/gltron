@@ -1,6 +1,6 @@
 #include "gltron.h"
 
-void initTexture(gDisplay *d) {
+void initTexture(Visual *d) {
   GLint min_filter;
   char texname[120];
 
@@ -53,7 +53,7 @@ void initTexture(gDisplay *d) {
   }
 }
 
-void deleteTextures(gDisplay *d) {
+void deleteTextures(Visual *d) {
   glDeleteTextures(game_textures, d->textures);
   checkGLError("texture.c deleted textures");
 }

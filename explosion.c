@@ -85,8 +85,6 @@ static void drawSpires(float radius) {
   glColor3f(1, 1, 1);
   glVertex3f(0, 0, 0);
  
-  glShadeModel(GL_SMOOTH);
-     
   glBlendFunc(GL_ONE, GL_ONE);
 
   glBegin(GL_TRIANGLES);

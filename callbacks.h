@@ -1,6 +1,7 @@
 #ifndef CALLBACKS_H
 #define CALLBACKS_H
-typedef struct callbacks {
+
+typedef struct Callbacks {
   void (*display)(void);
   void (*idle)(void);
   void (*keyboard)(int, int, int);
@@ -10,5 +11,6 @@ typedef struct callbacks {
   void (*mouse)(int, int, int, int);
   void (*mouseMotion)(int, int);
 	char *name;
-} callbacks;
+} Callbacks;
+
 #endif

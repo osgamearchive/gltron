@@ -1,6 +1,5 @@
 #include "gltron.h"
 
-char *gameDefault;
 void initFonts() {
   char *path;
   file_handle file;

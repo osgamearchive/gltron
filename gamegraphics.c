@@ -20,7 +20,7 @@ static float NoSpokeColor[4] = {0.0, 0.0, 0.0, 1.0};
 
 void drawGame() {
   GLint i;
-  gDisplay *d;
+  Visual *d;
   Player *p;
 
   polycount = 0;
@@ -313,7 +313,7 @@ void drawPlayers(Player *p) {
 	}
 }
 
-void drawCam(Player *p, gDisplay *d) {
+void drawCam(Player *p, Visual *d) {
   int i;
   float up[3] = { 0, 0, 1 };
   
@@ -381,7 +381,6 @@ void drawCam(Player *p, gDisplay *d) {
   }
 
   glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_SMOOTH);
 
   if (game2->settingsCache.show_recognizer &&
       p->data->speed != SPEED_GONE) {
@@ -394,13 +393,10 @@ void drawCam(Player *p, gDisplay *d) {
 
   drawPlayers(p);
 
-  glShadeModel(game->screen->shademodel);
-
 	setupLights(eWorld);
 
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonOffset(1,1);
-  glShadeModel(GL_SMOOTH);
 
 #if 0
   doTrails(p);
@@ -436,7 +432,6 @@ void drawCam(Player *p, gDisplay *d) {
 	}
 #endif
 
-	glShadeModel(game->screen->shademodel);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
   for(i = 0; i < game->players; i++)
@@ -461,8 +456,8 @@ void drawCam(Player *p, gDisplay *d) {
 	/* 2d hack */
 	if(game2->settingsCache.map_ratio_w > 0)
 	{
-		gDisplay d2d;
-		memcpy(&d2d, d, sizeof(gDisplay));
+		Visual d2d;
+		memcpy(&d2d, d, sizeof(Visual));
 		d2d.vp_w *= game2->settingsCache.map_ratio_w;
 		d2d.vp_h *= game2->settingsCache.map_ratio_h;
 
@@ -478,7 +473,7 @@ void drawCam(Player *p, gDisplay *d) {
 }
 
 void initGLGame() {
-  glShadeModel( game->screen->shademodel );
+  glShadeModel( GL_SMOOTH );
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }

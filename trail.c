@@ -218,7 +218,7 @@ void drawTrailShadow(Player* p) {
   glEnd();
 
   /* trail bow */
-  drawTrailBow(p, 0);
+  drawTrailBow(p);
 
   /* restore */
 
@@ -230,9 +230,7 @@ void drawTrailShadow(Player* p) {
   glPopMatrix();
 }
 
-
-
-void drawTrailBow(Player *p, int flag) {
+void drawTrailBow(Player *p) {
   Data *data;
   float height;
   float ex, ey, sx, sy;
@@ -241,9 +239,6 @@ void drawTrailBow(Player *p, int flag) {
   data = p->data;
   height = data->trail_height;
   if(height < 0) return;
-
-  if(flag) 
-    glShadeModel(GL_SMOOTH);
 
   if(PLAYER_IS_ACTIVE(p)) {
     glEnable(GL_TEXTURE_2D);
@@ -267,31 +262,25 @@ void drawTrailBow(Player *p, int flag) {
 
   /* glTexCoord2f(TEX_SPLIT, 0.0); */
   glTexCoord2f(0.0, 0.0);
-  if(flag)
-    glColor3f(1.0, 1.0, 1.0);
+	glColor3f(1.0, 1.0, 1.0);
   glVertex3f(sx, sy, 0.0);
 
   glTexCoord2f(1.0, 0.0);
-  if(flag)
-    glColor3fv(p->pColorDiffuse);
+	glColor3fv(p->pColorDiffuse);
   glVertex3f(ex, ey, 0.0);
 
   glTexCoord2f(1.0, 1.0);
-  if(flag)
-    glColor3fv(p->pColorDiffuse);
+	glColor3fv(p->pColorDiffuse);
   glVertex3f(ex, ey, height);
 
   /* glTexCoord2f(TEX_SPLIT, 1.0); */
   glTexCoord2f(0.0, 1.0);
-  if(flag)
-    glColor3f(1.0, 1.0, 1.0);
+	glColor3f(1.0, 1.0, 1.0);
   glVertex3f(sx, sy, height);
   glEnd();
 
   polycount += 4;
 
-  glShadeModel( game->screen->shademodel );
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
-
 }

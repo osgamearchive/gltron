@@ -14,12 +14,12 @@
 #include <errno.h>
 #include <unistd.h>
 
-list* readDirectoryContents(const char *dirname, char *prefix) {
+List* readDirectoryContents(const char *dirname, const char *prefix) {
   DIR *dir;
   struct dirent *entry;
-  list *l, *p;
+  List *l, *p;
 
-  l = (list*) malloc(sizeof(list));
+  l = (List*) malloc(sizeof(List));
   p = l;
   p->next = NULL;
 
@@ -35,7 +35,7 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
 		name = malloc(strlen(entry->d_name) + 1);
 		memcpy(name, entry->d_name, strlen(entry->d_name) + 1);
 		p->data = name;
-		p->next = (list*) malloc(sizeof(list));
+		p->next = (List*) malloc(sizeof(List));
 		p = p->next;
 		p->next = NULL;
       }

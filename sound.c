@@ -88,8 +88,8 @@ void Sound_setFxVolume(float volume) {
 
 void Sound_initTracks() {
   const char *music_path;
-  list *soundList;
-  list *p;
+  List *soundList;
+  List *p;
   int i;
 
   music_path = getDirectory( PATH_MUSIC );

@@ -7,7 +7,7 @@ void idleTimedemo(void) {
 	int t;
 	int i, j;
 
-	list *p, *l;
+	List *p, *l;
 
 	Sound_idle();
 	
@@ -146,7 +146,7 @@ void exitTimedemo(void) {
 	setSettingi("grid_size", saveRules.grid_size);
 }
 
-callbacks timedemoCallbacks = {
+Callbacks timedemoCallbacks = {
 	displayGame, idleTimedemo, keyTimedemo, initTimedemo, exitTimedemo,
 	initGLGame, NULL /* mouse button */, NULL /* mouse motion */, "timedemo"
 };

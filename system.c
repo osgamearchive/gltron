@@ -4,7 +4,7 @@
 #include "system_keynames.h"
 
 static int redisplay = 0;
-static callbacks *current = 0;
+static Callbacks *current = 0;
 static int return_code = -1;
 static SDL_Surface *screen;
 static int width, height;
@@ -172,7 +172,7 @@ int SystemMainLoop() {
 	return return_code;
 }
   
-void SystemRegisterCallbacks(callbacks *cb) {
+void SystemRegisterCallbacks(Callbacks *cb) {
   current = cb;
 }
 

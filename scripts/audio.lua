@@ -1,6 +1,7 @@
 function setupSoundTrack()
    local i,name
    for i,name in tracks do
+      print("[scripting audio] found track '", name, "'")
       if name == settings.current_track then
 	 current_track_index = i
 	 return

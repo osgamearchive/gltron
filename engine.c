@@ -21,7 +21,7 @@ void initGameStructures() { /* called only once */
   /*     create trails */
   /*   create camera */
 
-  gDisplay *d;
+  Visual *d;
   int i;
   /* int onScreen; */
   /* Data *data; */
@@ -30,7 +30,7 @@ void initGameStructures() { /* called only once */
   Player *p;
 
   game->winner = -1;
-  game->screen = (gDisplay*) malloc(sizeof(gDisplay));
+  game->screen = (Visual*) malloc(sizeof(Visual));
   game->viewportType = getSettingi("display_type"); 
   
   d = game->screen;
@@ -38,10 +38,6 @@ void initGameStructures() { /* called only once */
   d->h = getSettingi("height"); 
   d->vp_x = 0; d->vp_y = 0;
   d->vp_w = d->w; d->vp_h = d->h;
-  d->blending = 1;
-  d->fog = 0;
-  d->shademodel = GL_SMOOTH;
-  d->wall = 1;
   d->onScreen = -1;
   d->textures = (unsigned int*) malloc(game_textures * sizeof(unsigned int));
 
@@ -49,7 +45,7 @@ void initGameStructures() { /* called only once */
   game->player = (Player *) malloc(MAX_PLAYERS * sizeof(Player));
   for(i = 0; i < game->players; i++) {
     p = (game->player + i);
-    p->display = (gDisplay*) malloc(sizeof(gDisplay));
+    p->display = (Visual*) malloc(sizeof(Visual));
     p->ai = (AI*) malloc(sizeof(AI));
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (Line*) malloc(MAX_TRAIL * sizeof(Line));
@@ -234,14 +230,14 @@ int updateTime() {
   return game2->time.dt;
 }
 
-void addList(list **l, void* data) {
-  list *p;
+void addList(List **l, void* data) {
+  List *p;
   if(*l == NULL) {
-    *l = (list*) malloc(sizeof(list));
+    *l = (List*) malloc(sizeof(List));
     (*l)->next = NULL;
   }
   for(p = *l; p->next != NULL; p = p->next);
-  p->next = (list*) malloc(sizeof(list));
+  p->next = (List*) malloc(sizeof(List));
   p->next->next = NULL;
   p->data = data;
 }

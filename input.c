@@ -73,7 +73,7 @@ void keyGame(int k, int x, int y)
   }
 }
 
-void parse_args(int argc, char *argv[]) {
+void parse_args(int argc, const char *argv[]) {
   int i;
   while(argc--) {
     if(argv[argc][0] == '-') {

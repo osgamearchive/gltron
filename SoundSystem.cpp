@@ -24,7 +24,7 @@ namespace Sound {
     if(_status == eUninitialized) 
       return;
 
-    list* p;
+    List* p;
     int sources_mixed = 0;
     for(p = & _sources; p->next != NULL; p = p->next) {
       Source* s = (Source*) p->data;
@@ -44,23 +44,23 @@ namespace Sound {
   }
 
   void System::AddSource(Source* source) { 
-    list* p;
+    List* p;
     for(p = & _sources; p->next != NULL; p = p->next);
-    p->next = new list;
+    p->next = new List;
     p->next->next = NULL;
     p->data = source;
   }
 
   void System::Idle(void) {
 		/* idle processing */
-		list *p;
+		List *p;
 		for(p = & _sources; p->next != NULL; p = p->next) {
 			Source *source = (Source*) p->data;
 			// check if source is removable & has stopped playing
 			if(source->IsRemovable() && !source->IsPlaying()) {
 				// get rid of data
 				p->data = p->next->data;
-				list *tmp = p->next;
+				List *tmp = p->next;
 				p->next = p->next->next;
 				delete tmp;
 				delete source;

@@ -32,7 +32,7 @@ typedef struct Game2 {
   int players;
   int *startPositions;
   SystemTime time;
-  list events;
+  List events;
   FILE *record;
   FILE *play;
   Input input;
@@ -74,7 +74,7 @@ typedef struct AI {
 
 typedef struct Player {
   Data *data;
-  gDisplay *display;
+  Visual *display;
   Camera *camera;
   AI *ai;
 
@@ -84,8 +84,8 @@ typedef struct Player {
 } Player;
 
 typedef struct Game {
-  gDisplay *screen;
-  ViewportType viewportType;
+  Visual *screen;
+  int viewportType;
   Player *player;
   int players; /* number of players - currently limited to 4 somewhere */
   int winner; /* who won this round */

@@ -9,8 +9,8 @@ Game2 *game2;
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 
 /* TexFont *txf = NULL; */
-fonttex *guiFtx = NULL;
-fonttex *gameFtx = NULL;
+FontTex *guiFtx = NULL;
+FontTex *gameFtx = NULL;
 int fontID = 6;
 
 Mesh* recognizer_quad;
@@ -97,7 +97,7 @@ int n_textures = 11;
 #  define GL_CLAMP_TO_EDGE GL_CLAMP
 #endif
 
-texture_info textures[] = {
+TextureInfo textures[] = {
   { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR, 64 },
   { 1, "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI, 1 },
   { 1, "gltron_logo", GL_RGBA, 

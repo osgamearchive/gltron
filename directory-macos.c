@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct list list;
-struct list {
+typedef struct List List;
+struct List {
   void *data;
-  list* next;
+  List* next;
 };
 
 /* macintosh code by Darrell Walisser */
@@ -81,9 +81,9 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    }
 }
 
-list* readDirectoryContents(const char *dirname, char *prefix) {
+List* readDirectoryContents(const char *dirname, const char *prefix) {
 
-  list *l;
+  List *l;
   OSErr err;
   char *path;
   
@@ -111,7 +111,7 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
   }
   
   l = NULL;
-  l = (list*) malloc(sizeof(list));
+  l = (List*) malloc(sizeof(List));
   if (l == NULL) {
   	fprintf (stderr, "readDirectoryContents: out of memory\n");
   	exit (-1);

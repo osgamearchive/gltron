@@ -2,7 +2,7 @@
 
 /* draw a 2d map */
 
-void draw2D( gDisplay *d ) {
+void draw2D( Visual *d ) {
 		float width, height;
 		float border_left, border_bottom;
 		int i;

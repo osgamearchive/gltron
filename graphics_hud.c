@@ -1,6 +1,6 @@
 #include "gltron.h"
 
-void drawAI(gDisplay *d) {
+void drawAI(Visual *d) {
   char ai[] = "computer player";
 
   rasonly(d);
@@ -9,7 +9,7 @@ void drawAI(gDisplay *d) {
   /* glRasterPos2i(100, 0); */
 }
 
-void drawPause(gDisplay *display) {
+void drawPause(Visual *display) {
   char pause[] = "Game is paused";
   char winner[] = "Player %d wins!";
   char nowinner[] = "No one wins!";
@@ -60,7 +60,7 @@ void drawPause(gDisplay *display) {
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
 }
 
-void drawScore(Player *p, gDisplay *d) {
+void drawScore(Player *p, Visual *d) {
   char tmp[10]; /* hey, they won't reach such a score */
 
   sprintf(tmp, "%d", p->data->score);
@@ -70,7 +70,7 @@ void drawScore(Player *p, gDisplay *d) {
 }
 
   
-void drawFPS(gDisplay *d) {
+void drawFPS(Visual *d) {
 #define FPS_HSIZE 20
   /* draws FPS in upper left corner of Display d */
   static int fps_h[FPS_HSIZE];
@@ -131,7 +131,7 @@ void drawConsoleLines(char *line, int call) {
 	     size, line);
 }
 
-void drawConsole(gDisplay *d) {
+void drawConsole(Visual *d) {
   int lines;
   rasonly(d);
   glColor3f(1.0, 0.3, 0.3);

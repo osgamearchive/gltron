@@ -1,16 +1,16 @@
 #include "system.h"
 #include "callbacks.h"
 
-callbacks *last_callback = NULL;
-callbacks *current_callback = NULL;
+Callbacks *last_callback = NULL;
+Callbacks *current_callback = NULL;
 
-void exitCallback(callbacks *cb) {
+void exitCallback(Callbacks *cb) {
   if(cb != NULL)
     if(cb->exit != NULL)
     (cb->exit)(); /* give them the chance to quit */
 }
 
-void initCallback(callbacks *cb) {
+void initCallback(Callbacks *cb) {
   if(cb->init != NULL)
     (cb->init)();
   if(cb->initGL != NULL)
@@ -18,7 +18,7 @@ void initCallback(callbacks *cb) {
 }
 
 
-void switchCallbacks(callbacks *new) {
+void switchCallbacks(Callbacks *new) {
 	// if(current_callback)
 	// fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
   exitCallback(current_callback);
@@ -50,7 +50,7 @@ void restoreCallbacks() {
 }
 
 #define N_CALLBACKS 7
-callbacks *callbackList[N_CALLBACKS] = {
+Callbacks *callbackList[N_CALLBACKS] = {
 	&gameCallbacks, &guiCallbacks, &pauseCallbacks, &configureCallbacks,
 	&promptCallbacks, &creditsCallbacks, &timedemoCallbacks
 };

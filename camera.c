@@ -146,7 +146,7 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
     cam->movement[CAM_CHI] += game2->input.mousey * MOUSE_CY;
     writeCamDefaults(cam, CAM_PHI);
   }
-  /* done with mouse movement, now clamp the camera to legel values */
+  /* done with mouse movement, now clamp the camera to legal values */
   clampCam(cam);
 
   phi = cam->movement[CAM_PHI];

@@ -7,17 +7,7 @@
 
 /* general data structures */
   
-enum {
-  GAME_SINGLE = 1,
-#ifdef RECORD
-  GAME_SINGLE_RECORD = 2,
-  GAME_PLAY = 4,
-  GAME_PLAY_NETWORK = 8,
-  GAME_NETWORK_RECORD
-#endif
-};
-
-typedef struct fonttex {
+typedef struct {
   GLint nTextures;
   
   int texwidth; /* texture width */
@@ -32,7 +22,7 @@ typedef struct fonttex {
   char *bitmapname;
   int bitmapTexwidth;
   int bitmapWidth; /* character width */
-} fonttex;
+} FontTex;
 
 typedef struct {
   char *path;
@@ -40,6 +30,16 @@ typedef struct {
 } Artpack;
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
+
+enum {
+  GAME_SINGLE = 1,
+#ifdef RECORD
+  GAME_SINGLE_RECORD = 2,
+  GAME_PLAY = 4,
+  GAME_PLAY_NETWORK = 8,
+  GAME_NETWORK_RECORD
+#endif
+};
 
 enum {
   BILINEAR = 0,

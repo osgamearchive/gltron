@@ -5,18 +5,14 @@
 extern "C" {
 #endif
 
-  typedef enum { 
-    PATH_PREFERENCES = 0,
-    PATH_SNAPSHOTS, /* demos, screenshots */
-    PATH_DATA,
-    PATH_SCRIPTS,
-    PATH_MUSIC,
-    PATH_ART
-  } Location;
-
-#if 0	
-extern char* getFullPath(const char *filename);
-#endif
+enum { 
+  PATH_PREFERENCES = 0,
+  PATH_SNAPSHOTS, /* demos, screenshots */
+  PATH_DATA,
+  PATH_SCRIPTS,
+  PATH_MUSIC,
+  PATH_ART
+};
 
 extern int fileExists(const char *path);
 extern void initDirectories();

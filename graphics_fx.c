@@ -1,6 +1,6 @@
 #include "gltron.h"
 
-void drawGlow(Player *pCam, Player *pTarget, gDisplay *d, float dim) {
+void drawGlow(Player *pCam, Player *pTarget, Visual *d, float dim) {
   float mat[4*4];
   float alpha, dist;
 
@@ -8,8 +8,6 @@ void drawGlow(Player *pCam, Player *pTarget, gDisplay *d, float dim) {
   glTranslatef(pTarget->data->posx,
 	       pTarget->data->posy,
 	       0);
-
-  glShadeModel(GL_SMOOTH);
 
   glDepthMask(GL_FALSE);
   glEnable(GL_DEPTH_TEST);
@@ -89,7 +87,6 @@ void drawGlow(Player *pCam, Player *pTarget, gDisplay *d, float dim) {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 
-  glShadeModel( game->screen->shademodel );
   glPopMatrix();  
 }
 

@@ -5,6 +5,7 @@ GetMenuValue[ MenuC.type.menu ] = function ( menu )
    -- return "(menu)"
    return ""
 end
+
 MenuAction[ MenuC.type.menu ] = function ( menu )
    Menu.current = menu 
    Menu.active = 1
@@ -24,6 +25,7 @@ GetMenuValue[ MenuC.type.list ] = function ( menu )
    end
    return "unknown (" .. value .. ")"
 end
+
 MenuAction[ MenuC.type.list ] = function ( menu )
    local value
    if Menu[menu].read then 

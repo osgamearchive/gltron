@@ -33,7 +33,7 @@ void initClientData() {
   }
 }
 
-void initDisplay(gDisplay *d, int type, int p, int onScreen) {
+void initDisplay(Visual *d, int type, int p, int onScreen) {
   int field;
   field = game->screen->vp_w / 32;
   d->h = game->screen->h;
@@ -42,9 +42,6 @@ void initDisplay(gDisplay *d, int type, int p, int onScreen) {
   d->vp_y = game->screen->vp_y + vp_y[type][p] * field;
   d->vp_w = vp_w[type][p] * field;
   d->vp_h = vp_h[type][p] * field;
-  d->blending = 1;
-  d->fog = 0;
-  d->wall = 1;
   d->onScreen = onScreen;
 }  
 
@@ -62,7 +59,7 @@ static void defaultViewportPositions() {
 static void autoConfigureDisplay() {
   int n_humans = 0;
   int i;
-  ViewportType vp;
+  int vp;
 
   defaultViewportPositions();
 
@@ -114,17 +111,17 @@ void changeDisplay(int view) {
   setSettingi("display_type", view);
 }
 
-void updateDisplay(ViewportType newVP) {
+void updateDisplay(int vpType) {
   int i;
 
-  game->viewportType = newVP;
+  game->viewportType = vpType;
 
   for (i = 0; i < game->players; i++) {
     game->player[i].display->onScreen = 0;
   }
-  for (i = 0; i < vp_max[newVP]; i++) {
+  for (i = 0; i < vp_max[vpType]; i++) {
        initDisplay(game->player[ viewport_content[i] ].display, 
-		   newVP, i, 1);
+		   vpType, i, 1);
   }
 
 }
@@ -145,7 +142,7 @@ void exitGame() {
 }
 
 void initGameScreen() {
-  gDisplay *d;
+  Visual *d;
   d = game->screen;
   d->w = getSettingi("width");
   d->h = getSettingi("height"); 

@@ -1,19 +1,17 @@
 #ifndef BASIC_TYPES_H
 #define BASIC_TYPES_H
 
-#include "GL/gl.h"
-
-typedef struct list list;
-struct list {
+typedef struct List List;
+struct List {
   void *data;
-  list* next;
+  List* next;
 };
 
-typedef struct Point {
+typedef struct {
   float x, y;
 } Point;
   
-typedef struct line {
+typedef struct {
   float sx, sy, ex, ey;
 } Line;
 
