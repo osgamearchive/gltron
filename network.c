@@ -123,8 +123,8 @@ do_serverinfo(Packet packet)
 /* 		  ping/2, so 2*ping/2=ping                           */
 /* 	      Net_sendpacket(&rep, Net_getmainsock()); */
 /* 	    } // I used that for synchronization. */
-	  ping = 0;
-	  savedtime = 0;
+	  ping       = 0;
+	  savedtime  = 0;
 	  
 	  switchCallbacks(&pauseCallbacks);
 	  break;
@@ -181,7 +181,7 @@ do_chat( Packet packet )
 
   if( packet.infos.chat.which == BROADCAST )
     {
-      if( ! strcmp( game->settings->nickname, slots[packet.which].name) )
+      if( packet.which == me )
       {
 	printf("> %s\n", packet.infos.chat.mesg);
 	sprintf(mesg, "> %s\n", packet.infos.chat.mesg);	  
@@ -345,7 +345,7 @@ do_startpos(Packet packet)
 void
 do_event(Packet packet)
 {
-  if( packet.infos.event.event.player == getPlayer(me) )
+  if( packet.infos.event.event.player == me )
     {
       if( packet.infos.event.event.type != EVENT_CRASH &&  packet.infos.event.event.type != EVENT_STOP)
 	{
