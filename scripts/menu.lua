@@ -153,36 +153,84 @@ Menu = {
 
    -- PlayerX_Key
    Player1_Left = { 
-      type = MenuC.type.key, caption = "Player 1 Left",
+      type = MenuC.type.key, caption = "Turn Left",
       player = 1, event = "left"
 	 },
    Player1_Right = { 
-      type = MenuC.type.key, caption = "Player 1 Right",
+      type = MenuC.type.key, caption = "Turn Right",
       player = 1, event = "right"
    },
-   Player2_Left = { 
-      type = MenuC.type.key, caption = "Player 2 Left",
-      player = 2, event = "left"
+   Player1_GlanceLeft = { 
+      type = MenuC.type.key, caption = "Glance Left",
+      player = 1, event = "glance_left"
+	 },
+   Player1_GlanceRight = { 
+      type = MenuC.type.key, caption = "Glance Right",
+      player = 1, event = "glance_right"
    },
+   Player1_Booster = { 
+      type = MenuC.type.key, caption = "Booster",
+      player = 1, event = "boost"
+   },
+   Player2_Left = { 
+      type = MenuC.type.key, caption = "Turn Left",
+      player = 2, event = "left"
+	 },
    Player2_Right = { 
-      type = MenuC.type.key, caption = "Player 2 Right",
+      type = MenuC.type.key, caption = "Turn Right",
       player = 2, event = "right"
    },
-   Player3_Left = { 
-      type = MenuC.type.key, caption = "Player 3 Left",
-      player = 3, event = "left"
+   Player2_GlanceLeft = { 
+      type = MenuC.type.key, caption = "Glance Left",
+      player = 2, event = "glance_left"
+	 },
+   Player2_GlanceRight = { 
+      type = MenuC.type.key, caption = "Glance Right",
+      player = 2, event = "glance_right"
    },
+   Player2_Booster = { 
+      type = MenuC.type.key, caption = "Booster",
+      player = 2, event = "boost"
+   },
+   Player3_Left = { 
+      type = MenuC.type.key, caption = "Turn Left",
+      player = 3, event = "left"
+	 },
    Player3_Right = { 
-      type = MenuC.type.key, caption = "Player 3 Right",
+      type = MenuC.type.key, caption = "Turn Right",
       player = 3, event = "right"
    },
-   Player4_Left = { 
-      type = MenuC.type.key, caption = "Player 4 Left",
-      player = 4, event = "left"
+   Player3_GlanceLeft = { 
+      type = MenuC.type.key, caption = "Glance Left",
+      player = 3, event = "glance_left"
+	 },
+   Player3_GlanceRight = { 
+      type = MenuC.type.key, caption = "Glance Right",
+      player = 3, event = "glance_right"
    },
+   Player3_Booster = { 
+      type = MenuC.type.key, caption = "Booster",
+      player = 3, event = "boost"
+   },
+   Player4_Left = { 
+      type = MenuC.type.key, caption = "Turn Left",
+      player = 4, event = "left"
+	 },
    Player4_Right = { 
-      type = MenuC.type.key, caption = "Player 4 Right",
+      type = MenuC.type.key, caption = "Turn Right",
       player = 4, event = "right"
+   },
+   Player4_GlanceLeft = { 
+      type = MenuC.type.key, caption = "Glance Left",
+      player = 4, event = "glance_left"
+	 },
+   Player4_GlanceRight = { 
+      type = MenuC.type.key, caption = "Glance Right",
+      player = 4, event = "glance_right"
+   },
+   Player4_Booster = { 
+      type = MenuC.type.key, caption = "Booster",
+      player = 4, event = "boost"
    },
 
    -- Joystick
@@ -461,10 +509,26 @@ Menu.KeyConfigMenu.items = {
    "Player1_KeyMenu", "Player2_KeyMenu", "Player3_KeyMenu", "Player4_KeyMenu"
 }
 Menu.JoyConfigMenu.items = { "Joy_Threshold" }
-Menu.Player1_KeyMenu.items = { "Player1_Left", "Player1_Right" }
-Menu.Player2_KeyMenu.items = { "Player2_Left", "Player2_Right" }
-Menu.Player3_KeyMenu.items = { "Player3_Left", "Player3_Right" }
-Menu.Player4_KeyMenu.items = { "Player4_Left", "Player4_Right" }
+Menu.Player1_KeyMenu.items = { 
+	"Player1_Left", "Player1_Right",
+	"Player1_GlanceLeft", "Player1_GlanceRight",
+	"Player1_Booster",
+}
+Menu.Player2_KeyMenu.items = { 
+	"Player2_Left", "Player2_Right",
+	"Player2_GlanceLeft", "Player2_GlanceRight",
+	"Player2_Booster",
+}
+Menu.Player3_KeyMenu.items = { 
+	"Player3_Left", "Player3_Right",
+	"Player3_GlanceLeft", "Player3_GlanceRight",
+	"Player3_Booster",
+}
+Menu.Player4_KeyMenu.items = { 
+	"Player4_Left", "Player4_Right",
+	"Player4_GlanceLeft", "Player4_GlanceRight",
+	"Player4_Booster",
+}
 
 Menu.VideoMenu.items = {
 	 "Artpack", "DetailsMenu", 
