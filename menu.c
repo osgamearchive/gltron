@@ -206,7 +206,6 @@ void initMenuCaption(Menu *m) {
       break;
       }
     case 's': /* slider */
-      printf("slider, %s\n", m->szName);
       switch(m->szName[2]) {
 	case 'f':
 	  {
@@ -215,7 +214,7 @@ void initMenuCaption(Menu *m) {
 	    sscanf(m->szName, "ssf_%*f_%*f_%*f_%s ", buf);
 	    pfValue = getVf(buf);
 	    if(pfValue != NULL) {
-	      sprintf(m->display.szCaption, m->szCapFormat, *pfValue);
+	      sprintf(m->display.szCaption, m->szCapFormat, *pfValue * 100);
 	    }
 	    break;
 	  }

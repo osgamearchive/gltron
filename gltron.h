@@ -22,6 +22,7 @@
 /* win32 additions by Jean-Bruno Richard <jean-bruno.richard@mg2.com> */
 
 #ifdef WIN32
+
 #include <windows.h>
 #define SOUND
 #define M_PI 3.141592654

@@ -64,7 +64,7 @@ void drawGuiLogo() {
   float size[] = { 256, 64 };
   float glpos = 64;
   float glsize = 32;
-  float font_shift[] = { 0.5, 0.12 };
+  float font_shift[] = { 0.5, 0.00 };
 
   checkGLError("gui logo start");
   
@@ -83,7 +83,7 @@ void drawGuiLogo() {
 	       pos[1] + glsize * font_shift[1], 0);
   glScalef(glsize, glsize, glsize);
   glColor3f(0.2, 0.4, 0.8);
-  ftxRenderString(guiFtx, "gl", 2);
+  ftxRenderString(gameFtx, "gl", 2);
   glPopMatrix();
   
   glBindTexture(GL_TEXTURE_2D, game->screen->texLogo);

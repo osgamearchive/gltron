@@ -69,6 +69,9 @@ int loadSound(char *name) {
 int playSound() {
   if( ! Mix_PlayingMusic() )
     Mix_PlayMusic(music, -1);
+  /* todo: remove the following once the bug in SDL_mixer is fixed */
+  /* we don't want too many references to game objects here */
+  setMusicVolume(game->settings->musicVolume);
   return 0;
 }
 
