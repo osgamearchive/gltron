@@ -65,6 +65,8 @@ GameEvent* readEvent() {
 
 void getEvents() {
   static GameEvent *latest = NULL;
+  line *old;
+
   if(latest == NULL)
     latest = readEvent();
   if(latest != NULL) {
@@ -91,12 +93,33 @@ void getEvents() {
 	  printf("changing pos 'cause of prediction: %f, %f\n", 
 		 game->player[0].data->posx,
 		 game->player[0].data->posy);
+	  //undo prediction turn
+	  old= game->player[0].data->trail-1;
+	  old->ex=latest->x;
+	  old->ey=latest->y;
+	  game->player[0].data->trail->sx = latest->x;
+	  game->player[0].data->trail->sy = latest->y;
+
+
 	  //adjust position because of prediction
-	  game->player[0].data->posx+=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsX[ game->player[0].data->dir];
-	  game->player[0].data->posy+=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsY[ game->player[0].data->dir];
-	  printf("new pos is: %f, %f\n", 
-		 game->player[0].data->posx,
-		 game->player[0].data->posy);
+	  if((game2->time.current-latest->timestamp)>0)
+	    {
+	      printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",game2->time.current, latest->timestamp, (game2->time.current-latest->timestamp), (game2->time.current-latest->timestamp)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
+		     
+	      game->player[0].data->posx=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]+latest->x;
+
+	      game->player[0].data->posy=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsY[ game->player[0].data->dir]+latest->y;
+
+	      printf("new pos is: %f, %f\n", 
+		     game->player[0].data->posx,
+		     game->player[0].data->posy);
+	      
+	      game->player[0].data->trail->ex = game->player[0].data->posx;
+	      game->player[0].data->trail->ey = game->player[0].data->posy;
+	    } else {
+	      //TODO:change synchro 'cause system has changed!
+	      game2->time.current=latest->timestamp-slots[me].ping/2;
+	    }
 	} else {
 	  printf("process others events ( no predictions\n");
 	  latest->player = getPlayer(latest->player);
