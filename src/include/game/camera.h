@@ -27,7 +27,7 @@ typedef enum eCamType {
 	CAM_FOLLOW,
 	CAM_COCKPIT,
 	CAM_FREE
-};
+} eCamType;
 
 enum { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET };
 

@@ -361,6 +361,7 @@ int c_drawHUDMask(lua_State* l)
 	{
 		hud_MaskSetup(maskId, maskIndex);
 	}
+	return 0;
 }
 		
 void rgb_interpolate(float *color, float t, float *c1, float *c2) {
@@ -454,3 +455,4 @@ void drawRect(float width, float height,
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 }
+
