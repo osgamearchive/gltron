@@ -13,17 +13,17 @@ static int fullscreen;
 static int video_initialized = 0;
 
 void SystemExit() {
-  fprintf(stderr, "shutting down sound now\n");
+  fprintf(stderr, "[system] shutting down sound now\n");
 #ifdef SOUND
   Sound_shutdown();
 #endif
-  fprintf(stderr, "shutting down network now\n");
+  fprintf(stderr, "[system] shutting down network now\n");
 #ifdef NETWORK
   SystemNetExit();
 #endif
-  fprintf(stderr, "shutting down sdl now\n");
+  fprintf(stderr, "[system] shutting down sdl now\n");
   SDL_Quit();
-  fprintf(stderr, "exiting application\n");
+  fprintf(stderr, "[system] exiting application\n");
   exit(0); /* OK: end of program */
 }
 
@@ -196,7 +196,7 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   fullscreen = full;
   if(!video_initialized) {
     if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-      fprintf(stderr, "can't initialize Video: %s\n", SDL_GetError());
+      fprintf(stderr, "[system] can't initialize Video: %s\n", SDL_GetError());
       exit(1); /* OK: critical, no visual */
     }
   }
@@ -229,7 +229,7 @@ int SystemCreateWindow(char *name) {
   if(fullscreen & SYSTEM_FULLSCREEN)
     f |= SDL_FULLSCREEN;
   if( (screen = SDL_SetVideoMode( width, height, 0, f )) == NULL ) {
-    fprintf(stderr, "Couldn't set GL mode: %s\n", SDL_GetError());
+    fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
   }
 	SDL_WM_SetCaption("GLtron", "");
