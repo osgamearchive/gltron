@@ -36,10 +36,15 @@ void SystemInit(int *argc, char *argv[]) {
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
   }
   /* atexit(SystemExit); */
+
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
 #ifdef NETWORK
   SystemNetInit();
 #endif
+}
+
+void SystemGrabInput() {
+  SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 
 void SystemPostRedisplay() {
@@ -60,11 +65,11 @@ void SystemWarpPointer(int x, int y) {
 }
 
 void SystemHidePointer() {
-  /* SDL_ShowCursor(0); */
+  SDL_ShowCursor(0);
 }
 
 void SystemUnhidePointer() {
-  /* SDL_ShowCursor(1); */
+  SDL_ShowCursor(1);
 }
 
 void SystemMouse(int buttons, int state, int x, int y) {
@@ -142,6 +147,7 @@ void SystemInitDisplayMode(int f, unsigned char full) {
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
   if(flags & SYSTEM_DEPTH)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
+  /* SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8); */
   video_initialized = 1;
 }
 

@@ -27,9 +27,13 @@ int initWindow() {
   /* char buf[20]; */
 
   SystemInitWindow(0, 0, game->settings->width, game->settings->height);
-  flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH;
-  if(game->settings->windowMode == 0)
+
+  if(game->settings->windowMode == 0) {
+    SystemGrabInput();
     fullscreen = SYSTEM_FULLSCREEN;
+  }
+
+  flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH;
   SystemInitDisplayMode(flags, fullscreen);
 
   win_id = SystemCreateWindow("gltron");
@@ -94,10 +98,15 @@ int main( int argc, char *argv[] ) {
   parse_args(argc, argv);
 
   /* sound */
-  path = getFullPath(MUSIC_DIR);
-
+#ifndef WIN32
+  path = getMusicPath(MUSIC_DIR);
   game->settings->soundList = 
     readDirectoryContents(path, SONG_PREFIX);
+#else
+  path = getMusicPath(MUSIC_DIR);
+  game->settings->soundList = getSongList();
+#endif
+  
   game->settings->soundIndex = -1;
 
   l = game->settings->soundList;
