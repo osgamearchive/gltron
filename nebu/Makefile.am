@@ -1,6 +1,6 @@
 SUBDIRS = base filesystem scripting audio video input
 
-lib_LIBRARIES = libNebu.a
+noinst_LIBRARIES = libNebu.a
 
 libNebu_a_SOURCES =
 

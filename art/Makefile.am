@@ -1,1 +1,1 @@
-SUBDIRS = default metalTron classic
+SUBDIRS = default 

@@ -1,6 +1,6 @@
 SUBDIRS = filesystem base configuration audio video input game
 
-lib_LIBRARIES = libGLtron.a
+noinst_LIBRARIES = libGLtron.a
 
 libGLtron_a_SOURCES =
 
