@@ -19,8 +19,9 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	console.c renderer_gl.c callbacks.h camera.h data.h \
 	geom.h file.h gltron.h light.h menu.h model.h png_texture.h \
 	quad.h renderer_gl.h switchCallbacks.h system.h texture.h credits.c \
-  floor.c floor.h skybox.c skybox.h engine.h event.h \
-	scripting.c scripting.h scripting_interface.c console.h settings.h
+	floor.c floor.h skybox.c skybox.h engine.h event.h \
+	scripting.c scripting.h scripting_interface.c console.h settings.h \
+	util.c util.h
 
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/liblualib.a -lm
 
