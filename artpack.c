@@ -1,7 +1,7 @@
 #include "gltron.h"
 
 void initArtpacks() {
-  char *art_path;
+  const char *art_path;
   list *artList;
   list *p;
   int i;
