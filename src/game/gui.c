@@ -28,6 +28,10 @@ void drawGuiBackground(void) {
 
   rasonly(gScreen);
 
+  glDisable(GL_BLEND);
+  glDisable(GL_LIGHTING);
+  glDisable(GL_DEPTH_TEST);
+
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_GUI]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -93,7 +97,6 @@ void drawGuiLogo(void) {
 		glTexCoord2f(0.0, 1.0);
 		glVertex2f(pos[0], pos[1] + size[1]);
 	}
-	
   glEnd();
 
   glDisable(GL_BLEND);
@@ -219,17 +222,6 @@ void initGui(void) {
   updateSettingsCache();
 }
 
-void exitGui(void) {
-  glShadeModel( GL_SMOOTH );
-}
-
-void initGLGui(void) {
-  glShadeModel(GL_FLAT);
-  glDisable(GL_BLEND);
-  glDisable(GL_LIGHTING);
-  glDisable(GL_DEPTH_TEST);
-}
-	
 void guiMouse(int buttons, int state, int x, int y) {
   fprintf(stderr, "Mouse buttons: %d, State %d, Position (%d, %d)\n",
 	  buttons, state, x, y); 
@@ -246,12 +238,12 @@ void guiMouseMotion(int mx, int my) {
 }
 
 Callbacks configureCallbacks = {
-  displayConfigure, idleGui, keyboardConfigure, initGui, exitGui, initGLGui,
-  NULL, NULL, "configure"
+  displayConfigure, idleGui, keyboardConfigure, initGui, NULL /* exit */,
+  NULL /* mouse button */, NULL /* mouse motion */, "configure"
 };
 
 Callbacks guiCallbacks = {
-  displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui, 
+  displayGui, idleGui, keyboardGui, initGui, NULL /* exit */,
   guiMouse, guiMouseMotion, "gui"
 };
 

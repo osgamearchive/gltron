@@ -7,7 +7,6 @@ typedef struct Callbacks {
   void (*keyboard)(int, int, int, int);
   void (*init)(void);
   void (*exit)(void);
-  void (*initGL)(void);
   void (*mouse)(int, int, int, int);
   void (*mouseMotion)(int, int);
 	char *name;

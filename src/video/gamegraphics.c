@@ -40,6 +40,10 @@ void drawGame(void) {
 
 	clearScreen();
 
+  glShadeModel( GL_SMOOTH );
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
+
   for(i = 0; i < vp_max[gViewportType]; i++) {
 		Player *p = game->player + viewport_content[i];
 		PlayerVisual *pV = gPlayerVisuals + viewport_content[i];
@@ -521,8 +525,3 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	}
 }
 
-void initGLGame(void) {
-  glShadeModel( GL_SMOOTH );
-  glDepthMask(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
-}

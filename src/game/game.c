@@ -84,5 +84,5 @@ void gameMouse(int buttons, int state, int x, int y) {
 }
 
 Callbacks gameCallbacks = { 
-  displayGame, GameMode_Idle, keyGame, enterGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
+  displayGame, GameMode_Idle, keyGame, enterGame, exitGame, gameMouse, gameMouseMotion, "game"
 };

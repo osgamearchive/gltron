@@ -229,7 +229,6 @@ extern void updateDisplay(int vpType);
 
 extern void drawGame(void);
 extern void displayGame(void);
-extern void initGLGame(void);
 
 extern void shutdownDisplay(Visual *d);
 extern void setupDisplay(Visual *d);

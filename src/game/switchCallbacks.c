@@ -14,8 +14,6 @@ void exitCallback(Callbacks *cb) {
 void initCallback(Callbacks *cb) {
   if(cb->init != NULL)
     (cb->init)();
-  if(cb->initGL != NULL)
-    (cb->initGL)();
 }
 
 

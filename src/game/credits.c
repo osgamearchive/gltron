@@ -83,5 +83,5 @@ void initCredits(void) {
 
 Callbacks creditsCallbacks = { 
   displayCredits, idleCredits, keyCredits, initCredits, 
-  NULL, NULL, mouseCredits, NULL, "credits"
+  NULL /* exit */, mouseCredits, NULL /* mouse motion */, "credits"
 };

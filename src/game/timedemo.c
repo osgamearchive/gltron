@@ -147,6 +147,6 @@ void exitTimedemo(void) {
 
 Callbacks timedemoCallbacks = {
 	displayGame, idleTimedemo, keyTimedemo, initTimedemo, exitTimedemo,
-	initGLGame, NULL /* mouse button */, NULL /* mouse motion */, "timedemo"
+	NULL /* mouse button */, NULL /* mouse motion */, "timedemo"
 };
 
