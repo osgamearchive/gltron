@@ -21,6 +21,7 @@ Bugs:
   but user went back to menu. (LIM) (software cursor time?)
 - fix mouse not being released when going from fullscreen to windowed in some
   situations. (LIM)
+- changes of settings from within artpack.ini don't update the menu captions (Andreas)
 
 Features:
 
@@ -36,8 +37,6 @@ Features:
 Settings:
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
   [ nicolas, kokido ]
-- glClearColor() doesn't match artpack. Move glClearColor to settings and
-  include in artpack.ini [ Andreas ]
 - Add trail & cycle shadow color to setting / artpack.ini [ Andreas ]
 - Save current artpack / Clear up artpack system,
   Select default artpack [ Andreas ]

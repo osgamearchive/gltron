@@ -10,6 +10,10 @@ windowMode = 1
 grid_size = 720
 
 -- colors
+
+-- this setting is overridden in artpack.ini
+clear_color = { 0, 0, 0, 0 }
+
 model_diffuse_0 = { 1.000, 1.000, 0.000, 1.000 }
 model_diffuse_1 = { 0.700, 0.100, 0.100, 1.000 }
 model_diffuse_2 = { 0.300, 1.000, 0.800, 1.000 }

@@ -21,7 +21,12 @@ void drawGame() {
 
   glEnable(GL_DEPTH_TEST);
 
-  glClearColor(28.0f / 255.0f, 26.0 / 255.0f, 100.0 / 255.0f, .0);
+  {
+    float clear[4];
+    scripting_GetFloatArray("clear_color", clear, 4);
+    glClearColor(clear[0], clear[1], clear[2], clear[3]);
+  }
+
 #ifdef DO_STENCIL
   glClearStencil(0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
