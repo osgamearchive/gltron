@@ -78,6 +78,8 @@ void setupDisplay(gDisplay *d) {
   SystemReshapeFunc(reshape);
 }
 
+
+
 int main( int argc, char *argv[] ) {
   char *path;
   list *l;
@@ -87,6 +89,10 @@ int main( int argc, char *argv[] ) {
 
 #ifdef __FreeBSD__
   fpsetmask(0);
+#endif
+
+#ifdef macintosh
+    setupHomeEnvironment ();
 #endif
 
   SystemInit(&argc, argv);
