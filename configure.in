@@ -135,8 +135,8 @@ AC_OUTPUT(Makefile \
 	art/default/Makefile \
 	art/metalTron/Makefile \
 	data/Makefile \
-	data/music/Makefile \
 	sounds/Makefile \
+	music/Makefile \
 	scripts/Makefile \
 	lua/Makefile \
 	lua/src/Makefile \
