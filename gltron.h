@@ -53,7 +53,7 @@ extern "C" {
 
 #ifdef __APPLE__
 #undef RC_NAME
-#define RC_NAME "Library/Preferences/gltronPrefs.txt"
+#define RC_NAME "gltronPrefs.txt"
 #endif
 
 /* dropped support for anything else than libpng */
