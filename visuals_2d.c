@@ -10,13 +10,13 @@ void draw2D( gDisplay *d ) {
 		float aspect = (float)d->vp_w / (float)d->vp_h;
 		if(d->vp_w / game2->grid.width < d->vp_h / game2->grid.height) {
 				// black borders top/bottom
-				width = game2->grid.width;
+				width = game2->grid.width + 1;
 				height = width / aspect;
 				border_bottom = (height - game2->grid.height) / 2;
 				border_left = 0;
 		} else {
 				// black borders left/right
-				height = game2->grid.height;
+				height = game2->grid.height + 1;
 				width = height * aspect;
 				border_left = (width - game2->grid.width) / 2;
 				border_bottom = 0;
