@@ -1,4 +1,5 @@
 #include "sound.h"
+#include "gltron.h"
 
 /* linux only, at the moment */
 
@@ -10,8 +11,6 @@ static Mix_Music *music;
 
 static Mix_Chunk *game_fx[NUM_GAME_FX];
 static Mix_Chunk *menu_fx[NUM_MENU_FX];
-
-static char *fx_dir = "sounds";
 
 static char *game_fx_names[] = {
   "game_engine.wav",
@@ -28,14 +27,21 @@ static char *menu_fx_names[] = {
 
 void loadFX() {
   int i;
-  char buf[100];
+  char *path;
+
   for(i = 0; i < NUM_GAME_FX; i++) {
-    sprintf(buf, "%s/%s", fx_dir, game_fx_names[i]);
-    game_fx[i] = Mix_LoadWAV(buf);
+    path = getFullPath(game_fx_names[i]);
+    if(path) {
+      game_fx[i] = Mix_LoadWAV(path);
+      free(path);
+    }
   }
   for(i = 0; i < NUM_MENU_FX; i++) {
-    sprintf(buf, "%s/%s", fx_dir, menu_fx_names[i]);
-    menu_fx[i] = Mix_LoadWAV(buf);
+    path = getFullPath(menu_fx_names[i]);
+    if(path) {
+      menu_fx[i] = Mix_LoadWAV(path);
+      free(path);
+    }
   }
 }
  

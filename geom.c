@@ -40,3 +40,9 @@ void vadd(float v1[3], float v2[3], float out[3]) {
 	out[1] = v1[1] + v2[1];
 	out[2] = v1[2] + v2[2];
 }
+
+void vcopy(float v1[3], float out[3]) {
+	out[0] = v1[0];
+	out[1] = v1[1];
+	out[2] = v1[2];
+}

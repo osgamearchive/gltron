@@ -4,37 +4,23 @@ for URL's on how to get these packages see
 http://www.ards.net/Andreas/gltron.html#links
 
 Get a working OpenGL / Mesa
-Get Glut (glut is in the MesaDemos package)
+Get SDL-1.1 and SDL_mixer
+(from http://www.devolution.com/~slouken/SDL/index.html)
 
-Installation (without sound)
+Installation
 
-% make
-% ./gltron
+./configure
+make
 
-Installation (with sound)
+Type './gltron' to play!
 
-Get libmikmod and install it
+Optionally do (as root):
 
-% make sound
-% ./gltron
+make install
 
-STOP: make install is currently broken!
-
-Optionally:
-
-% su
-# make install
-
-will install gltron in GLTRON_INSTALLDIR and gltron.it (if present),
-settings.txt, menu.txt, helvetica.txf in GLTRON_HOME as defined in the
-Makefile.  By default, GLTRON_INSTALLDIR is /usr/bin and
-GLTRON_HOME is /usr/share/games/gltron.
-
-gltron will look for the following files:
-
-gltron.it (only if compiled with sound)
-settings.txt menu.txt gltron.sgi gltron_floor.sgi gltron_wall.sgi
-xenotron.ftx xenotron.0.sgi xenotron.1.sgi t-u-low.obj tron.mtl
+make install will install gltron in GLTRON_INSTALLDIR and some other files
+in GLTRON_HOME as defined in the Makefile. By default, GLTRON_INSTALLDIR
+is /usr/bin and GLTRON_HOME is /usr/share/games/gltron.
 
 If the environment variable GLTRON_HOME is defined, it will look
 there first, ./ second, /usr/share/games/gltron third and at last in

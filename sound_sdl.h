@@ -1,3 +1,6 @@
+#ifndef SOUND_H
+#define SOUND_H
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
 
@@ -19,5 +22,4 @@ void stopEngine();
 enum game_fx { fx_engine=0, fx_start, fx_crash, fx_win, fx_lose };
 enum menu_fx { fx_action=0, fx_highlight };
 
-
-
+#endif

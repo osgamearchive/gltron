@@ -111,8 +111,8 @@ void SystemReshapeFunc(void(*reshape)(int, int)) {
 }
 
 extern char* SystemGetKeyName(int key) {
-  char *buf;
   /*
+  char *buf;
   buf = malloc(2);
   buf[0] = (char)key;
   buf[1] = 0;

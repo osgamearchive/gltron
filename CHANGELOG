@@ -18,6 +18,9 @@ visible changes
 - very cool new model from Charles Babbage
 - levels-of-detail for the model
 - configure players (human, computer, none)
+- configure keyboard controls (not saved between games yet)
+- added arena overview camera mode when dead
+- GNU autoconf WOOO! WOOO!
 
 code changes
 - removed clearCol

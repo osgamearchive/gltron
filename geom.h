@@ -10,5 +10,5 @@ void normcrossprod(float v1[3], float v2[3], float out[3]);
 float scalarprod(float v1[3], float v2[3]);
 void vsub(float v1[3], float v2[3], float out[3]);
 void vadd(float v1[3], float v2[3], float out[3]);
-
+void vcopy(float v1[3], float out[3]);
 #endif
