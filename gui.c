@@ -156,6 +156,118 @@ void keyboardConfigure(int key, int x, int y) {
   restoreCallbacks();
 }
 
+#ifdef __NETWORK__
+static int nbreads = 0;
+void readNickname(int key, int x, int y)
+{
+  fprintf(stderr, "%c", key);
+  if( nbreads == 0 )
+    {
+      strcpy(game->settings->nickname, "");
+    }
+  nbreads++;
+  switch(key)
+    {
+    case 13:
+      nbreads=0;   
+      restoreCallbacks();
+      break;
+    case ';':
+       sprintf(game->settings->nickname, "%s%c", game->settings->nickname, '.');
+       break;
+    case 304:
+      break;
+    default:
+      if( key > 'A' && key < 'z' )
+	{
+	  sprintf(game->settings->nickname, "%s%c", game->settings->nickname, key);
+	} else {
+	  nbreads=0;
+	  restoreCallbacks();
+	}      
+      break;
+    }
+  initMenuCaptions();
+#ifdef SOUND
+  playMenuFX(fx_action);
+#endif
+   drawGuiBackground();
+   if(!game->settings->softwareRendering)
+     drawGuiLogo();
+   drawMenu(game->screen);
+   rasonly(game->screen);
+   SystemSwapBuffers();
+}
+
+void readServer(int key, int x, int y)
+{
+
+  if( nbreads == 0 )
+    {
+      strcpy(game->settings->server, "");
+    }
+  nbreads++;
+  switch(key)
+    {
+    case 13://return
+      nbreads=0;   
+      restoreCallbacks();
+      break;
+    case 113://shift
+      
+      break;
+    default:
+      if( key > 'A' && key < 'z' )
+	{
+	  sprintf(game->settings->server, "%s%c", game->settings->server, key);
+	} else {
+	  fprintf(stderr, "bad key: %c", key);
+	  nbreads=0;
+	  restoreCallbacks();
+	}      
+      break;
+    }
+  initMenuCaptions();
+#ifdef SOUND
+  playMenuFX(fx_action);
+#endif
+   drawGuiBackground();
+   if(!game->settings->softwareRendering)
+     drawGuiLogo();
+   drawMenu(game->screen);
+   rasonly(game->screen);
+   SystemSwapBuffers();
+}
+
+void displayNickname() {
+  char message[] = "Enter your nickname...";
+  drawGuiBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
+  drawMenu(game->screen);
+
+  rasonly(game->screen);
+  glColor3f(1.0, 1.0, 1.0);
+  drawText(guiFtx, game->screen->vp_w / 6, 20,
+	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+  SystemSwapBuffers();
+}
+
+void displayServer() {
+  char message[] = "Enter server name or server IP...";
+  drawGuiBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
+  drawMenu(game->screen);
+
+  rasonly(game->screen);
+  glColor3f(1.0, 1.0, 1.0);
+  drawText(guiFtx, game->screen->vp_w / 6, 20,
+	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+  SystemSwapBuffers();
+}
+#endif
+
 void keyboardGui(int key, int x, int y) {
   int i;
   switch(key) {
@@ -324,3 +436,15 @@ callbacks guiCallbacks = {
   displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui, 
   guiMouse, guiMouseMotion
 };
+
+#ifdef __NETWORK__
+callbacks nicknameCallbacks = {
+  displayNickname, idleGui, readNickname, initGui, exitGui, initGLGui,
+  NULL, NULL
+};
+
+callbacks serverCallbacks = {
+  displayServer, idleGui, readServer, initGui, exitGui, initGLGui,
+  NULL, NULL
+};
+#endif
