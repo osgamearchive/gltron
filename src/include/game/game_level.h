@@ -1,5 +1,5 @@
 #ifndef GAME_LEVEL_H
-#define VIDEO_LEVEL_H
+#define GAME_LEVEL_H
 
 #include "base/nebu_vector.h"
 
@@ -9,9 +9,10 @@ typedef struct {
 	segment2 *boundaries;
 	int nSpawnPoints;
 	vec2 *spawnPoints;
+	box2 boundingBox;
 } game_level;
 
-void game_free_level(game_level *l);
-game_level* game_create_level(const char *name);
+void game_FreeLevel(game_level *l);
+game_level* game_CreateLevel(const char *name);
 
 #endif
