@@ -73,10 +73,20 @@ unsigned char debugcolors[6][4] = {
 
 int vps = 4;
 int vp_max[] = { 1, 2, 4, 1 }; /* windows in this display setting */
-float vp_x[4][4] = { { 1 },    { 1, 1 },  { 1, 16, 1, 16 }, { 10 } };
-float vp_y[4][4] = { { 1 },    { 0.5, 12.5 },   { 1, 1, 12.5, 12.5 }, { 4.5 } } ;
-float vp_w[4][4] = { { 30 },   { 30, 30 }, { 14, 14, 14, 14 }, { 20 } };
-float vp_h[4][4] = { { 22.5 }, { 11.5, 11.5 }, { 10.5, 10.5, 10.5, 10.5 }, { 15 } };
+
+/* currently, the screen is partitioned into 32 units horizontally,
+   and 24 units vertically */
+
+/* these arrays have four members, for the four different visuals:
+   single, split, quad, unused */
+
+/* the offset of the view, in virtual units */
+float vp_x[4][4] = { { 0 },    { 1, 1 },  { 1, 16, 1, 16 }, { 10 } };
+float vp_y[4][4] = { { 0 },    { 0.5, 12.5 },   { 1, 1, 12.5, 12.5 }, { 4.5 } } ;
+
+/* the width/height of the view, in virtual units */
+float vp_w[4][4] = { { 32 },   { 30, 30 }, { 14, 14, 14, 14 }, { 20 } };
+float vp_h[4][4] = { { 24 }, { 11.5, 11.5 }, { 10.5, 10.5, 10.5, 10.5 }, { 15 } };
 
 #ifdef DEPTH_SORT
 int quadBufSize = 100;
