@@ -135,6 +135,7 @@ void idleGui() {
 #endif
 
   scripting_RunGC();
+	SDL_Delay(10);
   SystemPostRedisplay(); /* animate menu */
 }
 
