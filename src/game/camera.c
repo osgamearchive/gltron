@@ -173,11 +173,17 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   }
 
   if(cam->type.freedom[CAM_FREE_PHI]) {
-    cam->movement[CAM_PHI] += - gInput.mousex * MOUSE_CX;
+	  int sign = 1;
+	  if(getSettingi("invert_mouse_x") == 1)
+		  sign = -1;
+    cam->movement[CAM_PHI] += sign * (- gInput.mousex) * MOUSE_CX;
     writeCamDefaults(cam, CAM_CHI);
   }
   if(cam->type.freedom[CAM_FREE_CHI]) {
-    cam->movement[CAM_CHI] += gInput.mousey * MOUSE_CY;
+	  int sign = 1;
+	  if(getSettingi("invert_mouse_y") == 1)
+		  sign = -1;
+    cam->movement[CAM_CHI] += sign * gInput.mousey * MOUSE_CY;
     writeCamDefaults(cam, CAM_PHI);
   }
   /* done with mouse movement, now clamp the camera to legal values */

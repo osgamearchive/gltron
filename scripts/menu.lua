@@ -23,6 +23,7 @@ Menu = {
    -- Menu definitions
    RootMenu = { type = MenuC.type.menu, caption = "" },
    GameMenu = { type = MenuC.type.menu, caption = "Game" },
+   ControlsMenu = { type = MenuC.type.menu, caption = "Controls" },
    GameRulesMenu = { type = MenuC.type.menu, caption = "Game Rules" },
    GameSettingsMenu = { type = MenuC.type.menu, caption = "Play Settings" },
    PlayerConfigMenu = { type = MenuC.type.menu, caption = "Configure Players" },
@@ -173,6 +174,20 @@ Menu = {
       store = function(value) settings.ai_player4 = value; c_resetGame(); end
    },
 
+   InvertMouseY = {
+     type = MenuC.type.list, caption = "Invert Mouse (Y)",
+     labels = { "off", "on" },
+     values = { 0, 1 },
+     read = function() return settings.invert_mouse_y; end,
+     store = function(value) settings.invert_mouse_y = value; end
+  },
+   InvertMouseX = {
+     type = MenuC.type.list, caption = "Invert Mouse (X)",
+     labels = { "off", "on" },
+     values = { 0, 1 },
+     read = function() return settings.invert_mouse_x; end,
+     store = function(value) settings.invert_mouse_x = value; end
+  },
    -- PlayerX_Key
    Player1_Left = { 
       type = MenuC.type.key, caption = "Turn Left",
@@ -553,11 +568,15 @@ Menu = {
    },
 }
 -- Menu entries
-Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "Quit" }
+Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "ControlsMenu", "Quit" }
+
+Menu.ControlsMenu.items = {
+	"KeyConfigMenu", "JoyConfigMenu", "InvertMouseX", "InvertMouseY"
+}
 
 Menu.GameMenu.items = { 
    "StartGame", "ResetScores", "GameRulesMenu", 
-   "GameSettingsMenu", "PlayerConfigMenu", "KeyConfigMenu", "JoyConfigMenu"
+   "GameSettingsMenu", "PlayerConfigMenu",
 }
 
 Menu.GameRulesMenu.items = { 
