@@ -22,20 +22,21 @@ void SystemExit() {
   fprintf(stderr, "shutting down sdl now\n");
   SDL_Quit();
   fprintf(stderr, "exiting application\n");
-  exit(0);
+  exit(0); /* OK: end of program */
 }
 
 void SystemInit(int *argc, char *argv[]) {
   if(SDL_Init(SDL_INIT_VIDEO) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
-    exit(2);
+    exit(1); /* OK: critical, no visual */
   }
   else video_initialized = 1;
 
   if(SDL_Init(SDL_INIT_AUDIO) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
+#warning "disable sound system"
   }
-  /* atexit(SystemExit); */
+  atexit(SystemExit);
 
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
 #ifdef NETWORK
@@ -146,10 +147,8 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   if(!video_initialized) {
     if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
       fprintf(stderr, "can't initialize Video: %s\n", SDL_GetError());
-      exit(2);
+      exit(1); /* OK: critical, no visual */
     }
-  } else {
-    fprintf(stderr, "WARNING: can't init video; it's already running\n");
   }
   if(flags & SYSTEM_DOUBLE)
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
@@ -181,7 +180,7 @@ int SystemCreateWindow(char *name) {
     f |= SDL_FULLSCREEN;
   if( (screen = SDL_SetVideoMode( width, height, 0, f )) == NULL ) {
     fprintf(stderr, "Couldn't set GL mode: %s\n", SDL_GetError());
-    exit(1);
+    exit(1); /* OK: critical, no visual */
   }
   return 1;
 }
