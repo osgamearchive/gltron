@@ -440,7 +440,7 @@ Menu** loadMenuFile(char *filename) {
   char buf[MENU_BUFSIZE];
   FILE* f;
   Menu* m;
-  Menu** list = NULL;
+  Menu** lst = NULL;
   int nMenus;
   int i, j;
   node *head;
@@ -456,14 +456,14 @@ Menu** loadMenuFile(char *filename) {
   if(nMenus <= 0) return NULL;
 
   /* allocate space for data structures */
-  list = (Menu**) malloc(sizeof(Menu*) * nMenus);
+  lst = (Menu**) malloc(sizeof(Menu*) * nMenus);
 
   /* load data */
   for(i = 0; i < nMenus; i++) {
     /* printf("loading menu set %d\n", i); */
     /* TODO: bad magic */
     if(i > 10) exit(1);
-    *(list + i) = loadMenu(f, buf, NULL, 0);
+    *(lst + i) = loadMenu(f, buf, NULL, 0);
   }
   fclose(f);
 
@@ -481,7 +481,7 @@ Menu** loadMenuFile(char *filename) {
   
   for(i = 0; i < nMenus; i++) {
     t = (node*) malloc(sizeof(node));
-    t->data = *(list + i);
+    t->data = *(lst + i);
     t->next = head->next;
     head->next = t;
     sp++;
@@ -512,7 +512,7 @@ Menu** loadMenuFile(char *filename) {
       }
     }
   }
-  return list;
+  return lst;
 }
 
 void drawMenu(gDisplay *d) {

@@ -11,14 +11,14 @@ static float normal2[] = { 0.0, 1.0, 0.0 };
    specified (eye) point
    the z component is ignored
  */
-float getDist(line *line, float* eye) {
+float getDist(line *ln, float* eye) {
 
   float n[2];
   float tmp[2];
-  n[0] = line->sx + (line->ey - line->sy);
-  n[1] = line->sy - (line->ex - line->sx);
-  tmp[0] = eye[0] - line->sx;
-  tmp[1] = eye[1] - line->sy;
+  n[0] = ln->sx + (ln->ey - ln->sy);
+  n[1] = ln->sy - (ln->ex - ln->sx);
+  tmp[0] = eye[0] - ln->sx;
+  tmp[1] = eye[1] - ln->sy;
   if(n[0] == n[1] == 0) return length(tmp);
   return abs(scalarprod2(n, tmp) / length(n));
 }
@@ -224,7 +224,7 @@ void drawTrailShadow(Player* p) {
 */
 
 void drawTraces(Player *p, gDisplay *d) {
-  line *line;
+  line *ln;
   float height;
   float uv, ex, ey;
   float normal1[] = { 1.0, 0.0, 0.0 };
@@ -259,56 +259,56 @@ void drawTraces(Player *p, gDisplay *d) {
   glShadeModel(GL_SMOOTH);
 
   /* start drawing */
-  line = &(data->trails[0]);
+  ln = &(data->trails[0]);
   glBegin(GL_QUADS);
-  while(line != data->trail) { /* the last segment is special cased */
+  while(ln != data->trail) { /* the last segment is special cased */
 
-    if(line->sy == line->ey) normal = normal1;
+    if(ln->sy == ln->ey) normal = normal1;
     else normal = normal2;
 
     /* glNormal3fv(normal); */
     setNormal3fv(normal);
-    setVertex3f((line->sx + line->ex) / 2, (line->sy + line->ey) / 2, 0);
+    setVertex3f((ln->sx + ln->ex) / 2, (ln->sy + ln->ey) / 2, 0);
     light4fv(color);
     glColor4fv(color);
 
     glTexCoord2f(0.0, 0.0);
-    glVertex3f(line->sx, line->sy, 0.0);
+    glVertex3f(ln->sx, ln->sy, 0.0);
 
     glTexCoord2f(0.0, 1.0);
-    glVertex3f(line->sx, line->sy, height);
+    glVertex3f(ln->sx, ln->sy, height);
 
-    uv = getSegmentUV(line);
+    uv = getSegmentUV(ln);
     glTexCoord2f(uv, 1.0);
-    glVertex3f(line->ex, line->ey, height);
+    glVertex3f(ln->ex, ln->ey, height);
 
     glTexCoord2f(uv, 0.0);
-    glVertex3f(line->ex, line->ey, 0.0);
+    glVertex3f(ln->ex, ln->ey, 0.0);
 
-    line++;
+    ln++;
     polycount++;
   }
 
-  if(line->sy == data->posy) normal = normal1;
+  if(ln->sy == data->posy) normal = normal1;
   else normal = normal2;
   /* glNormal3fv(normal); */
 
   /* calculate segment color */
   setNormal3fv(normal);
-  setVertex3f(line->sx, line->sy, 0);
+  setVertex3f(ln->sx, ln->sy, 0);
   light4fv(color);
   glColor4fv(color);
     
   glTexCoord2f(0.0, 0.0);
-  glVertex3f(line->sx, line->sy, 0.0);
+  glVertex3f(ln->sx, ln->sy, 0.0);
   glTexCoord2f(0.0, 1.0);
-  glVertex3f(line->sx, line->sy, height);
+  glVertex3f(ln->sx, ln->sy, height);
 
   /* modify end of trail */
 
-  uv = getSegmentEndUV(line, data);
-  ex = getSegmentEndX(line, data, 1);
-  ey = getSegmentEndY(line, data, 1);
+  uv = getSegmentEndUV(ln, data);
+  ex = getSegmentEndX(ln, data, 1);
+  ey = getSegmentEndY(ln, data, 1);
 
   glTexCoord2f(uv, 1.0);
   glVertex3f(ex, ey, height);
@@ -333,8 +333,8 @@ void drawTraces(Player *p, gDisplay *d) {
   glVertex3f(ex, ey, height);
 
   glColor3f(1.0, 1.0, 1.0);
-  ex = getSegmentEndX(line, data, 0);
-  ey = getSegmentEndY(line, data, 0);
+  ex = getSegmentEndX(ln, data, 0);
+  ey = getSegmentEndY(ln, data, 0);
 
   glVertex3f(ex, ey, height);
   glVertex3f(ex, ey, 0);

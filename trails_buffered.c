@@ -62,7 +62,7 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
 }
 
 void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
-  line *line;
+  line *ln;
   float height;
   float uv, ex, ey;
   float normal1[] = { 1.0, 0.0, 0.0 };
@@ -89,51 +89,51 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   }
 
   /* start drawing */
-  line = &(data->trails[0]);
-  while(line != data->trail) { /* the last segment is special cased */
+  ln = &(data->trails[0]);
+  while(ln != data->trail) { /* the last segment is special cased */
     q = getNextQuad(qb);
     if(game->settings->softwareRendering == 0 && 
        game->settings->show_decals == 1) 
       q->type = QUAD_COLOR | QUAD_TEXTURE | QUAD_TEX_DECAL;
     else q->type = QUAD_COLOR;
     q->texture_id = tex;
-    if(line->sy == line->ey) normal = normal1;
+    if(ln->sy == ln->ey) normal = normal1;
     else normal = normal2;
 
     /* glNormal3fv(normal); */
     setNormal3fv(normal);
-    setVertex3f((line->sx + line->ex) / 2, (line->sy + line->ey) / 2, 0);
+    setVertex3f( (ln->sx + ln->ex) / 2, (ln->sy + ln->ey) / 2, 0);
     light4fv(color);
     
     q_setColor4fv(q, 0, color);
     q_setTexCoord2f(q, 0, 0.0, 0.0);
-    q_setVertex3f(q, 0, line->sx, line->sy, 0.0);
+    q_setVertex3f(q, 0, ln->sx, ln->sy, 0.0);
 
-    uv = getSegmentUV(line);
+    uv = getSegmentUV(ln);
 
     q_setColor4fv(q, 1, color);
     q_setTexCoord2f(q, 1, uv, 0.0);
-    q_setVertex3f(q, 1, line->ex, line->ey, 0.0);
+    q_setVertex3f(q, 1, ln->ex, ln->ey, 0.0);
 
     q_setColor4fv(q, 2, color);
     q_setTexCoord2f(q, 2, uv, 1.0);
-    q_setVertex3f(q, 2, line->ex, line->ey, height);
+    q_setVertex3f(q, 2, ln->ex, ln->ey, height);
 
     q_setColor4fv(q, 3, color);
     q_setTexCoord2f(q, 3, 0.0, 1.0);
-    q_setVertex3f(q, 3, line->sx, line->sy, height);
+    q_setVertex3f(q, 3, ln->sx, ln->sy, height);
 
 
-    line++;
+    ln++;
   }
 
-  if(line->sy == data->posy) normal = normal1;
+  if(ln->sy == data->posy) normal = normal1;
   else normal = normal2;
   /* glNormal3fv(normal); */
 
   /* calculate segment color */
   setNormal3fv(normal);
-  setVertex3f(line->sx, line->sy, 0);
+  setVertex3f(ln->sx, ln->sy, 0);
   light4fv(color);
 
   q = getNextQuad(qb);
@@ -146,11 +146,11 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
   q_setColor4fv(q, 0, color);
   q_setTexCoord2f(q, 0, 0.0, 0.0);
-  q_setVertex3f(q, 0, line->sx, line->sy, 0.0);
+  q_setVertex3f(q, 0, ln->sx, ln->sy, 0.0);
 
-  uv = getSegmentEndUV(line, data);
-  ex = getSegmentEndX(line, data, 1);
-  ey = getSegmentEndY(line, data, 1);
+  uv = getSegmentEndUV(ln, data);
+  ex = getSegmentEndX(ln, data, 1);
+  ey = getSegmentEndY(ln, data, 1);
 
   q_setColor4fv(q, 1, color);
   q_setTexCoord2f(q, 1, uv, 0.0);
@@ -164,7 +164,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
   q_setColor4fv(q, 3, color);
   q_setTexCoord2f(q, 3, 0.0, 1.0);
-  q_setVertex3f(q, 3, line->sx, line->sy, height);
+  q_setVertex3f(q, 3, ln->sx, ln->sy, height);
 
   /* 
   printf("uv for last segment: %.3f\n");
@@ -183,9 +183,9 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   q_setColor4fv(q, 3, color);
   q_setVertex3f(q, 3, ex, ey, height);
 
-  uv = getSegmentUV(line);
-  ex = getSegmentEndX(line, data, 0);
-  ey = getSegmentEndY(line, data, 0);
+  uv = getSegmentUV(ln);
+  ex = getSegmentEndX(ln, data, 0);
+  ey = getSegmentEndY(ln, data, 0);
 
   memcpy(color, white, sizeof(color));
 
