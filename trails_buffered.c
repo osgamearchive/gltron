@@ -259,12 +259,15 @@ void doTrails(Player *p) {
        bows */
     int i;
     /* flat shaded, no blending */
-    for(i = 0; i < game->players; i++)
+    for(i = 0; i < game->players; i++) {
       bufferPlayerTrail(game->player + i, q);
+    }
+
     drawTrails(q, NULL);
 
-    for(i = 0; i < game->players; i++)
+    for(i = 0; i < game->players; i++) {
       bufferPlayerBow(game->player + i, q);
+    }
     /* bows are transparent, so sort back-to-front */
     index = getSortedQuads(q, p->camera->cam);
     glEnable(GL_BLEND);
