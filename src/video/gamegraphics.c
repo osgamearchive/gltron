@@ -341,9 +341,6 @@ void drawPlanarShadows(Player *p) {
 }
 
 void drawFloor() {
-	video_Shader_Setup(& gWorld->floor_shader);
-	nebu_Mesh_Render( gWorld->floor );
-	video_Shader_Cleanup(& gWorld->floor_shader);
 }
 
 void drawWorld(Player *p, PlayerVisual *pV) {
@@ -357,6 +354,7 @@ void drawWorld(Player *p, PlayerVisual *pV) {
   }
 
   if (gSettingsCache.show_wall == 1) {
+		glColor3f(1,1,1);
     drawWalls();
   }
 
@@ -431,6 +429,22 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glEnable(GL_DEPTH_TEST);
 
 	/* reflections */
+	/* first draw reflector to stencil */
+	// glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	glDepthMask(GL_FALSE);
+
+	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+	glStencilFunc(GL_ALWAYS, 1, 255);
+	glEnable(GL_STENCIL_TEST);
+	
+	glColor3f(0,0,0);
+	nebu_Mesh_Render( gWorld->floor );
+	// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_TRUE);
+
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glStencilFunc(GL_LESS, 0, 255);
+	/* then draw world reflected, where stencil is set */
 	isRenderingReflection = 1;
 	glPushMatrix();
 	glScalef(1,1,-1);
@@ -440,11 +454,30 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	glPopMatrix();
 	isRenderingReflection = 0;
 
-	drawFloor();
+	/* then blend reflector into the scene */
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	{
+		float alpha = getVideoSettingf("reflection");
+		glColor4f(1,1,1,alpha);
+	}
+
+	glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+	glStencilFunc(GL_ALWAYS, 1, 255);
 	
+	video_Shader_Setup(& gWorld->floor_shader);
+	nebu_Mesh_Render( gWorld->floor );
+	video_Shader_Cleanup(& gWorld->floor_shader);
+
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_BLEND);
+	
+	/* draw rest of the scene */
   glDepthMask(GL_FALSE);
   glDisable(GL_DEPTH_TEST);
 
+	glDisable(GL_LIGHTING);
 	drawPlanarShadows(p);
 
   glDepthMask(GL_TRUE);
@@ -452,6 +485,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
 	drawWorld(p, pV);
 
+	glDisable(GL_LIGHTING);
   /* transparent stuff */
   /* draw the glow around the other players: */
   if (gSettingsCache.show_glow == 1) {
