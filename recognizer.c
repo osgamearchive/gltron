@@ -88,15 +88,12 @@ void drawRecognizers(int flag) {
     glEnable(GL_LIGHT1);
     glDisable(GL_LIGHTING);
 
-    /*glEnable(GL_POLYGON_OFFSET_LINE);
-    glPolygonOffset(-1.0, -1.0);*/
     glColor3fv(rec_outline_color);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glEnable(GL_BLEND);
     glEnable(GL_LINE_SMOOTH);
     drawQuadModel(recognizer_quad);
     glDisable(GL_LINE_SMOOTH);
-    /*glDisable(GL_POLYGON_OFFSET_LINE);*/
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   }
 
