@@ -198,6 +198,7 @@ void keyboardGui(int key, int x, int y) {
     if(pCurrent->iHighlight < 0)
       pCurrent->iHighlight = pCurrent->nEntries - 1;
     break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(); break;
   case SYSTEM_KEY_F12: doScreenShot(); break;
     /* debug code follows */
   case 'l':

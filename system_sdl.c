@@ -47,6 +47,10 @@ void SystemGrabInput() {
   SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 
+void SystemUngrabInput() {
+  SDL_WM_GrabInput(SDL_GRAB_OFF);
+}
+
 void SystemPostRedisplay() {
   redisplay = 1;
 }
@@ -181,3 +185,29 @@ extern char* SystemGetKeyName(int key) {
   */
   return SDL_GetKeyName(key);
 }  
+
+int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
+  /* this code is shamelessly stolen from Ray Kelm, but I believe he
+     put it in the public domain */
+  SDL_Surface *temp;
+  int i;
+
+  temp = SDL_CreateRGBSurface(SDL_SWSURFACE, x, y, 24,
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+			      0x000000FF, 0x0000FF00, 0x00FF0000, 0
+#else
+			      0x00FF0000, 0x0000FF00, 0x000000FF, 0
+#endif
+			      );
+
+  if (temp == NULL)
+    return -1;
+
+  for (i = 0; i < y; i++)
+    memcpy(((char *) temp->pixels) + temp->pitch * i, 
+	   pixels + 3 * x * (y - i - 1), x * 3);
+
+  SDL_SaveBMP(temp, filename);
+  SDL_FreeSurface(temp);
+  return 0;
+}

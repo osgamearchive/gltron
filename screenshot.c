@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 int screenShot(char *filename, gDisplay *d);
+int bmpScreenShot(char *filename, gDisplay *d);
 
 void doScreenShot() {
   char buf[100];
@@ -16,6 +17,14 @@ void doScreenShot() {
   screenshots++;
 
 #endif
+}
+
+void doBmpScreenShot() {
+  char buf[100];
+
+  sprintf(buf, "gltron-0.59-%d.bmp", screenshots);
+  bmpScreenShot(buf, game->screen);
+  screenshots++;
 }
 
 FILE *fp;
@@ -90,7 +99,21 @@ int screenShot(char *filename, gDisplay *d) {
   fprintf(stderr, "written screenshot to %s\n", filename);
   return 0;
 }
-  
+
+
+int bmpScreenShot(char *filename, gDisplay *d) {
+  unsigned char *data;
+  int width, height;
+    
+  width = d->w;
+  height = d->h;
+  data = malloc(width * height * 3);
+  glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+  SystemWriteBMP(filename, width, height, data);
+  free(data);
+  fprintf(stderr, "written screenshot to %s\n", filename);
+  return 0;
+}
 
 
 
