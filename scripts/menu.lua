@@ -557,7 +557,7 @@ Menu.Player4_KeyMenu.items = {
 
 Menu.VideoMenu.items = {
 	 "Artpack", "DetailsMenu", 
-	 "ScreenMenu", "TimeDemo" 
+	 "ScreenMenu" --, "TimeDemo" 
 }
 
 Menu.DetailsMenu.items = {
