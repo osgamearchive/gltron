@@ -4,7 +4,7 @@ static int coffset;
 
 char *credits[] = {
   "",
-  "GLtron is written by Andreas Umbach",
+  "GLtron is written by " "\x03" "4" "Andreas Umbach",
   "Contributors:",
   "Darrell Walisser    - Macintosh Platform Port",
   "Nicolas Zimmermann  - Texture Artist",
