@@ -98,7 +98,7 @@ void reshape(int x, int y) {
 }
 
 void shutdownDisplay(gDisplay *d) {
-  deleteTextures();
+  deleteTextures(d);
   deleteFonts();
   SystemDestroyWindow(d->win_id);
   printf("window destroyed\n");
