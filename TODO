@@ -8,10 +8,14 @@ Documentation & Packaging:
 - innosetup: compile patch installer
 
 Bugs [high priority]:
-- joystick fixes (screenshots)
 
 Optimizations/Cleanups [high priority]
-- portable locking solution for sound idle/mix (callback must not block on os 9)
+- portable locking solution for sound idle/mix
+	(callback must not block on os 9)
+- new trail rendering:
+ add trail bow
+ redo depth sorting using index buffers
+ add vertex colors
 
 Bugs [medium priority]:
 - fix gap between the top of the front fender and the wheel on the 

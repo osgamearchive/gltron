@@ -28,18 +28,12 @@ float getDist(Line *ln, float* eye) {
   last trail segment line (before the lightcycles bow starts)
 */
 
-#define DECAL_WIDTH 20.0
-#define BOW_LENGTH 6
-
-#define BOW_DIST3 2
-#define BOW_DIST2 0.85
-#define BOW_DIST1 0.4
-
 float dists[] = { BOW_DIST2, BOW_DIST3, BOW_DIST1, 0 };
 
-float getSegmentEndX(Line *line, Data *data, int dist) {
+float getSegmentEndX(Data *data, int dist) {
   float tlength, blength;
-
+	Line *line = data->trails + data->trailOffset;
+	
   if(dirsX[data->dir] == 0) return data->posx;
 
   tlength = data->posx - line->sx + data->posy - line->sy;
@@ -48,8 +42,10 @@ float getSegmentEndX(Line *line, Data *data, int dist) {
   return data->posx - dists[dist] * blength * dirsX[ data->dir ];
 }
 
-float getSegmentEndY(Line *line, Data *data, int dist) {
+float getSegmentEndY(Data *data, int dist) {
   float tlength, blength;
+	Line *line = data->trails + data->trailOffset;
+
   if(dirsY[data->dir] == 0) return data->posy;
 
   tlength = data->posx - line->sx + data->posy - line->sy;
@@ -75,13 +71,6 @@ float getSegmentUV(Line *line) {
   return tlength / DECAL_WIDTH;
 }
 
-#undef BOW_DIST1
-#undef BOW_DIST2
-
-
-#undef DECAL_WIDTH
-#undef BOW_LENGTH
-
 /* 
    drawTrailLines() draws a white line on top of each trail segment
    the alpha value is reduced with increasing distance to the player
@@ -105,7 +94,6 @@ void drawTrailLines(Player *p) {
   height = data->trail_height;
   if(height <= 0) return;
 
-  
   /*
   glDepthMask(GL_FALSE);
   glDisable(GL_DEPTH_TEST);
@@ -122,11 +110,12 @@ void drawTrailLines(Player *p) {
   glBegin(GL_LINES);
 
   line = &(data->trails[0]);
-  while(line != data->trails + data->trailOffset) { /* the current line is not drawn */
+  while(line != data->trails + data->trailOffset) { 
+		/* the current line is not drawn */
     /* compute distance from line to eye point */
     dist = getDist(line, cam->cam);
-    alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
-    trail_top[3] = alpha;
+		alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+    // trail_top[3] = alpha;
     glColor4fv(trail_top);
     
     if(line->sy == line->ey) normal = normal1;
@@ -143,13 +132,14 @@ void drawTrailLines(Player *p) {
   /* compute distance from line to eye point */
   dist = getDist(line, cam->cam);
   alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+	// trail_top[3] = alpha;
   glColor4fv(trail_top);
 
   glBegin(GL_LINES);
 
   glVertex3f(line->sx, line->sy, height);
-  glVertex3f( getSegmentEndX(line, data, 0),
-	      getSegmentEndY(line, data, 0),
+  glVertex3f( getSegmentEndX(data, 0),
+	      getSegmentEndY(data, 0),
 	      height );
 
   glEnd();
@@ -215,14 +205,14 @@ void drawTrailShadow(Player* p) {
   }
   glVertex3f(line->sx, line->sy, 0);
   glVertex3f(line->sx, line->sy, height);
-  ex = getSegmentEndX(line, data, 1);
-  ey = getSegmentEndY(line, data, 1);
+  ex = getSegmentEndX(data, 1);
+  ey = getSegmentEndY(data, 1);
   glVertex3f(ex, ey, height);
   glVertex3f(ex, ey, 0.0);
   glVertex3f(ex, ey, 0.0);
   glVertex3f(ex, ey, height);
-  ex = getSegmentEndX(line, data, 0);
-  ey = getSegmentEndY(line, data, 0);
+  ex = getSegmentEndX(data, 0);
+  ey = getSegmentEndY(data, 0);
   glVertex3f(ex, ey, height);
   glVertex3f(ex, ey, 0.0);
   glEnd();
@@ -240,6 +230,8 @@ void drawTrailShadow(Player* p) {
   glPopMatrix();
 }
 
+
+
 void drawTrailBow(Player *p, int flag) {
   Data *data;
   float height;
@@ -253,7 +245,7 @@ void drawTrailBow(Player *p, int flag) {
   if(flag) 
     glShadeModel(GL_SMOOTH);
 
-  if(PLAYER_IS_ACTIVE(p) && game2->settingsCache.show_model == 1) {
+  if(PLAYER_IS_ACTIVE(p)) {
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -262,14 +254,13 @@ void drawTrailBow(Player *p, int flag) {
   }
 
 
-  bdist = (game2->settingsCache.show_model) &&
-	         PLAYER_IS_ACTIVE(p) ? 2 : 3;
+  bdist = PLAYER_IS_ACTIVE(p) ? 2 : 3;
 
-  sx = getSegmentEndX(data->trails + data->trailOffset, data, 0);
-  sy = getSegmentEndY(data->trails + data->trailOffset, data, 0);
+  sx = getSegmentEndX(data, 0);
+  sy = getSegmentEndY(data, 0);
 
-  ex = getSegmentEndX(data->trails + data->trailOffset, data, bdist);
-  ey = getSegmentEndY(data->trails + data->trailOffset, data, bdist);
+  ex = getSegmentEndX(data, bdist);
+  ey = getSegmentEndY(data, bdist);
 
     /* quad fading from white to model color, bow texture */
   glBegin(GL_QUADS);

@@ -96,7 +96,7 @@ void draw2D( gDisplay *d ) {
         
         glPointSize(2);
 				glBegin(GL_POINTS);
-				glVertex2f(p->data->iposx, p->data->iposy);
+				glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
 				glEnd();
 
 				glBegin(GL_LINES);
@@ -109,12 +109,12 @@ void draw2D( gDisplay *d ) {
 				{
 						trail--;
 						glVertex2f(trail->ex, trail->ey);
-						glVertex2f(p->data->iposx, p->data->iposy);
+						glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
 				}
 				else
 				{
 						glVertex2f(trail->sx, trail->sy);
-						glVertex2f(p->data->iposx, p->data->iposy);
+						glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
 				}
 				glEnd();
 		}

@@ -34,19 +34,18 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   q->type = QUAD_COLOR;
   glShadeModel(GL_SMOOTH);
 
-  if(PLAYER_IS_ACTIVE(p)  && game2->settingsCache.show_model == 1) {
+  if(PLAYER_IS_ACTIVE(p)) {
     q->type |= QUAD_TEXTURE | QUAD_TEX_MODULATE | QUAD_ALPHA_TEST;
     q->texture_id = game->screen->textures[TEX_TRAIL];
   }
 
-  bdist = (game2->settingsCache.show_model) &&
-	   PLAYER_IS_ACTIVE(p) ? 2 : 3;
+  bdist = PLAYER_IS_ACTIVE(p) ? 2 : 3;
 
-  sx = getSegmentEndX(data->trails + data->trailOffset, data, 0);
-  sy = getSegmentEndY(data->trails + data->trailOffset, data, 0);
+  sx = getSegmentEndX(data, 0);
+  sy = getSegmentEndY(data, 0);
 
-  ex = getSegmentEndX(data->trails + data->trailOffset, data, bdist);
-  ey = getSegmentEndY(data->trails + data->trailOffset, data, bdist);
+  ex = getSegmentEndX(data, bdist);
+  ey = getSegmentEndY(data, bdist);
 
   /* hacked texture coordinates to avoid bleeding on some cards */
 #define ONE 0.98
@@ -164,8 +163,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   q_setVertex3f(q, 0, ln->sx, ln->sy, 0.0);
 
   uv = getSegmentEndUV(ln, data);
-  ex = getSegmentEndX(ln, data, 1);
-  ey = getSegmentEndY(ln, data, 1);
+  ex = getSegmentEndX(data, 1);
+  ey = getSegmentEndY(data, 1);
 
   q_setColor4fv(q, 1, color);
   q_setTexCoord2f(q, 1, uv, 0.0);
@@ -199,8 +198,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   q_setVertex3f(q, 3, ex, ey, height);
 
   uv = getSegmentUV(ln);
-  ex = getSegmentEndX(ln, data, 0);
-  ey = getSegmentEndY(ln, data, 0);
+  ex = getSegmentEndX(data, 0);
+  ey = getSegmentEndY(data, 0);
 
   memcpy(color, white, sizeof(color));
 

@@ -126,6 +126,10 @@ extern "C" {
 #endif
 
 	/* use enums, not magic */
+	enum {
+		TURN_LEFT = 3,
+		TURN_RIGHT = 1
+	};
 
 	enum { 
 		AI_HUMAN = 0,
@@ -200,9 +204,21 @@ extern "C" {
 #define EXP_RADIUS_MAX 30
 #define EXP_RADIUS_DELTA 0.01
 
+	/* trail definitions */
+#define DECAL_WIDTH 20.0
+#define BOW_LENGTH 6
+
+#define BOW_DIST3 2
+#define BOW_DIST2 0.85
+#define BOW_DIST1 0.4
+
 	/* these must be < 0 */
 #define SPEED_CRASHED -1
 #define SPEED_GONE -2
+
+	/* game options */
+#define SPEED_OZ_FREQ 1200
+#define SPEED_OZ_FACTOR 0.09
 
 #define FAST_FINISH 40
 
@@ -324,9 +340,9 @@ extern "C" {
 	extern void doTrail(Line *t, int value);
 	extern void fixTrails();
 	extern void clearTrails(Data *data);
+	extern void doTurn(GameEvent* e, int direction);
 
 	extern list* doMovement(int mode, int dt);
-	extern void moveStep(Data* data);
 	extern void writePosition(int player);
 
 	/* gltron.c */
@@ -454,8 +470,9 @@ extern "C" {
 	extern void drawTrailsWithQuadBuf(Player *p_eye);
 	extern float getSegmentUV(Line *line);
 	extern float getSegmentEndUV(Line *line, Data *data);
-	extern float getSegmentEndX(Line *line, Data *data, int type);
-	extern float getSegmentEndY(Line *line, Data *data, int type);
+	extern float getSegmentEndX(Data *data, int type);
+	extern float getSegmentEndY(Data *data, int type);
+
 	extern void checkQuad2D(char *flags, int q, int n);
 
 	/* clip.c */
