@@ -32,7 +32,7 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   glShadeModel(GL_SMOOTH);
 
   if(PLAYER_IS_ACTIVE(p)  && getSettingi("show_model") == 1) {
-    q->type |= QUAD_TEXTURE | QUAD_TEX_MODULATE;
+    q->type |= QUAD_TEXTURE | QUAD_TEX_MODULATE | QUAD_ALPHA_TEST;
     q->texture_id = game->screen->textures[TEX_TRAIL];
   }
 

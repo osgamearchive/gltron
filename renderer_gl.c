@@ -53,6 +53,11 @@ void renderQuad(Quad *q) {
     glDisable(GL_TEXTURE_2D);
   }
 
+  if(q->type & QUAD_ALPHA_TEST) {
+    glAlphaFunc(GL_GREATER, 0.1);
+    glEnable(GL_ALPHA_TEST);
+  }
+
   /* fprintf(stderr, "drawing quad...errors: %d\n", glGetError()); */
 
   glBegin(GL_QUADS);
@@ -63,6 +68,9 @@ void renderQuad(Quad *q) {
     glVertex3fv(q->vertex[i].v);
   }
   glEnd();
+
+  if(q->type & QUAD_ALPHA_TEST);
+    glDisable(GL_ALPHA_TEST);
 
 #ifdef POLY_COUNT
   polycount += 2;

@@ -61,7 +61,8 @@ enum {
   QUAD_COLOR = 1,
   QUAD_TEXTURE = 2,
   QUAD_TEX_MODULATE = 4,
-  QUAD_TEX_DECAL = 8
+  QUAD_TEX_DECAL = 8,
+  QUAD_ALPHA_TEST = 16
 };
 
 /* quad.c */
