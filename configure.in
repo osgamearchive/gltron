@@ -8,6 +8,8 @@ AM_INIT_AUTOMAKE(gltron, 0.62pre2)
 
 AC_PREFIX_DEFAULT("/usr/local")
 
+AM_MAINTAINER_MODE
+
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
@@ -113,12 +115,16 @@ dnl header checks
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
 
-AC_CHECK_HEADERS(GL/gl.h,,
- AC_CHECK_HEADERS(/usr/X11R6/include/GL/gl.h,
-	includes_in_x=1,
- AC_CHECK_HEADERS(/usr/local/include/GL/gl.h,
-	includes_in_local=1,
-AC_MSG_ERROR(cant find GL headers))))
+AC_CHECK_HEADERS(GL/gl.h, have_gl_h=true, have_gl_h=false)
+$have_gl_h || {
+	AC_CHECK_HEADERS(/usr/X11R6/include/GL/gl.h, includes_in_x=1 have_gl_h=true, have_gl_h=false)
+}
+$have_gl_h || {
+	AC_CHECK_HEADERS(/usr/local/include/GL/gl.h, includes_in_local=1 have_gl_h=true, have_gl_h=false)
+}
+$have_gl_h || {
+	AC_MSG_ERROR(cant find GL headers)
+}
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
