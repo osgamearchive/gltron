@@ -2,6 +2,7 @@
 #define CONSOLE_WIDTH 80
 
 #include <stdio.h>
+#include <string.h>
 
 static char buffer[CONSOLE_DEPTH][CONSOLE_WIDTH];
 static int position;
@@ -19,14 +20,34 @@ void consoleInit() {
 }
 
 void consoleAddLine(char *text) {
-  int i = 0;
+  int i = 0, x=0;
+
   while(i < CONSOLE_WIDTH - 1 && text[i] != 0) {
     buffer[position][i] = text[i];
     i++;
   }
   buffer[position][i] = '\0';
-  /* fprintf(stderr, "added \"%s\" to console\n", buffer[position]); */
-  position++;
+/*  fprintf(stderr, "added \"%s\" to console at buffer[%i] with "
+ *	  " offset of %i\n",
+ *	  buffer[position], position, offset);
+ */
+
+   position++;
+   
+   /* reposition the buffer to avoid buffer overruns - tim */
+   if(position >= 99){
+      for(i=0;i<CONSOLE_DEPTH;i++){
+	 strcpy(buffer[x], buffer[i]);
+	 ++x;
+      }
+      position -= 4;
+      /* redundency check to ensure that there's nothing in the buffer
+       * past the current position - tim 
+       */
+      for(i=(position+1);i<CONSOLE_DEPTH;i++){
+	 buffer[i][0]='\0';
+      }
+   }
 }
 
 void consoleDisplay(void(*func)(char *line, int call), int height) {

@@ -2,20 +2,30 @@
 
 # experimental autoconf usage
 
+SHELL = @SHELL@
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
 prefix = @prefix@
-includedir = @includedir@
+exec_prefix = @prefix@
+bindir = @bindir@
+datadir = ${prefix}/share/games/gltron
 
-SHELL = /bin/sh
-# OPT = -O2
-OPT = -g
-# CFLAGS = -c -pedantic -Wall -DSOUND -DNETWORK
-CFLAGS = -c -pedantic -Wall -DSOUND
-GL_LIBS = -lm -lGL -lGLU -lSDL -lpthread -lz -lpng
-XLIBS = -L/usr/X11/lib -L/usr/X11R6/lib -lX11
-SNDLIBS =  -lSDL_mixer
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
 
-GLTRON_INSTALLDIR = /usr/bin
-GLTRON_HOME = /usr/share/games/gltron
+EXTRA_DIST =  README TODO CHANGELOG CREDITS INSTALL LICENSE README.html 
+DIST_COMMON = Makefile.in configure.in config.h.in install-sh \
+	data/* tools/* sounds/*
+
+CC = @CC@
+
+CFLAGS = -c @CFLAGS@
+LIBS = @LIBS@
+
+# fix these later
+GLTRON_INSTALLDIR = ${bindir}
+GLTRON_HOME = ${datadir}
 
 HFILES = \
 	data.h \
@@ -25,7 +35,8 @@ HFILES = \
 	geom.h \
 	model.h \
 	system.h \
-	sound.h
+	sound.h \
+	system_net.h 
 
 
 CFILES = \
@@ -63,11 +74,15 @@ CFILES = \
 	camera.c \
 	console.c \
 	renderer_gl.c \
-	# network.c \
-	# system_net.c
+	@NETWORK_FILES@
+	#network.c \
+	#system_net.c
+
 
 SOUND_CFILES = \
 	sound.c
+	
+DISTFILES = $(DIST_COMMON) $(EXTRA_DIST) $(CFILES) $(HFILES) $(SOUND_CFILES)
 
 OBJ = $(CFILES:.c=.o)
 OBJ_SOUND = $(OBJ) $(SOUND_CFILES:.c=.o)
@@ -78,7 +93,7 @@ all: gltron
 	$(CC) $(CFLAGS) $(OPT) $<
 
 gltron: $(OBJ_SOUND)
-	$(CC) $(OPT) -o gltron $(OBJ_SOUND) $(GL_LIBS) $(XLIBS) $(SNDLIBS)
+	$(CC) $(OPT) -o gltron $(OBJ_SOUND) $(LIBS)
 
 INSTALL_FILES = gltron
 DATA_FILES = data/* sounds/*wav
@@ -90,14 +105,18 @@ install: $(INSTALL_FILES)
 	if [ ! -d $(GLTRON_HOME) ] ; then \
 	    mkdir -p $(GLTRON_HOME) ; \
 	fi
-	cp -f gltron $(GLTRON_INSTALLDIR)/gltron
+	$(INSTALL) gltron $(GLTRON_INSTALLDIR)/gltron
 	cp -R $(DATA_FILES) $(GLTRON_HOME)
 
 clean: 
-	rm -f *\.o gltron core
+	rm -f *~ *\.o gltron core *#*
 
 todo:
 	perl todo2html.pl < TODO > TODO.html
 
 etags:
 	etags $(CFILES) $(HFILES)
+
+distclean: clean
+	rm -f config.cache config.status configure Makefile \
+	sound.h sound.c system_net.c system_net.h system.c system.h

@@ -1,19 +1,58 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(sound.c)
+
+dnl any file will do
+AC_INIT(camera.c)
+
 
 dnl Checks for programs.
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lGL:
 LIBS='-L/usr/X11R6/lib'
-CC='gcc'
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+
+
+dnl Check for glut first and make symlinks, then check for
+dnl SDL and make required symlinks
+
 AC_CHECK_LIB(m, main,, AC_MSG_ERROR(libm is needed))
 AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
 AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(OpenGL is needed))
 AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU should come with OpenGL))
 AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
-AC_CHECK_LIB(SDL, main,, AC_MSG_ERROR(SDL is needed), -lpthread)
-AC_CHECK_LIB(SDL_mixer, main,, AC_MSG_ERROR(SDL_mixer is needed))
+
+dnl Tim Peeler <tim@iss.dccc.edu> 2000-10-24 changed to automate linking and
+dnl use fallback glut method
+AC_CHECK_LIB(SDL, main, 
+${LN_S} -f system_sdl.c system.c ; \
+${LN_S} -f system_sdl.h system.h ; \
+LIBS="$LIBS -lSDL" ; \
+HAVE_SDL=1,
+AC_CHECK_LIB(glut, main, 
+${LN_S} -f system_glut.c system.c ; \
+${LN_S} -f system_glut.h system.h ; \
+LIBS="$LIBS -lglut", \
+AC_MSG_ERROR(Neither SDL or glut is installed!)))
+
+dnl Tim Peeler <tim@iss.dccc.edu> 2000-10-24 changed to automate linking and
+dnl use fallback mikmod method
+AC_CHECK_LIB(SDL_mixer, main,
+${LN_S} -f sound_sdl.c sound.c ; \
+${LN_S} -f sound_sdl.h sound.h ; \
+CFLAGS="$CFLAGS -DSOUND"; \
+LIBS="$LIBS -lSDL_mixer", 
+AC_CHECK_LIB(mikmod, main,
+${LN_S} -f sound_libmikmod.c sound.c ; \
+${LN_S} -f sound_libmikmod.h sound.h ; \
+CFLAGS="$CFLAGS -DSOUND"; \
+LIBS="$LIBS -lmikmod",
+AC_MSG_ERROR(Neither SDL_mixer nor libmikmod is installed!)))
+
 dnl AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
 AC_CHECK_LIB(z, main,, AC_MSG_ERROR(libz is needed))
 AC_CHECK_LIB(png, main,, AC_MSG_ERROR(libpng is needed))
@@ -28,5 +67,51 @@ AC_C_CONST
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strstr)
+
+
+AC_ARG_ENABLE(warn,
+[ --enable-warn                Enable compiler warnings [default=on]],
+	enable_warn=$enableval, enable_warn=yes)
+if test "x$enable_warn" = xyes; then
+	CFLAGS="$CFLAGS -Wall"
+fi
+
+AC_ARG_ENABLE(debug,
+[ --enable-debug               Enable debugging [default=off]],
+	enable_debug=$enableval, enable_debug=off)
+if test "x$enable_debug" = xyes; then
+	CFLAGS="$CFLAGS -g3"
+fi
+
+AC_ARG_ENABLE(profile,
+[ --enable-profile             Enable profiling [default=off]],
+	enable_profile=$enableval, enable_profile=off)
+if test "x$enable_profile" = xyes; then
+	if test "x$GCC" = xyes; then
+		CFLAGS="$CFLAGS -pg"
+	else
+		CFLAGS="$CFLAGS -p"
+	fi
+fi
+
+AC_ARG_ENABLE(optimize,
+[ --enable-optimize=[level]    Enable optimization [default=2]],
+	enable_optmize=$enableval, enable_optimize=2)
+if test "x$enable_optimize" ; then
+	CFLAGS="$CFLAGS -O$enable_optimize"
+fi
+
+AC_ARG_ENABLE(network,
+[ --enable-network             Experimental network mode [default=off]],
+	enable_network=$enableval, enable_network=off)
+if test "x$enable_network" = xyes; then
+AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
+	${LN_S} -f system_net_sdl.c system_net.c
+	${LN_S} -f system_net_sdl.h system_net.h
+	CFLAGS="$CFLAGS -DNETWORK"
+	LIBS="$LIBS -lSDL_net"
+	NETWORK_FILES="network.c system_net.c"
+	AC_SUBST(NETWORK_FILES)
+fi
 
 AC_OUTPUT(Makefile)
