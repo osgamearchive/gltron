@@ -341,6 +341,7 @@ void drawPlanarShadows(Player *p) {
 }
 
 void drawFloor() {
+#ifndef NEW_LEVEL_DRAW
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
   
@@ -359,6 +360,7 @@ void drawFloor() {
   }
   
   /* glDepthMask(GL_FALSE); */
+#endif
 }
 
 void drawWorld(Player *p, PlayerVisual *pV) {
@@ -424,8 +426,10 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  doPerspective(gSettingsCache.fov, d->vp_w / d->vp_h,
-                gSettingsCache.znear, game2->rules.grid_size * 6.5f);
+  doPerspective(gSettingsCache.fov, (float) d->vp_w / (float) d->vp_h,
+                gSettingsCache.znear, 
+								box2_Diameter(& game2->level->boundingBox) * 
+								game2->level_scale * 6.5f);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -439,7 +443,8 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
   /* skybox */
   if (gSettingsCache.show_skybox) {
-    drawSkybox(game2->rules.grid_size);
+		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 
+								game2->level_scale * 2.5f );
   }
 
   glDepthMask(GL_TRUE);
