@@ -4,7 +4,7 @@ dnl initialisation
 AC_INIT(src/gltron.c)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE(gltron, 0.71-beta-5)
+AM_INIT_AUTOMAKE(gltron, 0.71-beta-6)
 
 AC_PREFIX_DEFAULT("/usr/local")
 
@@ -145,6 +145,7 @@ AC_CHECK_FUNCS(strstr mkstemp)
 CPPFLAGS="$CPPFLAGS $CPPFLAGSA"
 
 AC_OUTPUT([Makefile \
+	lib3ds/Makefile \
 	lua/Makefile \
 	lua/include/Makefile \
 	lua/src/Makefile \

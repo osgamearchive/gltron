@@ -1,4 +1,4 @@
-SUBDIRS = lua nebu src art data music scripts levels
+SUBDIRS = lib3ds lua nebu src art data music scripts levels
 
 bin_PROGRAMS = gltron
 
@@ -20,7 +20,8 @@ gltron_LDADD = \
 	nebu/filesystem/libfilesystem.a \
 	nebu/base/libbase.a \
 	lua/src/liblua.a \
-	lua/src/lib/liblualib.a
+	lua/src/lib/liblualib.a \
+	lib3ds/lib3ds.a
 
 #gltron_LDFLAGS = -static
 
