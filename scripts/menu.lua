@@ -322,7 +322,7 @@ Menu = {
 				 "off", "low", "medium", "high", "very high", "perfect mirror",
 				 "ask artpack"
 			},
-			values = { "0.0", "0.1", "0.3", "0.6", "0.8", "1.0", "-1" },
+			values = { 0.0, 0.1, 0.3, 0.6, 0.8, 1.0, -1 },
 			read = function() return settings.reflection; end,
 	    store = function(value) settings.reflection = value; end
 	 },
@@ -347,14 +347,7 @@ Menu = {
       read = function() return settings.lod; end,
       store = function(value) settings.lod = value; end
    },
-   ShadowStyle = {
-      type = MenuC.type.list, caption = "Shadow Type",
-      labels = { "stencil", "normal" },
-      values = { 1, 0 },
-      read = function() return settings.use_stencil; end,
-      store = function(value) settings.use_stencil = value; c_video_restart(); end
-   },
-	 -- Status Display
+   -- Status Display
    FPS_Counter = {
       type = MenuC.type.list, caption = "FPS counter",
       labels = { "off", "on" },
@@ -594,8 +587,7 @@ Menu.VideoMenu.items = {
 Menu.DetailsMenu.items = {
    "Filtering", "AlphaTrails", "Halos", "Reflections",
     -- "Lightcycles",
-    "Recognizer", "Lod", 
-	 "ShadowStyle", "FPS_Counter", "AI_Status", "Scores"
+    "Recognizer", "Lod", "FPS_Counter", "AI_Status", "Scores"
 }
 Menu.ScreenMenu.items = {
    "_320x240", "_512x384", "_640x480", "_800x600", "_1024x768", "_1280x1024",
