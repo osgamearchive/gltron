@@ -521,21 +521,20 @@ void drawMenu(gDisplay *d) {
   /* printf("%d %d %d %d %d\n", x, y, size, maxw, pCurrent->nEntries); */
   /* draw the entries */
 
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   for(i = 0; i < pCurrent->nEntries; i++) {
-    if(i == pCurrent->iHighlight) {
+    if(i == pCurrent->iHighlight)
       glColor4fv(pCurrent->display.hlColor);
-
-      if(game->settings->softwareRendering)
-	drawSoftwareHighlight(x, y, size, ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
-    } else 
+    else 
       glColor4fv(pCurrent->display.fgColor);
 
-    rasonly(d);
     drawText(guiFtx, x, y, size,
 	     ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
+
+    if(i == pCurrent->iHighlight) 
+      drawSoftwareHighlight(x, y, size, ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
+
     y -= lineheight;
   }
   

@@ -1,5 +1,50 @@
 #include "gltron.h"
 
+void drawGame() {
+  GLint i;
+  gDisplay *d;
+  Player *p;
+
+  polycount = 0;
+
+  glEnable(GL_DEPTH_TEST);
+
+  glClearColor(.0, .0, .0, .0);
+  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  for(i = 0; i < vp_max[ game->settings->display_type]; i++) {
+    p = &(game->player[ game->settings->content[i] ]);
+    if(p->display->onScreen == 1) {
+      d = p->display;
+      glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
+      drawCam(p, d);
+      glDisable(GL_DEPTH_TEST);
+      glDepthMask(GL_FALSE);
+      drawScore(p, d);
+      if(game->settings->show_ai_status)
+	if(p->ai->active == 1)
+	  drawAI(d);
+    }
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+  }
+
+  if(game->settings->show_2d > 0) {
+    drawDebugTex(game->screen);
+    drawDebugLines(game->screen);
+  }
+  if(game->settings->show_fps)
+    drawFPS(game->screen);
+
+  drawConsole(game->screen);
+  /*
+  if(game->settings->show_help == 1)
+    drawHelp(game->screen);
+  */
+
+  /* printf("%d polys\n", polycount); */
+}
+
 void checkGLError(char *where) {
   int error;
   error = glGetError();

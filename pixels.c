@@ -41,8 +41,8 @@ unsigned char *scalePixelBitmap(unsigned char *source, int sw, int sh,
 	  byte |= (1 << (x % 8) );
 	  break;
 	} else {
-	  printf("source value: (%d %d, %d): %d\n", 
-	     sx, sy, i, source[bytes * (sx + sy * sw) + i]);
+	  /* printf("source value: (%d %d, %d): %d\n", 
+	     sx, sy, i, source[bytes * (sx + sy * sw) + i]); */
 	}
       }
       if((x % 8) == 7) {

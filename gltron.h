@@ -247,6 +247,7 @@ extern void processEvent(GameEvent *e);
 
 /* gltron.c */
 /* game.c */
+/* gamegraphics.c */
 
 extern void initClientData();
 extern void initDisplay(gDisplay *d, int type, int p, int onScreen);

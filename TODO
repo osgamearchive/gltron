@@ -1,25 +1,35 @@
-optimize some stuff for software rendering
-top-down view
-fix transparency problem with alpha trails (back to front drawing of trails)
-fix transparency bow problem (draw AFTER solid stuff)
-save keyboard settings in .gltronrc
-fix settings loading code ignoring some settings and unsaved settings
-  (e.g. keyboard controls)
-warp mouse when running fullscreen
-write software cursor
-
-move cycle behind posx, posy
-solve cycle turning issue
-move things to integer coordinates
-
-add more & better sound effects
-
-add mouse support
-
-add lighting effects (shadows, mirrors etc.)
-
-check various TODOs in the code
-
-fix rpm's
-
-win32: sdl should dynamically load 3dfx opengl for Voodoo 1&2
+bugs:
+(4 / 6) console messages don't show correct player numbers
+(1 / 3) fast finish is broken
+(4 / 1) trail bows are writing to z-buffer, creating visible artefacts
+(5 / 2) transparent trails are drawn in the wrong order (artefacts) 
+(5 / 5) key definitions are not saved to .gltronrc
+(4 / 4 / 1) switching resolution leaks memory
+possible bugs:
+(0) more memory leaks
+(0) failing malloc's arent caught, might lock up application/system
+(0) some attributes are not saved to .gltronrc
+todo: 
+(1) implement networking
+(0) fix bitmap bug to allow even faster software rendering
+(0) implement one of the two top-down views and arrange HUD
+(0) write software mouse cursor for 3dfx cards
+(0) confine warp mouse to window when running fullscreen
+(0) move cycle behind posx, posy
+(0) add more & better sound effects
+(0) generate lightcycle floor shadow
+(0) add more special effects (mirrors etc.)
+(0) check various TODOs in the code
+(0) win32: sdl should dynamically load 3dfx opengl for Voodoo 1&2
+(0) make score display configurable
+(0) size HUD according to screen resolution
+(0) add slightly funny console messages (Robot ate Andi's tail)
+(0) work around non-unix missing readdir() stuff (playlist?)
+(0) add option to select GL_NEAREST_MIPMAP_LINEAR since Mesa is buggy
+at release time:
+(0) decide with floor texture to use
+(0) remove stupid compiler warnings (fix include files)
+(0) create RPM files for various linux distributions
+(0) proper documentation
+other stuff
+(0) remove banner ads from homepage
