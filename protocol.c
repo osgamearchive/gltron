@@ -17,10 +17,12 @@ int isConnected = 0;
 
 static void *pos;
 
-#define ADD_STRING(x) memcpy(pos, x, sizeof(x)); pos += sizeof(x)
-#define ADD_INT(x) SDLNet_Write32(x, pos); pos += 4
-#define GET_STRING(x, y) memcpy(x, y, sizeof(x)); y += sizeof(x)
-#define GET_INT(x, y) x=SDLNet_Read32(y); y += 4
+#define ADD_STRING(x)     memcpy(pos, x, sizeof(x)); pos += sizeof(x)
+#define GET_STRING(x, y)  memcpy(x, y, sizeof(x));   y   += sizeof(x)
+#define ADD_INT16(x)      SDLNet_Write16(x, pos);    pos += 2
+#define ADD_INT32(x)      SDLNet_Write32(x, pos);    pos += 4
+#define GET_INT16(x, y)   x=SDLNet_Read16(y);        y   += 2
+#define GET_INT32(x, y)   x=SDLNet_Read32(y);        y   += 4
 
 
 /** Core functions */
@@ -183,78 +185,79 @@ Net_preparepacket(Packet* packet, void *buf)
     return 0;
   
   pos = buf;
-  ADD_INT(packet->type);
-  ADD_INT(packet->which);
+  ADD_INT16(packet->type);
+  ADD_INT16(packet->which);
+  printf("send packet type %d from %d\n", packet->type, packet->which);
   switch(packet->type) {
   case LOGIN:
     ADD_STRING(packet->infos.login.version);
     ADD_STRING(packet->infos.login.nick);
     break;
   case LOGINREP:
-    ADD_INT(packet->infos.loginrep.accept);
+    ADD_INT16(packet->infos.loginrep.accept);
     ADD_STRING(packet->infos.loginrep.message);
     break;
   case USERINFO:
-    ADD_INT(packet->infos.userinfo.which);
-    ADD_INT(packet->infos.userinfo.ismaster);
-    ADD_INT(packet->infos.userinfo.color);
+    ADD_INT16(packet->infos.userinfo.which);
+    ADD_INT16(packet->infos.userinfo.ismaster);
+    ADD_INT16(packet->infos.userinfo.color);
     ADD_STRING(packet->infos.userinfo.nick);
     break;
   case SERVERINFO:
-    ADD_INT(packet->infos.serverinfo.serverstate);
-    ADD_INT(packet->infos.serverinfo.players);
+    ADD_INT16(packet->infos.serverinfo.serverstate);
+    ADD_INT16(packet->infos.serverinfo.players);
     break;
   case CHAT:
     ADD_STRING(packet->infos.chat.mesg);
-    ADD_INT(packet->infos.chat.which);
+    ADD_INT16(packet->infos.chat.which);
     break;
   case GAMERULES:
-    ADD_INT(packet->infos.gamerules.players);
-    ADD_INT(packet->infos.gamerules.speed*1000);
-    ADD_INT(packet->infos.gamerules.eraseCrashed);
+    ADD_INT16(packet->infos.gamerules.players);
+    ADD_INT16(packet->infos.gamerules.speed*1000);
+    ADD_INT16(packet->infos.gamerules.eraseCrashed);
     //TODO: need do be finished: how to add Time, float, and int * for
     //Time
-    ADD_INT(packet->infos.gamerules.time.current);
-    ADD_INT(packet->infos.gamerules.time.lastFrame);
-    ADD_INT(packet->infos.gamerules.time. offset);
-    ADD_INT(packet->infos.gamerules.time. dt);
+    ADD_INT16(packet->infos.gamerules.time.current);
+    ADD_INT16(packet->infos.gamerules.time.lastFrame);
+    ADD_INT16(packet->infos.gamerules.time. offset);
+    ADD_INT16(packet->infos.gamerules.time. dt);
 
-    ADD_INT(packet->infos.gamerules.gamespeed);
-    ADD_INT(packet->infos.gamerules.grid_size);
-    ADD_INT(packet->infos.gamerules.arena_size);
+    ADD_INT16(packet->infos.gamerules.gamespeed);
+    ADD_INT16(packet->infos.gamerules.grid_size);
+    ADD_INT16(packet->infos.gamerules.arena_size);
     break;
   case STARTPOS:
     //startPos
     for(i=0; i< MAX_PLAYERS*3; ++i)
       {
-	ADD_INT(packet->infos.startpos.startPos[i]);
+	ADD_INT16(packet->infos.startpos.startPos[i]);
       }
     break;
   case NETRULES:
-    ADD_INT(packet->infos.netrules.nbWins);
-    ADD_INT(packet->infos.netrules.time);   
+    ADD_INT16(packet->infos.netrules.nbWins);
+    ADD_INT16(packet->infos.netrules.time);   
     break;
   case SCORE:
-    ADD_INT(packet->infos.score.winner);
+    ADD_INT16(packet->infos.score.winner);
     //Points for each players
     for(i=0; i< MAX_PLAYERS; ++i)
       {
-	ADD_INT(packet->infos.score.points[i]);
+	ADD_INT16(packet->infos.score.points[i]);
       }
     break;
   case SNAPSHOT:
     //TODO: how send events[] : see later... ( easy )
     break;
   case EVENT:
-    ADD_INT(packet->infos.event.event.type);
-    ADD_INT(packet->infos.event.event.player);
-    ADD_INT(packet->infos.event.event.x);
-    ADD_INT(packet->infos.event.event.y);
-    ADD_INT(packet->infos.event.event.timestamp);
+    ADD_INT16(packet->infos.event.event.type);
+    ADD_INT16(packet->infos.event.event.player);
+    ADD_INT16(packet->infos.event.event.x);
+    ADD_INT16(packet->infos.event.event.y);
+    ADD_INT16(packet->infos.event.event.timestamp);
     break;
   case ACTION:
-    ADD_INT(packet->infos.action.type);
-    ADD_INT(packet->infos.action.which);   
+    ADD_INT16(packet->infos.action.type);
+    ADD_INT16(packet->infos.action.which);   
     break;
   }
   return pos - buf;
@@ -276,9 +279,9 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
   //printf("packet size %d ( float is %d )\n", sizeof(Packet), sizeof(float));
 
   //First : we send the header
-  SDLNet_Write32(packet->type, buff);
+  SDLNet_Write16(packet->type, buff);
   printf("sending header: %d\n", packet->type);
-  if( ( SDLNet_TCP_Send(sock, buff, 4)) < 4 )
+  if( ( SDLNet_TCP_Send(sock, buff, sizeof(Sint16))) < sizeof(Sint16) )
     {
       free(buff);
       buff=NULL;
@@ -310,78 +313,78 @@ Net_handlepacket(Packet* packet, void *buf)
 {
   int i;
 
-  GET_INT(packet->type, buf);
-  GET_INT(packet->which, buf);
-  printf("get packet type %d from %d\n", packet->type, packet->which);
+  GET_INT16(packet->type, buf);
+  GET_INT16(packet->which, buf);
+  printf("get packet type %hd from %hd\n", packet->type, packet->which);
   switch(packet->type) {
   case LOGIN:
     GET_STRING(packet->infos.login.version, buf);
     GET_STRING(packet->infos.login.nick, buf);
     break;
   case LOGINREP:
-    GET_INT(packet->infos.loginrep.accept, buf);
+    GET_INT16(packet->infos.loginrep.accept, buf);
     GET_STRING(packet->infos.loginrep.message, buf);
     break;
   case USERINFO:
-    GET_INT(packet->infos.userinfo.which, buf);
-    GET_INT(packet->infos.userinfo.ismaster, buf);
-    GET_INT(packet->infos.userinfo.color, buf);
+    GET_INT16(packet->infos.userinfo.which, buf);
+    GET_INT16(packet->infos.userinfo.ismaster, buf);
+    GET_INT16(packet->infos.userinfo.color, buf);
     GET_STRING(packet->infos.userinfo.nick, buf);
     break;
   case SERVERINFO:
-    GET_INT(packet->infos.serverinfo.serverstate, buf);
-    GET_INT(packet->infos.serverinfo.players, buf);
+    GET_INT16(packet->infos.serverinfo.serverstate, buf);
+    GET_INT16(packet->infos.serverinfo.players, buf);
     break;
   case CHAT:
     GET_STRING(packet->infos.chat.mesg, buf);
-    GET_INT(packet->infos.chat.which, buf);
+    GET_INT16(packet->infos.chat.which, buf);
     break;
   case GAMERULES:
-    GET_INT(packet->infos.gamerules.players, buf);
-    GET_INT(packet->infos.gamerules.speed, buf);
+    GET_INT16(packet->infos.gamerules.players, buf);
+    GET_INT16(packet->infos.gamerules.speed, buf);
     packet->infos.gamerules.speed/=1000;
-    GET_INT(packet->infos.gamerules.eraseCrashed, buf);
+    GET_INT16(packet->infos.gamerules.eraseCrashed, buf);
     //time...
-    GET_INT(packet->infos.gamerules.time.current, buf);
-    GET_INT(packet->infos.gamerules.time.lastFrame, buf);
-    GET_INT(packet->infos.gamerules.time. offset, buf);
-    GET_INT(packet->infos.gamerules.time. dt, buf);
+    GET_INT16(packet->infos.gamerules.time.current, buf);
+    GET_INT16(packet->infos.gamerules.time.lastFrame, buf);
+    GET_INT16(packet->infos.gamerules.time. offset, buf);
+    GET_INT16(packet->infos.gamerules.time. dt, buf);
 
-    GET_INT(packet->infos.gamerules.gamespeed, buf);
-    GET_INT(packet->infos.gamerules.grid_size, buf);
-    GET_INT(packet->infos.gamerules.arena_size, buf);
+    GET_INT16(packet->infos.gamerules.gamespeed, buf);
+    GET_INT16(packet->infos.gamerules.grid_size, buf);
+    GET_INT16(packet->infos.gamerules.arena_size, buf);
     break;
   case STARTPOS:   
     //startPos
     for(i=0; i< MAX_PLAYERS*3; ++i)
       {
-	GET_INT(packet->infos.startpos.startPos[i], buf);
+	GET_INT16(packet->infos.startpos.startPos[i], buf);
       }
     break;
   case NETRULES:
-    GET_INT(packet->infos.netrules.nbWins, buf);
-    GET_INT(packet->infos.netrules.time, buf);
+    GET_INT16(packet->infos.netrules.nbWins, buf);
+    GET_INT16(packet->infos.netrules.time, buf);
     break;
   case SCORE:
-    GET_INT(packet->infos.score.winner, buf);
+    GET_INT16(packet->infos.score.winner, buf);
     for(i=0; i< MAX_PLAYERS; ++i)
       {
-	GET_INT(packet->infos.score.points[i], buf);
+	GET_INT16(packet->infos.score.points[i], buf);
       }
     break;
   case SNAPSHOT:
     //TODO:
     break;
   case EVENT:
-    GET_INT(packet->infos.event.event.type, buf);
-    GET_INT(packet->infos.event.event.player, buf);
-    GET_INT(packet->infos.event.event.x, buf);
-    GET_INT(packet->infos.event.event.y, buf);
-    GET_INT(packet->infos.event.event.timestamp, buf);
+    GET_INT16(packet->infos.event.event.type, buf);
+    GET_INT16(packet->infos.event.event.player, buf);
+    GET_INT16(packet->infos.event.event.x, buf);
+    GET_INT16(packet->infos.event.event.y, buf);
+    GET_INT16(packet->infos.event.event.timestamp, buf);
     break;
   case ACTION:
-    GET_INT(packet->infos.action.type, buf);
-    GET_INT(packet->infos.action.which, buf);   
+    GET_INT16(packet->infos.action.type, buf);
+    GET_INT16(packet->infos.action.which, buf);   
     break;
   }
 }
@@ -391,40 +394,40 @@ get_packetsize( int type )
 {
   switch(type) {
   case LOGIN:
-    return 4 + 4 + 9 + 9;
+    return 2 * sizeof(Sint16) + 2 * 9 * sizeof(char);
     break;
   case LOGINREP:
-    return 4 + 4 + 4 + 32;
+    return 3 * sizeof(Sint16) + 32 * sizeof(char);
     break;
   case USERINFO:
-    return 4 + 4 + 4 + 4 + 4 + 9;
+    return 5 * sizeof(Sint16) + 9 * sizeof(char);
     break;
   case SERVERINFO:
-    return 4 + 4 + 4 + 4;
+    return 4 * sizeof(Sint16);
     break;
   case CHAT:
-    return 4 + 4 + 32 + 4;
+    return 3 * sizeof(Sint16) + 32 * sizeof(char);
     break;
   case GAMERULES:
-    return 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4; 
+    return 12 * sizeof(Sint16); 
     break;
   case STARTPOS:
-    return 4 + 4 + MAX_PLAYERS * 4 *  3;
+    return 2 * sizeof(Sint16) + MAX_PLAYERS *  3 * sizeof(Sint16);
     break;
   case NETRULES:
-    return 4 + 4 + 4 + 4;
+    return 4 * sizeof(Sint16);
     break;
   case SCORE:
-    return 4 + 4 + 4 + MAX_PLAYERS * 4;
+    return 3 * sizeof(Sint16) + MAX_PLAYERS * sizeof(Sint16);
     break;
   case SNAPSHOT:
-    return 4 + 4;
+    return 2 * sizeof(Sint16);
     break;
   case EVENT:
-    return 4 + 4 + 4 + 4 + 4 + 4 + 4;
+    return 7 * sizeof(Sint16);
     break;
   case ACTION:
-    return 4 + 4 + 4 + 4;
+    return 4 * sizeof(Sint16);
     break;
   }
   return 0;
@@ -444,16 +447,17 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
   printf("getting packet for %d, type %d\n", which, slots[which].packet);
   if( type == HEADER )
     {
-      buff =  malloc(4);
-      rLen = SDLNet_TCP_Recv(sock, (void *) buff, 4);
-      if( rLen < 4 )
+      buff =  malloc(sizeof(Sint16));
+      rLen = SDLNet_TCP_Recv(sock, (void *) buff, sizeof(Sint16));
+      if( rLen < sizeof(Sint16) )
 	{
 	  free(buff);
 	  buff=NULL;
 	  return connectionclosed;
 	}
       //parse
-      slots[which].packet=SDLNet_Read32(buff);
+      slots[which].packet=SDLNet_Read16(buff);
+      
       printf("get a header, next packet for %d is %d\n", which, slots[which].packet);
     } else {
 

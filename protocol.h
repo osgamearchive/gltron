@@ -69,7 +69,7 @@ enum {
 /** the Packet him self using union */
 typedef struct packet {
   PacketType   type;         //The type of the packet.
-  int          which;        //Who send the packet.
+  Sint16       which;        //Who send the packet.
   union        infos         //Additional infos
   {
     struct {
@@ -81,38 +81,38 @@ typedef struct packet {
       char     message[32];  //A message from the server.
     } loginrep;              //Type LOGINREP
     struct {
-      int      which;        //who are we talking about?
-      int      ismaster;     //Is he the game master?
-      int      color;        //server decide players's color.
+      Sint16   which;        //who are we talking about?
+      Sint16   ismaster;     //Is he the game master?
+      Sint16   color;        //server decide players's color.
       char     nick[9];      //His nickname.
     } userinfo;              //Type USERINFO
     struct {
-      int      serverstate;  //The server state.
-      int      players;      //Who many players are connected.
+      Sint16   serverstate;  //The server state.
+      Sint16   players;      //Who many players are connected.
     } serverinfo;            //Type SERVERINFO
     struct {
       char     mesg[32];     //The message
-      int      which;        //destination of the message.
+      Sint16   which;        //destination of the message.
     } chat;                  //Type CHAT
     struct {
-      int      players;      //how many players
+      Sint16   players;      //how many players
       float    speed;        //game speed
-      int      eraseCrashed; //1 if erase Crashed player.
+      Sint16   eraseCrashed; //1 if erase Crashed player.
       Time     time;         //to synchronize
-      int      gamespeed;    //The game speed
-      int      grid_size;    //grid size
-      int      arena_size;   //arena_size
+      Sint16   gamespeed;    //The game speed
+      Sint16   grid_size;    //grid size
+      Sint16   arena_size;   //arena_size
     } gamerules;             //Type GAMERULES
     struct {
-      int      startPos[MAX_PLAYERS*3]; //startposition of players
+      Sint16   startPos[MAX_PLAYERS*3]; //startposition of players
     } startpos;              //Type STARTPOS
     struct {
-      int      nbWins;       //NbWins before getting score
-      int      time;         //How many time before stopping game.
+      Sint16   nbWins;       //NbWins before getting score
+      Sint16   time;         //How many time before stopping game.
     } netrules;
     struct {
-      int      winner;        //Who is the winner
-      int      points[MAX_PLAYERS]; //Points for each player.
+      Sint16   winner;        //Who is the winner
+      Sint16   points[MAX_PLAYERS]; //Points for each player.
     } score;
     struct {
       GameEvent event;       //events
@@ -121,8 +121,8 @@ typedef struct packet {
       GameEvent event;       //event
     } event;                 //Type EVENT
     struct {
-      int type;              //Which action?
-      int which;             //To which if necessary.
+      Sint16    type;        //Which action?
+      Sint16    which;       //To which if necessary.
     } action;
   } infos;
 } Packet;

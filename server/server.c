@@ -144,6 +144,12 @@ do_lostplayer(int which )
   Net_delsocket(slots[which].sock);
   Net_closesock(slots[which].sock);
   slots[which].sock=NULL;
+
+  //Reset score
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      netscores.points[i]=0;
+    }
 }
 
 int
@@ -338,6 +344,8 @@ do_startgame( int which, Packet packet )
     return;
 
   netscores.winner=-1;
+
+  
 
   //TODO: clean this part of code. Really UGLY...
 
