@@ -49,12 +49,18 @@ void setLight4fv(float *f) {
   light[3] = f[3];
 }
 
-
 void setColor3fv(float *f) {
   color[0] = f[0];
   color[1] = f[1];
   color[2] = f[2];
   color[3] = 1.0;
+}
+
+void setColor4fv(float *f) {
+  color[0] = f[0];
+  color[1] = f[1];
+  color[2] = f[2];
+  color[3] = f[3];
 }
 
 void setFactor3fv(float *f) {
@@ -64,7 +70,7 @@ void setFactor3fv(float *f) {
   factor[3] = 1.0;
 }
 
-void light3fv(float *f) {
+void light4fv(float *f) {
   float cphi;
   float tmp[4];
 
@@ -73,6 +79,7 @@ void light3fv(float *f) {
   f[0] = color[0] + cphi * factor[0];
   f[1] = color[1] + cphi * factor[1];
   f[2] = color[2] + cphi * factor[2];
+  f[3] = color[3];
   if(f[0] < 0) f[0] = 0;
   else if(f[0] > 1) f[0] = 1;
   if(f[1] < 0) f[1] = 0;
