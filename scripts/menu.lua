@@ -286,6 +286,13 @@ Menu = {
       read = function() return settings.shadow_lod; end,
       store = function(value) settings.shadow_lod = value; end
    },
+   ShadowStyle = {
+      type = MenuC.type.list, caption = "Shadow Type",
+      labels = { "stencil", "normal" },
+      values = { 1, 0 },
+      read = function() return settings.use_stencil; end,
+      store = function(value) settings.use_stencil = value; c_video_restart(); end
+   },
    FPS_Counter = {
       type = MenuC.type.list, caption = "FPS counter",
       labels = { "off", "on" },
@@ -483,7 +490,7 @@ Menu.TextureMenu.items = {
    "Decals", "Mipmaps", "Filtering", "WallScaling"
 }
 Menu.DetailsMenu.items = {
-   "AlphaTrails", "Halos", "Lightcycles", "Recognizer", "CycleLod", "ShadowLod", 
+   "AlphaTrails", "Halos", "Lightcycles", "Recognizer", "CycleLod", "ShadowLod", "ShadowStyle",
    "FPS_Counter", "AI_Status", "Scores"
 }
 Menu.ScreenMenu.items = {
