@@ -58,7 +58,6 @@ void draw2D( gDisplay *d ) {
 		glDisable(GL_LIGHTING);
 		// glDisable(GL_BLEND);
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE);
 		{
 				float w = game2->grid.width;
 				float h = game2->grid.height;
@@ -78,9 +77,22 @@ void draw2D( gDisplay *d ) {
         if (p->data->trail_height <= 0) {
           continue;
         }
-				
-				glColor3fv( p->pColorAlpha );
-				glPointSize(2);
+        
+        if (p->data->trail_height < TRAIL_HEIGHT) {
+          /* 
+             if player crashed but the trail hasn't disappeared yet, fade
+             the trail on the 2d map as it disappears.
+           */
+          glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    
+          glColor4f(p->pColorAlpha[0], p->pColorAlpha[1], p->pColorAlpha[2],
+                    p->data->trail_height / TRAIL_HEIGHT);
+        } else {
+          glBlendFunc(GL_ONE, GL_ONE);
+          glColor3fv(p->pColorAlpha);
+        }
+        
+        glPointSize(2);
 				glBegin(GL_POINTS);
 				glVertex2f(p->data->iposx, p->data->iposy);
 				glEnd();
@@ -106,4 +118,4 @@ void draw2D( gDisplay *d ) {
 		}
 		glDisable(GL_BLEND);
 }
-		
+	
