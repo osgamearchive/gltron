@@ -13,7 +13,7 @@ Bugs:
   for me, anyone else experiencing problems? Andreas)
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM) (Note: proper back-to-front drawing
-  should take care of this. Andreas) [ won't fix ]
+  should take care of this, but I won't fix this, Andreas)
 - fix pointer not showing up when game was started but not initially unpaused,
   but user went back to menu. (LIM) (software cursor time?)
 - fix mouse not being released when going from fullscreen to windowed in some
