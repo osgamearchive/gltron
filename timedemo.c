@@ -88,7 +88,7 @@ void initTimedemo() {
 	
  	game2->mode = GAME_SINGLE;
   initData();
-  changeDisplay();
+  changeDisplay(-1);
 
 	for(i = 0; i < game->players; i++) {
 		game->player[i].ai->active = AI_COMPUTER;
@@ -102,10 +102,13 @@ void initTimedemo() {
 void exitTimedemo(void) {
 	int dt = SystemGetElapsedTime() - startTime;
 	if(dt) {
-		fprintf(stderr, "timedemo FPS: %.2f (%d frames in %f seconds)\n", (float) frames / dt * 1000.0f, frames, dt / 1000.0f);
+		displayMessage(TO_STDERR | TO_CONSOLE, 
+									 "timedemo FPS: %.2f\n", 
+									 (float) frames / dt * 1000.0f);
+		// displayMessage(TO_STDERR | TO_CONSOLE, "timedemo FPS: %.2f (%d frames in %f seconds)\n", (float) frames / dt * 1000.0f, frames, dt / 1000.0f);
 	}
 	else {
-		fprintf(stderr, "dt: %d, frames: %d\n", dt, frames);
+		displayMessage(TO_STDERR | TO_CONSOLE, "dt: %d, frames: %d\n", dt, frames);
 	}
 }
 
