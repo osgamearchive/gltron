@@ -366,7 +366,7 @@ void drawTrailBow(Player *p, int flag) {
   if(flag) 
     glShadeModel(GL_SMOOTH);
 
-  if(data->speed > 0 && game->settings->show_model == 1) {
+  if(PLAYER_IS_ACTIVE(p) && game->settings->show_model == 1) {
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -376,7 +376,7 @@ void drawTrailBow(Player *p, int flag) {
 
 
   bdist = (game->settings->show_model &&
-	   data->speed > 0) ? 2 : 3;
+	   PLAYER_IS_ACTIVE(p)) ? 2 : 3;
 
   sx = getSegmentEndX(data->trail, data, 0);
   sy = getSegmentEndY(data->trail, data, 0);

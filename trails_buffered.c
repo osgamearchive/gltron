@@ -31,13 +31,13 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   q->type = QUAD_COLOR;
   glShadeModel(GL_SMOOTH);
 
-  if(data->speed > 0 && game->settings->show_model == 1) {
+  if(PLAYER_IS_ACTIVE(p)  && game->settings->show_model == 1) {
     q->type |= QUAD_TEXTURE | QUAD_TEX_MODULATE;
     q->texture_id = game->screen->textures[TEX_TRAIL];
   }
 
   bdist = (game->settings->show_model &&
-	   data->speed > 0) ? 2 : 3;
+	   PLAYER_IS_ACTIVE(p)) ? 2 : 3;
 
   sx = getSegmentEndX(data->trail, data, 0);
   sy = getSegmentEndY(data->trail, data, 0);
