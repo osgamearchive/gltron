@@ -5,12 +5,17 @@ static char *share1 = "/usr/share/games/gltron";
 static char *share2 = "/usr/local/share/games/gltron";
 /* #endif */
 
+#ifdef macintosh 
+static char *subdir = ":Data";
+#else
 static char* subdir = "data";
+#endif
 
-#ifdef WIN32 /* assume current directory + data/ */
+#if defined WIN32 || defined macintosh 
+/* assume current directory + data/ */
 char* getFullPath(char *filename) {
   char *path;
-  fprintf(stderr, "using win32 hack looking for %s\n", filename);
+  fprintf(stderr, "using win32/mac hack looking for %s\n", filename);
   path = malloc(strlen(subdir) + 1 + strlen(filename) + 1);
   sprintf(path, "%s%c%s", subdir, SEPERATOR, filename);
 
@@ -26,7 +31,7 @@ char* getFullPath(char *filename) {
   /* check a few directories for the files and */
   /* return the full path. */
   
-  /* check: data sub-directory, GLTRON_HOME, and, for UNIX only: */
+  /* check: data sub-directory, GLTRON_HOME, and */
   /* /usr/share/games/gltron and /usr/local/share/games/gltron */
 
   path = malloc(strlen(subdir) + 1 + strlen(filename) + 1);
