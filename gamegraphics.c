@@ -404,13 +404,28 @@ void drawCam(Player *p, gDisplay *d) {
   glShadeModel(game->screen->shademodel);
 
 	setupLights(eWorld);
+	// setupLights(eCycles);
 
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonOffset(1,1);
   glShadeModel(GL_SMOOTH);
 
-  doTrails(p);
-  glShadeModel(game->screen->shademodel);
+  // doTrails(p);
+	{
+		TrailMesh mesh;
+		mesh.pVertices = (vec3*) malloc(1000 * sizeof(vec3));
+		mesh.pNormals = (vec3*) malloc(1000 * sizeof(vec3));
+		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
+		for(i = 0; i < game->players; i++) {
+			trailGeometry(game->player + i, &mesh);
+			trailRender(&mesh);
+		}
+		free(mesh.pVertices);
+		free(mesh.pNormals);
+		free(mesh.pIndices);
+	}
+		
+	glShadeModel(game->screen->shademodel);
   glDisable(GL_POLYGON_OFFSET_FILL);
 
   for(i = 0; i < game->players; i++)
