@@ -39,6 +39,7 @@ int processEvent(GameEvent* e) {
     if( isConnected && serverstate==gameState )
       {
 	sprintf(messages, "%s crashed", slots[getWhich(e->player)].name);
+	initTurnList();
       } else {
 #endif
     sprintf(messages, "player %d crashed", e->player + 1);
