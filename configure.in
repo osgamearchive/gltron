@@ -61,11 +61,33 @@ dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
 
-AC_CHECK_HEADERS(GL/gl.h GL/glu.h,,
-AC_CHECK_HEADERS("/usr/X11R6/include/GL/gl.h" \
-                 "/usr/X11R6/include/GL/glu.h",
-		 INCS="$INCS -I/usr/X11R6/include",
-AC_MSG_ERROR(cant find GL headers)))
+AC_CHECK_HEADERS(GL/gl.h,,
+ AC_CHECK_HEADERS(/usr/X11R6/include/GL/gl.h,
+	includes_in_x=1,
+ AC_CHECK_HEADERS(/usr/local/include/GL/gl.h,
+	includes_in_local=1,
+AC_MSG_ERROR(cant find GL headers))))
+
+dnl finding glu.h fails because it includes GL/gl.h, workaround...
+AC_CHECK_HEADERS(GL/glu.h,,
+AC_MSG_CHECKING(for /usr/X11R6/include/GL/glu.h)
+if test -f /usr/X11R6/include/GL/glu.h ; then
+	includes_in_x=1
+   AC_MSG_RESULT(yes)
+elif AC_MSG_CHECKING(for /usr/local/include/GL/glu.h) && test -f /usr/local/include/GL/glu.h ; then
+	includes_in_local=1
+   AC_MSG_RESULT(yes)
+else AC_MSG_RESULT(no)
+fi,
+AC_MSG_ERROR(cant find GL headers))
+
+if test "$includes_in_x" = 1 ; then
+	INCS="$INCS -I/usr/X11R6/include"
+fi
+
+if test "$includes_in_local" = 1; then
+	INCS="$INCS -I/usr/local/include"
+fi
 
 AC_SUBST(INCS)
 
