@@ -1,5 +1,5 @@
 #include "gltron.h"
-#include "skybox_glue.h"
+#include "skybox.h"
 
 static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
@@ -888,7 +888,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* skybox, floor */
   if(getSettingi("show_skybox"))
-    SkyBox_draw();
+    skybox();
 
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
