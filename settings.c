@@ -6,6 +6,28 @@
 #define BUFSIZE 100
 #define MAX_VAR_NAME_LEN 64
 
+/* this just screams to be replaced by scripting code */
+
+void settings_artpack(char *buf, FILE *f) {
+  if(f != NULL) {
+    fprintf(f, "vset artpack %s\n", artpack_list[artpack_index]);
+  } else {
+    char pack[256];
+    char **artpack;
+    int i = 0;
+    sscanf(buf, "vset artpack %s ", pack);
+    for(artpack = artpack_list; *artpack != NULL; artpack++) {
+      if(strstr(pack, *artpack) == pack) {
+	artpack_index = i;
+	return;
+      }
+      i++;
+    }
+    fprintf(stderr, "artpack '%s' not found - setting default\n", pack);
+    artpack_index = 0;
+  }
+}
+
 void settings_cam_settings(char *buf, FILE *f) {
   int i;
   if(f != NULL) {
@@ -169,6 +191,7 @@ void initSettingData(char *filename) {
   si[39].value = &(game->settings->show_decals);
   si[40].value = &(game->settings->show_scores);
   si[41].value = &(game->settings->shadow_lod);
+  si[42].value = &(game->settings->show_gl_logo);
 
   sf[0].value = &(game->settings->current_speed);
   sf[1].value = &(game->settings->musicVolume);
@@ -178,6 +201,7 @@ void initSettingData(char *filename) {
   sv[1].value = settings_cycle_colors;
   sv[2].value = settings_trail_colors;
   sv[3].value = settings_cam_settings;
+  sv[4].value = settings_artpack;
 }
 
 int* getVi(char* name) {
@@ -209,13 +233,55 @@ float* getVf(char* name) {
   return NULL;
 }
 
-void initMainGameSettings(char *filename) {
-  char *fname;
-  char *home;
+void loadIniFile(char *fname) {
   char buf[100];
   char expbuf[100];
   int i;
   FILE* f;
+
+  f = fopen(fname, "r");
+  if(f == NULL) {
+    fprintf(stderr, "can't load ini file '%s'\n", fname);
+    return;
+  }
+
+  while(fgets(buf, sizeof(buf), f)) {
+    /* process rc-file */
+
+    if(strstr(buf, "iset") == buf) {
+      /* linear search through settings */
+      /* first: integer */
+      for(i = 0; i < si_count; i++) {
+	sprintf(expbuf, "iset %s ", si[i].name);
+	if(strstr(buf, expbuf) == buf) {
+	  sscanf(buf + strlen(expbuf), "%d ", si[i].value);
+	  /* printf("assignment: %s\t%d\n", si[i].name, *(si[i].value)); */
+	  break;
+	}
+      }
+    } else if(strstr(buf, "fset") == buf) {
+      for(i = 0; i < sf_count; i++) {
+	sprintf(expbuf, "fset %s ", sf[i].name);
+	if(strstr(buf, expbuf) == buf) {
+	  sscanf(buf + strlen(expbuf), "%f ", sf[i].value);
+	  /* printf("assignment: %s\t%.2f\n", sf[i].name, *(sf[i].value)); */
+	  break;
+	}
+      }
+    } else if(strstr(buf, "vset") == buf) {
+      for(i = 0; i < sv_count; i++) {
+	sprintf(expbuf, "vset %s ", sv[i].name);
+	if(strstr(buf, expbuf) == buf)
+	  sv[i].value(buf, NULL);
+      }
+    }
+  }
+  fclose(f);
+}
+
+void initMainGameSettings(char *filename) {
+  char *fname;
+  char *home;
 
   game2 = &main_game2;
   game = &main_game;
@@ -264,6 +330,7 @@ void initMainGameSettings(char *filename) {
   game->settings->height = 480;
   game->settings->show_ai_status = 1;
   game->settings->show_scores = 1;
+  game->settings->show_gl_logo = 1;
   game->settings->camType = 1;
   game->settings->mouse_warp = 0;
   game->settings->windowMode = 0;
@@ -307,44 +374,9 @@ void initMainGameSettings(char *filename) {
     fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
     sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
   }
-  f = fopen(fname, "r");
-  if(f == NULL)
-    printf("no %s found - using defaults\n", fname);
-  else {
-    while(fgets(buf, sizeof(buf), f)) {
-      /* process rc-file */
 
-      if(strstr(buf, "iset") == buf) {
-	/* linear search through settings */
-	/* first: integer */
-	for(i = 0; i < si_count; i++) {
-	  sprintf(expbuf, "iset %s ", si[i].name);
-	  if(strstr(buf, expbuf) == buf) {
-	    sscanf(buf + strlen(expbuf), "%d ", si[i].value);
-	    /* printf("assignment: %s\t%d\n", si[i].name, *(si[i].value)); */
-	    break;
-	  }
-	}
-      } else if(strstr(buf, "fset") == buf) {
-	for(i = 0; i < sf_count; i++) {
-	  sprintf(expbuf, "fset %s ", sf[i].name);
-	  if(strstr(buf, expbuf) == buf) {
-	    sscanf(buf + strlen(expbuf), "%f ", sf[i].value);
-	    /* printf("assignment: %s\t%.2f\n", sf[i].name, *(sf[i].value)); */
-	    break;
-	  }
-	}
-      } else if(strstr(buf, "vset") == buf) {
-	for(i = 0; i < sv_count; i++) {
-	  sprintf(expbuf, "vset %s ", sv[i].name);
-	  if(strstr(buf, expbuf) == buf)
-	    sv[i].value(buf, NULL);
-	}
-      }
-    }
-    free(fname);
-    fclose(f);
-  }
+  loadIniFile(fname);
+  free(fname);
 
   game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
 
