@@ -6,7 +6,24 @@
 #define BUFSIZE 100
 #define MAX_VAR_NAME_LEN 64
 
-
+void settings_cam_settings(char *buf, FILE *f) {
+  int i;
+  if(f != NULL) {
+    fprintf(f, "vset cam ");
+    for(i = 0; i < 4; i++)
+      fprintf(f, "%s %.3f %.3f %.3f ", cam_names[i], 
+	      cam_defaults[i][0], cam_defaults[i][1], cam_defaults[i][2]);
+    fprintf(f, "\n");
+  } else {
+    char pattern[256];
+    for(i = 0; i < 4; i++) {
+      sprintf(pattern, "%s %%.3f %%.3f %%.3f ", cam_names[i]);
+      sscanf(buf, pattern, 
+	     cam_defaults[i], cam_defaults[i] + 1, cam_defaults[i] + 2);
+    }
+  }
+}
+	    
 void settings_key_actions(char *buf, FILE *f) {
   int i, tmp[8];
   if(f != NULL) {
@@ -148,6 +165,10 @@ void initSettingData(char *filename) {
   si[35].value = &(game->settings->mipmap_filter);
   si[36].value = &(game->settings->stretch_textures);
   si[37].value = &(game->settings->show_skybox);
+  si[38].value = &(game->settings->bitdepth_32);
+  si[39].value = &(game->settings->show_decals);
+  si[40].value = &(game->settings->show_scores);
+  si[41].value = &(game->settings->shadow_lod);
 
   sf[0].value = &(game->settings->current_speed);
   sf[1].value = &(game->settings->musicVolume);
@@ -156,6 +177,7 @@ void initSettingData(char *filename) {
   sv[0].value = settings_key_actions;
   sv[1].value = settings_cycle_colors;
   sv[2].value = settings_trail_colors;
+  sv[3].value = settings_cam_settings;
 }
 
 int* getVi(char* name) {
@@ -200,6 +222,14 @@ void initMainGameSettings(char *filename) {
   game->settings = (Settings*) malloc(sizeof(Settings));
   initSettingData(filename);
 
+  /* initialize some struct members */
+
+  game2->input.mouse1 = 0;
+  game2->input.mouse2 = 0;
+  game2->input.mousex = 0;
+  game2->input.mousey = 0;
+  game2->network.status = 0;
+
   /* initialize defaults, then load modifications from file */
 
   game->pauseflag = 0;
@@ -215,23 +245,26 @@ void initMainGameSettings(char *filename) {
   game->settings->show_skybox = 0;
   game->settings->show_floor_texture = 1;
   game->settings->show_crash_texture = 1;
+  game->settings->show_decals = 1;
   game->settings->show_model = 1;
   game->settings->lod = 0;
+  game->settings->shadow_lod = 1;
   game->settings->turn_cycle = 1;
   game->settings->line_spacing = 20;
-  game->settings->erase_crashed = 0;
+  game->settings->erase_crashed = 1;
   game->settings->fast_finish = 1;
   game->settings->fov = 105;
-  game->settings->znear = 1.0;
+  game->settings->znear = 0.5;
   game->settings->current_speed = 7.0;
-  game->settings->game_speed = 1; /* normal */
+  game->settings->game_speed = 2; /* fast */
   /* game->settings->grid_size MUST be divisible by 8 */
-  game->settings->arena_size = 1;
-  game->settings->grid_size = 240;
+  game->settings->arena_size = 3;
+  game->settings->grid_size = 600;
   game->settings->width = 640;
   game->settings->height = 480;
   game->settings->show_ai_status = 1;
-  game->settings->camType = 0;
+  game->settings->show_scores = 1;
+  game->settings->camType = 1;
   game->settings->mouse_warp = 0;
   game->settings->windowMode = 0;
   game->settings->model_backwards = 0;
@@ -239,6 +272,7 @@ void initMainGameSettings(char *filename) {
   game->settings->mipmap_filter = TRILINEAR;
   game->settings->stretch_textures = 0;
   game->settings->softwareRendering = 0;
+  game->settings->bitdepth_32 = 0;
 
   game->settings->display_type = 0;
   game->settings->playMusic = 1;
@@ -252,7 +286,7 @@ void initMainGameSettings(char *filename) {
   game->settings->ai_player3 = 1;
   game->settings->ai_player4 = 1;
 
-  game->settings->ai_level = 2;
+  game->settings->ai_level = 1;
   
   /* not included in .gltronrc */
 
