@@ -11,8 +11,7 @@ static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
 static char *player_list[] = { "human", "computer", "none", NULL };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
 static char *lod_list[] = { "normal", "lower", "ugly", NULL };
-static char *ai_list[] = { "sluggish (0)", "dumb (1)", "stupid (2)", 
-			   "mindless (3)", NULL };
+static char *ai_list[] = { "dumb", "normal", "strong", "the MCP himself", NULL };
 static char *filter_list[] = { "bilinear", "trilinear", NULL };
 static char *camera_list[] = { "circling", "behind", "cockpit", "mouse", NULL };
 static char *viewports_list[] = { "single", "split", "4 player", NULL };
