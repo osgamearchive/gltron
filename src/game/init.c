@@ -99,6 +99,7 @@ void initAudio(void) {
 void initGame(void) {
 	/* initialize the rest of the game's datastructures */
 	initGameStructures();
+	initGameLevel();
 	resetScores();
 }
 
