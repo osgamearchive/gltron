@@ -28,3 +28,6 @@ trail_diffuse_2 = { 0.120, 0.520, 0.600, 0.600 }
 trail_diffuse_3 = { 0.700, 0.700, 0.700, 0.600 }
 
 clear_color = { 0, 0, 0, 0 }
+
+video.settings.reflection = 0.9
+
