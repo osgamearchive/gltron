@@ -3,16 +3,24 @@
 
 static int coffset;
 
+static int serverport;
+static char serveradd[255];
+
 void mouseConnect (int buttons, int state, int x, int y)
 {
     if ( state == SYSTEM_MOUSEPRESSED )
 	changeCallback(&guiCallbacks);
 }
 
+void setconnection(char *server, char *port)
+{
+  serverport = strtol(port, (char**) NULL, 10);
+  strcpy(serveradd, server);
+}
 
 
 void idleConnect() {
-  int serverport = strtol(game->settings->port, (char**) NULL, 10);
+  //int serverport = strtol(game->settings->port, (char**) NULL, 10);
   int status;
   int sockstat = socksnotready;
 
@@ -36,7 +44,7 @@ void idleConnect() {
   
   if( ! isConnected )
     {
-      status = Net_connect(game->settings->server, serverport);
+      status = Net_connect(serveradd, serverport);
       if( status )
 	{
 	  isConnected = 0;

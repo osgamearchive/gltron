@@ -153,6 +153,7 @@ void menuAction(Menu *activated, int type) {
 	  printf("connect menu chosen\n");
 	  isConnected=0;
 	  isLogged=0;
+	  setconnection(game->settings->server, game->settings->port);
 	  switchCallbacks(&netConnectCallbacks);
 	  break;
 	case 's':

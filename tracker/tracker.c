@@ -154,7 +154,7 @@ do_server_infos(  int which, Trackerpacket *packet )
       slots[which].erase=packet->infos.infos.erase;
       strcpy(slots[which].description, packet->infos.infos.description);
       strcpy(slots[which].version, packet->infos.infos.version);
-      //slots[which].ipaddress=packet->infos.infos.ipaddress;
+      slots[which].ipaddress.port=packet->infos.infos.ipaddress.port;
       slots[which].nbplayers=packet->infos.infos.nbplayers;
 
       //updating lastseen
