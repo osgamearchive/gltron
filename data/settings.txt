@@ -3,7 +3,7 @@ f3
 speed
 musicVolume
 fxVolume
-i36
+i37
 show_help
 show_fps
 show_wall
@@ -40,8 +40,4 @@ alpha_trails
 lod
 ai_level
 mipmap_filter
-
-
-
-
-
+stretch_textures
