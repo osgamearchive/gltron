@@ -67,6 +67,7 @@ void getEvents() {
     latest = readEvent();
   if(latest != NULL) {
     while(latest->timestamp < game2->time.current) {
+      /* TODO: check if it's safe to ignore the return value here */
       processEvent(latest);
       latest = readEvent();
       if(latest == NULL) return;
