@@ -19,8 +19,10 @@ namespace Sound {
     virtual void Stop();
     virtual void Pause();
     virtual void UnPause();
-    virtual Uint8 IsPlaying();
+		virtual void Idle();
     virtual int Mix(Uint8 *data, int len); // abstract
+
+    virtual Uint8 IsPlaying();
     virtual void SetRemovable(void);
     virtual Uint8 IsRemovable(void);
     virtual void SetVolume(float volume);

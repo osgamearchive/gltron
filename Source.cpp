@@ -19,6 +19,7 @@ namespace Sound {
   void Source::Stop() { _isPlaying = 0; Reset(); }
   void Source::Pause() { _isPlaying = 0; }
   void Source::UnPause() { _isPlaying = 1; }
+	void Source::Idle() { }
 
   Uint8 Source::IsPlaying() { return _isPlaying; }
   void Source::SetRemovable() { _removable = 1; }
