@@ -19,11 +19,15 @@ void initClientData() {
     camType = (game->player[i].ai->active == AI_COMPUTER) ? 0 : getSettingi("camType");
     initCamera(cam, data, camType);
 
-    memcpy(game->player[i].pColorDiffuse, 
-	   colors_model_diffuse[i], sizeof( float[4] ));
-    memcpy(game->player[i].pColorSpecular, 
-	   colors_model_specular[i], sizeof( float[4] ));
-    memcpy(game->player[i].pColorAlpha, colors_trail_diffuse[i], sizeof( float[4] ));
+    {
+      char name[32];
+      sprintf(name, "model_diffuse_%d", i);
+      scripting_GetFloatArray(name, game->player[i].pColorDiffuse, 4);
+      sprintf(name, "model_specular_%d", i);
+      scripting_GetFloatArray(name, game->player[i].pColorSpecular, 4);
+      sprintf(name, "trail_diffuse_%d", i);
+      scripting_GetFloatArray(name, game->player[i].pColorAlpha, 4);
+    }
 #ifdef SOUND
     if( game->player[i].data->speed > 0)
       Audio_StartEngine(i);
