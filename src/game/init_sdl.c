@@ -23,9 +23,9 @@ void videoInit(void) {
 void inputInit(void) {
 	/* keyboard */
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
-
+  
 	/* joystick */
-	if(SDL_Init(SDL_INIT_JOYSTICK >= 0)) {
+	if(SDL_Init(SDL_INIT_JOYSTICK) >= 0) {
 		int i;
 		SDL_Joystick *joy;
 		int joysticks = SDL_NumJoysticks();
@@ -41,6 +41,7 @@ void inputInit(void) {
 		if(i)
 			SDL_JoystickEventState(SDL_ENABLE);
 	} else {
-		fprintf(stderr, "[init] couldn't initialize joysticks\n");
+		const char *s = SDL_GetError();
+		fprintf(stderr, "[init] couldn't initialize joysticks: %s\n", s);
 	}
 }
