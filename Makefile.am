@@ -22,7 +22,7 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	floor.c floor.h skybox.c skybox.h engine.h event.h \
 	visuals_2d.c \
 	scripting.c scripting.h scripting_interface.c console.h settings.h \
-	util.c util.h extgl.c vector.c matrix.c vector.h matrix.h
+	util.c util.h vector.c matrix.c vector.h matrix.h
 
 
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/liblualib.a -lm
@@ -33,7 +33,7 @@ man_MANS = gltron.6
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound_glue.h \
 	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp \
-	SoundSystem.cpp SourceEndgine.cpp \
+	SoundSystem.cpp SourceEngine.cpp \
 	SourceCopy.cpp Sound.h SoundSystem.h SourceMusic.h SourceCopy.h Source3D.h \
 	Source.h Vector3.h SourceSample.h
 

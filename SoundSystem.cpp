@@ -64,6 +64,8 @@ namespace Sound {
 				p->next = p->next->next;
 				delete tmp;
 				delete source;
+				if(p->next == NULL)
+					break;
 			} else {
 				source->Idle();
 			}
