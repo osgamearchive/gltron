@@ -56,7 +56,7 @@ void changeDisplay() {
 }
 
 void initGame() { /* called when game mode is entered */
-  SystemHidePointer();
+
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
   /* playEngine(); */
@@ -64,7 +64,6 @@ void initGame() { /* called when game mode is entered */
 }
 
 void exitGame() {
-  SystemUnhidePointer();
 #ifdef SOUND
   stopEngine();
 #endif
@@ -105,7 +104,6 @@ void initModel(Player *p, int p_num) {
   /* copy contents from colors_a[] to model struct */
   for(j = 0; j < 4; j++) {
     p->model->color_alpha[j] = colors_alpha[p_num][j];
-    p->model->color_trail[j] = colors_trail[p_num][j];
     p->model->color_model[j] = colors_model[p_num][j];
   }
   /* set material 0 to color_model */
@@ -143,3 +141,9 @@ void cycleDisplay(int p) {
   }
   changeDisplay();
 }
+
+
+
+
+
+
