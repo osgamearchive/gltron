@@ -21,11 +21,10 @@ void drawGame() {
 
   glEnable(GL_DEPTH_TEST);
 
-  {
-    float clear[4];
-    scripting_GetFloatArray("clear_color", clear, 4);
-    glClearColor(clear[0], clear[1], clear[2], clear[3]);
-  }
+  glClearColor(game2->settingsCache.clear_color[0], 
+               game2->settingsCache.clear_color[1], 
+               game2->settingsCache.clear_color[2],
+               game2->settingsCache.clear_color[3]);
 
 #ifdef DO_STENCIL
   glClearStencil(0);
@@ -42,9 +41,9 @@ void drawGame() {
       drawCam(p, d);
       glDisable(GL_DEPTH_TEST);
       glDepthMask(GL_FALSE);
-      if(getSettingi("show_scores"))
+      if (game2->settingsCache.show_scores)
 	drawScore(p, d);
-      if(getSettingi("show_ai_status"))
+      if (game2->settingsCache.show_ai_status)
 	if(p->ai->active == AI_COMPUTER)
 	  drawAI(d);
     }
@@ -52,11 +51,11 @@ void drawGame() {
     glEnable(GL_DEPTH_TEST);
   }
 
-  if(getSettingi("show_2d") > 0) {
+  if (game2->settingsCache.show_2d > 0) {
     drawDebugTex(game->screen);
     drawDebugLines(game->screen);
   }
-  if(getSettingi("show_fps"))
+  if (game2->settingsCache.show_fps)
     drawFPS(game->screen);
 
   drawConsole(game->screen);
@@ -297,11 +296,18 @@ void drawConsoleLines(char *line, int call) {
 }
 
 void drawConsole(gDisplay *d) {
-  int lines = 5;
+  int lines;
   rasonly(d);
   glColor3f(1.0, 0.3, 0.3);
-  if(game->screen->vp_h < 600) lines = 3;
-  if(getSettingi("softwareRendering")) lines = 1;
+  
+  if (game2->settingsCache.softwareRendering) { 
+    lines = 1;
+  } else if (game->screen->vp_h < 600) {
+    lines = 3;
+  } else {
+    lines = 5;
+  }
+  
   consoleDisplay(drawConsoleLines, lines);
 }
   
@@ -376,7 +382,7 @@ float GetDistance(float *v, float *p, float *d) {
 void drawFloor(gDisplay *d) {
   int i, j, k, l, t;
 
-  if(getSettingi("show_floor_texture")) {
+  if (game2->settingsCache.show_floor_texture) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
@@ -408,7 +414,7 @@ void drawFloor(gDisplay *d) {
     int line_spacing;
 
     scripting_GetFloatArray("clear_color", fogcolor, 4);
-    line_spacing = getSettingi("line_spacing");
+    line_spacing = game2->settingsCache.line_spacing;
 
     glColor3f(1.0, 1.0, 1.0);
 
@@ -529,7 +535,7 @@ void doCycleTurnRotation(Player *p) {
 void drawCycleShadow(Player *p, int lod) {
   Mesh *cycle;
 
-  lod += getSettingi("shadow_lod");
+  lod += game2->settingsCache.shadow_lod;
   if(lod > max_lod) lod = max_lod;
 
   cycle = lightcycle[lod];
@@ -537,9 +543,9 @@ void drawCycleShadow(Player *p, int lod) {
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
   glMultMatrixf(shadow_matrix);
-  if(getSettingi("turn_cycle"))
+  if (game2->settingsCache.turn_cycle) {
     doCycleTurnRotation(p);
-  else if (p->data->exp_radius == 0) {
+  } else if (p->data->exp_radius == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
 
@@ -578,8 +584,8 @@ void drawCycle(Player *p, int lod) {
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
-  if(getSettingi("show_crash_texture")) {
-    if(p->data->exp_radius > 0 && p->data->exp_radius < EXP_RADIUS_MAX) {
+  if (game2->settingsCache.show_crash_texture) {
+    if (p->data->exp_radius > 0 && p->data->exp_radius < EXP_RADIUS_MAX) {
       glPushMatrix();
       glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
       drawCrash(p->data->exp_radius);
@@ -587,12 +593,13 @@ void drawCycle(Player *p, int lod) {
     }
   }
 
-  if (p->data->exp_radius == 0 && getSettingi("turn_cycle") == 0) {
+  if (p->data->exp_radius == 0 && game2->settingsCache.turn_cycle == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
 
-  if(getSettingi("turn_cycle")) 
+  if (game2->settingsCache.turn_cycle) { 
     doCycleTurnRotation(p);
+  }
 
   initModelLights(GL_LIGHT1);
   glDisable(GL_LIGHT0);
@@ -601,13 +608,14 @@ void drawCycle(Player *p, int lod) {
   SetMaterialColor(cycle, "Hull", eDiffuse, p->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, p->pColorSpecular); 
 
-  if(getSettingi("light_cycles"))
+  if (game2->settingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
+  }
 
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
 
-  if(p->data->exp_radius == 0) {
+  if (p->data->exp_radius == 0) {
     glEnable(GL_NORMALIZE);
 
     /* glScalef(10, 10, 10); */
@@ -653,7 +661,7 @@ int playerVisible(Player *eye, Player *target) {
   tmp[1] = target->data->posy;
   tmp[2] = 0;
 
-  lod = (getSettingi("lod") > max_lod) ? max_lod : getSettingi("lod");
+  lod = (game2->settingsCache.lod > max_lod) ? max_lod : game2->settingsCache.lod;
   /* calculate lod */
   vsub(eye->camera->cam, tmp, v2);
   d = length(v2);
@@ -665,7 +673,7 @@ int playerVisible(Player *eye, Player *target) {
   normalize(v2);
   s = scalarprod(v1, v2);
   /* maybe that's not exactly correct, but I didn't notice anything */
-  d = cos((getSettingi("fov") / 2) * 2 * M_PI / 360.0);
+  d = cos((game2->settingsCache.fov / 2) * 2 * M_PI / 360.0);
   /*
     printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
     v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
@@ -685,10 +693,11 @@ void drawPlayers(Player *p) {
   for(i = 0; i < game->players; i++) {
     height = game->player[i].data->trail_height;
 
-    if(getSettingi("show_model")) {
+    if (game2->settingsCache.show_model) {
       lod = playerVisible(p, &(game->player[i]));
-      if(lod >= 0) 
-	drawCycle(&(game->player[i]), lod);
+      if (lod >= 0) { 
+	      drawCycle(&(game->player[i]), lod);
+      }
     }
   }
 }
@@ -769,7 +778,7 @@ void drawWalls(gDisplay *d) {
   float h;
 
   t = game2->rules.grid_size / 240.0;
-  if(getSettingi("stretch_textures")) {
+  if (game2->settingsCache.stretch_textures) {
     h = t * WALL_H;
     t = 1.0;
   } else h = WALL_H;
@@ -870,8 +879,8 @@ void drawCam(Player *p, gDisplay *d) {
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  doPerspective(getSettingf("fov"), d->vp_w / d->vp_h,
-		getSettingf("znear"), game2->rules.grid_size * 6.5);
+  doPerspective(game2->settingsCache.fov, d->vp_w / d->vp_h,
+                game2->settingsCache.znear, game2->rules.grid_size * 6.5);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -887,8 +896,9 @@ void drawCam(Player *p, gDisplay *d) {
 
 
   /* skybox, floor */
-  if(getSettingi("show_skybox"))
+  if (game2->settingsCache.show_skybox) {
     skybox();
+  }
 
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
@@ -898,12 +908,13 @@ void drawCam(Player *p, gDisplay *d) {
   /* shadows on the floor: cycle, recognizer, trails */
   for(i = 0; i < game->players; i++) {
     int lod;
-    if(getSettingi("show_model")) {
+    if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
-      if(lod >= 0) 
-	drawCycleShadow(game->player + i, lod);
+      if (lod >= 0) {
+	      drawCycleShadow(game->player + i, lod);
+      }
     }
-    if(getSettingi("show_recognizer")) {
+    if (game2->settingsCache.show_recognizer) {
       glPushMatrix();
       glMultMatrixf(shadow_matrix);
       glColor4fv(shadow_color);
@@ -939,14 +950,15 @@ void drawCam(Player *p, gDisplay *d) {
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-  if(getSettingi("show_recognizer")) {
+  if (game2->settingsCache.show_recognizer) {
     glEnable(GL_CULL_FACE);
     drawRecognizers(1);
     glDisable(GL_CULL_FACE);
   }
 
-  if(getSettingi("show_wall") == 1)
+  if (game2->settingsCache.show_wall == 1) {
     drawWalls(d);
+  }
 
   drawPlayers(p);
 
@@ -968,7 +980,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* transparent stuff */
   /* draw the glow around the other players: */
-  if (getSettingi("show_glow") == 1) {
+  if (game2->settingsCache.show_glow == 1) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     

@@ -372,6 +372,3 @@ callbacks guiCallbacks = {
   guiMouse, guiMouseMotion
 };
 
-
-
-

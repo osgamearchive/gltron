@@ -233,6 +233,6 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
 }
 
 void SystemQuit() {
-      saveSettings(); 
-      switchCallbacks(&creditsCallbacks);
+ saveSettings(); 
+ switchCallbacks(&creditsCallbacks);
 }

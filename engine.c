@@ -209,6 +209,35 @@ void initData() {
   game2->rules.eraseCrashed = getSettingi("erase_crashed");
   game2->rules.grid_size = getSettingi("grid_size");
 
+  /* cache lua settings that don't change during play */
+  game2->settingsCache.show_scores = getSettingi("show_scores");
+  game2->settingsCache.show_ai_status = getSettingi("show_ai_status");;
+  game2->settingsCache.show_2d = getSettingi("show_2d");
+  game2->settingsCache.show_fps = getSettingi("show_fps");
+  game2->settingsCache.softwareRendering = getSettingi("softwareRendering");
+  game2->settingsCache.show_floor_texture = getSettingi("show_floor_texture");
+  game2->settingsCache.line_spacing = getSettingi("line_spacing");
+  game2->settingsCache.show_model = getSettingi("show_model");
+  game2->settingsCache.show_decals = getSettingi("show_decals");
+  game2->settingsCache.alpha_trails = getSettingi("alpha_trails");
+  game2->settingsCache.shadow_lod = getSettingi("shadow_lod"); 
+  game2->settingsCache.turn_cycle = getSettingi("turn_cycle"); 
+  game2->settingsCache.light_cycles = getSettingi("light_cycles"); 
+  game2->settingsCache.lod = getSettingi("lod"); 
+  game2->settingsCache.fov = getSettingi("fov"); 
+  game2->settingsCache.stretch_textures = getSettingi("stretch_textures"); 
+  game2->settingsCache.show_skybox = getSettingi("show_skybox"); 
+  game2->settingsCache.show_recognizer = getSettingi("show_recognizer");
+  game2->settingsCache.show_glow = getSettingi("show_glow"); 
+  game2->settingsCache.show_crash_texture = getSettingi("show_crash_texture");
+  game2->settingsCache.show_wall = getSettingi("show_wall");
+  game2->settingsCache.fast_finish = getSettingi("fast_finish");
+  game2->settingsCache.fov = getSettingf("fov");
+  game2->settingsCache.znear = getSettingf("znear");
+  game2->settingsCache.playEffects = getSettingi("playEffects");
+  game2->settingsCache.playMusic = getSettingi("playMusic");
+  scripting_GetFloatArray("clear_color", game2->settingsCache.clear_color, 4);
+  
   /* time management */
   game2->time.lastFrame = 0;
   game2->time.current = 0;

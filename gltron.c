@@ -137,12 +137,12 @@ int main( int argc, char *argv[] ) {
   {
     char *path;
     path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
-    if(path != NULL) {
-      if(fileExists(path)) {
-	printf("loading settings from %s\n", path);
-	scripting_RunFile(path);
+    if (path != NULL) {
+      if (fileExists(path)) {
+        printf("loading settings from %s\n", path);
+	      scripting_RunFile(path);
       } else {
-	printf("cannot load %s from %s\n", RC_NAME, path);
+	      printf("cannot load %s from %s\n", RC_NAME, path);
       }
       free(path);
     }

@@ -139,16 +139,19 @@ void idleGame( void ) {
   case GAME_SINGLE:
   case GAME_SINGLE_RECORD:
     /* check for fast finish */
-    if(getSettingi("fast_finish") == 1) {
+    
+    if (game2->settingsCache.fast_finish == 1) {
       int factor = 4;
-      for(i = 0; i < game->players; i++) {
-	if(game->player[i].ai->active != AI_COMPUTER &&
-	   game->player[i].data->exp_radius < EXP_RADIUS_MAX)
-	  factor = 1;
+      for (i = 0; i < game->players; i++) {
+	      if (game->player[i].ai->active != AI_COMPUTER &&
+	          game->player[i].data->exp_radius < EXP_RADIUS_MAX) {
+	        factor = 1;
+        }
       }
       dt = game2->time.dt * factor;
-    } else  
+    } else { 
       dt = game2->time.dt;
+    }
 
     while(dt > 0) {
       if(dt > PHYSICS_RATE) t = PHYSICS_RATE;

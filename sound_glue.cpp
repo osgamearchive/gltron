@@ -44,7 +44,7 @@ extern "C" {
 				 0);
       }
 #ifdef RECOGNIZER_SOUND
-      if( getSettingi("show_recognizer") ) {
+      if (game2->settingsCache.show_recognizer) {
 	Point p, v;
 	getRecognizerPositionVelocity(&p, &v);
 	recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
@@ -60,10 +60,9 @@ extern "C" {
 #undef V
     }
 #endif
-    sound->SetMixMusic( getSettingi("playMusic") );
-    sound->SetMixFX( getSettingi("playEffects") );
+    sound->SetMixMusic(game2->settingsCache.playMusic);
+    sound->SetMixFX(game2->settingsCache.playEffects);
     sound->Idle();
-
   }
 
   void Audio_CrashPlayer(int player) {

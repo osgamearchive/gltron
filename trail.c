@@ -111,8 +111,9 @@ void drawTrailLines(Player *p) {
   glDisable(GL_DEPTH_TEST);
   */
 
-  if( getSettingi("antialias_lines") )
+  if (game2->settingsCache.antialias_lines) {
     glEnable(GL_LINE_SMOOTH); /* enable line antialiasing */
+  }
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -182,7 +183,7 @@ void drawTrailShadow(Player* p) {
   glMultMatrixf(shadow_matrix);
 
   height = data->trail_height;
-  if(getSettingi("softwareRendering") == 0) {
+  if (game2->settingsCache.softwareRendering == 0) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
@@ -368,7 +369,7 @@ void drawTrailBow(Player *p, int flag) {
   if(flag) 
     glShadeModel(GL_SMOOTH);
 
-  if(PLAYER_IS_ACTIVE(p) && getSettingi("show_model") == 1) {
+  if(PLAYER_IS_ACTIVE(p) && game2->settingsCache.show_model == 1) {
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -377,8 +378,8 @@ void drawTrailBow(Player *p, int flag) {
   }
 
 
-  bdist = (getSettingi("show_model") &&
-	   PLAYER_IS_ACTIVE(p)) ? 2 : 3;
+  bdist = (game2->settingsCache.show_model) &&
+	         PLAYER_IS_ACTIVE(p) ? 2 : 3;
 
   sx = getSegmentEndX(data->trail, data, 0);
   sy = getSegmentEndY(data->trail, data, 0);

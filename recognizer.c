@@ -54,7 +54,7 @@ void drawRecognizers(int flag) {
     glEnable(GL_LIGHT2);
  
     glDisable(GL_BLEND);
-    if (getSettingi("light_cycles"))
+    if (game2->settingsCache.light_cycles)
       glEnable(GL_LIGHTING);
 
     glEnable(GL_POLYGON_OFFSET_FILL);
