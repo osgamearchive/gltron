@@ -239,7 +239,7 @@ do_serverinfo(Packet packet)
 	 /*  game2->time.current   = SDL_GetTicks() - base; */
 /* 	  game2->time.offset    = base; */
 	  game2->time.offset    = now;
-	  printf("######################## << TIME %d ( %u ) >> #####################\n", game2->time.current, base);
+	  printf("######################## << TIME %u ( %u ) >> #####################\n", now, base);
 	  //game2->time.current=0;
 
 #ifdef DEBUG	  

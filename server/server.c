@@ -598,9 +598,8 @@ do_startgame( int which, Packet packet )
 
   //Start Synch
   now                              = SDL_GetTicks();
-
   nbSynch = 0;
-
+  printf("satrt synch %u\n", now );
 
   //Send first synch packet
   rep.which                        = SERVERID;
@@ -905,11 +904,11 @@ do_synch( int which, Packet packet )
   if ( nbSynch == users  )
     {
       //game2->time.current   = SDL_GetTicks();
-      //game2->time.offset    = (Sint32)SDL_GetTicks();
       printf("######################## TIME %d ( %u )#####################\n", game2->time.offset, SDL_GetTicks());
       printf("wait until %u\n", rep.infos.synch.data.u.s );
       while( SDL_GetTicks() < rep.infos.synch.data.u.s );
       printf("TIME = %u\n", SDL_GetTicks() );
+      game2->time.offset    = SDL_GetTicks();
       sState = gameState;
       rep.which=SERVERID;
       rep.type =SERVERINFO;
