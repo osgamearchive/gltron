@@ -1,4 +1,4 @@
-gltron is written by Andreas Umbach and released under the
+GLtron is written by Andreas Umbach and released under the
 GNU General Public License
 
 'Revenge of Cats' is copyright by Peter Hajba <skaven@remedy.fi>
@@ -18,11 +18,14 @@ tips, educating me etc.
 Thanks to Peter Hajba for the song 'Revenge of Cats'. More stuff on his
 homepage at http://isis.yok.utu.fi/~skaven/music.html
 
+Thanks to Jon Atkins & Todd Kirby & Nicolas Deniaud for the additional
+programming.
+
 Thanks to Charles Babbage for the great lightcycle models and
 the menu background & font.
 
-Thanks to Nicolas Zimmermann for the wall & floor textures and the menu
-logo & font editing.
+Thanks to Nicolas Zimmermann & Allen Bond for the wall & floor textures
+and the menu logo & font editing.
 
 Thanks to Ray Kelm for his excellent cross-compiler page and saving
 me from countless hours of struggling with VC++.
