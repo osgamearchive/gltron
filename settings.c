@@ -15,6 +15,7 @@ void settings_artpack(char *buf, FILE *f) {
     char pack[256];
     char **artpack;
     int i = 0;
+    fprintf(stderr, "reading artpack setting\n");
     sscanf(buf, "vset artpack %s ", pack);
     for(artpack = artpack_list; *artpack != NULL; artpack++) {
       if(strstr(pack, *artpack) == pack) {
@@ -31,17 +32,24 @@ void settings_artpack(char *buf, FILE *f) {
 void settings_cam_settings(char *buf, FILE *f) {
   int i;
   if(f != NULL) {
-    fprintf(f, "vset cam ");
+    fprintf(f, "vset cam_settings ");
     for(i = 0; i < 4; i++)
       fprintf(f, "%s %.3f %.3f %.3f ", cam_names[i], 
 	      cam_defaults[i][0], cam_defaults[i][1], cam_defaults[i][2]);
     fprintf(f, "\n");
   } else {
     char pattern[256];
+    fprintf(stderr, "reading camera setting\n");
     for(i = 0; i < 4; i++) {
-      sprintf(pattern, "%s %%.3f %%.3f %%.3f ", cam_names[i]);
-      sscanf(buf, pattern, 
-	     cam_defaults[i], cam_defaults[i] + 1, cam_defaults[i] + 2);
+      char *camera;
+      camera = strstr(buf, cam_names[i]); 
+      if(camera  != NULL) {
+	sprintf(pattern, "%s %%f %%f %%f ", cam_names[i]);
+	sscanf(camera, pattern, cam_defaults[i], 
+	       cam_defaults[i] + 1, cam_defaults[i] + 2);
+      } else {
+	fprintf(stderr, "can't find camera %s in %s", cam_names[i], buf);
+      }
     }
   }
 }
@@ -280,25 +288,7 @@ void loadIniFile(char *fname) {
   fclose(f);
 }
 
-void initMainGameSettings(char *filename) {
-  char *fname;
-  char *home;
-
-  game2 = &main_game2;
-  game = &main_game;
-  game->settings = (Settings*) malloc(sizeof(Settings));
-  initSettingData(filename);
-
-  /* initialize some struct members */
-
-  game2->input.mouse1 = 0;
-  game2->input.mouse2 = 0;
-  game2->input.mousex = 0;
-  game2->input.mousey = 0;
-  game2->network.status = 0;
-
-  /* initialize defaults, then load modifications from file */
-
+void initDefaultSettings() {
   game->pauseflag = 0;
 
   game->settings->show_help = 0;
@@ -366,6 +356,34 @@ void initMainGameSettings(char *filename) {
   game->settings->content[2] = 2;
   game->settings->content[3] = 3;
 
+  game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
+
+  /* choose speed */
+  default_speeds[4] = game->settings->current_speed;
+  game->settings->current_speed = default_speeds[ game->settings->game_speed ];
+
+}
+
+void initMainGameSettings(char *filename) {
+  char *fname;
+  char *home;
+
+  game2 = &main_game2;
+  game = &main_game;
+  game->settings = (Settings*) malloc(sizeof(Settings));
+  initSettingData(filename);
+
+  /* initialize some struct members */
+
+  game2->input.mouse1 = 0;
+  game2->input.mouse2 = 0;
+  game2->input.mousex = 0;
+  game2->input.mousey = 0;
+  game2->network.status = 0;
+
+  /* initialize defaults, then load modifications from file */
+  initDefaultSettings();
+
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
 
   home = getenv("HOME"); /* find homedir */
@@ -379,8 +397,6 @@ void initMainGameSettings(char *filename) {
 
   loadIniFile(fname);
   free(fname);
-
-  game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
 
   /* sanity check: speed, grid_size */
   if(game->settings->current_speed <= 0) {
@@ -397,12 +413,6 @@ void initMainGameSettings(char *filename) {
     fprintf(stderr, "[gltron] reset grid_size: grid_size = %d\n",
 	    game->settings->grid_size);
   }
-
-  /* choose speed */
-  default_speeds[4] = game->settings->current_speed;
-  game->settings->current_speed = default_speeds[ game->settings->game_speed ];
-  printf("[gltron] speed set to %.2f (level %d)\n",
-	 game->settings->current_speed, game->settings->game_speed);
 
 }
 
