@@ -18,7 +18,7 @@ extern "C" {
 #include "Nebu_base.h"
 #include "Nebu_filesystem.h"
 
-typedef struct {
+typedef struct gltron_Mesh_Material {
   float ambient[4];
   float diffuse[4];
   float specular[4];
@@ -27,13 +27,13 @@ typedef struct {
   char *map_diffuse;
 } gltron_Mesh_Material;
 
-typedef struct {
+typedef struct gltron_Mesh_BoundingBox {
   vec3 vMin;
   vec3 vSize;
   float fRadius;
 } gltron_Mesh_BoundingBox;
 
-typedef struct {
+typedef struct gltron_Mesh {
   GLfloat *pVertices;
   GLfloat *pNormals;
   GLshort **ppIndices;
@@ -43,7 +43,7 @@ typedef struct {
   gltron_Mesh_BoundingBox BBox;
 } gltron_Mesh;
 
-typedef enum {
+typedef enum gltron_MeshType {
   TRI_MESH,
   QUAD_MESH
 } gltron_MeshType;
@@ -52,7 +52,7 @@ extern gltron_Mesh* gltron_Mesh_LoadFromFile(const char* filename, gltron_MeshTy
 extern void gltron_Mesh_Draw(gltron_Mesh* pMesh, gltron_MeshType type);
 extern void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius);
 
-typedef enum {
+typedef enum ColorType {
   eAmbient = 0,
   eDiffuse,
   eSpecular

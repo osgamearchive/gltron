@@ -3,12 +3,12 @@
 
 #include "base/nebu_vector.h"
 
-typedef struct {
+typedef struct game_spawnpoint {
 	vec2 v;
 	int dir;
 } game_spawnpoint;
 
-typedef struct {
+typedef struct game_level {
 	int scalable;
 	int nBoundaries;
 	segment2 *boundaries;

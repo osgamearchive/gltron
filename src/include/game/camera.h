@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-typedef struct {
+typedef struct CameraType {
 	int interpolated_cam;
 	int interpolated_target;
 	int coupled;
@@ -9,23 +9,24 @@ typedef struct {
 	int type;
 } CameraType;
 
-typedef struct {
-  float cam[3];
-  float target[3];
-  float movement[4]; /* indices CAM_R, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET */
-  CameraType type;
+typedef struct Camera {
+	float cam[3];
+	float target[3];
+	float movement[4]; /* indices CAM_R, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET */
+	CameraType type;
 } Camera;
 
-enum { 
-  CAM_FREE_R = 0,
-  CAM_FREE_PHI,
-  CAM_FREE_CHI 
-};
+typedef enum eCamFreedom { 
+	CAM_FREE_R = 0,
+	CAM_FREE_PHI,
+	CAM_FREE_CHI 
+} eCamFreedom;
 
-enum { CAM_CIRCLE = 0,
-       CAM_FOLLOW,
-       CAM_COCKPIT,
-       CAM_FREE
+typedef enum eCamType { 
+	CAM_CIRCLE = 0,
+	CAM_FOLLOW,
+	CAM_COCKPIT,
+	CAM_FREE
 };
 
 enum { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET };

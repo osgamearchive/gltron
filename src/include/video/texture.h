@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-typedef struct {
+typedef struct TextureInfo {
   int count;
   char name[48];
   int type;

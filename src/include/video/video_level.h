@@ -4,12 +4,12 @@
 #include "base/nebu_vector.h"
 #include "video/nebu_mesh.h"
 
-typedef struct {
+typedef struct video_level_shader {
 	int lit;
 	int diffuse_texture_id;
 } video_level_shader;
 
-typedef struct {
+typedef struct video_level {
 	int scalable;
 
 	nebu_Mesh *floor;

@@ -4,7 +4,7 @@
 #include "video.h"
 #include "game/game.h"
 
-typedef struct {
+typedef struct TrailMesh {
 	vec3* pVertices; // each vertex consists of three floats
 	vec3* pNormals; // each normal consists of three float
 	vec2* pTexCoords; // each texcoord consists of three float

@@ -11,7 +11,7 @@
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
-enum {
+typedef enum eGameType {
   GAME_SINGLE = 1
 #ifdef RECORD
   ,
@@ -20,7 +20,7 @@ enum {
   GAME_PLAY_NETWORK = 8,
   GAME_NETWORK_RECORD
 #endif
-};
+} eGameType;
 
 /* 
    this struct contains all the necessary parameters to define a game round

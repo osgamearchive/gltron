@@ -5,7 +5,7 @@ extern float menu_fgColor[4];
 extern float menu_hlColor1[4];
 extern float menu_hlColor2[4];
 
-typedef struct {
+typedef struct mDisplay {
   float fgColor[4]; /* entries */
   float hlColor1[4]; /* the highlighted one */
   float hlColor2[4];
@@ -23,7 +23,7 @@ typedef struct Menu {
   void* param; /* reserved to bind parameters at runtime */
 } Menu;
 
-typedef struct {
+typedef struct node {
   void* data;
   void* next;
 } node;

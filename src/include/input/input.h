@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-typedef struct {
+typedef struct Input {
   int mouse1;
   int mouse2;
   int mousex;
