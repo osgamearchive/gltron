@@ -75,7 +75,7 @@ void goto_installpath(char *argv0)
             strcat(temppath, argv0);
 
             /* See if it exists, and update path */
-            if ( itemExists(temppath) ) {
+            if (access(temppath, X_OK) == 0) {
                 ++found;
             }
             path = last+1;
