@@ -1,8 +1,8 @@
 #include "server_gltron.h"
 
-static Uint32 ping = 0;
+static Uint32 ping      = 0;
 static Uint32 savedtime = 0; 
-
+static Uint32 timeout   = 0;
 
 static int  getping();
 static void makeping();
@@ -98,7 +98,7 @@ do_lostplayer(int which )
 
 	  //init NetRules
 	  netrulenbwins = 5;
-	  netruletime   = -1;
+	  netruletime   = 0;
     
 	  //Change game mode... nothing to do with game things...
 	  game2->mode = GAME_NETWORK_RECORD;
@@ -481,6 +481,9 @@ do_startconfirm(int which, Packet packet)
   game2->time.offset    = SystemGetElapsedTime();
 
   if( ! hasstarted )
+    timeout             = SystemGetElapsedTime();
+
+  if( ! hasstarted )
     hasstarted = 1;
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
@@ -515,6 +518,32 @@ do_chgenbwins(int which, Packet packet)
 	Net_sendpacket(&rep, slots[i].sock);
 }
 
+
+void
+do_chgetimeout(int which, Packet packet)
+{
+  Packet rep;
+  int    i;
+
+  if( ! slots[which].isMaster )
+    return;
+
+  if( sState != preGameState )
+    return;
+
+  netruletime = packet.infos.action.which;
+
+  //Send new NetRules to users...
+  rep.which = SERVERID;
+  rep.type  = NETRULES;
+  rep.infos.netrules.nbWins = netrulenbwins;
+  rep.infos.netrules.time   = netruletime;
+  printf("Net rules : %d %d\n", netrulenbwins,  netruletime);
+  for(i=0; i<MAX_PLAYERS; ++i)
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);
+}
+
 void
 do_action( int which, Packet packet )
 {
@@ -537,6 +566,9 @@ do_action( int which, Packet packet )
       break;
     case CHGENBWINS:
       do_chgenbwins(which, packet);
+      break;
+    case CHGETIMEOUT:
+      do_chgetimeout(which, packet);
       break;
     default:
       fprintf(stderr, "Received an action packet with a type %d that not be allowed or unknown\n", packet.infos.action.type);
@@ -806,6 +838,80 @@ getWhich(int player)
 }
 
 void
+do_timeout( )
+{
+  Packet rep;
+  int    winner, max, i;
+
+  if( SystemGetElapsedTime() - timeout > 1000 * 60 * netruletime )
+    {
+      //Time is Up! means end game 
+
+      //Search for winner
+      max=0;
+      for(i=0;i<MAX_PLAYERS;++i)
+	{
+	  if( netscores.points[i] > max )
+	    {
+	      max = netscores.points[i];
+	      winner = i;
+	    }
+	}
+
+     
+      netscores.winner=winner;
+      printf("winner is %d\n", winner);
+
+      //Sending scores to every one.
+      rep.which = SERVERID;
+      rep.type  = SCORE;
+      rep.infos.score.winner=netscores.winner;
+      //memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
+      for(i=0;i<MAX_PLAYERS;++i)
+	{
+	  rep.infos.score.points[i] = ( slots[i].active==1 ) ? netscores.points[i]:0;
+	  if( slots[i].active==1 )
+	    printf("%s (slot %d) has %hd points\n", slots[i].name, i, rep.infos.score.points[i]);
+	}
+
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  if( slots[i].active )
+	    {
+	      Net_sendpacket(&rep, slots[i].sock);
+	    }
+	}
+      
+      //Init netscores for next games
+      netscores.winner=-1;
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  netscores.points[i]=0;
+	}
+      hasstarted=0;
+      
+
+      game->pauseflag = PAUSE_GAME_FINISHED;
+      //start a new game...
+      
+      game2->mode = GAME_NETWORK_RECORD;
+      //go to pregame state...
+      sState = preGameState;
+      
+      rep.which=SERVERID;
+      rep.type=SERVERINFO;
+      rep.infos.serverinfo.serverstate=preGameState;
+      for(i=0; i<4; ++i)
+	{
+	  if( slots[i].active )
+	    {
+	      Net_sendpacket(&rep, slots[i].sock);
+	    }
+	}
+    }
+}
+
+void
 do_wingame( int winner)
 {
   Packet rep;
@@ -843,7 +949,7 @@ do_wingame( int winner)
 	{
 	  rep.infos.score.points[i] = ( slots[i].active==1 ) ? netscores.points[i]:0;
 	  if( slots[i].active==1 )
-	    printf("%s (slot %d) has %hd points\n", i, slots[i].name, rep.infos.score.points[i]);
+	    printf("%s (slot %d) has %hd points\n", slots[i].name, i, rep.infos.score.points[i]);
 	}
 
 

@@ -41,6 +41,7 @@ enum {
   JOIN,                     //Someone join
   CHGEGAMEMASTER,           //One server say that game master has changed
   CHGENBWINS,               //GameMaster ask to change nbWins setting
+  CHGETIMEOUT,              //change time out, 0 is no timeout.
   HASSTARTED                //Game already started!
 };
 

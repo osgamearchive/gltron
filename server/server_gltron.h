@@ -134,6 +134,7 @@ extern void stop_server();
 extern void handle_server();
 extern void SendEvents(GameEvent *e);
 extern void do_wingame(int);
+extern void do_timeout( void );
 
 
 extern int getPlayer          ( int );

@@ -548,9 +548,11 @@ int    me;
 netEventList neteventlist;
 
 int    packet_type;
-
+int    timeout;
+int    hasstarted;
 
 extern Netscores         netscores;
+
 
 extern void  handleServer      ( void );
 extern void  login             ( char* );

@@ -81,6 +81,7 @@ void displayScores() {
 void initScores() {
   coffset = SDL_GetTicks();
   printf("entering game scores, winner is %d\n", netscores.winner);
+  hasstarted=0;
 }
 
 void cleanScores()

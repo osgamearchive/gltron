@@ -68,6 +68,9 @@ netEventList neteventlist = NULL;
 
 int    packet_type = HEADER;
 Netscores         netscores;
+
+int    timeout=0;
+int    hasstarted=0;
 #endif
 
 /* settings stuff */

@@ -8,7 +8,7 @@ static int nbsocks = 1;
 static int nbsocks = MAX_PLAYERS+1;
 #endif
 int netrulenbwins = 5;
-int netruletime  = -1;
+int netruletime   = 0;
 
 static SDLNet_SocketSet       socketset = NULL;
 static TCPsocket              tcpsock   = NULL;

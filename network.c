@@ -102,6 +102,11 @@ do_serverinfo(Packet packet)
 	  //game->players = game2->players;
 	  applyGameInfo();
 	  printf("time is %d\n", game2->time.current);
+	  if( ! hasstarted )
+	    {
+	      hasstarted = 1;
+	      timeout = SystemGetElapsedTime();
+	    }
 	  game2->mode = GAME_NETWORK_PLAY;
 	  if( slots[me].isMaster == 1 )
 	    {
@@ -115,6 +120,7 @@ do_serverinfo(Packet packet)
 	      Net_sendpacket(&rep, Net_getmainsock());
 	    } // I used that for synchronization.
 	  ping = 0;
+	  savedtime = 0;
 	  
 	  switchCallbacks(&pauseCallbacks);
 	  break;

@@ -339,6 +339,11 @@ void drawFPS(gDisplay *d) {
       sprintf(tmp, "ping: %d", getping());
       drawText(gameFtx, d->vp_w - 180, d->vp_h - 65, 10, tmp);    
     }
+  if( game2->mode == GAME_NETWORK_PLAY && netruletime > 0)
+    {
+      sprintf(tmp, "time: %d", (netruletime*60*1000-(SystemGetElapsedTime() - timeout))/1000);
+      drawText(gameFtx, d->vp_w - 180, d->vp_h - 80, 10, tmp);    
+    }  
 #endif
 }
 

@@ -84,6 +84,29 @@ handlecommand(char *command, char *params)
 	    }
 	}
       break;
+    case 't': //Change Netsettings nbWins
+      if( serverstate == preGameState && isConnected  )
+	{
+	  
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGETIMEOUT;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      if( packet.infos.action.which < 60 && packet.infos.action.which > 0 )
+		{
+		  Net_sendpacket(&packet, Net_getmainsock());
+		} else {
+	      fprintf(stderr,"\nValue is out of bound..\n");		  
+		}	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
     }
 }
 
