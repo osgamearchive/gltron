@@ -82,7 +82,7 @@ void keyGame(int k, int x, int y)
     }
 
     sprintf(messages, "key '%s' is not bound", SystemGetKeyName(k));
-    consoleAddLine(messages);
+    // consoleAddLine(messages);
     fprintf(stderr, "%s\n", messages);
   }
 }
@@ -105,26 +105,32 @@ void parse_args(int argc, char *argv[]) {
 	case 'v': game->settings->screenSaver = 1; break;
 	case 'i': game->settings->windowMode = 1; break;
 	case 'O': game->settings->softwareRendering = 1; break;
-	case '1': /* default is -2 */
+	case '1': /* default is 4 */
 	  game->settings->width = 320;
 	  game->settings->height = 240;
 	  break;
 	case '2': 
+	  game->settings->width = 400;
+	  game->settings->height = 300;
+	  break;
+	case '3': 
+	  game->settings->width = 512;
+	  game->settings->height = 384;
+	  break;
+	case '4': 
 	  game->settings->width = 640;
 	  game->settings->height = 480;
 	  break;
-	case '3': 
+	case '5': 
 	  game->settings->width = 800;
 	  game->settings->height = 600;
 	  break;
-	case '4': 
+	case '6':
 	  game->settings->width = 1024;
 	  game->settings->height = 768;
-	  break;
-	case '5': 
+	case '7': 
 	  game->settings->width = 1280;
 	  game->settings->height = 1024;
-	  break;
 	case 's':
 	  game->settings->playMusic = 0;
 	  game->settings->playEffects = 0;
@@ -143,15 +149,18 @@ void parse_args(int argc, char *argv[]) {
 	  printf("-c\tdon't show ai status\n");
 	  printf("-C\tshow ai status (default: on)\n");
 	  printf("-1\tSet resolution to 320x240\n");
-	  printf("-2\tSet resolution to 640x480 (default)\n");
-	  printf("-3\tSet resolution to 800x600\n");
-	  printf("-4\tSet resolution to 1024x768\n");
-	  printf("-5\tSet resolution to 1280x1024\n");
+	  printf("-2\tSet resolution to 400x300\n");
+	  printf("-3\tSet resolution to 512x384\n");
+	  printf("-4\tSet resolution to 640x480 (default)\n");
+	  printf("-5\tSet resolution to 800x600\n");
+	  printf("-6\tSet resolution to 1024x768\n");
+	  printf("-7\tSet resolution to 1280x1024\n");
+
 	  printf("-s\tDon't play sound\n");
 	  /* printf("-v\tStart in demo/screensaver mode\n"); */
 	  printf("-i\tforce startup in a window\n");
-	  printf("-O\toptimize for software rendering (SLOWER on "
-		 "3D cards!)\n");
+	  printf("-O\tenable software rendering optimization (only if "
+		 "you don't have a 3d card!)\n");
 	  printf("-h\tthis help\n");
 	  exit(1);
 	}

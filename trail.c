@@ -123,7 +123,8 @@ void drawTrailLines(Player *p) {
     dist = getDist(line, cam->cam);
     alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
     /* printf("dist: %.2f, alpha: %.2f\n", dist, alpha); */
-    glColor4f(1.0, 1.0, 1.0, alpha);
+    // glColor4f(1.0, 1.0, 1.0, alpha);
+    glColor4f(0.0, 0.0, 0.0, alpha);
     
     if(line->sy == line->ey) normal = normal1;
     else normal = normal2;
@@ -142,8 +143,9 @@ void drawTrailLines(Player *p) {
   dist = getDist(line, cam->cam);
   alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
   /* printf("dist: %.2f, alpha: %.2f\n", dist, alpha); */
-  glColor4f(1.0, 1.0, 1.0, alpha);
-  
+  // glColor4f(1.0, 1.0, 1.0, alpha);
+  glColor4f(0.0, 0.0, 0.0, alpha);
+
   glBegin(GL_LINES);
 
   glVertex3f(line->sx, line->sy, height);
@@ -181,40 +183,41 @@ void drawTrailShadow(Player* p) {
 
   height = data->trail_height;
   if(game->settings->softwareRendering == 0) {
-    line = &(data->trails[0]);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4fv(shadow_color);
+  }
 
-    glBegin(GL_QUADS);
+  glColor4fv(shadow_color);
 
-    line = &(data->trails[0]);
-    while(line != data->trail) { /* the current line is not drawn */
-      glNormal3f(0.0, 0.0, 1.0);
-      glVertex3f(line->sx, line->sy, 0);
-      glVertex3f(line->sx, line->sy, height);
-      glVertex3f(line->ex, line->ey, height);
-      glVertex3f(line->ex, line->ey, 0);
-      line++;
-      polycount++;
-    }
+  glBegin(GL_QUADS);
+
+  line = &(data->trails[0]);
+  while(line != data->trail) { /* the current line is not drawn */
+    glNormal3f(0.0, 0.0, 1.0);
     glVertex3f(line->sx, line->sy, 0);
     glVertex3f(line->sx, line->sy, height);
-    ex = getSegmentEndX(line, data, 1);
-    ey = getSegmentEndY(line, data, 1);
-    glVertex3f(ex, ey, height);
-    glVertex3f(ex, ey, 0.0);
-    glVertex3f(ex, ey, 0.0);
-    glVertex3f(ex, ey, height);
-    ex = getSegmentEndX(line, data, 0);
-    ey = getSegmentEndY(line, data, 0);
-    glVertex3f(ex, ey, height);
-    glVertex3f(ex, ey, 0.0);
-
-    glEnd();
-    /* trail bow */
-    drawTrailBow(p, 0);
+    glVertex3f(line->ex, line->ey, height);
+    glVertex3f(line->ex, line->ey, 0);
+    line++;
+    polycount++;
   }
+  glVertex3f(line->sx, line->sy, 0);
+  glVertex3f(line->sx, line->sy, height);
+  ex = getSegmentEndX(line, data, 1);
+  ey = getSegmentEndY(line, data, 1);
+  glVertex3f(ex, ey, height);
+  glVertex3f(ex, ey, 0.0);
+  glVertex3f(ex, ey, 0.0);
+  glVertex3f(ex, ey, height);
+  ex = getSegmentEndX(line, data, 0);
+  ey = getSegmentEndY(line, data, 0);
+  glVertex3f(ex, ey, height);
+  glVertex3f(ex, ey, 0.0);
+
+  glEnd();
+  /* trail bow */
+  drawTrailBow(p, 0);
+
   glPopMatrix();
 }
 
@@ -244,11 +247,11 @@ void drawTraces(Player *p, gDisplay *d) {
 
   /* calculate trail color and set blending modes */
   if(game->settings->alpha_trails) {
-    glColor4fv(p->model->color_alpha);
+    glColor4fv(p->pColorAlpha);
     glDepthMask(GL_FALSE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    setColor4fv(p->model->color_alpha);
+    setColor4fv(p->pColorAlpha);
   } else {
     if(game->settings->softwareRendering == 0) {
       glDisable(GL_BLEND);
@@ -256,7 +259,7 @@ void drawTraces(Player *p, gDisplay *d) {
       glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
       glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_DECAL]);
     }
-    setColor3fv(p->model->color_alpha);
+    setColor3fv(p->pColorAlpha);
   }
 
   glShadeModel(GL_SMOOTH);
@@ -392,12 +395,12 @@ void drawTrailBow(Player *p, int flag) {
 
   glTexCoord2f(1.0, 0.0);
   if(flag)
-    glColor3fv(p->model->color_model);
+    glColor3fv(p->pColorDiffuse);
   glVertex3f(ex, ey, 0.0);
 
   glTexCoord2f(1.0, 1.0);
   if(flag)
-    glColor3fv(p->model->color_model);
+    glColor3fv(p->pColorDiffuse);
   glVertex3f(ex, ey, height);
 
   /* glTexCoord2f(TEX_SPLIT, 1.0); */

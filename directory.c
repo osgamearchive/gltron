@@ -18,7 +18,7 @@ struct list {
 #define SEPERATOR ':'
 
 #else
-	#include "gltron.h"
+#include "gltron.h"
 #endif
 
 

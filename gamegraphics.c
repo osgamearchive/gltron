@@ -20,7 +20,7 @@ void drawGame() {
 
   glEnable(GL_DEPTH_TEST);
 
-  glClearColor(.0, .0, .0, .0);
+  glClearColor(28.0f / 255.0f, 26.0 / 255.0f, 100.0 / 255.0f, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   for(i = 0; i < vp_max[ game->settings->display_type]; i++) {
@@ -76,24 +76,26 @@ void rasonly(gDisplay *d) {
 }
 
 void drawText(fonttex* ftx, int x, int y, int size, char *text) {
-  if(game->settings->softwareRendering) {
-    drawSoftwareText(ftx, x, y, size, text);
-  } else {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
 
-    glPushMatrix();
+  // if(game->settings->softwareRendering) {
+  //   drawSoftwareText(ftx, x, y, size, text);
+  // } else {
 
-    glTranslatef(x, y, 0);
-    glScalef(size, size, size);
-    ftxRenderString(ftx, text, strlen(text));
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_TEXTURE_2D);
+
+  glPushMatrix();
+
+  glTranslatef(x, y, 0);
+  glScalef(size, size, size);
+  ftxRenderString(ftx, text, strlen(text));
   
-    glPopMatrix();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
-    polycount += 2 * strlen(text); /* quads are two triangles */
-  }
+  glPopMatrix();
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_BLEND);
+  polycount += 2 * strlen(text); /* quads are two triangles */
+  // }
 }
 
 void initModelLights(int light) {
@@ -172,7 +174,7 @@ void drawDebugLines(gDisplay *d) {
     data = p->data;
     if(data->speed > 0) {
       glBegin(GL_LINES);
-      glColor3fv(p->model->color_alpha);
+      glColor3fv(p->pColorAlpha);
       line = &(data->trails[0]);
       while(line != data->trail) {
 
@@ -343,9 +345,23 @@ void drawScore(Player *p, gDisplay *d) {
   glColor4f(1.0, 1.0, 0.2, 1.0);
   drawText(gameFtx, 5, 5, 32, tmp);
 }
-  
-void drawFloor(gDisplay *d) {
-  int j, k, l, t;
+
+// distance from point v to line p + t * d
+ 
+float GetDistance(float *v, float *p, float *d) {
+  float diff[3];
+  float tmp[3];
+  float t;
+  vsub(v, p, diff);
+  t = scalarprod(d, diff) / scalarprod(d, d);
+  vcopy(d, tmp);
+  vmul(tmp, t);
+  vsub(diff, tmp, tmp);
+  return sqrt( scalarprod(tmp, tmp) );
+}
+
+void drawFloor(gDisplay *d, Camera *cam) {
+  int i, j, k, l, t;
 
   if(game->settings->show_floor_texture) {
     glEnable(GL_BLEND);
@@ -375,18 +391,46 @@ void drawFloor(gDisplay *d) {
       }
     glDisable(GL_TEXTURE_2D);
   } else {
-    /* lines as floor... */
-    glColor3f(0.0, 0.0, 1.0);
+    float fogcolor[] = { 28 / 255.0f, 26 / 255.0f, 100 / 255.0f, .0 };
+
+    glColor3f(1.0, 1.0, 1.0);
+
+    glFogfv(GL_FOG_COLOR, fogcolor);
+    glFogi(GL_FOG_MODE, GL_LINEAR);
+    glFogi(GL_FOG_START, 100);
+    glFogi(GL_FOG_END, 350);
+    
+    glEnable(GL_FOG);
+   
+    glBegin(GL_LINES);
+    for(i = 0; i < game->settings->grid_size; i += game->settings->line_spacing) {
+      for(j = 0; j < game->settings->grid_size; j += game->settings->line_spacing) {
+	glVertex3i(i, j, 0);
+	glVertex3i(i + game->settings->line_spacing, j, 0);
+	glVertex3i(i, j, 0);
+	glVertex3i(i, j + game->settings->line_spacing, 0);
+      }
+    }
+    glEnd();
+
+    glDisable(GL_FOG);
+
+    /*
     glBegin(GL_LINES);
     for(j = 0; j <= game->settings->grid_size;
 	j += game->settings->line_spacing) {
-      glVertex3i(0, j, 0);
-      glVertex3i(game->settings->grid_size, j, 0);
-      glVertex3i(j, 0, 0);
-      glVertex3i(j, game->settings->grid_size, 0);
-      polycount += 2;
+	glVertex3i(0, j, 0);
+	glVertex3i(game->settings->grid_size, j, 0);
+	polycount++;
+
+	glVertex3i(j, 0, 0);
+	glVertex3i(j, game->settings->grid_size, 0);
+	polycount++;
+
     }
     glEnd();
+    */
+
   }
 }
 
@@ -471,8 +515,7 @@ void drawCycleShadow(Player *p, int lod) {
   lod += game->settings->shadow_lod;
   if(lod > max_lod) lod = max_lod;
 
-  cycle = p->model->mesh[lod];
-
+  cycle = lightcycle[lod];
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
@@ -483,7 +526,7 @@ void drawCycleShadow(Player *p, int lod) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
 
-  glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1] / 2, .0);
+  // glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1] / 2, .0);
 
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
@@ -494,16 +537,22 @@ void drawCycleShadow(Player *p, int lod) {
   // glColor4fv(shadow_color);
   glColor3f(0, 0, 0);
 
+  /* lightcycle local transformation */
+  glScalef(10, 10, 10);
+  glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
+  glRotatef(90, 0, 0, 1);
+
   glDisable(GL_CULL_FACE);
   if(p->data->exp_radius == 0)
-    drawModel(cycle, MODEL_FLAT, MODEL_SOLID);
+    drawModel(cycle);
   glPolygonOffset(0, 0);
   glPopMatrix();
 }
 
 void drawCycle(Player *p, int lod) {
   Mesh *cycle;
-  cycle = p->model->mesh[lod];
+
+  cycle = lightcycle[lod];
     
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
@@ -524,14 +573,17 @@ void drawCycle(Player *p, int lod) {
   if(game->settings->turn_cycle) 
     doCycleTurnRotation(p);
 
-  glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1] / 2, .0);
+  // glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1] / 2, .0);
   /* glTranslatef(-cycle->bbox[0] / 2, 0, .0); */
   /* glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1], .0); */
 
   initModelLights(GL_LIGHT1);
   glDisable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
-  glDisable(GL_COLOR_MATERIAL);
+
+  SetMaterialColor(cycle, "Hull", eDiffuse, p->pColorDiffuse); 
+  SetMaterialColor(cycle, "Hull", eSpecular, p->pColorSpecular); 
+
   if(game->settings->light_cycles)
     glEnable(GL_LIGHTING);
 
@@ -540,18 +592,30 @@ void drawCycle(Player *p, int lod) {
 
   if(p->data->exp_radius == 0) {
     glEnable(GL_CULL_FACE);
-    drawModel(cycle, MODEL_USE_MATERIAL, MODEL_SOLID);
+    glEnable(GL_NORMALIZE);
+
+    glScalef(10, 10, 10);
+    glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
+    glRotatef(90, 0, 0, 1);
+
+    drawModel(cycle);
     glDisable(GL_CULL_FACE);
   }
   else if(p->data->exp_radius < EXP_RADIUS_MAX) {
     float alpha;
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
-	(float) EXP_RADIUS_MAX;
-      setMaterialAlphas(cycle, alpha);
-    drawExplosion(cycle, p->data->exp_radius, MODEL_USE_MATERIAL, MODEL_SOLID);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
+      (float) EXP_RADIUS_MAX;
+    // setMaterialAlphas(cycle, alpha);
+
+    glScalef(10, 10, 10);
+    glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
+    glRotatef(90, 0, 0, 1);
+
+    drawModelExplosion(cycle, p->data->exp_radius / 10);
   }
+  glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
   glPopMatrix();
 }
@@ -587,7 +651,7 @@ int playerVisible(Player *eye, Player *target) {
     /* calculate lod */
     vsub(eye->camera->cam, tmp, v1);
     d = length(v1);
-    for(i = 0; i < target->model->lod; i++) {
+    for(i = 0; i < LC_LOD; i++) {
       if(d < lod_dist[lod][i])
 	return i;
     }
@@ -616,8 +680,8 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   
   glPushMatrix();
   glTranslatef(p->data->posx,
-               p->data->posy,
-               0);
+	       p->data->posy,
+	       0);
 
   glShadeModel(GL_SMOOTH);
 
@@ -634,7 +698,7 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   mat[8] = mat[9] = 0.0;
   glLoadMatrixf(mat);
   glBegin(GL_TRIANGLE_FAN);
-  glColor3fv(p->model->color_model);
+  glColor3fv(p->pColorDiffuse);
 
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
@@ -655,14 +719,14 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 
 
   glBegin(GL_TRIANGLES);
-  glColor3fv(p->model->color_model);
+  glColor3fv(p->pColorDiffuse);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
   glVertex3f(0,-TRAIL_HEIGHT/4,0);
   glVertex3f(dim*cos(-0.2*3.1415/5.0),
 	     TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0);
 
-  glColor3fv(p->model->color_model);
+  glColor3fv(p->pColorDiffuse);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
   glVertex3f(dim*cos(5.2*3.1415/5.0),
@@ -695,8 +759,10 @@ void drawWalls(gDisplay *d) {
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
 
+  /*
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  */
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
 #define T_TOP 1.0
@@ -786,28 +852,32 @@ void drawCam(Player *p, gDisplay *d) {
   glLoadIdentity();
   doPerspective(game->settings->fov, d->vp_w / d->vp_h,
 		game->settings->znear, game->settings->grid_size * 6.5);
-
   glMatrixMode(GL_MODELVIEW);
-
   glLoadIdentity();
   /* set positions for GL lights in world coordinates */
   glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
 
   doLookAt(p->camera->cam, p->camera->target, up);
-
   glDisable(GL_LIGHTING);
+  glDisable(GL_BLEND);
 
+  glDepthMask(GL_FALSE);
+  glDisable(GL_DEPTH_TEST);
+
+  // skybox, walls, floor
   if(game->settings->show_skybox)
     skybox();
 
-  glDepthMask(GL_FALSE);
+  if(game->settings->show_wall == 1)
+    drawWalls(d);
 
-  drawFloor(d);
+  // glDepthMask(GL_TRUE);
+  drawFloor(d, p->camera);
+  // glDepthMask(GL_FALSE);
 
-  glDepthMask(GL_TRUE);
+  // shadows on the floor: cycle, recognizer, trails
   for(i = 0; i < game->players; i++) {
     int lod;
-
     if(game->settings->show_model) {
       lod = playerVisible(p, game->player + i);
       if(lod >= 0) 
@@ -824,31 +894,33 @@ void drawCam(Player *p, gDisplay *d) {
     drawTrailShadow(game->player + i);
   }
 
-  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-  drawFloor(d);
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  // z-buffer hack to do away with explosions
+  // use clip-plane instead (no fill rate penalty)
 
-  glDepthMask(GL_FALSE);
-  if(game->settings->show_wall == 1)
-    drawWalls(d);
+  // glDepthMask(GL_TRUE);
+  // glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+  // drawFloor(d);
+  // glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+  // glDepthMask(GL_FALSE);
+
   glDepthMask(GL_TRUE);
-
+  glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
   drawPlayers(p);
-  // drawRecognizers(1);
-  glShadeModel( game->screen->shademodel );
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  // glDepthMask(GL_FALSE);
+  glShadeModel(game->screen->shademodel);
+
   initTrailLights(0);
 
-    /*
-      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-      glEnable(GL_COLOR_MATERIAL);
-    */
+
+  glShadeModel(GL_SMOOTH);
+
+  glDisable(GL_LIGHTING); // just to be safe
+  glDisable(GL_BLEND);
 
   doTrails(p);
+  glShadeModel(game->screen->shademodel);
+
   // glDepthMask(GL_TRUE);
   for(i = 0; i < game->players; i++) {
     // drawTraces(&(game->player[i]), d);
@@ -857,31 +929,31 @@ void drawCam(Player *p, gDisplay *d) {
   }
 
   /* transparent stuff */
-  /* for(i = 0; i < game->players; i++)
-     drawTrailBow(&(game->player[i])); */
+  /* draw the glow around the other players: */
 
-    /* draw the glow around the other players: */
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   if(game->settings->show_glow == 1)
     for(i = 0; i < game->players; i++)
       if ((p != &(game->player[i])) && (game->player[i].data->speed > 0))
 	drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
 
-  glEnable(GL_DEPTH_TEST);
-  glDepthMask(GL_TRUE);
+  glDisable(GL_BLEND);
 
   if(game->settings->show_recognizer) {
     glClear(GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     doPerspective(game->settings->fov, d->vp_w / d->vp_h,
 		  game->settings->znear * 2, game->settings->grid_size * 6.5);
 
     glMatrixMode(GL_MODELVIEW);
-
     drawRecognizers(1);
   }
-
-
 }
 
 void drawAI(gDisplay *d) {

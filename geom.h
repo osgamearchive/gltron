@@ -3,6 +3,19 @@
 #ifndef GEOM_H
 #define GEOM_H
 
+typedef struct {
+  float v[4];
+} vec4;
+
+typedef struct {
+  float v[3];
+} vec3;
+
+typedef struct {
+  int vertex[3];
+  int normal[3];
+  int material;
+} face;
 
 float length2(float *v);
 float length3(float *v);

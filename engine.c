@@ -46,7 +46,6 @@ void initGameStructures() { /* called only once */
   game->player = (Player *) malloc(MAX_PLAYERS * sizeof(Player));
   for(i = 0; i < game->players; i++) {
     p = (game->player + i);
-    p->model = (Model*) malloc(sizeof(Model));
     p->display = (gDisplay*) malloc(sizeof(gDisplay));
     p->ai = (AI*) malloc(sizeof(AI));
     p->data = (Data*) malloc(sizeof(Data));
@@ -54,8 +53,7 @@ void initGameStructures() { /* called only once */
     p->camera = (Camera*) malloc(sizeof(Camera));
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
-    /* init model & display & ai */
-    initModel(p, i);
+    /* init ai */
 
     ai = p->ai;
     if(game->settings->screenSaver) {
@@ -79,17 +77,27 @@ void initGameStructures() { /* called only once */
   }
 
   /* load recognizer model */
-  path = getFullPath("recognizer.obj");
-  if(path != NULL)
-    // recognizer = loadModel(path, RECOGNIZER_HEIGHT, 0);
-    // recognizer = loadModel(path, 60, MODEL_NORMALIZE | MODEL_INVERT_NORMALS);
-    recognizer = loadModel(path, 60, MODEL_NORMALIZE );
-  else {
-    printf("fatal: could not load recognizer - exiting...\n");
+  path = getFullPath("recognizer.obj.gz");
+  if(path != NULL) {
+    recognizer = readMeshFromFile(path);
+    // old code did normalize & invert normals & rescale to size = 60
+  } else {
+    printf("fatal: could not load recognizer.obj.gz - exiting...\n");
     exit(1);
   }
   free(path);
 
+  /* load lyghtcycle models */
+  for(i = 0; i < LC_LOD; i++) {
+    path = getFullPath(lc_lod_names[i]);
+    if(path != NULL) {
+      lightcycle[i] = readMeshFromFile(path);
+    } else {
+      printf("fataL could not load model %s - exiting...\n", lc_lod_names[i]);
+      exit(1);
+    }
+  }
+  free(path);
 
   changeDisplay();
 
@@ -271,7 +279,9 @@ void crashPlayer(int player) {
   int j;
 
 #ifdef SOUND
-  playCrashSound(0, player);
+  // #warning "TODO: create sound source"
+  Audio_CrashPlayer(player);
+  // playCrashSound(0, player);
 #endif
 
   for(j = 0; j < game->players; j++) 

@@ -20,7 +20,7 @@
 */
 
 /* I modified this file a little, removing unneeded features and making the
-   thing compile */
+   thing compile ( Andreas Umbach <marvin@dataway.ch> ) */
 
 #include <stdlib.h>
 #include <stdio.h>

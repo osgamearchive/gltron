@@ -59,7 +59,7 @@ void reshape(int x, int y) {
 void shutdownDisplay(gDisplay *d) {
   deleteTextures(d);
   deleteFonts();
-  deleteBitmaps(d);
+  // deleteBitmaps(d);
   SystemDestroyWindow(d->win_id);
   printf("window destroyed\n");
 }
@@ -74,7 +74,7 @@ void setupDisplay(gDisplay *d) {
   fprintf(stderr, "loading art\n");
   loadArt();
 
-  initBitmaps(game->screen);
+  // initBitmaps(game->screen);
   SystemReshapeFunc(reshape);
 }
 
@@ -114,6 +114,10 @@ int main( int argc, char *argv[] ) {
 
   parse_args(argc, argv);
 
+  consoleInit();
+  initGameStructures();
+  resetScores();
+
   /* sound */
   path = getMusicPath(MUSIC_DIR);
   game->settings->soundList = 
@@ -149,6 +153,8 @@ int main( int argc, char *argv[] ) {
 
   if(game->settings->playMusic)
     playSound();
+  fprintf(stderr, "setting music volume to %.3f\n",
+	  game->settings->musicVolume);
   setMusicVolume(game->settings->musicVolume);
   free(path);
 #endif
@@ -164,10 +170,6 @@ int main( int argc, char *argv[] ) {
   printf("menu loaded\n");
   free(path);
 
-  consoleInit();
-  initGameStructures();
-  resetScores();
-
   setupDisplay(game->screen);
   switchCallbacks(&guiCallbacks);
   switchCallbacks(&guiCallbacks);
@@ -180,11 +182,4 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion
 };
-
-
-
-
-
-
-
 

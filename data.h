@@ -132,16 +132,6 @@ typedef struct fonttex {
   int bitmapWidth; /* character width */
 } fonttex;
 
-typedef struct Model {
-  Mesh **mesh; /* models (lod) */
-  int lod; /* number of models */
-  // int *lod_dist;
-  
-  float color_alpha[4]; /* alpha trail */
-  float color_trail[4]; /* solid edges of trail */
-  float color_model[4]; /* model color */
-} Model;
-
 typedef struct Data {
   int iposx, iposy;
   float posx, posy;
@@ -216,11 +206,14 @@ typedef struct gDisplay {
 } gDisplay;
 
 typedef struct Player {
-  Model *model;
   Data *data;
-  Camera *camera;
   gDisplay *display;
+  Camera *camera;
   AI *ai;
+
+  float pColorDiffuse[4];
+  float pColorSpecular[4];
+  float pColorAlpha[4];
 } Player;
 
 /* if you want to add something and make it permanent (via

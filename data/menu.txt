@@ -61,17 +61,13 @@ Arena size:  %s
 sti_erase_crashed
 Erase dead players   - %s
 
-5
+4
 xsub
 Play Settings
 
 0
 sti_fast_finish
 Fast Finish          - %s
-
-0
-sti_show_2d
-Show 2D map          - %s
 
 0
 stl_6_3_camType
@@ -275,12 +271,15 @@ sti_show_scores
 Scores            - %s
 
 # Change Resolution sub menu
-7
+8
 xsub
 Screen Options
 0
 xv320x240
 320 x 240
+0
+xv512x384
+512 x 384
 0
 xv640x480
 640 x 480

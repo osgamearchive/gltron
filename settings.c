@@ -70,21 +70,41 @@ void settings_key_actions(char *buf, FILE *f) {
   }
 }
 
-void settings_cycle_colors(char *buf, FILE *f) {
+void settings_cycle_colors_diffuse(char *buf, FILE *f) {
   int i, t;
   float tmp[4];
   if(f != NULL) {
     for(i = 0; i < MAX_PLAYERS; i++)
-      fprintf(f, "vset cycle_colors %d %.3f %.3f %.3f %.3f\n", i,
-	      colors_model[i][0],
-	      colors_model[i][1],
-	      colors_model[i][2],
-	      colors_model[i][3]);
+      fprintf(f, "vset cycle_colors_diffuse %d %.3f %.3f %.3f %.3f\n", i,
+	      colors_model_diffuse[i][0],
+	      colors_model_diffuse[i][1],
+	      colors_model_diffuse[i][2],
+	      colors_model_diffuse[i][3]);
   } else {
-    sscanf(buf, "vset cycle_colors %d %f %f %f %f ", &t,
+    sscanf(buf, "vset cycle_colors_diffuse %d %f %f %f %f ", &t,
 	   tmp + 0, tmp + 1, tmp + 2, tmp + 3);
     if(t < MAX_PLAYERS)
-      memcpy(colors_model[t], tmp, sizeof(tmp));
+      memcpy(colors_model_diffuse[t], tmp, sizeof(tmp));
+    else
+      fprintf(stderr, "error reading colors: unknown player %d\n", t);
+  }
+}
+
+void settings_cycle_colors_specular(char *buf, FILE *f) {
+  int i, t;
+  float tmp[4];
+  if(f != NULL) {
+    for(i = 0; i < MAX_PLAYERS; i++)
+      fprintf(f, "vset cycle_colors_specular %d %.3f %.3f %.3f %.3f\n", i,
+	      colors_model_specular[i][0],
+	      colors_model_specular[i][1],
+	      colors_model_specular[i][2],
+	      colors_model_specular[i][3]);
+  } else {
+    sscanf(buf, "vset cycle_colors_specular %d %f %f %f %f ", &t,
+	   tmp + 0, tmp + 1, tmp + 2, tmp + 3);
+    if(t < MAX_PLAYERS)
+      memcpy(colors_model_specular[t], tmp, sizeof(tmp));
     else
       fprintf(stderr, "error reading colors: unknown player %d\n", t);
   }
@@ -207,10 +227,11 @@ void initSettingData(char *filename) {
   sf[2].value = &(game->settings->fxVolume);
 
   sv[0].value = settings_key_actions;
-  sv[1].value = settings_cycle_colors;
-  sv[2].value = settings_trail_colors;
-  sv[3].value = settings_cam_settings;
-  sv[4].value = settings_artpack;
+  sv[1].value = settings_cycle_colors_diffuse;
+  sv[2].value = settings_cycle_colors_specular;
+  sv[3].value = settings_trail_colors;
+  sv[4].value = settings_cam_settings;
+  sv[5].value = settings_artpack;
 }
 
 int* getVi(char* name) {
@@ -292,7 +313,7 @@ void initDefaultSettings() {
   game->pauseflag = 0;
 
   game->settings->show_help = 0;
-  game->settings->show_fps = 1;
+  game->settings->show_fps = 0;
   game->settings->show_wall = 1;
   game->settings->show_glow = 1;
   game->settings->show_2d = 0;
@@ -304,9 +325,9 @@ void initDefaultSettings() {
   game->settings->show_crash_texture = 1;
   game->settings->show_decals = 1;
   game->settings->show_model = 1;
-  game->settings->show_recognizer = 1;
+  game->settings->show_recognizer = 0;
   game->settings->lod = 0;
-  game->settings->shadow_lod = 1;
+  game->settings->shadow_lod = 2;
   game->settings->turn_cycle = 1;
   game->settings->line_spacing = 20;
   game->settings->erase_crashed = 1;
@@ -320,7 +341,7 @@ void initDefaultSettings() {
   game->settings->grid_size = 600;
   game->settings->width = 640;
   game->settings->height = 480;
-  game->settings->show_ai_status = 1;
+  game->settings->show_ai_status = 0;
   game->settings->show_scores = 1;
   game->settings->show_gl_logo = 1;
   game->settings->camType = 1;
@@ -345,7 +366,7 @@ void initDefaultSettings() {
   game->settings->ai_player3 = 1;
   game->settings->ai_player4 = 1;
 
-  game->settings->ai_level = 1;
+  game->settings->ai_level = 2;
   
   /* not included in .gltronrc */
 
@@ -447,4 +468,3 @@ void saveSettings() {
   free(fname);
   fclose(f);
 }
-

@@ -1,34 +1,39 @@
-Installation from source
+GLtron - Installation from source
 
-for URL's on how to get these packages see
-http://www.gltron.org/
+If you install from CVS, read also README.CVS
 
-Get a working OpenGL / Mesa
-Get libpng / zlib (standard on allmost any system)
-Get SDL-1.1 and SDL_mixer 
+Requirements:
 
-Installation
+Get a working OpenGL / Mesa installation
+Get libpng / zlib (standard on almost any system)
+Get SDL-1.2 (1.1 might work, but is unsupported)
+
+If you want sound, you need to grab SDL_sound 0.1.4 or later from
+http://icculus.org/SDL_sound/
+
+Required libraries for SDL_sound: libmikmod 3.1.5 or newer, libvorbis
+for ogg/vorbis support and smpeg for mp3 support. Your average distribution
+has most of them already installed (except maybe smpeg).
+
+Compiling
 
 ./configure
 make
 
 Type './gltron' to play!
+make install is currently broken
 
 Note: make install is currently broken
 
-make install will install gltron in GLTRON_INSTALLDIR and some other files
-in GLTRON_HOME as defined in the Makefile. By default, GLTRON_INSTALLDIR
-is /usr/bin and GLTRON_HOME is /usr/share/games/gltron.
+You can install the data files (folders art/ and data/) into any directory,
+as long as you put the executable in the same directory as art/ and data/
+Thenput a symlink in /usr/local/bin or somewhere else in your $PATH
+and you're done.
 
-If the environment variable GLTRON_HOME is defined, it will look
-there first, ./ second, /usr/share/games/gltron third and at last in
-/usr/local/share/games/gltron. If you do a make install and have changed
-GLTRON_HOME, you _must_ set the GLTRON_HOME environment variable.
-
-You might also want to put the GLTRON_HOME environment variable into
-your ~/.profile (bash) or ~/.tcshrc (tcsh).
+'gltron -h' lists a few options. Most notably is the -O option, which will
+speed things up greatly *if you don't have a 3D card*. Don't use this
+unless the game runs really slow, the visuals will suffer terribly.
 
 Start gltron with the -s option if you don't want the sound playing.
 
-These instructions are very brief. I'd be glad if someone could write
-them better.
+Visit http://www.gltron.org/ frequently for updates and patches!

@@ -1,13 +1,5 @@
 #include "gltron.h"
 
-static int lod_n = 3;
-static char *lod_names[] = {
-  "lightcycle-high.obj",
-  "lightcycle-med.obj",
-  "lightcycle-low.obj"
-};
-/* static int lod_dist[] = { 25, 50, 150 }; */
-
 void initClientData() {
   /* for each player */
   /*   init camera (if any) */
@@ -15,21 +7,23 @@ void initClientData() {
   /* needs read access to server data
      to initialize camera */
 
-  int i, j;
+  int i;
   int camType;
   Camera *cam;
   Data *data;
-  Model *model;
 
   for(i = 0; i < game->players; i++) {
     cam = game->player[i].camera;
     data = game->player[i].data;
-    model = game->player[i].model;
 
-    for(j = 0; j < model->lod; j++)
-      setMaterialAlphas(model->mesh[j], 1.0);
     camType = (game->player[i].ai->active == 1) ? 0 : game->settings->camType;
     initCamera(cam, data, camType);
+
+    memcpy(game->player[i].pColorDiffuse, 
+	   colors_model_diffuse[i], sizeof( float[4] ));
+    memcpy(game->player[i].pColorSpecular, 
+	   colors_model_specular[i], sizeof( float[4] ));
+    memcpy(game->player[i].pColorAlpha, colors_alpha[i], sizeof( float[4] ));
   }
 }
 
@@ -57,62 +51,34 @@ void changeDisplay() {
 		   game->settings->display_type, i, 1);
 }
 
+#warning "audio engine"
+
+/*
 void playEngine(void *data, Uint8 *stream, int len) {
 #ifdef SOUND
   mixEngineSound(0, stream, len);
 #endif
 }
+*/
 
 void initGame() { /* called when game mode is entered */
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
-  Mix_SetPostMix(playEngine, NULL);
+#warning "audio engine"
+  // Mix_SetPostMix(playEngine, NULL);
+  Audio_EnableEngine();
 #endif
 }
 
 void exitGame() {
   SystemUnhidePointer();
 #ifdef SOUND
-  Mix_SetPostMix(NULL, NULL);
+#warning "audio engine"
+  // Mix_SetPostMix(NULL, NULL);
+  Audio_DisableEngine();
 #endif
-}
-
-void initModel(Player *p, int p_num) {
-  int i, j;
-  char *path;
-
-  p->model->lod = lod_n;
-  p->model->mesh = (Mesh**) malloc(lod_n * sizeof(Mesh*));
-  /* p->model->lod_dist = (int*) malloc(lod_n * sizeof(int)); */
-
-  for(i = 0; i < lod_n; i++) {
-    /* p->model->lod_dist[i] = lod_dist[i]; */
-    /* load player mesh, currently only one type */
-    path = getFullPath(lod_names[i]);
-    /* path = getFullPath("tron-med.obj"); */
-    if(path != NULL)
-      /* model size == CYCLE_HEIGHT */
-      p->model->mesh[i] = loadModel(path, CYCLE_HEIGHT, 0);
-    else {
-      printf("fatal: could not load model - exiting...\n");
-      exit(1);
-    }
-    
-    free(path);
-  }
-
-  /* copy contents from colors_a[] to model struct */
-  for(j = 0; j < 4; j++) {
-    p->model->color_alpha[j] = colors_alpha[p_num][j];
-    p->model->color_model[j] = colors_model[p_num][j];
-  }
-  /* set material 0 to color_model */
-  for(i = 0; i < lod_n; i++) {
-    setMaterialAmbient(p->model->mesh[i], 0, p->model->color_model);
-    setMaterialDiffuse(p->model->mesh[i], 0, p->model->color_model);
-  }
 }
 
 void defaultDisplay(int n) {
@@ -183,3 +149,9 @@ void gameMouse(int buttons, int state, int x, int y) {
   */
   /* fprintf(stderr, "new cam_r: %.2f\n", cam_r); */
 }
+
+
+
+
+
+

@@ -12,13 +12,15 @@ void setupHomeEnvironment () {
     long   directory_id;
     short  len;
     Handle path;
-    
+
     if ( noErr != FindFolder ( kOnSystemDisk, kPreferencesFolderType, kDontCreateFolder,
                                &volume_ref_number, &directory_id) )
         exit (-1);
+
     
+
     if ( noErr == GetFullPath (volume_ref_number, directory_id, "\p", &len, &path) ) {
-        
+
         char *homeEnv = (char*) malloc ( sizeof(*homeEnv) * len + 6);
         strcpy (homeEnv, "HOME=");
         strncat (homeEnv, *path, len-1); /* we want to remove the terminating ':' */        
@@ -26,5 +28,4 @@ void setupHomeEnvironment () {
         free (homeEnv);
     }
 }
-
 #endif

@@ -8,6 +8,8 @@ GLstate rendererState;
 GLstate *state = &rendererState;
 Renderer renderer;
 
+int rendererExtensionSupported(const char *extension);
+
 void clearState() {
   state->tex_id = 0;
   state->tex_env_mode = 0;
@@ -23,7 +25,7 @@ void initRenderer() {
 void printRendererInfo() {
   printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
 	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
-  printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
+  // printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
 }
 
 void renderQuad(Quad *q) {

@@ -74,13 +74,13 @@ char* getFullPath(char *filename) {
   for(i = 0; i < n_dirs; i++) {
     path = malloc(strlen(dirs[i]) + 1 + strlen(filename) + 1);
     sprintf(path, "%s%c%s", dirs[i], SEPERATOR, filename);
-    printf("checking '%s'...", path);
+    // printf("checking '%s'...", path);
     if (itemExists (path) ) {
-      printf("ok\n");
+      // printf("ok\n");
       return path;
     }
     free(path);
-    printf("unsuccessful\n");
+    // printf("unsuccessful\n");
   }
   return NULL;
 }

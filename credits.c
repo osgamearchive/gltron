@@ -49,7 +49,7 @@ void drawCredits() {
   int h;
   int i;
   float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 } };
-  time = SDL_GetTicks() - coffset;
+  time = SystemGetElapsedTime() - coffset;
 
   glClearColor(.0, .0, .0, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -71,7 +71,7 @@ void displayCredits() {
 }
 
 void initCredits() {
-  coffset = SDL_GetTicks();
+  coffset = SystemGetElapsedTime();
 }
 
 

@@ -21,7 +21,7 @@ void getRecognizerPositionVelocity(Point *p, Point *v) {
 void drawRecognizers(int flag) {
   float phi, rx, ry;
   float max = 0;
-  int i;
+  // int i;
 
   phi = acos ( dx() / sqrt( dx() * dx() + dy() * dy() ) );
   // printf("x: %.2f y: %.2f phi: %.2f ", dx(), dy(), phi);
@@ -31,32 +31,34 @@ void drawRecognizers(int flag) {
   // printf("recognizer in degrees: %.2f\n", (phi + M_PI / 2) * 180 / M_PI);
   glPushMatrix();
 
+#if 0
   for(i = 0; i < 3; i++)
-    if(recognizer->bbox[i] > max)
-      max = recognizer->bbox[i];
+    if(recognizer->BBox.v[i] > max)
+      max = recognizer->BBox.v[i];
+#endif
+
+  max = 1;
 
   rx = ( max + ( x() + 1.0 ) * (game->settings->grid_size - max) ) / 2.0;
   ry = ( max + ( y() + 1.0 ) * (game->settings->grid_size - max) ) / 2.0;
-  glTranslatef( rx, ry, 20 );
+  glTranslatef( rx, ry, RECOGNIZER_HEIGHT );
   glRotatef( (phi + M_PI / 2) * 180 / M_PI, 0, 0, 1); /* up */
 
   if(flag) { 
     initModelLights(GL_LIGHT1);
     glDisable(GL_LIGHT0);
     glEnable(GL_LIGHT1);
-    glEnable(GL_COLOR_MATERIAL);
 
     glDisable(GL_BLEND);
     if(game->settings->light_cycles)
       glEnable(GL_LIGHTING);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-    glColor3f(0.4, 0.8, 0.0);
   }
-    drawModel(recognizer, MODEL_FLAT, MODEL_SOLID);  
+
+  glEnable(GL_NORMALIZE);
+  glScalef(0.25, 0.25, 0.25);
+  drawModel(recognizer);
   // glColor3f(1, 1, 1);
 
-  // drawModel(recognizer, MODEL_USE_MATERIAL, MODEL_SOLID);
-  glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_LIGHTING);
 
   glPopMatrix();

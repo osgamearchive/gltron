@@ -34,6 +34,5 @@ bugs:
 (1) sound samples might overflow
 
 possible bugs:
-(0) more memory leaks
 (0) failing malloc's arent caught, might lock up application/system
 (0) some attributes are not saved to .gltronrc

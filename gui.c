@@ -4,6 +4,9 @@
 
 #include "gltron.h"
 
+#warning "ignored playMenuFX"
+void playMenuFX(int foo) { }
+
 void guiProjection(int x, int y) {
   checkGLError("gui.c guiProj - start");
   glMatrixMode(GL_PROJECTION);
@@ -25,6 +28,7 @@ void drawGuiBackground() {
 
   rasonly(game->screen);
 
+#if 0
   if(game->settings->softwareRendering) {
     glRasterPos2i(0, 0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -32,6 +36,7 @@ void drawGuiBackground() {
 		 GL_RGB, GL_UNSIGNED_BYTE,
 		 game->screen->pixelGui);
   } else {
+#endif
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_GUI]);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -52,7 +57,7 @@ void drawGuiBackground() {
     glVertex2f(0, game->screen->vp_h);
 
     glEnd();
-  }
+    //   }
 }
 
 void drawGuiLogo() {
@@ -113,7 +118,7 @@ void drawGuiLogo() {
   
 void displayGui() {
   drawGuiBackground();
-  if(!game->settings->softwareRendering)
+  // if(!game->settings->softwareRendering)
     drawGuiLogo();
   drawMenu(game->screen);
 
@@ -123,7 +128,7 @@ void displayGui() {
 void displayConfigure() {
   char message[] = "Press a key for this action!";
   drawGuiBackground();
-  if(!game->settings->softwareRendering)
+  // if(!game->settings->softwareRendering)
     drawGuiLogo();
   drawMenu(game->screen);
 
@@ -145,10 +150,10 @@ void keyboardConfigure(int key, int x, int y) {
   *configureKeyEntry = key;
   initMenuCaption(configureKeyMenu);
 #ifdef SOUND
-   playMenuFX(fx_action);
+  // playMenuFX(fx_action);
 #endif
    drawGuiBackground();
-   if(!game->settings->softwareRendering)
+   // if(!game->settings->softwareRendering)
      drawGuiLogo();
    drawMenu(game->screen);
    rasonly(game->screen);
@@ -161,7 +166,7 @@ void keyboardGui(int key, int x, int y) {
   switch(key) {
   case 27:
 #ifdef SOUND
-    if(game->settings->playEffects)
+    if(game->settings->playEffects) 
       playMenuFX(fx_action);
 #endif
     if(pCurrent->parent == NULL)
@@ -171,7 +176,7 @@ void keyboardGui(int key, int x, int y) {
     break;
   case 13: case ' ':
 #ifdef SOUND
-    if(game->settings->playEffects)
+    if(game->settings->playEffects) 
       playMenuFX(fx_action);
 #endif
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);

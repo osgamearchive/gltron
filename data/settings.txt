@@ -50,7 +50,8 @@ show_gl_logo
 show_recognizer
 v5
 keys
-cycle_colors
+cycle_colors_diffuse
+cycle_colors_specular
 trail_colors
 cam_settings
 artpack

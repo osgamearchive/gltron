@@ -1,8 +1,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+#include "sound_glue.h"
 
 int initSound();
 void shutdownSound();
@@ -35,3 +34,5 @@ enum {
 enum menu_fx { fx_action=0, fx_highlight };
 
 #endif
+
+

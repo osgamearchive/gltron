@@ -14,6 +14,12 @@ fonttex *gameFtx = NULL;
 int fontID = 6;
 
 Mesh* recognizer;
+Mesh* lightcycle[LC_LOD];
+char *lc_lod_names[] = {
+  "lightcycle-high.obj.gz",
+  "lightcycle-med.obj.gz",
+  "lightcycle-low.obj.gz"
+};
 
 Menu** pMenuList;
 Menu* pRootMenu;
@@ -76,8 +82,12 @@ float default_speeds[] = { 5.0, 6.5, 8.5, 12.0, 0.0 };
 float colors_alpha[][4] = { { .6, 0.6, 0.0, 0.6}, { 0.5, 0.05, 0.25, 0.6},
 		       { 0.2, 0.6, 0.4, 0.6 }, { 0.7, 0.7, 0.7, 0.6 } };
 
-float colors_model[][4] = { { 1.0, 1.0, 0.0, 1.0 }, { 0.7, 0.1, 0.1, 1.0 },
-		       { 0.3, 1.0, 0.8, 1.0 }, { 0.8, 0.8, 0.8, 1.0 } };
+float colors_model_diffuse[][4] = 
+{ { 1.0, 1.0, 0.0, 1.0 }, { 0.7, 0.1, 0.1, 1.0 },
+  { 0.3, 1.0, 0.8, 1.0 }, { 0.8, 0.8, 0.8, 1.0 } };
+float colors_model_specular[][4] = 
+{ { 1.0, 1.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 }, 
+  { 1.0, 1.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 } };
 
 unsigned char debugcolors[6][4] = {
   { 0, 0, 0, 0 },

@@ -1,6 +1,9 @@
 #!/bin/sh
 
+libtoolize
 aclocal
+
 autoconf
-automake --foreign --add-missing
+automake --add-missing
+
 echo you are ready to run ./configure now

@@ -3,12 +3,14 @@
   Copyright (C) 1999 by Andreas Umbach <marvin@dataway.ch>
 */
 
+#ifndef GLTRON_H
+#define GLTRON_H
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef GLTRON_H
-#define GLTRON_H
+#include <zlib.h>
 
 #define SEPERATOR '/'
 #define RC_NAME ".gltronrc"
@@ -77,7 +79,8 @@ typedef png_texture texture;
 #include "light.h"
 
 /* sound stuff */
-#include "sound3d.h"
+// #include "sound3d.h"
+
 /* rendering stuff */
 #include "renderer_gl.h"
 
@@ -130,7 +133,7 @@ enum {
 #define B_HEIGHT 0
 #define TRAIL_HEIGHT 3.5
 #define CYCLE_HEIGHT 8
-#define RECOGNIZER_HEIGHT 20
+#define RECOGNIZER_HEIGHT 40
 #define WALL_H 12
 
 #define CAM_TYPE_CIRCLING 0
@@ -213,7 +216,10 @@ extern Quad* quadBuf;
 extern int* quadBufIndex;
 #endif
 
-extern Mesh* recognizer;
+#define LC_LOD 3
+extern char *lc_lod_names[];
+extern Mesh *recognizer;
+extern Mesh *lightcycle[];
 
 /* extern TexFont *txf; */
 extern fonttex *gameFtx;
@@ -249,7 +255,8 @@ extern int screenshots;
 
 extern float colors_alpha[][4];
 extern float colors_trail[][4];
-extern float colors_model[][4];
+extern float colors_model_diffuse[][4];
+extern float colors_model_specular[][4];
 extern int vps;
 extern int vp_max[];
 extern float vp_x[4][4];
@@ -335,7 +342,6 @@ extern int processEvent(GameEvent *e);
 extern void initClientData();
 extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 extern void changeDisplay();
-extern void initModel(Player *p, int p_num);
 extern void initModelLights(int light);
 
 extern void gameMouseMotion(int x, int y);
@@ -445,7 +451,7 @@ extern void drawScore(Player *p, gDisplay *d);
 extern void drawAI(gDisplay *d);
 extern void drawPause(gDisplay *d);
 /* extern void drawHelp(gDisplay *d); */
-extern void drawFloor(gDisplay *d);
+extern void drawFloor(gDisplay *d, Camera *cam);
 extern void drawPlayers(Player *);
 extern void drawWalls(gDisplay *d);
 extern void drawCam(Player *p, gDisplay *d);

@@ -14,6 +14,7 @@ int getTrailCount() {
   /* fprintf(stderr, "trails: %d\n", c); */
   return c;
 }
+
 void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   Data *data;
   Quad *q;
@@ -48,11 +49,11 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   q_setTexCoord2f(q, 0, 0.0, 0.0);
   q_setVertex3f(q, 0, sx, sy, 0.0);
 
-  q_setColor4fv(q, 1, p->model->color_model);
+  q_setColor4fv(q, 1, p->pColorDiffuse);
   q_setTexCoord2f(q, 1, 1.0, 0.0);
   q_setVertex3f(q, 1, ex, ey, 0.0);
 
-  q_setColor4fv(q, 2, p->model->color_model);
+  q_setColor4fv(q, 2, p->pColorDiffuse);
   q_setTexCoord2f(q, 2, 1.0, 1.0);
   q_setVertex3f(q, 2, ex, ey, height);
 
@@ -83,9 +84,9 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
   /* calculate trail color and set blending modes */
   if(game->settings->alpha_trails) {
-    setColor4fv(p->model->color_alpha);
+    setColor4fv(p->pColorAlpha);
   } else {
-    setColor3fv(p->model->color_alpha);
+    setColor3fv(p->pColorAlpha);
   }
 
   /* start drawing */
@@ -194,7 +195,6 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
   q_setColor4fv(q, 1, color);
   q_setVertex3f(q, 1, ex, ey, 0.0);
-
 }
 
 void drawTrails(QuadBuffer *q, int *index) {
@@ -245,14 +245,18 @@ void doTrails(Player *p) {
     /* draw non-transparent trails first (unsorted), then draw
        bows */
     int i;
+    // flat shaded, no blending
     for(i = 0; i < game->players; i++)
       bufferPlayerTrail(game->player + i, q);
     drawTrails(q, NULL);
+
     for(i = 0; i < game->players; i++)
       bufferPlayerBow(game->player + i, q);
     /* bows are transparent, so sort back-to-front */
     index = getSortedQuads(q, p->camera->cam);
+    glEnable(GL_BLEND);
     drawTrails(q, index);
+    glDisable(GL_BLEND);
     if(index != NULL) free(index);
   }
   
