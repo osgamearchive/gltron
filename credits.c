@@ -79,5 +79,5 @@ void initCredits() {
 
 callbacks creditsCallbacks = { 
   displayCredits, idleCredits, keyCredits, initCredits, 
-  NULL, NULL, mouseCredits, NULL
+  NULL, NULL, mouseCredits, NULL, "credits"
 };
