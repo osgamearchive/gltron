@@ -25,6 +25,10 @@ extern "C" {
 
 
   void Audio_EnableEngine(void) {
+		int i;
+		for(i = 0; i < game->players; i++)
+			if( game->player[i].data->speed > 0)
+				Audio_StartEngine(i);
     sample_engine->Start();
     if (game2->settingsCache.show_recognizer)
       sample_recognizer->Start();
