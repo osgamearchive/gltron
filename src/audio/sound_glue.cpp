@@ -45,13 +45,14 @@ extern "C" {
     // iterate over all the players and update the engines
     if(sample_engine->IsPlaying()) {
       for(int i = 0; i < PLAYERS; i++) {
-				int dt = game2->time.current - gPlayerVisuals[i].turn_time;
-      
 				Player *p;
 				Sound::Source3D *p3d;
 				p3d = players[i];
 				p = game->player + i;
 				p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
+
+				// int dt = game2->time.current - gPlayerVisuals[i].turn_time;
+				int dt = game2->time.current - p->data->turn_time;
 				if(dt < TURN_LENGTH) {
 					float t = (float)dt / TURNLENGTH;
 

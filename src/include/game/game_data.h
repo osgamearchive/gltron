@@ -55,11 +55,14 @@ typedef struct Game2 {
 typedef struct Data {
   float posx, posy;
   
-  int dir; int last_dir;
+  int dir;
 
   int score;
   float speed; /* set to -1 when dead */
 	float trail_height;
+
+	int last_dir;
+	unsigned int turn_time; /* for cycle animation */
  
   Line *trails;
 	int trailOffset;

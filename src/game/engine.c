@@ -1,5 +1,5 @@
 #include "game/game.h"
-#include "video/video.h"
+// #include "video/video.h"
 #include "audio/audio.h"
 #include "Nebu_base.h"
 
@@ -212,10 +212,11 @@ void newTrail(Data* data) {
       
 void doTurn(GameEvent *e, int direction) {
 	Data *data = game->player[e->player].data;
-	PlayerVisual *pV = gPlayerVisuals + e->player;
+	// PlayerVisual *pV = gPlayerVisuals + e->player;
 	newTrail(data);
 	data->last_dir = data->dir;
 	data->dir = (data->dir + direction) % 4;
 
-	pV->turn_time = game2->time.current;
+	// pV->turn_time = game2->time.current;
+	data->turn_time = game2->time.current;
 }

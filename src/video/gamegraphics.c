@@ -106,7 +106,8 @@ void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
 
   neigung_dir = -1.0;
 
-  time = game2->time.current - pV->turn_time;
+  // time = game2->time.current - pV->turn_time;
+	time = game2->time.current - p->data->turn_time;
 
   dirAngle = getDirAngle(time, p);
   glRotatef(dirAngle, 0, 0, 1);
@@ -128,7 +129,9 @@ void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
 void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   Mesh *cycle;
   unsigned int turn_time;
-  turn_time = game2->time.current - pV->turn_time;
+  // turn_time = game2->time.current - pV->turn_time;
+	turn_time = game2->time.current - p->data->turn_time;
+      
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
 
@@ -181,14 +184,16 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 
 void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   Mesh *cycle;
-  unsigned int  time, turn_time;
+  unsigned int  spoke_time, turn_time;
   cycle = lightcycle[lod];
     
-  turn_time = game2->time.current - pV->turn_time;
+  // turn_time = game2->time.current - pV->turn_time;
+	turn_time = game2->time.current - p->data->turn_time;
+
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
 
-  time = game2->time.current  - pV->spoke_time;
+  spoke_time = game2->time.current  - pV->spoke_time;
   
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
@@ -206,7 +211,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  if (time > (120 - (p->data->speed * 10))) {
+  if (spoke_time > (120 - (p->data->speed * 10))) {
     if (pV->spoke_state == 1) {
       pV->spoke_state = 0;
       SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
