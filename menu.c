@@ -154,7 +154,13 @@ void menuAction(Menu *activated, int type) {
       changeAction(activated->szName + 3);
       break;
     case 'd':
-      if(activated->szName[2] == 'p') {
+      if(activated->szName[2] == 'e') { /* load default settings */
+	initDefaultSettings();
+	initMenuCaptions();
+	reloadArt();
+	fprintf(stderr, "loaded default settings\n");
+	break;
+      } else if(activated->szName[2] == 'p') {
 	initData();
 	if(startPlaying("demo.txt")) {
 	  fprintf(stderr, "starting \"play demo\" failed\n");
@@ -438,6 +444,42 @@ Menu* loadMenu(FILE* f, char* buf, Menu* parent, int level) {
   }
 
   return m;
+}
+
+void initMenuCaptions() {
+  node *head;
+  node *t;
+  node *z;
+  int j;
+  Menu *m;
+
+  z = (node*) malloc(sizeof(node));
+  z->next = z;
+  head = (node*) malloc(sizeof(node));
+  head->next = z;
+  
+  t = (node*) malloc(sizeof(node));
+  t->data = *(pMenuList);
+  t->next = head->next;
+  head->next = t;
+
+  while(head->next != z) {
+    t = head->next;
+    head->next = t->next;
+    m = (Menu*) t->data;
+    free(t);
+    /* visit m */
+
+    initMenuCaption(m);
+
+    /* push all of m's submenus */
+    for(j = 0; j < m->nEntries; j++) {
+      t = (node*) malloc(sizeof(node));
+      t->data = *(m->pEntries + j);
+      t->next = head->next;
+      head->next = t;
+    }
+  }
 }
 
 Menu** loadMenuFile(char *filename) {
