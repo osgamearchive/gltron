@@ -33,7 +33,7 @@ void displayPause() {
 void keyboardPause(int key, int x, int y) {
   switch(key) {
   case 27:
-		SystemExitLoop(RETURN_GAME_ESCAPE);
+		SystemExitLoop(RETURN_PAUSE_ESCAPE);
     break;
   case SYSTEM_KEY_F1: changeDisplay(0); break;
   case SYSTEM_KEY_F2: changeDisplay(1); break;
@@ -101,7 +101,7 @@ void keyboardPrompt(int key, int x, int y) {
   switch(key) {
   case 27:
   case SYSTEM_KEY_TAB:
-    restoreCallbacks();
+		SystemExitLoop(RETURN_PAUSE_ESCAPE);
     break;
   case SYSTEM_KEY_RETURN:
     /* promptEvaluate(); */
