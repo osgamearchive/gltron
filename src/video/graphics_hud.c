@@ -37,6 +37,11 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 		rasonly(&hud);
 		// rasonly(&pV->display);
 		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		nebu_2d_Draw(gpHUD);
+		glDisable(GL_BLEND);
+
 		glDisable(GL_DEPTH_TEST);
 		sprintf(temp, "drawGauge(%.2f)", 
 						p->data->speed / (2 * game2->rules.speed));
