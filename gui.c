@@ -152,7 +152,8 @@ void idleGui() {
 }
 
 void keyboardConfigure(int key, int x, int y) {
-  scripting_RunFormat("keys[ configure_player ][ configure_event ] = %d", key);
+  scripting_RunFormat("settings.keys[ configure_player ][ configure_event ]"
+		      "= %d", key);
   restoreCallbacks();
 }
 
