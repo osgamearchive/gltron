@@ -39,7 +39,7 @@ float camAngles[] = { M_PI / 2, 0, 3 * M_PI / 2, M_PI, 2 * M_PI };
 
 char *cam_names[] = { "circle", "follow", "cockpit", "free" };
 float cam_defaults[][3] =  { 
-  { CAM_CIRCLE_DIST, M_PI, 0 }, /* circle */
+  { CAM_CIRCLE_DIST, M_PI / 3, 0 }, /* circle */
   { CAM_FOLLOW_DIST, M_PI / 4, M_PI / 72 }, /* follow */
   { CAM_COCKPIT_Z, 0, 0 }, /* cockpit */
   { CAM_CIRCLE_DIST, M_PI / 3, 0 } /* free */
