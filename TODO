@@ -13,6 +13,7 @@ Bugs:
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM) (Note: proper back-to-front drawing
   should take care of this. Andreas) [ won't fix ]
+- Alpha channel in metaltron doesn't show correctly. It will show up when 2 players have died and alpha trails are turned on. (Darrell)
 
 Features:
 
