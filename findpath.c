@@ -44,7 +44,7 @@ void goto_installpath(char *argv0)
         home = ".";
     }
 
-    strcpy(temppath, argv0);    /* If this overflows, it's your own fault :) */
+    strncpy(temppath, argv0, PATH_MAX); 
     if ( ! strrchr(temppath, '/') ) {
         char *path;
         char *last;
