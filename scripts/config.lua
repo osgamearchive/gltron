@@ -15,6 +15,11 @@ settings.booster_max = 6.5
 settings.booster_use = 1.0
 settings.booster_decrease = 0.8
 settings.booster_regenerate = 0.4
+
+settings.wall_accel_limit = 30.0
+settings.wall_accel_use = 1.0
+settings.wall_accel_decrease = 0.8
+
 settings.ai_level = 2
 settings.grid_size = 720
 settings.erase_crashed = 1
