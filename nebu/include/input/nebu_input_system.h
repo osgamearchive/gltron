@@ -67,12 +67,14 @@ enum {
 	SYSTEM_JOY_BUTTON_19
 };
 
-extern void SystemGrabInput();
-extern void SystemUngrabInput();
+void SystemGrabInput();
+void SystemUngrabInput();
 
-extern char* SystemGetKeyName(int key);
+char* SystemGetKeyName(int key);
 
-extern void SystemMouse(int buttons, int state, int x, int y);
-extern void SystemMouseMotion(int x, int y);
+void SystemMouse(int buttons, int state, int x, int y);
+void SystemMouseMotion(int x, int y);
+
+void SystemSetJoyThreshold(float f);
 
 #endif
