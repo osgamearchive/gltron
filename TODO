@@ -5,10 +5,14 @@ TODO list
 
 Bugs:
 
+- fall back to non-stencil when not available (e.g. 16bpp X)
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
 - preferences/snapshot directory isn't created if it doesn't exist
-- fix sound hiccup on exit (it's preventing e.g. restoring screen resolution)
+- screenshots don't get saved in snapshot dir
+- recognizer has blue edges sometimes (http://www.gltron.org/stuff/recognizer_glue.jpg (Andreas) [ LIM,Todd ]
+- recognizer sometimes leaves arena
+- remove song & artpack list from settings - clean up loading
 
 Features:
 
@@ -29,8 +33,6 @@ Features:
 - merge software mouse cursor from networkign branch
 - add more special effects (reflections etc.)
 - add slightly funny console messages (Robot ate Andi's tail)
-- rewrite save.lua, so .gltronrc is a bit more readable (and settings are
-  grouped)
 - peek left/right when in 1st person camera mode
 - quick way to restore sane camera angle (e.g. middle mouse button, or press button, mouse mouse, release button, camera gets restored)
 - fallback instead of app exiting on corrupt mp3 files
@@ -68,3 +70,7 @@ Optimizations/Cleanups
 - Remove all bitmap stuff
 - check various TODOs and #warnings in the code
 - dynamically load OpenGL (?)
+- delete the sound object in Audio_Quit to allow restarting the whole
+  sound system without memory leaks
+- rewrite save.lua, so .gltronrc is a bit more readable (and settings are
+  grouped)
