@@ -2,6 +2,7 @@
 #include "skybox.h"
 #include "recognizer.h"
 #include "floor.h"
+#include "explosion.h"
 
 static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
@@ -350,6 +351,36 @@ void drawCycleShadow(Player *p, int lod) {
   glPopMatrix();
 }
 
+static void drawImpact(Player *p) {
+  float setback;
+
+  glDisable(GL_LIGHTING);
+  glPushMatrix();
+
+  glRotatef(90, 90, 0, 1);
+
+  if (p->data->iposx < 0 || p->data->iposx >= game2->rules.grid_size  -1 ||
+      p->data->iposy < 0 || p->data->iposy >= game2->rules.grid_size -1) {
+    setback = -1.5; /* enough to clear the arena wall */
+  } else {
+    setback = -0.5; /* enough to clear the trail */
+  }
+
+  /*
+   * Drop impact slightly below the floor and move it a tiny bit
+   * back from the impact point so we don't draw behind the
+   * trail/wall that's hit.
+   */
+  glTranslatef(0.0, -0.5, setback);
+
+  glColor3f(0.68, 0, 0);
+  
+  drawShockwaves(&(p->data->shockwave_radius));
+  drawSpires(&(p->data->spire_radius));
+  glPopMatrix();
+  glEnable(GL_LIGHTING);
+}
+
 void drawCycle(Player *p, int lod) {
   Mesh *cycle;
   unsigned int  time;
@@ -410,14 +441,19 @@ void drawCycle(Player *p, int lod) {
     glEnable(GL_CULL_FACE);
     drawModel(cycle, TRI_MESH);
     glDisable(GL_CULL_FACE);
-  }
-  else if(p->data->exp_radius < EXP_RADIUS_MAX) {
+
+  } else if(p->data->exp_radius < EXP_RADIUS_MAX) {
     float alpha;
+   
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
       (float) EXP_RADIUS_MAX;
 
+    if (game2->settingsCache.show_impact) {
+      drawImpact(p);
+    }
+    
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
     drawModelExplosion(cycle, p->data->exp_radius);
@@ -712,10 +748,10 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
-	drawCycleShadow(game->player + i, lod);
+	      drawCycleShadow(game->player + i, lod);
       }
     }
-    if( game->player[i].data->trail_height > 0 )
+    if (game->player[i].data->trail_height > 0 )
       drawTrailShadow(game->player + i);
   }
 

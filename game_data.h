@@ -39,7 +39,6 @@ typedef struct Game2 {
   Input input;
 } Game2;
 
-
 typedef struct Data {
   int iposx, iposy;
   float posx, posy;
@@ -54,7 +53,12 @@ typedef struct Data {
   int score;
   float speed; /* set to -1 when dead */
   float trail_height; /* countdown to zero when dead */
+
+  /* explosion stuff */
+  float shockwave_radius;
+  float spire_radius;
   float exp_radius; /* explosion of the cycle model */
+ 
   Line *trails;
   Line *trail; /* current trail */
 } Data;
