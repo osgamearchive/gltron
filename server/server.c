@@ -13,7 +13,7 @@ static Uint32 starttime     = 0;
 static int    timetostart   = 0;
 static int    timeserver    = 0;
 static Uint32 now;
-static const int minoff = 5;
+static const int minoff = 1;
 
 int nbSynch = 0;
 static int  getping();
@@ -887,13 +887,11 @@ do_synch( int which, Packet packet )
   case 2:
     rep.infos.synch.data.s.c = now - lag - packet.infos.synch.data.u.c ;
     if( rep.infos.synch.data.s.c < minoff && rep.infos.synch.data.s.c > -minoff ) {
-      rep.infos.synch.type = 3;
-      rep.infos.synch.data.u.s = SDL_GetTicks() + lag + minoff * 100;
-
       nbSynch++;
-    } else
+    } else {
       rep.infos.synch.data.u.s = SDL_GetTicks() + lag;
-    Net_sendpacket(&rep, slots[which].sock);
+      Net_sendpacket(&rep, slots[which].sock);
+    }
 
     /* if( rep.infos.synch.type == 3 ) { */
 /*       printf("wait until %u\n", rep.infos.synch.data.u.s ); */
@@ -903,6 +901,19 @@ do_synch( int which, Packet packet )
 
   if ( nbSynch == users  )
     {
+      rep.infos.synch.type = 3;
+      rep.infos.synch.data.s.c = now - lag - packet.infos.synch.data.u.c ;
+      rep.infos.synch.data.u.s = SDL_GetTicks() + lag + minoff * 100;
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  if( (slots[i].active == 1) )
+	    {
+	      slots[i].hasstarted=1;
+	      //send him signal to start
+	      Net_sendpacket(&rep, slots[i].sock);
+	    } 
+	}
+
       //game2->time.current   = SDL_GetTicks();
       printf("######################## TIME %d ( %u )#####################\n", game2->time.offset, SDL_GetTicks());
       printf("wait until %u\n", rep.infos.synch.data.u.s );
