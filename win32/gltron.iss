@@ -80,6 +80,7 @@ Source: "art\metalTron\skybox4.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox5.png"; DestDir: "{app}\art\metalTron\";
 Source: "levels\square.lua"; DestDir: "{app}\levels\";
 Source: "levels\tri.lua"; DestDir: "{app}\levels\";
+Source: "levels\ring.lua"; DestDir: "{app}\levels\";
 Source: "music\revenge_of_cats.it"; DestDir: "{app}\music\";
 Source: "scripts\artpack.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\audio.lua"; DestDir: "{app}\scripts\";
@@ -93,18 +94,18 @@ Source: "scripts\menu_functions.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\path.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\save.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\video.lua"; DestDir: "{app}\scripts\";
-Source: "msvcr70.dll"; DestDir: "{app}\";
-Source: "SDL.dll"; DestDir: "{app}\";
-Source: "libpng12.dll"; DestDir: "{app}\";
+Source: "bin\msvcr70.dll"; DestDir: "{app}\";
+Source: "bin\SDL.dll"; DestDir: "{app}\";
+Source: "bin\libpng12.dll"; DestDir: "{app}\";
 ; Source: "mikmod.dll"; DestDir: "{app}\";
-Source: "ogg.dll"; DestDir: "{app}\";
-Source: "sdl_sound.dll"; DestDir: "{app}\";
-Source: "smpeg.dll"; DestDir: "{app}\";
-Source: "vorbis.dll"; DestDir: "{app}\";
-Source: "vorbisfile.dll"; DestDir: "{app}\";
-Source: "zlib1.dll"; DestDir: "{app}\";
+Source: "bin\ogg.dll"; DestDir: "{app}\";
+Source: "bin\sdl_sound.dll"; DestDir: "{app}\";
+Source: "bin\smpeg.dll"; DestDir: "{app}\";
+Source: "bin\vorbis.dll"; DestDir: "{app}\";
+Source: "bin\vorbisfile.dll"; DestDir: "{app}\";
+Source: "bin\zlib1.dll"; DestDir: "{app}\";
 Source: "docs\README.html"; DestDir: "{app}\docs\"; Flags: isreadme
-Source: "gltron.exe"; DestDir: "{app}\";
+Source: "bin\gltron.exe"; DestDir: "{app}\";
 
 [Icons]
 Name: "{group}\GLtron"; Filename: "{app}\GLtron.exe"; WorkingDir: "{app}";
