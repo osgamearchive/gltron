@@ -11,6 +11,9 @@ static int lod_dist[][4] = {
   { 1, 5, 100, 0 }
 };
 
+/* spoke color */
+static float SpokeColor[4] = {1.0, 1.0, 1.0, 1.0};
+static float NoSpokeColor[4] = {0.0, 0.0, 0.0, 1.0};
 
 void drawGame() {
   GLint i;
@@ -564,10 +567,13 @@ void drawCycleShadow(Player *p, int lod) {
 }
 
 void drawCycle(Player *p, int lod) {
+#define SPOKE_INTERVAL 50
   Mesh *cycle;
-
+  unsigned int  time;
   cycle = lightcycle[lod];
     
+  time = game2->time.current  - p->data->spoke_time;
+  
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
@@ -595,6 +601,17 @@ void drawCycle(Player *p, int lod) {
   SetMaterialColor(cycle, "Hull", eDiffuse, p->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, p->pColorSpecular); 
 
+  if (time > SPOKE_INTERVAL) {
+    if (p->data->spoke_state == 1) {
+      p->data->spoke_state = 0;
+      SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
+    } else {
+      p->data->spoke_state = 1;
+      SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
+    }
+    p->data->spoke_time = game2->time.current;
+  }
+  
   if (game2->settingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
   }

@@ -130,6 +130,7 @@ void idleGame( void ) {
 #endif
 
   if(updateTime() == 0) return;
+
   switch(game2->mode) {
   case GAME_NETWORK_RECORD:
 #ifdef NETWORK

@@ -14,7 +14,7 @@ typedef struct GameEvent {
   int player; /* who */
   int x; /* where */
   int y;
-  int timestamp;
+  unsigned int timestamp;
 } GameEvent;
 
 extern void createEvent(int player, event_type_e eventType);

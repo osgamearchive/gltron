@@ -36,10 +36,10 @@ typedef struct RuleSet {
 } RuleSet;
 
 typedef struct Time {
-  int current;
-  int lastFrame;
-  int offset; /* from SystemGetElapsedTime() */
-  int dt; /* current - lastFrame */
+  unsigned int current;
+  unsigned int lastFrame;
+  unsigned int offset; /* from SystemGetElapsedTime() */
+  unsigned int dt; /* current - lastFrame */
 
   /* float timeScale; */
 } Time;
@@ -169,8 +169,10 @@ typedef struct Data {
   
   int dir; int last_dir;
 
-  int turn_time; /* for cycle animation */
-  
+  unsigned int turn_time; /* for cycle animation */
+  unsigned int spoke_time; /* for cycle wheel animation */
+  int spoke_state; /* showing spoke or not */
+
   int score;
   float speed; /* set to -1 when dead */
   float trail_height; /* countdown to zero when dead */
