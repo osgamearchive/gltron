@@ -107,7 +107,7 @@ void setMaterial(char *buf, Mesh *pMesh, int *iGroup) {
 	return;
       }
     }
-    fprintf(stderr, "*** error: material %s not found\n");
+    fprintf(stderr, "*** error: material %s not found\n", name);
   } else {
     fprintf(stderr, "*** error: can't parse material line %s\n", buf);
   }
