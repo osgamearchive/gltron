@@ -72,6 +72,7 @@ CFILES = \
 	model.c \
 	modelgraphics.c \
 	screenshot.c \
+	skybox.c \
 	mtllib.c \
 	geom.c \
 	system.c \
