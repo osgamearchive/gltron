@@ -71,10 +71,9 @@ void setupDisplay(gDisplay *d) {
   printf("window created\n");
   printRendererInfo();
   /* printf("win_id is %d\n", d->win_id); */
-  printf("loading fonts...\n");
-  initFonts();
-  printf("loading textures...\n");
-  initTexture(game->screen);
+  printf("loading art...\n");
+  loadArt();
+
   initBitmaps(game->screen);
   SystemReshapeFunc(reshape);
 }
@@ -96,6 +95,9 @@ int main( int argc, char *argv[] ) {
   goto_installpath(argv[0]);
 #endif
 
+  /* initialize artpack list before loading settigns! */
+  initArtpacks();
+
   path = getFullPath("settings.txt");
   if(path != NULL)
     initMainGameSettings(path); /* reads defaults from ~/.gltronrc */
@@ -105,9 +107,6 @@ int main( int argc, char *argv[] ) {
   }
 
   parse_args(argc, argv);
-
-  /* initialize artpack list */
-  initArtpacks();
 
   /* sound */
   path = getMusicPath(MUSIC_DIR);
