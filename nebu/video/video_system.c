@@ -7,10 +7,18 @@ static SDL_Surface *screen;
 static int width, height;
 static int flags;
 static int fullscreen;
-extern int video_initialized;
+static int video_initialized = 0;
 
-void SystemSwapBuffers() {
-  SDL_GL_SwapBuffers();
+void nebu_Video_SwapBuffers() {
+	SDL_GL_SwapBuffers();
+}
+
+void nebu_Video_Init(void) {
+  if(SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+    fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
+    exit(1); /* OK: critical, no visual */
+  } else
+		video_initialized = 1;
 }
 
 void SystemInitWindow(int x, int y, int w, int h) {
@@ -110,3 +118,6 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
   return 0;
 }
 
+void nebu_Video_WarpPointer(int x, int y) {
+  SDL_WarpMouse(x, y);
+}
