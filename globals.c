@@ -18,6 +18,10 @@ fonttex *guiFtx = NULL;
 fonttex *gameFtx = NULL;
 int fontID = 6;
 
+Mesh* recognizer_quad;
+float rec_outline_color[] = {0.0, 0.0, 0.0};
+float rec_spec_color[] = {0.25, 0.0, 0.25, 0.50};
+
 Mesh* recognizer;
 Mesh* lightcycle[LC_LOD];
 char *lc_lod_names[] = {

@@ -17,6 +17,12 @@ typedef struct {
   int material;
 } face;
 
+typedef struct {
+ int vertex[4];
+ int normal[4];
+ int material;
+} quadFace;
+
 float length2(float *v);
 float length3(float *v);
 float length4(float *v);

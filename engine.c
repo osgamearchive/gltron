@@ -91,21 +91,33 @@ void initGameStructures() { /* called only once */
   /* load recognizer model */
   path = getPath(PATH_DATA, "recognizer.obj.gz");
   if(path != NULL) {
-    recognizer = readMeshFromFile(path);
+    recognizer = readTriMeshFromFile(path);
     /* old code did normalize & invert normals & rescale to size = 60 */
   } else {
-    printf("fatal: could not load recognizer.obj.gz - exiting...\n");
+    fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
     exit(1);
   }
   free(path);
+ 
+  /* load recognizer  quad model (for recognizer outlines) */
+  path = getPath(PATH_DATA, "recognizer_quad.obj.gz");
+  if(path != NULL) {
+    recognizer_quad = readQuadMeshFromFile(path);
+    /* old code did normalize & invert normals & rescale to size = 60 */
+  } else {
+    fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
+    exit(1);
+  }
+  free(path);
+
 
   /* load lyghtcycle models */
   for(i = 0; i < LC_LOD; i++) {
     path = getPath(PATH_DATA, lc_lod_names[i]);
     if(path != NULL) {
-      lightcycle[i] = readMeshFromFile(path);
+      lightcycle[i] = readTriMeshFromFile(path);
     } else {
-      printf("fataL could not load model %s - exiting...\n", lc_lod_names[i]);
+      fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
       exit(1);
     }
   }
@@ -213,6 +225,8 @@ void initData() {
   game2->events.next = NULL;
   /* TODO: free any old events that might have gotten left */
 
+  initRecognizerColor();
+  
   initPlayerData();
   initClientData();
 }

@@ -122,7 +122,7 @@ void initModelLights(int light) {
   glLightfv(light, GL_DIFFUSE, dif);
   
 }
-
+ 
 void initTrailLights(int light) {
   /* doing my own lighting for that now */
   /* int light is currently ignored */

@@ -135,7 +135,7 @@ enum {
 #define B_HEIGHT 0
 #define TRAIL_HEIGHT 3.5
 #define CYCLE_HEIGHT 8
-#define RECOGNIZER_HEIGHT 40
+#define RECOGNIZER_HEIGHT 50
 #define WALL_H 12
 
 #define CAM_TYPE_CIRCLING 0
@@ -217,6 +217,10 @@ extern int* quadBufIndex;
 #define LC_LOD 3
 extern char *lc_lod_names[];
 extern Mesh *recognizer;
+extern Mesh *recognizer_quad;
+extern float rec_outline_color[3];
+extern float rec_spec_color[4];
+
 extern Mesh *lightcycle[];
 
 /* extern TexFont *txf; */
@@ -328,6 +332,7 @@ extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 extern void changeDisplay();
 extern void updateDisplay(ViewportType VPtype); /* vp types defined in data.h */
 extern void initModelLights(int light);
+extern void initRecognizerLights(int light, float rec_spec_color[]);
 
 extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
@@ -457,6 +462,7 @@ extern void checkQuad2D(char *flags, int q, int n);
 int testfrustum(float *x, float *y, float *p, float *a, float *b);
 
 /* recognizer stuff */
+extern void initRecognizerColor();
 extern void recognizerMovement();
 extern void drawRecognizers(int flag);
 extern void getRecognizerPositionVelocity(Point *p, Point *v);
