@@ -132,12 +132,14 @@ void initGame() { /* called when game mode is entered */
 #ifdef SOUND
   Audio_EnableEngine();
 #endif
+  /* fprintf(stderr, "init game\n"); */
 }
 
 void exitGame() {
 #ifdef SOUND
   Audio_DisableEngine();
 #endif
+  /* fprintf(stderr, "exit game\n"); */
 }
 
 void defaultDisplay(int n) {
