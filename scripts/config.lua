@@ -24,7 +24,7 @@ settings.display_type = 3
 
 -- video
 settings.artpacks = { }
-settings.current_artpack = "default"
+settings.current_artpack = "classic"
 -- texture settings
 settings.show_floor_texture = 1
 settings.show_wall = 1
