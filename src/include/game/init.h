@@ -2,7 +2,6 @@
 #define INIT_H
 
 extern void initSubsystems(int argc, const char *argv[]);
-extern void initFilesystem(void);
 extern void initScripting(void);
 extern void initConfiguration(int argc, const char *argv[]);
 extern void initVideo(void);
