@@ -8,11 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <unistd.h>
+// #include <unistd.h>
 #include <limits.h>
 
 #ifndef PATH_MAX
-#warning PATH_MAX "is not defined in limits.h!"
+// #warning PATH_MAX "is not defined in limits.h!"
 #define PATH_MAX 255
 #endif
 
