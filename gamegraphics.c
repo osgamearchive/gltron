@@ -384,49 +384,6 @@ float GetDistance(float *v, float *p, float *d) {
   return sqrt( scalarprod(tmp, tmp) );
 }
 
-/*****************************************************************************/
-/*
- * buildFloorDispList
- */
-GLuint buildFloorDispList(GLuint floor_list) {
-  
-  glNewList(floor_list, GL_COMPILE);
-  
-  if (game2->settingsCache.show_floor_texture) {
-    drawFloorTextured(game2->rules.grid_size,
-                      game->screen->textures[TEX_FLOOR]);
-  } else {
-    /* should this be an artpack setting? */
-    float line_color[] = {1.0, 1.0, 1.0};
-    
-    drawFloorGrid(game2->rules.grid_size,
-                  game2->settingsCache.line_spacing,
-                  line_color,
-                  game2->settingsCache.clear_color);
-  }
-  glEndList();
-
-  return floor_list;
-}
-
-/*****************************************************************************/
-/*
- * buildSkyboxDispList
- */
-GLuint buildSkyboxDispList(GLuint skybox_list) {
-  
-  glNewList(skybox_list, GL_COMPILE);
-  
-  if (game2->settingsCache.show_skybox) {
-    drawSkybox(game2->rules.grid_size);
-  }
- 
-  glEndList();
-
-  return skybox_list;
-}
-
-
 void drawCrash(float radius) {
 #define CRASH_W 32
 #define CRASH_H 16
@@ -880,14 +837,26 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* skybox */
   if (game2->settingsCache.show_skybox) {
-    glCallList(game2->displayLists.skybox_list);
+    drawSkybox(game2->rules.grid_size);
   }
 
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
   
   /* floor */
-  glCallList(game2->displayLists.floor_list);
+  if (game2->settingsCache.show_floor_texture) {
+    drawFloorTextured(game2->rules.grid_size,
+                      game->screen->textures[TEX_FLOOR]);
+  } else {
+    /* should this be an artpack setting? */
+    float line_color[] = {1.0, 1.0, 1.0};
+    
+    drawFloorGrid(game2->rules.grid_size,
+                  game2->settingsCache.line_spacing,
+                  line_color,
+                  game2->settingsCache.clear_color);
+  }
+  
   /* glDepthMask(GL_FALSE); */
 
   /* shadows on the floor: cycle, recognizer, trails */
@@ -896,7 +865,7 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
-	drawCycleShadow(game->player + i, lod);
+	      drawCycleShadow(game->player + i, lod);
       }
     }
     drawTrailShadow(game->player + i);
