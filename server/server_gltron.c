@@ -39,7 +39,7 @@ int main( int argc, char *argv[] ) {
     
     // On OS 9, we have to give up the processor every now and then
    #ifdef macintosh
-    mac_yield_cpu ();
+    mac_yield_cpu (0);
    #endif
    if( strcmp(settings.tracker, "NO") )
     {

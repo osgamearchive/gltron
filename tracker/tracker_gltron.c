@@ -26,7 +26,11 @@ int main( int argc, char *argv[] ) {
     //parse network
     handle_tracker();
     check_serveractivity();
-    SDL_Delay(10);
+    #ifdef macintosh
+        mac_yield_cpu (10000);
+    #else
+        SDL_Delay(10);
+    #endif
   }
 
   stop_tracker();
