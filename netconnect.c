@@ -11,8 +11,8 @@ void mouseConnect (int buttons, int state, int x, int y)
     if ( state == SYSTEM_MOUSEPRESSED )
       {
       if( trackeruse == 1 )
-	//switchCallbacks(&trackerCallbacks); 	
-	changeCallback(&trackerCallbacks, &trackerCallbacks);
+	//switchCallbacks(&trackerscreenCallbacks); 	
+	changeCallback(&trackerscreenCallbacks, &trackerscreenCallbacks);
       else
 	changeCallback(&guiCallbacks, &guiCallbacks);
 	  //switchCallbacks(&guiCallbacks);   
@@ -80,7 +80,7 @@ void keyConnect(int k, int unicode, int x, int y)
       //restoreCallbacks();
       
       if( trackeruse == 1 )	
-	changeCallback(&trackerCallbacks, &trackerCallbacks);
+	changeCallback(&trackerscreenCallbacks, &trackerscreenCallbacks);
       else
 	changeCallback(&guiCallbacks, &guiCallbacks);
       //switchCallbacks(&guiCallbacks);

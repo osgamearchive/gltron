@@ -1,6 +1,6 @@
 todo:
 (x) finish observer things ( some case doesn't work, that case needs to be find too ).
-(x) redo a pretty nice server's list ( see with Nicolas Zimermann )
+(x) redo a pretty nice server's list ( see with Nicolas Zimermann ) - done ( not finished )
 (x) do a font set for small size one.
 (x) IMPORTANT: see if server really waste time, or if it is the client. If true, where etc... .
 (x) check for bad predicted turn result.
@@ -13,10 +13,9 @@ todo:
 (x) server need to wait pings finished before starting the game.
 (x) adding timeout for connection.
 (x) add other players scores in-game.
-(x) see how enhance in-game ping.
 (x) making cycle crash when leaving, otherwise it can have zombies in the next round.
-(x) check in-game ping to feet best for predictions
-(x) adding AI players
+(x) check in-game ping to feet best for predictions - done
+(x) adding AI players - done
 
 bugs:
 (x) the client lags( fps descending 1xx to 4x ) sometimes

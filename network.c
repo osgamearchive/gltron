@@ -71,8 +71,8 @@ connectionLost()
   Net_disconnect();
   serverstate=preGameState; //We hope that next time server will be to preGameState
   
-
-  switchCallbacks(&guiCallbacks);
+  changeCallback(&trackerscreenCallbacks, &guiCallbacks);
+  //switchCallbacks(&guiCallbacks);
 }
 
 void
@@ -86,7 +86,7 @@ do_loginrep(Packet packet)
       Net_disconnect();
       isConnected=0;
       serverstate=preGameState; //We hope that next time server will be to preGameState
-      restoreCallbacks();
+      changeCallback(&trackerscreenCallbacks, &guiCallbacks);
       return;
     }
   isLogged=1;
@@ -97,7 +97,9 @@ do_loginrep(Packet packet)
   strcpy(server_message, packet.infos.loginrep.message);
   nbUsers++;
   switchCallbacks(&netPregameCallbacks);
+  //changeCallback(&netPregameCallbacks, &trackerscreenCallbacks);
 }
+
 
 void
 do_serverinfo(Packet packet)

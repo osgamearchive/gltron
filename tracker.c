@@ -521,6 +521,7 @@ initTracker()
   glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
+  trackeruse=1;
 
   if( serverlist != NULL )
     return;
@@ -534,7 +535,7 @@ initTracker()
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-250,
 			 10, 4, colDefs, 3, focus);
-  trackeruse=1;
+
   current=-1;
 }
 
