@@ -124,9 +124,6 @@ enum {
 #define PHYSICS_RATE 20
 
 #define SONG_PREFIX "song_"
-#define MUSIC_DIR "music"
-
-#define PATH_ART "art"
 
 #define PLAYERS 4
 #define MAX_PLAYERS 4
@@ -185,9 +182,6 @@ enum {
 #define SCREENSAVER_WAIT 2000
 
 #define PAUSE_GAME_FINISHED 1
-
-extern char** artpack_list;
-extern int artpack_index;
 
 extern int gl_error;
 
@@ -410,9 +404,9 @@ extern int* getVi(char *szName);
 extern float* getVf(char *szName);
 
 /* file handling -> file.c */
+#include "file.h"
 
 extern list* readDirectoryContents(const char *dirname, char *prefix);
-extern char* getMusicPath(char *dirname);
 
 /* findpath.c, GPL'd code */
 extern void goto_installpath(char *executable);
