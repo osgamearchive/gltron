@@ -218,8 +218,6 @@ void initData() {
   /* event management */
   game2->events.next = NULL;
   /* TODO: free any old events that might have gotten left */
-
-  initRecognizerColor();
   
   initPlayerData();
   initClientData();

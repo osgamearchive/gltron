@@ -442,7 +442,6 @@ extern void checkQuad2D(char *flags, int q, int n);
 int testfrustum(float *x, float *y, float *p, float *a, float *b);
 
 /* recognizer stuff */
-extern void initRecognizerColor();
 extern void recognizerMovement();
 extern void drawRecognizers(int flag);
 extern void getRecognizerPositionVelocity(Point *p, Point *v);
