@@ -6,6 +6,21 @@
 #define BUFSIZE 100
 #define MAX_VAR_NAME_LEN 64
 
+
+void settings_key_actions(char *buf, FILE *f) {
+  int i, tmp[8];
+  if(f != NULL) {
+    for(i = 0; i < 8; i++)
+      fprintf(f, "%d ", key_actions[i].key);
+  } else {
+    sscanf(buf, "vset keys %d %d %d %d %d %d %d %d ", 
+	   tmp + 0, tmp + 1, tmp + 2, tmp + 3, tmp + 4,
+	   tmp + 5, tmp + 6, tmp + 7);
+    for(i = 0; i < 8; i++)
+      key_actions[i].key = tmp[i];
+  }
+}
+
 void initSettingData(char *filename) {
   FILE *f;
   int n, i, count, j;
@@ -35,6 +50,15 @@ void initSettingData(char *filename) {
 	fgets(buf, BUFSIZE, f);
 	buf[MAX_VAR_NAME_LEN - 1] = 0;
 	sscanf(buf, "%s ", (sf + j)->name);
+      }
+      break;
+    case 'v': /* void */
+      sv = malloc(sizeof(struct settings_v) * count);
+      sv_count = count;
+      for(j = 0; j < count; j++) {
+	fgets(buf, BUFSIZE, f);
+	buf[MAX_VAR_NAME_LEN - 1] = 0;
+	sscanf(buf, "%s ", (sv + j)->name);
       }
       break;
     default:
@@ -85,6 +109,8 @@ void initSettingData(char *filename) {
   sf[0].value = &(game->settings->current_speed);
   sf[1].value = &(game->settings->musicVolume);
   sf[2].value = &(game->settings->fxVolume);
+
+  sv[0].value = settings_key_actions;
 }
 
 int* getVi(char* name) {
@@ -95,6 +121,17 @@ int* getVi(char* name) {
   }
   return NULL;
 }
+
+/*
+void* getVv(char *name) {
+  int i;
+  for(i = 0; i < sv_count; i++) {
+    if(strstr(name, sv[i].name) == name)
+      return sv[i].value;
+  }
+  return NULL;
+}
+*/
 
 float* getVf(char* name) {
   int i;
@@ -216,6 +253,12 @@ void initMainGameSettings(char *filename) {
 	    break;
 	  }
 	}
+      } else if(strstr(buf, "vset") == buf) {
+	for(i = 0; i < sv_count; i++) {
+	  sprintf(expbuf, "vset %s ", sv[i].name);
+	  if(strstr(buf, expbuf) == buf)
+	    sv[i].value(buf, NULL);
+	}
       }
     }
     free(fname);
@@ -272,7 +315,13 @@ void saveSettings() {
     fprintf(f, "iset %s %d\n", si[i].name, *(si[i].value));
   for(i = 0; i < sf_count; i++)
     fprintf(f, "fset %s %.2f\n", sf[i].name, *(sf[i].value));
+  for(i = 0; i < sv_count; i++) {
+    fprintf(f, "vset %s ", sv[i].name);
+    (sv[i].value)(NULL, f);
+    fprintf(f, "\n");
+  }
   printf("written settings to %s\n", fname);
   free(fname);
   fclose(f);
 }
+

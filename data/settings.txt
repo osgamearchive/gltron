@@ -1,4 +1,4 @@
-2
+3
 f3
 speed
 musicVolume
@@ -41,3 +41,5 @@ lod
 ai_level
 mipmap_filter
 stretch_textures
+v1
+keys
