@@ -23,8 +23,8 @@ void initRecognizer(int grid_size) {
 void getRecognizerPositionVelocity(Point *p, Point *v) {
   p->x = ( x() + 1.0 ) * game2->rules.grid_size / 2.0;
   p->y = ( y() + 1.0 ) * game2->rules.grid_size / 2.0;
-  v->x = dx() * game2->rules.grid_size;
-  v->y = dy() * game2->rules.grid_size;
+  v->x = dx() * game2->rules.grid_size / 100.f;
+  v->y = dy() * game2->rules.grid_size / 100.f;
 }
 
 float calcRecognizerDirection() {
