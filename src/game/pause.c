@@ -24,7 +24,9 @@ void keyboardPause(int state, int key, int x, int y) {
   case SYSTEM_KEY_F3: changeDisplay(2); break;
   case SYSTEM_KEY_F4: changeDisplay(3); break;
 
-  case SYSTEM_KEY_F5: saveSettings(); break;
+	// somehow, this breaks the 'keys' array, and saving
+	// at the end of the game fails
+	// case SYSTEM_KEY_F5: saveSettings(); return;
 
   case SYSTEM_KEY_F10: nextCameraType(); break;
 

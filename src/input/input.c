@@ -47,7 +47,9 @@ void keyGame(int state, int k, int x, int y)
 		case SYSTEM_KEY_F3: changeDisplay(2); return;
 		case SYSTEM_KEY_F4: changeDisplay(3); return;
 
-		case SYSTEM_KEY_F5: saveSettings(); return;
+		// somehow, this breaks the 'keys' array, and saving
+		// at the end of the game fails
+		// case SYSTEM_KEY_F5: saveSettings(); return;
 
 		case SYSTEM_KEY_F10: nextCameraType(); return;
 		case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); return;
