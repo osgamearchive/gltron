@@ -2,6 +2,7 @@
 
 #include "lua.h"
 #include "lualib.h"
+#include "lauxlib.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -15,10 +16,11 @@ lua_State *L;
 extern void init_c_interface(lua_State *L);
 
 void scripting_Init() {
-  L = lua_open(0);
-  lua_baselibopen(L);
-  lua_strlibopen(L);
-  lua_iolibopen(L);
+  L = lua_open();
+  luaopen_base(L);
+  luaopen_table(L);
+  luaopen_string(L);
+  luaopen_io(L);
 
   // init_c_interface(L);
 }
@@ -182,7 +184,7 @@ int scripting_CopyStringResult(char *s, int len) {
 
 int scripting_GetArraySize(int *i)
 {
-	*i = lua_getn(L, -1);
+	*i = luaL_getn(L, -1);
 	return 0;
 }
 

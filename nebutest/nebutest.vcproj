@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="msvcrtd.lib opengl32.lib glew32.lib lib3ds.lib sdl.lib sdlmain.lib ..\lua\Debug\lua.lib"
+				AdditionalDependencies="msvcrtd.lib opengl32.lib glew32.lib lib3ds.lib sdl.lib sdlmain.lib"
 				OutputFile="$(OutDir)/nebutest.exe"
 				LinkIncremental="2"
 				IgnoreAllDefaultLibraries="TRUE"

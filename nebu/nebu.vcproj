@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="./include;../lua/include"
+				AdditionalIncludeDirectories="./include;../lua5/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -71,7 +71,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include;../lua/include"
+				AdditionalIncludeDirectories="./include;../lua5/include"
 				PreprocessorDefinitions="_LIB;WIN32;_DEBUG;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -150,24 +150,12 @@
 				Filter="">
 				<File
 					RelativePath=".\base\matrix.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\base\png_texture.c">
 				</File>
 				<File
 					RelativePath=".\base\random.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\base\spline.c">
@@ -177,30 +165,12 @@
 				</File>
 				<File
 					RelativePath=".\base\system.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\base\util.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\base\vector.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -252,21 +222,9 @@
 				Filter="">
 				<File
 					RelativePath=".\input\input_system.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;../lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\input\system_keynames.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;../lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -274,12 +232,6 @@
 				Filter="">
 				<File
 					RelativePath=".\scripting\scripting.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./include;./include/base;./include/scripting;../lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
@@ -425,20 +377,20 @@
 					RelativePath=".\include\filesystem\nebu_file_io.h">
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h">
+					RelativePath=".\include\filesystem\nebu_filesystem.h">
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h">
+					RelativePath=".\include\Nebu_filesystem.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="scripting"
 				Filter="">
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h">
+					RelativePath=".\include\Nebu_scripting.h">
 				</File>
 				<File
-					RelativePath=".\include\Nebu_scripting.h">
+					RelativePath=".\include\scripting\nebu_scripting.h">
 				</File>
 			</Filter>
 		</Filter>

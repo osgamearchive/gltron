@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="src/include;lua/include;nebu/include"
+				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include"
 				PreprocessorDefinitions="_WINDOWS,PREF_DIR=\&quot;.\&quot;,SNAP_DIR=\&quot;\&quot;,DATA_DIR=\&quot;\&quot;,LOCAL_DATA=\&quot;\&quot;,SEPARATOR=&apos;\\&apos;,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;,SEPERATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -88,7 +88,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="src/include;lua/include;nebu/include"
+				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;PREF_DIR=\&quot;.\&quot;,SNAP_DIR=\&quot;\&quot;,DATA_DIR=\&quot;\&quot;,LOCAL_DATA=\&quot;\&quot;,SEPARATOR=&apos;\\&apos;,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;,SEPERATOR=&apos;\\&apos;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -156,207 +156,72 @@
 				Filter="">
 				<File
 					RelativePath=".\src\video\artpack.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\explosion.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\fonts.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\game\game_level.c">
 				</File>
 				<File
 					RelativePath=".\src\video\gamegraphics.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\graphics_fx.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\graphics_hud.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\graphics_lights.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\graphics_utility.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\graphics_world.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="src\video\level.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\load_texture.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\material.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\model.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\recognizer.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\screenshot.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\skybox.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\texture.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\trail.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\trail_geometry.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\trail_render.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\video.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\video\visuals_2d.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -368,12 +233,6 @@
 				Filter="">
 				<File
 					RelativePath=".\src\input\input.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -381,135 +240,51 @@
 				Filter="">
 				<File
 					RelativePath=".\src\game\camera.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\computer.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="src\game\computer_utilities.c">
 				</File>
 				<File
 					RelativePath=".\src\game\credits.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\engine.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\event.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\game.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\globals.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\gui.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\init.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="src\game\level.c">
 				</File>
 				<File
 					RelativePath=".\src\game\menu.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\pause.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\scripting_interface.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\switchCallbacks.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\game\timedemo.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -517,12 +292,6 @@
 				Filter="">
 				<File
 					RelativePath=".\src\configuration\settings.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -530,12 +299,6 @@
 				Filter="">
 				<File
 					RelativePath=".\src\base\util.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -543,21 +306,9 @@
 				Filter="">
 				<File
 					RelativePath=".\src\audio\sound.c">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\src\audio\sound_glue.cpp">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
