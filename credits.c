@@ -58,7 +58,7 @@ void drawCredits() {
 
   rasonly(game->screen);
   h = game->screen->vp_h / (24 * 1.5);
-  for(i = 0; i < time; i++) {
+  for(i = 0; i < time / 250; i++) {
     glColor3fv(colors[i % 2]);
     if(credits[i] == NULL) 
       break;
