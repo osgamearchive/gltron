@@ -96,11 +96,6 @@ int main( int argc, char *argv[] ) {
   parse_args(argc, argv);
 
   /* sound */
-
-#ifdef SOUND
-  printf("initializing sound\n");
-  initSound();
-  setFxVolume(game->settings->fxVolume);
   path = getFullPath(MUSIC_DIR);
 
   game->settings->soundList = 
@@ -108,6 +103,12 @@ int main( int argc, char *argv[] ) {
   game->settings->soundIndex = -1;
 
   l = game->settings->soundList;
+
+#ifdef SOUND
+  printf("initializing sound\n");
+  initSound();
+  setFxVolume(game->settings->fxVolume);
+
   c = 0;
   if(l->next != NULL) {
     char *tmp;
