@@ -1,5 +1,26 @@
 #include <stdio.h>
-#include "gltron.h"
+
+
+#ifdef macintosh
+
+/* there is a conflict with the point type and mac headers
+    a better fix is to put code in separate files
+*/
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct list list;
+struct list {
+  void *data;
+  list* next;
+};
+
+#define SEPERATOR ':'
+
+#else
+	#include "gltron.h"
+#endif
+
 
 #ifdef macintosh
 static char* subdir = ":Data";
@@ -72,7 +93,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    	while (l->next != NULL)
    	   l=l->next;
    	
-   	l->data = malloc (sizeof(char) * len + 1);  							  
+   	l->data = (char*) malloc (sizeof(char) * len + 1);  							  
       strcpy (l->data, filename);
       
       l->next = (list*) malloc (sizeof (list));
