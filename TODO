@@ -1,37 +1,46 @@
 TODO list
 
+(name) reported it (contact for questions)
+[name] plans to fix it (contact for updates/patches)
+
 Bugs:
 
-- Make install doesn't work (Andreas) (in progress)
-- Screen garbled in-game after switching resolutions (hofi)
-- tweak LOD values so the lightcycle stays detailed within camera clamp range
+- Make install doesn't work (Andreas) [ LIM ]
+- tweak LOD values so the lightcycle stays detailed within camera
+  clamp range [ LIM ]
+- Screen garbled in-game after switching resolutions (hofi) (Note: works fine
+  for me, anyone else experiencing problems? Andreas)
 - the transparent part of the bow of the trail prevents other trails 
-  from drawing in the same pixels (LIM)
-- Make sure trails retract *completely* below floor when player dies.
-  Currently, there are some artifacts from not going far enough (darrell)
+  from drawing in the same pixels (LIM) (Note: proper back-to-front drawing
+  should take care of this. Andreas) [ won't fix ]
 
 Features:
 
+- create default graphics settings to choose from: low/medium/high
 - fix camera zoom generally (speed / settings)
 - upon game start, default to split screen mode when there are multiple human
-  players
-- glClearColor() doesn't match artpack. Move glClearColor to settings and
-  include in artpack.ini
-- Save current artpack / Clear up artpack system, Select default artpack 
-- Add 3d sound source for recognizer
+  players [ Todd ]
+- Add 3d sound source for recognizer [ Andreas ]
 - Add sound for own cycle. Modulate pitch (or volume) after turns
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
-- Tune diffuse / specular materials for the lightcycle, trail & recognizers (nicolas, kokido)
 - explosion is missing alpha blending right now
+
+Settings:
+- Tune diffuse / specular materials for the lightcycle, trail & recognizers
+  [ nicolas, kokido ]
+- glClearColor() doesn't match artpack. Move glClearColor to settings and
+  include in artpack.ini [ Andreas ]
+- Add trail & cycle shadow color to setting / artpack.ini [ Andreas ]
+- Save current artpack / Clear up artpack system,
+  Select default artpack [ Andreas ]
 
 Documentation:
 
-- add new default artpack author to CREDITS
+- add new default artpack author to CREDITS [ Andreas ]
 
 Administrative:
 
-- consider gltron-LE release. talk to overcode about the CD
-- document tools used. included 'sponsor' message for 3d exploration
+- document tools used. included 'sponsor' message for 3d exploration [ Andreas ]
 
 Optimizations/Cleanups
 
@@ -44,7 +53,7 @@ Optimizations/Cleanups
   solutions: try to optain 24bit visual, don't zclear and change frustum for
   the recognizer, render recognizer shadow to texture, and project it onto
   floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
-  decide 1G
+  decide about defaults)
 
 
 Old TODO list, clean up when time available (priority):
