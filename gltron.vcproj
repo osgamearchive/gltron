@@ -575,6 +575,9 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
+				RelativePath=".\src\include\game\ai.h">
+			</File>
+			<File
 				RelativePath=".\src\include\audio\audio.h">
 			</File>
 			<File
@@ -707,6 +710,12 @@
 			</File>
 			<File
 				RelativePath=".\scripts\gauge.lua">
+			</File>
+			<File
+				RelativePath=".\scripts\hud-config.lua">
+			</File>
+			<File
+				RelativePath=".\scripts\hud.lua">
 			</File>
 			<File
 				RelativePath=".\scripts\joystick.lua">
