@@ -89,6 +89,10 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
       strcpy ((char*)l->data, (const char*)filename);
       
       l->next = (list*) malloc (sizeof (list));
+      if (l == NULL) {
+  	    fprintf (stderr, "iterateProc: out of memory\n");
+  		exit (-1);
+      }
       l->next->next = NULL;
       l->next->data = NULL;
    }
@@ -123,13 +127,18 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
     exit (-1);
   }
   
+  l = NULL;
   l = (list*) malloc(sizeof(list));
+  if (l == NULL) {
+  	fprintf (stderr, "readDirectoryContents: out of memory\n");
+  	exit (-1);
+  }
   l->data = NULL;
   l->next = NULL;
  
   filter_prefix = prefix;
   
-  err = FSpIterateDirectory (&spec, 1, iterateProc, l);
+  err = FSpIterateDirectory (&spec, 1, NewIterateFilterUPP(iterateProc), l);
     
   if (err != noErr)  {
     fprintf (stderr, "FSpIterateDirectory failed\n");
