@@ -10,14 +10,56 @@
 void settings_key_actions(char *buf, FILE *f) {
   int i, tmp[8];
   if(f != NULL) {
+    fprintf(f, "vset keys ");
     for(i = 0; i < 8; i++)
       fprintf(f, "%d ", key_actions[i].key);
+    fprintf(f, "\n");
   } else {
     sscanf(buf, "vset keys %d %d %d %d %d %d %d %d ", 
 	   tmp + 0, tmp + 1, tmp + 2, tmp + 3, tmp + 4,
 	   tmp + 5, tmp + 6, tmp + 7);
     for(i = 0; i < 8; i++)
       key_actions[i].key = tmp[i];
+  }
+}
+
+void settings_cycle_colors(char *buf, FILE *f) {
+  int i, t;
+  float tmp[4];
+  if(f != NULL) {
+    for(i = 0; i < MAX_PLAYERS; i++)
+      fprintf(f, "vset cycle_colors %d %.3f %.3f %.3f %.3f\n", i,
+	      colors_model[i][0],
+	      colors_model[i][1],
+	      colors_model[i][2],
+	      colors_model[i][3]);
+  } else {
+    sscanf(buf, "vset cycle_colors %d %f %f %f %f ", &t,
+	   tmp + 0, tmp + 1, tmp + 2, tmp + 3);
+    if(t < MAX_PLAYERS)
+      memcpy(colors_model[t], tmp, sizeof(tmp));
+    else
+      fprintf(stderr, "error reading colors: unknown player %d\n", t);
+  }
+}
+
+void settings_trail_colors(char *buf, FILE *f) {
+  int i, t;
+  float tmp[4];
+  if(f != NULL) {
+    for(i = 0; i < MAX_PLAYERS; i++)
+      fprintf(f, "vset trail_colors %d %.3f %.3f %.3f %.3f\n", i,
+	      colors_alpha[i][0],
+	      colors_alpha[i][1],
+	      colors_alpha[i][2],
+	      colors_alpha[i][3]);
+  } else {
+    sscanf(buf, "vset trail_colors %d %f %f %f %f ", &t,
+	   tmp + 0, tmp + 1, tmp + 2, tmp + 3);
+    if(t < MAX_PLAYERS)
+      memcpy(colors_alpha[t], tmp, sizeof(tmp));
+    else
+      fprintf(stderr, "error reading colors: unknown player %d\n", t);
   }
 }
 
@@ -111,6 +153,8 @@ void initSettingData(char *filename) {
   sf[2].value = &(game->settings->fxVolume);
 
   sv[0].value = settings_key_actions;
+  sv[1].value = settings_cycle_colors;
+  sv[2].value = settings_trail_colors;
 }
 
 int* getVi(char* name) {
@@ -316,9 +360,7 @@ void saveSettings() {
   for(i = 0; i < sf_count; i++)
     fprintf(f, "fset %s %.2f\n", sf[i].name, *(sf[i].value));
   for(i = 0; i < sv_count; i++) {
-    fprintf(f, "vset %s ", sv[i].name);
     (sv[i].value)(NULL, f);
-    fprintf(f, "\n");
   }
   printf("written settings to %s\n", fname);
   free(fname);

@@ -41,5 +41,7 @@ lod
 ai_level
 mipmap_filter
 stretch_textures
-v1
+v3
 keys
+cycle_colors
+trail_colors
