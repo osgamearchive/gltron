@@ -5,10 +5,17 @@
 
 #include <math.h>
 
-int getCol(int x, int y) {
-  return x < 1 || x >= game2->rules.grid_size ||
-		y < 1 || y >= game2->rules.grid_size ||
-		colmap[ y * colwidth + x ];
+void getPositionFromIndex(float *x, float *y, int player) {
+	getPositionFromData(x, y, game->player[player].data);
+}
+
+void getPositionFromData(float *x, float *y, Data *data) {
+	vec2 v;
+	vec2Add(&v,
+					&data->trails[data->trailOffset].vStart,
+					&data->trails[data->trailOffset].vDirection);
+	*x = v.v[0];
+	*y = v.v[1];
 }
 
 void initGameStructures(void) { /* called only once */
@@ -47,6 +54,7 @@ void resetPlayerData(void) {
     float startpos[][2] = { 
 			{ 0.5, 0.25 }, { 0.75, 0.5 }, { 0.5, 0.75 }, { 0.25, 0.5 }
     };
+		float x, y;
 
     data = game->player[i].data;
     ai = game->player[i].ai;
@@ -66,9 +74,8 @@ void resetPlayerData(void) {
 		/* arrange players in circle around center */
 
 		/* randomize position on the grid */
-		data->posx = startpos[ startIndex[i] ][0] * getSettingi("grid_size");
-		data->posy = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
-		if(i == 0) data->posy -= 1;
+		x = startpos[ startIndex[i] ][0] * getSettingi("grid_size");
+		y = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
 		/* randomize starting direction */
 		data->dir = trand() & 3;
 		/* data->dir = startdir[i]; */
@@ -88,8 +95,8 @@ void resetPlayerData(void) {
 		// data->trail = data->trails;
 		data->trailOffset = 0;
 
-		data->trails[ data->trailOffset ].vStart.v[0] = floorf(data->posx);
-		data->trails[ data->trailOffset ].vStart.v[1] = floorf(data->posy);
+		data->trails[ data->trailOffset ].vStart.v[0] = x;
+		data->trails[ data->trailOffset ].vStart.v[1] = y;
 		
 		data->trails[ data->trailOffset ].vDirection.v[0] = 0;
 		data->trails[ data->trailOffset ].vDirection.v[1] = 0;
@@ -111,21 +118,6 @@ void resetPlayerData(void) {
 }
 
 void initData(void) {
-	int i;
-  
-	/* colmap */
-
-	/* TODO: check if grid_size/colwidth has changed and  
-	 *       reallocate colmap accordingly                */
-
-	colwidth = getSettingi("grid_size");
-	if(colmap != NULL)
-		free(colmap);
-  
-	colmap = (unsigned char*) malloc(colwidth*colwidth/*getSettingi("grid_size")*/);
-	for(i = 0; i < colwidth * colwidth/*getSettingi("grid_size")*/; i++)
-		*(colmap + i) = 0;
-
 	/* lasttime = SystemGetElapsedTime(); */
 	game->pauseflag = PAUSE_GAME_RUNNING;
 
@@ -165,14 +157,6 @@ void resetScores(void) {
 		game->player[i].data->score = 0;
 }
 
-void clearTrail(int player) {
-	int i;
-
-	for(i = 0; i < colwidth *  game2->rules.grid_size; i++)
-		if(colmap[i] == player + 1)
-			colmap[i] = 0;
-}
-
 void doCrashPlayer(GameEvent *e) {
 	int j;
 
@@ -184,34 +168,22 @@ void doCrashPlayer(GameEvent *e) {
 			game->player[j].data->score++;
 
 	game->player[e->player].data->speed = SPEED_CRASHED;
-
-	if(game2->rules.eraseCrashed == 1)
-		clearTrail(e->player);
-}
-
-void writePosition(int player) {
-	int x, y;
-
-	x = floorf(game->player[player].data->posx);
-	y = floorf(game->player[player].data->posy);
-
-	/* collision detection */
-	colmap[ y * colwidth + x ] = player + 1;
 }
 
 void newTrail(Data* data) {
-	segment2 *s = data->trails + data->trailOffset;
-	s->vDirection.v[0] = data->posx - s->vStart.v[0];
-	s->vDirection.v[1] = data->posy - s->vStart.v[1];
+	segment2 *s;
+	float x, y;
 
-	s++;
-	
-	s->vStart.v[0] = data->posx;
-	s->vStart.v[1] = data->posy;
+	getPositionFromData(&x, &y, data);
+
+	data->trailOffset++;
+	s = data->trails + data->trailOffset;
+
+	s->vStart.v[0] = x;
+	s->vStart.v[1] = y;
 	s->vDirection.v[0] = 0;
 	s->vDirection.v[1] = 0;
 	
-	data->trailOffset++;
 }
       
 void doTurn(GameEvent *e, int direction) {
