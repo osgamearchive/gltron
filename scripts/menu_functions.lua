@@ -6,6 +6,7 @@ GetMenuValue[ MenuC.type.menu ] = function ( menu )
 end
 MenuAction[ MenuC.type.menu ] = function ( menu )
    Menu.current = menu 
+   Menu.active = 1
 end
 
 GetMenuValue[ MenuC.type.list ] = function ( menu )

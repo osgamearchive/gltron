@@ -47,7 +47,7 @@ Menu = {
    -- Game
    StartGame = { 
       type = MenuC.type.action, caption = "Start Game",
-      action = function() c_startGame(); end
+      action = function() Menu.current = "RootMenu"; c_startGame(); end
    },
    ResetScores = { 
       type = MenuC.type.action, caption = "Reset Scores",
@@ -413,6 +413,7 @@ end
 
 Menu.GotoParent = function ()
    Menu.current = Menu[Menu.current].parent
+   Menu.active = 1
 end
 
 Menu.Action = function ()
