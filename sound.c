@@ -60,9 +60,6 @@ int initSound() {
 
   loadFX();
   Audio_LoadPlayers();
-
-  SDL_PauseAudio(0);
-
   return 0;
 }
 
@@ -129,4 +126,6 @@ void setupSound() {
   setFxVolume(getSettingf("fxVolume"));
   reloadTrack();
   setMusicVolume(getSettingf("musicVolume"));
+
+  SDL_PauseAudio(0);
 }
