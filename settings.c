@@ -222,6 +222,7 @@ void initMainGameSettings(char *filename) {
   game->settings->erase_crashed = 0;
   game->settings->fast_finish = 1;
   game->settings->fov = 105;
+  game->settings->znear = 1.0;
   game->settings->current_speed = 7.0;
   game->settings->game_speed = 1; /* normal */
   /* game->settings->grid_size MUST be divisible by 8 */
