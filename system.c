@@ -161,10 +161,10 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   }
   if(flags & SYSTEM_DEPTH)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, zdepth);
-  /* SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8); */
-#ifdef DO_STENCIL
-  SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8);
-#endif
+  if(flags & SYSTEM_STENCIL)
+     SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8);
+  else 
+     SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 0);
   video_initialized = 1;
 #warning "bitdepth value unused"
 }

@@ -31,14 +31,28 @@ int initWindow() {
   if(getSettingi("bitdepth_32"))
     flags |= SYSTEM_32_BIT;
 
+  if(getSettingi("use_stencil"))
+    flags |= SYSTEM_STENCIL;
+
   SystemInitDisplayMode(flags, fullscreen);
 
-  win_id = SystemCreateWindow("gltron");
+  win_id = SystemCreateWindow("gltron");      
 
-  if (win_id < 0) {
+  if (win_id < 0) { 
+    if( getSettingi("use_stencil") ) {
+      flags &= ~SYSTEM_STENCIL;
+      SystemInitDisplayMode(flags, fullscreen);
+      win_id = SystemCreateWindow("gltron");      
+      if(win_id >= 0) {
+	setSettingi("use_stencil", 0);
+	goto SKIP;
+      }
+    }
     printf("could not create window...exiting\n");
     exit(1); /* OK: critical, no visual */
   }
+
+ SKIP:
 
   if(getSettingi("windowMode") == 0 || getSettingi("mouse_warp") == 1) {
     SystemGrabInput();

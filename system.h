@@ -40,6 +40,7 @@
 #define SYSTEM_DEPTH 4
 #define SYSTEM_FULLSCREEN 8
 #define SYSTEM_32_BIT 16
+#define SYSTEM_STENCIL 32
 
 /* system specific functions (basically, an SDL/glut wrapper) */
 
