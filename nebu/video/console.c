@@ -1,5 +1,5 @@
 #include "video/nebu_console.h"
-#include "nebu_Scripting.h"
+#include "scripting/nebu_scripting.h"
 
 #include <stdarg.h>
 #include <stdio.h>

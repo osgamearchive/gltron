@@ -1,7 +1,7 @@
 #include "game/game.h"
 #include "video/video.h"
 #include "audio/audio.h"
-#include "nebu/nebu_scripting.h"
+#include "scripting/nebu_scripting.h"
 #include "Nebu_base.h"
 
 #include <math.h>
