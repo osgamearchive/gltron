@@ -159,7 +159,7 @@ idleTracker()
 
   sockstat = Net_checksocket(Net_gettrackersock());
 
-  if(  ready_ping() )
+  while(  ready_ping() )
     {
       handle_ping(servers);
 	  /** */

@@ -229,7 +229,6 @@ make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
   int        i;
   //  IPaddress  address;
 
-  packet.time  = SystemGetElapsedTime();
   packet.which = which;
   slots[packet.which].ping=0;
 
@@ -243,6 +242,7 @@ make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
   SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT);
   for(i=0; i < NBPINGPACKET; ++i )
     {
+      packet.time  = SystemGetElapsedTime();
       printf("sending ping %d to %s:%d\n", i, ipaddress, port);
       packet.num = i;
       udppacket->len=sizeof(Pingpacket);

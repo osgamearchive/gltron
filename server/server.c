@@ -11,6 +11,7 @@ static int    getpingrep    = 0;
 static int    starting      = 0;
 static Uint32 starttime     = 0;
 static int    timetostart   = 0;
+static int    timeserver    = 0;
 
 
 static int  getping();
@@ -21,7 +22,7 @@ start_server()
 {
   int        i;
 
-
+  timeserver = SystemGetElapsedTime();
   //Init the slots
   for(i=0;i<MAX_PLAYERS;++i)
     {
@@ -1027,9 +1028,10 @@ handle_server()
     handle_connection();
   }
 
-  if(  ready_ping() )
+  while(  ready_ping() )
     {
       reply_ping();
+      printf("time is %d\n", SystemGetElapsedTime()-timeserver);
     }
 
   //look what is said!
