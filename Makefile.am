@@ -7,7 +7,7 @@ SUBDIRS=lua data art sounds scripts
 
 bin_PROGRAMS = gltron
 
-CFLAGS=@CFLAGS@ -Ilua/src -Ilua/include
+CFLAGS=@CFLAGS@ -I$(srcdir)/lua/src -I$(srcdir)/lua/include
 
 gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	pause.c computer.c engine.c event.c game.c gltron.c gamegraphics.c \
@@ -20,7 +20,7 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	geom.h file.h gltron.h light.h menu.h model.h png_texture.h \
 	quad.h renderer_gl.h switchCallbacks.h system.h texture.h credits.c \
         SkyBox.cpp SkyBox.h skybox_glue.cpp skybox_glue.h engine.h event.h \
-	scripting.c scripting.h
+	scripting.c scripting.h console.h settings.h
 
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/liblualib.a -lm
 
@@ -28,7 +28,8 @@ gltron_DEPENDENCIES = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/l
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound_glue.h \
 	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp SoundSystem.cpp \
-	SourceCopy.cpp 
+	SourceCopy.cpp Sound.h SoundSystem.h SourceMusic.h SourceCopy.h Source3D.h \
+	Source.h Vector3.h SourceSample.h
 
 todo:
 	perl todo2html.pl < TODO > TODO.html

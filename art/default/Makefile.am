@@ -5,4 +5,6 @@ gltron_wall_2.png gltron_wall_3.png gltron_wall_4.png skybox0.png skybox1.png \
 skybox2.png skybox3.png skybox4.png skybox5.png test.bitmap.png \
 xenotron.0.png xenotron.1.png
 
+EXTRA_DIST = $(pkgdata_DATA)
+
 pkgdatadir = @datadir@/@PACKAGE@/art/default

@@ -4,7 +4,7 @@ noinst_LIBRARIES=liblua.a
 
 DEFS=
 CPPFLAGS=
-CFLAGS=-O2 -ansi -pedantic -Wall -I. -I../include
+CFLAGS=-O2 -ansi -pedantic -Wall -I$(srcdir) -I$(top_srcdir)/lua/include
 LDFALGS=
 LIBS=-lm
 
