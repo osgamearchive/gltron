@@ -1,9 +1,6 @@
 #include "Sound.h"
 #include "gltron.h"
 
-#include "SDL.h"
-#include "SDL_sound.h"
-
 #define NUM_GAME_FX 3
 
 static char *game_fx_names[] = {
@@ -54,15 +51,6 @@ void reloadTrack() {
 
   free(path);
 }
- 
-int initSound() {
-  Audio_Init();
-
-  loadFX();
-  Audio_LoadPlayers();
-  return 0;
-}
-
 
 void shutdownSound() {
   Audio_Quit();
@@ -122,10 +110,12 @@ void initSoundTracks() {
 
 void setupSound() {
   printf("initializing sound\n");
-  initSound();
+
+  Audio_Init();
+  loadFX();
+  Audio_LoadPlayers();
   setFxVolume(getSettingf("fxVolume"));
   reloadTrack();
   setMusicVolume(getSettingf("musicVolume"));
-
-  SDL_PauseAudio(0);
+  Audio_Start();
 }
