@@ -3,16 +3,7 @@
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
 static char *ai_list[] = { "dumb", "normal", "strong", "the MCP", NULL };
-
-static int coffset;
-
-static char message[255] ="pregame";
-static char chat[1024]   = "";
-
-
 static int oldType;
-
-
 
 #define MAX_CHARS 255
 
@@ -256,7 +247,6 @@ keyboardreadingreturn(char *buff)
        } while (  j > 0 );
      
     }
-  //strcpy(buff, "");
 }
 
 
@@ -327,108 +317,6 @@ void idlePregame() {
 	handleUDP();
 #endif
     }
-}
-
-void
-drawMessage(char *str)
-{
-  strcpy(message, str);
-}
-
-void
-drawChat(char *str)
-{
-  //TODO: multiline chat...
-  strcpy(chat, str);
-}
-
-void drawPregame() {
-  int time;
-  int x, y;
-  int h;
-  int i, len;
-  char str[255];
-  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { 0.0, 0.5, 1.0 }};
-  time = SDL_GetTicks() - coffset;
-  
-  //glClearColor(.0, .0, .0, .0);
-  //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  //rasonly(game->screen);
-  
-  h = game->screen->vp_h / (24 * 1.5);
-  
-  //Draw pregametext
-  draw_wtext(pregame.pregametext);
-  
-  //calculate the max len of a name;
-  len=5; //for empty;
-  for(i=0; i<MAX_PLAYERS; ++i)
-    {
-      if( slots[i].active && strlen( slots[i].name)>len)
-	{
-	  len= strlen( slots[i].name);
-	}
-    }
-  glColor3fv(colors[1]);
-  x = game->screen->vp_w - 1.5 * 16 *( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 1.5 * h * (8);
-  drawText(gameFtx, x, y, h, "Users");
-
-  //Users
-  for(i=0; i<MAX_PLAYERS; ++i)
-    {
-      y = game->screen->vp_h - 1.5 * h * (i + 9);
-      if( slots[i].active == 1 )
-	{
-	  if( slots[i].isMaster )
-	    glColor3fv(colors[3]);
-	    
-	  sprintf(str, "%s (%d)\n", slots[i].name, slots[i].ping);
-	  drawText(gameFtx, x, y, h, str);
-	  if( slots[i].isMaster )
-	    glColor3fv(colors[1]);
-	  
-	} else {
-	  if( slots[i].active == 2 )
-	      drawText(gameFtx, x, y, h, "Computer");
-	    else
-	      drawText(gameFtx, x, y, h, "Empty");
-	}
-    }
-
-  //Inputs
-  glColor3fv(colors[2]);
-  draw_wintext(pregame.inpregametext);
-
-  //NetRules
-  glColor3fv(colors[1]);
-  x = game->screen->vp_w - 1.5 * 21*( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 1.5 * h * 17;
-  drawText(gameFtx, x, y, h, "Game Settings"); 
-  sprintf(str, "Games: %d", netrulenbwins);
-  y = game->screen->vp_h - 1.5 * h * 18; 
-  drawText(gameFtx, x, y, h, str);
-  sprintf(str, "Time: %d", netruletime);
-  y = game->screen->vp_h - 1.5 * h * 19; 
-  drawText(gameFtx, x, y, h, str);
-
-  //GameRules 
-  sprintf(str, "eraseCrashed: %d", game2->rules.eraseCrashed);
-  y = game->screen->vp_h - 1.5 * h * 20; 
-  drawText(gameFtx, x, y, h, str);
-  sprintf(str, "Speed: %s", speed_list[game->settings->game_speed]);
-  y = game->screen->vp_h - 1.5 * h * 21; 
-  drawText(gameFtx, x, y, h, str);
-  sprintf(str, "arena size: %s", arena_list[game->settings->arena_size]);
-  y = game->screen->vp_h - 1.5 * h * 22; 
-  drawText(gameFtx, x, y, h, str);
-  sprintf(str, "AI level: %s", ai_list[game->settings->ai_level]);
-  y = game->screen->vp_h - 1.5 * h * 23; 
-  drawText(gameFtx, x, y, h, str);
-
-  
-  
 }
 
 void
