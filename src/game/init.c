@@ -6,7 +6,7 @@
 #include "base/nebu_system.h"
 #include "audio/nebu_audio_system.h"
 
-#define INI_VERSION 0.7105f
+#define INI_VERSION 0.7106f
 
 void initSubsystems(int argc, const char *argv[]) {
 	nebu_Init();
