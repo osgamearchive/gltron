@@ -140,7 +140,7 @@ void drawCrash(float radius) {
   if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
 }
 
-void drawCycle(Player *p) {
+void drawCycle(Player *p, int lod) {
   float dirangles1[] = { 180, 90, 0, 270, 360, -90 };
   float dirangles2[] = { 0, -90, -180, 90, 180, -270 };
   float *dirangles;
@@ -161,7 +161,7 @@ void drawCycle(Player *p) {
   }
 
   /* TODO: decide on LOD */
-  cycle = p->model->mesh;
+  cycle = p->model->mesh[lod];
     
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, .0);
@@ -242,6 +242,7 @@ int playerVisible(Player *eye, Player *target) {
   float tmp[3];
   float s;
   float d;
+  int i;
 
   vsub(eye->camera->target, eye->camera->cam, v1);
   normalize(v1);
@@ -259,8 +260,17 @@ int playerVisible(Player *eye, Player *target) {
 	 s, d);
   */
   if(s < d)
-    return 0;
-  else return 1;
+    return -1;
+  else {
+    /* calculate lod */
+    vsub(eye->camera->cam, tmp, v1);
+    d = length(v1);
+    for(i = 0; i < target->model->lod; i++) {
+      if(d < target->model->lod_dist[i])
+	return i;
+    }
+    return -1;
+  }
 }
 	    
 void drawPlayers(Player *p) {
@@ -268,6 +278,7 @@ void drawPlayers(Player *p) {
   int dir;
   float l = 5.0;
   float height;
+  int lod;
 
   glShadeModel(GL_SMOOTH);
   glEnable(GL_BLEND);
@@ -292,9 +303,10 @@ void drawPlayers(Player *p) {
       polycount++;
       glPopMatrix();
     }
-    if(playerVisible(p, &(game->player[i]))) {
-      if(game->settings->show_model)
-	drawCycle(&(game->player[i]));
+    if(game->settings->show_model) {
+      lod = playerVisible(p, &(game->player[i]));
+      if(lod >= 0) 
+	drawCycle(&(game->player[i]), lod);
     }
   }
   if(game->settings->show_alpha != 1) glDisable(GL_BLEND);

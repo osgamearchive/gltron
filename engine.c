@@ -81,29 +81,49 @@ void exitGame() {
 #endif
 }
 
-void initModel(Player *p) {
-  // load player mesh, currently only one type
-  path = getFullPath("t-u-low.obj");
-  // path = getFullPath("tron-med.obj");
-  if(path != 0)
-    // model size == CYCLE_HEIGHT
-    p->model->mesh = loadModel(path, CYCLE_HEIGHT, 0);
-  else {
-    printf("fatal: could not load model - exiting...\n");
-    exit(1);
-  }
-    
-  free(path);
+static int lod_n = 3;
+static char *lod_names[] = {
+  "lightcycle high.obj",
+  "lightcycle med.obj",
+  "lightcycle low.obj"
+};
+static int lod_dist[] = { 25, 50, 150 };
 
-    /* copy contents from colors_a[] to model struct */
+void initModel(Player *p, int p_num) {
+  int i, j;
+  char *path;
+
+  p->model->lod = lod_n;
+  p->model->mesh = (Mesh**) malloc(lod_n * sizeof(Mesh*));
+  p->model->lod_dist = (int*) malloc(lod_n * sizeof(int));
+
+  for(i = 0; i < lod_n; i++) {
+    p->model->lod_dist[i] = lod_dist[i];
+    // load player mesh, currently only one type
+    path = getFullPath(lod_names[i]);
+    // path = getFullPath("tron-med.obj");
+    if(path != 0)
+      // model size == CYCLE_HEIGHT
+      p->model->mesh[i] = loadModel(path, CYCLE_HEIGHT, 0);
+    else {
+      printf("fatal: could not load model - exiting...\n");
+      exit(1);
+    }
+    
+    free(path);
+  }
+
+  /* copy contents from colors_a[] to model struct */
   for(j = 0; j < 4; j++) {
-    p->model->color_alpha[j] = colors_alpha[i][j];
-    p->model->color_trail[j] = colors_trail[i][j];
-    p->model->color_model[j] = colors_model[i][j];
+    p->model->color_alpha[j] = colors_alpha[p_num][j];
+    p->model->color_trail[j] = colors_trail[p_num][j];
+    p->model->color_model[j] = colors_model[p_num][j];
   }
   // set material 0 to color_model
-  setMaterialAmbient(p->model->mesh, 0, p->model->color_model);
-  setMaterialDiffuse(p->model->mesh, 0, p->model->color_model);
+  for(i = 0; i < lod_n; i++) {
+    setMaterialAmbient(p->model->mesh[i], 0, p->model->color_model);
+    setMaterialDiffuse(p->model->mesh[i], 0, p->model->color_model);
+  }
 }
 
 void initGameStructures() { /* called only once */
@@ -117,14 +137,14 @@ void initGameStructures() { /* called only once */
   /*   create camera */
 
   gDisplay *d;
-  int i, j;
+  int i;
   /* int onScreen; */
   /* Data *data; */
   /* Camera *c; */
   /* Model *m; */
   AI *ai;
   Player *p;
-  char *path;
+
 
   game->winner = -1;
   game->screen = (gDisplay*) malloc(sizeof(gDisplay));
@@ -149,7 +169,7 @@ void initGameStructures() { /* called only once */
     p->camera = (Camera*) malloc(sizeof(Camera));
 
     // init model & display & ai
-    initModel(p);
+    initModel(p, i);
 
     ai = p->ai;
     ai->active = (i == 0 && game->settings->screenSaver == 0) ? -1 : 1;
@@ -167,7 +187,7 @@ void initData() {
   /*   init camera (if any) */
   /*   init data */
   /*   reset ai (if any) */
-  int i;
+  int i, j;
   Camera *cam;
   Data *data;
   AI *ai;
@@ -179,7 +199,8 @@ void initData() {
     ai = game->player[i].ai;
     model = game->player[i].model;
 
-    setMaterialAlphas(model->mesh, 1.0);
+    for(j = 0; j < model->lod; j++)
+      setMaterialAlphas(model->mesh[j], 1.0);
 
     /* arrange players in circle around center */
     data->posx = game->settings->grid_size / 2 +
