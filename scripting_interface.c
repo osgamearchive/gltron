@@ -33,6 +33,7 @@ int c_resetCamera(lua_State *L) {
       0 : getSettingi("camType");
     initCamera(cam, data, camType);
   }
+  return 0;
 }
 
 int c_video_restart(lua_State *L) {
