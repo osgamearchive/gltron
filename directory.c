@@ -184,7 +184,11 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
 void makeDirectory(const char *name) {
   int result;
   if(access(name, R_OK)) {
+#ifndef WIN32
     result = mkdir(name, 0x1ff);
+#else
+    result = mkdir(name);
+#endif
     if(result)
       printf("cannot create dir '%s': %s\n", name, strerror(errno));
   }
