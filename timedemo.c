@@ -87,7 +87,7 @@ void initTimedemo() {
 	frames = 0;
 	startTime = SystemGetElapsedTime();
 	
-	tsrand(37518);
+	tsrand(12313);
 
 	resetRecognizer();
 	
