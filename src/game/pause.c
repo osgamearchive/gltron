@@ -80,13 +80,13 @@ void exitPause(void) {
 // Audio_EnableEngine(); 
 }
 
-void initPauseGL(void) {
+void initGLPause(void) {
   initGLGame();
 }
 
 Callbacks pauseCallbacks = {
   displayPause, idlePause, keyboardPause,
-  initPause, exitPause, initPauseGL, gameMouse, gameMouseMotion, "pause"
+  initPause, exitPause, initGLPause, gameMouse, gameMouseMotion, "pause"
 };
 
 void keyboardPrompt(int state, int key, int x, int y) {
