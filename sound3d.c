@@ -67,9 +67,9 @@ void getSound3dData(int i_player, int i_object,
     (VOLSCALE_BASE * game->settings->game_speed / dist2) : (1.0);
   *shift = 
     ( USOUND + 
-      ( vo.x * ( vp.x - po.x ) + vo.y * ( vp.y - po.y ) ) / sqrt(dist2) ) /
+      abs( vo.x * ( vp.x - po.x ) + vo.y * ( vp.y - po.y ) ) / sqrt(dist2) ) /
     ( USOUND + 
-      ( vp.x * ( vp.x - po.x ) + vp.y * ( vp.y - po.y ) ) / sqrt(dist2) );
+      abs( vp.x * ( vp.x - po.x ) + vp.y * ( vp.y - po.y ) ) / sqrt(dist2) );
 }
 
 int checkFormat() {
