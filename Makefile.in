@@ -85,8 +85,8 @@ CFILES = \
 #	system_net.c
 
 
-SOUND_CFILES = \
-	sound.c
+SOUND_CFILES = @SOUND_FILE@
+#	sound.c
 
 DISTFILES = $(DIST_COMMON) $(EXTRA_DIST) $(CFILES) $(HFILES) $(SOUND_CFILES)
 

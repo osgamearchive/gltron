@@ -16,6 +16,56 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
+CFLAGS=""
+
+AC_ARG_ENABLE(warn,
+[ --enable-warn                Enable compiler warnings [default=on]],
+	enable_warn=$enableval, enable_warn=yes)
+if test "x$enable_warn" = xyes; then
+	CFLAGS="$CFLAGS -Wall"
+fi
+
+AC_ARG_ENABLE(debug,
+[ --enable-debug               Enable debugging [default=off]],
+	enable_debug=$enableval, enable_debug=off)
+if test "x$enable_debug" = xyes; then
+	CFLAGS="$CFLAGS -g3"
+fi
+
+AC_ARG_ENABLE(profile,
+[ --enable-profile             Enable profiling [default=off]],
+	enable_profile=$enableval, enable_profile=off)
+if test "x$enable_profile" = xyes; then
+	if test "x$GCC" = xyes; then
+		CFLAGS="$CFLAGS -pg"
+	else
+		CFLAGS="$CFLAGS -p"
+	fi
+fi
+
+AC_ARG_ENABLE(optimize,
+[ --enable-optimize=[level]    Enable optimization [default=2]],
+	enable_optmize=$enableval, enable_optimize=2)
+if test "x$enable_optimize" ; then
+	CFLAGS="$CFLAGS -O$enable_optimize"
+fi
+
+AC_ARG_ENABLE(network,
+[ --enable-network             Experimental network mode [default=off]],
+	enable_network=$enableval, enable_network=off)
+if test "x$enable_network" = xyes; then
+AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
+	${LN_S} -f system_net_sdl.c system_net.c
+	${LN_S} -f system_net_sdl.h system_net.h
+	CFLAGS="$CFLAGS -DNETWORK"
+	LIBS="$LIBS -lSDL_net"
+	NETWORK_FILES="network.c system_net.c"
+	AC_SUBST(NETWORK_FILES)
+fi
+
+AC_ARG_ENABLE(sound,
+[ --disable-sound              Dont compile in sound [default=off]],
+   use_sound=no, use_sound=yes)
 
 AC_CHECK_LIB(m, main,, AC_MSG_ERROR(libm is needed))
 AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
@@ -34,7 +84,9 @@ ${LN_S} -f system_glut.h system.h ; \
 LIBS="$LIBS -lglut", \
 AC_MSG_ERROR(Neither SDL or glut is installed!)))
 
-if test "x$use_sound" = 1; then
+if test "x$use_sound" = xyes; then
+	SOUND_FILE="sound.c"
+	AC_SUBST(SOUND_FILE)
 	AC_CHECK_LIB(SDL_mixer, main,
 	${LN_S} -f sound_sdl.c sound.c ; \
 	${LN_S} -f sound_sdl.h sound.h ; \
@@ -91,53 +143,5 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS(strstr)
 
 
-AC_ARG_ENABLE(warn,
-[ --enable-warn                Enable compiler warnings [default=on]],
-	enable_warn=$enableval, enable_warn=yes)
-if test "x$enable_warn" = xyes; then
-	CFLAGS="$CFLAGS -Wall"
-fi
-
-AC_ARG_ENABLE(debug,
-[ --enable-debug               Enable debugging [default=off]],
-	enable_debug=$enableval, enable_debug=off)
-if test "x$enable_debug" = xyes; then
-	CFLAGS="$CFLAGS -g3"
-fi
-
-AC_ARG_ENABLE(profile,
-[ --enable-profile             Enable profiling [default=off]],
-	enable_profile=$enableval, enable_profile=off)
-if test "x$enable_profile" = xyes; then
-	if test "x$GCC" = xyes; then
-		CFLAGS="$CFLAGS -pg"
-	else
-		CFLAGS="$CFLAGS -p"
-	fi
-fi
-
-AC_ARG_ENABLE(optimize,
-[ --enable-optimize=[level]    Enable optimization [default=2]],
-	enable_optmize=$enableval, enable_optimize=2)
-if test "x$enable_optimize" ; then
-	CFLAGS="$CFLAGS -O$enable_optimize"
-fi
-
-AC_ARG_ENABLE(network,
-[ --enable-network             Experimental network mode [default=off]],
-	enable_network=$enableval, enable_network=off)
-if test "x$enable_network" = xyes; then
-AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
-	${LN_S} -f system_net_sdl.c system_net.c
-	${LN_S} -f system_net_sdl.h system_net.h
-	CFLAGS="$CFLAGS -DNETWORK"
-	LIBS="$LIBS -lSDL_net"
-	NETWORK_FILES="network.c system_net.c"
-	AC_SUBST(NETWORK_FILES)
-fi
-
-AC_ARG_ENABLE(sound,
-[ --disable-sound              Dont compile in sound [default=off]],
-   use_sound=$enableval, use_sound=1)
 
 AC_OUTPUT(Makefile)
