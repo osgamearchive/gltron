@@ -62,10 +62,20 @@ if test "x$use_sound" = xyes; then
 	AC_SUBST(SOUND_OBJS)
 fi
 
+dnl use udp instead of tcp
+AC_ARG_ENABLE(udp,
+[ --enable-udp             Use udp in stead of tcp [default=off]],
+	enable_udp=$enableval, enable_udb=no)
+if test "x$enable_udp" = xyes; then
+	AC_CHECK_LIB(SDL_net, SDLNet_Init,
+	CFLAGS="$CFLAGS -DUSEUDP";
+	enable_network=yes)
+fi
+
 dnl network set-up
 AC_ARG_ENABLE(network,
 [ --enable-network             Experimental network mode [default=on]],
-	enable_network=$enableval, enable_network=on)
+	enable_network=$enableval, enable_network=yes)
 if test "x$enable_network" = xyes; then
 	AC_CHECK_LIB(SDL_net, SDLNet_Init,
 	CFLAGS="$CFLAGS -D__NETWORK__";
@@ -74,6 +84,7 @@ if test "x$enable_network" = xyes; then
 	AC_MSG_WARN(SDL_net not found - disabling network))
 	AC_SUBST(NETWORK_OBJS)
 fi
+
 
 dnl header checks
 AC_HEADER_STDC

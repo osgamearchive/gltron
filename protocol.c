@@ -1,16 +1,28 @@
 #ifdef __NETWORK__
 //this is the client
 #include "gltron.h"
+#ifdef USEUDP
+static int nbsocks = 2; //TCP + UDP
+#else
 static int nbsocks = 1;
+#endif
 #else
 //this is the server
 #include "server/server_gltron.h"
-static int nbsocks = MAX_PLAYERS+1;
+#ifdef USEUDP
+static int nbsocks = MAX_PLAYER + 2; 
+#else
+static int nbsocks = MAX_PLAYERS + 1;
+#endif
 #endif
 int netrulenbwins = 5;
 int netruletime   = 0;
 
 static SDLNet_SocketSet       socketset = NULL;
+#ifdef USEUDP
+static UDPsocket              udpsock   = NULL;
+static UDPpacket            **packets   = NULL;
+#endif
 static TCPsocket              tcpsock   = NULL;
 int isConnected = 0;
 
@@ -33,7 +45,16 @@ Net_init( )
     {
       fprintf(stderr, "Can't init SDLNet : %s\n", SDLNet_GetError());
       exit(1);
-    }  
+    }
+#ifdef USEUDP
+  //Allocate vector of udp packets
+#ifdef __NETWORK__
+  //this is the client
+  packets = SDLNet_AllocPacketV( 1, PACKETSIZE );
+#else
+  packets = SDLNet_AllocPacketV( MAX_PLAYERS, PACKETSIZE );
+#endif
+#endif
 }
 
 void
@@ -45,6 +66,19 @@ Net_cleanup( )
       tcpsock=NULL;
     }
 
+#ifdef USEUDP
+  if( udpsock != NULL )
+    {
+      SDLNet_UDP_Close(udpsock);
+      udpsock=NULL;
+    }
+  //Free udp packets
+  if( packets != NULL )
+    {
+      SDLNet_FreePacketV(packets);
+      packets = NULL;
+    }
+#endif
   if( socketset != NULL )
     {
       SDLNet_FreeSocketSet(socketset);
@@ -73,7 +107,9 @@ Net_connect( char *server, int port)
 	  exit(1);
 	}
       isConnected=1;
+#ifndef USEUDP
       return 0;
+#endif
     } else {
       //This is the client...
       if( serverIP.host == INADDR_NONE )
@@ -88,10 +124,25 @@ Net_connect( char *server, int port)
 	    } else {
 	      printf("connected...\n");
 	      isConnected = 1;
+#ifndef USEUDP
 	      return 0;
+#endif
 	    }
 	}
     }
+
+#ifdef USEUDP
+      //listen to udp
+  udpsock = SDLNet_UDP_Open(port);
+  if( udpsock == NULL )
+    {
+      fprintf(stderr, "Can't Open socket: %s\n", SDLNet_GetError());
+      return cantopenudp;
+    } else {
+      return 0;
+    }
+#endif
+
   return unknownerror;
 }
 
@@ -104,6 +155,14 @@ Net_disconnect( )
       SDLNet_TCP_Close(tcpsock);
       tcpsock = NULL;
     }
+#ifdef USEUDP
+  if( udpsock != NULL )
+    {
+      SDLNet_UDP_DelSocket(socketset, udpsock);
+      SDLNet_UDP_Close(udpsock);
+      udpsock = NULL;
+    }
+#endif
   isConnected = 0;
 }
 
@@ -136,6 +195,7 @@ Net_addsocket(TCPsocket sock)
   return 0;
 }
 
+
 int
 Net_delsocket(TCPsocket sock)
 {
@@ -154,18 +214,54 @@ Net_readysock( TCPsocket sock )
    return 0;
 }
 
+#ifdef USEUDP
 int
-Net_checksocks( )
-{  
-  SDLNet_CheckSockets(socketset, 0);
-  
-  // something appens, look what it was...
-  if( SDLNet_SocketReady(tcpsock) )
+Net_addudpsocket(UDPsocket sock)
+{
+  SDLNet_UDP_AddSocket(socketset, sock);
+  return 0;
+}
+
+int
+Net_deludpsocket(UDPsocket sock)
+{
+  SDLNet_UDP_DelSocket(socketset, sock);
+  return 0;
+}
+
+
+int
+Net_readyudpsock( UDPsocket sock )
+{
+   if( sock != NULL && SDLNet_SocketReady(sock) )
     {
       return 1;
     }
+   return 0;
+}
+#endif
+
+int
+Net_checksocks( )
+{  
+  int socksready = socksnotready;
+  SDLNet_CheckSockets(socketset, 0);
   
-  return 0; 
+  // something appens, look what it was...
+
+  if( SDLNet_SocketReady(tcpsock) )
+    {
+      socksready |=  tcpsockready;
+    }
+
+#ifdef USEUDP
+  //looking to udp 
+ if( SDLNet_SocketReady(udpsock) )
+    {
+      socksready |=  udpsockready;
+    }
+#endif
+  return socksready; 
 }
 
 TCPsocket
@@ -174,7 +270,14 @@ Net_getmainsock( )
   return tcpsock;
 }
 
+#ifdef USEUDP
+UDPsocket
+Net_getudpsock()
+{
+  return udpsock;
+}
 
+#endif
 int
 Net_preparepacket(Packet* packet, char *buf)
 {
@@ -317,6 +420,51 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
   return 0;
 }
 
+#ifdef USEUDP
+int
+Net_sendudppacket( Packet  *packet , int which, UDPsocket sock )
+{
+  char *buff;
+  int  len;
+
+  if( packet == NULL )
+    {
+      printf("packet is NULL\n");
+      return cantsendpacket;
+    }
+
+  buff = malloc(PACKETSIZE);  //Allocate max packet size...
+
+  //Parse packet to send
+  len =  Net_preparepacket(packet, buff);
+  printf("sending udp packet size: %d\n", len);
+  printf("type %d from %d\n", packet->type, packet->which);
+
+  if( len > packets[0]->maxlen )
+    len = packets[0]->maxlen;
+
+  memcpy(packets[0]->data, buff, len);
+  packets[0]->len = len;
+
+  //Send the packet itself...
+  //Sending to which channel?
+  if( which == SERVERID )
+    {
+      which = 0;
+    }
+  
+
+  if( ( SDLNet_UDP_Send(sock, which, packets[0])) < len )
+    {
+      free(buff);
+      buff=NULL;
+      return connectionclosed;
+    }
+  free(buff);
+  buff=NULL;
+  return 0;
+}
+#endif
 
 /** Important: get things in the same order as they 've been send! */
 void
@@ -516,3 +664,33 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
   buff=NULL;
   return 0;
 }
+
+
+#ifdef USEUDP
+int
+Net_receiveudppacket( Packet **packet, UDPsocket sock )
+{
+  int   n;
+  char *buff;
+
+  if( packet == NULL )
+    {
+      return cantgetpacket;
+    }
+  buff =  malloc(PACKETSIZE);
+
+  //getting packets
+  n = SDLNet_UDP_RecvV(sock, packets);
+  while( n-- > 0 )
+    {
+      //For each channel doing the traitement
+      Net_handlepacket(packet[n], packets[n]->data);
+      
+    }
+
+  free(buff);
+  buff=NULL;
+  return 0;
+}
+
+#endif

@@ -39,10 +39,19 @@ void keyPregame(int k, int unicode, int x, int y)
 }
 
 void idlePregame() {
+  int sockstat;
+
   SystemPostRedisplay();
-  if( isConnected && Net_checksocks() )
+
+  sockstat = Net_checksocks();
+  if(  isConnected && sockstat != socksnotready ) //game2->mode == GAME_NETWORK_PLAY &&
     {
-      handleServer();
+      if( sockstat & tcpsockready )
+	handleServer();
+#ifdef USEUDP
+      if( sockstat & udpsockready )
+	handleUDP();
+#endif
     }
 }
 

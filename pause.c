@@ -5,6 +5,11 @@
 // static float Gamma = 2.0;
 
 void idlePause() {
+#ifdef __NETWORK__
+  int sockstat;
+#endif
+
+
 #ifdef SOUND
   soundIdle();
 #endif
@@ -14,9 +19,15 @@ void idlePause() {
     {
       switchCallbacks(&gameCallbacks);
     } else {
-      if( game2->mode == GAME_NETWORK_PLAY && isConnected && Net_checksocks() )
+      sockstat = Net_checksocks();
+      if( game2->mode == GAME_NETWORK_PLAY && isConnected && sockstat != socksnotready )
 	{
-	  handleServer();
+	  if( sockstat & tcpsockready )
+	    handleServer();
+#ifdef USEUDP
+	  if( sockstat & udpsockready )
+	    printf("getting udp\n");
+#endif
 	}
     }
 #endif
@@ -126,7 +137,8 @@ void keyboardPause(int key, int unicode, int x, int y) {
 
 void initPause() {
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  fprintf(stderr, "init pause mode\n");
+  fprintf(stderr, "init pause mode\n"); 
+  initTurnList();
   // Mix_SetPostMix(playEngine, NULL);
 }
 

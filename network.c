@@ -4,6 +4,19 @@ static Uint32 ping = 0;
 static Uint32 savedtime = 0; 
 static int    observerstate = 0;
 
+typedef struct Predictedturn *Predictedturn;
+typedef struct Predictedturn {
+  int            dir;
+  int            time;
+  Predictedturn  next;
+} predictedturn;
+
+typedef struct TurnList {
+  Predictedturn  head;
+} TurnList;
+
+TurnList *turnlist;
+
 void
 login(char *name)
 {
@@ -550,6 +563,38 @@ handleServer()
   //printf("## handleserver took %d ms\n", getping());
 }  
 
+#ifdef USEUDP
+void
+handleUDP()
+{
+  Packet **packets;
+  Packet packet;
+
+  packets = ( Packet ** ) malloc(sizeof(Packet *));
+
+  //Get the packet...
+  if( Net_receiveudppacket(packets, Net_getudpsock()) != 0 )
+    {
+      //Connection perdu
+      connectionLost();
+      return;
+    }
+  packet = *(packets[0]);
+
+  printf("recieve a udp packet. Type: %d. Serverstate: %d.\n", packet.type, serverstate);
+  switch( serverstate )
+    {
+    case preGameState:
+      do_preGameState(packet);
+      break;
+    case gameState:
+      do_gameState(packet);
+      break;
+    default:
+      fprintf(stderr, "Unknown server state %d\n", serverstate);
+    }  
+}
+#endif
 
 int
 getping()
@@ -568,4 +613,92 @@ makeping(int time)
       ping = SystemGetElapsedTime() - savedtime;
       savedtime=0;
     }
+}
+
+void
+doPredictedTurn(int dir, int time)
+{
+  Predictedturn turn, new;
+
+  new = (Predictedturn) malloc(sizeof(predictedturn));
+  new->dir = dir;
+  new->time = time;
+  new->next = NULL;
+  
+
+  //insert in queue
+  turn = turnlist->head;
+  if( turn == NULL )
+    {
+      turnlist->head = new;
+      return;
+    }
+  while( turn->next )
+    { turn = turn->next; }
+  turn->next = new;    
+}
+
+
+void
+idleTurns(  )
+{
+  Predictedturn turn;
+  list *p;
+  GameEvent *latest;
+
+  turn = turnlist->head;
+
+  if( turn != NULL )
+    {
+      //turn are ordered
+      if( (game2->time.current - turn->time) >= (slots[me].ping/2) )
+	{
+	  printf("creating turn... at %d\n", game2->time.current);
+	  createTurnEvent(0, turn->dir);
+	  for(p = &(game2->events); p->next != NULL; p = p->next);
+	  latest = p->data;
+	  processEvent(latest);
+	  //Free this turn!
+	  turnlist->head = turn->next;
+	  free(turn);
+	}
+    }
+}
+
+
+void
+createTurnList()
+{
+  turnlist = (TurnList*) malloc(sizeof(TurnList));
+  turnlist->head = NULL;
+
+}
+
+void
+initTurnList( )
+{
+  Predictedturn turn, next;
+
+  //nsl must be allocate before...
+  if( turnlist == NULL )
+    return;
+
+  turn = turnlist->head;
+
+  if( turn == NULL )
+    {
+      return;
+    }
+  while( turn )
+    { next = turn->next; free(turn); turn=next;printf("freeing turn...\n"); }
+  turnlist->head=NULL;
+}
+
+
+void
+freeTurnList()
+{
+  initTurnList();
+  free(turnlist);
+  turnlist=NULL;
 }

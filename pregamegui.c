@@ -271,11 +271,20 @@ void displaykeyboardreading() {
 
 void idlekeyboardreading()
 {  
+  int sockstat;
   SystemPostRedisplay();
-  if( isConnected && Net_checksocks() )
+
+  sockstat = Net_checksocks();
+  if(  isConnected && sockstat != socksnotready ) //game2->mode == GAME_NETWORK_PLAY &&
     {
-      handleServer();
+      if( sockstat & tcpsockready )
+	handleServer();
+#ifdef USEUDP
+      if( sockstat & udpsockready )
+	handleUDP();
+#endif
     }
+
 }
 
 callbacks keyboardreadingCallbacks = {

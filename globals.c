@@ -63,7 +63,7 @@ char   name[255];
 int    sChat       = 0;
 char   mesg[255] = "";
 int    me;
-
+int    isLogged;
 netEventList neteventlist = NULL;
 
 int    packet_type = HEADER;

@@ -156,6 +156,7 @@ void keyGame(int k, int unicode, int x, int y)
 		  packet.infos.action.type=TURNRIGHT;
 		Net_sendpacket(&packet, Net_getmainsock());
 		makeping(game2->time.current);
+		doPredictedTurn(key_actions[i].turn, game2->time.current);
 	      }
 #endif
 	  }

@@ -14,11 +14,25 @@ void mouseConnect (int buttons, int state, int x, int y)
 void idleConnect() {
   int serverport = strtol(game->settings->port, (char**) NULL, 10);
   int status;
+  int sockstat = socksnotready;
+
   SystemPostRedisplay();
-  if( isConnected && Net_checksocks() )
+
+  if( isConnected==1  ) //game2->mode == GAME_NETWORK_PLAY && 
     {
-      handleServer();
+      sockstat = Net_checksocks();
+      printf("sockstat = %d\n", sockstat);
+      if( sockstat != socksnotready )
+	{
+	  if( sockstat & tcpsockready )
+	    handleServer();
+#ifdef USEUDP
+	  if( sockstat & udpsockready )
+	    printf("getting udp\n");
+#endif
+	}
     }
+
   
   if( ! isConnected )
     {
@@ -26,10 +40,16 @@ void idleConnect() {
       if( status )
 	{
 	  isConnected = 0;
+	  fprintf(stderr, "can't connect to server\n");
 	  restoreCallbacks();	  
 	}
       Net_allocsocks();
       Net_addsocket(Net_getmainsock());
+#ifdef USEUDP
+      Net_addudpsocket(Net_getudpsock());
+#endif
+      printf(" isconnected = %d\n", isConnected);
+      createTurnList();
       login(game->settings->nickname);
     }
 }

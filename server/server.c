@@ -6,7 +6,7 @@ static Uint32 savedtime  = 0;
 static Uint32 timeout       = 0;
 static Uint32 lastping       = 0;
 /* static Uint32 slowest    = RAND_MAX; */
-static int    slowest       = INT_MAX;
+static int    slowest       = 0;
 static int    getpingrep    = 0;
 static int    starting      = 0;
 static Uint32 starttime     = 0;
@@ -539,14 +539,14 @@ do_startgame( int which, Packet packet )
 	  Net_sendpacket(&rep2, slots[i].sock);
 	}
     }  
-
+  slowest=0;
   //find slowest ping
   for(i=0; i<MAX_PLAYERS; ++i)
     {
       if (slots[i].active == 1)
 	{
 	  //printf("get i=%d %d < %d\n", i, SDLNet_Read16(&slots[i].ping), slowest );
-	  if( slots[i].ping < slowest ){
+	  if( slots[i].ping > slowest ){
 	    slowest = slots[i].ping;
 	  }
 	}
@@ -1062,9 +1062,9 @@ do_starting()
 	} else {
 	  for(i=0; i<MAX_PLAYERS; ++i)
 	    {
-	      //printf("%d >= %d\n", timetostart, slots[i].ping );
-	      if( slots[i].active == 1 && timetostart >= slots[i].ping*-1 && slots[i].hasstarted == 0 )
+	      if( slots[i].active == 1 && timetostart >= (slots[i].ping*-1) && slots[i].hasstarted == 0 )
 		{
+	      printf("%d >= %d\n", timetostart, slots[i].ping );
 		  slots[i].hasstarted=1;
 		  printf("sending signal to %s\n", slots[i].name);
 		  //send him signal to start

@@ -169,6 +169,9 @@ void idleGame( void ) {
   int i;
   int dt;
   int t;
+#ifdef __NETWORK__
+  int sockstat;
+#endif
 
 #ifdef SOUND
   soundIdle();
@@ -178,8 +181,17 @@ void idleGame( void ) {
 
 
 #ifdef __NETWORK__
-  if( game2->mode == GAME_NETWORK_PLAY && isConnected && Net_checksocks() )
-    handleServer();
+  idleTurns();
+  sockstat = Net_checksocks();
+  if( game2->mode == GAME_NETWORK_PLAY && isConnected && sockstat != socksnotready )
+    {
+      if( sockstat & tcpsockready )
+	handleServer();
+#ifdef USEUDP
+      if( sockstat & udpsockready )
+	printf("getting udp\n");
+#endif
+    }
 #endif
 
   if(updateTime() == 0) return;

@@ -21,7 +21,15 @@ enum {
   loginnotaccepted =  -7,    //login was refused for a reason...
   cantsendpacket   =  -8,    //Cant send a packet...
   cantgetpacket    =  -9,    //Can't get a packet
+  cantopenudp      =  -10,   //Can't bind udp port
   unknownerror     = -255    //Unknown Error...
+};
+
+/** Socket ready? */
+enum {
+  socksnotready    = 0,         //no sockets ready
+  tcpsockready     = 1,         //tcpsock is ready
+  udpsockready     = 2          //udpsock is ready
 };
 
 /** Server state */
@@ -184,9 +192,21 @@ int       Net_readysock          ( TCPsocket );
 int       Net_checksocks         ( void );
 int       Net_addsocket          ( TCPsocket );
 int       Net_delsocket          ( TCPsocket );
+#ifdef USEUDP
+int       Net_readyudpsock       ( UDPsocket );
+int       Net_addudpsocket       ( UDPsocket );
+int       Net_deludpsocket       ( UDPsocket );
+UDPsocket Net_getudpsock         ( void );
+#endif
 TCPsocket Net_getmainsock        ( void );
 
 /** Send a packet */
 int       Net_sendpacket         ( Packet* , TCPsocket );
 /** Receive a packet */
 int       Net_receivepacket      ( Packet *, TCPsocket, int, int );
+
+#ifdef USEUDP
+int       Net_sendudppacket         ( Packet* , int, UDPsocket );
+/** Receive a packet */
+int       Net_receiveudppacket      ( Packet **, UDPsocket );
+#endif
