@@ -1,6 +1,7 @@
 /* system specific functions (basically, an SDL wrapper) */
 
 #include "system.h"
+#include "system_keynames.h"
 
 static int redisplay = 0;
 static callbacks *current = 0;
@@ -26,7 +27,7 @@ void SystemExit() {
 }
 
 void SystemInit(int *argc, char *argv[]) {
-  if(SDL_Init(SDL_INIT_VIDEO) < 0 ){
+  if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
   }
@@ -36,8 +37,25 @@ void SystemInit(int *argc, char *argv[]) {
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
     /* FIXME: disable sound system */
   }
-
+	/* keyboard */
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
+	
+	{
+		int i;
+		SDL_Joystick *joy;
+		int joysticks = SDL_NumJoysticks();
+		
+		/* joystick, currently at most 2 */
+		if(joysticks > 2)
+			joysticks = 2;
+		
+		for(i = 0; i < joysticks; i++) {
+			joy = SDL_JoystickOpen(i);
+		}
+		if(i)
+			SDL_JoystickEventState(SDL_ENABLE);
+	}
+			
 #ifdef NETWORK
   SystemNetInit();
 #endif
@@ -91,34 +109,57 @@ void SystemMouseMotion(int x, int y) {
 void SystemMainLoop() {
   SDL_Event event;
   char *keyname;
-  char key;
+  int key;
 
   while(1) {
     while(SDL_PollEvent(&event) && current) {
-      if(event.type == SDL_KEYDOWN) {
-	keyname = SDL_GetKeyName(event.key.keysym.sym);
-	key = 0;
-	switch(event.key.keysym.sym) {
-	case SDLK_SPACE: key = ' '; break;
-	case SDLK_ESCAPE: key = 27; break;
-	case SDLK_RETURN: key = 13; break;
-	default:
-	  if(keyname[1] == 0) key = keyname[0];
-	  break;
-	}
-	/* check: is that translation necessary? */
-	if(key) 
-	  current->keyboard(key, 0, 0);
-	else
-	  current->keyboard(event.key.keysym.sym, 0, 0);
-      } else if(event.type == SDL_MOUSEBUTTONDOWN ||
-		event.type == SDL_MOUSEBUTTONUP) {
-	SystemMouse(event.button.button, event.button.state, 
-		    event.button.x, event.button.y);
-      } else if(event.type == SDL_MOUSEMOTION) {
-	SystemMouseMotion(event.motion.x, event.motion.y);
-      } else if(event.type == SDL_QUIT) {
+			switch(event.type) {
+			case SDL_KEYDOWN:
+				keyname = SDL_GetKeyName(event.key.keysym.sym);
+				key = 0;
+				switch(event.key.keysym.sym) {
+				case SDLK_SPACE: key = ' '; break;
+				case SDLK_ESCAPE: key = 27; break;
+				case SDLK_RETURN: key = 13; break;
+				default:
+					if(keyname[1] == 0) key = keyname[0];
+					break;
+				}
+				/* check: is that translation necessary? */
+				if(key) 
+					current->keyboard(key, 0, 0);
+				else
+					current->keyboard(event.key.keysym.sym, 0, 0);
+				break;
+			case SDL_JOYAXISMOTION:
+				if(event.jaxis.value == 0)
+					break;
+				key = SYSTEM_JOY_LEFT + event.jaxis.which * SYSTEM_JOY_OFFSET;
+				if(event.jaxis.axis == 1)
+					key += 2;
+				if(event.jaxis.value > 0)
+					key++;
+				current->keyboard(key, 0, 0);
+				break;
+			case SDL_JOYBUTTONDOWN:
+				key = SYSTEM_JOY_BUTTON_0 + event.jbutton.button +
+					SYSTEM_JOY_OFFSET * event.jbutton.which;
+				current->keyboard(key, 0, 0);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+				SystemMouse(event.button.button, event.button.state, 
+										event.button.x, event.button.y);
+				break;
+			case SDL_MOUSEMOTION:
+				SystemMouseMotion(event.motion.x, event.motion.y);
+				break;
+			case SDL_QUIT:
         SystemQuit ();
+				break;
+			default:
+				/* ignore event */
+				break;
       }
     }
     if(redisplay) {
@@ -202,14 +243,17 @@ void SystemReshapeFunc(void(*reshape)(int, int)) {
 }
 
 extern char* SystemGetKeyName(int key) {
-  /*
-  char *buf;
-  buf = malloc(2);
-  buf[0] = (char)key;
-  buf[1] = 0;
-  return buf;
-  */
-  return SDL_GetKeyName(key);
+	if(key < SYSTEM_CUSTOM_KEYS)
+		return SDL_GetKeyName(key);
+	else {
+		int i;
+		
+		for(i = 0; i < CUSTOM_KEY_COUNT; i++) {
+			if(custom_keys.key[i].key == key)
+				return custom_keys.key[i].name;
+		}
+		return "unknown custom key";
+	}
 }  
 
 int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
