@@ -167,8 +167,7 @@ int SystemCreateWindow(char *name) {
 }
 
 void SystemDestroyWindow(int id) {
-  SDL_FreeSurface(screen);
-  SDL_QuitSubSystem(SDL_INIT_VIDEO);
+  // SDL_QuitSubSystem(SDL_INIT_VIDEO);
   video_initialized = 0;
 }
 
