@@ -11,8 +11,6 @@ Bugs [low priority]:
 
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
-- recognizer has blue edges sometimes (http://www.gltron.org/stuff/recognizer_glue.jpg (Andreas) [ LIM,Todd ]
-- recognizer sometimes leaves arena
 
 Features [high priority]:
 
@@ -28,8 +26,6 @@ Features [low priority]:
 - fast finish should be relative to the arena size (or really finish instantly)
 - create default graphics settings to choose from: low/medium/high
 - fix camera zoom generally (speed / settings)
-- upon game start, default to split screen mode when there are multiple human
-  players [ Todd ]
 - Add 3d sound source for recognizer [ Andreas ]
 - Add sound for own cycle. Modulate pitch (or volume) after turns
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
