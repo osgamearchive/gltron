@@ -8,6 +8,7 @@ typedef struct { float v[4]; } vec4;
 typedef struct { vec2 vStart, vDirection; } segment2;
 
 typedef struct { vec2 vMin, vMax; } box2;
+typedef struct { vec3 vMin, vMax; } box3;
 
 vec4* vec4_Add(vec4 *pOut, const vec4 *pV1, const vec4 *pV2);
 vec4* vec4_Sub(vec4 *pOut, const vec4 *pV1, const vec4 *pV2);
@@ -57,5 +58,5 @@ float box2_Diameter(const box2* pBox);
 void box2_Center(vec2 *pOut, const box2* pBox);
 void box2_Init(box2 *pBox);
 void box2_Extend(box2 *pBox, const vec2 *pV);
-
+void box3_Compute(box3 *pBox, const vec3 *pVertices, int nVertices);
 #endif

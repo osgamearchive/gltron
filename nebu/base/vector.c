@@ -358,3 +358,32 @@ void box2_Extend(box2 *pBox, const vec2 *pV)
 	if(pBox->vMax.v[0] < pV->v[0]) pBox->vMax.v[0] = pV->v[0];
 	if(pBox->vMax.v[1] < pV->v[1]) pBox->vMax.v[1] = pV->v[1];
 }
+
+void box3_Init(box3 *pBox)
+{
+	pBox->vMin.v[0] = FLT_MAX;
+	pBox->vMin.v[1] = FLT_MAX;
+	pBox->vMin.v[2] = FLT_MAX;
+	pBox->vMax.v[0] = FLT_MIN;
+	pBox->vMax.v[1] = FLT_MIN;
+	pBox->vMax.v[2] = FLT_MIN;
+}
+
+void box3_Compute(box3 *pBox, const vec3 *pVertices, int nVertices)
+{
+	int i, j;
+
+	box3_Init(pBox);
+
+	for(i = 0; i < nVertices; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			float f = pVertices[i].v[j];
+			if(f < pBox->vMin.v[j])
+				pBox->vMin.v[j] = f;
+			if(f > pBox->vMax.v[j])
+				pBox->vMax.v[j] = f;
+		}
+	}
+}
