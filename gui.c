@@ -213,13 +213,85 @@ void initGLGui() {
   SystemPostRedisplay();
 }
 
-void guiMouse(int buttons, int states, int x, int y) {
-  /* fprintf(stderr, "Mouse buttons: %d, State %d, Position (%d, %d)\n",
-     buttons, states, x, y); */
+static int current_highlight = -1;
+	
+void guiMouse(int buttons, int state, int x, int y) {
+  fprintf(stderr, "Mouse buttons: %d, State %d, Position (%d, %d)\n",
+	  buttons, state, x, y); 
+
+  /* fprintf(stderr, "testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
+  if (state == SYSTEM_MOUSEPRESSED) {	
+#ifdef SOUND
+    if(game->settings->playEffects)
+      playMenuFX(fx_action);
+#endif	
+    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
+    SystemPostRedisplay();
+  }
 }
 
-void guiMouseMotion(int x, int y) {
+void guiMouseMotion(int mx, int my) {
   /* fprintf(stderr, "Mouse motion at (%d, %d)\n", x, y); */
+ 
+  /* I am using the calculation in drawMenu, perhaps
+     these values should be bound to Menu structure in the future. */
+
+  /* TODO: this is cut-and-paste from menu.c: VERY UGLY */
+  int i;
+  int x, y, size, lineheight;
+  int hsize, vsize;
+  int maxw = 0;
+
+#define MENU_TEXT_START_X 0.08
+#define MENU_TEXT_START_Y 0.40
+
+#define MENU_WIDTH 0.80
+#define MENU_HEIGHT 0.40
+
+#define MENU_TEXT_LINEHEIGHT 1.5
+	
+  gDisplay *d = game->screen; 
+	
+  x = (int) (d->vp_w * MENU_TEXT_START_X);
+  y = (int) (d->vp_h * MENU_TEXT_START_Y);
+
+  /* transform mouse y-coordinate */
+
+  my = d->vp_h - my;
+
+  /* new stuff: calculate menu dimensions */
+  for(i = 0; i < pCurrent->nEntries; i++) {
+    int len;
+    len =  strlen(((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
+    if(len > maxw)
+      maxw = len;
+}
+  /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
+
+  hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float)maxw );
+  vsize = (int) ((float)d->vp_h * MENU_HEIGHT / 
+		 ( (float)pCurrent->nEntries * MENU_TEXT_LINEHEIGHT));
+
+  size = (hsize < vsize) ? hsize : vsize;
+
+  lineheight = (int)( (float) size * MENU_TEXT_LINEHEIGHT);  
+
+  for (i = 0; i < pCurrent->nEntries; i++) {
+    if (current_highlight != i)
+      if (my < y + lineheight && my > y ) {
+	current_highlight = i;
+
+#ifdef SOUND
+	if(game->settings->playEffects)
+	  playMenuFX(fx_highlight);
+#endif
+	pCurrent->iHighlight = i;
+	SystemPostRedisplay ();
+	break;	
+      }
+ 		
+    y -= lineheight;
+  }
 }
 
 callbacks configureCallbacks = {
