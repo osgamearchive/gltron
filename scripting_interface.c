@@ -19,6 +19,22 @@ int c_resetScores(lua_State *L) {
   return 0;
 }
 
+int c_resetCamera(lua_State *L) {
+  int i;
+  int camType;
+  Camera *cam;
+  Data *data;
+
+  for(i = 0; i < game->players; i++) {
+    cam = game->player[i].camera;
+    data = game->player[i].data;
+
+    camType = (game->player[i].ai->active == AI_COMPUTER) ? 
+      0 : getSettingi("camType");
+    initCamera(cam, data, camType);
+  }
+}
+
 int c_video_restart(lua_State *L) {
   initGameScreen();
   shutdownDisplay( game->screen );
@@ -82,6 +98,7 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_quitGame", c_quitGame);
   lua_register(L, "c_resetGame", c_resetGame);
   lua_register(L, "c_resetScores", c_resetScores);
+  lua_register(L, "c_resetCamera", c_resetCamera);
   lua_register(L, "c_video_restart", c_video_restart);
   lua_register(L, "c_update_audio_volume", c_update_audio_volume);
   lua_register(L, "c_startGame", c_startGame);

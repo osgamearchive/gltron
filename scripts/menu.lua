@@ -97,7 +97,7 @@ Menu = {
       labels = { "circling", "behind", "cockpit", "mouse" },
       values = { 0, 1, 2, 3 },
       read = function() return settings.camType; end,
-      store = function(value) settings.camType = value; end
+      store = function(value) settings.camType = value; c_resetCamera(); end
    },
    Viewports = {    
       type = MenuC.type.list, caption = "Viewports",
