@@ -137,6 +137,8 @@ void SystemInitWindow(int x, int y, int w, int h) {
 }
 
 void SystemInitDisplayMode(int f, unsigned char full) {
+  int bitdepth;
+
   flags = f;
   fullscreen = full;
   if(!video_initialized) {
@@ -149,10 +151,17 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   }
   if(flags & SYSTEM_DOUBLE)
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
+  if(flags & SYSTEM_32_BIT)
+    bitdepth = 32;
+  else bitdepth = 16;
   if(flags & SYSTEM_DEPTH)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
   /* SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8); */
   video_initialized = 1;
+}
+
+void SystemSetGamma(float red, float green, float blue) {
+  SDL_SetGamma(red, green, blue);
 }
 
 int SystemCreateWindow(char *name) {
