@@ -50,7 +50,7 @@ void initTexture(gDisplay *d) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   checkGLError("texture.c initTextures - floor");
 
-  /* menu icon */
+  /* menu background */
 
   glBindTexture(GL_TEXTURE_2D, d->texGui);
   loadTexture("gltron" TEX_SUFFIX, GL_RGB);
@@ -59,7 +59,7 @@ void initTexture(gDisplay *d) {
 
   checkGLError("texture.c initTextures - gui");
 
-  /* meno logo icon */
+  /* menu logo */
 
   glBindTexture(GL_TEXTURE_2D, d->texLogo);
   loadTexture("gltron_logo" TEX_SUFFIX, GL_RGBA);
@@ -93,8 +93,7 @@ void initTexture(gDisplay *d) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
   
   /* wall texture 4*/
 
@@ -121,7 +120,6 @@ void initTexture(gDisplay *d) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
   /* trail decal texture */

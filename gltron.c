@@ -73,7 +73,7 @@ void initGLGame() {
   printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
 	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
 
-  glShadeModel( GL_FLAT ); /* ugly debug mode */
+  glShadeModel( game->screen->shademodel );
 
 
   if(game->settings->show_alpha) 

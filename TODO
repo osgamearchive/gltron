@@ -1,5 +1,6 @@
-fix texturing bug with trail
-allow multiple fonts
+implement LOD settings (for 2 & 4 player view)
+configurable bots (difficulty settings)
+sound effect fixes / mixer
 
 move cycle behind posx, posy
 solve cycle turning issue
@@ -11,7 +12,6 @@ add more & better sound effects
 
 add mouse support
 
-configurable bots (difficulty settings)
 
 check various TODOs in the code
 

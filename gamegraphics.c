@@ -31,6 +31,8 @@ void drawScore(Player *p, gDisplay *d) {
 void drawFloor(gDisplay *d) {
   int j, k, l, t;
 
+  glShadeModel(GL_FLAT);
+
   if(game->settings->show_floor_texture) {
     glDepthMask(GL_TRUE);
     glEnable(GL_TEXTURE_2D);
@@ -70,6 +72,8 @@ void drawFloor(gDisplay *d) {
     }
     glEnd();
   }
+
+  glShadeModel( game->screen->shademodel );
 }
 
 void drawTraces(Player *p, gDisplay *d, int instance) {
@@ -80,175 +84,173 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
   float tlength;
 
   Data *data;
+
   data = p->data;
   height = data->trail_height;
 
-  if(height > 0) {
-    // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+  if(height < 0) return;
 
-    if(game->settings->alpha_trails) {
-      glColor4fv(p->model->color_alpha);
-    } else {
-      glEnable(GL_TEXTURE_2D);
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-      glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
+  // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-      glColor3fv(p->model->color_alpha);
-    }
+  if(game->settings->alpha_trails) {
+    glColor4fv(p->model->color_alpha);
+  } else {
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
 
-    line = &(data->trails[0]);
+    glColor3fv(p->model->color_alpha);
+  }
 
-    glBegin(GL_QUADS);
+  line = &(data->trails[0]);
+
+  glBegin(GL_QUADS);
+  glTexCoord2f(0.0, 0.0);
+  glVertex3f(line->sx, line->sy, 0.0);
+  glTexCoord2f(0.0, 1.0);
+  glVertex3f(line->sx, line->sy, height);
+
+  while(line != data->trail) {
+    tlength = (line->ex - line->sx + line->ey - line->sy);
+    if(tlength < 0) tlength = -tlength;
+#define DECAL_WIDTH 20.0
+    glTexCoord2f(tlength / DECAL_WIDTH, 1.0);
+    glVertex3f(line->ex, line->ey, height);
+
+    glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
+    glVertex3f(line->ex, line->ey, 0.0);
+
+    line++;
+
     glTexCoord2f(0.0, 0.0);
     glVertex3f(line->sx, line->sy, 0.0);
     glTexCoord2f(0.0, 1.0);
     glVertex3f(line->sx, line->sy, height);
 
-    while(line != data->trail) {
-      tlength = (line->ex - line->sx + line->ey - line->sy);
-      if(tlength < 0) tlength = -tlength;
-#define DECAL_WIDTH 20.0
-      glTexCoord2f(tlength / DECAL_WIDTH, 1.0);
-      glVertex3f(line->ex, line->ey, height);
+    polycount++;
+  }
 
-      glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
-      glVertex3f(line->ex, line->ey, 0.0);
-
-      line++;
-
-      glTexCoord2f(0.0, 0.0);
-      glVertex3f(line->sx, line->sy, 0.0);
-      glTexCoord2f(0.0, 1.0);
-      glVertex3f(line->sx, line->sy, height);
-
-      polycount++;
-    }
-
-    /* calculate distance of cycle to last corner */
-    tlength = (line->ex - line->sx + line->ey - line->sy);
-    if(tlength < 0) tlength = -tlength;
+  /* calculate distance of cycle to last corner */
+  tlength = (line->ex - line->sx + line->ey - line->sy);
+  if(tlength < 0) tlength = -tlength;
 
 #define BOW_LENGTH 6
-    blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
 #undef BOW_LENGTH
 
-    /* modify end of trail */
-    glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 1.0);
-    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
-	       line->ey - 2 * blength * dirsY[ data->dir ], height);
-    glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 0.0);
-    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
-	       line->ey - 2 * blength * dirsY[ data->dir ], 0.0);
+  /* modify end of trail */
+  glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 1.0);
+  glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	     line->ey - 2 * blength * dirsY[ data->dir ], height);
+  glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 0.0);
+  glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	     line->ey - 2 * blength * dirsY[ data->dir ], 0.0);
 
-    polycount += 2;
-    glEnd();
+  polycount += 2;
+  glEnd();
 
 #undef DECAL_WIDTH
 
-    glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_2D);
 
     /* experimental trail effect */
-    checkGLError("before trail");
+  checkGLError("before trail");
 
 
-    glEnable(GL_BLEND);
-    glShadeModel(GL_SMOOTH);
-    if(data->speed > 0) {
-      glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
-      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    }
-     
 
 #define BOW_DIST2 0.85
 #define BOW_DIST1 0.4
 
 #define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 
-    bdist = (game->settings->show_model &&
-	     data->speed > 0) ? BOW_DIST1 : 0;
+  bdist = (game->settings->show_model &&
+	   data->speed > 0) ? BOW_DIST1 : 0;
 
-    /* quad fading from model color to white, bow texture */
-    glBegin(GL_QUADS);
+  /* quad fading from model color to white, no texture */
+  glShadeModel(GL_SMOOTH);
 
-    glTexCoord2f(TEX_SPLIT, 0.0);
-    glColor3f(1.0, 1.0, 1.0);
-    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
+  glBegin(GL_QUADS);
 
-    glTexCoord2f(TEX_SPLIT, 1.0);
-    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+  glColor3f(1.0, 1.0, 1.0);
+  glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
 
-
-    if(game->settings->alpha_trails) glColor4fv(p->model->color_alpha);
-    else glColor3fv(p->model->color_alpha);
-
-    glTexCoord2f(-1.0, 1.0);
-    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
-	       line->ey - 2 * blength * dirsY[ data->dir ], height);
+  glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], height);
 
 
-    glTexCoord2f(-1.0, 0.0);
-    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
-	       line->ey - 2 * blength * dirsY[ data->dir ], 0.0);
+  if(game->settings->alpha_trails) glColor4fv(p->model->color_alpha);
+  else glColor3fv(p->model->color_alpha);
 
-    glEnd();
+  glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	     line->ey - 2 * blength * dirsY[ data->dir ], height);
+
+
+  glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	     line->ey - 2 * blength * dirsY[ data->dir ], 0.0);
+
+  glEnd();
+
+
+  if(data->speed > 0 && game->settings->show_model == 1) {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  }
 
 
     /* quad fading from white to model color, bow texture */
-    glBegin(GL_QUADS);
+  glBegin(GL_QUADS);
 
-    glTexCoord2f(TEX_SPLIT, 0.0);
-    glColor3f(1.0, 1.0, 1.0);
-    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
+  glTexCoord2f(TEX_SPLIT, 0.0);
+  glColor3f(1.0, 1.0, 1.0);
+  glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
 
-    glTexCoord2f(1.0, 0.0);
-    glColor3fv(p->model->color_model);
-    glVertex3f(line->ex - bdist * blength * dirsX[ data->dir ], 
-	       line->ey - bdist * blength * dirsY[ data->dir ], 0.0);
+  glTexCoord2f(1.0, 0.0);
+  glColor3fv(p->model->color_model);
+  glVertex3f(line->ex - bdist * blength * dirsX[ data->dir ], 
+	     line->ey - bdist * blength * dirsY[ data->dir ], 0.0);
 
-    glTexCoord2f(1.0, 1.0);
-    glColor3fv(p->model->color_model);
-    glVertex3f(line->ex - bdist * blength * dirsX[ data->dir ], 
-	       line->ey - bdist * blength * dirsY[ data->dir ], height);
+  glTexCoord2f(1.0, 1.0);
+  glColor3fv(p->model->color_model);
+  glVertex3f(line->ex - bdist * blength * dirsX[ data->dir ], 
+	     line->ey - bdist * blength * dirsY[ data->dir ], height);
 
-    glTexCoord2f(TEX_SPLIT, 1.0);
-    glColor3f(1.0, 1.0, 1.0);
-    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], height);
-    glEnd();
+  glTexCoord2f(TEX_SPLIT, 1.0);
+  glColor3f(1.0, 1.0, 1.0);
+  glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+  glEnd();
 
-    polycount += 4;
+  polycount += 4;
 
 #undef BOW_DIST1
 #undef BOW_DIST2
 #undef TEX_SPLIT
 
-    if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);
+  glShadeModel( game->screen->shademodel );
+  glDisable(GL_TEXTURE_2D);
 
-    checkGLError("after trail");
+  checkGLError("after trail");
 
     /* draw this line if in behind camera mode */
 
-    if(game->settings->camType == 1) {
-      //       glLineWidth(3);
-      // glBegin(GL_LINES);
-      glBegin(GL_QUADS);
+  if(game->settings->camType == 1) {
+    //       glLineWidth(3);
+    // glBegin(GL_LINES);
+    glBegin(GL_QUADS);
 #define LINE_D 0.05
-      glVertex2f(data->trail->sx - LINE_D, data->trail->sy - LINE_D);
-      glVertex2f(data->trail->sx + LINE_D, data->trail->sy + LINE_D);
-      glVertex2f(data->trail->ex + LINE_D, data->trail->ey + LINE_D);
-      glVertex2f(data->trail->ex - LINE_D, data->trail->ey - LINE_D);
+    glVertex2f(data->trail->sx - LINE_D, data->trail->sy - LINE_D);
+    glVertex2f(data->trail->sx + LINE_D, data->trail->sy + LINE_D);
+    glVertex2f(data->trail->ex + LINE_D, data->trail->ey + LINE_D);
+    glVertex2f(data->trail->ex - LINE_D, data->trail->ey - LINE_D);
 
-      glEnd();
-      // glLineWidth(1);
-      polycount += 2;
-    }
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnd();
+    // glLineWidth(1);
+    polycount += 2;
   }
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void drawCrash(float radius) {
@@ -450,7 +452,7 @@ void drawPlayers(Player *p) {
     }
   }
   if(game->settings->show_alpha != 1) glDisable(GL_BLEND);
-  glShadeModel(GL_FLAT);
+  glShadeModel( game->screen->shademodel );
 }
 
 void drawGlow(Player *p, gDisplay *d, float dim) {
@@ -512,7 +514,7 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   if(game->settings->show_alpha != 1) glDisable(GL_BLEND);
-  glShadeModel(GL_FLAT);
+  glShadeModel( game->screen->shademodel );
   glPopMatrix();  
 }
 
@@ -594,7 +596,10 @@ void drawHelp(gDisplay *d) {
 void drawCam(Player *p, gDisplay *d) {
   int i;
 
-  if (d->fog == 1) glEnable(GL_FOG);
+  if (d->fog == 1) {
+    glEnable(GL_FOG);
+    fprintf(stderr, "who enabled the fog?\n");
+  }
 
   glColor3f(0.0, 1.0, 0.0);
   glMatrixMode(GL_PROJECTION);

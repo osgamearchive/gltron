@@ -63,6 +63,7 @@ typedef struct gDisplay {
   int vp_h, vp_w;
   int blending;
   int fog;
+  int shademodel;
   int wall;
   int onScreen;
 

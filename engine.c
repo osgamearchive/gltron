@@ -155,6 +155,7 @@ void initGameStructures() { /* called only once */
   d->vp_w = d->w; d->vp_h = d->h;
   d->blending = 1;
   d->fog = 0;
+  d->shademodel = GL_SMOOTH;
   d->wall = 1;
   d->onScreen = -1;
 
