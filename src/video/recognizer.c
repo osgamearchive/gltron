@@ -14,10 +14,10 @@ static float y(void) { return yv[0] * cosf(yv[1] * alpha + yv[2]) - yv[3] * sinf
 static float dx(void) { return xv[1] * xv[0] * cosf(xv[1] * alpha + xv[2]) - xv[4] * xv[3] * cosf(xv[4] * alpha + xv[5]); }
 static float dy(void) { return - yv[1] * yv[0] * sinf(yv[1] * alpha + yv[2]) - yv[4] * yv[3] * sinf(yv[4] * alpha + yv[5]); }
 
-float getRecognizerAngle(Point *velocity)
+float getRecognizerAngle(vec2 *velocity)
 {
-  float dxval = velocity->x;
-  float dyval = velocity->y;
+  float dxval = velocity->v[0];
+  float dyval = velocity->v[0];
   
   float phi = acosf ( dxval / sqrtf( dxval * dxval + dyval * dyval ) );
   if (dyval < 0) {
@@ -26,18 +26,18 @@ float getRecognizerAngle(Point *velocity)
   return (phi + PI / 2) * 180 / PI;
 }
   
-void getRecognizerPositionVelocity(Point *p, Point *v) {
+void getRecognizerPositionVelocity(vec2 *p, vec2 *v) {
   float max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
   float rec_boundry = game2->rules.grid_size - max;
-  p->x = (max + (x() + 1.0f) * rec_boundry) / 2.0f;
-  p->y = (max + (y() + 1.0f) * rec_boundry) / 2.0f;
-  v->x = dx() * game2->rules.grid_size / 100.f;
-  v->y = dy() * game2->rules.grid_size / 100.f;
+  p->v[0] = (max + (x() + 1.0f) * rec_boundry) / 2.0f;
+  p->v[1] = (max + (y() + 1.0f) * rec_boundry) / 2.0f;
+  v->v[0] = dx() * game2->rules.grid_size / 100.f;
+  v->v[1] = dy() * game2->rules.grid_size / 100.f;
 }
 
 void drawRecognizerShadow(void) {
   float dirx;
-  Point p, v;
+  vec2 p, v;
   /* states */
 
   glEnable(GL_CULL_FACE);
@@ -59,7 +59,7 @@ void drawRecognizerShadow(void) {
 
   glPushMatrix();
   glMultMatrixf(shadow_matrix);
-  glTranslatef( p.x, p.y, RECOGNIZER_HEIGHT);
+  glTranslatef( p.v[0], p.v[1], RECOGNIZER_HEIGHT);
   glRotatef(dirx, 0, 0, 1); /* up */
   glScalef(rec_scale_factor, rec_scale_factor, rec_scale_factor);
   glEnable(GL_NORMALIZE);
@@ -80,7 +80,7 @@ void drawRecognizerShadow(void) {
 
 void drawRecognizer(void) {
   float dirx;
-  Point p, v;
+  vec2 p, v;
 
   glPushMatrix();
 
@@ -88,7 +88,7 @@ void drawRecognizer(void) {
   getRecognizerPositionVelocity(&p, &v);
   dirx = getRecognizerAngle(&v);
 
-  glTranslatef( p.x, p.y, RECOGNIZER_HEIGHT);
+  glTranslatef( p.v[0], p.v[1], RECOGNIZER_HEIGHT);
   glRotatef(dirx, 0, 0, 1); /* up */
   
   glScalef(rec_scale_factor, rec_scale_factor, rec_scale_factor); 

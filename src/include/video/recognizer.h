@@ -7,6 +7,6 @@ extern void resetRecognizer(void);
 extern void doRecognizerMovement(void);
 extern void drawRecognizer(void);
 extern void drawRecognizerShadow(void);
-extern void getRecognizerPositionVelocity(Point *p, Point *v);
+extern void getRecognizerPositionVelocity(vec2 *p, vec2 *v);
 
 #endif

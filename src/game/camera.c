@@ -105,15 +105,15 @@ void initCamera(Camera *cam, Data *data, int type) {
 /* place user into recognizer */
 void observerCamera(PlayerVisual *pV, Player *player) {
 	Camera *cam;
-  Point p, v;
+  vec2 p, v;
   getRecognizerPositionVelocity(&p, &v);
 
 	cam = player->camera;
-  cam->cam[0] = p.x;
-  cam->cam[1] = p.y;
+  cam->cam[0] = p.v[0];
+  cam->cam[1] = p.v[1];
   cam->cam[2] = RECOGNIZER_HEIGHT;
-  cam->target[0] = p.x + v.x;
-  cam->target[1] = p.y + v.y;
+  cam->target[0] = p.v[0] + v.v[0];
+  cam->target[1] = p.v[1] + v.v[1];
   cam->target[2] = RECOGNIZER_HEIGHT - 2;
 }  
 

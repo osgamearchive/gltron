@@ -117,11 +117,11 @@ extern "C" {
 
     if(sample_recognizer->IsPlaying()) {
       if (game2->settingsCache.show_recognizer) {
-				Point p, v;
+				vec2 p, v;
 				getRecognizerPositionVelocity(&p, &v);
 				// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
-				recognizerEngine->_location = Vector3(p.x, p.y, 10.0f);
-				recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
+				recognizerEngine->_location = Vector3(p.v[0], p.v[1], 10.0f);
+				recognizerEngine->_velocity = Vector3(v.v[0], v.v[1], 0);
       }
     }
 
