@@ -161,7 +161,8 @@ namespace Sound {
     if(_source->_buffer == NULL) return 0;
 
     if(_source->IsPlaying()) {
-      int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
+	  // TODO: find out if source volume is handled correctly
+      // int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
       float pan = 0, shift = 1.0f, vol = 1.0f;
       int clen, shifted_len;
 
