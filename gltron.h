@@ -91,14 +91,14 @@
 
 #include "menu.h"
 
+#include "console.h"
 /* TODO(3): incorporate model stuff */
 /* model stuff */
 #include "model.h"
-/* poly-soup stuff */
-/* #include "polysoup.h" */
+
+#include "geom.h"
 
 /* do Sound */
-
 #ifdef SOUND
 #include "sound.h"
 #endif
@@ -132,6 +132,8 @@ enum {
 #define CAM_FOLLOW_SPEED_FACTOR 1.0 / 82.0
 #define CAM_SPEED 2.0
 
+#define TURN_LENGTH 200
+
 #define EXP_RADIUS_MAX 30
 #define EXP_RADIUS_DELTA 0.01
 
@@ -150,6 +152,8 @@ enum {
 #define PAUSE_GAME_FINISHED 1
 
 extern int gl_error;
+
+extern char messages[80];
 
 extern settings_int *si;
 extern int si_count;
@@ -365,6 +369,7 @@ extern void rebuildDebugTex();
 extern void drawDebugLines(gDisplay *d);
 extern void drawDebugTex(gDisplay *d);
 extern void drawFPS(gDisplay *d);
+extern void drawConsole(gDisplay *d);
 extern void drawScore(Player *p, gDisplay *d);
 extern void drawAI(gDisplay *d);
 extern void drawPause(gDisplay *d);
@@ -401,5 +406,6 @@ extern callbacks guiCallbacks;
 /* extern callbacks chooseModelCallbacks; */
 extern callbacks pauseCallbacks;
 extern callbacks configureCallbacks;
+extern callbacks promptCallbacks;
 
 #endif

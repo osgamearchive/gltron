@@ -1,0 +1,12 @@
+After you checked out from CVS, do
+
+./system_sdl
+./sound_sdl
+autoconf
+
+and after that:
+
+make clean
+make
+
+This will hopefully compile successfully.

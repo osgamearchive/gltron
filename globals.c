@@ -6,6 +6,8 @@ Game *game;
 Game2 main_game2;
 Game2 *game2;
 
+char messages[80];
+
 /* TexFont *txf = NULL; */
 fonttex *guiFtx = NULL;
 fonttex *gameFtx = NULL;

@@ -42,6 +42,7 @@ void drawGame() {
   if(game->settings->show_fps)
     drawFPS(game->screen);
 
+  drawConsole(game->screen);
   /*
   if(game->settings->show_help == 1)
     drawHelp(game->screen);
@@ -154,6 +155,7 @@ int main( int argc, char *argv[] ) {
   printf("menu loaded\n");
   free(path);
 
+  consoleInit();
   initGameStructures();
   resetScores();
 
@@ -169,4 +171,14 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, NULL, NULL
 };
+
+
+
+
+
+
+
+
+
+
 

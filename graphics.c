@@ -19,6 +19,7 @@ void rasonly(gDisplay *d) {
 }
 
 void drawText(fonttex* ftx, int x, int y, int size, char *text) {
+
   /* int i; */
 
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

@@ -14,6 +14,10 @@ void SystemExit() {
 #ifdef SOUND
   shutdownSound();
 #endif
+  fprintf(stderr, "shutting down network now\n");
+#ifdef NETWORK
+  SystemNetExit();
+#endif
   fprintf(stderr, "shutting down sdl now\n");
   SDL_Quit();
   fprintf(stderr, "exiting application\n");
@@ -27,6 +31,9 @@ void SystemInit(int *argc, char *argv[]) {
   }
   atexit(SystemExit);
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
+#ifdef NETWORK
+  SystemNetInit();
+#endif
 }
 
 void SystemPostRedisplay() {
@@ -142,7 +149,3 @@ extern char* SystemGetKeyName(int key) {
   */
   return SDL_GetKeyName(key);
 }  
-
-
-
-

@@ -11,6 +11,10 @@
 - added mouse callbacks for SDL and SYSTEM_MOUSEUP, SYSTEM_MOUSEDOWN constants
 - colored debug texture (2D map)
 - added second 2D map for evaluation (one line drawing, one textured)
+- added "console" for status messages
+- added ligthing for trails
+- added shadows to trails
+- added line to trail-top to make them appear 'thick'
 
 0.53 to 0.59
 most important visible changes (including the ones to 0.59beta)

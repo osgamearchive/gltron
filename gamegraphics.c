@@ -1,5 +1,26 @@
 #include "gltron.h"
-#include "geom.h"
+
+void initModelLights(int light) {
+  /* float col[] = { .77, .77, .77, 1.0 }; */
+  float col[] = { .95, .95, .95, 1.0 };
+  float dif[] =  { 0.4, 0.4, 0.4, 1};
+  float amb[] = { 0.05, 0.05, 0.05, 1};
+
+  glLightfv(light, GL_AMBIENT, amb);
+  glLightfv(light, GL_SPECULAR, col);
+  glLightfv(light, GL_DIFFUSE, dif);
+}
+
+void initTrailLights(int light) {
+  /* float col[] = { .77, .77, .77, 1.0 }; */
+  float col[] = { .0, .0, .0, 1.0 };
+  float dif[] =  { 0.8, 0.8, 0.8, 1};
+  float amb[] = { 0.3, 0.3, 0.3, 1};
+
+  glLightfv(light, GL_AMBIENT, amb);
+  glLightfv(light, GL_SPECULAR, col);
+  glLightfv(light, GL_DIFFUSE, dif);
+}
 
 void rebuildDebugTex() {
   int x, y;
@@ -51,7 +72,7 @@ void drawDebugLines(gDisplay *d) {
   glVertex2i(0, size);
   glEnd();
 
-
+  /* glLineWidth(2); */ /* buggy in Mesa/Glide */
   for(i = 0; i < game->players; i++) {
     p = &(game->player[i]);
     data = p->data;
@@ -71,6 +92,7 @@ void drawDebugLines(gDisplay *d) {
       glEnd();
     }
   }
+  /* glLineWidth(1); */
   glPopMatrix();
 }
 
@@ -150,6 +172,19 @@ void drawDebugTex(gDisplay *d) {
   glEnable(GL_DEPTH_TEST);
 }
 
+void drawConsoleLines(char *line, int call) {
+  /* fprintf(stdout, "%s\n", line); */
+  if(*line != 0) 
+    drawText(gameFtx, 20, game->screen->vp_h - 20 * (call + 1),
+	     15, line);
+}
+
+void drawConsole(gDisplay *d) {
+  rasonly(d);
+  glColor3f(1.0, 0.3, 0.3);
+  consoleDisplay(drawConsoleLines, 5);
+}
+  
 void drawFPS(gDisplay *d) {
 #define FPS_HSIZE 20
   /* draws FPS in upper left corner of Display d */
@@ -253,7 +288,8 @@ void drawFloor(gDisplay *d) {
 void drawCrash(float radius) {
 #define CRASH_W 32
 #define CRASH_H 16
-
+  glDisable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
   glColor4f(1.0, 1.0, 1.0, (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX);
   /* printf("exp_r: %.2f\n", (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX); */
   glEnable(GL_TEXTURE_2D);
@@ -274,6 +310,8 @@ void drawCrash(float radius) {
   polycount += 2;
 
   glDisable(GL_TEXTURE_2D);
+  glEnable(GL_DEPTH_TEST);
+  glDepthMask(GL_TRUE);
 }
 
 void drawCycle(Player *p, int lod) {
@@ -285,8 +323,6 @@ void drawCycle(Player *p, int lod) {
   int last_dir;
   float dirangle;
   Mesh *cycle;
-
-#define turn_length 200
 
   dirangles = dirangles2;
   neigung_dir = -1.0;
@@ -302,15 +338,15 @@ void drawCycle(Player *p, int lod) {
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
   if(game->settings->turn_cycle) {
-    time = abs(p->data->turn_time - game2->time.current);
-    if(time < turn_length) {
+    time = game2->time.current - p->data->turn_time;
+    if(time < TURN_LENGTH) {
       last_dir = p->data->last_dir;
       if(p->data->dir == 3 && last_dir == 2)
 	last_dir = 4;
       if(p->data->dir == 2 && last_dir == 3)
 	last_dir = 5;
-      dirangle = ((turn_length - time) * dirangles[last_dir] +
-		  time * dirangles[p->data->dir]) / turn_length;
+      dirangle = ((TURN_LENGTH - time) * dirangles[last_dir] +
+		  time * dirangles[p->data->dir]) / TURN_LENGTH;
     } else
       dirangle = dirangles[p->data->dir];
   } else  dirangle = dirangles[p->data->dir];
@@ -328,14 +364,14 @@ void drawCycle(Player *p, int lod) {
 
 #define neigung 25
   if(game->settings->turn_cycle) {
-    if(time < turn_length) {
+    if(time < TURN_LENGTH) {
       float axis = 1.0;
       if(p->data->dir < p->data->last_dir && p->data->last_dir != 3)
 	axis = -1.0;
       else if((p->data->last_dir == 3 && p->data->dir == 2) ||
 	      (p->data->last_dir == 0 && p->data->dir == 3))
 	axis = -1.0;
-      glRotatef(neigung * sin(M_PI * time / turn_length),
+      glRotatef(neigung * sin(M_PI * time / TURN_LENGTH),
 		0.0, axis * neigung_dir, 0.0);
     }
   }
@@ -344,6 +380,10 @@ void drawCycle(Player *p, int lod) {
   /* glTranslatef(-cycle->bbox[0] / 2, 0, .0); */
   /* glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1], .0); */
 
+  initModelLights(GL_LIGHT1);
+  glDisable(GL_LIGHT0);
+  glEnable(GL_LIGHT1);
+  glDisable(GL_COLOR_MATERIAL);
   glEnable(GL_LIGHTING);
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
@@ -561,6 +601,9 @@ void drawWalls(gDisplay *d) {
 void drawCam(Player *p, gDisplay *d) {
   int i;
 
+  float arena[] = { 1.0, 1.0, 5, 0.0 };
+  glLightfv(GL_LIGHT0, GL_POSITION, arena);
+
   /* 
   if (d->fog == 1) {
     glEnable(GL_FOG);
@@ -576,8 +619,8 @@ void drawCam(Player *p, gDisplay *d) {
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glLightfv(GL_LIGHT0, GL_POSITION, p->camera->cam);
 
+  glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
   gluLookAt(p->camera->cam[0], p->camera->cam[1], p->camera->cam[2],
 	    p->camera->target[0], p->camera->target[1], p->camera->target[2],
 	    0, 0, 1);
@@ -586,8 +629,17 @@ void drawCam(Player *p, gDisplay *d) {
   if(game->settings->show_wall == 1)
     drawWalls(d);
 
+
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+  glEnable(GL_COLOR_MATERIAL);
+  glShadeModel(GL_SMOOTH);
+  initTrailLights(GL_LIGHT0);
+  glDisable(GL_LIGHT1);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHTING);
   for(i = 0; i < game->players; i++)
     drawTraces(&(game->player[i]), d);
+  glDisable(GL_LIGHTING);
 
   drawPlayers(p);
 
@@ -642,17 +694,6 @@ void drawPause(gDisplay *display) {
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
 }
 
-void initCustomLights() {
-  /* float col[] = { .77, .77, .77, 1.0 }; */
-  float col[] = { .95, .95, .95, 1.0 };
-  float dif[] =  { 0.4, 0.4, 0.4, 1};
-  float amb[] = { 0.05, 0.05, 0.05, 1};
-
-  glEnable(GL_LIGHT0);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, col);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
-}
 
 void initGLGame() {
 
@@ -674,7 +715,7 @@ void initGLGame() {
 
   /* TODO(3): incorporate model stuff */
   /* initLightAndMaterial(); */
-  initCustomLights();
+  /* initCustomLights(); */
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);

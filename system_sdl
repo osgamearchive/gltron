@@ -1,5 +1,7 @@
 #!/bin/sh
 
-rm -f system.c system.h
+rm -f system.c system.h system_net.c system_net.h
 ln -s system_sdl.c system.c
 ln -s system_sdl.h system.h
+ln -s system_net_sdl.c system_net.c
+ln -s system_net_sdl.h system_net.h

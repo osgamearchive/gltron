@@ -6,7 +6,6 @@
 
 /* default actions */
 
-
 keyAction key_actions[KEY_ACTIONS_N] = {
   { 0, TURN_LEFT, 'a' },
   { 0, TURN_RIGHT, 's' },
@@ -27,7 +26,9 @@ int reserved_keys[] = {
   SYSTEM_KEY_F4,
   SYSTEM_KEY_F5,
   SYSTEM_KEY_F10,
-  SYSTEM_KEY_F12
+  SYSTEM_KEY_F12,
+  SYSTEM_KEY_UP,
+  SYSTEM_KEY_DOWN
 };
 
 void keyGame(int k, int x, int y)
@@ -53,20 +54,29 @@ void keyGame(int k, int x, int y)
   case SYSTEM_KEY_F5: saveSettings(); break;
   case SYSTEM_KEY_F12: doScreenShot(); break;
 
+  case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
+  case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
+
   default: 
     for(i = 0; i < KEY_ACTIONS_N; i++) {
       if(k == key_actions[i].key) {
-	createTurnEvent(key_actions[i].player, key_actions[i].turn);
+	int p;
+	p = key_actions[i].player;
+	if(game->player[p].data->speed > 0)
+	  createTurnEvent(p, key_actions[i].turn);
 	return;
       }
     }
-    fprintf(stderr, "key %d is not bound\n", k);
+
+    sprintf(messages, "key '%s' is not bound", SystemGetKeyName(k));
+    consoleAddLine(messages);
+    fprintf(stderr, "%s\n", messages);
   }
 }
 
 void parse_args(int argc, char *argv[]) {
   int i;
-  while(argc--)
+  while(argc--) {
     if(argv[argc][0] == '-') {
       i = 0;
       while(argv[argc][++i] != 0) {
@@ -134,4 +144,5 @@ void parse_args(int argc, char *argv[]) {
 	}
       }
     }
+  }
 }

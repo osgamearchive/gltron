@@ -1,5 +1,4 @@
 #include "gltron.h"
-#include "geom.h"
 
 int getCol(int x, int y) {
   if(x < 0 || x >= game->settings->grid_size -1 ||
@@ -106,7 +105,7 @@ void initPlayerData() {
     data->dir = rand() & 3;
     data->last_dir = data->dir;
     data->turn = 0;
-    data->turn_time = 0;
+    data->turn_time = -TURN_LENGTH;
 
     /* if player is playing... */
     if(ai->active != 2) {
@@ -137,6 +136,7 @@ void initPlayerData() {
 
 void initData() {
   int i;
+
   /* colmap */
 
   /* TODO: check if grid_size/colwidth has changed and  
@@ -173,7 +173,6 @@ void initData() {
 
   initPlayerData();
   initClientData();
-
 }
 
 int applyGameInfo() {
@@ -205,8 +204,6 @@ int applyGameInfo() {
   }
   return 0;
 }
-    
-    
 
 int updateTime() {
   game2->time.lastFrame = game2->time.current;
@@ -222,7 +219,6 @@ void processEvent(GameEvent* e) {
   }
   switch(e->type) {
   case EVENT_TURN_LEFT:
-    fprintf(stderr, "player %d turning left\n", e->player);
     data = game->player[e->player].data;
     data->iposx = e->x;
     data->iposy = e->y;
@@ -230,7 +226,6 @@ void processEvent(GameEvent* e) {
     doTurn(data, e->timestamp);
     break;
   case EVENT_TURN_RIGHT:
-    fprintf(stderr, "player %d turning right\n", e->player);
     data = game->player[e->player].data;
     data->iposx = e->x;
     data->iposy = e->y;
@@ -238,7 +233,9 @@ void processEvent(GameEvent* e) {
     doTurn(data, e->timestamp);
     break;
   case EVENT_CRASH: 
-    fprintf(stderr, "player %d crashed\n", e->player);
+    sprintf(messages, "player %d crashed", e->player);
+    fprintf(stderr, "%s\n", messages);
+    consoleAddLine(messages);
     crashPlayer(e->player);
     break;
   case EVENT_STOP:
@@ -251,7 +248,9 @@ void processEvent(GameEvent* e) {
       game2->mode = GAME_SINGLE;
     }
     game->winner = e->player;
-      printf("winner: %d\n", game->winner);
+    sprintf(messages, "winner: %d", game->winner);
+    printf("%s\n", messages);
+    consoleAddLine(messages);
     switchCallbacks(&pauseCallbacks);
     /* screenSaverCheck(0); */
     game->pauseflag = PAUSE_GAME_FINISHED;
@@ -272,7 +271,7 @@ void addList(list **l, void* data) {
   p->data = data;
 }
  			
-list* doMovement() {
+list* doMovement(int mode) {
   int i;
   int dt;
   float fs;
@@ -298,7 +297,7 @@ list* doMovement() {
       while(data->t >= 1) {
 	moveStep(data);
 	data->t--;
-	if(getCol(data->iposx, data->iposy)) {
+	if(getCol(data->iposx, data->iposy) && mode) {
 	  e = (GameEvent*) malloc(sizeof(GameEvent));
 	  e->type = EVENT_CRASH;
 	  e->player = i;
@@ -332,13 +331,14 @@ list* doMovement() {
 	      maxSpeed = game->player[i].data->speed;
 	    }
 	  }
-	  
-	  e = (GameEvent*) malloc(sizeof(GameEvent));
-	  e->type = EVENT_STOP;
-	  e->player = winner;
-	  e->timestamp = game2->time.current;
-	  e->x = 0; e->y = 0;
-	  addList(&l, e);
+	  if(mode) {
+	    e = (GameEvent*) malloc(sizeof(GameEvent));
+	    e->type = EVENT_STOP;
+	    e->player = winner;
+	    e->timestamp = game2->time.current;
+	    e->x = 0; e->y = 0;
+	    addList(&l, e);
+	  }
 	}
       }
     }      
@@ -356,8 +356,14 @@ void idleGame( void ) {
 
   if(updateTime() == 0) return;
   switch(game2->mode) {
+  case GAME_NETWORK_RECORD:
+#ifdef NETWORK
+    updateNet();
+#endif
+    /* fall through */
   case GAME_SINGLE:
   case GAME_SINGLE_RECORD:
+    /* check for fast finish */
     /* run AI */
     for(i = 0; i < game->players; i++)
       if(game->player[i].ai != NULL)
@@ -378,7 +384,7 @@ void idleGame( void ) {
     }
     game2->events.next = NULL;
 
-    l = doMovement(); /* this can generate new events */
+    l = doMovement(1); /* this can generate new events */
     if(l != NULL) {
       for(p = l; p->next != NULL; p = p->next) {
 	processEvent((GameEvent*) p->data);
@@ -392,29 +398,30 @@ void idleGame( void ) {
       p = p->next;
       free(l);
     }
-
-
     break;
+  case GAME_PLAY_NETWORK:
+#ifdef NETWORK
+    updateNet();
+    /* broadCast any outstanding events (turns, etc) */
+    for(p = &(game2->events); p->next != NULL; p = p->next) {
+      sendNetEvent((GameEvent*) p->data);
+    }
+#endif
+    /* fall through to GAME_PLAY */
   case GAME_PLAY:
     getEvents(); 
-    l = doMovement(); /* this can generate new events */
+    l = doMovement(0); /* this won't generate new events */
     if(l != NULL) {
-      fprintf(stderr, "ignoring some events\n");
+      fprintf(stderr, "something is seriously wrong - ignoring events\n");
     }
-    /* free list */
-    p = l;
-    while(p != NULL) {
-      l = p;
-      p = p->next;
-      free(l);
-    }
+    break;
   }
     
   camMove();
   chaseCamMove();
 
   SystemPostRedisplay();
-  fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0);
+  /* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
 }
 
 void resetScores() {
@@ -516,126 +523,3 @@ void doTurn(Data *data, int time) {
   data->posx = data->iposx + data->t * dirsX[data->dir];
   data->posy = data->iposy + data->t * dirsY[data->dir];
 }
-
-static float cam_park_pos[4][2] = {
-  { 0.2, 0.2 },
-  { 0.8, 0.2 },
-  { 0.2, 0.8 },
-  { 0.8, 0.8 }
-};
-
-static float park_height = 80.0;
-
-void chaseCamMove() {
-  int i;
-  Camera *cam;
-  Data *data;
-  float dest[3];
-  float tdest[3];
-  float dcamx;
-  float dcamy;
-  float d, dt;
-
-  dt = game2->time.dt;
-
-  for(i = 0; i < game->players; i++) {
-      
-    cam = game->player[i].camera;
-    data = game->player[i].data;
-    
-    if(data->speed == SPEED_GONE) {
-      float tmp[3];
-    
-      dest[0] = cam_park_pos[i][0] * game->settings->grid_size;
-      dest[1] = cam_park_pos[i][1] * game->settings->grid_size;
-    
-      dest[2] = park_height;
-      tdest[0] = game->settings->grid_size / 2;
-      tdest[1] = game->settings->grid_size / 2;
-      tdest[2] = -10;
-      vsub(dest, cam->cam, tmp);
-      if(length(tmp) > 1) {
-	normalize(tmp);
-	vadd(cam->cam, tmp, cam->cam);
-      } else
-	vcopy(dest, cam->cam);
-      vsub(tdest, cam->target, tmp);
-      if(length(tmp) > 1) {
-	normalize(tmp);
-	vadd(cam->target, tmp, cam->target);
-      } else 
-	vcopy(tdest, cam->target);
-    } else {
-      
-      switch(cam->camType) {
-      case 0: /* Andi-cam */
-	cam->cam[0] = data->posx + CAM_CIRCLE_DIST * COS(camAngle);
-	cam->cam[1] = data->posy + CAM_CIRCLE_DIST * SIN(camAngle);
-	cam->cam[2] = CAM_CIRCLE_Z;
-	cam->target[0] = data->posx;
-	cam->target[1] = data->posy;
-	cam->target[2] = B_HEIGHT;
-	break;
-      case 1: /* Mike-cam */
-	cam->target[0] = data->posx;
-	cam->target[1] = data->posy;
-	cam->target[2] = B_HEIGHT;
-      
-	dest[0] = cam->target[0] - CAM_FOLLOW_DIST * dirsX[ data->dir];
-	dest[1] = cam->target[1] - CAM_FOLLOW_DIST * dirsY[ data->dir];
-
-	d = sqrt((dest[0] - cam->cam[0]) * (dest[0] - cam->cam[0]) +
-		 (dest[1] - cam->cam[1]) * (dest[1] - cam->cam[1]));
-	if(d != 0) {
-	  /*
-	    dcamx = (float)dt * CAM_FOLLOW_SPEED * (dest[0] - cam->cam[0]) / d;
-	    dcamy = (float)dt * CAM_FOLLOW_SPEED * (dest[1] - cam->cam[1]) / d;
-	  */
-	  dcamx = (float)dt * CAM_FOLLOW_SPEED_FACTOR *
-	    game->settings->current_speed * (dest[0] - cam->cam[0]) / d;
-	  dcamy = (float)dt * CAM_FOLLOW_SPEED_FACTOR *
-	    game->settings->current_speed * (dest[1] - cam->cam[1]) / d;
-
-	  if((dest[0] - cam->cam[0] > 0 && dest[0] - cam->cam[0] < dcamx) ||
-	     (dest[0] - cam->cam[0] < 0 && dest[0] - cam->cam[0] > dcamx)) {
-	    cam->cam[0] = dest[0];
-	  } else cam->cam[0] += dcamx;
-
-	  if((dest[1] - cam->cam[1] > 0 && dest[1] - cam->cam[1] < dcamy) ||
-	     (dest[1] - cam->cam[1] < 0 && dest[1] - cam->cam[1] > dcamy)) {
-	    cam->cam[1] = dest[1];
-	  } else cam->cam[1] += dcamy;
-	}
-	break;
-      case 2: /* 1st person */
-#define H 3
-	cam->target[0] = data->posx + dirsX[data->dir];
-	cam->target[1] = data->posy + dirsY[data->dir];
-	cam->target[2] = H;
-
-	cam->cam[0] = data->posx;
-	cam->cam[1] = data->posy;
-	cam->cam[2] = H + 0.5;
-#undef H
-	break;
-      }
-    }
-  }
-}
-
-void camMove() {
-  camAngle += CAM_SPEED * game2->time.dt / 100;
-  while(camAngle > 360) camAngle -= 360;
-}
-
-
-
-
-
-
-
-
-
-
-
-

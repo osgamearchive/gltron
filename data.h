@@ -61,18 +61,28 @@ typedef struct GameEvent {
   int y;
   int timestamp;
 } GameEvent;
-
-typedef struct History History;
-struct History {
-  GameEvent event;
-  History *next;
-};
   
 enum {
   GAME_SINGLE = 1,
   GAME_SINGLE_RECORD = 2,
-  GAME_PLAY = 4
+  GAME_PLAY = 4,
+  GAME_PLAY_NETWORK = 8,
+  GAME_NETWORK_RECORD
 };
+
+enum {
+  NET_EVENT = 'e'
+};
+
+typedef struct NetData {
+  char type[2];
+  char *data;
+  int length;
+} NetData;
+
+typedef struct Network {
+  list *data;
+} Network;
 
 typedef struct Game2 {
   Grid grid;
@@ -84,8 +94,7 @@ typedef struct Game2 {
   list events;
   FILE *record;
   FILE *play;
-  History *history;
-  History *current;
+  Network *network;
 } Game2;
   
 typedef struct line {

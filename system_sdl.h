@@ -2,6 +2,8 @@
 #define SYSTEM_H
 
 #include "gltron.h"
+#include "system_net.h"
+
 #include <SDL/SDL.h>
 
 #define SYSTEM_KEY_DOWN SDLK_DOWN
@@ -17,8 +19,13 @@
 #define SYSTEM_KEY_F10 SDLK_F10
 #define SYSTEM_KEY_F12 SDLK_F12
 
+#define SYSTEM_ENTER SDLK_ENTER
+#define SYSTEM_RETURN SDLK_RETURN
+
 #define SYSTEM_MOUSEUP SDL_MOUSEBUTTONUP
 #define SYSTEM_MOUSEDOWN SDL_MOUSEBUTTONDOWN
+
+#define SYSTEM_KEY_TAB SDLK_TAB
 
 #define SYSTEM_RGBA 1
 #define SYSTEM_DOUBLE 2
