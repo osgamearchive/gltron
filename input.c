@@ -56,7 +56,7 @@ void keyGame(int k, int x, int y)
   case SYSTEM_KEY_F10:
     game->settings->camType = (game->settings->camType + 1) % CAM_COUNT;
     for(i = 0; i < game->players; i++)
-      if(game->player[i].ai->active == 0)
+      if(game->player[i].ai->active == AI_HUMAN)
 	initCamera(game->player[i].camera, 
 		   game->player[i].data, 
 		   game->settings->camType);

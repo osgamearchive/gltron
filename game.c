@@ -16,7 +16,7 @@ void initClientData() {
     cam = game->player[i].camera;
     data = game->player[i].data;
 
-    camType = (game->player[i].ai->active == 1) ? 0 : game->settings->camType;
+    camType = (game->player[i].ai->active == AI_COMPUTER) ? 0 : game->settings->camType;
     initCamera(cam, data, camType);
 
     memcpy(game->player[i].pColorDiffuse, 
@@ -66,7 +66,7 @@ static void autoConfigureDisplay() {
 
   /* loop thru players and find the humans */
   for (i=0; i < game->players; i++) {
-    if (game->player[i].ai->active == 0) {
+    if (game->player[i].ai->active == AI_HUMAN) {
       game->settings->content[n_humans] = i;
       n_humans++;
     }    

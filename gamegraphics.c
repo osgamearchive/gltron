@@ -40,7 +40,7 @@ void drawGame() {
       if(game->settings->show_scores)
 	drawScore(p, d);
       if(game->settings->show_ai_status)
-	if(p->ai->active == 1)
+	if(p->ai->active == AI_COMPUTER)
 	  drawAI(d);
     }
     glDepthMask(GL_TRUE);

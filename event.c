@@ -157,7 +157,7 @@ void idleGame( void ) {
       /* run AI */
       for(i = 0; i < game->players; i++)
 	if(game->player[i].ai != NULL)
-	  if(game->player[i].ai->active == 1 &&
+	  if(game->player[i].ai->active == AI_COMPUTER &&
 	     PLAYER_IS_ACTIVE(&game->player[i])) {
 
             /* 

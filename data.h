@@ -35,15 +35,6 @@ typedef struct Time {
 
   /* float timeScale; */
 } Time;
-
-
-typedef struct GameEvent {
-  int type; /* what */
-  int player; /* who */
-  int x; /* where */
-  int y;
-  int timestamp;
-} GameEvent;
   
 enum {
   GAME_SINGLE = 1,

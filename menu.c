@@ -119,7 +119,7 @@ void changeAction(char *name) {
   } else if(strstr(name, "camType") == name) {
     int i;
     for(i = 0; i < game->players; i++)
-      if(game->player[i].ai->active == 0)
+      if(game->player[i].ai->active == AI_HUMAN)
 	initCamera(game->player[i].camera, 
 		   game->player[i].data, 
 		   game->settings->camType);

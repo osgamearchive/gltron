@@ -76,6 +76,7 @@ typedef png_texture texture;
 #include "menu.h"
 #include "quad.h"
 #include "callbacks.h"
+#include "event.h"
 
 #include "system.h"
 #include "geom.h"
@@ -114,7 +115,6 @@ enum {
   AI_HUMAN = 0,
   AI_COMPUTER = 1,
   AI_NONE = 2
-  
 };
 
 /* global constants */
@@ -330,8 +330,6 @@ extern void clearTrails(Data *data);
 
 extern void moveStep(Data* data);
 extern void writePosition(int player);
-
-extern void crashPlayer(int player);
 
 /* gltron.c */
 /* game.c */

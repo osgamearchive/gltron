@@ -142,7 +142,7 @@ void initPlayerData() {
     data->turn_time = -TURN_LENGTH;
 
     /* if player is playing... */
-    if(ai->active != 2) {
+    if(ai->active != AI_NONE) {
       data->speed = game->settings->current_speed;
       data->trail_height = TRAIL_HEIGHT;
       data->exp_radius = 0;
