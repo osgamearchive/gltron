@@ -68,9 +68,6 @@ extern Game *game;
 extern Game2 main_game2;
 extern Game2 *game2;
 
-extern unsigned char* colmap;
-extern int colwidth;
-
 extern segment2 walls[];
 
 extern int dirsX[];
@@ -107,4 +104,7 @@ extern void doCameraMovement(void);
 extern void initCamera(Camera *cam, Data *data, int type);
 
 extern void initWalls(void);
+
+extern void getPositionFromIndex(float *x, float *y, int player);
+extern void getPositionFromData(float *x, float *y, Data *data);
 #endif

@@ -39,7 +39,6 @@ float cam_r_mouse = CAM_CIRCLE_DIST;
 float cam_r_follow = CAM_FOLLOW_DIST;
 float cam_r_circle = CAM_CIRCLE_DIST;
 
-unsigned char* colmap = NULL;
 unsigned char* debugtex = NULL;
 int ogl_debugtex;
 int colwidth;
