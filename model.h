@@ -7,6 +7,9 @@
 /* warning: changing this will break drawModel() */
 #define MODEL_FACESIZE 4
 
+/* only for GLtron: define polycount */
+#define POLY_COUNT
+
 typedef struct {
   float ambient[4];
   float diffuse[4];
