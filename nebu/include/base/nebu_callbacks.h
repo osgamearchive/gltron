@@ -4,7 +4,7 @@
 typedef struct Callbacks {
   void (*display)(void);
   void (*idle)(void);
-  void (*keyboard)(int, int, int);
+  void (*keyboard)(int, int, int, int);
   void (*init)(void);
   void (*exit)(void);
   void (*initGL)(void);

@@ -56,11 +56,19 @@ extern char* SystemGetKeyName(int key) {
 
 void SystemHandleInput(SDL_Event *event) {
   char *keyname;
-  int key;
+  int key, state;
   int skip_axis_event = 0;
 
 	switch(event->type) {
 	case SDL_KEYDOWN:
+	case SDL_KEYUP:
+		if(event->type == SDL_KEYDOWN)
+			state = SYSTEM_KEYSTATE_DOWN;
+		else {
+			printf("got keyup\n");
+			state = SYSTEM_KEYSTATE_UP;
+		}
+ 
 		keyname = SDL_GetKeyName(event->key.keysym.sym);
 		key = 0;
 		switch(event->key.keysym.sym) {
@@ -73,9 +81,9 @@ void SystemHandleInput(SDL_Event *event) {
 		}
 		/* check: is that translation necessary? */
 		if(key) 
-			current->keyboard(key, 0, 0);
+			current->keyboard(state, key, 0, 0);
 		else
-			current->keyboard(event->key.keysym.sym, 0, 0);
+			current->keyboard(state, event->key.keysym.sym, 0, 0);
 		break;
 	case SDL_JOYAXISMOTION:
 		if (abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
@@ -90,12 +98,18 @@ void SystemHandleInput(SDL_Event *event) {
 			key += 2;
 		if(event->jaxis.value > 0)
 			key++;
-		current->keyboard(key, 0, 0);
+		current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
 		break;
 	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		if(event->type == SDL_JOYBUTTONDOWN)
+			state = SYSTEM_KEYSTATE_DOWN;
+		else
+			state = SYSTEM_KEYSTATE_UP;
+		
 		key = SYSTEM_JOY_BUTTON_0 + event->jbutton.button +
 			SYSTEM_JOY_OFFSET * event->jbutton.which;
-		current->keyboard(key, 0, 0);
+		current->keyboard(state, key, 0, 0);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
