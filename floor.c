@@ -71,5 +71,4 @@ void drawFloorGrid(int grid_size,  int line_spacing,
   glEnd();
 
   glDisable(GL_FOG);
-  glEndList();
 }
