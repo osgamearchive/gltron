@@ -11,9 +11,10 @@
    and rendering
 */
 
+/* fixme: this is all very obsolete, use vertex buffers instead */
+
 typedef struct Vertex {
   float v[3];
-  // float n[3];
   float color[4];
   float uv[2];
 } Vertex;

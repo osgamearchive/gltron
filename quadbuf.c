@@ -126,8 +126,7 @@ int* getSortedQuads(QuadBuffer *q, float eye[3]) {
   int *processed;
   int pos = 0;
   int i;
-  // fprintf(stderr, "sorting %d quads to eye coordinates %.2f, %.2f, %.2f\n",
-// 	  q->current, eye[0], eye[1], eye[2]);
+
   if(q->current == 0) return NULL;
 
   index = (int*) malloc(q->current * sizeof(int));

@@ -82,7 +82,7 @@ void keyGame(int k, int x, int y)
     }
 
     sprintf(messages, "key '%s' is not bound", SystemGetKeyName(k));
-    // consoleAddLine(messages);
+    /* consoleAddLine(messages); */
     fprintf(stderr, "%s\n", messages);
   }
 }

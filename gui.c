@@ -5,6 +5,7 @@
 #include "gltron.h"
 
 #warning "ignored playMenuFX"
+
 void playMenuFX(int foo) { }
 
 void guiProjection(int x, int y) {
@@ -57,7 +58,9 @@ void drawGuiBackground() {
     glVertex2f(0, game->screen->vp_h);
 
     glEnd();
-    //   }
+#if 0
+  }
+#endif
 }
 
 void drawGuiLogo() {
@@ -118,8 +121,7 @@ void drawGuiLogo() {
   
 void displayGui() {
   drawGuiBackground();
-  // if(!game->settings->softwareRendering)
-    drawGuiLogo();
+  drawGuiLogo();
   drawMenu(game->screen);
 
   SystemSwapBuffers();  
@@ -128,8 +130,7 @@ void displayGui() {
 void displayConfigure() {
   char message[] = "Press a key for this action!";
   drawGuiBackground();
-  // if(!game->settings->softwareRendering)
-    drawGuiLogo();
+  drawGuiLogo();
   drawMenu(game->screen);
 
   rasonly(game->screen);
@@ -150,11 +151,12 @@ void keyboardConfigure(int key, int x, int y) {
   *configureKeyEntry = key;
   initMenuCaption(configureKeyMenu);
 #ifdef SOUND
-  // playMenuFX(fx_action);
+#if 0
+  playMenuFX(fx_action);
+#endif
 #endif
    drawGuiBackground();
-   // if(!game->settings->softwareRendering)
-     drawGuiLogo();
+   drawGuiLogo();
    drawMenu(game->screen);
    rasonly(game->screen);
    SystemSwapBuffers();

@@ -8,9 +8,6 @@
 
 #define NUM_GAME_FX 2
 
-// Mix_Chunk *game_fx[NUM_GAME_FX];
-// static Mix_Chunk *menu_fx[NUM_MENU_FX];
-
 static char *game_fx_names[] = {
 
 #ifdef macintosh 
@@ -82,6 +79,3 @@ void setFxVolume(float volume) {
   if(volume < 0) volume = 0;
   Audio_SetFxVolume(volume);
 }
-
-
-

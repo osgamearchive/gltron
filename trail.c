@@ -98,6 +98,8 @@ void drawTrailLines(Player *p) {
   Data *data;
   Camera *cam;
 
+  float trail_top[] = { 1.0, 1.0, 1.0, 1.0 };
+
   data = p->data;
   cam = p->camera;
 
@@ -112,9 +114,7 @@ void drawTrailLines(Player *p) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_LIGHTING);
-  // glColor3f(1.0, 1.0, 1.0);
 
-  // glBegin(GL_QUADS);
   glBegin(GL_LINES);
 
   line = &(data->trails[0]);
@@ -122,16 +122,13 @@ void drawTrailLines(Player *p) {
     /* compute distance from line to eye point */
     dist = getDist(line, cam->cam);
     alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
-    /* printf("dist: %.2f, alpha: %.2f\n", dist, alpha); */
-    // glColor4f(1.0, 1.0, 1.0, alpha);
-    glColor4f(0.0, 0.0, 0.0, alpha);
+    trail_top[3] = alpha;
+    glColor4fv(trail_top);
     
     if(line->sy == line->ey) normal = normal1;
     else normal = normal2;
     glNormal3fv(normal);
     glVertex3f(line->sx, line->sy, height);
-    // glVertex3f(line->sx, line->sy, height + 0.1);
-    // glVertex3f(line->ex, line->ey, height + 0.1);
     glVertex3f(line->ex, line->ey, height);
 
     line++;
@@ -142,9 +139,7 @@ void drawTrailLines(Player *p) {
   /* compute distance from line to eye point */
   dist = getDist(line, cam->cam);
   alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
-  /* printf("dist: %.2f, alpha: %.2f\n", dist, alpha); */
-  // glColor4f(1.0, 1.0, 1.0, alpha);
-  glColor4f(0.0, 0.0, 0.0, alpha);
+  glColor4fv(trail_top);
 
   glBegin(GL_LINES);
 

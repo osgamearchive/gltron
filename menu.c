@@ -5,8 +5,6 @@ Menu *pCurrent = 0;
 
 #define MENU_BUFSIZE 100
 
-
-// static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom", NULL };
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
 static char *player_list[] = { "human", "computer", "none", NULL };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
@@ -34,7 +32,9 @@ void changeAction(char *name) {
     setMusicVolume(game->settings->musicVolume);
   } else if(strstr(name, "fxVolume") == name) {
     setFxVolume(game->settings->fxVolume);
+#if 0
     playMenuFX(fx_highlight);
+#endif
   } else if(strstr(name, "song") == name) {
     if(game->settings->soundIndex != -1) {
       char *tmp;
@@ -145,7 +145,7 @@ void menuAction(Menu *activated, int type) {
       game2->mode = GAME_SINGLE;
       switchCallbacks(&pauseCallbacks);
       break;
-    case 'a': // this menu code is turning uglier and uglier 
+    case 'a': /* this menu code is turning uglier and uglier */
       printf("artpack menu chosen\n");
       artpack_index++;
       if(artpack_list[artpack_index] == NULL)
@@ -227,16 +227,13 @@ void menuAction(Menu *activated, int type) {
       case 'l':
 	{
 	  char buf[64];
-	  // int max_value;
 	  int dummy;
 	  int clist_index;
 	  
-	  // sscanf(activated->szName, "stl_%d_%d_%s", &dummy, &max_value, buf);
 	  sscanf(activated->szName, "stl_%d_%d_%s", &clist_index, &dummy, buf);
 	  piValue = getVi(buf);
 	  if(piValue != NULL) {
 	    (*piValue)++;
-	    // if(*piValue > max_value) *piValue = 0;
 	    if(clists[clist_index][*piValue] == NULL) *piValue = 0;
 	    initMenuCaption(activated);
 	    changeAction(buf);
@@ -607,7 +604,6 @@ void drawMenu(gDisplay *d) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   for(i = 0; i < pCurrent->nEntries; i++) {
     if(i == pCurrent->iHighlight) {
-      // glColor4fv(pCurrent->display.hlColor);
       float color[4];
       int j;
       float t;

@@ -25,7 +25,7 @@ void initRenderer() {
 void printRendererInfo() {
   printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
 	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
-  // printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
+  /* printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS)); */
 }
 
 void renderQuad(Quad *q) {
@@ -61,7 +61,6 @@ void renderQuad(Quad *q) {
     if(q->type & QUAD_COLOR) glColor4fv(q->vertex[i].color);
     if(q->type & QUAD_TEXTURE) glTexCoord2fv(q->vertex[i].uv);
     glVertex3fv(q->vertex[i].v);
-    // printVector3f(q->vertex[i].v);
   }
   glEnd();
 

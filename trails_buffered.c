@@ -245,7 +245,7 @@ void doTrails(Player *p) {
     /* draw non-transparent trails first (unsorted), then draw
        bows */
     int i;
-    // flat shaded, no blending
+    /* flat shaded, no blending */
     for(i = 0; i < game->players; i++)
       bufferPlayerTrail(game->player + i, q);
     drawTrails(q, NULL);

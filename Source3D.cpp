@@ -56,7 +56,7 @@ int fxShift(float shift, Uint8 *target, Uint8 *source, int len) {
       k = (int) pa;
       l = pa - k;
 
-      *(Sint16*) (target + 2 * j + 4 * i) +=
+      *(Sint16*) (target + 2 * j + 4 * i) += (Sint16) 
 	( *(Sint16*) (source + 2 * j + 4 * (k + 0) ) * ( 1 - l ) +
 	  *(Sint16*) (source + 2 * j + 4 * (k + 2) ) * ( l ) );
       

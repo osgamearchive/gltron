@@ -30,7 +30,7 @@ typedef struct GLstate {
 } GLstate;
 
 typedef struct Renderer {
-  // shows caps of the renderer
+  /* shows capabilities of the renderer */
   int ext_filter_anisotropic;
 } Renderer;
 

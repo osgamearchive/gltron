@@ -227,24 +227,20 @@ void doComputer2(int player, int target) {
   */
 
   if(front < critical && (left > front || right > front) ) {
-    /*
+#if 0
     if(critical <= rear_right && left > critical) {
-      // turn left
+      /* turn left */
       createTurnEvent(player, TURN_LEFT);
       fprintf(stderr, "turning left\n");
       return;
     }
-    */
+#endif
     if(left < right) {
-      // turn right
+      /* turn right */
       createTurnEvent(player, TURN_RIGHT);
-      // fprintf(stderr, "turning right\n");
-      // return;
     } else {
-      // turn left 
+      /* turn left */
       createTurnEvent(player, TURN_LEFT);
-      // fprintf(stderr, "turning left\n");
-      // return;
     }
     ai->lastx = data->iposx;
     ai->lasty = data->iposy;

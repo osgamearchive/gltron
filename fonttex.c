@@ -189,7 +189,7 @@ void ftxRenderString(fonttex *ftx, char *string, int len) {
   cw = (float)ftx->width / (float)ftx->texwidth;
 
   for(i = 0; i < len; i++) {
-    if(string[i] == 3) { // color code
+    if(string[i] == 3) { /* color code */
       i++;
       if(i >= len) return;
       if(string[i] < color_base && string[i] > color_base + colors) continue;

@@ -178,7 +178,8 @@ int SystemCreateWindow(char *name) {
 }
 
 void SystemDestroyWindow(int id) {
-  // SDL_QuitSubSystem(SDL_INIT_VIDEO);
+  /* don't quit the video subsystem, SDL fails unloading GL drivers */
+  /* SDL_QuitSubSystem(SDL_INIT_VIDEO); */
   video_initialized = 0;
 }
 

@@ -115,7 +115,6 @@ typedef struct fontbmp {
 } fontbmp;
 
 typedef struct fonttex {
-  // sgi_texture **textures;
   GLint nTextures;
   
   int texwidth; /* texture width */

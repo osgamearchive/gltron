@@ -59,7 +59,9 @@ void reshape(int x, int y) {
 void shutdownDisplay(gDisplay *d) {
   deleteTextures(d);
   deleteFonts();
-  // deleteBitmaps(d);
+#if 0
+  deleteBitmaps(d);
+#endif
   SystemDestroyWindow(d->win_id);
   printf("window destroyed\n");
 }
@@ -74,7 +76,10 @@ void setupDisplay(gDisplay *d) {
   fprintf(stderr, "loading art\n");
   loadArt();
 
-  // initBitmaps(game->screen);
+#if 0
+  initBitmaps(game->screen);
+#endif
+
   SystemReshapeFunc(reshape);
 }
 

@@ -21,14 +21,11 @@ void getRecognizerPositionVelocity(Point *p, Point *v) {
 void drawRecognizers(int flag) {
   float phi, rx, ry;
   float max = 0;
-  // int i;
 
   phi = acos ( dx() / sqrt( dx() * dx() + dy() * dy() ) );
-  // printf("x: %.2f y: %.2f phi: %.2f ", dx(), dy(), phi);
   if( dy() < 0 )
     phi = 2 * M_PI - phi;
-  // printf("phi corrected: %.2f\n", phi);
-  // printf("recognizer in degrees: %.2f\n", (phi + M_PI / 2) * 180 / M_PI);
+
   glPushMatrix();
 
 #if 0
@@ -57,7 +54,6 @@ void drawRecognizers(int flag) {
   glEnable(GL_NORMALIZE);
   glScalef(0.25, 0.25, 0.25);
   drawModel(recognizer);
-  // glColor3f(1, 1, 1);
 
   glDisable(GL_LIGHTING);
 

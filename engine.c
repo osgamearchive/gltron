@@ -80,7 +80,7 @@ void initGameStructures() { /* called only once */
   path = getFullPath("recognizer.obj.gz");
   if(path != NULL) {
     recognizer = readMeshFromFile(path);
-    // old code did normalize & invert normals & rescale to size = 60
+    /* old code did normalize & invert normals & rescale to size = 60 */
   } else {
     printf("fatal: could not load recognizer.obj.gz - exiting...\n");
     exit(1);
@@ -271,17 +271,17 @@ void clearTrail(int player) {
     if(colmap[i] == player + 1)
       colmap[i] = 0;
 
- // This causes a substantial hiccup on OS X
-  //rebuildDebugTex();
+  /* This causes a substantial hiccup on OS X */
+#if 0
+  rebuildDebugTex();
+#endif
 }
 
 void crashPlayer(int player) {
   int j;
 
 #ifdef SOUND
-  // #warning "TODO: create sound source"
   Audio_CrashPlayer(player);
-  // playCrashSound(0, player);
 #endif
 
   for(j = 0; j < game->players; j++) 

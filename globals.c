@@ -51,9 +51,9 @@ float cam_defaults[][3] =  {
   { CAM_CIRCLE_DIST, M_PI / 3, 0 } /* free */
 };
 
-// screensaver hack
+/* screensaver hack */
 int stoptime = 0;
-// menu hack
+/* menu hack */
 int menutime;
 /* int lasttime; 
    double dt; */
@@ -74,11 +74,9 @@ int screenshots = 0;
 
 /* default settings */
 
-// int default_arena_sizes[] = { 160, 240, 400, 600, 1200 };
 int default_arena_sizes[] = { 160, 240, 480, 720, 1200 };
-// int default_texture_modifier[] = { be 
 float default_speeds[] = { 5.0, 6.5, 8.5, 12.0, 0.0 };
-/* float colors_alpha[][4] = { { 1.0, 0.2, 0.4 , 0.4}, { 0.2, 0.3, 1.0, 0.4}, */
+
 float colors_alpha[][4] = { { .6, 0.6, 0.0, 0.6}, { 0.5, 0.05, 0.25, 0.6},
 		       { 0.2, 0.6, 0.4, 0.6 }, { 0.7, 0.7, 0.7, 0.6 } };
 
@@ -135,7 +133,7 @@ texture_info textures[] = {
 };
 
 float shadow_color[] = { 0, 0, 0, .8 };
-// float shadow_color[] = { 1, 1, 1, 1 };
+
 #define LX 2.0
 #define LY 2.0
 float shadow_matrix[] = { LX * LY, 0,       0, 0, 

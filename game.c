@@ -51,23 +51,11 @@ void changeDisplay() {
 		   game->settings->display_type, i, 1);
 }
 
-#warning "audio engine"
-
-/*
-void playEngine(void *data, Uint8 *stream, int len) {
-#ifdef SOUND
-  mixEngineSound(0, stream, len);
-#endif
-}
-*/
-
 void initGame() { /* called when game mode is entered */
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
-#warning "audio engine"
-  // Mix_SetPostMix(playEngine, NULL);
   Audio_EnableEngine();
 #endif
 }
@@ -75,8 +63,6 @@ void initGame() { /* called when game mode is entered */
 void exitGame() {
   SystemUnhidePointer();
 #ifdef SOUND
-#warning "audio engine"
-  // Mix_SetPostMix(NULL, NULL);
   Audio_DisableEngine();
 #endif
 }

@@ -2,16 +2,10 @@
 
 /* very brief - just the pause mode */
 
-// static float Gamma = 2.0;
-
 void idlePause() {
 #ifdef SOUND
   soundIdle();
 #endif
-  /* 
-  if(SystemGetElapsedTime() - lasttime < 10) return;
-  timediff();
-  */
   doCameraMovement();
   if(game->settings->screenSaver && stoptime != 0 &&
      SystemGetElapsedTime() - stoptime > 2000) {
@@ -83,12 +77,10 @@ void initPause() {
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   fprintf(stderr, "init pause mode\n");
-  // Mix_SetPostMix(playEngine, NULL);
 }
 
 void exitPause() {
   SystemUnhidePointer();
-  // Mix_SetPostMix(NULL, NULL);
 }
 
 void initPauseGL() {

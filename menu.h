@@ -35,11 +35,8 @@ typedef struct {
   void* next;
 } node;
 
-  // hack
+/* fixme: this variable is a hack */
 extern int menutime;
+
 #endif
-
-
-
-
 

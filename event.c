@@ -142,7 +142,6 @@ void idleGame( void ) {
   int t;
 
 #ifdef SOUND
-  // Audio_Idle();
   soundIdle();
 #endif
 

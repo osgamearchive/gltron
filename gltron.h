@@ -77,9 +77,6 @@ typedef png_texture texture;
 #include "geom.h"
 #include "light.h"
 
-/* sound stuff */
-// #include "sound3d.h"
-
 /* rendering stuff */
 #include "renderer_gl.h"
 

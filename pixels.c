@@ -83,7 +83,6 @@ unsigned char *scalePixels(unsigned char *source, int sw, int sh,
 	   source[bytes * (sx2 + sy * sw) + j] +
 	   source[bytes * (sx + sy2 * sw) + j] +
 	   source[bytes * (sx2 + sy2 * sw) + j]) / 4;
-	// data[x + y * dw + j] = (j != 0) ? 255 : 0;
       }
     }
   }

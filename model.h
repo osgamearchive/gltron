@@ -59,6 +59,6 @@ extern int polycount;
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif /* __cplusplus */
 
-#endif // MODEL_H
+#endif /* MODEL_H */
