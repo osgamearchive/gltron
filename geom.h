@@ -3,12 +3,23 @@
 #ifndef GEOM_H
 #define GEOM_H
 
-float length(float v[3]);
-void normalize(float v[3]);
-void crossprod(float v1[3], float v2[3], float out[3]);
-void normcrossprod(float v1[3], float v2[3], float out[3]);
-float scalarprod(float v1[3], float v2[3]);
-void vsub(float v1[3], float v2[3], float out[3]);
-void vadd(float v1[3], float v2[3], float out[3]);
-void vcopy(float v1[3], float out[3]);
+float length(float *v);
+void normalize(float *v);
+void crossprod(float *v1, float *v2, float *out);
+void normcrossprod(float *v1, float *v2, float *out);
+float scalarprod(float *v1, float *v2);
+void vsub(float *v1, float *v2, float *out);
+void vadd(float *v1, float *v2, float *out);
+void vcopy(float *v1, float *out);
+
+float length4(float *v);
+void normalize4(float *v);
+float scalarprod4(float *v1, float *v2);
+void vsub4(float *v1, float *v2, float *out);
+void vadd4(float *v1, float *v2, float *out);
+void vcopy4(float *v1, float *out);
 #endif
+
+
+
+
