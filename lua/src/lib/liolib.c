@@ -1,5 +1,5 @@
 /*
-** $Id: liolib.c,v 1.1 2002/02/14 10:46:59 jcatki Exp $
+** $Id: liolib.c,v 1.2 2002/02/22 12:23:41 jcatki Exp $
 ** Standard I/O (and system) library
 ** See Copyright Notice in lua.h
 */
@@ -516,7 +516,12 @@ static int io_rename (lua_State *L) {
 
 
 static int io_tmpname (lua_State *L) {
-  lua_pushstring(L, tmpnam(NULL));
+  static char tmpfname[16];
+  int fid;
+  strcpy(tmpfname,"/tmp/lua.XXXXXX");
+  if((fid=mkstemp(tmpfname)))
+	  close(fid);
+  lua_pushstring(L, tmpfname);
   return 1;
 }
 
