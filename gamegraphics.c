@@ -298,8 +298,12 @@ void doCycleTurnRotation(Player *p) {
 #undef neigung
 }
 
-void drawCycleShadow(Player *p, int lod) {
+void drawCycleShadow(Player *p, int lod, int drawTurn) {
   Mesh *cycle;
+  unsigned int turn_time;
+  turn_time = game2->time.current - p->data->turn_time;
+  if(turn_time < TURN_LENGTH && !drawTurn)
+    return;
 
   if(p->data->exp_radius != 0)
     return;
@@ -381,11 +385,15 @@ static void drawImpact(Player *p) {
   glEnable(GL_LIGHTING);
 }
 
-void drawCycle(Player *p, int lod) {
+void drawCycle(Player *p, int lod, int drawTurn) {
   Mesh *cycle;
-  unsigned int  time;
+  unsigned int  time, turn_time;
   cycle = lightcycle[lod];
     
+  turn_time = game2->time.current - p->data->turn_time;
+  if(turn_time < TURN_LENGTH && !drawTurn)
+    return;
+
   time = game2->time.current  - p->data->spoke_time;
   
   glPushMatrix();
@@ -511,14 +519,14 @@ void drawPlayers(Player *p) {
     height = game->player[i].data->trail_height;
 
     if (game2->settingsCache.show_model) {
-      /* don't draw our bike in cockpit mode */
+      int drawTurn = 1;
       if (game2->settingsCache.camType == CAM_TYPE_COCKPIT && 
           p == &game->player[i]) {
-        continue;
+        drawTurn = 0;
       }
       lod = playerVisible(p, &(game->player[i]));
       if (lod >= 0) { 
-        drawCycle(&(game->player[i]), lod);
+        drawCycle(&(game->player[i]), lod, drawTurn);
       }
     }
   }
@@ -746,10 +754,11 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
+	int drawTurn = 1;
         if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
-            p != &game->player[i]) {
-          drawCycleShadow(game->player + i, lod);
-        }
+            p != &game->player[i])
+	  drawTurn = 0;
+	drawCycleShadow(game->player + i, lod, drawTurn);
       }
     }
     if (game->player[i].data->trail_height > 0 )
@@ -764,7 +773,8 @@ void drawCam(Player *p, gDisplay *d) {
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
-  if (game2->settingsCache.show_recognizer) {
+  if (game2->settingsCache.show_recognizer &&
+      p->data->speed != SPEED_GONE) {
     drawRecognizer();
   }
 
