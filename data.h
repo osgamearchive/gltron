@@ -72,6 +72,7 @@ typedef struct gDisplay {
   unsigned int texWall_3;
   unsigned int texWall_4;
   unsigned int texGui;
+  unsigned int texLogo;
   unsigned int texCrash;
   unsigned int texTrail;
   unsigned int texTrailDecal;

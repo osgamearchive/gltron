@@ -142,13 +142,66 @@ void drawGuiBackground() {
   glVertex2f(0, game->screen->vp_h);
 
   glEnd();
-  glDisable(GL_TEXTURE_2D);
+
+}
+
+void drawGuiLogo() {
+  float pos[] = { 512 - 10 - 256, 384 - 64 };
+  float size[] = { 256, 64 };
+  float glpos = 64;
+  float glsize = 32;
+  float font_shift[] = { 0.5, 0.12 };
+
+  checkGLError("gui logo start");
+  
+  rasonly(game->screen);
+
+  pos[0] *= game->screen->vp_w / 512.0;
+  pos[1] *= game->screen->vp_h / 384.0;
+  size[0] *= game->screen->vp_w / 512.0;
+  size[1] *= game->screen->vp_h / 384.0;
+  glpos *= game->screen->vp_w / 512.0;
+  glsize *= game->screen->vp_w / 512.0;
+  
+  glEnable(GL_TEXTURE_2D);
+  glPushMatrix();
+  glTranslatef(pos[0] - glpos + glsize * font_shift[0], 
+	       pos[1] + glsize * font_shift[1], 0);
+  glScalef(glsize, glsize, glsize);
+  glColor3f(0.2, 0.4, 0.8);
+  ftxRenderString(ftx, "gl", 2);
+  glPopMatrix();
+  
+  glBindTexture(GL_TEXTURE_2D, game->screen->texLogo);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  glColor3f(1.0, 1.0, 1.0);
+  glBegin(GL_QUADS);
+
+  glTexCoord2f(0.0, 0.0);
+  glVertex2f(pos[0], pos[1]);
+
+  glTexCoord2f(1.0, 0.0);
+  glVertex2f(pos[0] + size[0], pos[1]);
+
+  glTexCoord2f(1.0, 1.0);
+  glVertex2f(pos[0] + size[0], pos[1] + size[1]);
+
+  glTexCoord2f(0.0, 1.0);
+  glVertex2f(pos[0], pos[1] + size[1]);
+
+  glEnd();
+
   checkGLError("gui background end");
 }
   
 void displayGui() {
   /* drawGui(); */
   drawGuiBackground();
+  drawGuiLogo();
   drawMenu(game->screen);
 
   SystemSwapBuffers();  

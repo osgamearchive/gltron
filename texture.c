@@ -7,15 +7,18 @@ void deleteTextures(gDisplay *d) {
   glDeleteTextures(1, &(d->texWall_3));
   glDeleteTextures(1, &(d->texWall_4));
   glDeleteTextures(1, &(d->texGui));
+  glDeleteTextures(1, &(d->texLogo));
   glDeleteTextures(1, &(d->texCrash));
   glDeleteTextures(1, &(d->texTrail));
   glDeleteTextures(1, &(d->texTrailDecal));
+
   checkGLError("texture.c deleted textures");
 }
 
 void initTextureNames(gDisplay *d) {
   glGenTextures(1, &(d->texFloor));  
   glGenTextures(1, &(d->texGui));
+  glGenTextures(1, &(d->texLogo));
   glGenTextures(1, &(d->texWall_1));
   glGenTextures(1, &(d->texWall_2));
   glGenTextures(1, &(d->texWall_3));
@@ -46,6 +49,7 @@ void initTexture(gDisplay *d) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   checkGLError("texture.c initTextures - floor");
+
   /* menu icon */
 
   glBindTexture(GL_TEXTURE_2D, d->texGui);
@@ -54,6 +58,15 @@ void initTexture(gDisplay *d) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
   checkGLError("texture.c initTextures - gui");
+
+  /* meno logo icon */
+
+  glBindTexture(GL_TEXTURE_2D, d->texLogo);
+  loadTexture("gltron_logo" TEX_SUFFIX, GL_RGBA);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+
+  checkGLError("texture.c initTextures - logo");
 
   /* wall texture 1*/
 

@@ -2,7 +2,7 @@
 
 void initFonts() {
   if(ftx != NULL) ftxUnloadFont(ftx);
-  ftx = ftxLoadFont("babbage.ftx");
+  ftx = ftxLoadFont("xenotron.ftx");
   
   if(ftx == NULL) {
     fprintf(stderr, "can't load font xenotron.ftx\n");
