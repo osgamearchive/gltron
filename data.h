@@ -3,13 +3,19 @@
 
 #include "gltron.h"
 
-/* data structures */
+/* general data structures */
 
 typedef struct list list;
 struct list {
   void *data;
   list* next;
 };
+
+typedef struct {
+  float x, y;
+} Point;
+
+/* game specific data structures */
 
 typedef struct Grid {
   int width, height;
@@ -70,8 +76,16 @@ typedef struct NetData {
 
 typedef struct Network {
   list *data;
+  int status;
 } Network;
 
+typedef struct Input {
+  int mouse1;
+  int mouse2;
+  int mousex;
+  int mousey;
+} Input;
+  
 typedef struct Game2 {
   Grid grid;
   RuleSet rules;
@@ -82,7 +96,8 @@ typedef struct Game2 {
   list events;
   FILE *record;
   FILE *play;
-  Network *network;
+  Network network;
+  Input input;
 } Game2;
   
 typedef struct line {
@@ -145,11 +160,31 @@ typedef struct Data {
   line *trail; /* current trail */
 } Data;
 
+enum { 
+  CAM_FREE_R = 0,
+  CAM_FREE_PHI,
+  CAM_FREE_CHI 
+};
+
+typedef struct CameraMovement {
+  float r;
+  float phi;
+  float chi;
+} CameraMovement;
+
+typedef struct CameraType {
+  int interpolated_cam;
+  int interpolated_target;
+  int coupled;
+  int freedom[3];
+  int type;
+} CameraType;
+
 typedef struct Camera {
   float cam[3];
   float target[3];
-  float angle;
-  int camType;
+  CameraMovement *movement;
+  CameraType *type;
 } Camera;
 
 typedef struct AI {
@@ -223,9 +258,12 @@ typedef struct Settings {
   int show_skybox;
   int show_floor_texture;
   int show_glow;
+  int show_scores;
   int show_ai_status;
   int show_model;
+  int show_decals; /* disable on G200/G400/win32 due to a driver bug */
   int lod;
+  int shadow_lod;
   int show_crash_texture;
   int model_backwards;
   int turn_cycle; /* smooth turning */
@@ -243,6 +281,7 @@ typedef struct Settings {
   int display_type; /* 0-2 -> 1, 2 or 4 displays on the screen */
   int content[4]; /* max. 4 individual viewports on the screen */
   int windowMode; /* 0: fullscreen, non-zero: window mode */
+  int bitdepth_32; /* 1: 32 bit rendering */
 
   int fov; /* field ov view (vertical angle) */
   float znear; /* the near z-Plane */
