@@ -13,14 +13,14 @@ static float normal2[] = { 0.0, 1.0, 0.0 };
    the z component is ignored
  */
 float getDist(segment2 *s, float* eye) {
-  float n[2];
-  float tmp[2];
-  n[0] = s->vStart.v[0] + s->vDirection.v[1];
-  n[1] = s->vStart.v[1] - s->vDirection.v[0];
-  tmp[0] = eye[0] - s->vStart.v[0];
-  tmp[1] = eye[1] - s->vStart.v[1];
-  if(n[0] == n[1] == 0) return length(tmp);
-  return abs(scalarprod2(n, tmp) / length(n));
+  vec2 n, tmp;
+
+  n.v[0] = s->vStart.v[0] + s->vDirection.v[1];
+  n.v[1] = s->vStart.v[1] - s->vDirection.v[0];
+  tmp.v[0] = eye[0] - s->vStart.v[0];
+  tmp.v[1] = eye[1] - s->vStart.v[1];
+  if(n.v[0] == n.v[1] == 0) return vec2_Length(&tmp);
+  return (float) fabs(vec2_Dot(&n, &tmp) / vec2_Length(&n));
 }
 
 /*
@@ -77,6 +77,7 @@ float getSegmentUV(segment2 *s) {
 */
 
 void drawTrailLines(Player *p, PlayerVisual *pV) {
+#ifndef NEW_LEVEL_DRAW
   segment2 *s;
   float height;
 
@@ -157,6 +158,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
   */
+#endif
 }
 
 /* 
