@@ -75,7 +75,7 @@ void keyGame(int k, int x, int y)
       if(k == key_actions[i].key) {
 	int p;
 	p = key_actions[i].player;
-	if(game->player[p].data->speed > 0)
+	if(PLAYER_IS_ACTIVE(&game->player[p]))
 	  createTurnEvent(p, key_actions[i].turn);
 	return;
       }
