@@ -1,4 +1,5 @@
 #include "video/nebu_mesh_3ds.h"
+#include "video/nebu_mesh.h"
 
 #include <lib3ds/file.h>                        
 #include <lib3ds/camera.h>
@@ -13,22 +14,31 @@
 #include <string.h>
 
 static void countVerticesAndTriangles(nebu_Mesh_3ds_File *pFile, 
-															 int *pnVertices, int *pnTriangles)
+	int *pnVertices, int *pnTriangles, int *pnTexCoords)
 {
 	Lib3dsMesh *p;
+
+	*pnVertices = *pnTriangles = *pnTexCoords = 0;
+
 	for(p = pFile->meshes; p != NULL; p = p->next)
 	{
+		lib3ds_mesh_dump(p);
+		printf("----------------------\n");
 		*pnVertices += p->points;
 		*pnTriangles += p->faces;
+		*pnTexCoords += p->texels;
 	}
 }
 
 static void addToMesh(nebu_Mesh *pMesh, int *pCurVertex, int *pCurTri, Lib3dsMesh *pLib3dsMesh)
 {
-	int i, j;
+	unsigned int i, j;
 
-	// TODO: add vertices & triangles of this node to mesh
+	// add vertices & triangles of this node to mesh
 	memcpy(pMesh->pVertices + 3 * *pCurVertex, pLib3dsMesh->pointL, pLib3dsMesh->points * 3 * sizeof(float));
+
+	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0)
+		memcpy(pMesh->pTexCoords[0] + 2 * *pCurVertex, pLib3dsMesh->texelL, pLib3dsMesh->texels * 2 * sizeof(float));
 
 	for(i = 0; i < pLib3dsMesh->faces; i++)
 	{
@@ -44,15 +54,27 @@ static void addToMesh(nebu_Mesh *pMesh, int *pCurVertex, int *pCurTri, Lib3dsMes
 
 nebu_Mesh* nebu_Mesh_3ds_GetFromFile(nebu_Mesh_3ds_File* pFile)
 {
+	nebu_Mesh* pMesh = NULL;
+
 	int nTriangles = 0;
 	int nVertices = 0;
+	int nTexCoords = 0;
 
-	countVerticesAndTriangles(pFile, &nVertices, &nTriangles);
+	int vertexFlags = NEBU_MESH_POSITION;
+	countVerticesAndTriangles(pFile, &nVertices, &nTriangles, &nTexCoords);
 	if(nVertices == 0 || nTriangles == 0) {
 		return NULL;
 	}
 
-	nebu_Mesh* pMesh = nebu_Mesh_Create(NEBU_MESH_POSITION, nVertices, nTriangles);
+	// Check if we actually have texture coordinates in the file.
+	// FIXME: Actually, we could have multpliple meshes that have either texcoords or not.
+	// Oh god, this is messy
+
+	// TODO
+	// if(???) // has texcoords?
+		vertexFlags |= NEBU_MESH_TEXCOORD0;
+
+	pMesh = nebu_Mesh_Create(vertexFlags, nVertices, nTriangles);
 	{
 		int curVertex = 0;
 		int curTri = 0;
