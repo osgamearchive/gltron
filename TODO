@@ -5,6 +5,8 @@ TODO list
 
 Bugs [high priority]:
 - check cycle & recognizer sounds again (pause/menu/unpause/game)
+- make all sound/audio functions check if the sound-system system is
+  initialized
 
 Features [high priority]:
 
