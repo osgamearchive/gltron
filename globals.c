@@ -65,7 +65,6 @@ int menutime;
 /* milliseconds since last frame */
 
 int polycount; /* poly count - how much do we draw each frame? */
-int screenshots = 0;
 
 /* default settings */
 
