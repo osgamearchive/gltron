@@ -34,6 +34,7 @@ login(char *name)
       printf("- send login\n");
     }
   neteventlist = createNetEventList();
+  hasstarted = 0;
 }
 
 void
@@ -346,6 +347,9 @@ do_score(Packet packet)
   netscores.winner=packet.infos.score.winner;
   for(i=0;i<MAX_PLAYERS;++i)
     netscores.points[i]=packet.infos.score.points[i];
+
+  //We change server state to gameState, so that game will ended
+  serverstate = gameState;
 }
 
 
@@ -377,7 +381,7 @@ do_preGameState( Packet packet )
       do_netrules(packet);
       break;
     case SCORE:
-      //can't have score there...
+      do_score(packet); //if we are in pause, we can get score, and need to stop
       break;
     case ACTION:
       do_action(packet);

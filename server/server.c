@@ -481,10 +481,10 @@ do_startconfirm(int which, Packet packet)
   game2->time.offset    = SystemGetElapsedTime();
 
   if( ! hasstarted )
+    {
     timeout             = SystemGetElapsedTime();
-
-  if( ! hasstarted )
     hasstarted = 1;
+    }
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
   printf("starting game with %d players at %d\n", game->players, game2->time.current); 
@@ -844,7 +844,7 @@ void
 do_timeout( )
 {
   Packet rep;
-  int    winner, max, i;
+  int    winner=0, max, i;
 
   if( SystemGetElapsedTime() - timeout > 1000 * 60 * netruletime )
     {
@@ -937,7 +937,7 @@ do_wingame( int winner)
 	max = netscores.points[i];
     }
 
-  if(  max >= netrulenbwins )
+  if( netruletime == 0 &&  max >= netrulenbwins )
     {
       //The game is finished
       netscores.winner=getWhich(winner);

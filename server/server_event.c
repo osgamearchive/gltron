@@ -141,7 +141,8 @@ void idleGame( void ) {
 
   
   handle_server();
-  if( game2->mode == GAME_SINGLE && netruletime > 0 )
+  //if( game2->mode == GAME_SINGLE && netruletime > 0 )
+  if( netruletime > 0 && hasstarted==1 )
     do_timeout();
   if(updateTime() == 0 && game2->mode == GAME_SINGLE ) return;
 
