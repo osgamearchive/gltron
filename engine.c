@@ -286,7 +286,7 @@ void crashPlayer(int player) {
 #endif
 
   for(j = 0; j < game->players; j++) 
-    if(j != player && game->player[j].data->speed > 0)
+    if(j != player && PLAYER_IS_ACTIVE(&(game->player[j])))
       game->player[j].data->score++;
 
   game->player[player].data->speed = SPEED_CRASHED;
