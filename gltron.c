@@ -79,9 +79,13 @@ void setupDisplay(gDisplay *d) {
   if( game->settings->softwareRendering != 1 )
     {
       fprintf(stderr, "trying to splash screen\n");
-      splash = new_splash(358, 358, "splashscreen.png", 0);
+
+      if( game->settings->height > 358 )
+	{
+	  splash = new_splash(358, 358, "splashscreen.png", 0);
+	}
       draw_splash( splash );
-  fprintf(stderr, "splash screen created\n");
+      fprintf(stderr, "splash screen created\n");
     }
 
   printRendererInfo();

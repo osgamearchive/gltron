@@ -4,9 +4,10 @@
 static void handle_connection();
 static void handle_slot(int which);
 static void do_lostconnection(int which);
-static void do_server_login( Trackerpacket *packet );
-static void do_client_login( Trackerpacket *packet );
-
+static void do_server_login(  int which, Trackerpacket *packet );
+static void do_client_login(  int which );
+static void do_server_infos(  int which, Trackerpacket *packet );
+static void do_notknowninfo(  int which );
 
 void
 initNetwork()
@@ -52,44 +53,90 @@ start_tracker()
 static void
 do_lostconnection(int which)
 {
-   Trackerpacket rep;
-  int            i;
-  
-
-  if( slots[which].active == ACTIVE || slots[which].active == NEGOCIATION )
-    {
-      slots[which].active=INACTIVE;
-	  
-      //Say to other...
-      rep.which=SERVERID;
-      rep.type=TCLOSE;	  
-      for(i=0; i< MAX_SLOTS; ++i)
-	{
-	  if( slots[i].active == ACTIVE && slots[i].type == CLIENT )
-	    {	
-	      Net_tsendpacket(&rep, slots[i].sock);
-	    }
-	}
-    }
+  slots[which].active=INACTIVE;
   Net_delsocket(slots[which].sock);
   Net_closesock(slots[which].sock);
   slots[which].sock=NULL;
 
 }
 
+static void
+do_notknowninfo(int which)
+{
+  slots[which].speed=NOTKNOWN;
+  slots[which].size=NOTKNOWN;
+  slots[which].erase=NOTKNOWN;
+  strcpy(slots[which].description, "N/A");
+  strcpy(slots[which].version, "N/A");
+  slots[which].ipaddress.host=0;
+  slots[which].nbplayers=NOTKNOWN;
+}
+
 
 static void
-do_server_login( Trackerpacket *packet )
+do_server_login( int which, Trackerpacket *packet )
 {
   //here we don't need to do lot of things
+  //check passwd
+  if( strcmp(packet->infos.login.passwd, settings.passwd) )
+    {
+      do_lostconnection(which);
+      
+    } else {
+      slots[which].type=SERVER;
+      slots[which].active=ACTIVE;
+
+      //making info to N/A
+      do_notknowninfo(which);
+    }
 }
 
 static void
-do_client_login( Trackerpacket *packet )
+do_client_login( int which )
 {
+  int              i;
+  Trackerpacket    rep;
 
+  //send server list.
+  slots[which].type=CLIENT;
+  slots[which].active=ACTIVE;
+
+  //prepare packet
+  rep.type=TINFOS;
+  rep.which=SERVERID;
+
+  for(i=0; i<MAX_SLOTS; ++i)
+    {
+      if( slots[which].active==ACTIVE && slots[which].type == SERVER )
+	{
+	  rep.infos.infos.speed = slots[which].speed;
+	  rep.infos.infos.size  = slots[which].size;
+	  rep.infos.infos.erase = slots[which].erase;
+	  strcpy(rep.infos.infos.description, slots[which].description);
+	  strcpy(rep.infos.infos.version, slots[which].version);
+	  rep.infos.infos.ipaddress= slots[which].ipaddress;
+	  rep.infos.infos.nbplayers = slots[which].nbplayers;
+	  //Send the packet
+	  Net_tsendpacket( &rep , slots[which].sock);
+	}
+    }
 }
 
+static void
+do_server_infos(  int which, Trackerpacket *packet )
+{
+  //here we get the information from a server
+  if( slots[which].active != ACTIVE )
+    {
+      //this is an error, that slot should be active!
+      do_lostconnection(which);
+      
+    } else {
+      //saving informations
+
+      //updating lastseen
+    }
+}
 
 static void
 handle_connection()
@@ -161,10 +208,10 @@ handle_slot(int which)
 	  switch( packet.infos.login.type )
 	    {
 	    case SERVER:
-	      do_server_login(&packet);
+	      do_server_login(which, &packet);
 	      break;
 	    case CLIENT:
-	      do_client_login(&packet);
+	      do_client_login(which);
 	      break;
 	    default:
 	      fprintf(stderr, "get a packet different from login before negociation\n");
@@ -175,6 +222,16 @@ handle_slot(int which)
 	      break;
 	    }
 	}
+    }
+
+  switch( packet.type )
+    {
+    case TINFOS:
+      do_server_infos(which, &packet);
+      break;
+    default:
+      fprintf(stderr, "error unknown packet type:%d\n", packet.type);
+      break;
     }
 }
 

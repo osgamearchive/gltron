@@ -4,6 +4,7 @@
 #ifndef __TRACKER_PROTOCOL_H__
 #define __TRACKER_PROTOCOL_H__
 
+
 //Enums-------------------------------------------------------------------
 //active state of a slot
 enum {
@@ -18,6 +19,10 @@ enum {
   CLIENT                    //this slot is a connection to a client
 };
 
+enum {
+  NOTKNOWN = -1             //information is not known yet.
+};
+
 //TypeDefs-----------------------------------------------------------------
 //Server slots
 typedef struct {
@@ -25,13 +30,21 @@ typedef struct {
   TCPsocket     sock;         //client's socket
   IPaddress     peer;         //client's address
   int           type;         //type client or server.
+  /** these are for server only */
+  int           speed;         //speed of the game
+  int           size;          //arena size
+  int           erase;         //if trail are erased when cycle death
+  char          description[32]; //description of the server
+  char          version[9];    //which gltron's version is comptatible with
+  IPaddress     ipaddress;     //what is its ip and its port?
+  int           nbplayers;     //how many players on that server?
+  Uint32        lastseen;      //time since last seen, to know if it is only or not.
 } Trackerslots;
 
 
 typedef enum tpackettype
   {
     TLOGIN,                   //Asking for login.
-    TCLOSE,                   //A server has close
     TINFOS                    //information of a server
   } TpacketType;
 
@@ -44,7 +57,6 @@ typedef struct {
     struct {
       int      type;          //type
       char     passwd[9];     //passwd for login to tracker( not needed for clients )
-      char     nick[9];       //Nickname to use in the game.
     } login;              //Type TLOGINREP
     struct {
       int      speed;         //speed of the game
