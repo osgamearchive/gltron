@@ -28,9 +28,13 @@ Documentation & Packaging:
   [ nicolas, kokido ]
 
 Bugs [medium priority]:
+- fix messed up normals on the back fender of the lightcycle-high model
+- fix gap between the top of the front fender and the wheel on the 
+    lightcycle-high model
 
 Features [medium priority]
 
+- add extra faces for spokes instead of using existing rim triangles.
 - remove space around single player view
 - fix camera zoom generally (speed / settings)
 - new bot AI
