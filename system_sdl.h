@@ -3,7 +3,8 @@
 
 #include "gltron.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
+#include <SDL_types.h>
 
 #define SYSTEM_KEY_DOWN SDLK_DOWN
 #define SYSTEM_KEY_UP SDLK_UP
