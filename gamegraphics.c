@@ -923,9 +923,11 @@ void drawCam(Player *p, gDisplay *d) {
   glDepthMask(GL_FALSE);
 #endif
 
-  glEnable(GL_CULL_FACE);
-  drawRecognizers(1);
-  glDisable(GL_CULL_FACE);
+  if(game->settings->show_recognizer) {
+    glEnable(GL_CULL_FACE);
+    drawRecognizers(1);
+    glDisable(GL_CULL_FACE);
+  }
   if(game->settings->show_wall == 1)
     drawWalls(d);
 
@@ -963,7 +965,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   glDisable(GL_BLEND);
 
-  if(game->settings->show_recognizer) {
+  /*if(game->settings->show_recognizer) {
 #if DEPTH_CLEAR
     glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -979,10 +981,10 @@ void drawCam(Player *p, gDisplay *d) {
     glMatrixMode(GL_MODELVIEW);
 #endif
 
-    /*glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     drawRecognizers(1);
-    glDisable(GL_CULL_FACE);*/
-  }
+    glDisable(GL_CULL_FACE);
+  }*/
 }
 
 void drawAI(gDisplay *d) {
