@@ -59,14 +59,6 @@ void drawGame(void) {
 			drawHUD(p, pV);
 		}
 	}
-
-	/* hud stuff - full screen */
-	if (gSettingsCache.show_fps)
-		drawFPS(gScreen);
-
-	if(gSettingsCache.show_console)
-		drawConsole(gScreen);
-
 	/* printf("%d polys\n", polycount); */
 }
 
@@ -141,18 +133,6 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 
   glEnable(GL_CULL_FACE);
 
-  if(gSettingsCache.use_stencil) {
-    glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_GREATER, 1, 1);
-    glEnable(GL_BLEND);
-    glColor4fv(gCurrentShadowColor);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  } else {
-    glColor3f(0, 0, 0);
-    glDisable(GL_BLEND);
-  }
-
   /* transformations */
 
   glPushMatrix();
@@ -174,90 +154,81 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   gltron_Mesh_Draw(cycle, TRI_MESH);
 
   /* restore */
-
-  if(gSettingsCache.use_stencil)
-    glDisable(GL_STENCIL_TEST);
-
-  glDisable(GL_BLEND);
   glDisable(GL_CULL_FACE);
   glPopMatrix();
 }
 
 void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
-  gltron_Mesh *cycle = lightcycle[lod];
+	gltron_Mesh *cycle = lightcycle[lod];
+	float x, y;
 
-  unsigned int spoke_time = game2->time.current - pV->spoke_time;
+	unsigned int spoke_time = game2->time.current - pV->spoke_time;
 	int turn_time = game2->time.current - p->data->turn_time;
 
-  if(turn_time < TURN_LENGTH && !drawTurn)
-    return;
-  
-  glPushMatrix();
-	{
-		float x, y;
-		getPositionFromData(&x, &y, p->data);
-		glTranslatef(x, y, 0.0);
+	if(turn_time < TURN_LENGTH && !drawTurn)
+		return;
+
+	getPositionFromData(&x, &y, p->data);
+	glPushMatrix();
+	glTranslatef(x, y, 0.0);
+
+	if (pV->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
+		glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
 	}
 
-  if (pV->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
-    glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
-  }
+	if (gSettingsCache.turn_cycle) { 
+		doCycleTurnRotation(pV, p);
+	}
 
-  if (gSettingsCache.turn_cycle) { 
-    doCycleTurnRotation(pV, p);
-  }
+	gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
+	gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
-  gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
+	if (pV->exp_radius == 0) {
+		glEnable(GL_NORMALIZE);
 
-  if (gSettingsCache.light_cycles) {
-    glEnable(GL_LIGHTING);
-  }
+		glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
-  glEnable(GL_DEPTH_TEST);
-  glDepthMask(GL_TRUE);
+		/* draw spoke animation */
+		if (spoke_time > 140 - (p->data->speed * 10) 
+			&& game->pauseflag == PAUSE_GAME_RUNNING) {
+			if (pV->spoke_state == 1) {
+			pV->spoke_state = 0;
+			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
+			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
+			} else {
+			pV->spoke_state = 1;
+			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
+			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
+			}
+			pV->spoke_time = game2->time.current;
+		}
 
-  if (pV->exp_radius == 0) {
-    glEnable(GL_NORMALIZE);
+		if (gSettingsCache.light_cycles) {
+			glEnable(GL_LIGHTING); // enable OpenGL lighting for lightcycles
+		}
+		glEnable(GL_CULL_FACE);
+		gltron_Mesh_Draw(cycle, TRI_MESH);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_LIGHTING);
+	} else if(pV->exp_radius < EXP_RADIUS_MAX) {
+		glEnable(GL_BLEND);
 
-    glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
+		if (gSettingsCache.show_impact) {
+			drawImpact(pV);
+		}
 
-    /* draw spoke animation */
-    if (spoke_time > 140 - (p->data->speed * 10) 
-        && game->pauseflag == PAUSE_GAME_RUNNING) {
-      if (pV->spoke_state == 1) {
-        pV->spoke_state = 0;
-        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
-        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
-      } else {
-        pV->spoke_state = 1;
-        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
-        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
-      }
-      pV->spoke_time = game2->time.current;
-    }
-    
-    glEnable(GL_CULL_FACE);
-    gltron_Mesh_Draw(cycle, TRI_MESH);
-    glDisable(GL_CULL_FACE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  } else if(pV->exp_radius < EXP_RADIUS_MAX) {
-   
-    glEnable(GL_BLEND);
+		glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
-    if (gSettingsCache.show_impact) {
-      drawImpact(pV);
-    }
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-
-    gltron_Mesh_DrawExplosion(cycle, pV->exp_radius);
-  }
-  glDisable(GL_BLEND);
-  glDisable(GL_LIGHTING);
-  glPopMatrix();
+		if (gSettingsCache.light_cycles) {
+			glEnable(GL_LIGHTING); // enable OpenGL lighting for lightcycles
+		}
+		gltron_Mesh_DrawExplosion(cycle, pV->exp_radius);
+		glDisable(GL_LIGHTING); // disable ligthing after lightcycles
+		glDisable(GL_BLEND);
+	}
+	glPopMatrix();
 }
  
 int playerVisible(Player *eye, Player *target) {
@@ -324,23 +295,42 @@ void drawPlayers(Player *p, PlayerVisual *pV) {
 void drawPlanarShadows(Player *p) {
 	int i;
 
-  /* shadows on the floor: cycle, recognizer, trails */
-  if (gSettingsCache.show_recognizer) {
-    drawRecognizerShadow();
-  }
+	if(gSettingsCache.use_stencil) {
+		glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+		glStencilFunc(GL_EQUAL, 1, 255);
+		glEnable(GL_BLEND);
+		glColor4fv(gCurrentShadowColor);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	} else {
+		glColor3f(0, 0, 0);
+		glDisable(GL_BLEND);
+	}
 
-  for(i = 0; i < game->players; i++) {
-    int lod = playerVisible(p, game->player + i);
+	/* shadows on the floor: cycle, recognizer, trails */
+	if (gSettingsCache.show_recognizer) {
+		drawRecognizerShadow();
+	}
+
+	for(i = 0; i < game->players; i++) {
+	int lod = playerVisible(p, game->player + i);
 		if (lod >= 0) {
 			int drawTurn = 1;
-			if (! gSettingsCache.camType == CAM_TYPE_COCKPIT ||
+			if (!gSettingsCache.camType == CAM_TYPE_COCKPIT ||
 	 			p != &game->player[i])
+			{
 				drawTurn = 0;
+			}
 			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
 		}
 		if (game->player[i].data->trail_height > 0 )
 			drawTrailShadow(game->player + i, gPlayerVisuals + i);
 	}
+
+	if(gSettingsCache.use_stencil)
+		glDisable(GL_STENCIL_TEST);
+
+	glDisable(GL_BLEND);
 }
 
 void drawFloor() {
@@ -422,34 +412,40 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	for(i = 0; i < 4; i++) 
 		gCurrentShadowColor[i] = gShadowColor[i] * (1 - reflectivity);
 
-  glColor3f(0.0, 1.0, 0.0);
-	
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  doPerspective(gSettingsCache.fov, (float) d->vp_w / (float) d->vp_h,
-                gSettingsCache.znear, box2_Diameter(& game2->level->boundingBox) * 6.5f);
+	glColor3f(0.0, 1.0, 0.0);
 
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	doPerspective(gSettingsCache.fov, (float) d->vp_w / (float) d->vp_h,
+		gSettingsCache.znear, box2_Diameter(& game2->level->boundingBox) * 6.5f);
 
-  doLookAt(p->camera->cam, p->camera->target, up);
-  glDisable(GL_LIGHTING);
-  glDisable(GL_BLEND);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
-  glDepthMask(GL_FALSE);
-  glDisable(GL_DEPTH_TEST);
+	doLookAt(p->camera->cam, p->camera->target, up);
+	glDisable(GL_LIGHTING); // initial config at frame start
+	glDisable(GL_BLEND); // initial config at frame start
 
-  /* skybox */
-  if (gSettingsCache.show_skybox) {
+	/* skybox */
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
+
+	if (gSettingsCache.show_skybox) {
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
-  }
+	}
 
-  glDepthMask(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+	/* skybox done */
 
+	/* floor */ 
 	if(reflectivity == 0) {
 		video_Shader_Setup(& gWorld->floor_shader);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilFunc(GL_ALWAYS, 1, 255);
+		glEnable(GL_STENCIL_TEST);
 		nebu_Mesh_DrawGeometry( gWorld->floor );
+		glDisable(GL_STENCIL_TEST);
 		video_Shader_Cleanup(& gWorld->floor_shader);
 	} else {
 		/* reflections */
@@ -457,10 +453,10 @@ void drawCam(Player *p, PlayerVisual* pV) {
 		// glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 		glDepthMask(GL_FALSE);
 
-		glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glEnable(GL_STENCIL_TEST);
-	
+
 		glColor3f(0,0,0);
 		nebu_Mesh_DrawGeometry( gWorld->floor );
 		// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -484,9 +480,9 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
 		glColor4f(1, 1, 1, 1 - reflectivity);
 
-		glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		glStencilFunc(GL_ALWAYS, 1, 255);
-	
+
 		video_Shader_Setup(& gWorld->floor_shader);
 		nebu_Mesh_DrawGeometry( gWorld->floor );
 		video_Shader_Cleanup(& gWorld->floor_shader);
@@ -494,49 +490,35 @@ void drawCam(Player *p, PlayerVisual* pV) {
 		glDisable(GL_STENCIL_TEST);
 		glDisable(GL_BLEND);
 	}
-	
-	/* draw rest of the scene */
-  glDepthMask(GL_FALSE);
-  glDisable(GL_DEPTH_TEST);
+	/* floor done */
 
-	glDisable(GL_LIGHTING);
-	if(reflectivity != 1) // for perfect mirrors, don't bother
+	/* planar shadows */
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
+
+	if(reflectivity != 1) // there are no shadows on perfect mirrors
 		drawPlanarShadows(p);
 
-  glDepthMask(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+	/* planar shadows done */
 
 	drawWorld(p, pV);
 
-	glDisable(GL_LIGHTING);
-  /* transparent stuff */
-  /* draw the glow around the other players: */
-  if (gSettingsCache.show_glow == 1) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    for (i = 0; i < game->players; i++) {
-      if (p != game->player + i && PLAYER_IS_ACTIVE(game->player + i)) {
-	      drawGlow(p->camera, game->player + i, gPlayerVisuals + i,
-								 d, TRAIL_HEIGHT * 4);
-      }
-      
-    glDisable(GL_BLEND);
-    }
-  }
+	/* transparent stuff */
+	/* draw the glow around the other players: */
+	if (gSettingsCache.show_glow == 1) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#if 0
-	/* 2d hack */
-	if(gSettingsCache.map_ratio_w > 0)
-	{
-		nebu_Rect rect;
-		rect.width = pV->display.vp_w * gSettingsCache.map_ratio_w;
-		rect.height = pV->display.vp_h * gSettingsCache.map_ratio_h;
-		rect.x = 20;
-		rect.y = 20;
-		rasonly(&pV->display);
-		draw2D(&rect);
+		for (i = 0; i < game->players; i++)
+		{
+			if (p != game->player + i && PLAYER_IS_ACTIVE(game->player + i))
+			{
+				drawGlow(p->camera, game->player + i, gPlayerVisuals + i,
+					d, TRAIL_HEIGHT * 4);
+			}
+		}
+		glDisable(GL_BLEND);
 	}
-#endif
 }
-

@@ -8,6 +8,8 @@
 #include <lua.h>
 #include <lualib.h>
 
+void getPauseString(char *buf, float* color);
+
 void hud_MaskSetup(int maskId, int maskIndex) {
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
@@ -34,8 +36,48 @@ void hud_MaskFinish(void)
 	glDisable(GL_STENCIL_TEST);
 }
 
+int getFPS(void) {
+#define FPS_HSIZE 20
+  /* draws FPS in upper left corner of Display d */
+  static int fps_h[FPS_HSIZE];
+  static int pos = -FPS_HSIZE;
+  static int fps_min = 0;
+  static int fps_avg = 0;
+
+  int dt = nebu_Time_GetTimeForLastFrame();
+  if(dt <= 0)
+	  dt = 1;
+
+  if(pos < 0) {
+    fps_avg = 1000 / dt;
+    fps_min = 1000 / dt;
+    fps_h[pos + FPS_HSIZE] = 1000 / dt;
+    pos++;
+  } else {
+    fps_h[pos] = 1000 / dt;
+    pos = (pos + 1) % FPS_HSIZE;
+    if(pos % 10 == 0) {
+      int i;
+      int sum = 0;
+      int min = 1000;
+      for(i = 0; i < FPS_HSIZE; i++) {
+	sum += fps_h[i];
+	if(fps_h[i] < min)
+	  min = fps_h[i];
+      }
+      fps_min = min;
+      fps_avg = sum / FPS_HSIZE;
+    }
+  }
+  return fps_avg;
+}
+
 void drawHUD(Player *p, PlayerVisual *pV) {
-	char temp[256];
+	char temp[1024];
+	char pause_message[128];
+	float pause_color[3];
+
+	getPauseString(pause_message, pause_color);
 
 	glDisable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
@@ -51,17 +93,27 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 		- Speed digital (absolute value)
 		- Speed analog (1 for default speed, > 1 during acceleration)
 		- Booster value (between 0 and 1)
+		- fps
+		- pause message
+		- pause message r,g,b colors
 	*/
 
-	sprintf(temp, "drawHUD(%d, %d, %d, %s, %f, %f, %f)",
+	sprintf(temp, "drawHUD(%d, %d, %d, \"%s\", %f, %f, %f, %d, \"%s\", %f, %f, %f)",
 		pV->display.vp_w, pV->display.vp_h,
 		gSettingsCache.show_scores ? p->data->score : -1,
 		gSettingsCache.show_ai_status ?
-		(p->ai->active ? "\"AI_COMPUTER\"" : "\"\"") : "\"\"",
+		(p->ai->active ? "AI_COMPUTER" : "") : "",
 		p->data->speed,
 		p->data->speed / (2 * game2->rules.speed),
-		p->data->booster / getSettingf("booster_max")
+		p->data->booster / getSettingf("booster_max"),
+		getFPS(),
+		pause_message,
+		pause_color[0],
+		pause_color[1],
+		pause_color[2]
 		);
+
+	glScalef(pV->display.vp_w / 1024.0f, pV->display.vp_w / 1024.0f, 1.0f);
 	// fprintf(stderr, "%s\n", temp);
 	scripting_Run(temp);
 
@@ -70,12 +122,11 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void drawPause(Visual *display) {
+void getPauseString(char *buf, float* color) {
   char pause[] = "Game is paused";
   char winner[] = "Player %d wins!";
   char nowinner[] = "No one wins!";
-  char buf[100];
-  char *message;
+  char starting[] = "Press a key to start";
   static float d = 0;
   static int lt = 0;
   int now;
@@ -98,116 +149,31 @@ void drawPause(Visual *display) {
          make the 'Player wins' message oscillate between 
          white and the winning bike's color 
        */
-      glColor3f((player_color[0] + ((sinf(d) + 1) / 2) * (1 - player_color[0])),
-                (player_color[1] + ((sinf(d) + 1) / 2) * (1 - player_color[1])),
-                (player_color[2] + ((sinf(d) + 1) / 2) * (1 - player_color[2]))); 
-
-      message = buf;
-      sprintf(message, winner, game->winner + 1);
+      color[0] = ((player_color[0] + ((sinf(d) + 1) / 2) * (1 - player_color[0])));
+	  color[1] = ((player_color[1] + ((sinf(d) + 1) / 2) * (1 - player_color[1])));
+	  color[2] = ((player_color[2] + ((sinf(d) + 1) / 2) * (1 - player_color[2])));
+   
+      sprintf(buf, winner, game->winner + 1);
     } else {
-      glColor3d(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
-      message = nowinner;
+		color[0] = 1.0f;
+		color[1] = (sinf(d) + 1) / 2;
+		color[2] = (sinf(d) + 1) / 2;
+	  sprintf(buf, "%s", nowinner);
     }
+  } else if(game->pauseflag & PAUSE_GAME_SUSPENDED) {
+		color[0] = 1.0f;
+		color[1] = (sinf(d) + 1) / 2;
+		color[2] = (sinf(d) + 1) / 2;
+	  sprintf(buf, "%s", pause);
+  } else if(game->pauseflag & PAUSE_GAME_STARTING) {
+		color[0] = 1.0f;
+		color[1] = (sinf(d) + 1) / 2;
+		color[2] = (sinf(d) + 1) / 2;
+	  sprintf(buf, "%s", starting);
   } else {
-    glColor3d(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
-    message = pause;
+	  // game is running
+	  buf[0] = 0;
   }
-
-  rasonly(gScreen);
-  {
-	  float width = 0.9f;
-	  box2 box;
-	  box.vMin.v[0] = display->vp_w * (1 - width) / 2;
-	  // box.vMin.v[1] = 20.0f;
-	  box.vMin.v[1] = 320.0f;
-	  box.vMax.v[0] = display->vp_w * (1 - (1 - width) / 2);
-	  box.vMax.v[1] = (float) display->vp_h;
-	  nebu_Font_RenderToBox(gameFtx, message, strlen(message),&box,
-		  eFontFormatAlignCenter | eFontFormatAlignVCenter |
-		  eFontFormatScaleFitHorizontally |
-		  eFontFormatScaleFitVertically);
-  }
-}
-
-void drawScore(Player *p, Visual *d) {
-}
-
-  
-void drawFPS(Visual *d) {
-#define FPS_HSIZE 20
-  /* draws FPS in upper left corner of Display d */
-  static int fps_h[FPS_HSIZE];
-  static int pos = -FPS_HSIZE;
-  static int fps_min = 0;
-  static int fps_avg = 0;
-
-  char tmp[20];
-  int diff;
-
-  rasonly(d);
-  diff = (game2->time.dt > 0) ? game2->time.dt : 1;
-
-  if(pos < 0) {
-    fps_avg = 1000 / diff;
-    fps_min = 1000 / diff;
-    fps_h[pos + FPS_HSIZE] = 1000 / diff;
-    pos++;
-  } else {
-    fps_h[pos] = 1000 / diff;
-    pos = (pos + 1) % FPS_HSIZE;
-    if(pos % 10 == 0) {
-      int i;
-      int sum = 0;
-      int min = 1000;
-      for(i = 0; i < FPS_HSIZE; i++) {
-	sum += fps_h[i];
-	if(fps_h[i] < min)
-	  min = fps_h[i];
-      }
-      fps_min = min;
-      fps_avg = sum / FPS_HSIZE;
-    }
-  }
-
-  sprintf(tmp, "average FPS: %d", fps_avg);
-  glColor4f(1.0, 0.4f, 0.2f, 1.0);
-  drawText(gameFtx, d->vp_w - 180.0f, d->vp_h - 20.0f, 10.0f, tmp);
-  sprintf(tmp, "minimum FPS: %d", fps_min);
-  drawText(gameFtx, d->vp_w - 180.0f, d->vp_h - 35.0f, 10.0f, tmp);
-  sprintf(tmp, "triangles: %d", polycount);
-  drawText(gameFtx, d->vp_w - 180.0f, d->vp_h - 50.0f, 10.0f, tmp);
-}
-
-
-void drawConsoleLines(char *line, int call) {
-#define CONSOLE_SIZE 15.0f
-#define CONSOLE_X_OFF 20.0f
-  float size = CONSOLE_SIZE;
-  int length;
-  /* fprintf(stdout, "%s\n", line); */
-  length = strlen(line);
-  while(length * size > gScreen->vp_w / 2 - CONSOLE_X_OFF)
-    size -= 1.0f;
-    
-  if(*line != 0) 
-    drawText(gameFtx, CONSOLE_X_OFF, gScreen->vp_h - 20.0f * (call + 1),
-	     size, line);
-}
-
-void drawConsole(Visual *d) {
-  int lines;
-  rasonly(d);
-  glColor3f(1.0, 0.3f, 0.3f);
-  
-  if (gSettingsCache.softwareRendering) { 
-    lines = 1;
-  } else if (gScreen->vp_h < 600) {
-    lines = 3;
-  } else {
-    lines = 5;
-  }
-  
-  consoleDisplay(drawConsoleLines, lines);
 }
 
 /* new hud stuff starts here */

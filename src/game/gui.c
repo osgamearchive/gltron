@@ -3,6 +3,7 @@
 #include <math.h>
 
 #include "game/gltron.h"
+#include "input/input.h"
 
 /* FIXME: "ignored playMenuFX" */
 void playMenuFX(int foo) { }
@@ -109,7 +110,7 @@ void displayGui(void) {
   drawGuiLogo();
   drawMenu(gScreen);
 
-  nebu_Video_SwapBuffers();  
+  nebu_System_SwapBuffers();  
 }
 
 void displayConfigure(void) {
@@ -122,23 +123,38 @@ void displayConfigure(void) {
   glColor3f(1.0, 1.0, 1.0);
   drawText(guiFtx, gScreen->vp_w / 6.0f, 20,
 	   gScreen->vp_w / (6.0f / 4.0f * strlen(message)), message);
-  nebu_Video_SwapBuffers();
+  nebu_System_SwapBuffers();
 }
 
 void idleGui(void) {
 	Sound_idle();
 	scripting_RunGC();
-	SDL_Delay(10);
 	Video_Idle();
 	Input_Idle();
+	nebu_Time_FrameDelay(50);
 	SystemPostRedisplay(); /* animate menu */
 }
 
 void keyboardConfigure(int state, int key, int x, int y) {
 	if(state == SYSTEM_KEYSTATE_DOWN) {
 		if(key != 27) /* don't allow escape */
-			scripting_RunFormat("settings.keys[ configure_player ]"
+		{
+			int i;
+			int isReserved = 0;
+			for(i = 0; i < eReservedKeys; i++)
+			{
+				if(key == ReservedKeyCodes[i])
+				{
+					isReserved = 1;
+					break;
+				}
+			}
+			if(!isReserved)
+			{
+				scripting_RunFormat("settings.keys[ configure_player ]"
 													"[ configure_event ] = %d", key);
+			}
+		}
 		SystemExitLoop(RETURN_PROMPT_ESCAPE);
 	}
 }

@@ -9,19 +9,19 @@ void freeTextureData(texture *tex) {
 }
 
 texture* loadTextureData(const char *filename) {
-  texture *tex = NULL;
-  char *path;
-  path = nebu_FS_GetPath(PATH_ART, filename);
-  if(path != NULL) {
-    tex = LOAD_TEX(path);
-    free(path);
-  }
+	texture *tex = NULL;
+	char *path;
+	path = nebu_FS_GetPath(PATH_ART, filename);
+	if(path != NULL) {
+		tex = LOAD_TEX(path);
+		free(path);
+	}
 
-  if(tex == NULL) {    
-    fprintf(stderr, "fatal: failed load %s, exiting...\n", filename);
-    exit(1); /* OK: critical, installation corrupt */
-  }
-  return tex;
+	if(tex == NULL) {    
+		fprintf(stderr, "fatal: failed loading %s, exiting...\n", filename);
+		exit(1); /* OK: critical, installation corrupt */
+	}
+	return tex;
 }
 
 void loadTexture(const char *filename, int format) {

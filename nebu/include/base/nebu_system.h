@@ -24,7 +24,9 @@ void nebu_System_SetCallback_Key( void(*key)(int, int, int, int) );
 unsigned int nebu_Time_GetElapsed();
 unsigned int nebu_Time_GetElapsedSinceLastFrame();
 void nebu_Time_SetCurrentFrameTime(unsigned t);
-
+int nebu_Time_GetTimeForLastFrame();
+void nebu_Time_FrameDelay(unsigned int delay);
+void nebu_System_SwapBuffers();
 void nebu_System_Sleep(int ms);
 
 #endif

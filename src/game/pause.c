@@ -3,19 +3,12 @@
 /* very brief - just the pause mode */
 
 void idlePause(void) {
-  Sound_idle();
-  game2->time.dt = 0;
-  doCameraMovement();
-	
-  scripting_RunGC();
-  SystemPostRedisplay();
-}
-
-void displayPause(void) {
-  drawGame();
-  drawPause(gScreen);
-
-  nebu_Video_SwapBuffers();
+	Sound_idle();
+	game2->time.dt = 0;
+	doCameraMovement();
+	scripting_RunGC();
+	nebu_Time_FrameDelay(10);
+	SystemPostRedisplay();
 }
 
 void keyboardPause(int state, int key, int x, int y) {
@@ -38,8 +31,8 @@ void keyboardPause(int state, int key, int x, int y) {
   case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
   case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;
     
-  case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
-  case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
+  case SYSTEM_KEY_UP: console_Seek(-1); break;
+  case SYSTEM_KEY_DOWN: console_Seek(1); break;
 
   case SYSTEM_KEY_TAB: 
 	// SystemExitLoop(RETURN_MENU_PROMPT);
@@ -47,11 +40,15 @@ void keyboardPause(int state, int key, int x, int y) {
 
 	default:
     if(game->pauseflag == PAUSE_GAME_FINISHED) {
-      game_ResetData();
-			video_ResetData();
-		}
+		game_ResetData();
+		video_ResetData();
+	}
+	else
+	{
+		game->pauseflag = PAUSE_GAME_RUNNING;
+	    SystemExitLoop(RETURN_GAME_UNPAUSE);
+	}
     /* lasttime = SystemGetElapsedTime(); */
-    SystemExitLoop(RETURN_GAME_UNPAUSE);
     break;
   }
 }
@@ -68,22 +65,15 @@ void initPause(void) {
    * Game should be totally silent in pause mode. (Nice when 
    * the boss is walking by, phone call, etc...)
    */
-
-  /* set pause flag to suspended */
-  if (game->pauseflag != PAUSE_GAME_FINISHED) {
-    game->pauseflag = PAUSE_GAME_SUSPENDED;
-  }
   
   updateSettingsCache();
 }
 
 void exitPause(void) {
-/* sound effects are re-enabled in enterGame() */
-// Audio_EnableEngine(); 
 }
 
 Callbacks pauseCallbacks = {
-  displayPause, idlePause, keyboardPause,
+  displayGame, idlePause, keyboardPause,
   initPause, exitPause, gameMouse, gameMouseMotion, "pause"
 };
 
@@ -106,7 +96,7 @@ void initPrompt(void) { }
 void exitPrompt(void) { }
 
 Callbacks promptCallbacks = {
-  displayPause, idlePause, keyboardPrompt,
+  displayGame, idlePause, keyboardPrompt,
   initPrompt, exitPrompt, NULL /* mouse button */, NULL /* mouse motio */, 
 	"prompt"
 };

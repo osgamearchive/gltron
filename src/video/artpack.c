@@ -43,8 +43,16 @@ void artpack_LoadSurfaces(void)
 	int i;
 	for(i = 0; i < eHUDElementCount; i++)
 	{
-		char *path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
-		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
+		nebu_Surface *surface;
+		char *path;
+		
+		path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
+		if(!path)
+		{
+			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
+			exit(1); /* OK: critical, installation corrupt */
+		}
+		surface = nebu_Surface_LoadPNG(path);
 
 		if(gpHUD[i]) { nebu_2d_Free(gpHUD[i]); gpHUD[i] = NULL; }
 		gpHUD[i] = nebu_2d_Create(surface, 0);

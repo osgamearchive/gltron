@@ -25,10 +25,8 @@ void setupLights(int type) {
 
 	switch(type) {
 	case eWorld:
-		glEnable(GL_LIGHTING);
-
 		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
+		// glPushMatrix();
 		// glLoadIdentity();
 		
 		glEnable(GL_LIGHT0);
@@ -47,12 +45,11 @@ void setupLights(int type) {
 		for(i = 2; i < 8; i++)
 				glDisable(GL_LIGHT0 + i);
 		
-		glPopMatrix();
+		// glPopMatrix();
 
 		break;
 	case eCycles:
 	case eRecognizer:
-		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 
 		glMatrixMode(GL_MODELVIEW);
@@ -68,7 +65,6 @@ void setupLights(int type) {
 				glDisable(GL_LIGHT0 + i);
 		
 		glPopMatrix();
-
 		break;
 	}
 }		

@@ -1,6 +1,7 @@
 #include "game/game.h"
 #include "video/video.h"
 #include "audio/audio.h"
+#include "nebu/nebu_scripting.h"
 #include "Nebu_base.h"
 
 #include <math.h>
@@ -103,7 +104,10 @@ void resetPlayerData(void) {
 		/* if player is playing... */
 		if(ai->active != AI_NONE) {
 			data->speed = getSettingf("speed");
-			data->booster = getSettingf("booster_max");
+			if(getSettingf("booster_on"))
+				data->booster = getSettingf("booster_max");
+			else
+				data->booster = 0;
 			data->boost_enabled = 0;
 			data->trail_height = TRAIL_HEIGHT;
 		} else {
@@ -137,7 +141,7 @@ void resetPlayerData(void) {
 }
 
 void game_ResetData(void) {
-	game->pauseflag = PAUSE_GAME_RUNNING;
+	game->pauseflag = PAUSE_GAME_STARTING;
 
 	game2->rules.speed = getSettingf("speed");
 	game2->rules.eraseCrashed = getSettingi("erase_crashed");
@@ -151,6 +155,8 @@ void game_ResetData(void) {
 	/* event management */
 	game2->events.next = NULL;
 	/* TODO: free any old events that might have gotten left */
+
+	scripting_Run("console_Clear()");
 
 	resetPlayerData();
 }

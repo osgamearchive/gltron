@@ -1,5 +1,3 @@
--- disclaimer: red / yellow / green can be replaced with arbitrary colors
-
 function color_interpolate(t, c1, c2)
 	local color = { }
 	color.r = (1 - t) * c1.r + t * c2.r
@@ -49,12 +47,12 @@ FontFormat = {
 
 function drawSpeedDigital(speed, rect, color) -- between 0 and N
 	c_pushMatrix()
-	c_translate(rect.left, rect.top, 0)
+	c_translate(rect.x, rect.y, 0)
 	if(speed > 0) then
 		c_color(color.r, color.g, color.b, color.a)
  		c_drawTextFitIntoRect(
  			format("%.0f", speed * 10), -- TODO: reformat speed into string
- 			rect.right - rect.left, rect.bottom - rect.top,
+ 			rect.w, rect.h,
  			FontFormat.ScaleFitHorizontally + 
  			FontFormat.ScaleFitVertically)
  	end
@@ -97,13 +95,13 @@ function drawSpeedAnalog(speed, circle, angles)
 end
 
 function drawTurbo(charge, rect, ranges) -- between 0 and 1
-	 write("charge: ", charge, "\n")
-	 write(format("rect: %.2f, %.2f, %.2f, %.2f\n", rect.top, rect.left, rect.right, rect.bottom))
+	 -- write("charge: ", charge, "\n")
+	 -- write(format("rect: %.2f, %.2f, %.2f, %.2f\n", rect.top, rect.left, rect.right, rect.bottom))
 	 -- Rectangle in pixel coordinates
 	 -- for each area, draw a rectangle, with optional color
 	 -- interpolation through the arc
 	 for index, range in ranges do
-			write(format("range: %.2f, %.2f %.2f, %.2f\n", range.range_start.charge, range.range_end.charge, range.range_start.width, range.range_end.width))
+			-- write(format("range: %.2f, %.2f %.2f, %.2f\n", range.range_start.charge, range.range_end.charge, range.range_start.width, range.range_end.width))
 			if(charge > range.range_start.charge) then
 				 if(charge > range.range_end.charge) then
 						drawRectangle(rect, range)

@@ -22,7 +22,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./include;../lua/include"
-				PreprocessorDefinitions="WIN32,NDEBUG,_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -72,7 +72,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./include;../lua/include"
-				PreprocessorDefinitions="_LIB;WIN32;_DEBUG;VERSION=\&quot;0.63alpha1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
+				PreprocessorDefinitions="_LIB;WIN32;_DEBUG;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -383,9 +383,6 @@
 				Filter="">
 				<File
 					RelativePath=".\include\video\nebu_2d.h">
-				</File>
-				<File
-					RelativePath=".\include\video\nebu_extgl.h">
 				</File>
 				<File
 					RelativePath=".\include\video\nebu_font.h">

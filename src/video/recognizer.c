@@ -38,46 +38,31 @@ void getRecognizerPositionVelocity(vec2 *p, vec2 *v) {
 }
 
 void drawRecognizerShadow(void) {
-  float dirx;
-  vec2 p, v;
-  /* states */
+	float dirx;
+	vec2 p, v;
+	/* states */
 
-  glEnable(GL_CULL_FACE);
-  if(gSettingsCache.use_stencil) {
-    glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_GREATER, 1, 1);
-    glEnable(GL_BLEND);
-    glColor4fv(gCurrentShadowColor);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  } else {
-    glColor3f(0, 0, 0);
-    glDisable(GL_BLEND);
-  }
-  
-  /* transformations */
-  getRecognizerPositionVelocity(&p, &v);
-  dirx = getRecognizerAngle(&v);
+	glEnable(GL_CULL_FACE);
 
-  glPushMatrix();
-  glMultMatrixf(shadow_matrix);
-  glTranslatef( p.v[0], p.v[1], RECOGNIZER_HEIGHT);
-  glRotatef(dirx, 0, 0, 1); /* up */
-  glScalef(rec_scale_factor, rec_scale_factor, rec_scale_factor);
-  glEnable(GL_NORMALIZE);
+	/* transformations */
+	getRecognizerPositionVelocity(&p, &v);
+	dirx = getRecognizerAngle(&v);
 
-  /* render */
+	glPushMatrix();
+	glMultMatrixf(shadow_matrix);
+	glTranslatef( p.v[0], p.v[1], RECOGNIZER_HEIGHT);
+	glRotatef(dirx, 0, 0, 1); /* up */
+	glScalef(rec_scale_factor, rec_scale_factor, rec_scale_factor);
+	glEnable(GL_NORMALIZE);
 
-  gltron_Mesh_Draw(recognizer, TRI_MESH);
+	/* render */
 
-  /* restore */
+	gltron_Mesh_Draw(recognizer, TRI_MESH);
 
-  if(gSettingsCache.use_stencil)
-    glDisable(GL_STENCIL_TEST);
+	/* restore */
 
-  glDisable(GL_BLEND);
-  glDisable(GL_CULL_FACE);
-  glPopMatrix();
+	glDisable(GL_CULL_FACE);
+	glPopMatrix();
 }
 
 void drawRecognizer(void) {
@@ -105,7 +90,7 @@ void drawRecognizer(void) {
   glEnable(GL_CULL_FACE);
   
   if (gSettingsCache.light_cycles) {
-    glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
   }
   
   glEnable(GL_POLYGON_OFFSET_FILL);

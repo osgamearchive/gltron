@@ -23,7 +23,6 @@ extern void SystemReshapeFunc(void(*reshape)(int, int));
 extern int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels);
 
 void nebu_Video_WarpPointer(int x, int y);
-void nebu_Video_SwapBuffers();
 void nebu_Video_Init(void);
 void nebu_Video_CheckErrors(const char *where);
 

@@ -12,7 +12,6 @@ void trailStatesNormal(Player *pPlayer, int texture) {
 	glEnable(GL_TEXTURE_2D);
 	// glDisable(GL_TEXTURE_2D);
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	// glDisable(GL_LIGHTING);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
@@ -39,7 +38,6 @@ void trailStatesShadowed(void) {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_TEXTURE_2D);
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDisable(GL_LIGHTING);
 }
 
 void trailStatesRestore(void) {
@@ -47,7 +45,6 @@ void trailStatesRestore(void) {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-	glEnable(GL_LIGHTING);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 

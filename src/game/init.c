@@ -33,6 +33,7 @@ void initScripting(void) {
 	runScript(PATH_SCRIPTS, "video.lua");
 
 	/* not so basic scripting stuff */
+	runScript(PATH_SCRIPTS, "console.lua");
 	runScript(PATH_SCRIPTS, "hud-config.lua");
 	runScript(PATH_SCRIPTS, "hud.lua");
 	runScript(PATH_SCRIPTS, "gauge.lua");
@@ -97,8 +98,6 @@ void initVideo(void) {
 	nebu_Video_Init();
 
 	initVideoData();
-
-	consoleInit();
 	initArtpacks();
 
 	runScript(PATH_SCRIPTS, "menu.lua");

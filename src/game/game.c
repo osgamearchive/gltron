@@ -30,6 +30,7 @@ void GameMode_Idle(void) {
 	Video_Idle();
 	Input_Idle();
 	Scripting_Idle();
+	nebu_Time_FrameDelay(5);
 	SystemPostRedisplay();
 }
 
@@ -50,11 +51,6 @@ void enterGame(void) { /* called when game mode is entered */
 		}
 	}
 
-  /* reset pause flag */
-  if (game->pauseflag != PAUSE_GAME_FINISHED) {
-    game->pauseflag = PAUSE_GAME_RUNNING;
-  }
-  
   /* fprintf(stderr, "init game\n"); */
 }
 

@@ -8,11 +8,78 @@
 #include "stdlib.h"
 #include "assert.h"
 
+unsigned char irc_color_codes[][3] = {
+  { 255, 255,255 },
+  { 0, 0, 0 },
+  { 255, 0, 0 },
+  { 255, 128, 0 },
+  { 255, 255, 0 },
+  { 128, 255, 0 },
+  { 0, 255, 0 },
+  { 0, 255, 128 }
+};
+
+/*
+0     48    white       65535  65536  65535  FFFFFF
+1     49    black           0      0      0  000000
+
+2     50    red         65535      0      0  FF0000
+3     51    orange      65535  32768      0  FF8000
+4     52    yellow      65535  65535      0  FFFF00
+5     53    lt green    32768  65535      0  80FF00
+6     54    green           0  65535      0  00FF00
+7     55    blue green      0  65535  32768  00FF80
+8     56    cyan            0  65535  65535  00FFFF
+9     57    lt blue         0  32768  65535  0080FF
+:     58    blue            0      0  65535  0000FF
+;     59    purple      32768      0  65535  8000FF
+< 60    magenta     65535      0  65535  FF00FF
+=     61    purple red  65535      0  32768  FF0080
+
+> 62    lt gray     49152  49152  49152  C0C0C0
+?     63    dk gray     16384  16384  16384  404040
+
+@     64    -           32768      0      0  800000
+A     65    |           32768  16384      0  804000
+B     66    |           32768  32768      0  808000
+C     67    | darker    16384  32768      0  408000
+D     68    | versions      0  32768      0  008000
+E     69    | of            0  32768  16384  008040
+F     70    | colors        0  32768  32768  008080
+G     71    | 50..61        0  16384  32768  004080
+H     72    |               0      0  32768  000080
+I     73    |           16384      0  32768  400080
+J     74    |           32768      0  32768  800080
+K     75    -           32768      0  16384  800040
+*/
+
 void getLine(char *buf, int size, file_handle file) {
   do {
     file_gets(file, buf, size);
   } while( buf[0] == '\n' || buf[0] == '#');
 }
+
+int getTextLength(const char *text, int len)
+{
+	int i;
+	int textLength = 0;
+
+	for(i = 0; i < len; i++)
+	{
+		if(text[i] == 0) // end of text reached?
+			break; 
+		if(text[i] == 0x03) // color code?
+		{
+			if(text[i+1] == 0)
+				break;
+			i++;
+		}
+		else
+			textLength++;
+	}
+	return textLength;
+}
+
 
 nebu_Font* nebu_Font_Load(const char *filename, int fs_tag)
 {
@@ -115,6 +182,18 @@ void nebu_Font_Render(nebu_Font* font, const char *text, int len)
 		int wx, wy;
 		float u1, u2, v1, v2;
 
+		if(text[i] == 0)
+			return;
+		if(text[i] == 0x03)
+		{
+			if(text[i+1] == 0)
+				return;
+
+			glColor3ubv(irc_color_codes[text[i+1] - '0']);
+			i++;
+			continue;
+		}
+
 		index = text[i] - font->firstChar + 1;
 		if(index >= font->nChars)
 		{
@@ -192,33 +271,45 @@ void nebu_Font_RenderFormatted(nebu_Font* font, nebu_Font_Format *format, const 
 void nebu_Font_RenderToBox(nebu_Font* font, const char *text, int len, box2 *box, int flags)
 {
 	float width, height, scalew, scaleh;
+	int textLength;
 	glPushMatrix();
 	glTranslatef(box->vMin.v[0], box->vMin.v[1], 0);
 
 	width = box->vMax.v[0] - box->vMin.v[0];
 	height = box->vMax.v[1] - box->vMin.v[1];
-	if(width / len < height)
+	textLength = getTextLength(text, len);
+	if(width / textLength < height)
 	{
-		scalew = width / len;
 		if(flags & eFontFormatScaleFitVertically)
+		{
 			scaleh = height;
+			scalew = width / textLength;
+		}
 		else
-			scaleh = width / len;
+		{
+			scalew = width / textLength;
+			scaleh = width / textLength;
+		}
+
 	}
 	else
 	{
 		if(flags & eFontFormatScaleFitHorizontally)
-			scalew = width / len;
+		{
+			scalew = width / textLength;
+			scaleh = height;
+		}
 		else
+		{
 			scalew = height;
-
-		scaleh = height;
+			scaleh = height;
+		}
 	}
 
 	if(flags & eFontFormatAlignCenter)
 	{
 		// shift according to width/scale
-		glTranslatef( (width / len - scalew) / 2, 0, 0);
+		glTranslatef( (width - textLength * scalew) / 2, 0, 0);
 	}
 	if(flags & eFontFormatAlignVCenter)
 	{

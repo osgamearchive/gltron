@@ -21,9 +21,6 @@ void draw2D( nebu_Rect *pRect ) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(0.7f, 0.7f, 0.7f, 0.3f);
 
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-
 	glColor3f(1, 1, 1);
 	glBegin(GL_LINES);
 	for(i = 0; i < game2->level->nBoundaries; i++) {

@@ -15,6 +15,7 @@ char *credits[] = {
   " Music:       Peter Hajba",
   " Sound:       Damon Law",
   "",
+  "",
   "Additional Thanks to:",
   "Xavier Bouchoux     Mike Field      Steve Baker",
   "Jean-Bruno Richard             Andrey Zahkhatov",
@@ -23,9 +24,9 @@ char *credits[] = {
   "Martin Fierz    Joseph Valenzuela   Ryan Gordon",
   "Sam Lantinga                   Patrick McCarthy",
   "",
-  "Thanks to my sponsors:",
-  "  3dfx:              Voodoo5 5500 graphics card",
-  "  Right Hemisphere:  3D exploration software",
+  // "Thanks to my sponsors:",
+  // "  3dfx:              Voodoo5 5500 graphics card",
+  // "  Right Hemisphere:  3D exploration software",
   NULL
 };
 
@@ -46,8 +47,9 @@ void keyCredits(int state, int k, int x, int y)
 }
 
 void idleCredits(void) {
-  scripting_RunGC();
-  SystemPostRedisplay();
+	scripting_RunGC();
+	nebu_Time_FrameDelay(50);
+	SystemPostRedisplay();
 }
 
 void drawCredits(void) {
@@ -73,7 +75,7 @@ void drawCredits(void) {
 }
 void displayCredits(void) {
   drawCredits();
-  nebu_Video_SwapBuffers();
+  nebu_System_SwapBuffers();
 }
 
 void initCredits(void) {

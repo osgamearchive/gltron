@@ -5,23 +5,27 @@
 
 #include "Nebu_input.h"
 #include "Nebu_scripting.h"
-
+#include "input/input.h"
 /* I hear people are reading this file because they couldn't find the
    manual! Go to http://www.gltron.org/ */
 
-int reserved_keys[] = {
-  'q', 27, ' ',
+int ReservedKeyCodes[eReservedKeys] = {
+  27,
+  ' ',
   SYSTEM_KEY_F1,
   SYSTEM_KEY_F2,
   SYSTEM_KEY_F3,
   SYSTEM_KEY_F4,
   SYSTEM_KEY_F5,
+  SYSTEM_KEY_F6,
+  SYSTEM_KEY_F7,
+  SYSTEM_KEY_F8,
+  SYSTEM_KEY_F9,
   SYSTEM_KEY_F10,
   SYSTEM_KEY_F11,
-  SYSTEM_KEY_F12,
-  SYSTEM_KEY_UP,
-  SYSTEM_KEY_DOWN
+  SYSTEM_KEY_F12
 };
+
 
 void keyGame(int state, int k, int x, int y)
 {
@@ -31,9 +35,11 @@ void keyGame(int state, int k, int x, int y)
 		switch (k) {
 			/* case 'q': SystemExit(); return; */
 		case 27:
+			game->pauseflag = PAUSE_GAME_SUSPENDED;
 			SystemExitLoop(RETURN_GAME_ESCAPE);
 			return;
 		case ' ':
+			game->pauseflag = PAUSE_GAME_SUSPENDED;
 			SystemExitLoop(RETURN_GAME_PAUSE);
 			return;
 		case SYSTEM_KEY_F1: changeDisplay(0); return;
@@ -47,8 +53,8 @@ void keyGame(int state, int k, int x, int y)
 		case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); return;
 		case SYSTEM_KEY_F12: doPngScreenShot(gScreen); return;
 
-		case SYSTEM_KEY_UP: consoleScrollBackward(1); return;
-		case SYSTEM_KEY_DOWN: consoleScrollForward(1); return;
+		case SYSTEM_KEY_UP: console_Seek(-1); return;
+		case SYSTEM_KEY_DOWN: console_Seek(1); return;
     /* toggle lighting
   case SYSTEM_KEY_F6: 
       setSettingi("light_cycles", !game->settings->light_cycles);

@@ -1,5 +1,6 @@
 #include "video/nebu_renderer_gl.h"
 #include "video/nebu_video_system.h"
+#include "base/nebu_system.h"
 
 #include "SDL.h"
 
@@ -11,10 +12,6 @@ static int flags;
 static int fullscreen;
 static int video_initialized = 0;
 static int window_id;
-
-void nebu_Video_SwapBuffers() {
-	SDL_GL_SwapBuffers();
-}
 
 void nebu_Video_Init(void) {
   if(SDL_Init(SDL_INIT_VIDEO) < 0 ) {
@@ -87,7 +84,7 @@ int SystemCreateWindow(char *name) {
   SDL_WM_SetCaption("GLtron", "");
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
-  SDL_GL_SwapBuffers();
+  nebu_System_SwapBuffers();
   return 0;
 }
 
