@@ -26,8 +26,7 @@ new_splash( int width, int height,  char *background, int options )
   //options
   splash->options = options;
 
-  //load background texture
-  
+  //load background texture 
   glGenTextures(1, splash_textures);
   glBindTexture(GL_TEXTURE_2D, splash_textures[0]);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -60,7 +59,7 @@ new_splash( int width, int height,  char *background, int options )
       y = 30 + game->screen->vp_h/2-splash->height/2;
     }
   //Creating the progress status
-   x = (game->screen->vp_w/2-splash->width/2)+10;
+  x = (game->screen->vp_w/2-splash->width/2)+10;
   splash->wstatus = new_wprogressstatus(x, y, (splash->width-10)*1.5/12);
 
   return splash;
@@ -102,10 +101,10 @@ static void drawbg_splash(Splash *splash ) {
   glTexCoord2f(1.0, 0.0);
   glVertex2f(game->screen->vp_w/2+splash->width/2, game->screen->vp_h/2-splash->height/2);
 
-  glTexCoord2f(1.0, .75);
+  glTexCoord2f(1.0, 1.0);
   glVertex2f(game->screen->vp_w/2+splash->width/2, game->screen->vp_h/2+splash->height/2);
 
-  glTexCoord2f(0.0, .75);
+  glTexCoord2f(0.0, 1.0);
   glVertex2f(game->screen->vp_w/2-splash->width/2, game->screen->vp_h/2+splash->height/2);
   
   glEnd();
@@ -131,5 +130,23 @@ drawv_splash(  Splash *splash )
   char str[32];
   sprintf(str, "Version %s", VERSION);
   glColor3f(1.0, 0.0, 0.0);
-  drawText(guiFtx, game->screen->vp_w/2, 50 + game->screen->vp_h/2-splash->height/2, 8, str);
+  drawText(gameFtx, game->screen->vp_w/2,  90+game->screen->vp_h/2-splash->height/2, 8, str);
+}
+
+void
+free_splash( Splash *splash )
+{
+  if( splash == NULL )
+    return;
+
+  //unload texture
+  glDeleteTextures(1, splash_textures);
+
+  free_wprogressbar(splash->wprogress);
+  splash->wprogress=NULL;
+
+  free_wprogressstatus(splash->wstatus);
+  splash->wstatus = NULL;
+
+  free(splash);
 }

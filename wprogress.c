@@ -99,6 +99,14 @@ update_wprogressbar(Wprogressbar *wprogress, float prog)
   SDL_Delay(time);
 }
 
+void
+free_wprogressbar(Wprogressbar *wprogress)
+{
+  if(wprogress ==NULL)
+    return;
+
+  free(wprogress);
+}
 
 Wprogressstatus*
 new_wprogressstatus(int x, int y, int nbchars)
@@ -131,9 +139,19 @@ draw_wprogressstatus(Wprogressstatus  *wstatus)
   glColor4f(1.0, 1.0, 1.0, 1.0);
   drawText(gameFtx, wstatus->x, wstatus->y, 12, wstatus->status);
 }
-void
 
+void
 update_wprogressstatus(Wprogressstatus *wstatus, char *status)
 {
   strcpy(wstatus->status, status);
+}
+
+void
+free_wprogressstatus(Wprogressstatus *wstatus)
+{
+  if(wstatus ==NULL)
+    return;
+
+  free(wstatus->status);
+  free(wstatus);
 }

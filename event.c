@@ -7,11 +7,12 @@ int processEvent(GameEvent* e) {
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY )
     printf("process event ( current time %d )\n", game2->time.current);
-#endif
+
 
   if(game2->mode == GAME_NETWORK_RECORD) {
     writeEvent(e);
   }
+#endif
   switch(e->type) {
   case EVENT_TURN_LEFT:
     data = game->player[e->player].data;
@@ -39,7 +40,8 @@ int processEvent(GameEvent* e) {
     if( isConnected && serverstate==gameState )
       {
 	sprintf(messages, "%s crashed", slots[getWhich(e->player)].name);
-	initTurnList();
+	if( e->player == 0 )
+	  initTurnList();
       } else {
 #endif
     sprintf(messages, "player %d crashed", e->player + 1);
@@ -53,10 +55,10 @@ int processEvent(GameEvent* e) {
   case EVENT_STOP:
     fprintf(stderr, "game stopped\n");
     if(game2->mode == GAME_SINGLE_RECORD) {
-      stopRecording();
+      //stopRecording();
       game2->mode = GAME_SINGLE;
     } else if(game2->mode == GAME_PLAY) {
-      stopPlaying();
+      //stopPlaying();
       game2->mode = GAME_SINGLE;
     }
     game->winner = e->player;
@@ -274,7 +276,7 @@ void idleGame( void ) {
       sendNetEvent((GameEvent*) p->data);
     }
 #endif
-
+#ifdef __NETWORK__
   case GAME_NETWORK_PLAY:
     /* fall through to GAME_PLAY */
   case GAME_PLAY:
@@ -284,6 +286,7 @@ void idleGame( void ) {
       fprintf(stderr, "something is seriously wrong - ignoring events\n");
     }
     break;
+#endif
   }
     
   doCameraMovement();

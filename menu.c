@@ -175,6 +175,7 @@ void menuAction(Menu *activated, int type) {
       initMenuCaption(activated);
       changeAction(activated->szName + 3);
       break;
+#ifdef __NETWORK__
     case 'd':
       if(activated->szName[2] == 'e') { /* load default settings */
 	initDefaultSettings();
@@ -209,6 +210,7 @@ void menuAction(Menu *activated, int type) {
 	switchCallbacks(&pauseCallbacks);
       }
       break;
+#endif
     case 'v':
       sscanf(activated->szName, "%cv%dx%d ", &c, &x, &y);
       game->settings->width = x;

@@ -181,9 +181,9 @@ enum {
 #include "protocol.h"
 #include "netevent.h"
 #include "wtext.h"
+#endif
 #include "wprogress.h"
 #include "splash.h"
-#endif
 
 extern char** artpack_list;
 extern int artpack_index;
@@ -561,7 +561,6 @@ extern Netscores         netscores;
 extern Wtext    *pregametext;
 extern Wintext  *inpregametext;
 
-extern Splash   *splash;
 
 extern void  handleServer      ( void );
 extern void  login             ( char* );
@@ -585,6 +584,7 @@ extern int   undoTurn          ( int, int, int );
 extern void  handleUDP         ( void );
 #endif
 #endif
+extern Splash   *splash;
 
 #endif
 

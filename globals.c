@@ -66,8 +66,6 @@ int    me;
 int    isLogged;
 netEventList neteventlist = NULL;
 
-Splash   *splash = NULL;
-
 int    packet_type = HEADER;
 Netscores         netscores;
 
@@ -78,6 +76,8 @@ Wtext    *pregametext = NULL;
 Wintext  *inpregametext = NULL;
 char   server_message[255] = "";
 #endif
+
+Splash   *splash = NULL;
 
 /* settings stuff */
 

@@ -21,33 +21,13 @@ Root
 
 # Game Submenu - Start Game / Game Settings / Configure Players
 # 2 (chooseModel)
-6
+5
 xsub
 Game
 
 0
 xreset
 Start Game
-
-4
-xsub
-Network
-
-0
-xnet
-Connect
-
-0
-sn_server
-Server IP: %s
-
-0
-sn_port
-Port: %s
-
-0
-sn_nick
-Nickname: %s
 
 #2
 #xsub

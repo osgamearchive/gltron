@@ -81,7 +81,7 @@ void getEvents() {
       /* TODO: check if it's safe to ignore the return value here */
 #ifdef __NETWORK__
       printf("event change player %d to %d ( curent time %d )\n", latest->player, getPlayer(latest->player),game2->time.current );
-#endif
+
       fprintf(stderr, "process : %d %d %d %d %d\n", latest->type, latest->player, 
   	 latest->x, latest->y, latest->timestamp);
 
@@ -97,7 +97,7 @@ void getEvents() {
 	      latest->player = getPlayer(latest->player);
 	      processEvent(latest);
 	    }
-
+#endif
 /* 	  printf("changing pos 'cause of prediction: %f, %f\n",  */
 /* 		 game->player[0].data->posx, */
 /* 		 game->player[0].data->posy); */

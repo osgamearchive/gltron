@@ -120,7 +120,7 @@ do_lostplayer(int which )
 	  hasstarted  = 0;
 	  lastping    = 0;
 	  slowest     = 0;
-	  starting = 0;
+	  starting    = 0;
 	} else {
 	  
 	  //TODO: If it was the game master, change that #done
@@ -365,6 +365,9 @@ do_login( int which, Packet packet )
 /* 	    } */
 /* 	} */
 
+      slots[which].player = find_freeplayer();
+      slots[which].hasstarted = 1;
+
       //Send rules as we are starting the game...
       rep.which                        = SERVERID;
       rep.type                         = GAMERULES;
@@ -383,6 +386,11 @@ do_login( int which, Packet packet )
 	{
 	  
 	  j=getWhich(i);
+	  if( j == - 1 )
+	    {
+	      fprintf(stderr, "BIG ERROR!!! \n");
+	      return;
+	    }
 	  printf("\nget startpos client ( sent ) %d <-> server %d\n", j, i);
 /* 	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx; */
 /* 	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy; */
@@ -1051,6 +1059,20 @@ do_starting()
       printf("timetostart %d\n", timetostart);
       if( timetostart > 0 )
 	{
+	  //check if nobody has be forgotten
+	  for(i=0; i<MAX_PLAYERS; ++i)
+	    {
+	      if( slots[i].active == 1 && slots[i].hasstarted == 0 )
+		{
+		  fprintf(stderr, "player %s hasn't started!!!\n", slots[i].name);
+		  slots[i].hasstarted=1;
+		  printf("sending signal to %s\n", slots[i].name);
+		  //send him signal to start
+		  Net_sendpacket(&rep, slots[i].sock);
+		}
+	    }
+
+
 	  //start the server
 	  starting=0;
 	  game2->time.lastFrame = timetostart;

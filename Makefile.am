@@ -12,10 +12,11 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	input.c settings.c texture.c load_texture.c fonttex.c \
 	fonts.c menu.c findpath.c file.c directory.c model.c \
 	modelgraphics.c screenshot.c skybox.c mtllib.c geom.c \
-	system.c globals.c record.c camera.c recognizer.c \
+	system.c globals.c camera.c recognizer.c \
 	console.c renderer_gl.c callbacks.h camera.h data.h \
 	geom.h gltron.h light.h menu.h model.h png_texture.h \
-	quad.h renderer_gl.h switchCallbacks.h system.h texture.h credits.c
+	quad.h renderer_gl.h switchCallbacks.h system.h texture.h credits.c \
+	wprogress.c splash.c  wprogress.h splash.h
 
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@
 

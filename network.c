@@ -201,7 +201,7 @@ do_userinfo(Packet packet)
       if( serverstate == preGameState )
 	{
 	  //drawMessage(mesg);	  
-	  insert_wtext(pregametext, mesg, 2);
+	  insert_wtext(pregametext, mesg, 8);
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);
@@ -221,13 +221,15 @@ do_userinfo(Packet packet)
     {
       sprintf(mesg, "logged...\n");
       printf("logged...\n");
-      insert_wtext(pregametext, mesg, 2);
+      insert_wtext(pregametext, mesg, 65);
     }
     } else {
       slots[which].player=(which==0)?me:which;
     }
 }
 
+
+static int chatcolor[4] = {4, 2, 5, 0};
 void
 do_chat( Packet packet )
 {
@@ -246,13 +248,13 @@ do_chat( Packet packet )
       if( serverstate == gameState )	
 	consoleAddLine(mesg);
       else
-	insert_wtext(pregametext, mesg, 4);
+	insert_wtext(pregametext, mesg, chatcolor[packet.which]);
 	  
 	  //drawChat(mesg);
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      insert_wtext(pregametext, mesg, 3);
+      insert_wtext(pregametext, mesg, 75);
       //drawChat(mesg);
     }
 }
@@ -277,7 +279,7 @@ do_action(Packet packet)
 
       if( serverstate == preGameState )
 	{
-	  insert_wtext(pregametext, mesg, 2);
+	  insert_wtext(pregametext, mesg, 56);
 	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
@@ -302,7 +304,7 @@ do_action(Packet packet)
 
       if( serverstate == preGameState )
 	{
-	  insert_wtext(pregametext, mesg, 2);
+	  insert_wtext(pregametext, mesg, 67);
 	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
@@ -703,8 +705,9 @@ undoTurn(int x, int y, int time)
 {
   int              ping=0;
   line             *old, *cur;
-  Predictedturn    turn;
+  Predictedturn    turn, aux, next;
   int              nbPredictedTurn;
+  int              i;
 
   printf("undoTurn pos x=%d, y=%d at time=%d\n", x, y, time);
 
@@ -714,7 +717,7 @@ undoTurn(int x, int y, int time)
 
   //search for turn to undo turn = turnlist->head;
   //we need to get the last PREDICTED ( oldest one )
-  while( turn!= NULL && turn->statut != PREDICTED ) { turn=turn->next; }
+  while( turn->next!= NULL  && turn->next->statut == PREDICTED ) { turn=turn->next; }
 
   nbPredictedTurn = get_size_predictedturn();
   printf("nbPredictedTurn %d\n", nbPredictedTurn);
@@ -736,10 +739,37 @@ undoTurn(int x, int y, int time)
   cur->sx = x;
   cur->sy = y;
 
+  if( nbPredictedTurn > 1 )
+    {
+      i=2;
+      next=turn;
+      //rearrange next trails
+      while( cur != game->player[0].data->trail )
+	{
+	  old = cur;
+	  cur = game->player[0].data->trail-nbPredictedTurn+i++;
+
+	  aux=turnlist->head;
+	  while( aux->next!=next ){
+	    aux=aux->next;
+	    if( aux->next == NULL )
+	      {
+		fprintf(stderr, "didn't find our turn! in the list\n");
+		break;
+	      }
+	  }
+	  old->ex=(aux->time-next->time)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+x;
+	  old->ey=(aux->time-next->time)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+y;
+	  cur->sx=old->ex;
+	  cur->sy=old->ey;
+	  next=aux;
+	}
+    }
+
   //Changing position of cycle
   ping=getping();
 
-printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",time+ping/2, time, (time+ping/2), (ping/2)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
+  printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",time+ping/2, time, (time+ping/2), (ping/2)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
 
   game->player[0].data->posx=(ping/2)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+x;
   

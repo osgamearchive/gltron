@@ -22,4 +22,5 @@ typedef struct
 Splash   *new_splash(int width, int height, char *background,  int options);
 void      draw_splash( Splash *splash );
 void      update_splash(Splash *splash, float prog, char *status);
+void      free_splash(Splash *splash);
 #endif

@@ -81,23 +81,17 @@ void setupDisplay(gDisplay *d) {
   //Setup splash
   if( game->settings->softwareRendering != 1 )
     {
-      fprintf(stderr, "trying to splash screen\n");
 
       if( game->settings->height > 358 )
 	{
-	  splash = new_splash(358, 358, "splashscreen.png", 0);
+	  fprintf(stderr, "trying to create splash screen\n");
+	  splash = new_splash(300, 358, "splashscreen.png", 0);
+	  draw_splash( splash );
+	  fprintf(stderr, "splash screen created\n");
 	}
-      draw_splash( splash );
-      fprintf(stderr, "splash screen created\n");
     }
 
   printRendererInfo();
-  /* for(i=0; i< 100; ++i) */
-/*     { */
-/*       update_splash(splash, (float)(i/100.0), "loading art"); */
-/*       SDL_Delay(1); */
-/*     } */
-  //update_splash(splash, 0.1, "loading art");
 
   /* printf("win_id is %d\n", d->win_id); */
   fprintf(stderr, "loading art\n");
@@ -133,12 +127,14 @@ int main( int argc, char *argv[] ) {
 #endif
 
 
-
-
   /* initialize artpack list before loading settings! */
   initArtpacks();
 
+#ifdef __NETWORK__
+  path = getFullPath("settings.txt.net");
+#else
   path = getFullPath("settings.txt");
+#endif
   if(path != NULL)
     initMainGameSettings(path); /* reads defaults from ~/.gltronrc */
   else {
@@ -202,7 +198,11 @@ int main( int argc, char *argv[] ) {
   
   update_splash(splash, 0.95, "loading menu");
   printf("loading menu\n");
+#ifdef __NETWORK__
+  path = getFullPath("menu.txt.net");
+#else
   path = getFullPath("menu.txt");
+#endif
   if(path != NULL)
     pMenuList = loadMenuFile(path);
   else {
@@ -217,12 +217,18 @@ int main( int argc, char *argv[] ) {
   resetScores();
 
   update_splash(splash, 1.0, "starting");
+
+
+
   //setupDisplay(game->screen);
   switchCallbacks(&guiCallbacks);
   switchCallbacks(&guiCallbacks);
 
   SystemMainLoop();
 
+  //Freing splash
+  free_splash( splash );
+  splash=NULL;
   return 0;
 }
 

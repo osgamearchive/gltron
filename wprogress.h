@@ -25,9 +25,12 @@ typedef struct
 Wprogressbar     *new_wprogressbar(int x, int y, int width, int height);
 void              draw_wprogressbar(Wprogressbar *wprogress);
 void              update_wprogressbar(Wprogressbar *wprogress, float prog);
+void              free_wprogressbar(Wprogressbar *wprogress);
 
 /** progress status */
 Wprogressstatus  *new_wprogressstatus(int x, int y, int nbchars);
 void              draw_wprogressstatus(Wprogressstatus  *wstatus);
 void              update_wprogressstatus(Wprogressstatus *wstatus, char *status);
+
+void              free_wprogressstatus(Wprogressstatus *wstatus);
 #endif
