@@ -144,6 +144,8 @@ int main( int argc, char *argv[] ) {
   /* load settings from config file */
   scripting_LoadConfig("config.lua");
 
+  initColors();
+
   /* parse any comandline switches overrinding the loaded settings */
   parse_args(argc, argv);
 

@@ -1,6 +1,6 @@
 -- sound
 playEffects = 1
-playMusic = 1
+playMusic = 0
 
 -- settings
 show_gl_logo = 1
@@ -8,6 +8,22 @@ windowMode = 1
 
 -- game
 grid_size = 720
+
+-- colors
+model_diffuse_0 = { 1.000, 1.000, 0.000, 1.000 }
+model_diffuse_1 = { 0.700, 0.100, 0.100, 1.000 }
+model_diffuse_2 = { 0.300, 1.000, 0.800, 1.000 }
+model_diffuse_3 = { 0.800, 0.800, 0.800, 1.000 }
+
+model_specular_0 = { 1.000, 1.000, 1.000, 1.000 }
+model_specular_1 = { 1.000, 1.000, 1.000, 1.000 }
+model_specular_2 = { 1.000, 1.000, 1.000, 1.000 }
+model_specular_3 = { 1.000, 1.000, 1.000, 1.000 }
+
+trail_diffuse_0 = { 0.600, 0.600, 0.000, 0.600 }
+trail_diffuse_1 = { 0.500, 0.050, 0.250, 0.600 }
+trail_diffuse_2 = { 0.200, 0.600, 0.400, 0.600 }
+trail_diffuse_3 = { 0.700, 0.700, 0.700, 0.600 }
 
 -- This stuff is commented out, will add later
 
@@ -56,14 +72,6 @@ grid_size = 720
 -- fset musicVolume 0.30
 -- fset fxVolume 0.70
 -- vset keys 97 115 107 108 53 54 276 275 
--- vset cycle_colors_diffuse 0 1.000 1.000 0.000 1.000
--- vset cycle_colors_diffuse 1 0.700 0.100 0.100 1.000
--- vset cycle_colors_diffuse 2 0.300 1.000 0.800 1.000
--- vset cycle_colors_diffuse 3 0.800 0.800 0.800 1.000
--- vset cycle_colors_specular 0 1.000 1.000 1.000 1.000
--- vset cycle_colors_specular 1 1.000 1.000 1.000 1.000
--- vset cycle_colors_specular 2 1.000 1.000 1.000 1.000
--- vset cycle_colors_specular 3 1.000 1.000 1.000 1.000
 -- vset trail_colors 0 0.600 0.600 0.000 0.600
 -- vset trail_colors 1 0.500 0.050 0.250 0.600
 -- vset trail_colors 2 0.200 0.600 0.400 0.600

@@ -255,8 +255,7 @@ extern double dt;
 extern int polycount;
 extern int screenshots;
 
-extern float colors_alpha[][4];
-extern float colors_trail[][4];
+extern float colors_trail_diffuse[][4];
 extern float colors_model_diffuse[][4];
 extern float colors_model_specular[][4];
 extern int vps;
@@ -392,6 +391,7 @@ extern void parse_args(int argc, char *argv[]);
 
 extern void initMainGameSettings();
 extern void initDefaultSettings();
+extern void initColors();
 extern void checkSettings();
 extern void saveSettings();
 

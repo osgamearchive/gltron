@@ -97,6 +97,24 @@ void initMainGameSettings() {
   game2->network.status = 0;
 }
 
+void initColors() {
+  scripting_GetFloatArray("model_diffuse_0", colors_model_diffuse[0], 4);
+  scripting_GetFloatArray("model_diffuse_1", colors_model_diffuse[1], 4);
+  scripting_GetFloatArray("model_diffuse_2", colors_model_diffuse[2], 4);
+  scripting_GetFloatArray("model_diffuse_3", colors_model_diffuse[3], 4);
+
+  scripting_GetFloatArray("model_specular_0", colors_model_specular[0], 4);
+  scripting_GetFloatArray("model_specular_1", colors_model_specular[1], 4);
+  scripting_GetFloatArray("model_specular_2", colors_model_specular[2], 4);
+  scripting_GetFloatArray("model_specular_3", colors_model_specular[3], 4);
+
+  scripting_GetFloatArray("trail_diffuse_0", colors_trail_diffuse[0], 4);
+  scripting_GetFloatArray("trail_diffuse_1", colors_trail_diffuse[1], 4);
+  scripting_GetFloatArray("trail_diffuse_2", colors_trail_diffuse[2], 4);
+  scripting_GetFloatArray("trail_diffuse_3", colors_trail_diffuse[3], 4);
+
+}
+
 void checkSettings() {
   /* sanity check: speed, grid_size */
   if(getSettingf("current_speed") <= 0) {
