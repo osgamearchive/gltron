@@ -13,6 +13,27 @@ void writeCamDefaults(Camera *cam, int type) {
   cam_defaults[cam->type->type][type] = cam->movement[type];
 }
 
+#define CLAMP_R_MIN 5
+#define CLAMP_R_MAX 25
+#define CLAMP_CHI_MIN M_PI / 8
+#define CLAMP_CHI_MAX 3 * M_PI / 8
+
+void clampCam(Camera *cam) {
+  if(cam->type->freedom[CAM_FREE_R]) {
+    if(cam->movement[CAM_R] < CLAMP_R_MIN)
+      cam->movement[CAM_R] = CLAMP_R_MIN;
+    if(cam->movement[CAM_R] > CLAMP_R_MAX)
+      cam->movement[CAM_R] = CLAMP_R_MAX;
+  }
+
+  if(cam->type->freedom[CAM_FREE_CHI]) {
+    if(cam->movement[CAM_CHI] < CLAMP_CHI_MIN)
+      cam->movement[CAM_CHI] = CLAMP_CHI_MIN;
+    if(cam->movement[CAM_CHI] > CLAMP_CHI_MAX)
+      cam->movement[CAM_CHI] = CLAMP_CHI_MAX;
+  }
+}
+
 void initCircleCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_CIRCLE][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_CIRCLE][CAM_CHI];
@@ -144,6 +165,7 @@ void doCameraMovement() {
 	cam->movement[CAM_CHI] += game2->input.mousey * MOUSE_CY;
 	writeCamDefaults(cam, CAM_PHI);
       }
+      clampCam(cam);
 
       /* ok, now let's calculate the new camera destination coordinates */
       /* also, perform some camera dependant movement */
