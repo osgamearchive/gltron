@@ -99,7 +99,9 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    
    list *l = (list*) user_data;
 	
-   if (cpb_ptr->hFileInfo.ioFlAttrib == 2) {	
+    #define FOLDER_BIT 0x10	/* bit 5 is folder bit, never is set for files */
+   if ( (cpb_ptr->hFileInfo.ioFlAttrib & FOLDER_BIT) == 0) {	
+   	#undef FOLDER_BIT
    	
    	while (l->next != NULL)
    	   l++;

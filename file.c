@@ -2,7 +2,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SEPERATOR '/'
+#ifdef macintosh
+#    define SEPERATOR ':'
+#endif
+
+#ifdef WIN32
+#    define SEPERATOR '\\'
+#endif
+
+#ifndef SEPERATOR
+#    define SEPERATOR '/'
+#endif
 
 /* #ifdef UNIX */
 static char *share1 = "/usr/share/games/gltron";
