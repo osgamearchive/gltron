@@ -199,7 +199,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  if (spoke_time > 70 - (p->data->speed * 10) 
+  if (spoke_time > 140 - (p->data->speed * 10) 
       && game->pauseflag == PAUSE_GAME_RUNNING) {
     if (pV->spoke_state == 1) {
       pV->spoke_state = 0;
