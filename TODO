@@ -12,7 +12,6 @@ Bugs:
 - screenshots don't get saved in snapshot dir
 - recognizer has blue edges sometimes (http://www.gltron.org/stuff/recognizer_glue.jpg (Andreas) [ LIM,Todd ]
 - recognizer sometimes leaves arena
-- remove song & artpack list from settings - clean up loading
 
 Features:
 
@@ -30,7 +29,7 @@ Features:
 - uv-coordinates for the model, add texture coordinate support to obj loader
 - support other controllers (i.e. joysticks)
 - quake-like drop down console
-- merge software mouse cursor from networkign branch
+- merge software mouse cursor from networking branch
 - add more special effects (reflections etc.)
 - add slightly funny console messages (Robot ate Andi's tail)
 - peek left/right when in 1st person camera mode
@@ -58,6 +57,7 @@ Administrative:
 Optimizations/Cleanups
 
 - Rework LOD system a bit.
+- seperate game from engine a bit more
 - look at #if 0,#endif and remove obsolete code
 - remove obsolete bitmap stuff
 - Scale the mesh on load time, to avoid need for GL_NORMALIZE
@@ -72,5 +72,5 @@ Optimizations/Cleanups
 - dynamically load OpenGL (?)
 - delete the sound object in Audio_Quit to allow restarting the whole
   sound system without memory leaks
-- rewrite save.lua, so .gltronrc is a bit more readable (and settings are
+- maybe rewrite save.lua, so .gltronrc is a bit more readable (and settings are
   grouped)
