@@ -231,6 +231,12 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
 }
 
 void SystemQuit() {
- saveSettings(); 
- switchCallbacks(&creditsCallbacks);
+  static int quitting = 0;
+  if(quitting) {
+    SystemExit();
+  } else {
+    saveSettings(); 
+    switchCallbacks(&creditsCallbacks);
+    quitting = 1;
+  }
 }
