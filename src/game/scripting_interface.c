@@ -118,6 +118,10 @@ int c_SetCallback(lua_State *L) {
 		setCallback(name);
 		// printf("enabling callback-set '%s'\n", name);
 	}
+	else {
+		fprintf(stderr, "[fatal] invalid callback set\n");
+		exit(1);
+	}
 	return 0;
 }
 
