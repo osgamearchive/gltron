@@ -325,6 +325,7 @@ extern float* getVf(char *szName);
 
 extern char* getFullPath(char* filename);
 extern list* readDirectoryContents(char *dirname, char *prefix);
+extern char* getMusicPath(char *dirname);
 
 /* callback stuff -> switchCallbacks.c */
 
