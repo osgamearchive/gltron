@@ -80,6 +80,8 @@ void initGameStructures() { /* called only once */
     ai->tdiff = 0;
     ai->moves = 0;
     ai->danger = 0;
+    ai->lastx = 0;
+    ai->lasty = 0;
   }
 
   changeDisplay();
@@ -260,8 +262,7 @@ void crashPlayer(int player) {
   int j;
 
 #ifdef SOUND
-  if(game->settings->playEffects)
-    playGameFX(fx_crash);
+  playCrashSound(0, player);
 #endif
 
   for(j = 0; j < game->players; j++) 

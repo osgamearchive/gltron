@@ -1,5 +1,13 @@
 #include "gltron.h"
 
+static int lod_n = 3;
+static char *lod_names[] = {
+  "lightcycle high.obj",
+  "lightcycle med.obj",
+  "lightcycle low.obj"
+};
+/* static int lod_dist[] = { 25, 50, 150 }; */
+
 void initClientData() {
   /* for each player */
   /*   init camera (if any) */
@@ -58,27 +66,22 @@ void changeDisplay() {
 		   game->settings->display_type, i, 1);
 }
 
-void initGame() { /* called when game mode is entered */
+void playEngine(void *data, Uint8 *stream, int len) {
+  mixEngineSound(0, stream, len);
+}
 
+void initGame() { /* called when game mode is entered */
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
-  /* playEngine(); */
+  Mix_SetPostMix(playEngine, NULL);
 #endif
 }
 
 void exitGame() {
 #ifdef SOUND
-  stopEngine();
+  Mix_SetPostMix(NULL, NULL);
 #endif
 }
-
-static int lod_n = 3;
-static char *lod_names[] = {
-  "lightcycle high.obj",
-  "lightcycle med.obj",
-  "lightcycle low.obj"
-};
-/* static int lod_dist[] = { 25, 50, 150 }; */
 
 void initModel(Player *p, int p_num) {
   int i, j;
