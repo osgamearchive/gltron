@@ -1,5 +1,12 @@
 #include "gltron.h"
 
+#ifdef macintosh
+/* it seems that MacOS 8.6 and lower do not have interrupt-safe memcpy */
+#define memcpy(from,to,size) BlockMoveData(to,from,size)
+/* important: cannot call printf/fprintf inside an interrupt procedure */
+#define fprintf(arg1, arg2)
+#endif
+
 typedef struct {
   float x, y;
 } Point;
@@ -155,6 +162,7 @@ Uint8* getSoundSource(int type, int player, int object, int len, int *delivered)
   case SOUND_CRASH:
     chunk = game_fx + SOUND_CRASH;
     loop = 0;
+    break;
   default:
     fprintf(stderr, "unknown sound source requested\n");
     return NULL;
@@ -204,10 +212,12 @@ void mixEngineSound(int player_i, Uint8* buf, int len) {
     if(game->settings->playEffects == 0)
       return;
 
-    clen = (int)((len / 4) * shift + 1) * 4;
+    
     for(i = 0; i < game->players; i++) {
       if(i != player_i && game->player[i].data->speed > 0) {
 	getSound3dData(player_i, i, &pan, &vol, &shift);
+	
+	clen = (int)((len / 4) * shift + 1) * 4;
 	/*
 	  printf("sound data for player %d / %d: %.2f %.2f %.2f\n",
 	  player_i, i, pan, vol, shift);
