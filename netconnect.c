@@ -12,11 +12,12 @@ void mouseConnect (int buttons, int state, int x, int y)
 void keyConnect(int k, int unicode, int x, int y)
 {
   int status;
+  int serverport = strtol(game->settings->port, (char**) NULL, 10);
 
   switch( k )
     {
     case 13:
-      status = Net_connect(game->settings->server, SERVER_PORT);
+      status = Net_connect(game->settings->server, serverport);
       isConnected = status;
       if( status != connected )
 	{

@@ -156,6 +156,9 @@ void menuAction(Menu *activated, int type) {
 	case 's':
 	  switchCallbacks(&serverCallbacks);
 	  break;
+	case 'p':
+	  switchCallbacks(&portCallbacks);
+	  break;
 	case 'n':
 	  switchCallbacks(&nicknameCallbacks);
 	  break;
@@ -322,15 +325,23 @@ void initMenuCaption(Menu *m) {
       break;
 #ifdef __NETWORK__
     case 'n':
-      if( m->szName[3] == 'n' )
+      switch( m->szName[3] )
 	{
-	  printf("setting network menu caption ( nickname )\n");
+	  case 'n':
+	    printf("setting network menu caption ( nickname )\n");
 	  sprintf(m->display.szCaption, m->szCapFormat, 
 		  game->settings->nickname);
-	} else {
+	  break;
+	case 'p':
+	  printf("setting network menu caption ( port )\n");
+	  sprintf(m->display.szCaption, m->szCapFormat, 
+		  game->settings->port);
+	  break;
+	case 's':
 	  printf("setting network menu caption ( server )\n");
 	  sprintf(m->display.szCaption, m->szCapFormat, 
 		  game->settings->server);
+	  break;
 	}
       break;
 #endif

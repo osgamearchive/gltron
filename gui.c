@@ -241,6 +241,51 @@ void readServer(int key, int unicode, int x, int y)
    SystemSwapBuffers();
 }
 
+
+void readPort(int key, int unicode, int x, int y)
+{
+
+  printf("entering readPort\n");
+  if( nbreads == 0 )
+    {
+      strcpy(game->settings->port, "");
+    }
+  switch(key)
+    {
+    case 13://return
+    case SDLK_ESCAPE://escape
+      nbreads=0;
+      restoreCallbacks();
+      break;
+      
+    case SDLK_BACKSPACE://backspace
+      if( nbreads > 0 )
+	{
+	  nbreads--;
+	  game->settings->port[nbreads]='\0';
+	}
+      break;
+    default:
+      if( unicode < 0x80 && unicode > 0 )
+	{
+	  sprintf(game->settings->port, "%s%c", game->settings->port, unicode);
+	  nbreads++;
+	}
+  break;
+}
+  initMenuCaptions();
+#ifdef SOUND
+  playMenuFX(fx_action);
+#endif
+   drawGuiBackground();
+   if(!game->settings->softwareRendering)
+     drawGuiLogo();
+   drawMenu(game->screen);
+   rasonly(game->screen);
+   SystemSwapBuffers();
+}
+
+
 void displayNickname() {
   char message[] = "Enter your nickname...";
   drawGuiBackground();
@@ -257,6 +302,20 @@ void displayNickname() {
 
 void displayServer() {
   char message[] = "Enter server name or server IP...";
+  drawGuiBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
+  drawMenu(game->screen);
+
+  rasonly(game->screen);
+  glColor3f(1.0, 1.0, 1.0);
+  drawText(guiFtx, game->screen->vp_w / 6, 20,
+	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+  SystemSwapBuffers();
+}
+
+void displayPort() {
+  char message[] = "Enter port...";
   drawGuiBackground();
   if(!game->settings->softwareRendering)
     drawGuiLogo();
@@ -447,6 +506,11 @@ callbacks nicknameCallbacks = {
 
 callbacks serverCallbacks = {
   displayServer, idleGui, readServer, initGui, exitGui, initGLGui,
+  NULL, NULL
+};
+
+callbacks portCallbacks = {
+  displayPort, idleGui, readPort, initGui, exitGui, initGLGui,
   NULL, NULL
 };
 #endif

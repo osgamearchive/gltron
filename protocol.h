@@ -29,7 +29,7 @@
 #define    gameState    23 //partie commencée
 
 
-#define SERVER_PORT     23460
+//#define SERVER_PORT     23460 use game->settings->port instead.
 #define SERVERID        -1
 
 #define magic           255

@@ -86,6 +86,14 @@ void settings_server(char *buf, FILE *f) {
     sscanf(buf, "vset server %s ", game->settings->server);
   }
 }
+
+void settings_port(char *buf, FILE *f) {
+  if(f != NULL) {
+    fprintf(f, "vset port %s\n", game->settings->port);
+  } else {
+    sscanf(buf, "vset port %s ", game->settings->port);
+  }
+}
 #endif
 
 void settings_cycle_colors(char *buf, FILE *f) {
@@ -232,6 +240,7 @@ void initSettingData(char *filename) {
 #ifdef __NETWORK__
   sv[5].value = settings_nickname;
   sv[6].value = settings_server;
+  sv[7].value = settings_port;
 #endif
 }
 
@@ -388,6 +397,7 @@ void initDefaultSettings() {
   /* network default */
   strcpy(game->settings->nickname,"Default");
   strcpy(game->settings->server,"localhost");
+  strcpy(game->settings->port, "23460");
 #endif
  
 }

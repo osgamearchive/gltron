@@ -315,6 +315,7 @@ typedef struct Settings {
   /* these settings affect network play. */
   char nickname[255];
   char server[255];
+  char port[16];
 #endif
 
 } Settings;

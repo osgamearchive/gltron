@@ -276,6 +276,7 @@ extern callbacks creditsCallbacks;
 extern callbacks netConnectCallbacks;
 extern callbacks nicknameCallbacks;
 extern callbacks serverCallbacks;
+extern callbacks portCallbacks;
 extern callbacks netPregameCallbacks;
 extern callbacks keyboardreadingCallbacks;
 #endif

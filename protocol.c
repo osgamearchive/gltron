@@ -662,7 +662,8 @@ Recv_rules()
   for(i=0; i<game2->players;++i)
     {
       printf("adding tp player %d ( %d ) %d %d %d\n", i, getPlayer(i),startPos[3*getPlayer(i)],
-	     getPlayer(i),startPos[3*getPlayer(i)+1],getPlayer(i),startPos[3*getPlayer(i)+2] );
+	     startPos[3*getPlayer(i)+1],
+	     startPos[3*getPlayer(i)+2] );
       rLen = getPlayer(i); //Change player start Position.
       game2->startPositions[3*i+0]=startPos[3*rLen+0];
       game2->startPositions[3*i+1]=startPos[3*rLen+1];

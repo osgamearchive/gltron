@@ -29,7 +29,7 @@ Game
 xreset
 Start Game
 
-3
+4
 xsub
 Network
 
@@ -40,6 +40,10 @@ Connect
 0
 sn_server
 Server IP: %s
+
+0
+sn_port
+Port: %s
 
 0
 sn_nick
