@@ -123,10 +123,12 @@ void displayConfigure(void) {
 }
 
 void idleGui(void) {
-  Sound_idle();
-  scripting_RunGC();
+	Sound_idle();
+	scripting_RunGC();
 	SDL_Delay(10);
-  SystemPostRedisplay(); /* animate menu */
+	Video_Idle();
+	Input_Idle();
+	SystemPostRedisplay(); /* animate menu */
 }
 
 void keyboardConfigure(int state, int key, int x, int y) {
@@ -206,7 +208,6 @@ void keyboardGui(int state, int key, int x, int y) {
 		break;
   }
   free(pMenuName);
-  SystemPostRedisplay();
 }
 
 void initGui(void) {
@@ -224,7 +225,6 @@ void initGLGui(void) {
   glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
-  SystemPostRedisplay();
 }
 	
 void guiMouse(int buttons, int state, int x, int y) {
@@ -235,7 +235,6 @@ void guiMouse(int buttons, int state, int x, int y) {
   if (state == SYSTEM_MOUSEPRESSED) {	
     if(getSettingi("playEffects"))
       playMenuFX(fx_action);
-    SystemPostRedisplay();
   }
 }
 
