@@ -48,7 +48,9 @@ void getSound3dData(int i_player, int i_object,
 	( po.y - pp.y ) * ( po.y - pp.y ) );
   if(temp != 0) {
     cos2phi = scalar * scalar / temp;
-    *pan = sqrt( 1 - cos2phi );
+    if(1 - cos2phi > 0)
+      *pan = sqrt( 1 - cos2phi );
+    else *pan = 0;
     if( lc.x * ( po.y - pp.y ) - lc.y * (po.x - pp.x) > 0 )
       *pan = - *pan;
   } else {
@@ -57,6 +59,7 @@ void getSound3dData(int i_player, int i_object,
 
   dist2 = ( po.x - pp.x ) * ( po.x - pp.x ) +
     ( po.y - pp.y ) * ( po.y - pp.y );
+  if(dist2 < 1) dist2 = 1;
 
 #define VOLSCALE_BASE 1000
   *vol = 
