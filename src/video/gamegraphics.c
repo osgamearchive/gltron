@@ -5,6 +5,8 @@
 #include "video/recognizer.h"
 #include "video/explosion.h"
 
+#include "base/nebu_math.h"
+
 // static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
 #define MAX_LOD_LEVEL 3
@@ -71,7 +73,8 @@ void drawGame(void) {
 
   /* printf("%d polys\n", polycount); */
 }
- 
+
+/* 
 float GetDistance(float *v, float *p, float *d) {
   float diff[3];
   float tmp[3];
@@ -83,6 +86,7 @@ float GetDistance(float *v, float *p, float *d) {
   vsub(diff, tmp, tmp);
   return sqrtf( scalarprod(tmp, tmp) );
 }
+*/
 
 static float dirangles[] = { 0, -90, -180, 90, 180, -270 };
 
@@ -126,7 +130,7 @@ void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
 }
 
 void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
-  Mesh *cycle;
+  gltron_Mesh *cycle;
   int turn_time = game2->time.current - p->data->turn_time;
       
   if(turn_time < TURN_LENGTH && !drawTurn)
@@ -171,7 +175,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 
   /* render */
 
-  drawModel(cycle, TRI_MESH);
+  gltron_Mesh_Draw(cycle, TRI_MESH);
 
   /* restore */
 
@@ -184,7 +188,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 }
 
 void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
-  Mesh *cycle = lightcycle[lod];
+  gltron_Mesh *cycle = lightcycle[lod];
 
   unsigned int spoke_time = game2->time.current - pV->spoke_time;
 	int turn_time = game2->time.current - p->data->turn_time;
@@ -207,8 +211,8 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
     doCycleTurnRotation(pV, p);
   }
 
-  SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
-  SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
+  gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
+  gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
   if (gSettingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
@@ -227,18 +231,18 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
         && game->pauseflag == PAUSE_GAME_RUNNING) {
       if (pV->spoke_state == 1) {
         pV->spoke_state = 0;
-        SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
-        SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
+        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
+        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
       } else {
         pV->spoke_state = 1;
-        SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
-        SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
+        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
+        gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
       }
       pV->spoke_time = game2->time.current;
     }
     
     glEnable(GL_CULL_FACE);
-    drawModel(cycle, TRI_MESH);
+    gltron_Mesh_Draw(cycle, TRI_MESH);
     glDisable(GL_CULL_FACE);
 
   } else if(pV->exp_radius < EXP_RADIUS_MAX) {
@@ -253,7 +257,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
     
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
-    drawModelExplosion(cycle, pV->exp_radius);
+    gltron_Mesh_DrawExplosion(cycle, pV->exp_radius);
   }
   glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
@@ -261,36 +265,35 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 }
  
 int playerVisible(Player *eye, Player *target) {
-  float v1[3];
-  float v2[3];
-  float tmp[3];
+  vec3 v1, v2, tmp;
+	
   float s;
   float d;
   int i;
   int lod_level;
 	float x, y;
 
-  vsub(eye->camera->target, eye->camera->cam, v1);
-  normalize(v1);
+  vec3_Sub(&v1, (vec3*) eye->camera->target, (vec3*) eye->camera->cam);
+	vec3_Normalize(&v1, &v1);
 	
 	getPositionFromData(&x, &y, target->data);
-	tmp[0] = x;
-  tmp[1] = y;
-  tmp[2] = 0;
+	tmp.v[0] = x;
+  tmp.v[1] = y;
+  tmp.v[2] = 0;
 	
   lod_level = (gSettingsCache.lod > MAX_LOD_LEVEL) ? 
     MAX_LOD_LEVEL : gSettingsCache.lod;
 
   /* calculate lod */
-  vsub(eye->camera->cam, tmp, v2);
-  d = length(v2);
+  vec3_Sub(&v2, (vec3*) eye->camera->cam, &tmp);
+  d = vec3_Length(&v2);
   for(i = 0; i < LC_LOD && d >= lod_dist[lod_level][i]; i++);
   if(i >= LC_LOD)
     return -1;
 
-  vsub(tmp, eye->camera->cam, v2);
-  normalize(v2);
-  s = scalarprod(v1, v2);
+  vec3_Sub(&v2, &tmp, (vec3*) eye->camera->cam);
+  vec3_Normalize(&v2, &v2);
+  s = vec3_Dot(&v1, &v2);
   /* maybe that's not exactly correct, but I didn't notice anything */
   d = cosf((gSettingsCache.fov / 2) * 2 * PI / 360.0);
   /*
@@ -405,6 +408,11 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 void drawCam(Player *p, PlayerVisual* pV) {
   int i;
   float up[3] = { 0, 0, 1 };
+	
+	float reflectivity = getSettingf("reflection");
+	if(reflectivity < 0)
+		reflectivity = getVideoSettingf("reflection");
+
 	Visual *d = & pV->display;
   
   glColor3f(0.0, 1.0, 0.0);
@@ -432,50 +440,53 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 
-	/* reflections */
-	/* first draw reflector to stencil */
-	// glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	glDepthMask(GL_FALSE);
+	if(reflectivity == 0) {
+		video_Shader_Setup(& gWorld->floor_shader);
+		nebu_Mesh_DrawGeometry( gWorld->floor );
+		video_Shader_Cleanup(& gWorld->floor_shader);
+	} else {
+		/* reflections */
+		/* first draw reflector to stencil */
+		// glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glDepthMask(GL_FALSE);
 
-	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-	glStencilFunc(GL_ALWAYS, 1, 255);
-	glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+		glStencilFunc(GL_ALWAYS, 1, 255);
+		glEnable(GL_STENCIL_TEST);
 	
-	glColor3f(0,0,0);
-	nebu_Mesh_Render( gWorld->floor );
-	// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDepthMask(GL_TRUE);
+		glColor3f(0,0,0);
+		nebu_Mesh_DrawGeometry( gWorld->floor );
+		// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glDepthMask(GL_TRUE);
 
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-	glStencilFunc(GL_LESS, 0, 255);
-	/* then draw world reflected, where stencil is set */
-	isRenderingReflection = 1;
-	glPushMatrix();
-	glScalef(1,1,-1);
-	glCullFace(GL_FRONT);
-	drawWorld(p, pV);
-	glCullFace(GL_BACK);
-	glPopMatrix();
-	isRenderingReflection = 0;
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+		glStencilFunc(GL_LESS, 0, 255);
+		/* then draw world reflected, where stencil is set */
+		isRenderingReflection = 1;
+		glPushMatrix();
+		glScalef(1,1,-1);
+		glCullFace(GL_FRONT);
+		drawWorld(p, pV);
+		glCullFace(GL_BACK);
+		glPopMatrix();
+		isRenderingReflection = 0;
 
-	/* then blend reflector into the scene */
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		/* then blend reflector into the scene */
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	{
-		float alpha = getVideoSettingf("reflection");
-		glColor4f(1,1,1,alpha);
+		glColor4f(1, 1, 1, 1 - reflectivity);
+
+		glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+		glStencilFunc(GL_ALWAYS, 1, 255);
+	
+		video_Shader_Setup(& gWorld->floor_shader);
+		nebu_Mesh_DrawGeometry( gWorld->floor );
+		video_Shader_Cleanup(& gWorld->floor_shader);
+
+		glDisable(GL_STENCIL_TEST);
+		glDisable(GL_BLEND);
 	}
-
-	glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
-	glStencilFunc(GL_ALWAYS, 1, 255);
-	
-	video_Shader_Setup(& gWorld->floor_shader);
-	nebu_Mesh_Render( gWorld->floor );
-	video_Shader_Cleanup(& gWorld->floor_shader);
-
-	glDisable(GL_STENCIL_TEST);
-	glDisable(GL_BLEND);
 	
 	/* draw rest of the scene */
   glDepthMask(GL_FALSE);
