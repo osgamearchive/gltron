@@ -40,11 +40,6 @@ void skybox() {
     { { -1, 1, -1 }, { -1, -1, -1 }, { 1, -1, -1 }, { 1, 1, -1 } }, // botton
     { { -1, -1, -1 }, { -1, 1, -1 }, { -1, 1, 1 }, { -1, -1, 1 } } // back
   };
-
-  float colors[6][3] = { 
-    { 1, 1, 0 }, { 1, 0.5, 0.5 }, { 0.5, 1, 1 }, 
-    { 0, 1, 1 }, { 1, 0, 1 }, { 0.5, 1, 0.5 }
-  };
     
   float uv[4][2] = { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
   int i, j;
@@ -56,7 +51,6 @@ void skybox() {
   for(i = 0; i < 6; i++) {
     bindSkyboxTexture(i);
     glBegin(GL_QUADS);
-    /* debug:  glColor3fv(colors[i]); */
     for(j = 0; j < 4; j++) {
       glTexCoord2fv( uv[j] );
       glVertex3f( sides[i][j][0] * d, sides[i][j][1] * d, sides[i][j][2] * d );
