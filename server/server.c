@@ -4,6 +4,9 @@
 //TODO : manage version...
 //server functions...
 #define __DEBUG__
+
+int server_port;
+
 void
 start_server()
 {
@@ -27,7 +30,7 @@ start_server()
     }
 
   //Getting IPaddress
-  SDLNet_ResolveHost(&serverIP, NULL, SERVER_PORT);
+  SDLNet_ResolveHost(&serverIP, NULL, server_port);
   
   //Start listening to port.
   servsock = SDLNet_TCP_Open(&serverIP);
@@ -44,7 +47,7 @@ start_server()
   sState   = waitState;
   nbUsers  = 0;
   //Server is started!
-  printf("server listening to port %d\n", SERVER_PORT);
+  printf("server listening to port %d\n", server_port);
 }
 
 void
