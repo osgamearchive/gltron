@@ -2,16 +2,17 @@
 #include "game/game.h"
 
 void drawWalls(void) {
-#undef WALL_H
-#define WALL_H 48
+#ifndef NEW_LEVEL_DRAW
+
+#define WALL_HEIGHT 48
   float t;
   float h;
 
   t = game2->rules.grid_size / 240.0f;
   if (gSettingsCache.stretch_textures) {
-    h = t * WALL_H;
+    h = t * WALL_HEIGHT;
     t = 1.0;
-  } else h = WALL_H;
+  } else h = WALL_HEIGHT;
 
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
@@ -65,6 +66,8 @@ void drawWalls(void) {
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
+
+#endif
 }
 
 /*!
@@ -87,7 +90,7 @@ int drawFloorTextured(int grid_size, GLuint texture) {
 	/* there are some strange clipping artefacts on some renderers */
 	/* try subdividing things... */
 
-	glColor4f(1.0, 1.0, 1.0, .8); // for reflections
+	glColor4f(1.0f, 1.0f, 1.0f, .8f); // for reflections
 	l = grid_size / 4;
 	t = l / 12;
     
