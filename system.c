@@ -181,6 +181,7 @@ int SystemCreateWindow(char *name) {
     fprintf(stderr, "Couldn't set GL mode: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
   }
+	SDL_WM_SetCaption("GLtron", "");
   return 1;
 }
 
