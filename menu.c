@@ -59,20 +59,23 @@ void changeAction(char *name) {
     initFonts();
     initTexture(game->screen);
   }
-  if(strstr(name, "game_speed") == name) {
+  else if(strstr(name, "game_speed") == name) {
     game->settings->current_speed = 
       default_speeds[ game->settings->game_speed ];
     initData();
-  }
-  if(strstr(name, "arena_size") == name) {
+  } 
+  else if(strstr(name, "arena_size") == name) {
     game->settings->grid_size = 
       default_arena_sizes[ game->settings->arena_size ];
     initData();
-  }
-  
-  if(strstr(name, "resetScores") == name)
+  } 
+  else if(strstr(name, "display_type") == name) {
+    changeDisplay();
+  } 
+  else if(strstr(name, "resetScores") == name)
     resetScores();
-  if(strstr(name, "ai_player") == name) {
+
+  else if(strstr(name, "ai_player") == name) {
     int c;
     int *v;
 
@@ -81,8 +84,8 @@ void changeAction(char *name) {
     v = getVi(name);
     game->player[c - 1].ai->active = *v;
     /* printf("changed AI status for player %c\n", c + '0'); */
-  }
-  if(strstr(name, "windowMode") == name) {
+  } 
+  else if(strstr(name, "windowMode") == name) {
     initGameScreen();
     shutdownDisplay(game->screen);
     setupDisplay(game->screen);
@@ -242,9 +245,10 @@ static char *lod_list[] = { "normal", "lower", "ugly" };
 static char *ai_list[] = { "sluggish (0)", "dumb (1)", "stupid (2)", 
 			   "mindless (3)" };
 static char *filter_list[] = { "bilinear", "trilinear" };
-
+static char *camera_list[] = { "circling", "behind", "cockpit", "mouse" };
+static char *viewports_list[] = { "single", "split", "4 player" };
 static char **clists[] = { speed_list, player_list, arena_list, lod_list,
-			   ai_list, filter_list };
+			   ai_list, filter_list, camera_list, viewports_list };
 
 void initMenuCaption(Menu *m) {
   int *piValue;
@@ -454,16 +458,11 @@ Menu** loadMenuFile(char *filename) {
       /* printf("visiting %s\n", m->szName); */
       /* visit m */
 
-      /* TODO(0): put the color defaults somewhere else */
+      /* copy default colors into menu entry */
 
-      m->display.fgColor[0] = 1.0;
-      m->display.fgColor[1] = 1.0;
-      m->display.fgColor[2] = 1.0;
-      m->display.fgColor[3] = 1.0;
-      m->display.hlColor[0] = 255.0 / 255.0;
-      m->display.hlColor[1] = 20.0 / 255.0;
-      m->display.hlColor[2] = 20.0 / 255.0;
-      m->display.hlColor[3] = 1.0;
+      memcpy(m->display.fgColor, menu_fgColor, sizeof(menu_fgColor) );
+      memcpy(m->display.hlColor1, menu_hlColor1, sizeof(menu_hlColor1) );
+      memcpy(m->display.hlColor2, menu_hlColor2, sizeof(menu_hlColor2) );
 
       /* push all of m's submenus */
       for(j = 0; j < m->nEntries; j++) {
@@ -524,9 +523,20 @@ void drawMenu(gDisplay *d) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   for(i = 0; i < pCurrent->nEntries; i++) {
-    if(i == pCurrent->iHighlight)
-      glColor4fv(pCurrent->display.hlColor);
-    else 
+    if(i == pCurrent->iHighlight) {
+      // glColor4fv(pCurrent->display.hlColor);
+      float color[4];
+      int j;
+      float t;
+      int time = (SystemGetElapsedTime() - menutime) & 4095; 
+      t = sin( time * M_PI / 2048.0 ) / 2.0 + 0.5;
+      for(j = 0; j < 4; j++) {
+	color[j] = 
+	  t * pCurrent->display.hlColor1[j] + 
+	  (1 - t) * pCurrent->display.hlColor2[j];
+      }
+      glColor4fv(color);
+    } else 
       glColor4fv(pCurrent->display.fgColor);
 
     drawText(guiFtx, x, y, size,

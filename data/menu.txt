@@ -20,7 +20,7 @@ Root
 
 # Game Submenu - Start Game / Game Settings / Configure Players
 # 2 (chooseModel)
-5
+6
 xsub
 Game
 
@@ -40,9 +40,9 @@ Play demo
 xdr
 Record demo
 
-9
+4
 xsub
-Game Settings
+Game Rules
 
 0
 stl_0_3_game_speed
@@ -57,12 +57,16 @@ stl_2_4_arena_size
 Arena size:  %s
 
 0
-sti_fast_finish
-Fast Finish          - %s
-
-0
 sti_erase_crashed
 Erase dead players   - %s
+
+7
+xsub
+Play Settings
+
+0
+sti_fast_finish
+Fast Finish          - %s
 
 0
 sti_turn_cycle
@@ -71,6 +75,14 @@ Cycle turns smooth   - %s
 0
 sti_show_2d
 Show 2D map          - %s
+
+0
+stl_6_3_camType
+Camera mode          - %s
+
+0
+stl_7_2_display_type
+Viewports            - %s
 
 0
 sti_show_ai_status
