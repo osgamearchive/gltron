@@ -1,5 +1,6 @@
 #include "gltron.h"
 #include "skybox.h"
+#include "floor.h"
 
 static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
@@ -382,72 +383,48 @@ float GetDistance(float *v, float *p, float *d) {
   return sqrt( scalarprod(tmp, tmp) );
 }
 
+/*****************************************************************************/
+/*
+ * buildFloorDispList
+ */
 GLuint buildFloorDispList(GLuint floor_list) {
-  int j, k, l, t;
   
-  /* init floor display list */
   glNewList(floor_list, GL_COMPILE);
   
   if (game2->settingsCache.show_floor_texture) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_FLOOR]);
-
-    /* there are some strange clipping artefacts on some renderers */
-    /* try subdividing things... */
-
-    glColor4f(1.0, 1.0, 1.0, 1.0);
-    l = game2->rules.grid_size / 4;
-    t = l / 12;
-    
-    glBegin(GL_QUADS);
-    for (j = 0; j < game2->rules.grid_size; j += l) {
-      for (k = 0; k < game2->rules.grid_size; k += l) {
-        glTexCoord2i(0, 0);
-        glVertex2i(j, k);
-        glTexCoord2i(t, 0);
-        glVertex2i(j + l, k);
-        glTexCoord2i(t, t);
-        glVertex2i(j + l, k + l);
-        glTexCoord2i(0, t);
-        glVertex2i(j, k + l);
-        polycount += 2;
-      }
-    }
-    glEnd();
-    
-    glDisable(GL_TEXTURE_2D);
+    drawFloorTextured(game2->rules.grid_size,
+                      game->screen->textures[TEX_FLOOR]);
   } else {
-    int i, j;
-    int line_spacing = game2->settingsCache.line_spacing;
-
-    glColor3f(1.0, 1.0, 1.0);
-
-    glFogfv(GL_FOG_COLOR, game2->settingsCache.clear_color);
-    glFogi(GL_FOG_MODE, GL_LINEAR);
-    glFogi(GL_FOG_START, 100);
-    glFogi(GL_FOG_END, 350);
-  
-    glEnable(GL_FOG);
-   
-    glBegin(GL_LINES);
-    for (i = 0; i < game2->rules.grid_size; i += line_spacing) {
-      for (j = 0; j < game2->rules.grid_size; j += line_spacing) {
-        glVertex3i(i, j, 0);
-        glVertex3i(i + line_spacing, j, 0);
-        glVertex3i(i, j, 0);
-        glVertex3i(i, j + line_spacing, 0);
-      }
-    }
-    glEnd();
-
-    glDisable(GL_FOG);
+    /* should this be an artpack setting? */
+    float line_color[] = {1.0, 1.0, 1.0};
+    
+    drawFloorGrid(game2->rules.grid_size,
+                  game2->settingsCache.line_spacing,
+                  line_color,
+                  game2->settingsCache.clear_color);
   }
   glEndList();
 
   return floor_list;
 }
+
+/*****************************************************************************/
+/*
+ * buildSkyboxDispList
+ */
+GLuint buildSkyboxDispList(GLuint skybox_list) {
+  
+  glNewList(skybox_list, GL_COMPILE);
+  
+  if (game2->settingsCache.show_skybox) {
+    drawSkybox(game2->rules.grid_size);
+  }
+ 
+  glEndList();
+
+  return skybox_list;
+}
+
 
 void drawCrash(float radius) {
 #define CRASH_W 32

@@ -423,6 +423,7 @@ extern void drawPlayers(Player *);
 extern void drawWalls(gDisplay *d);
 extern void drawCam(Player *p, gDisplay *d);
 extern GLuint buildFloorDispList(GLuint list_start);
+extern GLuint buildSkyboxDispList(GLuint list_start);
 
 /* trail.c */
 /* extern void drawTrails(Player *p, Player *p_eye, gDisplay *d); */

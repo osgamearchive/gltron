@@ -12,7 +12,7 @@ static void bindSkyboxTexture(int index) {
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[ TEX_SKYBOX + index ]);
 }
 
-GLuint buildSkyboxDispList(GLuint skybox_list) {
+void drawSkybox(int grid_size) {
   /* 
      matrices are: 
      projection: perspective projection 
@@ -43,10 +43,7 @@ GLuint buildSkyboxDispList(GLuint skybox_list) {
     
   float uv[4][2] = { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
   int i, j;
-  float d = game2->rules.grid_size * 3;
-
-  skybox_list = glGenLists(1);
-  glNewList(skybox_list, GL_COMPILE);
+  float d = grid_size * 3;
   
   glEnable(GL_TEXTURE_2D);
   glDepthMask(GL_FALSE);
@@ -62,7 +59,4 @@ GLuint buildSkyboxDispList(GLuint skybox_list) {
   }
   glDisable(GL_TEXTURE_2D);
   glDepthMask(GL_TRUE);
-
-  glEndList();
-  return skybox_list;
 }

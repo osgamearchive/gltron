@@ -1,4 +1,3 @@
-#include "skybox.h"
 #include "gltron.h"
 #include "event.h"
 
@@ -239,7 +238,7 @@ void initData() {
   game2->settingsCache.playMusic = getSettingi("playMusic");
   scripting_GetFloatArray("clear_color", game2->settingsCache.clear_color, 4);
 
-  /* create setup display lists */
+  /* setup display lists */
   if(game2->displayLists.list_start) {
     glDeleteLists(game2->displayLists.list_start, 2);
   }
