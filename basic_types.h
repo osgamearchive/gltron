@@ -17,13 +17,13 @@ typedef struct line {
   int sx, sy, ex, ey;
 } Line;
 
-typedef struct Time {
+typedef struct {
   unsigned int current;
   unsigned int lastFrame;
   unsigned int offset; /* from SystemGetElapsedTime() */
   unsigned int dt; /* current - lastFrame */
 
   /* float timeScale; */
-} Time;
+} SystemTime;
 
 #endif

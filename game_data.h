@@ -31,7 +31,7 @@ typedef struct Game2 {
   int mode;
   int players;
   int *startPositions;
-  Time time;
+  SystemTime time;
   list events;
   FILE *record;
   FILE *play;
