@@ -35,8 +35,6 @@ Undetermined
 
 settings.c (defaults, set's some game related variables too, sanity check, setting interface)
 input.c (parses cmd-line options, input during gameplay)
-camera.c (camera movement is certainly game specific)
-computer.c (AI for GLtron opponents)
 globals.c (some game data, some engine data)
 light.c (some lighting functions - maybe useful)
 sound_glue.cpp (some basic sound functionality, some game specific audio playback)
@@ -45,6 +43,8 @@ lua-files
 
 GLtron specific:
 
+camera.c (camera movement is certainly game specific)
+computer.c (AI for GLtron opponents)
 engine.c (setup game datastructures, deals with a few events, utility functions)
 event.c (handle game events, idleGame function)
 game.c (init game datastructures, game display setup, game mouse motion)
