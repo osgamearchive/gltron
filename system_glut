@@ -1,5 +1,0 @@
-#!/bin/sh
-
-rm -f system.c system.h
-ln -s system_glut.c system.c
-ln -s system_glut.h system.h

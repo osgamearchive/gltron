@@ -1,5 +1,0 @@
-#!/bin/sh
-
-rm -f sound.c sound.h
-ln -s sound_libmikmod.c sound.c
-ln -s sound_libmikmod.h sound.h
