@@ -77,7 +77,7 @@ vec3* vec3_Normalize(vec3 *pOut, const vec3 *pV) {
   return pOut;
 }
 
-void vec4Print(const vec4 *v) {
+void vec4_Print(const vec4 *v) {
   int i;
   printf("[ ");
   for(i = 0; i < 4; i++) {
@@ -86,7 +86,7 @@ void vec4Print(const vec4 *v) {
   printf(" ]\n");
 }
 
-void vec3Print(const vec3 *v) {
+void vec3_Print(const vec3 *v) {
   int i;
   printf("[ ");
   for(i = 0; i < 3; i++) {
