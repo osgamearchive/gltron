@@ -27,11 +27,8 @@ void setPos(Data *data, int *x, int *y) {
 #define RIGHT(x) ((x + 1) % 4)
 
 static int probe_dists[][2] = {
-  { 10, 20 },
   { 8, 10 },
-  { 5, 8 },
   { 2, 5 },
-  { 0, 0 },
 };
 
 /*
@@ -44,37 +41,38 @@ static int target_dir[][2] = {
 */
 
 static int turn_time[] = {
-  300, 300, 200, 100
+  200, 100
 };
 
 static float max_moves[] = {
-  0.30, 0.40, 0.5, 0.5
+  .4, 0.5
 };
 
 static int spiral[] = {
-  10, 10, 10, 10
+  10, 10
 };
 	
-void doComputer(int player, Data *him) {
+void doComputer(int player, int target) {
   AI *ai;
   Data *data;
-  Player *me;
+  Player *me, *him;
   int i, j, level, x, y, rdist, ldist;
-  me = &(game->player[ player ]);
 
+  me = &(game->player[ player ]);
+  him = &(game->player[ target ]);
   if(me->ai == NULL) {
     printf("This player has no AI data!\n");
     return;
   }
-  
   data = me->data;
   ai = me->ai;
-  ai->moves++;
-
   level = game->settings->ai_level;
+
+  ai->moves++;
   /* avoid to short turns */
   if(game2->time.current - ai->lasttime < turn_time[level])
     return;
+
 
   /* first, check if we are in danger */
   /* check the highest level first! */
@@ -131,6 +129,127 @@ void doComputer(int player, Data *him) {
     ai->danger = 0;
     ai->lasttime = game2->time.current;
   }
+}
+
+/* new AI code */
+
+#define DIR_LEFT 1
+#define DIR_RIGHT 2
+#define DIR_FRONT 4
+#define DIR_BACK 8
+
+void getXYdir(int dir, int *x, int *y) {
+  int tx = 0, ty = 0;
+  if(dir & DIR_FRONT) { tx = *x; ty = *y; }
+  if(dir & DIR_BACK) { tx = -*x; ty = -*y; }
+  if(dir & DIR_LEFT) { tx += -*y; ty += *x; }
+  if(dir & DIR_RIGHT) { tx += *y; ty += -*x; }
+  *x = tx; *y = ty;
+}
+
+int freeway2(Data* data, int xdir, int ydir, int c) {
+  if(xdir == 0 && ydir == 0) {
+    fprintf(stderr, "bug: xdir == ydir == 0\n");
+    return 0;
+  }
+
+  while(getCol(data->iposx + xdir * c, 
+	       data->iposy + ydir * c) == 0) c++;
+  return c;
+}
+
+/*
+  if FRONT < 0.92063 go straight
+  else if 0.92063 >= REAR_RIGHT turn left
+  else if LEFT < RIGHT turn right
+  else turn left
+*/
+
+#define MIN_FREE 1
+#define MIN_TURN 5
+#define CRIT_F 0.92063
+
+static int min_turn[] = { 1, 1, 15, 6 };
+
+/* level 2 and better */
+
+void doComputer2(int player, int target) {
+  /* target is ignored */
+  Data *data;
+  Player *me;
+  AI *ai;
+  int level;
+  int front, rear_right, left, right;
+  int x, y;
+  float critical;
+
+  me = &(game->player[ player ]);
+  if(me->ai == NULL) {
+    printf("This player has no AI data!\n");
+    return;
+  }
+  ai = me->ai;
+  level = game->settings->ai_level;
+  data = me->data;
+  if(abs(data->iposx - ai->lastx) < min_turn[level] &&
+     abs(data->iposy - ai->lasty) < min_turn[level]) {
+    /* fprintf(stderr, "too early\n"); */
+    return;
+  }
+
+  critical = (1 - CRIT_F) * game->settings->grid_size;
+  x = dirsX[ data->dir ];
+  y = dirsY[ data->dir ];
+  getXYdir(DIR_FRONT, &x, &y);
+  front = freeway2(data, x, y, MIN_FREE);
+
+  x = dirsX[ data->dir ];
+  y = dirsY[ data->dir ];
+  getXYdir(DIR_BACK | DIR_RIGHT, &x, &y);
+  rear_right = freeway2(data, x, y, MIN_FREE);
+
+  x = dirsX[ data->dir ];
+  y = dirsY[ data->dir ];
+  getXYdir(DIR_RIGHT, &x, &y);
+  right = freeway2(data, x, y, MIN_FREE);
+
+  x = dirsX[ data->dir ];
+  y = dirsY[ data->dir ];
+  getXYdir(DIR_LEFT, &x, &y);
+  left = freeway2(data, x, y, MIN_FREE);
+
+  /*
+    fprintf(stderr, "-------------------------\n");
+    fprintf(stderr, "front space %d\n", front);
+    fprintf(stderr, "rear_right space %d\n", rear_right);
+    fprintf(stderr, "right space %d\n", right);
+    fprintf(stderr, "left space %d\n", left);
+  */
+
+  if(front < critical && (left > front || right > front) ) {
+    /*
+    if(critical <= rear_right && left > critical) {
+      // turn left
+      createTurnEvent(player, TURN_LEFT);
+      fprintf(stderr, "turning left\n");
+      return;
+    }
+    */
+    if(left < right) {
+      // turn right
+      createTurnEvent(player, TURN_RIGHT);
+      fprintf(stderr, "turning right\n");
+      // return;
+    } else {
+      // turn left 
+      createTurnEvent(player, TURN_LEFT);
+      fprintf(stderr, "turning left\n");
+      // return;
+    }
+    ai->lastx = data->iposx;
+    ai->lasty = data->iposy;
+  }
+  
 }
 
 
