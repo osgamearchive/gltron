@@ -26,6 +26,7 @@
 #define SEPERATOR '\\'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
+#define CURRENT_EQ_DATA_DIR 
 
 #endif /* WIN32 */
 
@@ -44,6 +45,7 @@
 #define SEPERATOR ':'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
+#define CURRENT_EQ_DATA_DIR 
 #endif 
 
 /* dropped support for anything else than libpng */
@@ -61,6 +63,7 @@ typedef png_texture texture;
 #include "data.h"
 #include "menu.h"
 #include "quad.h"
+#include "callbacks.h"
 
 #include "system.h"
 #include "geom.h"
@@ -83,7 +86,6 @@ extern void reloadArt(void);
 
 /* graphics libs */
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 /* do Sound */
 #ifdef SOUND
@@ -357,7 +359,8 @@ extern void doBmpScreenShot();
 
 /* ai -> computer.c */
 
-extern void doComputer(int player, Data *him);
+extern void doComputer(int player, int target);
+extern void doComputer2(int player, int target);
 
 /* keyboard -> input.c */
 
@@ -385,6 +388,9 @@ extern float* getVf(char *szName);
 extern char* getFullPath(char *filename);
 extern list* readDirectoryContents(char *dirname, char *prefix);
 extern char* getMusicPath(char *dirname);
+
+/* findpath.c, GPL'd code */
+extern void goto_installpath(char *executable);
 
 /* callback stuff -> switchCallbacks.c */
 
