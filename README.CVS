@@ -1,13 +1,5 @@
-After you checked out from CVS, do
+After you checked out from CVS (and after every "cvs update -dP"), do
 
 ./autogen.sh
-./configure
 
-and after that:
-
-make clean
-make
-
-This will hopefully compile successfully.
-
-"make install" is currently broken!
+See INSTALL for the rest of the build process.

@@ -24,6 +24,7 @@ Bugs:
 
 Features:
 
+- fast finish should be relative to the arena size (or really finish instantly)
 - create default graphics settings to choose from: low/medium/high
 - fix camera zoom generally (speed / settings)
 - upon game start, default to split screen mode when there are multiple human
@@ -44,6 +45,7 @@ Features:
   grouped)
 
 Settings:
+
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
   [ nicolas, kokido ]
 - Add trail & cycle shadow color to setting / artpack.ini [ Andreas ]
