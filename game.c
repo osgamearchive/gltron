@@ -124,6 +124,7 @@ void updateDisplay(ViewportType newVP) {
 }
 
 void initGame() { /* called when game mode is entered */
+  updateSettingsCache();
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
