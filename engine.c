@@ -175,7 +175,7 @@ void initPlayerData() {
 
 void initData() {
   int i;
-
+  
   /* colmap */
 
   /* TODO: check if grid_size/colwidth has changed and  
@@ -184,8 +184,9 @@ void initData() {
   colwidth = getSettingi("grid_size");
   if(colmap != NULL)
     free(colmap);
-  colmap = (unsigned char*) malloc(colwidth * getSettingi("grid_size"));
-  for(i = 0; i < colwidth * getSettingi("grid_size"); i++)
+  
+  colmap = (unsigned char*) malloc(colwidth*colwidth/*getSettingi("grid_size")*/);
+  for(i = 0; i < colwidth * colwidth/*getSettingi("grid_size")*/; i++)
     *(colmap + i) = 0;
 
   if(debugtex != NULL)
