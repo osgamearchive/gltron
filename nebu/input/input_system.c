@@ -57,7 +57,9 @@ extern char* SystemGetKeyName(int key) {
 void SystemHandleInput(SDL_Event *event) {
   char *keyname;
   int key, state;
-  int skip_axis_event = 0;
+  // int skip_axis_event = 0;
+	static int joy_axis_state[2] = { 0, 0 };
+	static int joy_lastaxis[2] = { 0, 0 };
 
 	switch(event->type) {
 	case SDL_KEYDOWN:
@@ -85,6 +87,44 @@ void SystemHandleInput(SDL_Event *event) {
 			current->keyboard(state, event->key.keysym.sym, 0, 0);
 		break;
 	case SDL_JOYAXISMOTION:
+		if( abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
+			// axis returned to origin, only generate event if it was set before
+			if(joy_axis_state[event->jaxis.which] & (1 << event->jaxis.axis)) {
+				joy_axis_state[event->jaxis.which] &= ~ 
+					(1 << event->jaxis.axis); // clear axis
+				key = SYSTEM_JOY_LEFT + event->jaxis.which * SYSTEM_JOY_OFFSET;
+				if(event->jaxis.axis == 1) {
+					key += 2;
+				}
+				if(joy_lastaxis[event->jaxis.which] & (1 << event->jaxis.axis)) {
+					key++;
+				}
+				current->keyboard(SYSTEM_KEYSTATE_UP, key, 0, 0);
+			} else {
+				// do nothing
+			}
+		} else {
+			// axis set, only generate event if it wasn't set before
+			if(! (joy_axis_state[event->jaxis.which] & (1 << event->jaxis.axis)) ) {
+				joy_axis_state[event->jaxis.which] |= (1 < event->jaxis.axis);
+				key = SYSTEM_JOY_LEFT + event->jaxis.which * SYSTEM_JOY_OFFSET;
+				if(event->jaxis.axis == 1) {
+					key += 2;
+				}
+				if(event->jaxis.value > 0) {
+					key++;
+					joy_lastaxis[event->jaxis.which] |= (1 << event->jaxis.axis);
+				} else {
+					joy_lastaxis[event->jaxis.which] &= ~(1 << event->jaxis.axis);
+				}
+				current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
+			} else {
+				// do nothing
+			}
+		}
+		break;
+				 
+#if 0
 		if (abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
 			skip_axis_event &= ~(1 << event->jaxis.axis);
 			break;
@@ -99,6 +139,7 @@ void SystemHandleInput(SDL_Event *event) {
 			key++;
 		current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
 		break;
+#endif
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
 		if(event->type == SDL_JOYBUTTONDOWN)
