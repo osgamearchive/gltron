@@ -89,6 +89,10 @@ int main( int argc, char *argv[] ) {
 
   SystemInit(&argc, argv);
 
+#ifndef CURRENT_EQ_DATA_DIR
+  goto_installpath(argv[0]);
+#endif
+
   path = getFullPath("settings.txt");
   if(path != NULL)
     initMainGameSettings(path); /* reads defaults from ~/.gltronrc */
