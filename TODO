@@ -17,8 +17,9 @@ Features [high priority]:
 - fallback instead of app exiting on corrupt mp3 files
 - fallback instead of app exiting when SDL_sound is present, but doesn't
   support ogg/vorbis, or if sound fx files are corrupt
-- add 3d sound source for recognizer [ Andreas ]
-- Add sound for own cycle. Modulate pitch (or volume) after turns
+- stream music from disk instead of reading the whole file to memory
+  (serious OS 9 problem, for example), this allows handling of large mp3 files
+  too and gets rid of the fixed size buffer
 
 Features [medium priority, or easily implemented]:
 
