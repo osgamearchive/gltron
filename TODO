@@ -4,7 +4,6 @@ Bugs:
 
 - Make install doesn't work (Andreas) (in progress)
 - Screen garbled in-game after switching resolutions (hofi)
-- sound FX garbled on MacOS (sem,darrell) (may be fixed)
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM)
 
