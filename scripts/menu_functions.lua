@@ -2,7 +2,8 @@ GetMenuValue = {}
 MenuAction = {}
 
 GetMenuValue[ MenuC.type.menu ] = function ( menu )
-   return "(menu)"
+   -- return "(menu)"
+   return ""
 end
 MenuAction[ MenuC.type.menu ] = function ( menu )
    Menu.current = menu 
@@ -66,7 +67,8 @@ GetMenuValue[ MenuC.type.key ] = function ( menu )
 end
 
 GetMenuValue[ MenuC.type.action ] = function ( menu )
-   return "(action)"
+   -- return "(action)"
+   return ""
 end
 
 GetMenuValueWidth = function ( menu )
@@ -76,3 +78,6 @@ end
 GetMenuValueString = function ( menu )
    return GetMenuValue[ Menu[menu].type ]( menu )
 end
+
+
+
