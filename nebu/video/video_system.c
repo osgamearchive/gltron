@@ -1,6 +1,7 @@
 #include "Nebu_video.h"
 
 #include "SDL.h"
+#include "SDL_opengl.h"
 
 static SDL_Surface *screen;
 static int width, height;
@@ -60,7 +61,10 @@ int SystemCreateWindow(char *name) {
     fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
   }
-	SDL_WM_SetCaption("GLtron", "");
+  SDL_WM_SetCaption("GLtron", "");
+  glClearColor(0,0,0,0);
+  glClear(GL_COLOR_BUFFER_BIT);
+  SDL_GL_SwapBuffers();
   return 1;
 }
 
