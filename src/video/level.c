@@ -29,34 +29,63 @@ void video_ScaleLevel(video_level *l, float fSize)
 void video_Shader_Setup(video_level_shader* shader) {
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 void video_Shader_Cleanup(video_level_shader* shader) {
 	glDisable(GL_TEXTURE_2D);
 }
 
-void loadShader(video_level_shader *shader) {
+int level_LoadTexture() {
+	int id;
+	char *filename;
+	int filter[] = { GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_NEAREST, 
+									 GL_LINEAR_MIPMAP_LINEAR };
+	int wrap[] = { GL_CLAMP, GL_CLAMP_TO_EDGE, GL_REPEAT };
+	int result;
+
+	// FIXME: error checking
+
+	glGenTextures(1, & id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	// printf("binding texture %d\n", id);
+
+	scripting_GetValue("file");
+	scripting_GetStringResult(& filename);
+	loadTexture(filename, GL_RGBA);
+	free(filename);
+
+	scripting_GetValue("min_filter");
+	scripting_GetIntegerResult(&result);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter[result]);
+
+	scripting_GetValue("mag_filter");
+	scripting_GetIntegerResult(&result);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter[result]);
+	
+	scripting_GetValue("wrap_s");
+	scripting_GetIntegerResult(&result);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap[result]);
+	
+	scripting_GetValue("wrap_t");
+	scripting_GetIntegerResult(&result);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap[result]);
+	
+	return id;
+}
+
+void level_LoadShader(video_level_shader *shader) {
 	scripting_GetValue("shading");
 	scripting_GetValue("lit");
 	scripting_GetIntegerResult(& shader->lit);
 	scripting_GetValue("textures");
 	scripting_GetValue("diffuse");
 	
-	// FIXME: use a general load texture method, and handle stuff
-	// like filtering, wrap/clamp, etc.
-	{
-		char *filename;
-		scripting_GetStringResult(& filename);
+	shader->diffuse_texture_id = level_LoadTexture();
 
-		glGenTextures(1, & shader->diffuse_texture_id);
-		glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
-		printf("binding texture %d\n", shader->diffuse_texture_id);
-		loadTexture(filename, GL_RGBA);
-		free(filename);
-	}
+	scripting_PopTable(); // diffuse
 	scripting_PopTable(); // textures
-	scripting_PopTable(); // shader
+	scripting_PopTable(); // shading
 }
 
 video_level* video_CreateLevel(void) {
@@ -74,12 +103,12 @@ video_level* video_CreateLevel(void) {
 	// get floor & arena meshes
 	scripting_GetValue("floor");
 	l->floor = loadMesh();
-	loadShader(& l->floor_shader);
+	level_LoadShader(& l->floor_shader);
 	scripting_PopTable(); // floor
 	
 	scripting_GetValue("arena");
 	l->arena = loadMesh();
-	loadShader(& l->arena_shader);
+	level_LoadShader(& l->arena_shader);
 	scripting_PopTable(); // arena
 		
 	scripting_PopTable(); // geometry
