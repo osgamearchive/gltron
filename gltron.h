@@ -277,6 +277,7 @@ extern callbacks netConnectCallbacks;
 extern callbacks nicknameCallbacks;
 extern callbacks serverCallbacks;
 extern callbacks netPregameCallbacks;
+extern callbacks keyboardreadingCallbacks;
 #endif
 
 #define KEY_ACTIONS_N 8
@@ -395,7 +396,7 @@ extern void doComputer2(int player, int target);
 
 /* keyboard -> input.c */
 
-extern void keyGame(int key, int x, int y);
+extern void keyGame(int key, int unicode, int x, int y);
 extern void parse_args(int argc, char *argv[]);
 
 /* settings -> settings.c */

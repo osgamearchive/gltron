@@ -38,6 +38,8 @@ void SystemInit(int *argc, char *argv[]) {
   /* atexit(SystemExit); */
 
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
+
+  SDL_EnableUNICODE(1);     /* Enable UNICODE */ 
 #ifdef NETWORK
   SystemNetInit();
 #endif
@@ -108,9 +110,9 @@ void SystemMainLoop() {
 	}
 	/* check: is that translation necessary? */
 	if(key) 
-	  current->keyboard(key, 0, 0);
+	  current->keyboard(key, event.key.keysym.unicode, 0, 0);
 	else
-	  current->keyboard(event.key.keysym.sym, 0, 0);
+	  current->keyboard(event.key.keysym.sym, event.key.keysym.unicode, 0, 0);
       } else if(event.type == SDL_MOUSEBUTTONDOWN ||
 		event.type == SDL_MOUSEBUTTONUP) {
 	SystemMouse(event.button.button, event.button.state, 

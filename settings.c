@@ -70,6 +70,24 @@ void settings_key_actions(char *buf, FILE *f) {
   }
 }
 
+#ifdef __NETWORK__
+void settings_nickname(char *buf, FILE *f) {
+  if(f != NULL) {
+    fprintf(f, "vset nickname %s\n", game->settings->nickname);
+  } else {
+    sscanf(buf, "vset nickname %s ", game->settings->nickname);
+  }
+}
+
+void settings_server(char *buf, FILE *f) {
+  if(f != NULL) {
+    fprintf(f, "vset server %s\n", game->settings->server);
+  } else {
+    sscanf(buf, "vset server %s ", game->settings->server);
+  }
+}
+#endif
+
 void settings_cycle_colors(char *buf, FILE *f) {
   int i, t;
   float tmp[4];
@@ -211,6 +229,10 @@ void initSettingData(char *filename) {
   sv[2].value = settings_trail_colors;
   sv[3].value = settings_cam_settings;
   sv[4].value = settings_artpack;
+#ifdef __NETWORK__
+  sv[5].value = settings_nickname;
+  sv[6].value = settings_server;
+#endif
 }
 
 int* getVi(char* name) {
@@ -362,6 +384,12 @@ void initDefaultSettings() {
   default_speeds[4] = game->settings->current_speed;
   game->settings->current_speed = default_speeds[ game->settings->game_speed ];
 
+#ifdef __NETWORK__
+  /* network default */
+  strcpy(game->settings->nickname,"Default");
+  strcpy(game->settings->server,"localhost");
+#endif
+ 
 }
 
 void initMainGameSettings(char *filename) {

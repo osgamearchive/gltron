@@ -9,7 +9,7 @@ void mouseConnect (int buttons, int state, int x, int y)
       switchCallbacks(&guiCallbacks);
 }
 
-void keyConnect(int k, int x, int y)
+void keyConnect(int k, int unicode, int x, int y)
 {
   int status;
 

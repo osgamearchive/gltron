@@ -13,15 +13,15 @@ initkeyreading()
 void
 keyboardreadingreturn()
 {
-  char command[MAX_CHARS], params[MAX_CHARS];
+  char command[MAX_CHARS]="", params[MAX_CHARS]="";
 
   //We have our buffer.
-  sscanf(buff, "/%s %s", command, params);
+  sscanf(buff, "/%[a-z] %s", command, params);
   if( strlen(command) > 0 )
     {
-      fprintf(stderr, "command: %s\nparams: %s\n", command, params);
+      fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
     } else {
-      fprintf(stderr, "send chat: %s\n", buff);
+      fprintf(stderr, "\nsend chat: %s\n", buff);
     }
 }
 
@@ -39,8 +39,9 @@ keyboardreadingpressed(int k)
   fprintf(stderr, "%c", k);
 }
 
-void keyreading(int k, int x, int y)
+void keyreading(int k, int unicode, int x, int y)
 {
+  
   if( nbreads > MAX_CHARS )
     {
       //leave, no space left...
@@ -57,13 +58,20 @@ void keyreading(int k, int x, int y)
 	case 27://escape
 	  //???
 	  break;
-	case 127://backspace
-	  nbreads--;
+	case SDLK_BACKSPACE://backspace
+	  if( nbreads > 0 )
+	    {
+	      nbreads--;
+	      keyboardreadingpressed(unicode);
+	    }
 	  break;
 	default:
-	  buff[nbreads++]=k;
+	  if( unicode < 0x80 && unicode > 0 )
+	    buff[nbreads++]=(char)unicode;
+	  //else
+	  //  buff[nbreads++]=k;
 	  //call a function after key is pressed ( example: trigger. )
-	  keyboardreadingpressed(k);
+	  keyboardreadingpressed(unicode);
 	  break;
 	}
     }

@@ -44,7 +44,8 @@ doLoginNetEvent(int accepted, int which, int len, int time)
     }
 
 
-  fprintf(stderr, "%s\n", message);
+  //sprintf(message, "%s\n", message);
+  //drawConsoleLines(messages, 0);
 
   //Get login info.
   Recv_login( &serverstate, &nbUsers );
@@ -169,9 +170,9 @@ doChatNetEvent(int len, int which)
   
   Recv_chat(len, mesg);
   mesg[len]='\0';
-  fprintf(stderr,"%s ( %d ) > %s\n", slots[which].name, which, mesg);
-
-
+  fprintf(stderr,"%s ( %d ) > %s\n", slots[which].name, which, mesg); 
+  //sprintf(mesg,"%s ( %d ) > %s\n", slots[which].name, which, mesg); 
+  //drawConsoleLines(mesg, 3);
   return err;
 }
 /** Handle network traffic. */

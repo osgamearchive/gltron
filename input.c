@@ -32,7 +32,7 @@ int reserved_keys[] = {
   SYSTEM_KEY_DOWN
 };
 
-void keyGame(int k, int x, int y)
+void keyGame(int k, int unicode, int x, int y)
 {
   int i;
 

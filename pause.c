@@ -29,7 +29,7 @@ void displayPause() {
   SystemSwapBuffers();
 }
 
-void keyboardPause(int key, int x, int y) {
+void keyboardPause(int key, int unicode, int x, int y) {
   int i;
   switch(key) {
   case 27:
@@ -98,7 +98,7 @@ callbacks pauseCallbacks = {
   initPause, exitPause, initPauseGL, gameMouse, gameMouseMotion
 };
 
-void keyboardPrompt(int key, int x, int y) {
+void keyboardPrompt(int key, int unicode, int x, int y) {
   switch(key) {
   case 27:
   case SYSTEM_KEY_TAB:

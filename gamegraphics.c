@@ -271,7 +271,7 @@ void drawConsoleLines(char *line, int call) {
 #define CONSOLE_X_OFF 20
   int size = CONSOLE_SIZE;
   int length;
-  /* fprintf(stdout, "%s\n", line); */
+  /*fprintf(stdout, "%s\n", line);*/
   length = strlen(line);
   while(length * size > game->screen->vp_w / 2 - CONSOLE_X_OFF)
     size--;

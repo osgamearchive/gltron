@@ -9,9 +9,14 @@ void mousePregame (int buttons, int state, int x, int y)
       switchCallbacks(&guiCallbacks);
 }
 
-void keyPregame(int k, int x, int y)
+void keyPregame(int k, int unicode, int x, int y)
 {
-  switchCallbacks(&guiCallbacks);
+  if( k == 13 )
+    {
+      switchCallbacks(&keyboardreadingCallbacks);
+    } else {
+      switchCallbacks(&guiCallbacks);
+    }
 }
 
 void idlePregame() {
@@ -29,11 +34,12 @@ void drawPregame() {
   int h;
   float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 } };
   time = SDL_GetTicks() - coffset;
-
+  
   glClearColor(.0, .0, .0, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   rasonly(game->screen);
+  
   h = game->screen->vp_h / (24 * 1.5);
   glColor3fv(colors[1]);
   x = 10;
@@ -61,3 +67,4 @@ callbacks netPregameCallbacks = {
   displayPregame, idlePregame, keyPregame, initPregame,
   cleanPregame, NULL, mousePregame, NULL
 };
+

@@ -34,7 +34,7 @@ void mouseCredits (int buttons, int state, int x, int y)
         SystemExit();
 }
 
-void keyCredits(int k, int x, int y)
+void keyCredits(int k, int unicode, int x, int y)
 {
   SystemExit();
 }

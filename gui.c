@@ -141,7 +141,7 @@ void idleGui() {
   SystemPostRedisplay(); /* animate menu */
 }
 
-void keyboardConfigure(int key, int x, int y) {
+void keyboardConfigure(int key, int unicode, int x, int y) {
   *configureKeyEntry = key;
   initMenuCaption(configureKeyMenu);
 #ifdef SOUND
@@ -158,7 +158,7 @@ void keyboardConfigure(int key, int x, int y) {
 
 #ifdef __NETWORK__
 static int nbreads = 0;
-void readNickname(int key, int x, int y)
+void readNickname(int key, int unicode, int x, int y)
 {
   fprintf(stderr, "%c", key);
   if( nbreads == 0 )
@@ -199,7 +199,7 @@ void readNickname(int key, int x, int y)
    SystemSwapBuffers();
 }
 
-void readServer(int key, int x, int y)
+void readServer(int key, int unicode, int x, int y)
 {
 
   if( nbreads == 0 )
@@ -217,7 +217,7 @@ void readServer(int key, int x, int y)
       
       break;
     default:
-      if( key > 'A' && key < 'z' )
+      if( (key > 'A' && key < 'z') || ( key >'0' && key < '9' ) )
 	{
 	  sprintf(game->settings->server, "%s%c", game->settings->server, key);
 	} else {
@@ -268,7 +268,7 @@ void displayServer() {
 }
 #endif
 
-void keyboardGui(int key, int x, int y) {
+void keyboardGui(int key, int unicode, int x, int y) {
   int i;
   switch(key) {
   case 27:
