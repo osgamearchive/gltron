@@ -1,4 +1,11 @@
-#include "gltron.h"
+#include "model.h"
+
+#include "GL/gl.h"
+#include <stdio.h>
+
+#ifdef POLY_COUNT
+extern int polycount;
+#endif
 
 void drawMeshPart(MeshPart* meshpart, int flag) {
   int i, j;
@@ -22,7 +29,9 @@ void drawMeshPart(MeshPart* meshpart, int flag) {
 	glVertex3fv(vertex);
       }
       glEnd();
+#ifdef POLY_COUNT
       polycount += c - 2
+#endif
 ;
     } 
   }
@@ -71,7 +80,9 @@ void drawExplosionPart(MeshPart* meshpart, float radius, int flag) {
 	glVertex3fv(vertex);
       }
       glEnd();
+#ifdef POLY_COUNT
       polycount += c - 2;
+#endif
       glPopMatrix();
     } 
   }
