@@ -248,15 +248,15 @@ List* doMovement(int mode, int dt) {
 					deccel = getSettingf("wall_accel_decrease");
 				}
 				else {
-					deccel = 0;
+					deccel = -1; // forbid deacceleration for booster
 				}
 			}
 			if(getSettingf("booster_on") == 1) {
-				if(!applyBooster(i, dt) && deccel != 0) {
+				if(!applyBooster(i, dt) && deccel != -1) {
 					float d = getSettingf("booster_decrease");
 					deccel = d > deccel ? d : deccel;
 				} else {
-					deccel = 0;
+					deccel = -1;
 				}
 			}
 			if(deccel > 0)
