@@ -78,6 +78,7 @@ void initSettingData(char *filename) {
   si[31].value = &(game->settings->arena_size);
   si[32].value = &(game->settings->alpha_trails);
   si[33].value = &(game->settings->lod);
+  si[34].value = &(game->settings->ai_level);
 
   sf[0].value = &(game->settings->speed);
   sf[1].value = &(game->settings->musicVolume);
@@ -159,6 +160,8 @@ void initMainGameSettings(char *filename) {
   game->settings->ai_player2 = 1;
   game->settings->ai_player3 = 1;
   game->settings->ai_player4 = 1;
+
+  game->settings->ai_level = 2;
   
   /* not included in .gltronrc */
 

@@ -28,13 +28,17 @@ Game
 xreset
 Start Game
 
-8
+9
 xsub
 Game Settings
 
 0
 stl_0_3_game_speed
 Game speed:  %s
+
+0
+stl_4_3_ai_level
+Bot skill:   %s
 
 0
 stl_2_4_arena_size

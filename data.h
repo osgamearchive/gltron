@@ -53,6 +53,7 @@ typedef struct AI {
   int active;
   int tdiff; /*  */
   int moves;
+  long lasttime;
   int danger;
 } AI;
 
@@ -144,6 +145,7 @@ typedef struct Settings {
   int ai_player2;
   int ai_player3;
   int ai_player4;
+  int ai_level;
 
   /* these gettings affect the gameplay */
   int erase_crashed;

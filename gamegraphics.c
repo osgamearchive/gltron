@@ -41,7 +41,7 @@ void drawFloor(gDisplay *d) {
     /* try subdividing things... */
     glColor4f(1.0, 1.0, 1.0, 1.0);
     l = game->settings->grid_size / 4;
-    t = 5;
+    t = l / 12;
     for(j = 0; j < game->settings->grid_size; j += l)
       for(k = 0; k < game->settings->grid_size; k += l) {
 	glBegin(GL_QUADS);
@@ -531,7 +531,9 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 void drawWalls(gDisplay *d) {
 #undef WALL_H
 #define WALL_H 48
-  float t = 1;
+  float t;
+
+  t = game->settings->grid_size / 240.0;
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -636,7 +638,7 @@ void drawAI(gDisplay *d) {
 
 void drawPause(gDisplay *display) {
   char pause[] = "Game is paused";
-  char winner[] = "Player %d wins";
+  char winner[] = "Player %d wins!";
   char buf[100];
   char *message;
   static float d = 0;
@@ -655,7 +657,7 @@ void drawPause(gDisplay *display) {
     d -= 2 * M_PI;
   }
 
-  if(game->pauseflag & PAUSE_GAME_FINISHED &&
+  if((game->pauseflag & PAUSE_GAME_FINISHED) &&
      game->winner != -1) {
     message = buf;
     sprintf(message, winner, game->winner + 1);

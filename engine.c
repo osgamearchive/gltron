@@ -247,12 +247,13 @@ void initData() {
     data->trail->sy = data->trail->ey = data->posy;
 
     ai->tdiff = 0;
-    ai->moves = 0;
+    ai->moves = game->settings->grid_size / 10;
     ai->danger = 0;
+    ai->lasttime = SystemGetElapsedTime();
   }
 
   game->running = game->players - not_playing; /* not everyone is alive */
-  printf("starting game with %d players\n", game->running);
+  /* printf("starting game with %d players\n", game->running); */
   game->winner = -1;
   /* colmap */
   /* game->settings->grid_size MUST be divisible by 8 */

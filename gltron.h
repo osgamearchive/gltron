@@ -212,7 +212,13 @@ extern char *help[];
 
 extern void setCol(int x, int y, int value, int width, unsigned char *map);
 extern int getCol(int x, int y, int width, unsigned char *map);
+
 extern void turn(Data* data, int direction);
+
+enum { 
+  TURN_LEFT = 1,
+  TURN_RIGHT = 3
+};
 
 extern void idleGame();
 
@@ -274,8 +280,6 @@ extern void doScreenShot();
 
 /* ai -> computer.c */
 
-extern int freeway(Data *data, int dir);
-extern void getDistPoint(Data *data, int d, int *x, int *y);
 extern void doComputer(Player *me, Data *him);
 
 /* keyboard -> input.c */

@@ -10,27 +10,52 @@ int freeway(Data *data, int dir) {
   return i;
 }
 
-void getDistPoint(Data *data, int d, int *x, int *y) {
-  *x = (int)data->posx + dirsX[data->dir] * d;
-  *y = (int)data->posy + dirsY[data->dir] * d;
+void getDistPoint(int dir, int d, int *x, int *y) {
+  *x += dirsX[dir] * d;
+  *y += dirsY[dir] * d;
 }
-  
+
+void setPos(Data *data, int *x, int *y) {
+  *x = (int)data->posx;
+  *y = (int)data->posy;
+}
+
+#define MAX_PROBE_DIST 20
+
+#define LEFT(x) ((x + 3) % 4)
+#define RIGHT(x) ((x + 1) % 4)
+
+static int probe_dists[][2] = {
+  { 10, 20 },
+  { 8, 10 },
+  { 5, 8 },
+  { 2, 5 },
+  { 0, 0 },
+};
+
+static int target_dir[][2] = {
+  { 0, 1 },
+  { 2, 1 },
+  { 3, 0 },
+  { 3, 2 }
+};
+
+static int turn_time[] = {
+  300, 300, 200, 100
+};
+
+static float max_moves[] = {
+  0.30, 0.40, 0.5, 0.5
+};
+
+static int spiral[] = {
+  10, 10, 10, 10
+};
+	
 void doComputer(Player *me, Data *him) {
   AI *ai;
   Data *data;
-  int x, y;
-  int i;
-  int dtest[] = { 5, 10, 15 };
-  int dn = 3;
-
-  int fd = 15;
-
-  int maxmoves = 100;
-  int dir1, dir2;
-  int s1, s2;
-  int d1, d2;
-
-  int tvalue = 0;
+  int i, j, level, x, y, rdist, ldist;
 
   if(me->ai == NULL) {
     printf("This player has no AI data!\n");
@@ -41,45 +66,65 @@ void doComputer(Player *me, Data *him) {
   ai = me->ai;
   ai->moves++;
 
-  if(ai->danger <= 0) {
-    for(i = 0; i < dn; i++) {
-      getDistPoint(me->data, dtest[i], &x, &y);
-      if(getCol(x, y, colwidth, colmap)) ai->danger = dtest[i];
+  level = game->settings->ai_level;
+  /* avoid to short turns */
+  if(SystemGetElapsedTime() - ai->lasttime < turn_time[level])
+    return;
+
+  /* first, check if we are in danger */
+  /* check the highest level first! */
+  for(i = level; i >= 0; i++) {
+    for(j = probe_dists[i][0]; j <= probe_dists[i][1]; j++) {
+      setPos(data, &x, &y);
+      getDistPoint(data->dir, j, &x, &y);
+      if(getCol(x, y, colwidth, colmap)) {
+	ai->danger = j;
+	break;
+      }
     }
+    if(ai->danger != 0) break;
   }
 
-  if(ai->danger > 0) {
-    dir1 = (data->dir + 1) % 4;
-    dir2 = (data->dir + 3) % 4;
-    s1 = freeway(data, dir1);
-    s2 = freeway(data, dir2);
+  if(ai->danger != 0 || ai->moves > max_moves[level] * game->settings->grid_size) {
+    ai->moves = 0;
 
-    if(s1 > ai->danger && s2 > ai->danger) { /* turn ok */
-      if(s1 > fd && s1 - ai->tdiff > s2)
-	tvalue = 1;
-      else if(s2 > fd && s1 - ai->tdiff < s2)
-	tvalue = 3;
-      else tvalue = (s1 > s2) ? 1 : 3;
-      turn(data, tvalue);
-      ai->tdiff += (tvalue == 1) ? 1 : -1;
-      ai->danger = 0;
-    } else {
+    /* figure out how far it's to either side */
+    for(i = 1; i < MAX_PROBE_DIST; i++) {
+      setPos(data, &x, &y);
+      getDistPoint(LEFT(data->dir), i, &x, &y);
+      if(getCol(x, y, colwidth, colmap)) {
+	ldist = i;
+	break;
+      } else { ldist = i; }
+    }
+    for(i = 1; i < MAX_PROBE_DIST; i++) {
+      setPos(data, &x, &y);
+      getDistPoint(RIGHT(data->dir), i, &x, &y);
+      if(getCol(x, y, colwidth, colmap)) {
+	rdist = i;
+	break;
+      } else { rdist = i; }
+    }
+    /* decide where to turn */
+    if(ai->danger > rdist && ai->danger > ldist) {
       ai->danger--;
-    }
-  } else if(ai->moves >= maxmoves) {
-    dir1 = (data->dir + 1) % 4;
-    dir2 = (data->dir + 3) % 4;
-    d1 = abs((int)data->posx + dirsX[dir1] - (int)him->posx) +
-      abs((int)data->posy + dirsY[dir1] - (int)him->posy);
-    d2 = abs((int)data->posx + dirsX[dir2] - (int)him->posx) +
-      abs((int)data->posy + dirsY[dir2] - (int)him->posy);
-    tvalue = (d1 < d2) ? 1 : 3;
-    if(freeway(data, (data->dir + tvalue) % 4) > fd) {
-      turn(data, tvalue);
-      ai->tdiff += (tvalue == 1) ? 1 : -1;
-      ai->moves = 0;
+      return;
+    } else if(rdist > ldist && ai->tdiff > -spiral[level] ) {
+      turn(data, TURN_LEFT);
+      ai->tdiff--;
+    } else if(rdist < ldist && ai->tdiff < spiral[level] ) {
+      turn(data, TURN_RIGHT);
+      ai->tdiff++;
     } else {
-      ai->moves -= 20;
+      if(ai->tdiff > 0) { turn(data, TURN_LEFT); ai->tdiff--; }
+      else { turn(data, TURN_RIGHT); ai->tdiff++; }
     }
+    ai->danger = 0;
+    ai->lasttime = SystemGetElapsedTime();
   }
 }
+
+
+
+
+

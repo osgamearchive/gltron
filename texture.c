@@ -38,6 +38,7 @@ void initTexture(gDisplay *d) {
 
   if(game->settings->use_mipmaps)
     min_filter = GL_LINEAR_MIPMAP_LINEAR;
+    // min_filter = GL_LINEAR_MIPMAP_NEAREST;
   else
     min_filter = GL_LINEAR;
 
@@ -73,7 +74,7 @@ void initTexture(gDisplay *d) {
   glBindTexture(GL_TEXTURE_2D, d->texWall_1);
   loadTexture("gltron_wall_1" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
   
@@ -82,7 +83,7 @@ void initTexture(gDisplay *d) {
   glBindTexture(GL_TEXTURE_2D, d->texWall_2);
   loadTexture("gltron_wall_2" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
   
@@ -91,7 +92,7 @@ void initTexture(gDisplay *d) {
   glBindTexture(GL_TEXTURE_2D, d->texWall_3);
   loadTexture("gltron_wall_3" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
   
@@ -100,7 +101,7 @@ void initTexture(gDisplay *d) {
   glBindTexture(GL_TEXTURE_2D, d->texWall_4);
   loadTexture("gltron_wall_4" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
  
@@ -108,8 +109,8 @@ void initTexture(gDisplay *d) {
 
   glBindTexture(GL_TEXTURE_2D, d->texCrash);
   loadTexture("gltron_crash" TEX_SUFFIX, GL_RGBA);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
