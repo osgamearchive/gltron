@@ -173,7 +173,6 @@ void resetVideoData() {
       sprintf(name, "trail_diffuse_%d", i);
       scripting_GetFloatArray(name, pV->pColorAlpha, 4);
     }
-		// pV->turn_time = -TURN_LENGTH;
 		if(game->player[i].ai->active != AI_NONE) {
 			pV->impact_radius = 0.0;
 			pV->exp_radius = 0;

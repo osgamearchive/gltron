@@ -51,7 +51,6 @@ extern "C" {
 				p = game->player + i;
 				p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
 
-				// int dt = game2->time.current - gPlayerVisuals[i].turn_time;
 				int dt = game2->time.current - p->data->turn_time;
 				if(dt < TURN_LENGTH) {
 					float t = (float)dt / TURNLENGTH;

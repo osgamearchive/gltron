@@ -166,9 +166,7 @@ void playerCamera(PlayerVisual *pV, Player *p) {
 
   /* if the cam is coupled to player movement, change the phi accordingly */
   if(cam->type.coupled) {
-    int time;
-    // time = game2->time.current - pV->turn_time;
-		time = game2->time.current - p->data->turn_time;
+    int time = game2->time.current - p->data->turn_time;
     if(time < TURN_LENGTH) {
       int dir, ldir;
       dir = p->data->dir;
