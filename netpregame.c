@@ -37,6 +37,11 @@ handlecommand(char *command, char *params)
     case 'w':
       if( serverstate == preGameState && isConnected  )
 	{
+	  if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/%c command need a parameter  eg: /%c <who> <text>\n", command[0], command[0]);
+		  return;
+		}
 	  //Whisper
 	  packet.which=me;
 	  packet.type=CHAT;
@@ -72,6 +77,11 @@ handlecommand(char *command, char *params)
 
 	  if( slots[me].isMaster )
 	    {
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/%c command need a parameter  eg: /%c 1\n", command[0], command[0]);
+		  return;
+		}
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=CHGENBWINS;
@@ -90,6 +100,11 @@ handlecommand(char *command, char *params)
 	  
 	  if( slots[me].isMaster )
 	    {
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/%c command need a parameter  eg: /%c 1\n", command[0], command[0]);
+		  return;
+		}
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=CHGETIMEOUT;
@@ -113,6 +128,11 @@ handlecommand(char *command, char *params)
 
 	  if( slots[me].isMaster )
 	    {
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/v command need a parameter  eg: /v 1\n");
+		  return;
+		}
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=CHGESPEED;
@@ -131,6 +151,11 @@ handlecommand(char *command, char *params)
 
 	  if( slots[me].isMaster )
 	    {
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/z command need a parameter  eg: /z 1\n");
+		  return;
+		}
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=CHGESIZE;
@@ -149,6 +174,11 @@ handlecommand(char *command, char *params)
 
 	  if( slots[me].isMaster )
 	    {
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/e command need a parameter  eg: /e 1\n");
+		  return;
+		}
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=CHGEERASE;
@@ -171,6 +201,11 @@ handlecommand(char *command, char *params)
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=ADDAIPLAYER;
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/a command need a parameter ( nb computers to add ) eg: /a 1\n");
+		  return;
+		}
 	      str = strtok(params, " ");
 	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
 	      Net_sendpacket(&packet, Net_getmainsock());	  
@@ -184,6 +219,11 @@ handlecommand(char *command, char *params)
 	{
 	  if( slots[me].isMaster )
 	    {
+	      if( ! strcmp(params, "") )
+		{
+		  fprintf(stderr,"\n/l command need a parameter ( 0 to 3 ) eg: /l 1\n");
+		  return;
+		}
 	      printf("changing ai level\n");
 	      packet.which=me;
 	      packet.type=ACTION;
@@ -592,7 +632,7 @@ void changeGameType( Wpopmenu *wpopmenu )
     case 0:
       if( type == oldType )
 	return;
-      setTitle_wpopmenu(pregame.gameRule, "Games Number");
+      setTitle_wpopmenu(pregame.gameRule, "Nb Rounds   ");
       select_wpopmenu(pregame.gameRule, netrulenbwins/5-1 );
       netruletime=0;
       netrulenbwins=5;
@@ -764,7 +804,7 @@ void initPregame() {
   y = 47*game->screen->vp_h /100;
   width=30*game->screen->vp_h /100;
   height=30*game->screen->vp_h /100;
-  pregame.userslist = new_wlist(x, y,  width, height, 5, 1, colDefs, 0, NULL, NULL, NULL );
+  pregame.userslist = new_wlist(x, y,  width, height, 5, 1, colDefs, 0, cWlistAlignMiddle+cWlistNoBox, NULL, NULL, NULL );
 
   //Default value
   i = addRow_wlist     ( pregame.userslist, 4 );
@@ -816,7 +856,7 @@ void initPregame() {
 
   //game type
   pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Game Type   ", changeGameType);
-  addchoice_wpopmenu(pregame.gameType, "Games", 0 );
+  addchoice_wpopmenu(pregame.gameType, "Rounds", 0 );
   addchoice_wpopmenu(pregame.gameType, "Time",  1 );
   select_wpopmenu(pregame.gameType, 0 );
   newControl(pregame.pregameControls, (Wptr)pregame.gameType, WpopupMenu);
@@ -824,7 +864,7 @@ void initPregame() {
 
 
   //Game Rules
-  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Games Number", changeGameRule);
+  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Nb Rounds   ", changeGameRule);
   addchoice_wpopmenu(pregame.gameRule, "5",   0 );
   addchoice_wpopmenu(pregame.gameRule, "10",  1 );
   addchoice_wpopmenu(pregame.gameRule, "15",  2 );

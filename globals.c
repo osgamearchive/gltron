@@ -161,6 +161,7 @@ texture_info textures[] = {
   { 1, "network", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_PREGAME },
 #endif
   { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX },
+
   { 1, "mouseCursor", GL_RGBA,  GL_REPEAT, GL_REPEAT, TEX_MOUSECURSOR }
 };
 

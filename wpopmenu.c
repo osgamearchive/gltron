@@ -128,6 +128,7 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
 {
   int x, y;
   int i=0;
+  int s;
   Wmenu *menu;
   float color[4] = { 0.05f, 0.05f, 0.05f, .8f };
   //int h = game->screen->vp_w / 50;
@@ -202,6 +203,8 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
       glDisable(GL_BLEND);
     }
 
+  // s = wpopmenu->height-8;
+  s = 7*wpopmenu->width/200;;
 
     glColor3f(1.0, 1.0, 1.0);
   //Draw current value
@@ -212,7 +215,7 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
 	glColor3f(1.0, .1, .1);
       else if( wpopmenu->selected == wpopmenu->newselect && wpopmenu->isOpen == 1 )
 	glColor3f(.1, 1.0, .1);
-      drawText(gameFtx, x+10, y+4, wpopmenu->height-8, menu->name);
+      drawText(gameFtx, x+10, y+4, s, menu->name);
     }
 
   glColor3f(1.0, 1.0, 1.0);
@@ -243,7 +246,7 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
 	    {
 	      if( i == wpopmenu->newselect )
 		glColor3f(.1, 1.0, .1);
-	      drawText(gameFtx, x+10, y-wpopmenu->height*(i-wpopmenu->selected)+4, wpopmenu->height-8, menu->name);
+	      drawText(gameFtx, x+10, y-wpopmenu->height*(i-wpopmenu->selected)+4, s, menu->name);
 	      glColor3f(1.0, 1.0, 1.0);
 	    }
 	}
@@ -270,7 +273,7 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
 	    {
 	      if( i == wpopmenu->newselect )
 		glColor3f(.1, 1.0, .1);
-	      drawText(gameFtx, x+10, y-wpopmenu->height*(i-wpopmenu->selected)+4, wpopmenu->height-8, menu->name);
+	      drawText(gameFtx, x+10, y-wpopmenu->height*(i-wpopmenu->selected)+4, s, menu->name);
 	      glColor3f(1.0, 1.0, 1.0);
 	    }
 	}

@@ -50,32 +50,36 @@ void keyGame(int k, int unicode, int x, int y)
 	isLogged=0;
 	Net_disconnect();
 	serverstate=preGameState; //We hope that next time server will be to preGameState
-
+	
 	//TODO: see how not to came back to this callBack when doing lot of esc in gui!
-
-
-    if( trackeruse == 1 )
-      {
-	if( ! tracker_connect() )
+	
+	
+	if( trackeruse == 1 )
 	  {
-	    changeCallback(&trackerscreenCallbacks, &trackerscreenCallbacks);
-	  } else {
-	    changeCallback(&guiCallbacks, &guiCallbacks);
-	  }
-	//changeCallback(&guiCallbacks, &guiCallbacks);
-	//changeCallback(&netPregameCallbacks, &netPregameCallbacks);
+	    if( ! tracker_connect() )
+	      {
+		changeCallback(&trackerscreenCallbacks, &trackerscreenCallbacks);
+	      } else {
+		changeCallback(&guiCallbacks, &guiCallbacks);
+	      }
+	    //changeCallback(&guiCallbacks, &guiCallbacks);
+	    //changeCallback(&netPregameCallbacks, &netPregameCallbacks);
+	  }/* else {
+	      #endif
+	      switchCallbacks(&pauseCallbacks);
+	      switchCallbacks(&guiCallbacks);
+	      #ifdef __NETWORK__*/
       } else {
 #endif
 	switchCallbacks(&pauseCallbacks);
 	switchCallbacks(&guiCallbacks);
 #ifdef __NETWORK__
       }
-      }
 #endif
     break;
   case ' ':
 #ifdef __NETWORK__
-    if( game2->mode == GAME_NETWORK_PLAY && ! isConnected )
+    if( (game2->mode != GAME_NETWORK_PLAY) && ! (isConnected) )
 #endif
 	switchCallbacks(&pauseCallbacks);
     break;

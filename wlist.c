@@ -50,7 +50,7 @@ set_colDef( ColDef *colDefs, int col, char *title, int colsize,
 
 Wlist *
 new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
-	    ColDef *colDefs, int sortcol, 
+	    ColDef *colDefs, int sortcol, int options,
 	    void  (*focus) ( WlistPtr list, int line ),
 	    void  (*action)( WlistPtr list ),
 	    void  (*mouseFocus) ( WlistPtr list, int line, Wpoint mousexy ))
@@ -79,6 +79,7 @@ new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
   wlist->focus  = focus;
   wlist->mouseFocus  = mouseFocus;
   wlist->action = action;
+  wlist->options = options;
   
   //Init and allocte memory for index and datas
   wlist->index = (int *)malloc(sizeof(int)*MAXWLISTLINES);
@@ -97,6 +98,7 @@ draw_wlist( Wlist *wlist )
   int h = wlist->height/wlist->nblines;
   //int c = wlist->width/wlist->nbcols;
   int x, y, s, i, j;
+  float color[4] = { 0.1, 0.1, 0.4, 0.6 };
 
 
 /*   glColor3f(1.0, 1.0, 1.0); */
@@ -132,7 +134,7 @@ draw_wlist( Wlist *wlist )
 
   y = wlist->y+wlist->height-h/2;
 
-  s = 7.5*(wlist->width*wlist->colDefs[0].colsize/100)/100;
+  s = 7*(wlist->width*wlist->colDefs[0].colsize/100)/100;
 
   x = wlist->x;
   for( i = 0; i < wlist->nbcols; ++i )
@@ -140,11 +142,15 @@ draw_wlist( Wlist *wlist )
       //x = (wlist->x+i*c+10);
       if( i != 0  )
 	x += wlist->width*wlist->colDefs[i-1].colsize/100;
-      glColor3f(1.0,1.0,1.0);
-      glBegin(GL_LINES);
-      glVertex2d(x,  (y-h/2) );
-      glVertex2d(x,  (y+h/2) );
-      glEnd();
+
+      if( ! ( wlist->options & cWlistNoBox ) )
+	{
+	  glColor3f(1.0,1.0,1.0);
+	  glBegin(GL_LINES);
+	  glVertex2d(x,  (y-h/2) );
+	  glVertex2d(x,  (y+h/2) );
+	  glEnd();
+	}
       drawText(netFtx, x+10, y-h/2+4, s, wlist->colDefs[i].title);
     }
 
@@ -168,19 +174,25 @@ draw_wlist( Wlist *wlist )
 	      if( i == wlist->current )
 		{
 		  //draw hilight
-		  glColor3f(.1, .1, 0.4);
+		  //glColor3f(.1, .1, 0.4);
+
+		  glEnable(GL_BLEND);
+		  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		  glColor4fv(color);
+
 		  glBegin(GL_QUADS);	  
-		  glVertex3f(x+1, y+h/2, 0.0f);     //top left
+		  glVertex3f(x+1, y+h/2+1, 0.0f);     //top left
 		  if( j == wlist->nbcols-1 )
 		    {
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2-1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2+1, 0.0f);   //top right
 		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y-h/2-1, 0.0f);   //Bottom right
 		    } else {
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2-1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2+1, 0.0f);   //top right
 		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y-h/2-1, 0.0f);   //Bottom right
 		    }
 		  glVertex3f(x+1, y-h/2-1, 0.0f);         //Bottom left
 		  glEnd();
+		  glDisable(GL_BLEND);
 		  glColor3f(.9, .9, 0.6);
 		} else 
 		  glColor3f(wlist->colDefs[j].color[0], wlist->colDefs[j].color[1], wlist->colDefs[j].color[2] );
@@ -189,7 +201,8 @@ draw_wlist( Wlist *wlist )
 		drawText(netFtx, x+10, y-h/2+7, s, wlist->colDefs[j].callbacks.tostr(wlist,wlist->index[i], j));
 
 	    }
-	  if( i < wlist->scroll+wlist->nblines-2 )
+
+	  if(( i < wlist->scroll+wlist->nblines-2 ) && ! ( wlist->options & cWlistNoBox ))
 	    {
 	      glColor3f(1.0, 1.0, 1.0);
 	      glBegin(GL_LINES);
@@ -202,33 +215,36 @@ draw_wlist( Wlist *wlist )
   glColor3f(1.0, 1.0, 1.0);
 
   //Draw Borders
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x,                wlist->y);
-  glVertex2d(wlist->x+wlist->width,   wlist->y);
-  glEnd();
+  if( ! ( wlist->options & cWlistNoBox ) )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(wlist->x,                wlist->y);
+      glVertex2d(wlist->x+wlist->width,   wlist->y);
+      glEnd();
+      
+      
+      glBegin(GL_LINES);
+      glVertex2d(wlist->x+wlist->width,   wlist->y);
+      glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
+      glEnd();
+      
+      glBegin(GL_LINES);
+      glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
+      glVertex2d(wlist->x,   wlist->y+wlist->height);
+      glEnd();
+      
+      
+      glBegin(GL_LINES);
+      glVertex2d(wlist->x,   wlist->y+wlist->height );
+      glVertex2d(wlist->x,  wlist->y );
+      glEnd();
 
- 
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x+wlist->width,   wlist->y);
-  glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
-  glEnd();
-
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
-  glVertex2d(wlist->x,   wlist->y+wlist->height);
-  glEnd();
-
-
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x,   wlist->y+wlist->height );
-  glVertex2d(wlist->x,  wlist->y );
-  glEnd();
-
-  //draw Titles
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x,               wlist->y+wlist->height-h+1 );
-  glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h+1 );
-  glEnd();
+      //draw Titles
+      glBegin(GL_LINES);
+      glVertex2d(wlist->x,               wlist->y+wlist->height-h+1 );
+      glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h+1 );
+      glEnd();
+    }
 }
 
 void

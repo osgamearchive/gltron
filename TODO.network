@@ -16,6 +16,10 @@ todo:
 (x) making cycle crash when leaving, otherwise it can have zombies in the next round.
 (x) check in-game ping to feet best for predictions - done
 (x) adding AI players - done
+(x) adding key to pop menu control
+(x) adding tab key to switch between controls
+(x) adding refresh server list
+
 
 bugs:
 (x) the client lags( fps descending 1xx to 4x ) sometimes

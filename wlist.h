@@ -18,6 +18,13 @@ enum {
   LIST_SCROLL_DOWN
 };
 
+//define options
+enum {
+  cWlistDefaultOptions = 0,          //default options
+  cWlistAlignMiddle    = 1,          //text is align middle
+  cWlistNoBox          = 2           //no box is drawn
+};
+
 typedef struct Wlist *WlistPtr;
 
 /** Callbacks for each columns */
@@ -51,6 +58,7 @@ typedef struct Wlist {
   int              scroll;            //window that shows nblines
   int              rlines;            //how many lines in memory?
   int              sortcol;           //column for sorting
+  int              options;           //options
   void  (*focus) ( WlistPtr list, int line ); //focus on a line
   void  (*action)( WlistPtr list);    //when double clicking or hitting enter
   void  (*mouseFocus) ( WlistPtr list, int line, Wpoint mousexy ); //mouse focus
@@ -71,8 +79,12 @@ void    set_colDef( ColDef *colDefs, int col, char *title, int colsize,
 		    int   (*sortit)( WlistPtr list, int line, int next )); 
 
 /** Creating and disposing of lists */
-Wlist *new_wlist(  int x, int y, int width, int height, int nblines, int nbcols, ColDef *colDefs, int sortcol, void  (*focus) ( WlistPtr list, int line ), void  (*action)( WlistPtr list ),
-	void  (*mouseFocus) ( WlistPtr list, int line, Wpoint mousexy )	   );
+Wlist *new_wlist(  int x, int y, int width, int height, int nblines, int nbcols, ColDef *colDefs, int sortcol, int options, 
+		   void  (*focus) ( WlistPtr list, int line ), 
+		   void  (*action)( WlistPtr list ),
+		   void  (*mouseFocus) ( WlistPtr list, int line, Wpoint mousexy )	   );
+
+
 void   free_wlist       ( Wlist *wlist );
 
 
