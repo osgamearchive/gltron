@@ -61,14 +61,18 @@ typedef png_texture texture;
 #include "model.h"
 #include "data.h"
 #include "menu.h"
+#ifdef DEPTH_SORT
 #include "quad.h"
+#endif
 
 #include "system.h"
 #include "geom.h"
 #include "light.h"
 
 /* rendering stuff */
+#ifdef DEPTH_SORT
 #include "renderer_gl.h"
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 
