@@ -180,19 +180,24 @@ do_chat( Packet packet )
 
   if( packet.infos.chat.which == BROADCAST )
     {
-      printf("%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      sprintf(mesg, "%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+      if( ! strcmp( game->settings->nickname, slots[packet.which].name) )
+      {
+	printf("> %s\n", packet.infos.chat.mesg);
+	sprintf(mesg, "> %s\n", packet.infos.chat.mesg);	  
+      } else {
+	printf("%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+	sprintf(mesg, "%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+      }
       if( serverstate == gameState )	
 	consoleAddLine(mesg);
-	else
-	  insert_wtext(pregametext, mesg, 4);
-  
+      else
+	insert_wtext(pregametext, mesg, 4);
 	  
 	  //drawChat(mesg);
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      insert_wtext(pregametext, mesg, 4);
+      insert_wtext(pregametext, mesg, 3);
       //drawChat(mesg);
     }
 }

@@ -18,6 +18,8 @@ void keyPregame(int k, int unicode, int x, int y)
 {
   switch( k )
     {
+    case SYSTEM_KEY_F11: doBmpScreenShot(); break;
+    case SYSTEM_KEY_F12: doScreenShot(); break;
     case 13:
       switchCallbacks(&keyboardreadingCallbacks);
       break;
@@ -28,6 +30,7 @@ void keyPregame(int k, int unicode, int x, int y)
       Net_disconnect();
       serverstate=preGameState; //We hope that next time server will be to preGameState
       free_wtext(pregametext);
+      pregametext=NULL;
       changeCallback(&guiCallbacks);      
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
@@ -62,7 +65,7 @@ void drawPregame() {
   int h;
   int i, len;
   char str[255];
-  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.1, 0.1, 0.5} , { 0.0, 0.5, 1.0 }};
+  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { 0.0, 0.5, 1.0 }};
   time = SDL_GetTicks() - coffset;
   
   //glClearColor(.0, .0, .0, .0);
@@ -70,12 +73,12 @@ void drawPregame() {
 
   //rasonly(game->screen);
   
-  //Message
   h = game->screen->vp_h / (24 * 1.5);
-  glColor3fv(colors[1]);
-  x = 10;
-  y = game->screen->vp_h - 1.5 * h * (0 + 1);
-  drawText(gameFtx, x, y, h, message);
+  //Message
+/*   glColor3fv(colors[1]); */
+/*   x = 10; */
+/*   y = game->screen->vp_h - 1.5 * h * (0 + 1); */
+/*   drawText(gameFtx, x, y, h, message); */
 
   //chat
 /*   glColor3fv(colors[0]); */
@@ -120,8 +123,9 @@ void drawPregame() {
 
   //Inputs
   glColor3fv(colors[2]);
+/*   x = 10; */
   x = 10;
-  y = h-1;
+  y = h;
   drawText(gameFtx, x, y, h, getInputEntry());
 
   //NetRules
