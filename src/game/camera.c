@@ -85,6 +85,10 @@ static void initFreeCamera(Camera *cam) {
 }
 
 void initCamera(Camera *cam, Data *data, int type) {
+	float x,y;
+	
+	getPositionFromData(&x, &y, data);
+	
   cam->type.type = type;
 
   switch(cam->type.type) {
@@ -93,12 +97,12 @@ void initCamera(Camera *cam, Data *data, int type) {
   case CAM_TYPE_COCKPIT: initCockpitCamera(cam); break;
   case CAM_TYPE_MOUSE: initFreeCamera(cam); break;
   }
-  cam->target[0] = data->posx;
-  cam->target[1] = data->posy;
+  cam->target[0] = x;
+  cam->target[1] = y;
   cam->target[2] = 0;
 
-  cam->cam[0] = data->posx + CAM_CIRCLE_DIST;
-  cam->cam[1] = data->posy;
+  cam->cam[0] = x + CAM_CIRCLE_DIST;
+  cam->cam[1] = y;
   cam->cam[2] = CAM_CIRCLE_Z;
 }
 
@@ -121,6 +125,7 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   float dest[3];
   float tdest[3];
   float phi, chi, r;
+	float x, y;
 	Camera *cam;
 	Data *data;
   /* first, process all movement commands */
@@ -140,6 +145,7 @@ void playerCamera(PlayerVisual *pV, Player *p) {
 
 	cam = p->camera;
 	data = p->data;
+	getPositionFromData(&x, &y, data);
 
   if(cam->type.freedom[CAM_FREE_R]) {
     if(gInput.mouse1 == 1)
@@ -183,8 +189,8 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   }
 
   /* position the camera */
-  dest[0] = data->posx + r * cosf(phi) * sinf(chi);
-  dest[1] = data->posy + r * sinf(phi) * sinf(chi);
+  dest[0] = x + r * cosf(phi) * sinf(chi);
+  dest[1] = y + r * sinf(phi) * sinf(chi);
   dest[2] = r * cosf(chi);
 
   /* ok, now let's calculate the new camera destination coordinates */
@@ -192,26 +198,26 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   switch(cam->type.type) {
   case CAM_TYPE_CIRCLING: /* Andi-cam */
     cam->movement[CAM_PHI] += CAM_SPEED * game2->time.dt;
-    tdest[0] = data->posx;
-    tdest[1] = data->posy;
+    tdest[0] = x;
+    tdest[1] = y;
     tdest[2] = B_HEIGHT;
     break;
   case CAM_TYPE_FOLLOW: /* Mike-cam */
-    tdest[0] = data->posx;
-    tdest[1] = data->posy;
+    tdest[0] = x;
+    tdest[1] = y;
     tdest[2] = B_HEIGHT;
     break;
   case CAM_TYPE_COCKPIT: /* 1st person */
-    tdest[0] = data->posx + 4.0f * dirsX[ p->data->dir ] + 2.0f * cosf(phi);
-    tdest[1] = data->posy + 4.0f * dirsY[ p->data->dir ] + 2.0f * sinf(phi);
+    tdest[0] = x + 4.0f * dirsX[ p->data->dir ] + 2.0f * cosf(phi);
+    tdest[1] = y + 4.0f * dirsY[ p->data->dir ] + 2.0f * sinf(phi);
     tdest[2] = CAM_COCKPIT_Z;
-    dest[0] = data->posx + 4.0f * dirsX[ p->data->dir ] + 0.1f * cosf(phi);
-    dest[1] = data->posy + 4.0f * dirsY[ p->data->dir ] + 0.1f * sinf(phi);
+    dest[0] = x + 4.0f * dirsX[ p->data->dir ] + 0.1f * cosf(phi);
+    dest[1] = y + 4.0f * dirsY[ p->data->dir ] + 0.1f * sinf(phi);
     dest[2] = CAM_COCKPIT_Z + 0.1f;
     break;
   case CAM_TYPE_MOUSE: /* mouse camera */
-    tdest[0] = data->posx;
-    tdest[1] = data->posy;
+    tdest[0] = x;
+    tdest[1] = y;
     tdest[2] = B_HEIGHT;
     break;
   }

@@ -151,7 +151,11 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   /* transformations */
 
   glPushMatrix();
-  glTranslatef(p->data->posx, p->data->posy, 0.0);
+	{
+		float x, y;
+		getPositionFromData(&x, &y, p->data);
+		glTranslatef(x,y, 0.0);
+	}
   glMultMatrixf(shadow_matrix);
   if (game2->settingsCache.turn_cycle) {
     doCycleTurnRotation(pV, p);
@@ -184,7 +188,11 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
     return;
   
   glPushMatrix();
-  glTranslatef(p->data->posx, p->data->posy, 0.0);
+	{
+		float x, y;
+		getPositionFromData(&x, &y, p->data);
+		glTranslatef(x, y, 0.0);
+	}
 
   if (pV->exp_radius == 0 && game2->settingsCache.turn_cycle == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
@@ -257,11 +265,14 @@ int playerVisible(Player *eye, Player *target) {
   float d;
   int i;
   int lod_level;
+	float x, y;
 
   vsub(eye->camera->target, eye->camera->cam, v1);
   normalize(v1);
-  tmp[0] = target->data->posx;
-  tmp[1] = target->data->posy;
+	
+	getPositionFromData(&x, &y, target->data);
+	tmp[0] = x;
+  tmp[1] = y;
   tmp[2] = 0;
 	
   lod_level = (game2->settingsCache.lod > MAX_LOD_LEVEL) ? 

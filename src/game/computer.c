@@ -42,9 +42,11 @@ void getDistances(int player,
 	int dirLeft = (data->dir + 3) % 4;
 	int dirRight = (data->dir + 1) % 4;
 	int i, j;
-	
-	vPos.v[0] = data->posx;
-	vPos.v[1] = data->posy;
+	float x, y;
+
+	getPositionFromIndex(&x, &y, player);
+	vPos.v[0] = x;
+	vPos.v[1] = y;
 
 	for(i = 0; i < eMax; i++) {
 		vec2Copy(&segments[i].vStart, &vPos);

@@ -69,9 +69,11 @@ extern "C" {
       for(int i = 0; i < PLAYERS; i++) {
 				Player *p;
 				Sound::Source3D *p3d;
+				float x, y;
 				p3d = players[i];
 				p = game->player + i;
-				p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
+				getPositionFromIndex(&x, &y, i);
+				p3d->_location = Vector3(x, y, 0);
 				float V = p->data->speed;
 
 				int dt = game2->time.current - p->data->turn_time;

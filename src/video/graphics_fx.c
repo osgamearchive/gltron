@@ -5,11 +5,12 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 							Visual *d, float dim) {
   float mat[4*4];
   float alpha, dist;
+	float x, y;
 
   glPushMatrix();
-  glTranslatef(pTarget->data->posx,
-	       pTarget->data->posy,
-	       0);
+	
+	getPositionFromData(&x, &y, pTarget->data);
+  glTranslatef(x, y, 0);
 
   glDepthMask(GL_FALSE);
   glEnable(GL_DEPTH_TEST);
@@ -26,8 +27,8 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 
 	{
 		vec3 v;
-		v.v[0] = pTarget->data->posx - pCam->cam[0];
-		v.v[1] = pTarget->data->posy - pCam->cam[1];
+		v.v[0] = x - pCam->cam[0];
+		v.v[1] = y - pCam->cam[1];
 		v.v[2] = 0 - pCam->cam[2];
 		dist = vec3Length(&v);
 	}

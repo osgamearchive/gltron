@@ -57,7 +57,6 @@ void draw2D( Visual *d ) {
 			glEnd();
 		}
 		
-		
 		glDisable(GL_LIGHTING);
 		// glDisable(GL_BLEND);
 		glEnable(GL_BLEND);
@@ -76,6 +75,9 @@ void draw2D( Visual *d ) {
 				Player *p = &game->player[i];
 				PlayerVisual *pV = gPlayerVisuals + i;
 				segment2* trail;
+				float x, y;
+
+				getPositionFromData(&x, &y, p->data);
 				
 				// fixme: check if trails vanish
         if (p->data->trail_height <= 0) {
@@ -98,7 +100,7 @@ void draw2D( Visual *d ) {
         
         glPointSize(2);
 				glBegin(GL_POINTS);
-				glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
+				glVertex2f( x, y );
 				glEnd();
 
 				glBegin(GL_LINES);
@@ -117,14 +119,14 @@ void draw2D( Visual *d ) {
 						glVertex2f(trail->vStart.v[0] + trail->vDirection.v[0], 
 											 trail->vStart.v[1] + trail->vDirection.v[1]
 											 );
-						glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
+						glVertex2f( floorf(x), floorf(y));
 				}
 				else
 				{
 						glVertex2f(trail->vStart.v[0], 
 											 trail->vStart.v[1]
 											 );
-						glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
+						glVertex2f( floorf(x), floorf(y));
 				}
 				
 #if 0

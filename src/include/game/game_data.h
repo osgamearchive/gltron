@@ -54,8 +54,6 @@ typedef struct Game2 {
 } Game2;
 
 typedef struct Data {
-  float posx, posy;
-  
   int dir;
 
   int score;
