@@ -10,10 +10,14 @@ void setupLights(int type) {
 	float posWorld0[] = { 1, .8f, 0, 0 };
 	float posWorld1[] = { -1, -.8f, 0, 0 };
 
-	float posCycles0[] = { 0, 0, 0, 1 };
+	float posCycles0[] = { 0, 0, 1, 0 };
 	
 	int i;
-	
+
+	if(isRenderingReflection) {
+		posCycles0[2] *= -1;
+	}
+
 	// turn global ambient lighting off
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
