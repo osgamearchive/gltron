@@ -85,7 +85,9 @@ void initPause() {
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
 
   /* disable game sound effects */
+#ifdef SOUND
   Audio_DisableEngine();
+#endif
 
   /* 
    * TODO: Disable game music here. Game should be totally silent in pause
@@ -97,7 +99,9 @@ void initPause() {
 
 void exitPause() {
   /* re-enable game sound effects */
+#ifdef SOUND
   Audio_EnableEngine();
+#endif
 }
 
 void initPauseGL() {
