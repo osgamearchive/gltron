@@ -1,6 +1,7 @@
 #include "gltron.h"
 #include "recognizer.h"
 #include "event.h"
+#include "util.h"
 
 enum {
   TURN_LEFT = 3,
@@ -110,11 +111,19 @@ void initPlayerData() {
   AI *ai;
   int not_playing = 0;
 
+  int *startIndex;
+  startIndex = malloc( game->players * sizeof(int) );
+  randomPermutation(game->players, startIndex);
+  printf("startindex: ");
+  for(i = 0; i < game->players; i++) {
+    printf("%d ", startIndex[i]);
+  }
+  printf("\n");
+
   for(i = 0; i < game->players; i++) {
     float startpos[][2] = { 
 	{ 0.5, 0.25 }, { 0.75, 0.5 }, { 0.5, 0.75 }, { 0.25, 0.5 }
     };
-    /* float startdir[] = { 2, 1, 0, 3 }; */
 
     data = game->player[i].data;
     ai = game->player[i].ai;
@@ -141,8 +150,9 @@ void initPlayerData() {
 
     /* arrange players in circle around center */
 
-    data->iposx = startpos[i][0] * getSettingi("grid_size");
-    data->iposy = startpos[i][1] * getSettingi("grid_size");
+    /* randomize position on the grid */
+    data->iposx = startpos[ startIndex[i] ][0] * getSettingi("grid_size");
+    data->iposy = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
     if(i == 0) data->iposy -= 1;
     /* randomize starting direction */
     data->dir = rand() & 3;
@@ -173,6 +183,9 @@ void initPlayerData() {
     data->trail->sy = data->trail->ey = data->iposy;
 
   }
+
+  free(startIndex);
+
   game->running = game->players - not_playing; /* not everyone is alive */
   /* printf("starting game with %d players\n", game->running); */
   game->winner = -1;
