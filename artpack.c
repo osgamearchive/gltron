@@ -54,7 +54,7 @@ void loadArt() {
   }
 
   initTexture(game->screen);
-  //initFonts();
+  initFonts();
 }
 
 void reloadArt() {

@@ -1,10 +1,10 @@
 #include "server_gltron.h"
 #include <limits.h>
 
-static Uint32 ping       = 0;
-static Uint32 savedtime  = 0; 
+static Uint32 ping          = 0;
+static Uint32 savedtime     = 0; 
 static Uint32 timeout       = 0;
-static Uint32 lastping       = 0;
+static Uint32 lastping      = 0;
 /* static Uint32 slowest    = RAND_MAX; */
 static int    slowest       = 0;
 static int    getpingrep    = 0;
