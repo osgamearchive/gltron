@@ -2,7 +2,6 @@
 #define Sound_Source_H
 
 #include "Sound.h"
-// #include "System.h"
 
 namespace Sound {
   enum {

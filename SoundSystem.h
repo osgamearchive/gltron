@@ -1,9 +1,6 @@
 #ifndef Sound_System_H
 #define Sound_System_H
 
-#include "gltron.h"
-
-#include "Sound.h"
 #include "Source.h"
 #include "Vector3.h"
 

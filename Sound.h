@@ -1,6 +1,8 @@
 #ifndef Sound_H
 #define Sound_H
 
+#include "gltron.h"
+
 #include "SDL.h"
 #include "SDL_sound.h"
 
