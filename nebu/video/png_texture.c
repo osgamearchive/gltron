@@ -18,7 +18,7 @@ void user_read_data(png_structp png_ptr,
   fread(data, 1, length, f);
 }
 
-png_texture* load_png_texture(char *filename) {
+png_texture* load_png_texture(const char *filename) {
   unsigned int i;
   int bpc, color_type, zsize;
 
