@@ -347,8 +347,8 @@ void initMainGameSettings(char *filename) {
   game->settings->playMusic = 1;
   game->settings->playEffects = 1;
 
-  game->settings->musicVolume = 0.5;
-  game->settings->fxVolume = 0.5;
+  game->settings->musicVolume = 0.3;
+  game->settings->fxVolume = 0.7;
 
   game->settings->ai_player1 = 0;
   game->settings->ai_player2 = 1;
