@@ -111,7 +111,9 @@ void drawTrailLines(Player *p) {
   glDisable(GL_DEPTH_TEST);
   */
 
-  glEnable (GL_LINE_SMOOTH); /* enable line antialiasing */
+  if( getSettingi("antialias_lines") )
+    glEnable(GL_LINE_SMOOTH); /* enable line antialiasing */
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDisable(GL_LIGHTING);

@@ -54,6 +54,8 @@ void initDefaultSettings() {
   setSettingi("softwareRendering", 0);
   setSettingi("bitdepth_32", 0);
 
+  setSettingi("antialias_lines", 1);
+
   setSettingi("display_type", 3);
   setSettingi("playMusic", 1);
   setSettingi("playEffects", 1);

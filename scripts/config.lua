@@ -29,6 +29,7 @@ trail_diffuse_1 = { 0.500, 0.050, 0.250, 0.600 }
 trail_diffuse_2 = { 0.200, 0.600, 0.400, 0.600 }
 trail_diffuse_3 = { 0.700, 0.700, 0.700, 0.600 }
 
+antialias_lines = 1
 -- This stuff is commented out, will add later
 
 -- iset show_help 0
