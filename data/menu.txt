@@ -172,24 +172,13 @@ xsub
 Video
 
 # Options Submenu (11 entries)
-2
+3
 xsub
 Display Options
 
-0
-sti_windowMode
-Window Mode        - %s
-
-10
+5
 xsub
-Detail Settings
-0
-sti_use_mipmaps
-Use MipMaps        - %s
-
-0
-stl_5_1_mipmap_filter
-Mipmap Filtering   - %s
+Texture Detail
 
 0
 sti_show_floor_texture
@@ -198,24 +187,46 @@ Floor Texture      - %s
 0
 sti_show_wall
 Wall Texture       - %s
-0
-sti_alpha_trails
-Use alpha trails   - %s
-0 
-sti_show_alpha
-Alpha Blending     - %s
-0
-sti_show_glow
-Halos              - %s
-0
-sti_show_model
-Show Lightcycles   - %s
-0
-stl_3_2_lod
-LOD setting:       - %s
+
 0
 sti_show_crash_texture
 Show crash texture - %s
+
+0
+sti_use_mipmaps
+Use MipMaps        - %s
+
+0
+stl_5_1_mipmap_filter
+Mipmap Filtering   - %s
+
+5
+xsub
+Other Details
+
+0
+sti_alpha_trails
+Use alpha trails   - %s
+
+0 
+sti_show_alpha
+Alpha Blending     - %s
+
+0
+sti_show_glow
+Halos              - %s
+
+0
+sti_show_model
+Show Lightcycles   - %s
+
+0
+stl_3_2_lod
+LOD setting:       - %s
+
+0
+sti_windowMode
+Window Mode - %s
 
 # Misc Options Sub Menu
 2

@@ -393,7 +393,7 @@ void drawMenu(gDisplay *d) {
 #define MENU_TEXT_START_X 0.08
 #define MENU_TEXT_START_Y 0.40
 
-#define MENU_WIDTH 0.60
+#define MENU_WIDTH 0.80
 #define MENU_HEIGHT 0.40
 
 #define MENU_TEXT_LINEHEIGHT 1.5
