@@ -399,15 +399,15 @@ Menu = {
    },
    FX_Volume = {
       type = MenuC.type.slider, caption = "FX Volume",
-      right = FXVolumeUp,
-      left = FXVolumeDown,
+      right = function() FXVolumeUp(); end,
+      left = function() FXVolumeDown(); end,
       read = function() return format("%.0f%%", settings.fxVolume * 100); end
    },
    Song = {
       type = MenuC.type.slider, caption = "Song",
-      right = nextTrack,
-      left = previousTrack,
-      action = nextTrack,
+      right = function() nextTrack(); end,
+      left = function() previousTrack(); end,
+      action = function() nextTrack(); end,
       read = function()
 								_,_,name = strfind(settings.current_track, "(.*)%..+")
 								if name then
