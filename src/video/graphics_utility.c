@@ -3,19 +3,12 @@
 
 #include "base/nebu_math.h"
 
-void checkGLError(const char *where) {
-  int error;
-  error = glGetError();
-  if(error != GL_NO_ERROR)
-    printf("[glError: %s] - %d\n", where, error);
-}
-
 void rasonly(Visual *d) {
   /* do rasterising only (in local display d) */
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(0.0f, (GLfloat) d->vp_w, 0.0f, (GLfloat) d->vp_h, 0.0f, 1.0f);
-  checkGLError("rasonly");
+  nebu_Video_CheckErrors("rasonly");
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
