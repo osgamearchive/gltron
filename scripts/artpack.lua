@@ -29,5 +29,5 @@ trail_diffuse_3 = { 0.700, 0.700, 0.700, 0.600 }
 
 clear_color = { 0, 0, 0, 0 }
 
-video.settings.reflection = 0.9
+video.settings.reflection = 0.0
 
