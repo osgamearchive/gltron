@@ -29,28 +29,16 @@ namespace Sound {
     for(p = & _sources; p->next != NULL; p = p->next) {
       Source* s = (Source*) p->data;
       if(s->IsPlaying()) {
-	// fprintf(stderr, "mixing source\n");
-	if(!(
-	     (s->GetType() & eSoundFX && ! _mix_fx ) ||
-	     (s->GetType() & eSoundMusic && ! _mix_music) )
-	   )
-	  {
-	    if( s->Mix(data, len) )
-	      sources_mixed++;
-	  }
-	// fprintf(stderr, "done mixing %d sources\n", sources_mixed);
-      } else {
-	// check if source is removable
-	if(s->IsRemovable()) {
-	  // get rid of data
-	  delete (Source*) p->data;
-	  p->data = p->next->data;
-	  list *tmp = p->next;
-	  p->next = p->next->next;
-	  delete tmp;
-	  if(p->next == NULL)
-	    break;
-	}
+				// fprintf(stderr, "mixing source\n");
+				if(!(
+						 (s->GetType() & eSoundFX && ! _mix_fx ) ||
+						 (s->GetType() & eSoundMusic && ! _mix_music) )
+					 )
+					{
+						if( s->Mix(data, len) )
+							sources_mixed++;
+					}
+				// fprintf(stderr, "done mixing %d sources\n", sources_mixed);
       }
     }
   }
@@ -68,11 +56,23 @@ namespace Sound {
 
 		/* idle processing */
 		list *p;
-		for(p = & _sources; p->next != NULL; p = p->next)
-			((Source*)p->data)->Idle();
-  }
+		for(p = & _sources; p->next != NULL; p = p->next) {
+			Source *source = (Source*) p->data;
+			// check if source is removable
+			if(source->IsRemovable()) {
+				// get rid of data
+				p->data = p->next->data;
+				list *tmp = p->next;
+				p->next = p->next->next;
+				delete tmp;
+				delete source;
+			} else {
+				source->Idle();
+			}
+		}
+	}
 
-  extern "C" {
+	extern "C" {
     void c_callback(void *userdata, Uint8 *stream, int len) { 
       // printf("c_callback got called for %d bytes of data\n", len);
       ((System*)userdata)->Callback(stream, len);
