@@ -97,7 +97,7 @@ int main( int argc, char *argv[] ) {
 #endif
 
 #if defined (macintosh)
-  setupHomeEnvironment ();
+  setupMacDirectories();
 #endif
 
   SystemInit(&argc, argv);
