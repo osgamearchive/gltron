@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./include" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./include" /D "_LIB" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -98,35 +98,14 @@ SOURCE=".\filesystem\directory-win32.c"
 # Begin Source File
 
 SOURCE=.\filesystem\file_io.c
-
-!IF  "$(CFG)" == "nebu - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=.\filesystem\filesystem.c
-
-!IF  "$(CFG)" == "nebu - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
 SOURCE=.\filesystem\findpath.c
-
-!IF  "$(CFG)" == "nebu - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -203,6 +182,34 @@ SOURCE=.\scripting\scripting.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\audio\SoundSystem.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\Source.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\Source3D.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\SourceCopy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\SourceEngine.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\SourceMusic.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\audio\SourceSample.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\base\system.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
@@ -264,6 +271,10 @@ SOURCE=.\video\video_system.c
 # Begin Source File
 
 SOURCE=.\include\Nebu.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_audio_system.h
 # End Source File
 # Begin Source File
 
@@ -340,6 +351,38 @@ SOURCE=.\include\Nebu_scripting.h
 # Begin Source File
 
 SOURCE=.\include\scripting\nebu_scripting.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_Sound.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_SoundSystem.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_Source.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_Source3D.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_SourceCopy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_SourceEngine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_SourceMusic.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\include\audio\nebu_SourceSample.h
 # End Source File
 # Begin Source File
 
