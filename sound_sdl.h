@@ -16,13 +16,22 @@ void soundIdle();
 void setMusicVolume(float volume);
 void setFxVolume(float volume);
 
-void playGameFX(int fx);
+void playGameFX(int fx, float volume);
 void playMenuFX(int fx);
 
 void playEngine();
 void stopEngine();
 
-enum game_fx { fx_engine=0, fx_start, fx_crash, fx_win, fx_lose };
+enum game_fx { fx_engine=0, fx_crash, fx_start, fx_win, fx_lose };
+
+enum { 
+  SOUND_ENGINE = 0,
+  SOUND_CRASH,
+  SOUND_START,
+  SOUND_WIN,
+  SOUND_LOSE
+};
+
 enum menu_fx { fx_action=0, fx_highlight };
 
 #endif
