@@ -77,13 +77,13 @@ dnl snapshot dir setup
 AC_ARG_WITH(snapshot-dir,
 AC_HELP_STRING([--with-snapshot-dir=@<:@path@:>@],[Snapshot directory @<:@default=~/.gltron@:>@]),
 	CPPFLAGSA="$CPPFLAGSA -DSNAP_DIR=\\\"$withval\\\"",
-	CPPFLAGSA="$CPPFLAGSA -DSNAP_DIR=\\\"~/.gltron\\\"")
+	CPPFLAGSA="$CPPFLAGSA -DSNAP_DIR=\\\"~\\\"")
 
 dnl preferences dir setup
 AC_ARG_WITH(preferences-dir,
 AC_HELP_STRING([--with-preferences-dir=@<:@path@:>@],[Preferences directory @<:@default=~/.gltron@:>@]),
 	CPPFLAGSA="$CPPFLAGSA -DPREF_DIR=\\\"$withval\\\"",
-	CPPFLAGSA="$CPPFLAGSA -DPREF_DIR=\\\"~/.gltron\\\"")
+	CPPFLAGSA="$CPPFLAGSA -DPREF_DIR=\\\"~\\\"")
 
 dnl sound set-up
 AC_ARG_ENABLE(sound,
