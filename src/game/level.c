@@ -1,5 +1,5 @@
 #include "game/game_level.h"
-#include "nebu_Scripting.h"
+#include "Nebu_scripting.h"
 #include <stdlib.h>
 
 void game_FreeLevel(game_level *l) {
