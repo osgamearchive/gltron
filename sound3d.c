@@ -236,9 +236,10 @@ void mixEngineSound(int player_i, Uint8* buf, int len) {
 	
 	clen = (int)((len / 4) * shift + 1) * 4;
 
-	printf("sound data for player %d / %d: %.2f %.2f %.2f\n",
-	       player_i, i, pan, vol, shift);
-
+	/*
+	  printf("sound data for player %d / %d: %.2f %.2f %.2f\n",
+	  player_i, i, pan, vol, shift);
+	*/
 	if(vol > SOUND_VOL_THRESHOLD) {
 	  source = getSoundSource(SOUND_ENGINE, player_i, i, clen, &delivered);
 	  fxPan(pan, game->settings->fxVolume * vol, source, clen);
