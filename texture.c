@@ -12,7 +12,7 @@ void deleteTextures(gDisplay *d) {
   glDeleteTextures(1, &(d->texTrail));
   glDeleteTextures(1, &(d->texTrailDecal));
   glDeleteTextures(1, &(d->texDebug));
-
+  ogl_debugtex = 0;
   checkGLError("texture.c deleted textures");
 }
 
