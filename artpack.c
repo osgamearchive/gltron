@@ -34,7 +34,7 @@ void loadArt() {
 
   path = getArtPath(artpack, "artpack.ini");
   if(path != NULL) {
-    scripting_DoFile(path);
+    scripting_RunFile(path);
     free(path);
   }
 
