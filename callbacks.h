@@ -9,5 +9,6 @@ typedef struct callbacks {
   void (*initGL)(void);
   void (*mouse)(int, int, int, int);
   void (*mouseMotion)(int, int);
+	char *name;
 } callbacks;
 #endif
