@@ -28,6 +28,12 @@ char *credits[] = {
   NULL
 };
 
+void mouseCredits (int buttons, int state, int x, int y)
+{
+    if ( state == SYSTEM_MOUSEPRESSED )
+        SystemExit();
+}
+
 void keyCredits(int k, int x, int y)
 {
   SystemExit();
@@ -71,5 +77,5 @@ void initCredits() {
 
 callbacks creditsCallbacks = { 
   displayCredits, idleCredits, keyCredits, initCredits, 
-  NULL, NULL, NULL, NULL
+  NULL, NULL, mouseCredits, NULL
 };
