@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <SDL.h>
+#include "mouse.h"
 #include "wcontrols.h"
 
 WrootControl*
@@ -12,6 +13,9 @@ newRootControl()
   root->controlList       = NULL;
   root->currentcontrol    = 0;
   root->lastClick         = 0;
+  root->currentFocus      = -1;
+  root->lastFocus         = 0;
+  root->activeFocus       = 0;
   return root;
 }
 
@@ -38,37 +42,17 @@ newControl( WrootControl  *root, Wptr control, int type )
     case WcontrolButton:
       break;
     case WprogressBar:
-/*       wcontrol->controlRect.top = (Wprogressbar*)(wcontrol->control)->x; */
-/*       wcontrol->controlRect.left = (Wprogressbar*)(wcontrol->control)->y; */
-/*       wcontrol->controlRect.bottom = (Wprogressbar*)(wcontrol->control)->x+(Wprogressbar*)(wcontrol->control)->height; */
-/*      (wcontrol->controlRect.right = (Wprogressbar*)(wcontrol->control)->y+(Wprogressbar*)(wcontrol->control)->width; */
       break;
     case WprogressStatus:
-/*       wcontrol->controlRect.top = (Wprogressstatus*)(wcontrol->control)->x; */
-/*       wcontrol->controlRect.left = (Wprogressstatus*)(wcontrol->control)->y; */
-/*       wcontrol->controlRect.bottom = (Wprogressstatus*)(wcontrol->control)->x+(Wprogressstatus*)(wcontrol->control)->height; */
-/*       wcontrol->controlRect.right = (Wprogressstatus*)(wcontrol->control)->y+(Wprogressstatus*)(wcontrol->control)->width; */
       break;
     case WinputText:
-/*       wcontrol->controlRect.top = (Wintext*)(wcontrol->control)->x; */
-/*       wcontrol->controlRect.left = (Wintext*)(wcontrol->control)->y; */
-/*       wcontrol->controlRect.bottom = (Wintext*)(wcontrol->control)->x+(Wintext*)(wcontrol->control)->height; */
-/*       wcontrol->controlRect.right = (Wintext*)(wcontrol->control)->y+(Wintext*)(wcontrol->control)->width; */
       break;
     case WoutputText:
-/*       wcontrol->controlRect.top = (Wtext*)(wcontrol->control)->x; */
-/*       wcontrol->controlRect.left = (Wtext*)(wcontrol->control)->y; */
-/*       wcontrol->controlRect.bottom = (Wtext*)(wcontrol->control)->x+(Wtext*)(wcontrol->control)->height; */
-/*       wcontrol->controlRect.right = (Wtext*)(wcontrol->control)->y+(Wtext*)(wcontrol->control)->width; */
       break;
     case  WstaticText:
       break;
     case Wlistbox:
       wcontrol->controlRect = getRect_wlist((Wlist*)wcontrol->control);
-/*       wcontrol->controlRect.top = (Wlist*)(wcontrol->control)->x; */
-/*       wcontrol->controlRect.left = (Wlist*)(wcontrol->control)->y; */
-/*       wcontrol->controlRect.bottom = (Wlist*)(wcontrol->control)->x+(Wlist*)(wcontrol->control)->height; */
-/*       wcontrol->controlRect.right = (Wlist*)(wcontrol->control)->y+(Wlist*)(wcontrol->control)->width;; */
       break;
     case Wscrollbar:	  
       break;
@@ -113,6 +97,30 @@ getCurrentControl( WrootControl  *root )
 }
 
 
+WcontrolRef
+getControl( WrootControl  *root, int controlID )
+{
+  WcontrolRef wcontrol;
+  int         i;
+
+  if( root->currentcontrol == 0 )
+    {
+      return NULL;
+    } else {
+      i = 0;
+      wcontrol = root->controlList;
+
+      while( ( ++i != controlID) && (wcontrol != NULL) )
+	{
+	  wcontrol  = wcontrol->next;
+	}
+      if( i != controlID )
+	return NULL;
+      else
+	return wcontrol;
+    }
+}
+
 void
 setCurrentControl( WrootControl  *root, Wptr controldata )
 {
@@ -135,7 +143,8 @@ void
 updateControls( WrootControl  *root )
 {
   WcontrolRef wcontrol;  
-
+  int nx, ny;
+  Wpoint pt;
 
   wcontrol = root->controlList;
 
@@ -170,16 +179,47 @@ updateControls( WrootControl  *root )
       wcontrol = wcontrol->next;
     }
   
+  //drawing mouse focus
+  if( root->activeFocus && (SDL_GetTicks() - root->lastFocus) > 1500 )
+    {
+      wcontrol = getControl( root, root->currentFocus );
+
+      getMouse( &nx, &ny );
+      pt.v=ny;
+      pt.h=nx;
+
+      switch( wcontrol->type )
+	{
+	case WcontrolButton:
+	  break;
+	case WprogressBar:
+	  break;
+	case WprogressStatus:
+	  break;
+	case WinputText:
+	  break;
+	case WoutputText:
+	  break;
+	case  WstaticText:
+	  break;
+	case Wlistbox:
+	  mouseFocus_wlist((Wlist *)wcontrol->control, pt );
+	  break;
+	case Wscrollbar:	  
+	  break;
+	}
+    }
+
   //drawing the highlighting ( TODO )
 }
 
 static int
 pointinRect( Wpoint pt, Wrect rect )
 {
-  printf("checking %d >= %d\n",  pt.v, rect.top);
-  printf("checking %d <= %d\n",  pt.v, rect.bottom);
-  printf("checking %d <= %d\n",  pt.h, rect.right);
-  printf("checking %d >= %d\n",  pt.h, rect.left);
+  /* printf("checking %d >= %d\n",  pt.v, rect.top); */
+/*   printf("checking %d <= %d\n",  pt.v, rect.bottom); */
+/*   printf("checking %d <= %d\n",  pt.h, rect.right); */
+/*   printf("checking %d >= %d\n",  pt.h, rect.left); */
   return(    pt.v >= rect.top && pt.v <= rect.bottom
 	     && pt.h <= rect.right && pt.h >= rect.left );
 }
@@ -238,6 +278,60 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 void
 mouseControls( WrootControl  *root, Wpoint mousexy )
 {
+  WcontrolRef wcontrol;
+  int         i = 0;
+
+  globalMouseToLocal(&mousexy);
+
+  //managing mouse focus
+  wcontrol = root->controlList;
+  if( wcontrol != NULL )
+    i++;
+
+  while( wcontrol != NULL &&
+	 ! pointinRect(mousexy, wcontrol->controlRect ) )
+    {
+      wcontrol = wcontrol->next;
+      i++;
+    }
+  
+  if( wcontrol == NULL )
+    {
+      root->activeFocus = 0;
+      return;
+    }
+ 
+
+
+  if( root->activeFocus && i == root->currentFocus )
+    return;
+    
+  root->currentFocus  = i;
+  root->lastFocus     = SDL_GetTicks();
+  root->activeFocus   = 1;
+
+  printf("new focus is %d", root->currentFocus );
+
+/*   switch( wcontrol->type ) */
+/*     { */
+/*     case WcontrolButton: */
+/*       break; */
+/*     case WprogressBar: */
+/*       break; */
+/*     case WprogressStatus: */
+/*       break; */
+/*     case WinputText: */
+/*       break; */
+/*     case WoutputText: */
+/*       break; */
+/*     case  WstaticText: */
+/*       break; */
+/*     case Wlistbox: */
+/*       mouseMotion_wlist((Wlist *)wcontrol->control, mousexy); */
+/*       break; */
+/*     case Wscrollbar:	   */
+/*       break; */
+/*     } */
 
 }
 

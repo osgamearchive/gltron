@@ -34,3 +34,9 @@ setMouse( int nx, int ny )
 }
 
 
+void getMouse( int *nx, int *ny )
+{
+  *nx = x;
+  *ny = y;
+}
+

@@ -450,6 +450,68 @@ focus(WlistPtr list, int line)
 }
 
 void
+mousefocus(WlistPtr list, int line, Wpoint mousexy)
+{
+  float color[4] = { 0.05f, 0.05f, 0.05f, .8f };
+  int   x, y;
+  int   width    = 400;
+  int   h        = list->height/list->nblines;
+  int   l        = (list->y+list->height-mousexy.v)/h;
+  int   s        = 14;
+  int   height   = s*6;
+  char  str[255];
+
+  //draw a beautifull transparent box using alpha trucs
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glColor4fv(color);
+
+  //find pos x, y
+  x = list->x + list->width/2 - width/2;
+  y = list->y+list->height-((l+1)*h)+0.5*h+(0.25*height)-1;//+((list->y+list->height-mousexy.v)/h)*h;
+
+  glBegin(GL_QUADS); 
+  glVertex3f(x, y, 0.0f);   //top left
+  glVertex3f(x+width, y, 0.0f);   //top right
+  glVertex3f(x+width, y-height, 0.0f);  //Bottom right
+  glVertex3f(x, y-height, 0.0f);  //Bottom left  
+  glEnd();
+  glDisable(GL_BLEND);
+
+  glColor3f(0.9,.3, .3);
+  //draw text now
+  y -=2*s;
+  x+=10;
+  sprintf(str, "Server       : %d.%d.%d.%d",
+	  (ntohl(servers[line].ipaddress.host) & 0xff000000) >> 24,
+	  (ntohl(servers[line].ipaddress.host) & 0x00ff0000) >> 16,
+	  (ntohl(servers[line].ipaddress.host) & 0x0000ff00) >> 8,
+	  ntohl(servers[line].ipaddress.host) & 0x000000ff);
+  //x=list->x+list->width/2-strlen(str)*s*1.5/2;
+  drawText(gameFtx, x, y, s, str);
+  y -=s;
+
+  glColor3f(.1,.9, .1);
+  sprintf(str, "Version      : %s",servers[line].version);
+  //x=list->x+list->width/2-strlen(str)*( game->screen->vp_w / (50 * 1.5) )*1.5/2;
+  drawText(gameFtx, x, y, s, str);
+  y -=s;
+
+  glColor3f(.4,.4, .9);
+  sprintf(str, "Speed        : %s",speed_list[servers[line].speed]);
+  //x=list->x+list->width/2-strlen(str)*( game->screen->vp_w / (50 * 1.5) )*1.5/2;
+ //y = game->screen->vp_h - 90;
+  drawText(gameFtx, x, y, s, str);
+
+  y -=s;
+  sprintf(str, "Size         : %s", arena_list[servers[line].size]);
+  //x=list->x+list->width/2-strlen(str)*( game->screen->vp_w / (50 * 1.5) )*1.5/2;
+  //y = game->screen->vp_h - 110;
+  drawText(gameFtx, x, y, s, str);
+}
+
+
+void
 action(WlistPtr list)
 {
   char server[255], port[255];
@@ -543,8 +605,8 @@ initTracker()
   set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr, sortit); 
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-250,
-			 10, 4, colDefs, 3, focus, action);
-  
+			 10, 4, colDefs, 3, focus, action, mousefocus );
+ 
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
 
   setCurrentControl( trackerControls, (Wptr)serverlist );
@@ -569,7 +631,13 @@ cleanTracker()
 void
 mousemotionTracker( int mx, int my )
 {
+  Wpoint pt;
+
+  pt.h=mx;
+  pt.v=my;
+
   setMouse( mx, my );
+  mouseControls( trackerControls, pt );
 }
 
 callbacks trackerscreenCallbacks = {

@@ -55,6 +55,9 @@ typedef struct WrootControl
   WcontrolRef     controlList;   //control list
   int             currentcontrol;//current control selected id
   int             lastClick;     //time of last click ( for double clicking )
+  int             currentFocus;  //current controls focused
+  int             lastFocus;     //time of the last focuse
+  int             activeFocus;   //if focus is activated.
 } WrootControl;
 
 /** definitions of controls */
@@ -111,6 +114,7 @@ void              newControl( WrootControl  *root, Wptr control, int type );
 
 /** Get current control                 */
 WcontrolRef       getCurrentControl( WrootControl  *root );
+WcontrolRef       getControl( WrootControl  *root, int controlID );
 
 /** Updates controls                    */
 void              updateControls( WrootControl  *root );

@@ -52,7 +52,8 @@ Wlist *
 new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
 	    ColDef *colDefs, int sortcol, 
 	    void  (*focus) ( WlistPtr list, int line ),
-	    void  (*action)( WlistPtr list ))
+	    void  (*action)( WlistPtr list ),
+	    void  (*mouseFocus) ( WlistPtr list, int line, Wpoint mousexy ))
 {
   Wlist *wlist = NULL;
   int    i;
@@ -76,6 +77,7 @@ new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
   wlist->colDefs=colDefs;
   wlist->sortcol=sortcol;
   wlist->focus  = focus;
+  wlist->mouseFocus  = mouseFocus;
   wlist->action = action;
   
   //Init and allocte memory for index and datas
@@ -404,11 +406,11 @@ find_line_wlist(Wlist *wlist, Wpoint mousexy)
   int tmp;
   int h = wlist->height/wlist->nblines;
 
-  printf("wlist->y = %d and mousexy.v = %d\n", wlist->y+wlist->height, mousexy.v);
+  //printf("wlist->y = %d and mousexy.v = %d\n", wlist->y+wlist->height, mousexy.v);
   tmp = (wlist->y+wlist->height-mousexy.v)/h;
   line = tmp-1;
 
-  printf("line is %d\n", line);
+  //printf("line is %d\n", line);
   return line;
 }
 
@@ -446,5 +448,37 @@ if( wlist->focus != NULL )
 void
 mouseMotion_wlist( Wlist *wlist, Wpoint mousexy )
 {
+    int line;
+
+  line = find_line_wlist(wlist, mousexy);
+  if( line == -1 )
+    return;
+  line+=wlist->scroll;
   
+  if( line >= wlist->rlines )
+    return;
+  
+  //Select that line
+  if( wlist->current != line )
+    wlist->current = line;
+
+if( wlist->focus != NULL )
+    wlist->focus(wlist, wlist->index[wlist->current]);
+}
+
+void
+mouseFocus_wlist( Wlist *wlist, Wpoint mousexy )
+{
+  int line;
+  
+  line = find_line_wlist(wlist, mousexy);
+  if( line == -1 )
+    return;
+  line+=wlist->scroll;
+  
+  if( line >= wlist->rlines )
+    return;
+  
+  if( wlist->mouseFocus != NULL )
+    wlist->mouseFocus(wlist, wlist->index[line], mousexy);
 }
