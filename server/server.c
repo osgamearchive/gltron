@@ -841,7 +841,9 @@ do_wingame( int winner)
       //memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
       for(i=0;i<MAX_PLAYERS;++i)
 	{
-	  rep.infos.score.points[i] = netscores.points[i];
+	  rep.infos.score.points[i] = ( slots[i].active==1 ) ? netscores.points[i]:0;
+	  if( slots[i].active==1 )
+	    printf("%s (slot %d) has %hd points\n", i, slots[i].name, rep.infos.score.points[i]);
 	}
 
 

@@ -6,7 +6,7 @@ static Uint32 savedtime = 0;
 void
 login(char *name)
 {
-  int           i;
+  int           i=0;
   Packet        packet;
   
   
@@ -332,8 +332,11 @@ do_event(Packet packet)
 void
 do_score(Packet packet)
 {
+  int i=0;
+
   netscores.winner=packet.infos.score.winner;
-  memcpy(netscores.points, packet.infos.score.points, 4*MAX_PLAYERS);
+  for(i=0;i<MAX_PLAYERS;++i)
+    netscores.points[i]=packet.infos.score.points[i];
 }
 
 

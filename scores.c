@@ -58,7 +58,7 @@ void drawScores() {
 	  if( i == netscores.winner  )
 	    glColor3fv(colors[1]);
 	  
-	  sprintf(str, "%c%s        :  %hd\n", i==netscores.winner?'*':'+',slots[i].name, netscores.points[i]);
+	  sprintf(str, "%s        :  %hd\n", slots[i].name, netscores.points[i]);
 	  drawText(gameFtx, x, y, h, str);
 	  
 	  y = game->screen->vp_h - 1.5 * h * (j+i + 2);
