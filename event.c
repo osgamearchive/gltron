@@ -179,7 +179,7 @@ void idleGame(void) {
 #ifdef NETWORK
     updateNet();
 #endif
-#endif
+#endif /* RECORD */
     /* fall through */
   case GAME_SINGLE:
 #ifdef RECORD
@@ -256,13 +256,13 @@ active == AI_COMPUTER &&
 #endif
     /* fall through to GAME_PLAY */
   case GAME_PLAY:
-#endif
     getEvents(); 
     l = doMovement(0, game2->time.dt); /* this won't generate new events */
     if(l != NULL) {
       fprintf(stderr, "something is seriously wrong - ignoring events\n");
     }
     break;
+#endif /* RECORD */
   }
     
   doCameraMovement();
