@@ -1,12 +1,12 @@
 #include "file.h"
 
-#include <limits.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #ifndef macintosh
+#   include <limits.h>
 #   include <unistd.h>
 #endif
 
