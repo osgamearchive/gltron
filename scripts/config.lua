@@ -12,7 +12,7 @@ display_type = 3
 
 -- video
 artpacks = { }
-current_artpack = "metalTron"
+current_artpack = "default"
 -- texture settings
 show_floor_texture = 1
 show_wall = 1
@@ -38,7 +38,7 @@ windowMode = 1
 
 -- audio
 tracks = { }
-current_track = "song_bruce.mp3"
+current_track = "song_revenge_of_cats.it.gz"
 -- music & fx settings
 playEffects = 1
 playMusic = 1
