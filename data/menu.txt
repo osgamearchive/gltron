@@ -21,7 +21,7 @@ Root
 
 # Game Submenu - Start Game / Game Settings / Configure Players
 # 2 (chooseModel)
-6
+5
 xsub
 Game
 
@@ -29,17 +29,17 @@ Game
 xreset
 Start Game
 
-2
-xsub
-Demo
-
-0
-xdp
-Play demo
-
-0
-xdr
-Record demo
+#2
+#xsub
+#Demo
+#
+#0
+#xdp
+#Play demo
+#
+#0
+#xdr
+#Record demo
 
 4
 xsub
@@ -61,17 +61,13 @@ Arena size:  %s
 sti_erase_crashed
 Erase dead players   - %s
 
-7
+5
 xsub
 Play Settings
 
 0
 sti_fast_finish
 Fast Finish          - %s
-
-0
-sti_turn_cycle
-Cycle turns smooth   - %s
 
 0
 sti_show_2d
@@ -84,10 +80,6 @@ Camera mode          - %s
 0
 stl_7_2_display_type
 Viewports            - %s
-
-0
-sti_show_ai_status
-Show AI status       - %s
 
 0
 xp__resetScores
@@ -194,117 +186,97 @@ FX Volume     - %.0f%%
 sm_song
 Song: %s
 
-# Video Submenu (4 entries)
-# Display Options / Misc Options / Status Information / Change Resolution
-4
+# Video Submenu
+# Texturing / Detail Options / Screen Options
+3
 xsub
 Video
 
-# Options Submenu (11 entries)
-4
+9
 xsub
-Display Options
+Texturing
 
 0
 sa_artpack
-Artpack: %s
-
-7
-xsub
-Texture Detail
+Artpack:       - %s
 
 0
 sti_show_floor_texture
-Floor Texture      - %s
+Floor Texture  - %s
 
 0
 sti_show_wall
-Wall Texture       - %s
+Wall Texture   - %s
 
 0
 sti_show_crash_texture
-Show crash texture - %s
+Crash texture  - %s
 
 0
 sti_show_skybox
-Skybox             - %s
+Skybox         - %s
+
+0
+sti_show_decals
+Trail Decals   - %s
 
 0
 sti_use_mipmaps
-Use MipMaps        - %s
+Use MipMaps    - %s
 
 0
 stl_5_1_mipmap_filter
-Mipmap Filtering   - %s
+Filtering      - %s
 
 0
 sti_stretch_textures
-Stretch Textures   - %s
+Scale Walls    - %s
 
-5
+# Options Submenu (11 entries)
+
+8
 xsub
-Other Details
+Detail Options
 
 0
 sti_alpha_trails
-Use alpha trails   - %s
-
-0 
-sti_show_alpha
-Alpha Blending     - %s
+Use alpha trails  - %s
 
 0
 sti_show_glow
-Halos              - %s
+Halos             - %s
 
 0
 sti_show_model
-Show Lightcycles   - %s
+Lightcycles       - %s
 
 0
 stl_3_2_lod
-LOD setting:       - %s
+Cycle LOD:        - %s
 
 0
-sti_windowMode
-Window Mode - %s
+stl_8_2_shadow_lod
+Shadow LOD:       - %s
 
-# Misc Options Sub Menu
-2
-xsub
-Misc Options
-
-0
-sti_mouse_warp
-Capture mouse  - %s
-0
-sti_model_backwards
-Lightcycle backwards - %s
-
-# Status information sub menu
-2
-xsub
-Status Information
 0
 sti_show_fps
-Show FPS counter          - %s
+FPS counter       - %s
+
 0
 sti_show_ai_status
-Show AI status            - %s
+AI status         - %s
+
+0
+sti_show_scores
+Scores            - %s
 
 # Change Resolution sub menu
-6
+7
 xsub
-Change Resolution
+Screen Options
 0
 xv320x240
 320 x 240
-0
-xv400x300
-400 x 300
-0
-xv512x384
-512 x 384
 0
 xv640x480
 640 x 480
@@ -314,8 +286,18 @@ xv800x600
 0
 xv1024x768
 1024 x 768
+0
+xv1280x1024
+1280 x 1024
+0
+xv1600x1200
+1600 x 1200
+0
+sti_windowMode
+Windowed Mode - %s
 
 # Quit entry (saves settings)
 0
 xquit
 Quit
+
