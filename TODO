@@ -5,6 +5,10 @@ TODO list
 
 Bugs:
 
+- no garbage collection scheduled in-game
+- Changing song leaks memory
+- App crashes on corrupt mp3 files
+- Menu system got broken with new scripts. Still missing: Configuring Keys
 - readDirectoryContents() doesn't use the correct path
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
@@ -19,7 +23,6 @@ Bugs:
   but user went back to menu. (LIM) (software cursor time?)
 - fix mouse not being released when going from fullscreen to windowed in some
   situations. (LIM)
-- changes of settings from within artpack.ini don't update the menu captions (Andreas)
 - preferences/snapshot directory isn't created if it doesn't exist
 - key presses are not modifier immune (shift/capslock, etc.)
 
