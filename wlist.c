@@ -54,7 +54,7 @@ new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
 	    void  (*focus) ( WlistPtr list, int line ) )
 {
   Wlist *wlist = NULL;
-
+  int    i;
 
   if( colDefs == NULL )
     return NULL;
@@ -80,6 +80,10 @@ new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
   wlist->index = (int *)malloc(sizeof(int)*MAXWLISTLINES);
   initindex_wlist(wlist);
   wlist->lines = (char ***)malloc(sizeof(char **) * MAXWLISTLINES);
+  for(i=0; i<MAXWLISTLINES; ++i)
+    {
+      wlist->lines[i]=NULL;
+    }
   return wlist;
 }
 
@@ -307,7 +311,7 @@ scroll_wlist(Wlist *wlist, int dir)
 int
 getcurrent_wlist( Wlist *wlist )
 {
-  return wlist->current;
+  return wlist->index[wlist->current];
 }
 
 void

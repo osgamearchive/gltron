@@ -249,15 +249,16 @@ make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
   slots[packet.which].ping=0;
   SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT);
   for(i=0; i < NBPINGPACKET; ++i )
-    {
-      packet.time  = SystemGetElapsedTime();
-      printf("sending ping %d to %s:%d\n", i, ipaddress, port);
-      packet.num = i;
-      udppacket->len=sizeof(Pingpacket);
-      memcpy(udppacket->data, &packet, sizeof(Pingpacket));
-      
-      SDLNet_UDP_Send(udpsock, -1, udppacket);
-    }
+  {
+    //i=0;
+  packet.time  = SystemGetElapsedTime();
+  printf("sending ping %d to %s:%d\n", i, ipaddress, port);
+  packet.num = 1;
+  udppacket->len=sizeof(Pingpacket);
+  memcpy(udppacket->data, &packet, sizeof(Pingpacket));
+  
+  SDLNet_UDP_Send(udpsock, -1, udppacket);
+      }
   
 }
 
@@ -265,10 +266,16 @@ void
 reply_ping()
 {
   int         n;
+  Pingpacket  *packet;
   
   printf("reply to a ping\n");
 
   n = SDLNet_UDP_Recv(udpsock, udppacket);
+  packet = (Pingpacket *)udppacket->data;
+  
+  if( packet->num == 2 )
+    return;
+  packet->num = 2;
   printf("ping from %s:%hd\n", SDLNet_ResolveIP(&udppacket->address), ntohs(udppacket->address.port));
 
   SDLNet_UDP_Bind(udpsock, 1, &udppacket->address);

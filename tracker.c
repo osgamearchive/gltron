@@ -370,6 +370,10 @@ addressToStr( WlistPtr list, int line, int col )
   IPaddress *ipaddress;
 
   ipaddress = ( IPaddress *)list->lines[line][col];
+  if( ipaddress == NULL )
+    {
+      strcpy(str, "N/A");
+    }
 
   sprintf(str, "%d.%d.%d.%d",
 	 (ntohl(ipaddress->host) & 0xff000000) >> 24,
@@ -387,6 +391,10 @@ intToStr( WlistPtr list, int line, int col )
   int *val;
 
   val = (int *)(list->lines[line][col]);
+  if( val == NULL )
+    {
+      strcpy(str, "N/A");
+    }
 
   //val = (int)(*(list->lines[line][col]));
 
@@ -399,6 +407,11 @@ char *
 charToStr(WlistPtr list, int line, int col )
 {
   char *str = malloc(255);
+
+  if(  list->lines[line][col] == NULL )
+    {
+      strcpy(str, "N/A");
+    }
 
   sprintf(str, "%s", list->lines[line][col]);
   return str;
