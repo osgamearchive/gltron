@@ -178,8 +178,8 @@ do_gamerules(Packet packet)
   game->settings->ai_player4= ( slots[3].active ) ? 0 : 2;
   
   initNetEventList( neteventlist );
+  game->players               = packet.infos.gamerules.players;
   initData();
-  game2->players              = packet.infos.gamerules.players;
   //game->players=game2->players;
   game2->rules.speed          = packet.infos.gamerules.speed;
   game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
@@ -187,6 +187,7 @@ do_gamerules(Packet packet)
   game->settings->grid_size   = packet.infos.gamerules.grid_size;
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
   game2->time                 = packet.infos.gamerules.time;
+  
   //Startpos
   printf("+ %d players, getting start positions \n", game2->players);
   game2->startPositions = ( int *)malloc(3*game2->players *sizeof(int));
