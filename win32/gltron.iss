@@ -2,7 +2,7 @@
 
 [Setup]
 AppName=GLtron
-AppVerName=GLtron version 0.70-alpha-1
+AppVerName=GLtron version 0.71-beta
 AppCopyright=Copyright © 1999-2003 Andreas Umbach
 DefaultDirName={pf}\GLtron
 DefaultGroupName=GLtron
@@ -39,10 +39,7 @@ Source: "art\classic\babbage.1.png"; DestDir: "{app}\art\classic\";
 Source: "art\classic\gltron_floor.png"; DestDir: "{app}\art\classic\";
 Source: "art\classic\gltron_trail.png"; DestDir: "{app}\art\classic\";
 Source: "art\classic\gltron_traildecal.png"; DestDir: "{app}\art\classic\";
-Source: "art\classic\gltron_wall_1.png"; DestDir: "{app}\art\classic\";
-Source: "art\classic\gltron_wall_2.png"; DestDir: "{app}\art\classic\";
-Source: "art\classic\gltron_wall_3.png"; DestDir: "{app}\art\classic\";
-Source: "art\classic\gltron_wall_4.png"; DestDir: "{app}\art\classic\";
+Source: "art\classic\walls.png"; DestDir: "{app}\art\classic\";
 Source: "art\classic\readme.txt"; DestDir: "{app}\art\classic\";
 Source: "art\classic\skybox0.png"; DestDir: "{app}\art\classic\";
 Source: "art\classic\skybox1.png"; DestDir: "{app}\art\classic\";
@@ -62,10 +59,7 @@ Source: "art\default\gltron_impact.png"; DestDir: "{app}\art\default\";
 Source: "art\default\gltron_logo.png"; DestDir: "{app}\art\default\";
 Source: "art\default\gltron_trail.png"; DestDir: "{app}\art\default\";
 Source: "art\default\gltron_traildecal.png"; DestDir: "{app}\art\default\";
-Source: "art\default\gltron_wall_1.png"; DestDir: "{app}\art\default\";
-Source: "art\default\gltron_wall_2.png"; DestDir: "{app}\art\default\";
-Source: "art\default\gltron_wall_3.png"; DestDir: "{app}\art\default\";
-Source: "art\default\gltron_wall_4.png"; DestDir: "{app}\art\default\";
+Source: "art\default\walls.png"; DestDir: "{app}\art\default\";
 Source: "art\default\skybox0.png"; DestDir: "{app}\art\default\";
 Source: "art\default\skybox1.png"; DestDir: "{app}\art\default\";
 Source: "art\default\skybox2.png"; DestDir: "{app}\art\default\";
@@ -77,16 +71,15 @@ Source: "art\default\xenotron.0.png"; DestDir: "{app}\art\default\";
 Source: "art\default\xenotron.1.png"; DestDir: "{app}\art\default\";
 Source: "art\metalTron\artpack.lua"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\gltron_floor.png"; DestDir: "{app}\art\metalTron\";
-Source: "art\metalTron\gltron_wall_1.png"; DestDir: "{app}\art\metalTron\";
-Source: "art\metalTron\gltron_wall_2.png"; DestDir: "{app}\art\metalTron\";
-Source: "art\metalTron\gltron_wall_3.png"; DestDir: "{app}\art\metalTron\";
-Source: "art\metalTron\gltron_wall_4.png"; DestDir: "{app}\art\metalTron\";
+Source: "art\metalTron\walls.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox0.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox1.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox2.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox3.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox4.png"; DestDir: "{app}\art\metalTron\";
 Source: "art\metalTron\skybox5.png"; DestDir: "{app}\art\metalTron\";
+Source: "levels\square.lua"; DestDir: "{app}\levels\";
+Source: "levels\tri.lua"; DestDir: "{app}\levels\";
 Source: "music\revenge_of_cats.it"; DestDir: "{app}\music\";
 Source: "scripts\artpack.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\audio.lua"; DestDir: "{app}\scripts\";
@@ -97,18 +90,19 @@ Source: "scripts\layout.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\main.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\menu.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\menu_functions.lua"; DestDir: "{app}\scripts\";
+Source: "scripts\path.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\save.lua"; DestDir: "{app}\scripts\";
 Source: "scripts\video.lua"; DestDir: "{app}\scripts\";
-Source: "MSVCR70.dll"; DestDir: "{app}\";
+Source: "msvcr70.dll"; DestDir: "{app}\";
 Source: "SDL.dll"; DestDir: "{app}\";
-Source: "libpng.dll"; DestDir: "{app}\";
-Source: "mikmod.dll"; DestDir: "{app}\";
+Source: "libpng12.dll"; DestDir: "{app}\";
+; Source: "mikmod.dll"; DestDir: "{app}\";
 Source: "ogg.dll"; DestDir: "{app}\";
 Source: "sdl_sound.dll"; DestDir: "{app}\";
 Source: "smpeg.dll"; DestDir: "{app}\";
 Source: "vorbis.dll"; DestDir: "{app}\";
 Source: "vorbisfile.dll"; DestDir: "{app}\";
-Source: "zlib.dll"; DestDir: "{app}\";
+Source: "zlib1.dll"; DestDir: "{app}\";
 Source: "docs\README.html"; DestDir: "{app}\docs\"; Flags: isreadme
 Source: "gltron.exe"; DestDir: "{app}\";
 
