@@ -74,6 +74,13 @@ void keyTimedemo(int key, int x, int y) {
 		switchCallbacks(&guiCallbacks);
 }
 
+struct {
+	float speed;
+	int eraseCrashed, grid_size;
+} saveRules;
+
+extern int c_resetCamera();
+
 void initTimedemo() {
 	int i = 0;
 
@@ -82,18 +89,36 @@ void initTimedemo() {
 	
 	srand(37518);
 
-	updateSettingsCache();
-	// overwrite AI skills in settingsCache
-	game2->settingsCache.ai_level = 2;
+	resetRecognizer();
 	
+	updateSettingsCache();
+
+	// overwrite AI skills & rules in settingsCache
+	game2->settingsCache.ai_level = 2;
+	game2->settingsCache.show_ai_status = 0;
+	game2->settingsCache.show_fps = 0;
+	game2->settingsCache.camType = CAM_CIRCLE;
+	game2->settingsCache.show_console = 0;
+	
+	saveRules.speed = getSettingf("speed");
+	saveRules.eraseCrashed = getSettingi("erase_crashed");
+	saveRules.grid_size = getSettingi("grid_size");
+
+  setSettingf("speed", 12);
+	setSettingi("erase_crashed", 1);
+	setSettingi("grid_size", 200);
+		
  	game2->mode = GAME_SINGLE;
   initData();
   changeDisplay(-1);
 
 	for(i = 0; i < game->players; i++) {
 		game->player[i].ai->active = AI_COMPUTER;
+		// set all camera phi values to 0
+		game->player[i].camera->movement[CAM_PHI] = M_PI / 18;
+		game->player[i].camera->movement[CAM_CHI] = M_PI / 3;
 	}
-
+	
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
@@ -110,6 +135,10 @@ void exitTimedemo(void) {
 	else {
 		displayMessage(TO_STDERR | TO_CONSOLE, "dt: %d, frames: %d\n", dt, frames);
 	}
+
+  setSettingf("speed", saveRules.speed);
+	setSettingi("eraseCrashed", saveRules.eraseCrashed);
+	setSettingi("grid_size", saveRules.grid_size);
 }
 
 callbacks timedemoCallbacks = {
