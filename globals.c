@@ -24,9 +24,9 @@ float rec_spec_color[] = {0.05, 0.14, 0.05, 0.50};
 Mesh* recognizer;
 Mesh* lightcycle[LC_LOD];
 char *lc_lod_names[] = {
-  "lightcycle-high.obj.gz",
-  "lightcycle-med.obj.gz",
-  "lightcycle-low.obj.gz"
+  "lightcycle-high.obj",
+  "lightcycle-med.obj",
+  "lightcycle-low.obj"
 };
 
 #if 0

@@ -68,7 +68,7 @@ void initGameStructures() { /* called only once */
   }
 
   /* load recognizer model */
-  path = getPath(PATH_DATA, "recognizer.obj.gz");
+  path = getPath(PATH_DATA, "recognizer.obj");
   if(path != NULL) {
     recognizer = readMeshFromFile(path, TRI_MESH);
     /* old code did normalize & invert normals & rescale to size = 60 */
@@ -79,7 +79,7 @@ void initGameStructures() { /* called only once */
   free(path);
  
   /* load recognizer  quad model (for recognizer outlines) */
-  path = getPath(PATH_DATA, "recognizer_quad.obj.gz");
+  path = getPath(PATH_DATA, "recognizer_quad.obj");
   if(path != NULL) {
     recognizer_quad = readMeshFromFile(path, QUAD_MESH);
     /* old code did normalize & invert normals & rescale to size = 60 */
