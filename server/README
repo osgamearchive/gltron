@@ -1,0 +1,37 @@
+*Authors : Andreas Umbach & Nicolas Deniaud <nicolas.deniaud@wanadoo.fr>
+Copyright (C) 1999 Andreas Umbach <marvin@dataway.ch>
+
+This is a standalone server for networking game play with gltron.
+Usage: /opt/cvs/gltron/server/server [-h] [-f <conffile>]
+ 
+-f      set config file path ( default server.conf )
+-h      this help
+
+Config file:
+The default config file is server.conf in the same directory as the server.
+Comments are line starting with a #.
+Four variables need to be set:
+port: port is the port on which server listenning to incomming connection.
+default is 23460.
+
+passwd: is the passwd used to connect to a masterserver ( tracker ).
+
+tracker: is the IP address of the tracker. If set to NO, server won't connect to the tracker. WARNING: tracker address should be the address from internet interface if server and tracker are on the same machine. Using localhost is a bad idea because tracker will show 127.0.0.1 in server list.
+
+tport: is the port to connect to the tracker. default is 23470.
+
+License:
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
