@@ -29,3 +29,7 @@ function console_GetLine(offset)
 		end
 	end
 end
+
+function console_SeekRelative(offset)
+	-- TODO: implement something
+end
