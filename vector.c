@@ -1,7 +1,6 @@
 #include "vector.h"
-#include <math.h>
+#include "math.h"
 #include <stdio.h>
-#include <string.h>
 
 vec4* vec4Add(vec4 *pOut, const vec4 *pV1, const vec4 *pV2) {
   pOut->v[0] = pV1->v[0] + pV2->v[0];
@@ -73,7 +72,7 @@ vec3* vec3Normalize(vec3 *pOut, const vec3 *pV) {
   return pOut;
 }
 
-void vec4Print(vec4 *v) {
+void vec4Print(const vec4 *v) {
   int i;
   printf("[ ");
   for(i = 0; i < 4; i++) {
@@ -82,7 +81,7 @@ void vec4Print(vec4 *v) {
   printf(" ]\n");
 }
 
-void vec3Print(vec3 *v) {
+void vec3Print(const vec3 *v) {
   int i;
   printf("[ ");
   for(i = 0; i < 3; i++) {
@@ -114,11 +113,11 @@ vec3* vec3Copy(vec3 *pOut, const vec3 *pV) {
 	return pOut;
 }
 
-vec3* vec3Scale(vec3 *pV, float f) {
-	pV->v[0] *= f;
-	pV->v[1] *= f;
-	pV->v[2] *= f;
-	return pV;
+vec3* vec3Scale(vec3 *pOut, const vec3 *pV, float f) {
+	pOut->v[0] = f * pV->v[0];
+	pOut->v[1] = f * pV->v[1];
+	pOut->v[2] = f * pV->v[2];
+	return pOut;
 }
 
 unsigned int uintFromVec3(vec3 *pV) {
@@ -128,3 +127,24 @@ unsigned int uintFromVec3(vec3 *pV) {
 		( ( (unsigned int)(pV->v[2] * 127.0f + 128.0f) ) << 0 );
 }
 		
+vec3* vec3Zero(vec3 *pV) {
+	memset(pV, 0, sizeof(vec3));
+	return pV;
+}
+
+vec3* vec3TriNormalDirection(vec3* pOut, 
+														 const vec3* pV1, 
+														 const vec3* pV2, 
+														 const vec3 *pV3) {
+	vec3 v1, v2;
+	vec3Sub(&v1, pV2, pV1);
+	vec3Sub(&v2, pV3, pV1);
+	vec3Cross(pOut, &v1, &v2);
+	return pOut;
+}
+
+vec2* vec2Copy(vec2 *pOut, const vec2 *pV) {
+	memcpy(pOut, pV, sizeof(vec2));
+	return pOut;
+}
+

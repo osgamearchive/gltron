@@ -24,9 +24,13 @@ vec3* vec3fromVec4(vec3 *pOut, const vec4 *pV);
 vec4* vec4fromVec3(vec4 *pOut, const vec3 *pV);
 
 vec3* vec3Copy(vec3 *pOut, const vec3 *pV);
-vec3* vec3Scale(vec3 *pV, float f);
-void vec4Print(vec4 *pV);
-void vec3Print(vec3 *pV);
+vec3* vec3Scale(vec3 *pOut, const vec3 *pV, float f);
+void vec4Print(const vec4 *pV);
+void vec3Print(const vec3 *pV);
+vec3* vec3Zero(vec3 *pV);
+vec3* vec3TriNormalDirection(vec3* pOut, const vec3* pV1, const vec3* pV2, const vec3 *pV3);
+
+vec2* vec2Copy(vec2 *pOut, const vec2 *pV);
 
 unsigned int uintFromVec3(vec3 *pV);
 // vec4* vec4Transform(vec4* pOut, const vec4* pV, const matrix16 *pM);
