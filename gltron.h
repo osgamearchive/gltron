@@ -286,6 +286,7 @@ extern void stopPlaying();
 /* engine.c */
 
 extern void addList(list **l, void *data);
+extern void updateSettingsCache();
 extern int updateTime();
 extern int getCol(int x, int y);
 extern void turn(Data* data, int direction);
