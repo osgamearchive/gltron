@@ -18,29 +18,31 @@ Features [high priority]:
 - fallback instead of app exiting when SDL_sound is present, but doesn't
   support ogg/vorbis, or if sound fx files are corrupt
 - add 3d sound source for recognizer [ Andreas ]
-- add sound for own cycle. Modulate pitch (or volume) after turns
-- add (merge) software mouse cursor (from networking branch)
+- Add sound for own cycle. Modulate pitch (or volume) after turns
+
+Features [medium priority, or easily implemented]:
+
+- Add 'smooth turning' for other cycle sounds (doppler/panning)
+- fast finish should be relative to the arena size (or really finish instantly)
+- fix camera zoom generally (speed / settings)
+- new bot AI
+- add speed boost / variable speed
+- Add new starting positions, e.g. 3 against one
 
 Features [low priority]:
 
-- fast finish should be relative to the arena size (or really finish instantly)
+- add more special effects (reflections etc.)
 - create default graphics settings to choose from: low/medium/high
-- fix camera zoom generally (speed / settings)
-- Add 3d sound source for recognizer [ Andreas ]
-- Add sound for own cycle. Modulate pitch (or volume) after turns
-- Consider 'smooth turning' for other cycle sounds (doppler/panning)
 - explosion is missing alpha blending right now
 - Proper HUD for scores / ai info, etc.
 - uv-coordinates for the model, add texture coordinate support to obj loader
 - support other controllers (i.e. joysticks)
 - quake-like drop down console
-- add more special effects (reflections etc.)
 - add slightly funny console messages (Robot ate Andi's tail)
 - peek left/right when in 1st person camera mode
 - quick way to restore sane camera angle (e.g. middle mouse button)
-- new bot AI
-- add speed boost / variable speed
 - add armagetron style physics mod 
+- add (merge) software mouse cursor (from networking branch)
 
 Settings:
 
