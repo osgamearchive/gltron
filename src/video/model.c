@@ -286,13 +286,13 @@ void drawModel(Mesh *pMesh, MeshType iType) {
   }
 
   for(i = 0; i < pMesh->nMaterials; i++) {
-    glMaterialfv(GL_FRONT, GL_AMBIENT,
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,
 		 pMesh->pMaterials[i].ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,
 		 pMesh->pMaterials[i].diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR,
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,
 		 pMesh->pMaterials[i].specular);
-    glMaterialf(GL_FRONT, GL_SHININESS,
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS,
 		pMesh->pMaterials[i].shininess);
 
     glDrawElements(primitive, iFaceSize * pMesh->pnFaces[i],
