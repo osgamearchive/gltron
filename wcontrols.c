@@ -40,6 +40,7 @@ newControl( WrootControl  *root, Wptr control, int type )
   switch(wcontrol->type )
     {
     case WcontrolButton:
+      wcontrol->controlRect = getRect_wbutton((Wbutton*)wcontrol->control);
       break;
     case WprogressBar:
       break;
@@ -155,6 +156,7 @@ updateControls( WrootControl  *root )
       switch( wcontrol->type )
 	{
 	case WcontrolButton:
+	  draw_wbutton((Wbutton*)wcontrol->control);
 	  break;
 	case WprogressBar:
 	  draw_wprogressbar((Wprogressbar*)wcontrol->control);
@@ -266,7 +268,7 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
       break;
     case WoutputText:
       break;
-    case  WstaticText:
+    case WstaticText:
       break;
     case Wlistbox:
       mouse_wlist((Wlist *)wcontrol->control, buttons, state, dblClick, mousexy);
@@ -396,6 +398,7 @@ freeRootControl( WrootControl *root)
       switch( wcontrol->type )
 	{
 	case WcontrolButton:
+	  free_wbutton((Wbutton*)wcontrol->control);
 	  break;
 	case WprogressBar:
 	  free_wprogressbar((Wprogressbar*)wcontrol->control);

@@ -29,6 +29,10 @@
 #include "wprogress.h"
 #endif
 
+#ifndef __WBUTTON_H__
+#include "wbutton.h"
+#endif
+
 #ifndef __WLIST_H__
 #include "wlist.h"
 #endif

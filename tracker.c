@@ -615,6 +615,9 @@ initTracker()
  
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
 
+  //a button for testing
+  newControl(trackerControls, (Wptr)new_wbutton(game->screen->vp_w/2-40, 40, 80, 15, "Refresh", NULL, NULL, NULL), WcontrolButton);
+
   //title
   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h;
