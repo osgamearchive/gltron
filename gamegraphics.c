@@ -337,9 +337,11 @@ void drawScore(Player *p, gDisplay *d) {
 void drawFloor(gDisplay *d) {
   int j, k, l, t;
 
-  glShadeModel(GL_FLAT);
+
 
   if(game->settings->show_floor_texture) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_FLOOR]);
     /* there are some strange clipping artefacts in software mode */
@@ -651,7 +653,9 @@ void drawWalls(gDisplay *d) {
 
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
-  glDisable(GL_BLEND);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
 #define T_TOP 1.0
