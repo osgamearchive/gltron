@@ -162,10 +162,14 @@ free_wtext(Wtext *wtext)
   int i;
   for( i=0; i< wtext->nblines; ++i )
     {
-      free(wtext->buffer[i]);
+      if( wtext->buffer != NULL )
+	free(wtext->buffer[i]);
     }
-  free(wtext);
-  wtext=NULL;
+  if( wtext != NULL )
+    {
+      free(wtext);
+      wtext=NULL;
+    }
 }
 
 Wintext *
@@ -202,9 +206,12 @@ new_wintext ( int width, int height, int posx, int posy, int nbchars, int maxcha
 void
 free_wintext(Wintext *wintext)
 {
-  free(wintext->buffer);
-  free(wintext);
-  wintext=NULL;
+  if( wintext != NULL )
+    {
+      free(wintext->buffer);
+      free(wintext);
+      wintext=NULL;
+    }
 }
 
 void

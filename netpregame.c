@@ -230,6 +230,7 @@ void keyPregame(int k, int unicode, int x, int y)
       free_wtext(pregametext);
       pregametext=NULL;
       free_wintext(inpregametext);
+      inpregametext=NULL;
       changeCallback(&guiCallbacks);      
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
