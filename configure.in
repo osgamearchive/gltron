@@ -15,10 +15,10 @@ AC_PROG_CPP
 AC_PROG_RANLIB
 
 dnl CFLAGS set-up
-CFLAGS=""
+dnl CFLAGS=""
 dnl CFLAGS="-ansi -pedantic"
-CXXFLAGS=""
-CPPFLAGSA=""
+dnl CXXFLAGS=""
+dnl CPPFLAGS=""
 
 AC_ARG_ENABLE(warn,
 AC_HELP_STRING([--enable-warn],[Enable compiler warnings @<:@default=on@:>@]),
