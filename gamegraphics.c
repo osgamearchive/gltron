@@ -335,6 +335,7 @@ drawPlayersName(gDisplay *d)
   int   len;
   float color[4];
   float projection_matrix[16], camera_matrix[16], res[16], view[16], v[4], v2[4];
+  float   size;
 
   /**
      modelview_matrix * posx : camera coordinates
@@ -384,11 +385,15 @@ drawPlayersName(gDisplay *d)
 	    }
 	  /* x=view[0] + view[3] * (v2[0]/v2[3] + 1) / 2; */
 /* 	  y=view[1] + view[2] * (v2[1]/v2[3] + 1) / 2; */
-	  x=view[0] + view[3] * (v2[0]/v2[3]+1)/2 ;
-	  y=view[1] + view[2] * (v2[1]/v2[3]+1)/2 ;
+	  x=game->screen->vp_w * (v2[0]/v2[3]+1)/2 ;
+	  y=game->screen->vp_h * (v2[1]/v2[3]+1)/2 ;
 	  //position is not really good
-	  x+=50;
-	  y-=40;
+	  //It depends on screen resolution
+	  j = getPlayer(i);
+	  size=3*game->screen->vp_w/100;
+	  len=strlen(slots[j].name);
+	  x-=size*len/2;
+	  y+=30;
 	  j=getWhich(i);
 	  //world coord are data->posx, data->posy, 0
 
@@ -414,11 +419,10 @@ drawPlayersName(gDisplay *d)
 	  glColor4fv(color);
 
 	  glBegin(GL_QUADS);
-	  len=strlen(slots[j].name);
 	  
-	  glVertex3f(0.0f, 20.0f, 0.0f);   //top left
-	  glVertex3f(len*20.0f, 20.0f, 0.0f);   //top right
-	  glVertex3f(len*20.0f, 0.0f, 0.0f);  //Bottom right
+	  glVertex3f(0.0f, size, 0.0f);   //top left
+	  glVertex3f(len*size, size, 0.0f);   //top right
+	  glVertex3f(len*size, 0.0f, 0.0f);  //Bottom right
 	  glVertex3f(0.0f, 0.0f, 0.0f);  //Bottom left
 
 	  //glVertex3f(0.0f, 10, 0.0f);   //top
@@ -434,7 +438,7 @@ drawPlayersName(gDisplay *d)
 
 	  //printf("printing %s at %d and %d\n", slots[j].name, x, y);
 	  glColor3f(1.0f, 1.0f, 1.0f); //setting color to green
-	  drawText(gameFtx, x, y, 20, slots[j].name);
+	  drawText(gameFtx, x, y, size, slots[j].name);
 	}
     }
     
