@@ -94,6 +94,22 @@ void settings_port(char *buf, FILE *f) {
     sscanf(buf, "vset port %s ", game->settings->port);
   }
 }
+
+void settings_tracker(char *buf, FILE *f) {
+  if(f != NULL) {
+    fprintf(f, "vset tracker %s\n", game->settings->tracker);
+  } else {
+    sscanf(buf, "vset tracker %s ", game->settings->tracker);
+  }
+}
+
+void settings_tport(char *buf, FILE *f) {
+  if(f != NULL) {
+    fprintf(f, "vset tport %s\n", game->settings->tport);
+  } else {
+    sscanf(buf, "vset tport %s ", game->settings->tport);
+  }
+}
 #endif
 
 void settings_cycle_colors(char *buf, FILE *f) {
@@ -241,6 +257,8 @@ void initSettingData(char *filename) {
   sv[5].value = settings_nickname;
   sv[6].value = settings_server;
   sv[7].value = settings_port;
+  sv[8].value = settings_tracker;
+  sv[9].value = settings_tport;
 #endif
 }
 
@@ -398,6 +416,8 @@ void initDefaultSettings() {
   strcpy(game->settings->nickname,"Default");
   strcpy(game->settings->server,"localhost");
   strcpy(game->settings->port, "23460");
+  strcpy(game->settings->server,"localhost");
+  strcpy(game->settings->port, "23470");
 #endif
  
 }

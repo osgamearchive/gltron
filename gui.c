@@ -241,6 +241,47 @@ void readServer(int key, int unicode, int x, int y)
    SystemSwapBuffers();
 }
 
+void readTracker(int key, int unicode, int x, int y)
+{
+
+  if( nbreads == 0 )
+    {
+      strcpy(game->settings->tracker, "");
+    }
+  switch(key)
+    {
+    case 13://return
+    case SDLK_ESCAPE://escape
+      nbreads=0;
+      restoreCallbacks();
+      break;
+      
+    case SDLK_BACKSPACE://backspace
+      if( nbreads > 0 )
+	{
+	  nbreads--;
+	  game->settings->tracker[nbreads]='\0';
+	}
+      break;
+    default:
+      if( unicode < 0x80 && unicode > 0 )
+	{
+	  sprintf(game->settings->tracker, "%s%c", game->settings->tracker, unicode);
+	  nbreads++;
+	}
+  break;
+}
+  initMenuCaptions();
+#ifdef SOUND
+  playMenuFX(fx_action);
+#endif
+   drawGuiBackground();
+   if(!game->settings->softwareRendering)
+     drawGuiLogo();
+   drawMenu(game->screen);
+   rasonly(game->screen);
+   SystemSwapBuffers();
+}
 
 void readPort(int key, int unicode, int x, int y)
 {
@@ -269,6 +310,49 @@ void readPort(int key, int unicode, int x, int y)
       if( unicode < 0x80 && unicode > 0 )
 	{
 	  sprintf(game->settings->port, "%s%c", game->settings->port, unicode);
+	  nbreads++;
+	}
+  break;
+}
+  initMenuCaptions();
+#ifdef SOUND
+  playMenuFX(fx_action);
+#endif
+   drawGuiBackground();
+   if(!game->settings->softwareRendering)
+     drawGuiLogo();
+   drawMenu(game->screen);
+   rasonly(game->screen);
+   SystemSwapBuffers();
+}
+
+void readTport(int key, int unicode, int x, int y)
+{
+
+  printf("entering readPort\n");
+  if( nbreads == 0 )
+    {
+      strcpy(game->settings->tport, "");
+    }
+  switch(key)
+    {
+    case 13://return
+    case SDLK_ESCAPE://escape
+      nbreads=0;
+      restoreCallbacks();
+      break;
+      
+    case SDLK_BACKSPACE://backspace
+      if( nbreads > 0 )
+	{
+	  nbreads--;
+	  game->settings->tport[nbreads]='\0';
+	}
+      break;
+    default:
+      if( unicode < 0x80 && unicode > 0 )
+	{
+	  sprintf(game->settings->tport, "%s%c", game->settings->tport, unicode);
 	  nbreads++;
 	}
   break;
@@ -314,8 +398,38 @@ void displayServer() {
   SystemSwapBuffers();
 }
 
+void displayTracker() {
+  char message[] = "Enter tracker name or tracker IP...";
+  drawGuiBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
+  drawMenu(game->screen);
+
+  rasonly(game->screen);
+  glColor3f(1.0, 1.0, 1.0);
+  drawText(guiFtx, game->screen->vp_w / 6, 20,
+	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+  SystemSwapBuffers();
+}
+
+
+
 void displayPort() {
   char message[] = "Enter port...";
+  drawGuiBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
+  drawMenu(game->screen);
+
+  rasonly(game->screen);
+  glColor3f(1.0, 1.0, 1.0);
+  drawText(guiFtx, game->screen->vp_w / 6, 20,
+	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+  SystemSwapBuffers();
+}
+
+void displayTport() {
+  char message[] = "Enter port of tracker ...";
   drawGuiBackground();
   if(!game->settings->softwareRendering)
     drawGuiLogo();
@@ -511,6 +625,16 @@ callbacks serverCallbacks = {
 
 callbacks portCallbacks = {
   displayPort, idleGui, readPort, initGui, exitGui, initGLGui,
+  NULL, NULL
+};
+
+callbacks trackerCallbacks = {
+  displayTracker, idleGui, readTracker, initGui, exitGui, initGLGui,
+  NULL, NULL
+};
+
+callbacks tportCallbacks = {
+  displayTport, idleGui, readTport, initGui, exitGui, initGLGui,
   NULL, NULL
 };
 #endif

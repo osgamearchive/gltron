@@ -1,6 +1,8 @@
 #include "tracker_gltron.h"
 
 
+
+
 static void handle_connection();
 static void handle_slot(int which);
 static void do_lostconnection(int which);
@@ -13,7 +15,6 @@ void
 initNetwork()
 {
   int i;
-  Net_init();
 
   //Init the slots
   for(i=0;i<MAX_SLOTS;++i)
@@ -27,7 +28,6 @@ initNetwork()
 void
 start_tracker()
 {
-  //Here we create the two main socket, those which listenning
 
   //Alocate the sock
   if( Net_allocsocks() )
@@ -36,7 +36,7 @@ start_tracker()
       exit(1);
     }
 
-   //Start listening
+  //Start listening
   if( Net_connect(NULL, settings.port) )
     {
       fprintf(stderr, "Can't Open socket: %s\n", SDLNet_GetError());
@@ -45,9 +45,23 @@ start_tracker()
 
   //Add socket to SocketSet
   Net_addsocket( Net_getmainsock());
-
   //Server is started!
   printf("server listening to port %d\n", settings.port);
+}
+
+void
+stop_tracker()
+{
+  int i;
+
+  //close all connection.
+  for(i=0; i< MAX_SLOTS; ++i)
+    {
+      do_lostconnection(i);
+    }
+
+  //clean up connection.
+  Net_cleanup();
 }
 
 static void
@@ -68,7 +82,7 @@ do_notknowninfo(int which)
   slots[which].erase=NOTKNOWN;
   strcpy(slots[which].description, "N/A");
   strcpy(slots[which].version, "N/A");
-  slots[which].ipaddress.host=0;
+  //slots[which].ipaddress.host=0;
   slots[which].nbplayers=NOTKNOWN;
 }
 
@@ -89,6 +103,7 @@ do_server_login( int which, Trackerpacket *packet )
       //making info to N/A
       do_notknowninfo(which);
     }
+  printf("a server has logged, waiting for its informations.\n");
 }
 
 static void
@@ -103,19 +118,20 @@ do_client_login( int which )
 
   //prepare packet
   rep.type=TINFOS;
-  rep.which=SERVERID;
+  printf("a client has logging in, sending hime list of servers\n");
 
   for(i=0; i<MAX_SLOTS; ++i)
     {
-      if( slots[which].active==ACTIVE && slots[which].type == SERVER )
+      if( slots[i].active==ACTIVE && slots[i].type == SERVER )
 	{
-	  rep.infos.infos.speed = slots[which].speed;
-	  rep.infos.infos.size  = slots[which].size;
-	  rep.infos.infos.erase = slots[which].erase;
-	  strcpy(rep.infos.infos.description, slots[which].description);
-	  strcpy(rep.infos.infos.version, slots[which].version);
-	  rep.infos.infos.ipaddress= slots[which].ipaddress;
-	  rep.infos.infos.nbplayers = slots[which].nbplayers;
+	  rep.which=i;
+	  rep.infos.infos.speed = slots[i].speed;
+	  rep.infos.infos.size  = slots[i].size;
+	  rep.infos.infos.erase = slots[i].erase;
+	  strcpy(rep.infos.infos.description, slots[i].description);
+	  strcpy(rep.infos.infos.version, slots[i].version);
+	  rep.infos.infos.ipaddress= slots[i].ipaddress;
+	  rep.infos.infos.nbplayers = slots[i].nbplayers;
 	  //Send the packet
 	  Net_tsendpacket( &rep , slots[which].sock);
 	}
@@ -133,9 +149,38 @@ do_server_infos(  int which, Trackerpacket *packet )
       
     } else {
       //saving informations
+      slots[which].speed=packet->infos.infos.size;
+      slots[which].size=packet->infos.infos.size;
+      slots[which].erase=packet->infos.infos.erase;
+      strcpy(slots[which].description, packet->infos.infos.description);
+      strcpy(slots[which].version, packet->infos.infos.version);
+      //slots[which].ipaddress=packet->infos.infos.ipaddress;
+      slots[which].nbplayers=packet->infos.infos.nbplayers;
 
       //updating lastseen
+      slots[which].lastseen=SystemGetElapsedTime();
     }
+  
+  printf("------------------------------------------\n");
+  printf("getting server infos %d \n", which);
+  printf("speed       : %d\n",slots[which].speed ); 
+  printf("size        : %d\n",slots[which].size ); 
+  printf("erase       : %d\n",slots[which].erase ); 
+  printf("description : %s\n",slots[which].description ); 
+  printf("version     : %s\n",slots[which].version );  
+
+  #ifndef macintosh /* no ntohl on MacOS */
+  printf("IP          : %d.%d.%d.%d:%i\n",
+	 (ntohl(slots[which].ipaddress.host) & 0xff000000) >> 24,
+	  (ntohl(slots[which].ipaddress.host) & 0x00ff0000) >> 16,
+	 (ntohl(slots[which].ipaddress.host) & 0x0000ff00) >> 8,
+	 ntohl(slots[which].ipaddress.host) & 0x000000ff,
+	 slots[which].ipaddress.port
+ ); 
+  #endif
+  printf("nbplayers   : %d\n",slots[which].nbplayers ); 
+  printf("------------------------------------------\n");
+
 }
 
 static void
@@ -170,9 +215,10 @@ handle_connection()
     } else {
       //Server is not full...
       //Savings slots
-      slots[which].sock   = newsock;
-      slots[which].peer   = *SDLNet_TCP_GetPeerAddress(newsock); //Get remote address
-      slots[which].active = NEGOCIATION;
+      slots[which].sock        = newsock;
+      slots[which].ipaddress   = *SDLNet_TCP_GetPeerAddress(newsock); //Get remote address
+      slots[which].active      = NEGOCIATION;
+      slots[which].lastseen    = SystemGetElapsedTime();
 
       Net_addsocket( slots[which].sock );
       printf("New Connection on slot %d\n", which);
@@ -185,13 +231,14 @@ handle_slot(int which)
   Trackerpacket packet;
   
   //Get the packet...
-  if( Net_treceivepacket(&packet, slots[which].sock, which) != 0 )
+  if( Net_treceivepacket(&packet, slots[which].sock) != 0 )
     {
       //Connection perdu
       do_lostconnection(which);
       return;
     }
 
+  printf("got a packet type %d from %d\n", packet.type, packet.which);
   //See if connection is active?
   if( slots[which].active == NEGOCIATION )
     {
@@ -222,6 +269,7 @@ handle_slot(int which)
 	      break;
 	    }
 	}
+      return;
     }
 
   switch( packet.type )
@@ -256,3 +304,22 @@ handle_tracker()
     }
 }
 
+void
+check_serveractivity()
+{
+  int i;
+
+  for(i=0; i< MAX_SLOTS; ++i)
+    {
+      if( slots[i].active != INACTIVE && slots[i].type == SERVER )
+	{
+	  if( ( SystemGetElapsedTime()- slots[i].lastseen ) > settings.timeout*1000 )
+	    {
+	      printf("server %d answer is timeout! %d\n", i, SystemGetElapsedTime() - slots[i].lastseen );
+	      //that server is down now!
+	      do_lostconnection(i);
+	      do_notknowninfo(i);
+	    }
+	}
+    }
+}

@@ -41,7 +41,7 @@ start_server()
     }
 
   //Start listening
-  if( Net_connect(NULL, server_port) )
+  if( Net_connect(NULL, settings.port) )
     {
       fprintf(stderr, "Can't Open socket: %s\n", SDLNet_GetError());
       exit(1);
@@ -54,7 +54,7 @@ start_server()
   nbUsers  = 0;
 
   //Server is started!
-  printf("server listening to port %d\n", server_port);
+  printf("server listening to port %d\n", settings.port);
 }
 
 void
@@ -183,7 +183,7 @@ check_version(char *vers )
 {
   //TODO: check version. #done
 
-#define VERSION "0.61am" 
+
   //Check for curent version 0.61am
   printf("checking version %s <> %s\n", vers, VERSION);
   return ! strcmp(vers, VERSION);
@@ -1013,7 +1013,6 @@ handle_connection()
 	}
     }
 }
-
 
 void
 handle_server()

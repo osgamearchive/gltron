@@ -317,6 +317,8 @@ typedef struct Settings {
   char nickname[255];
   char server[255];
   char port[16];
+  char tracker[255];
+  char tport[16];
 #endif
 
 } Settings;

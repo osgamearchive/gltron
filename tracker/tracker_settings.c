@@ -83,6 +83,9 @@ ReadConfigFile()
 	    } else if(  ! strcmp(com, "port") )
 	      {
 		settings.port = strtol(value, (char**) NULL, 10);
+	      } else if(  ! strcmp(com, "timeout") )
+	      {
+		settings.timeout = strtol(value, (char**) NULL, 10);
 	      }
 	}
     }
@@ -96,5 +99,6 @@ initDefaultSettings()
   strcpy(settings.passwd, "passwd");
 
   settings.port=23470;
+  settings.timeout=60;
 
  }

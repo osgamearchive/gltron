@@ -12,7 +12,8 @@ enum
   };
 typedef struct Predictedturn *Predictedturn;
 typedef struct Predictedturn {
-  int            dir;
+  int            dir;     //dir turn asked
+  int            rdir;    //real direction after the turn
   int            time;
   int            statut;
   Predictedturn  next;
@@ -626,8 +627,10 @@ makeping(int time)
       savedtime = SystemGetElapsedTime();
       //ping = 0;
     } else {
-      ping += SystemGetElapsedTime() - savedtime;
-      ++nbpings;
+      /* ping += SystemGetElapsedTime() - savedtime; */
+/*       ++nbpings; */
+      ping = SystemGetElapsedTime() - savedtime;
+      nbpings=1;
       savedtime=0;
     }
 }
@@ -671,7 +674,7 @@ idleTurns(  )
     {
       //find first turn to predict
       while( turn != NULL  ) {
-	printf("turn status is %s ( %d / %d )\n", (turn->statut == PREDICTED)? "PREDICTED" : "ASKED", game2->time.current - turn->time, ping);
+	printf("turn status is %s ( %d / %d )\n", (turn->statut == PREDICTED)? "PREDICTED" : "ASKED", game2->time.current - turn->time, getping());
 	if( turn->statut == ASKED )
 	  break;
 	turn=turn->next;
@@ -696,6 +699,7 @@ idleTurns(  )
 	  e->player = 0;
 	  e->timestamp = game2->time.current;
 	  processEvent(e);
+	  turn->rdir=game->player[0].data->dir;
 	}
     }
 }
@@ -710,17 +714,16 @@ undoTurn(int x, int y, int time)
   int              i;
 
   printf("undoTurn pos x=%d, y=%d at time=%d\n", x, y, time);
+  printf("current pos x=%d, y=%d at time=%d\n", game->player[0].data->iposx, game->player[0].data->iposy, game2->time.current);
 
   turn = turnlist->head;
   if( turn == NULL )
     return 0;
 
-  //search for turn to undo turn = turnlist->head;
-  //we need to get the last PREDICTED ( oldest one )
-  while( turn->next!= NULL  && turn->next->statut == PREDICTED ) { turn=turn->next; }
-
   nbPredictedTurn = get_size_predictedturn();
   printf("nbPredictedTurn %d\n", nbPredictedTurn);
+
+  //turn are ordered so it's 
 
   if( nbPredictedTurn == 0 )
     {     
@@ -741,28 +744,26 @@ undoTurn(int x, int y, int time)
 
   if( nbPredictedTurn > 1 )
     {
-      i=2;
-      next=turn;
+      i=nbPredictedTurn+2;
+      aux=turn;
+      next=aux->next;
       //rearrange next trails
-      while( cur != game->player[0].data->trail )
+      while( cur != game->player[0].data->trail && next != NULL )
 	{
 	  old = cur;
-	  cur = game->player[0].data->trail-nbPredictedTurn+i++;
+	  //cur = game->player[0].data->trail-i--;
+	  cur = old+1;
 
-	  aux=turnlist->head;
-	  while( aux->next!=next ){
-	    aux=aux->next;
-	    if( aux->next == NULL )
-	      {
-		fprintf(stderr, "didn't find our turn! in the list\n");
-		break;
-	      }
-	  }
-	  old->ex=(aux->time-next->time)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+x;
-	  old->ey=(aux->time-next->time)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+y;
+	  printf("diff time is %d old->sx %d old->sy %d\n", next->time-aux->time,
+		 old->sx, old->sy);
+	  printf("change old->ex %d old->ey %d to", old->ex, old->ey);
+	  old->ex=(next->time-aux->time)*game->player[0].data->speed*dirsX[ aux->rdir ]/100+old->sx;
+	  old->ey=(next->time-aux->time)*game->player[0].data->speed*dirsY[ aux->rdir ]/100+old->sy;
+	  printf(" old->ex %d old->ey %d\n", old->ex, old->ey);
 	  cur->sx=old->ex;
 	  cur->sy=old->ey;
-	  next=aux;
+	  aux=next;
+	  next=aux->next;
 	}
     }
 
@@ -771,9 +772,9 @@ undoTurn(int x, int y, int time)
 
   printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",time+ping/2, time, (time+ping/2), (ping/2)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
 
-  game->player[0].data->posx=(ping/2)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+x;
+  game->player[0].data->posx=(ping/2)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+cur->sx;
   
-  game->player[0].data->posy=(ping/2)*game->player[0].data->speed*dirsY[ game->player[0].data->dir]/100+y;
+  game->player[0].data->posy=(ping/2)*game->player[0].data->speed*dirsY[ game->player[0].data->dir]/100+cur->sy;
 	      
   game->player[0].data->iposx=game->player[0].data->posx;
   game->player[0].data->iposy=game->player[0].data->posy;
@@ -826,6 +827,7 @@ free_turn(Predictedturn turn)
 
   if( turn == cur )
     {
+      printf("free head\n");
       turnlist->head = turn->next;
       free(turn);
       return;

@@ -193,6 +193,12 @@ Net_allocsocks( )
   return 0;
 }
 
+void
+Net_freesockset()
+{
+  SDLNet_FreeSocketSet(socketset);
+}
+
 int
 Net_addsocket(TCPsocket sock)
 {
@@ -266,6 +272,23 @@ Net_checksocks( )
       socksready |=  udpsockready;
     }
 #endif
+  return socksready; 
+}
+
+int
+Net_checksocket(TCPsocket sock )
+{  
+  int socksready = socksnotready;
+  SDLNet_CheckSockets(socketset, 0);
+  
+  // something appens, look what it was...
+
+  if( SDLNet_SocketReady(sock) )
+    {
+      socksready |=  tcpsockready;
+    }
+
+
   return socksready; 
 }
 

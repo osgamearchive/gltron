@@ -33,7 +33,12 @@ Slots             slots[MAX_PLAYERS];
 
 Netscores         netscores;
 
-int server_port=23460;
+//int server_port=23460;
 int hasstarted = 0;
+
+/** Settings */
+Server_settings settings;
+
+char     configpath[32] = "server.conf";
 
 Eventlist *eventList;

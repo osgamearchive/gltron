@@ -191,8 +191,10 @@ int       Net_connect            ( char*, int );
 void      Net_disconnect         ( void );
 void      Net_closesock          ( TCPsocket );
 int       Net_allocsocks         ( void );
+void      Net_freesockset         ( void );
 int       Net_readysock          ( TCPsocket );
 int       Net_checksocks         ( void );
+int       Net_checksocket        ( TCPsocket );
 int       Net_addsocket          ( TCPsocket );
 int       Net_delsocket          ( TCPsocket );
 #ifdef USEUDP

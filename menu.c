@@ -164,8 +164,18 @@ void menuAction(Menu *activated, int type) {
 	case 'n':
 	  switchCallbacks(&nicknameCallbacks);
 	  break;
+	case 'o':
+	  if( ! tracker_connect() )
+	    switchCallbacks(&trackerscreenCallbacks);
+	  break;
+	case 'l':
+	  switchCallbacks(&trackerCallbacks);
+	  break;
+	case 'c':
+	  switchCallbacks(&tportCallbacks);
+	  break;
 	}
-      break;
+      break;	
 #endif
     case 'a': // this menu code is turning uglier and uglier 
       printf("artpack menu chosen\n");
@@ -331,8 +341,8 @@ void initMenuCaption(Menu *m) {
     case 'n':
       switch( m->szName[3] )
 	{
-	  case 'n':
-	    printf("setting network menu caption ( nickname )\n");
+	case 'n':
+	  printf("setting network menu caption ( nickname )\n");
 	  sprintf(m->display.szCaption, m->szCapFormat, 
 		  game->settings->nickname);
 	  break;
@@ -345,6 +355,14 @@ void initMenuCaption(Menu *m) {
 	  printf("setting network menu caption ( server )\n");
 	  sprintf(m->display.szCaption, m->szCapFormat, 
 		  game->settings->server);
+	  break;
+	case 'l':
+	  sprintf(m->display.szCaption, m->szCapFormat, 
+		  game->settings->tracker);
+	  break;
+	case 'c':
+	  sprintf(m->display.szCaption, m->szCapFormat, 
+		  game->settings->tport);
 	  break;
 	}
       break;

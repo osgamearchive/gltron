@@ -4,6 +4,8 @@
 #ifndef __TRACKER_PROTOCOL_H__
 #define __TRACKER_PROTOCOL_H__
 
+#define TPACKETSIZE sizeof(Trackerpacket)
+#define REFRESH 50
 
 //Enums-------------------------------------------------------------------
 //active state of a slot
@@ -23,12 +25,14 @@ enum {
   NOTKNOWN = -1             //information is not known yet.
 };
 
+
+
 //TypeDefs-----------------------------------------------------------------
 //Server slots
 typedef struct {
   int           active;       //Slot is active?
   TCPsocket     sock;         //client's socket
-  IPaddress     peer;         //client's address
+  //IPaddress     peer;         //client's address
   int           type;         //type client or server.
   /** these are for server only */
   int           speed;         //speed of the game
@@ -73,6 +77,12 @@ typedef struct {
 //Prototypes------------------------------------------------------------------
 
 /** new function specific to tracker, others still protocol's one */
-int Net_treceivepacket    ( Trackerpacket *packet , TCPsocket sock, int which  );
-int Net_tsendpacket       ( Trackerpacket *packet , TCPsocket sock             );
+
+
+
+int  Net_treceivepacket    ( Trackerpacket *packet , TCPsocket sock); 
+int  Net_tsendpacket       ( Trackerpacket *packet , TCPsocket sock             );
+int  Net_tconnect( char *server, int port);
+void Net_tdisconnect( );
+TCPsocket Net_gettrackersock();
 #endif

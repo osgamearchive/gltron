@@ -179,8 +179,10 @@ enum {
 #ifdef __NETWORK__
 #include <SDL_net.h>
 #include "protocol.h"
+#include "tracker_protocol.h"
 #include "netevent.h"
 #include "wtext.h"
+#include "wlist.h"
 #endif
 #include "wprogress.h"
 #include "splash.h"
@@ -282,10 +284,13 @@ extern callbacks netConnectCallbacks;
 extern callbacks nicknameCallbacks;
 extern callbacks serverCallbacks;
 extern callbacks portCallbacks;
+extern callbacks trackerCallbacks;
+extern callbacks tportCallbacks;
 extern callbacks netPregameCallbacks;
 extern callbacks keyboardreadingCallbacks;
 extern callbacks scoresCallbacks;
 extern callbacks netWaitCallbacks;
+extern callbacks trackerscreenCallbacks;
 #endif
 
 #define KEY_ACTIONS_N 8
@@ -580,11 +585,13 @@ extern void  freeTurnList      ( void );
 extern void  doPredictedTurn   ( int, int );
 extern int   get_size_predictedturn();
 extern int   undoTurn          ( int, int, int );
+extern int   tracker_connect();
 #ifdef USEUDP
 extern void  handleUDP         ( void );
 #endif
 #endif
 extern Splash   *splash;
+
 
 #endif
 

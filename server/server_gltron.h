@@ -11,6 +11,10 @@
 #define GLTRON_H
 #include "server_data.h"
 #include "server_system.h"
+#include "tracker_protocol.h"
+
+//Version comptatiblity
+#define VERSION "0.61am" 
 
 /* use enums, not magic */
 
@@ -149,7 +153,7 @@ extern int               sState;
 extern Slots             slots[MAX_PLAYERS];
 extern Netscores         netscores;
 
-extern int server_port;
+//extern int server_port;
 extern int hasstarted;
 
 //records
@@ -160,7 +164,26 @@ void            initEventlist   ( Eventlist * );
 
 extern Eventlist *eventList;
 
+/** Settings */
+typedef struct {
+  int      port;           //server port
+  char     tracker[33];    //tracker's address
+  int      tport;          //tracker port
+  char     passwd[9];      //tracker's passwd
+  char     description[33]; //server's description
+} Server_settings;
 
+extern Server_settings settings;
+extern char     configpath[32];
+
+/** Settings functions */
+extern void get_args( int argc, char *argv[] );
+extern void initServerDefaultSettings();
+extern void ReadConfigFile();
+
+/** Tracker functions */
+extern void tracker_connect();
+extern void tracker_sendinfos();
 #endif
 
 

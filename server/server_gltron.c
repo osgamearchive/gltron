@@ -6,14 +6,15 @@
 #include "server_gltron.h"
 
 int main( int argc, char *argv[] ) {
-  if(argc != 2) {
-    //   fprintf(stderr, "usage: server <port-number>\n");
-    //exit(1);
-    //use default 23460
-  } else {
-    server_port = strtol(argv[1], (char**) NULL, 10);
-  }
+  int lastsent;
 
+  get_args(argc, argv);
+  
+  
+  initServerDefaultSettings();
+
+  //read settings file
+  ReadConfigFile();
 
   initMainGameSettings();
   initGameStructures();
@@ -23,6 +24,13 @@ int main( int argc, char *argv[] ) {
 
   //starting the server
   start_server();
+
+  if( strcmp(settings.tracker, "NO") )
+    {
+      //connect to the server.
+      tracker_connect();
+      lastsent = SystemGetElapsedTime();
+    }
   
 
   while(1) {
@@ -33,7 +41,15 @@ int main( int argc, char *argv[] ) {
    #ifdef macintosh
     mac_yield_cpu ();
    #endif
-   
+   if( strcmp(settings.tracker, "NO") )
+    {
+      if( ( SystemGetElapsedTime() - lastsent ) > REFRESH*1000 )
+	{
+	  //send again infos.
+	  tracker_sendinfos();
+	  lastsent = SystemGetElapsedTime();
+	}
+    } 
   }
   stop_server();
   return 0;

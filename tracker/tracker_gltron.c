@@ -22,14 +22,14 @@ int main( int argc, char *argv[] ) {
   //starting the tracker
   start_tracker();
   
-
   while(1) {
     //parse network
     handle_tracker();
+    check_serveractivity();
     SDL_Delay(1);
   }
 
-  //stop_server();
+  stop_tracker();
 
   //cleanup
   return 0;
