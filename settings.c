@@ -121,6 +121,7 @@ void updateSettingsCache() {
   game2->settingsCache.show_ai_status = getSettingi("show_ai_status");
   game2->settingsCache.ai_level = getSettingi("ai_level");
   game2->settingsCache.show_fps = getSettingi("show_fps");
+  game2->settingsCache.show_console = getSettingi("show_console");
   game2->settingsCache.softwareRendering = getSettingi("softwareRendering");
   game2->settingsCache.show_floor_texture = getSettingi("show_floor_texture");
   game2->settingsCache.line_spacing = getSettingi("line_spacing");

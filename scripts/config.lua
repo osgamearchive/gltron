@@ -43,6 +43,7 @@ settings.show_impact = 1
 settings.lod = 1
 settings.shadow_lod = 1
 settings.show_fps = 0
+settings.show_console = 1
 settings.show_ai_status = 1
 settings.show_scores = 1
 

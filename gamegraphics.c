@@ -60,7 +60,8 @@ void drawGame() {
   if (game2->settingsCache.show_fps)
     drawFPS(game->screen);
 
-  drawConsole(game->screen);
+	if(game2->settingsCache.show_console)
+		drawConsole(game->screen);
   /*
     if(getSettingi("show_help") == 1)
     drawHelp(game->screen);
