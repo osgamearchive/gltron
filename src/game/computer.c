@@ -70,6 +70,9 @@ void getDistances(int player,
 	// loop over all segment
 	for(i = 0; i < game->players; i++) {
 		segment2 *wall = game->player[i].data->trails;
+		if(game->player[i].data->trail_height < TRAIL_HEIGHT)
+			continue;
+
 		for(j = 0; j < game->player[i].data->trailOffset + 1; j++) {
 			float t1, t2;
 			if(i == player && j == game->player[i].data->trailOffset)
