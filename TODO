@@ -3,17 +3,27 @@ TODO list
 (name) reported it (contact for questions)
 [name] plans to fix it (contact for updates/patches)
 
-Bugs:
+Bugs [high priority]:
 
 - fall back to non-stencil when not available (e.g. 16bpp X)
+
+Bugs [low priority]:
+
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
-- preferences/snapshot directory isn't created if it doesn't exist
-- screenshots don't get saved in snapshot dir
 - recognizer has blue edges sometimes (http://www.gltron.org/stuff/recognizer_glue.jpg (Andreas) [ LIM,Todd ]
 - recognizer sometimes leaves arena
 
-Features:
+Features [high priority]:
+
+- fallback instead of app exiting on corrupt mp3 files
+- fallback instead of app exiting when SDL_sound is present, but doesn't
+  support ogg/vorbis, or if sound fx files are corrupt
+- add 3d sound source for recognizer [ Andreas ]
+- add sound for own cycle. Modulate pitch (or volume) after turns
+- add (merge) software mouse cursor (from networking branch)
+
+Features [low priority]:
 
 - fast finish should be relative to the arena size (or really finish instantly)
 - create default graphics settings to choose from: low/medium/high
@@ -25,18 +35,13 @@ Features:
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
 - explosion is missing alpha blending right now
 - Proper HUD for scores / ai info, etc.
-- camera is not saved to ~/.gltronrc
 - uv-coordinates for the model, add texture coordinate support to obj loader
 - support other controllers (i.e. joysticks)
 - quake-like drop down console
-- merge software mouse cursor from networking branch
 - add more special effects (reflections etc.)
 - add slightly funny console messages (Robot ate Andi's tail)
 - peek left/right when in 1st person camera mode
-- quick way to restore sane camera angle (e.g. middle mouse button, or press button, mouse mouse, release button, camera gets restored)
-- fallback instead of app exiting on corrupt mp3 files
-- fallback instead of app exiting when SDL_sound is present, but doesn't
-  support ogg/vorbis, or if sound fx files are corrupt
+- quick way to restore sane camera angle (e.g. middle mouse button)
 
 Settings:
 
@@ -54,23 +59,25 @@ Administrative:
 
 - document tools used. included 'sponsor' message for 3d exploration [ Andreas ]
 
-Optimizations/Cleanups
-
-- Rework LOD system a bit.
+Optimizations/Cleanups [high priority]
 - seperate game from engine a bit more
 - look at #if 0,#endif and remove obsolete code
-- remove obsolete bitmap stuff
-- Scale the mesh on load time, to avoid need for GL_NORMALIZE
-- Rewrite trail handling code
+- check various TODOs and #warnings in the code
+- delete the sound object in Audio_Quit to allow restarting the whole
+  sound system without memory leaks
 - The recognizer shadow suffers from z-buffer artefacts (Andreas)
   solutions: try to optain 24bit visual, don't zclear and change frustum for
   the recognizer, render recognizer shadow to texture, and project it onto
   floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
   decide about defaults)
+
+Optimizations/Cleanups [low priority]
+
+- Rework LOD system a bit.
+- remove obsolete bitmap stuff
+- Scale the mesh on load time, to avoid need for GL_NORMALIZE
+- Rewrite trail handling code
 - Remove all bitmap stuff
-- check various TODOs and #warnings in the code
 - dynamically load OpenGL (?)
-- delete the sound object in Audio_Quit to allow restarting the whole
-  sound system without memory leaks
 - maybe rewrite save.lua, so .gltronrc is a bit more readable (and settings are
   grouped)
