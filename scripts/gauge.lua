@@ -19,7 +19,7 @@ function color_interpolate(t, c1, c2)
 end
 
 function drawCircleSegment(circle, range)
-	 c_pushMatrix();
+	c_pushMatrix();
 	c_translate(circle.center.x, circle.center.y, 0);
 	c_drawCircle(range.arc_start.angle, range.arc_end.angle, 
 							 20, circle.inner_radius, circle.radius,
@@ -44,17 +44,13 @@ function drawRectangle(rect, range)
 end
 
 function drawGauge(speed) -- between 0 and 1
-	 color1 = { r = .2, b = .2, g = .2 };
-	 color2 = { r = .6, b = .6, g = .6 };
-	 c_drawRectangle(248, 150, color1, color2, color2, color1);
-
 	-- circle center in pixel coordinates
 	-- circle inner and outer radius in pixels
 	-- write("speed: ", speed, "\n");
 	circle = {
-		center = { x = 180, y = 75 },
-		inner_radius = 20,
-		radius = 60
+		center = { x = 174, y = 75 },
+		inner_radius = 23,
+		radius = 66
 	}
 	angles = {
 	-- angles, and speed range for green area
