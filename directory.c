@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include "gltron.h"
 
-#ifdef WIN32
-list *readDirectoryContents(char *dirname, char *prefix) {
+static char* subdir = "data";
+
+list *getSongList() {
   char *path;
   FILE *f;
   char buf[100];
@@ -37,10 +38,14 @@ list *readDirectoryContents(char *dirname, char *prefix) {
   }
   return l;
 }
-#else
 
+/* the following code doesn't compile under non-POSIX systems (they
+   don't have dirent.h) */
+
+#ifndef WIN32
 #include <sys/types.h>
 #include <dirent.h>
+
 list* readDirectoryContents(char *dirname, char *prefix) {
   DIR *dir;
   struct dirent *entry;
@@ -66,4 +71,17 @@ list* readDirectoryContents(char *dirname, char *prefix) {
   return l;
 
 }
+
+char *getMusicPath(char *name) {
+  return getFullPath(name);
+}
+
+#else 
+char *getMusicPath(char *name) {
+  char *path;
+  path = malloc(strlen(subdir) + 1 + strlen(name) + 1);
+  sprintf(path, "%s%c%s", subdir, SEPERATOR, name);
+  return path;
+}
 #endif
+

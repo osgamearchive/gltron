@@ -7,6 +7,17 @@ static char *share2 = "/usr/local/share/games/gltron";
 
 static char* subdir = "data";
 
+#ifdef WIN32 /* assume current directory + data/ */
+char* getFullPath(char *filename) {
+  char *path;
+  fprintf(stderr, "using win32 hack looking for %s\n", filename);
+  path = malloc(strlen(subdir) + 1 + strlen(filename) + 1);
+  sprintf(path, "%s%c%s", subdir, SEPERATOR, filename);
+
+  return path;
+}
+#else
+
 char* getFullPath(char *filename) {
   char *path;
   FILE *fp = NULL;
@@ -47,7 +58,6 @@ char* getFullPath(char *filename) {
     printf("unsuccessful\n");
   }
 
-  /* #ifdef UNIX */
   path = malloc(strlen(share1) + 1 + strlen(filename) + 1);
   sprintf(path, "%s%c%s", share1, SEPERATOR, filename);
 
@@ -73,12 +83,11 @@ char* getFullPath(char *filename) {
   }  
   free(path);
   printf("unsuccessful\n");
-  /* #endif */
 
   return NULL;
 }
 
-  
+#endif  
   
 
   
