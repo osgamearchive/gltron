@@ -132,7 +132,7 @@ void drawPregame() {
 
   //NetRules
   glColor3fv(colors[1]);
-  x = game->screen->vp_w - 1.5 * 20*( game->screen->vp_w / (50 * 1.5) );
+  x = game->screen->vp_w - 1.5 * 21*( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h * 17;
   drawText(gameFtx, x, y, h, "Game Settings"); 
   sprintf(str, "Games: %d", netrulenbwins);

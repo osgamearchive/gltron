@@ -176,6 +176,9 @@ keyboardreadingreturn()
   char command[MAX_CHARS]="", params[MAX_CHARS]="";
   Packet packet;
 
+  if( strlen(buff) == 0 )
+    return;
+
   //We have our buffer.
   sscanf(buff, "/%[A-Za-z] %[A-Za-z0-9 ]", command, params);
   if( strlen(command) > 0 )
