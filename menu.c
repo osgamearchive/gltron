@@ -110,7 +110,10 @@ void menuAction(Menu *activated) {
 }
 
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom" };
-static char **clists[] = { speed_list };
+static char *player_list[] = { "human", "computer", "none" };
+static char **clists[] = { speed_list, player_list };
+
+
 
 void initMenuCaption(Menu *m) {
   int *piValue;

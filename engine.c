@@ -172,7 +172,7 @@ void initGameStructures() { /* called only once */
     initModel(p, i);
 
     ai = p->ai;
-    ai->active = (i == 0 && game->settings->screenSaver == 0) ? -1 : 1;
+    ai->active = (i == 0 && game->settings->screenSaver == 0) ? 0 : 1;
     ai->tdiff = 0;
     ai->moves = 0;
     ai->danger = 0;
@@ -192,6 +192,7 @@ void initData() {
   Data *data;
   AI *ai;
   Model *model;
+  int not_playing = 0;
 
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
@@ -225,10 +226,20 @@ void initData() {
     data->last_dir = data->dir;
     data->turn_time = 0;
 
-    data->speed = game->settings->current_speed;
-    data->trail_height = TRAIL_HEIGHT;
+    /* if player is playing... */
+    if(ai->active != 2) {
+      data->speed = game->settings->current_speed;
+      data->trail_height = TRAIL_HEIGHT;
+      data->exp_radius = 0;
+    } else {
+      data->speed = SPEED_GONE;
+      data->trail_height = 0;
+      data->exp_radius = EXP_RADIUS_MAX;
+
+      not_playing++;
+    }
     data->trail = data->trails;
-    data->exp_radius = 0;
+
 
     data->trail->sx = data->trail->ex = data->posx;
     data->trail->sy = data->trail->ey = data->posy;
@@ -238,7 +249,8 @@ void initData() {
     ai->danger = 0;
   }
 
-  game->running = game->players; /* everyone is alive */
+  game->running = game->players - not_playing; /* not everyone is alive */
+  printf("starting game with %d players\n", game->running);
   game->winner = -1;
   /* colmap */
   /* game->settings->grid_size MUST be divisible by 8 */
@@ -334,7 +346,7 @@ void idleGame( void ) {
   if(game->settings->fast_finish == 1) {
     loop = FAST_FINISH;
     for(i = 0; i < game->players; i++)
-      if(game->player[i].ai->active != 1 &&
+      if(game->player[i].ai->active == 0 &&
 	 game->player[i].data->exp_radius < EXP_RADIUS_MAX)
 	 /* game->player[i].data->speed > 0) */
 	loop = 1;

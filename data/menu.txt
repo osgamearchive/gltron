@@ -62,22 +62,22 @@ Reset Scores
 
 4
 xsub
-Configure Players (bots)
+Configure Players
 
 0
-sti_ai_player1
+stl_1_2_ai_player1
 Player 1 - %s
 
 0
-sti_ai_player2
+stl_1_2_ai_player2
 Player 2 - %s
 
 0
-sti_ai_player3
+stl_1_2_ai_player3
 Player 3 - %s
 
 0
-sti_ai_player4
+stl_1_2_ai_player4
 Player 4 - %s
 
 # 0

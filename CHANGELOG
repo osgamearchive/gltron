@@ -15,6 +15,9 @@ visible changes
 - fixed chase camera starting position
 - played with wall dimensions
 - experimental speed oszillation
+- very cool new model from Charles Babbage
+- levels-of-detail for the model
+- configure players (human, computer, none)
 
 code changes
 - removed clearCol
