@@ -19,13 +19,7 @@ static int lod_dist[MAX_LOD_LEVEL + 1][LC_LOD + 1] = {
 static float SpokeColor[4] = {1.0, 1.0, 1.0, 1.0};
 static float NoSpokeColor[4] = {0.0, 0.0, 0.0, 1.0};
 
-void drawGame(void) {
-  GLint i;
-
-  polycount = 0;
-
-  glEnable(GL_DEPTH_TEST);
-
+void clearScreen() {
   glClearColor(gSettingsCache.clear_color[0], 
                gSettingsCache.clear_color[1], 
                gSettingsCache.clear_color[2],
@@ -37,6 +31,14 @@ void drawGame(void) {
   } else {
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   }
+}
+
+void drawGame(void) {
+  GLint i;
+
+  polycount = 0;
+
+	clearScreen();
 
   for(i = 0; i < vp_max[gViewportType]; i++) {
 		Player *p = game->player + viewport_content[i];
@@ -46,18 +48,17 @@ void drawGame(void) {
     if(d->onScreen == 1) {
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
 			drawCam(p, pV);
-      glDisable(GL_DEPTH_TEST);
-      glDepthMask(GL_FALSE);
+			
+			/* hud stuff for every player */
       if (gSettingsCache.show_scores)
 				drawScore(p, d);
       if (gSettingsCache.show_ai_status)
 				if(p->ai->active == AI_COMPUTER)
 					drawAI(d);
     }
-    glDepthMask(GL_TRUE);
-    glEnable(GL_DEPTH_TEST);
   }
 
+	/* hud stuff - full screen */
   if (gSettingsCache.show_fps)
     drawFPS(gScreen);
 
@@ -202,8 +203,6 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
     doCycleTurnRotation(pV, p);
   }
 
-	setupLights(eCycles);
-	
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
@@ -319,53 +318,8 @@ void drawPlayers(Player *p, PlayerVisual *pV) {
 	}
 }
 
-void drawCam(Player *p, PlayerVisual* pV) {
-  int i;
-  float up[3] = { 0, 0, 1 };
-	Visual *d = & pV->display;
-  
-  glColor3f(0.0, 1.0, 0.0);
-	
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  doPerspective(gSettingsCache.fov, d->vp_w / d->vp_h,
-                gSettingsCache.znear, game2->rules.grid_size * 6.5f);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  /* set positions for GL lights in world coordinates */
-  glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
-
-  doLookAt(p->camera->cam, p->camera->target, up);
-  glDisable(GL_LIGHTING);
-  glDisable(GL_BLEND);
-
-  glDepthMask(GL_FALSE);
-  glDisable(GL_DEPTH_TEST);
-
-  /* skybox */
-  if (gSettingsCache.show_skybox) {
-    drawSkybox(game2->rules.grid_size);
-  }
-
-  /* fixme: clear z-buffer handling */
-  /* glDepthMask(GL_TRUE); */
-  
-  /* floor */
-  if (gSettingsCache.show_floor_texture) {
-    drawFloorTextured(game2->rules.grid_size,
-                      gScreen->textures[TEX_FLOOR]);
-  } else {
-    /* should this be an artpack setting? */
-    float line_color[] = {1.0, 1.0, 1.0};
-    
-    drawFloorGrid(game2->rules.grid_size,
-                  gSettingsCache.line_spacing,
-                  line_color,
-                  gSettingsCache.clear_color);
-  }
-  
-  /* glDepthMask(GL_FALSE); */
+void drawPlanarShadows(Player *p) {
+	int i;
 
   /* shadows on the floor: cycle, recognizer, trails */
   if (gSettingsCache.show_recognizer) {
@@ -384,9 +338,33 @@ void drawCam(Player *p, PlayerVisual* pV) {
 		if (game->player[i].data->trail_height > 0 )
 			drawTrailShadow(game->player + i, gPlayerVisuals + i);
 	}
-	
-  glDepthMask(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
+}
+
+void drawFloor() {
+  /* fixme: clear z-buffer handling */
+  /* glDepthMask(GL_TRUE); */
+  
+  /* floor */
+  if (gSettingsCache.show_floor_texture) {
+    drawFloorTextured(game2->rules.grid_size,
+                      gScreen->textures[TEX_FLOOR]);
+  } else {
+    /* should this be an artpack setting? */
+    float line_color[] = {1.0, 1.0, 1.0};
+    
+    drawFloorGrid(game2->rules.grid_size,
+                  gSettingsCache.line_spacing,
+                  line_color,
+                  gSettingsCache.clear_color);
+  }
+  
+  /* glDepthMask(GL_FALSE); */
+}
+
+void drawWorld(Player *p, PlayerVisual *pV) {
+	int i;
+
+	setupLights(eWorld);
 
   if (gSettingsCache.show_recognizer &&
       p->data->speed != SPEED_GONE) {
@@ -397,12 +375,11 @@ void drawCam(Player *p, PlayerVisual* pV) {
     drawWalls();
   }
 
+	setupLights(eCycles);
+
   drawPlayers(p, pV);
 
 	setupLights(eWorld);
-
-  glEnable(GL_POLYGON_OFFSET_FILL);
-  glPolygonOffset(1,1);
 
 	{
 		TrailMesh mesh;
@@ -433,11 +410,60 @@ void drawCam(Player *p, PlayerVisual* pV) {
 		free(mesh.pIndices);
 	}
 
-  glDisable(GL_POLYGON_OFFSET_FILL);
-
   for(i = 0; i < game->players; i++)
     if (game->player[i].data->trail_height > 0 )
 			drawTrailLines(game->player + i, gPlayerVisuals + i);
+}
+
+void drawCam(Player *p, PlayerVisual* pV) {
+  int i;
+  float up[3] = { 0, 0, 1 };
+	Visual *d = & pV->display;
+  
+  glColor3f(0.0, 1.0, 0.0);
+	
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  doPerspective(gSettingsCache.fov, d->vp_w / d->vp_h,
+                gSettingsCache.znear, game2->rules.grid_size * 6.5f);
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  doLookAt(p->camera->cam, p->camera->target, up);
+  glDisable(GL_LIGHTING);
+  glDisable(GL_BLEND);
+
+  glDepthMask(GL_FALSE);
+  glDisable(GL_DEPTH_TEST);
+
+  /* skybox */
+  if (gSettingsCache.show_skybox) {
+    drawSkybox(game2->rules.grid_size);
+  }
+
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
+
+	/* reflections */
+	isRenderingReflection = 1;
+	glPushMatrix();
+	glScalef(1,1,-1);
+	glCullFace(GL_FRONT);
+	drawWorld(p, pV);
+	glCullFace(GL_BACK);
+	glPopMatrix();
+	isRenderingReflection = 0;
+
+	drawFloor();
+	
+  glDepthMask(GL_FALSE);
+  glDisable(GL_DEPTH_TEST);
+	drawPlanarShadows(p);
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
+
+	drawWorld(p, pV);
 
   /* transparent stuff */
   /* draw the glow around the other players: */
@@ -454,6 +480,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
     glDisable(GL_BLEND);
     }
   }
+
 	/* 2d hack */
 	if(gSettingsCache.map_ratio_w > 0)
 	{
