@@ -1,34 +1,52 @@
 #ifdef macintosh
 
 /* we want GLTron to run on locked volumes (CD-ROMs etc),
-   so we must save settings to the prefs folder */
+   so we must save settings to the prefs and screenshots
+   to the desktop folder */
 
 #include <Folders.h>
 #include "FullPath.h" /* MoreFiles Library */
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
+
 #include "SDL.h"
 
-void setupHomeEnvironment () {
+char *_MacOS_Prefs_Directory;
+char *_MacOS_Desktop_Directory;
+
+/* Get path to a standard Mac OS directory */
+static char* getStandardDirectory (UInt32 directoryType) {
 
     short  volume_ref_number;
     long   directory_id;
     short  len;
     Handle path;
 
-    if ( noErr != FindFolder ( kOnSystemDisk, kPreferencesFolderType, kDontCreateFolder,
-                               &volume_ref_number, &directory_id) )
-        exit (-1);
-
-    
+    if ( noErr != FindFolder ( kOnSystemDisk, directoryType, kDontCreateFolder,
+                               &volume_ref_number, &directory_id) ) {
+        return NULL;
+    }
 
     if ( noErr == GetFullPath (volume_ref_number, directory_id, "\p", &len, &path) ) {
 
-        char *homeEnv = (char*) malloc ( sizeof(*homeEnv) * len + 6);
-        strcpy (homeEnv, "HOME=");
-        strncat (homeEnv, *path, len-1); /* we want to remove the terminating ':' */        
-        SDL_putenv (homeEnv);        
-        free (homeEnv);
+        char *findDir = (char*) malloc ( sizeof(*findDir) * len + 1);
+        assert (findDir != NULL);
+        memcpy (findDir, *path, len-1); /* we want to remove the terminating ':' (hence len-1)*/
+        findDir[len-1] = '\0';              
+    	return findDir;
     }
+    
+    return NULL;
 }
+
+void setupMacDirectories () {
+
+	_MacOS_Prefs_Directory = getStandardDirectory (kPreferencesFolderType);
+	assert (_MacOS_Prefs_Directory != NULL);
+	
+	_MacOS_Desktop_Directory = getStandardDirectory (kDesktopFolderType);
+	assert (_MacOS_Desktop_Directory != NULL);
+}
+
 #endif
