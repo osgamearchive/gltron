@@ -16,6 +16,7 @@
 #define SYSTEM_KEY_F5 SDLK_F5
 #define SYSTEM_KEY_F6 SDLK_F6
 #define SYSTEM_KEY_F10 SDLK_F10
+#define SYSTEM_KEY_F11 SDLK_F11
 #define SYSTEM_KEY_F12 SDLK_F12
 
 #define SYSTEM_ENTER SDLK_ENTER
@@ -48,6 +49,7 @@ extern void SystemWarpPointer(int x, int y);
 extern void SystemHidePointer();
 extern void SystemUnhidePointer();
 extern void SystemGrabInput();
+extern void SystemUngrabInput();
 extern void SystemMainLoop();
 extern void SystemRegisterCallbacks(callbacks*);
 
@@ -61,14 +63,6 @@ extern char* SystemGetKeyName(int key);
 
 extern void SystemMouse(int buttons, int state, int x, int y);
 extern void SystemMouseMotion(int x, int y);
+
+extern int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels);
 #endif
-
-
-
-
-
-
-
-
-
-
