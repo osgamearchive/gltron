@@ -20,8 +20,10 @@ void initArtpacks() {
   
   i = 1;
   for(p = artList; p->next != NULL; p = p->next) {
-    scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
-    i++;
+    if(strncmp((char*)p->data, "Makefile", 8)) {
+      scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
+      i++;
+    }
   }
   scripting_Run("setupArtpacks()");
 }
