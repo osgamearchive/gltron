@@ -23,8 +23,8 @@ extern "C" {
 #ifndef M_PI
 #define M_PI 3.141592654
 #endif
-/* win32 additions by Jean-Bruno Richard <jean-bruno.richard@mg2.com> */
 
+/* Win32 port maintained by Andreas Umbach <marvin@dataway.ch> */
 #ifdef WIN32
 #include <windows.h>
 
@@ -41,9 +41,9 @@ extern "C" {
 #include <floatingpoint.h>
 #endif
 
-/* MacOS additions by Stefan Buchholtz <sbuchholtz@online.de> */
+/* MacOS port maintained by Darrell Walisser <dwaliss1@purdue.edu> */
 
-#ifdef macintosh
+#ifdef macintosh 
 #include <string.h>
 #undef SEPERATOR
 #define SEPERATOR ':'
