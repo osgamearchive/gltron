@@ -532,7 +532,7 @@ startMouseFocus( Wbutton *wbutton )
   glColor4fv(color);
 
   //find pos x, y
-  x = wbutton->x + wbutton->width/2;
+  x = wbutton->x + wbutton->width/3;
   y = wbutton->y + 10;
   glBegin(GL_QUADS); 
   glVertex3f(x, y, 0.0f);   //top left
@@ -706,6 +706,18 @@ void changeLevel( Wpopmenu *wpopmenu )
 
 }
 
+void eraseAction( Wcheckbox *wcheckbox )
+{
+  Packet packet;
+
+  packet.which=me;
+  packet.type=ACTION;
+  packet.infos.action.type=CHGEERASE;
+  packet.infos.action.which = get_wcheckbox(wcheckbox );
+  Net_sendpacket(&packet, Net_getmainsock());
+}
+
+
 void initPregame() {
   int top_left_x, top_left_y;
   int width, height;
@@ -813,6 +825,10 @@ void initPregame() {
   select_wpopmenu(pregame.gameRule, 0 );
   newControl(pregame.pregameControls, (Wptr)pregame.gameRule, WpopupMenu);
 
+
+  pregame.erase= new_wcheckbox(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 180, h+5, "Erase Deads", eraseAction);
+  newControl(pregame.pregameControls, (Wptr)pregame.erase, WcheckBox);
+
   //Speed
   pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 180, h+5, "Speed", changeSpeed);
   addchoice_wpopmenu(pregame.speed, speed_list[0],  0 );
@@ -828,6 +844,7 @@ void initPregame() {
   addchoice_wpopmenu(pregame.size, arena_list[1],  1 );
   addchoice_wpopmenu(pregame.size, arena_list[2],  2 );
   addchoice_wpopmenu(pregame.size, arena_list[3],  3 );
+  addchoice_wpopmenu(pregame.size, arena_list[4],  4 );
   select_wpopmenu(pregame.size, 0 );
   newControl(pregame.pregameControls, (Wptr)pregame.size, WpopupMenu);
 
@@ -848,7 +865,7 @@ void initPregame() {
   deActivateControl( pregame.pregameControls, (Wptr)pregame.gameType );
 
   //The start button
-  pregame.start = new_wbutton(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 80, 15, "Start game", NULL, startaction, NULL, startMouseFocus);
+  pregame.start = new_wbutton(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 100, 15, "Start game", NULL, startaction, NULL, startMouseFocus);
   newControl(pregame.pregameControls, (Wptr)pregame.start, WcontrolButton);
   deActivateControl( pregame.pregameControls, (Wptr)pregame.start );
 

@@ -53,26 +53,44 @@ draw_wbutton(Wbutton *wbutton, int active)
 
 	//Draw Borders
 	glBegin(GL_LINES);
-	glVertex2d(wbutton->x,                  wbutton->y);
-	glVertex2d(wbutton->x+wbutton->width,   wbutton->y);
+	glVertex2d(wbutton->x+2,                  wbutton->y);
+	glVertex2d(wbutton->x+wbutton->width-2,   wbutton->y);
 	glEnd();
 
 
 	glBegin(GL_LINES);
-	glVertex2d(wbutton->x+wbutton->width,   wbutton->y);
-	glVertex2d(wbutton->x+wbutton->width,   wbutton->y+wbutton->height);
+	glVertex2d(wbutton->x+wbutton->width-2, wbutton->y);
+	glVertex2d(wbutton->x+wbutton->width,   wbutton->y+2);
 	glEnd();
 
-
 	glBegin(GL_LINES);
-	glVertex2d(wbutton->x+wbutton->width,   wbutton->y+wbutton->height);
-	glVertex2d(wbutton->x,                  wbutton->y+wbutton->height);
+	glVertex2d(wbutton->x+wbutton->width,   wbutton->y+2);
+	glVertex2d(wbutton->x+wbutton->width,   wbutton->y+wbutton->height-2);
 	glEnd();
 
+	glBegin(GL_LINES);
+	glVertex2d(wbutton->x+wbutton->width,     wbutton->y+wbutton->height-2);
+	glVertex2d(wbutton->x+wbutton->width-2,   wbutton->y+wbutton->height);
+	glEnd();
 
 	glBegin(GL_LINES);
-	glVertex2d(wbutton->x,                  wbutton->y+wbutton->height);
-	glVertex2d(wbutton->x,                  wbutton->y);
+	glVertex2d(wbutton->x+wbutton->width-2,   wbutton->y+wbutton->height);
+	glVertex2d(wbutton->x+2,                  wbutton->y+wbutton->height);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex2d(wbutton->x+2,   wbutton->y+wbutton->height);
+	glVertex2d(wbutton->x,     wbutton->y+wbutton->height-2);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex2d(wbutton->x,     wbutton->y+wbutton->height-2);
+	glVertex2d(wbutton->x,     wbutton->y+2);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex2d(wbutton->x,       wbutton->y+2);
+	glVertex2d(wbutton->x+2,     wbutton->y);
 	glEnd();
 
 	//and the title
@@ -85,7 +103,7 @@ draw_wbutton(Wbutton *wbutton, int active)
 
 /*   size = (hsize < vsize) ? hsize : vsize; */
 	//s = wbutton->width/(6.0 / 4.0 * strlen(wbutton->title));
-	s = wbutton->width/(strlen(wbutton->title));
+	s = wbutton->width/((strlen(wbutton->title))+1);
 	x = wbutton->x + wbutton->width/2 - strlen(wbutton->title)*s/2;
 	y = wbutton->y+wbutton->height/2-s/2;
 	glColor3f(1.0, 1.0, 1.0);

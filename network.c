@@ -448,6 +448,7 @@ do_gamerules(Packet packet)
 
   select_wpopmenu(pregame.speed, game->settings->game_speed );
   select_wpopmenu(pregame.size, game->settings->arena_size );
+  set_wcheckbox(pregame.erase, game2->rules.eraseCrashed );
 
 
   initData();
@@ -521,8 +522,9 @@ do_gameset( Packet packet )
   game->settings->arena_size  = packet.infos.gameset.arena_size;
   game->settings->ai_level    = packet.infos.gameset.ai_level;
   select_wpopmenu(pregame.speed, game->settings->game_speed );
-  select_wpopmenu(pregame.size, game->settings->arena_size );
+  select_wpopmenu(pregame.size,  game->settings->arena_size );
   select_wpopmenu(pregame.level, game->settings->ai_level );
+  set_wcheckbox(pregame.erase,   game2->rules.eraseCrashed );
 }
 
 void

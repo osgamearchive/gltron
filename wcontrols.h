@@ -131,6 +131,13 @@ enum {
   WpopupMenu     = 70           //a menu pop up
 };
 
+/*
+ *  Checkbox
+ */
+enum {
+  WcheckBox      = 80          //a check box
+};
+
 
 /** Creating Root Control               */
 WrootControl*     newRootControl();

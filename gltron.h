@@ -580,6 +580,7 @@ typedef struct PregameControls {
   Wtext        *pregametext;
   Wintext      *inpregametext;
   Wpopmenu     *gameRule;
+  Wcheckbox    *erase;
   Wpopmenu     *speed;
   Wpopmenu     *size;
   Wpopmenu     *level;

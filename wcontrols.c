@@ -68,6 +68,9 @@ newControl( WrootControl  *root, Wptr control, int type )
     case WpopupMenu:
       wcontrol->controlRect = getRect_wpopmenu((Wpopmenu*)wcontrol->control);
       break;
+    case WcheckBox:
+      wcontrol->controlRect = getRect_wcheckbox((Wcheckbox*)wcontrol->control);
+      break;
     }
 
 
@@ -127,6 +130,9 @@ updateRectsControls( WrootControl *root )
 	  break;
 	case WpopupMenu:
 	  wcontrol->controlRect = getRect_wpopmenu((Wpopmenu*)wcontrol->control);
+	  break;
+	case WcheckBox:
+	  wcontrol->controlRect = getRect_wcheckbox((Wcheckbox*)wcontrol->control);
 	  break;
 	}
       wcontrol=wcontrol->next;
@@ -251,6 +257,9 @@ updateControls( WrootControl  *root )
 		case WpopupMenu:
 		  draw_wpopmenu((Wpopmenu*)wcontrol->control, wcontrol->enable);
 		  break;
+		case WcheckBox:
+		  draw_wcheckbox((Wcheckbox*)wcontrol->control, wcontrol->enable);
+		  break;
 		}
 	    }
 	} else {
@@ -281,6 +290,9 @@ updateControls( WrootControl  *root )
 	      break;
 	    case WpopupMenu:
 	      draw_wpopmenu((Wpopmenu*)wcontrol->control, wcontrol->enable);
+	      break;
+	    case WcheckBox:
+	      draw_wcheckbox((Wcheckbox*)wcontrol->control, wcontrol->enable);
 	      break;
 	    }
 	  if( wcontrol->prev == NULL )
@@ -327,6 +339,9 @@ updateControls( WrootControl  *root )
 	  break;
 	case WpopupMenu:
 	  //draw_wpopmenu((Wpopmenu*)wcontrol->control);
+	  break;
+	case WcheckBox:
+	  //draw_wcheckbox((Wcheckbox*)wcontrol->control, wcontrol->enable);
 	  break;
 	}
     }
@@ -403,6 +418,8 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 	    case WpopupMenu:
 	      mouse_wpopmenu((Wpopmenu*)oldcontrol->control, buttons, !SDL_PRESSED, dblClick, mousexy);
 	      break;
+	    case WcheckBox:
+	      break;
 	    }
 	}
     }
@@ -434,6 +451,9 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
       break;
     case WpopupMenu:
       mouse_wpopmenu((Wpopmenu*)wcontrol->control, buttons, state, dblClick, mousexy);
+      break;
+    case WcheckBox:
+      mouse_wcheckbox((Wcheckbox*)wcontrol->control, buttons, state, dblClick, mousexy);
       break;
     }
 
@@ -472,6 +492,8 @@ mouseFocusControls( WrootControl  *root, Wpoint mousexy, WcontrolRef wcontrol )
       break;
     case WpopupMenu:
       mouseMotion_wpopmenu((Wpopmenu *)wcontrol->control, mousexy );
+      break;
+    case WcheckBox:
       break;
     }
 }
@@ -575,6 +597,8 @@ keyControls(WrootControl  *root, int key, int unicode )
     case WpopupMenu:
       //draw_wpopmenu((Wpopmenu*)wcontrol->control);
       break;
+    case WcheckBox:
+      break;
     }
 }
 
@@ -626,6 +650,9 @@ freeRootControl( WrootControl *root)
 	  break;
 	case WpopupMenu:
 	  free_wpopmenu((Wpopmenu*)wcontrol->control);
+	  break;
+	case WcheckBox:
+	  free_wcheckbox((Wcheckbox*)wcontrol->control);
 	  break;
 	}
       wcontrol = wcontrol->next;
