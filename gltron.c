@@ -85,7 +85,7 @@ void setupDisplay(gDisplay *d) {
   d->win_id = initWindow();
   // fprintf(stderr, "[video] window created\n");
   initRenderer();
-  // printRendererInfo();
+  printRendererInfo();
   // printf("win_id is %d\n", d->win_id);
   // fprintf(stderr, "[status] loading art\n");
   loadArt();
@@ -96,25 +96,9 @@ void setupDisplay(gDisplay *d) {
 
 
 int main( int argc, char *argv[] ) {
-
-#ifdef __FreeBSD__
-  fpsetmask(0);
-#endif
-
-#if defined (macintosh)
-  setupMacDirectories();
-#endif
-
   SystemInit(&argc, argv);
 
-#ifdef LOCAL_DATA
-#if !defined(WIN32) && !defined(macintosh)
-  goto_installpath(argv[0]);
-#endif
-#endif
-  initDirectories();
-
-
+	dirSetup(argv[0]);
 
   /* initialize lua */
   scripting_Init();
