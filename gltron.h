@@ -13,6 +13,7 @@ extern "C" {
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include <zlib.h>
 
@@ -248,7 +249,6 @@ extern double dt;
 /* milliseconds since last frame */
 
 extern int polycount;
-extern int screenshots;
 
 extern float colors_trail_diffuse[][4];
 extern float colors_model_diffuse[][4];
@@ -364,8 +364,8 @@ extern void deleteTextures(gDisplay*);
 extern void loadTexture(char *filename, int format);
 
 /* screenshot.c */
-extern void doScreenShot();
-extern void doBmpScreenShot();
+extern void doBmpScreenShot(gDisplay *display);
+extern void doPngScreenShot(gDisplay *display);
 
 /* help -> character.c */
 
