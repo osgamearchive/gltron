@@ -129,7 +129,7 @@ void initData() {
 		*(colmap + i) = 0;
   
 	/* lasttime = SystemGetElapsedTime(); */
-	game->pauseflag = 0;
+	game->pauseflag = PAUSE_GAME_RUNNING;
 
 	game2->rules.speed = getSettingf("speed");
 	game2->rules.eraseCrashed = getSettingi("erase_crashed");
