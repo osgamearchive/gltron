@@ -75,12 +75,20 @@ int SystemCreateWindow(char *name) {
   }
   SDL_WM_SetCaption(name, NULL);
   glewInit();
+  if(!GLEW_ARB_multitexture)
+  {
+	  fprintf(stderr, "multitexturing is not available\n");
+	  exit(1);
+  }
+  fprintf(stderr, "GL vendor: %s\n", glGetString(GL_VENDOR));
+  fprintf(stderr, "GL renderer: %s\n", glGetString(GL_RENDERER));
+  fprintf(stderr, "GL version: %s\n", glGetString(GL_VERSION));
 
   SDL_WM_SetCaption("GLtron", "");
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
   SDL_GL_SwapBuffers();
-  return 1;
+  return 0;
 }
 
 void SystemDestroyWindow(int id) {
