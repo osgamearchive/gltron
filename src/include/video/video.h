@@ -7,6 +7,7 @@
 #include "video/fonttex.h"
 #include "video/model.h"
 #include "video/video_level.h"
+#include "base/nebu_png_texture.h"
 
 #include "Nebu_video.h"
 
