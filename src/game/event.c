@@ -78,8 +78,10 @@ List* doMovement(int mode, int dt) {
 			// speed boost:
 			if(data->booster > 0 && data->boost_enabled) {
 				float boost = getSettingf("booster_use") * dt / 1000.0f;
-				if(boost > data->booster)
+				if(boost > data->booster) {
 					boost = data->booster;
+					data->boost_enabled = 0;
+				}
 				data->speed += boost;
 				data->booster -= boost;
 			}
@@ -97,6 +99,22 @@ List* doMovement(int mode, int dt) {
 						data->booster = booster_max;
 				}
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			// if(i == 0)
 			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
 				
