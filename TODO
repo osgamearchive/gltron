@@ -15,8 +15,7 @@ Bugs [medium priority]:
     lightcycle-high model
 
 Features [medium priority]
-
-- add extra faces for spokes instead of using existing rim triangles.
+- add extra faces for spokes instead of using existing rim triangles. (todd)
 - remove space around single player view
 - fix camera zoom generally (speed / settings)
 - new bot AI
@@ -30,7 +29,6 @@ Optimizations/Cleanups [medium priority]
 - delete the sound object in Audio_Quit to allow restarting the whole
   sound system without memory leaks
 - check various TODOs and FIXMEs in the code
-
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
   [ nicolas, kokido ]
 
@@ -43,7 +41,8 @@ Bugs [low priority]:
 Features [low priority]:
 
 - configurable zoom functionality (e.g. other mouse buttons)
-- support other controllers (i.e. joysticks)
+- better GUI support for mouse / gamepad
+- fix GUI resizing all the time
 - add (merge) software mouse cursor (from networking branch)
 - add more special effects (reflections etc.)
 - create default graphics settings to choose from: low/medium/high
@@ -52,7 +51,6 @@ Features [low priority]:
 - uv-coordinates for the model, add texture coordinate support to obj loader
 - quake-like drop down console
 - add slightly funny console messages (Robot ate Andi's tail)
-- peek left/right when in 1st person camera mode
 - quick way to restore sane camera angle (e.g. middle mouse button)
 - add armagetron style physics mod 
 - add (merge) software mouse cursor (from networking branch)
