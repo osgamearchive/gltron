@@ -245,16 +245,21 @@ do_gamerules(Packet packet)
       printf("activating player %d on slot %d : %d\n", i, getWhich(i), game->player[i].ai->active);
     }
 
-  initData();
 
   //game->players=game2->players;
-  game2->rules.speed          = packet.infos.gamerules.speed;
+  //game2->rules.speed          = packet.infos.gamerules.speed;
+  game->settings->current_speed = packet.infos.gamerules.speed;
+
   game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
+  
+  //game->settings->eraseCrashed = packet.infos.gamerules.eraseCrashed;
   game->settings->game_speed  = packet.infos.gamerules.gamespeed;
   game->settings->grid_size   = packet.infos.gamerules.grid_size;
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
-  game2->time                 = packet.infos.gamerules.time;
   printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
+  printf("initData with game speed = %d and so speed is %f\n", game->settings->game_speed, game->settings->current_speed );
+  initData();
+  game2->time                 = packet.infos.gamerules.time;
 }
 
 void

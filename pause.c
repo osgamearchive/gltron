@@ -68,12 +68,13 @@ void keyboardPause(int key, int unicode, int x, int y) {
 	Net_sendpacket(&packet,  Net_getmainsock());
       } else {
 	printf("\nOnly game master can start the game...\n");
+#endif	
+	if(game->pauseflag & PAUSE_GAME_FINISHED)
+	  initData();
+	/* lasttime = SystemGetElapsedTime(); */
+	switchCallbacks(&gameCallbacks);
+#ifdef __NETWORK__
       }
-#else
-    if(game->pauseflag & PAUSE_GAME_FINISHED)
-      initData();
-    /* lasttime = SystemGetElapsedTime(); */
-    switchCallbacks(&gameCallbacks);
 #endif   
     break;
     /* case 'q': SystemExit(); break; */
