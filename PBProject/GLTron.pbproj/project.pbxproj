@@ -104,7 +104,7 @@
 		};
 		29B97314FDCFA39411CA2CEA = {
 			children = (
-				B25203F704B0B03100A80002,
+				F5EA7FC00788739E01B5F9CB,
 				080E96DDFE201D6D7F000001,
 				29B97317FDCFA39411CA2CEA,
 				29B97323FDCFA39411CA2CEA,
@@ -157,50 +157,25 @@
 //B22
 //B23
 //B24
-		B25203F704B0B03100A80002 = {
-			children = (
-				B252046204B0B03200A80002,
-				B252046804B0B03200A80002,
-				B252046904B0B03200A80002,
-				B252046A04B0B03200A80002,
-				B25206A604B0B03400A80002,
-				B252079404B0B03500A80002,
-				B252079504B0B03500A80002,
-				B252100204B0BC2C00A80002,
-				B252069504B0B03400A80002,
-				B25206AE04B0B03400A80002,
-				B25206F904B0B03400A80002,
-				B252079604B0B03500A80002,
-				B25207AF04B0B03500A80002,
-				B252083D04B0B03600A80002,
-			);
-			isa = PBXGroup;
-			name = gltron;
-			path = /Users/andreas/gltron;
-			refType = 0;
-		};
 		B252046204B0B03200A80002 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = ChangeLog;
+			name = ChangeLog;
+			path = ../ChangeLog;
 			refType = 4;
 		};
 		B252046804B0B03200A80002 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = COPYING;
-			refType = 4;
-		};
-		B252046904B0B03200A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = COPYING.txt;
+			name = COPYING;
+			path = ../COPYING;
 			refType = 4;
 		};
 		B252046A04B0B03200A80002 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = CREDITS;
+			name = CREDITS;
+			path = ../CREDITS;
 			refType = 4;
 		};
 		B252069504B0B03400A80002 = {
@@ -221,7 +196,8 @@
 				B25206A304B0B03400A80002,
 			);
 			isa = PBXGroup;
-			path = docs;
+			name = docs;
+			path = ../docs;
 			refType = 4;
 		};
 		B252069604B0B03400A80002 = {
@@ -311,33 +287,58 @@
 		B25206A604B0B03400A80002 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = INSTALL;
+			name = INSTALL;
+			path = ../INSTALL;
 			refType = 4;
 		};
 		B25206AE04B0B03400A80002 = {
 			children = (
-				B25206AF04B0B03400A80002,
-				B25206B004B0B03400A80002,
+				B25206C904B0B03400A80002,
 				B25206B104B0B03400A80002,
+				B25206BD04B0B03400A80002,
+				B25206BE04B0B03400A80002,
+				B25206BF04B0B03400A80002,
+				B25206C004B0B03400A80002,
+				B25206C104B0B03400A80002,
+				B25206C204B0B03400A80002,
+				B25206C304B0B03400A80002,
+				B25206C404B0B03400A80002,
+				B25206C504B0B03400A80002,
+				B25206C604B0B03400A80002,
+				B25206C704B0B03400A80002,
+				B25206C804B0B03400A80002,
+				B25206D304B0B03400A80002,
+				B25206D404B0B03400A80002,
+				B25206D504B0B03400A80002,
+				B25206D604B0B03400A80002,
+				B25206D704B0B03400A80002,
+				B25206D804B0B03400A80002,
+				B25206D904B0B03400A80002,
+				B25206DA04B0B03400A80002,
+				B25206DB04B0B03400A80002,
+				B25206DC04B0B03400A80002,
+				B25206DD04B0B03400A80002,
+				B25206DE04B0B03400A80002,
+				B25206DF04B0B03400A80002,
+				B25206E004B0B03400A80002,
+				B25206E104B0B03400A80002,
+				B25206E204B0B03400A80002,
+				B25206E304B0B03400A80002,
+				B25206E404B0B03400A80002,
+				B25206E504B0B03400A80002,
+				B25206E604B0B03400A80002,
+				B25206E704B0B03400A80002,
+				B25206E804B0B03400A80002,
+				B25206E904B0B03400A80002,
+				B25206EA04B0B03400A80002,
+				B25206EB04B0B03400A80002,
+				F5EA7FC10788769E01B5F9CB,
 				B25206B804B0B03400A80002,
-				B25206BA04B0B03400A80002,
-				B25206BB04B0B03400A80002,
-				B25206BC04B0B03400A80002,
+				F5EA7FC3078876B901B5F9CB,
 			);
 			isa = PBXGroup;
-			path = lua;
-			refType = 4;
-		};
-		B25206AF04B0B03400A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = COPYRIGHT;
-			refType = 4;
-		};
-		B25206B004B0B03400A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = HISTORY;
+			name = lua5;
+			path = ../lua5;
 			refType = 4;
 		};
 		B25206B104B0B03400A80002 = {
@@ -386,64 +387,6 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Makefile.am;
-			refType = 4;
-		};
-		B25206BA04B0B03400A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = MANIFEST;
-			refType = 4;
-		};
-		B25206BB04B0B03400A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = README;
-			refType = 4;
-		};
-		B25206BC04B0B03400A80002 = {
-			children = (
-				B25206BD04B0B03400A80002,
-				B25206BE04B0B03400A80002,
-				B25206BF04B0B03400A80002,
-				B25206C004B0B03400A80002,
-				B25206C104B0B03400A80002,
-				B25206C204B0B03400A80002,
-				B25206C304B0B03400A80002,
-				B25206C404B0B03400A80002,
-				B25206C504B0B03400A80002,
-				B25206C604B0B03400A80002,
-				B25206C704B0B03400A80002,
-				B25206C804B0B03400A80002,
-				B25206C904B0B03400A80002,
-				B25206D304B0B03400A80002,
-				B25206D404B0B03400A80002,
-				B25206D504B0B03400A80002,
-				B25206D604B0B03400A80002,
-				B25206D704B0B03400A80002,
-				B25206D804B0B03400A80002,
-				B25206D904B0B03400A80002,
-				B25206DA04B0B03400A80002,
-				B25206DB04B0B03400A80002,
-				B25206DC04B0B03400A80002,
-				B25206DD04B0B03400A80002,
-				B25206DE04B0B03400A80002,
-				B25206DF04B0B03400A80002,
-				B25206E004B0B03400A80002,
-				B25206E104B0B03400A80002,
-				B25206E204B0B03400A80002,
-				B25206E304B0B03400A80002,
-				B25206E404B0B03400A80002,
-				B25206E504B0B03400A80002,
-				B25206E604B0B03400A80002,
-				B25206E704B0B03400A80002,
-				B25206E804B0B03400A80002,
-				B25206E904B0B03400A80002,
-				B25206EA04B0B03400A80002,
-				B25206EB04B0B03400A80002,
-				B25206EC04B0B03400A80002,
-			);
-			isa = PBXGroup;
-			path = src;
 			refType = 4;
 		};
 		B25206BD04B0B03400A80002 = {
@@ -527,7 +470,8 @@
 				B25206CE04B0B03400A80002,
 				B25206CF04B0B03400A80002,
 				B25206D004B0B03400A80002,
-				B25206D204B0B03400A80002,
+				F5EA7FC5078876C501B5F9CB,
+				F5EA7FC7078876CD01B5F9CB,
 			);
 			isa = PBXGroup;
 			path = lib;
@@ -573,12 +517,6 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Makefile.am;
-			refType = 4;
-		};
-		B25206D204B0B03400A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = README;
 			refType = 4;
 		};
 		B25206D304B0B03400A80002 = {
@@ -731,12 +669,6 @@
 			path = lzio.h;
 			refType = 4;
 		};
-		B25206EC04B0B03400A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = Makefile.am;
-			refType = 4;
-		};
 		B25206F904B0B03400A80002 = {
 			children = (
 				B252071A04B0B03500A80002,
@@ -749,7 +681,8 @@
 				B252076104B0B03500A80002,
 			);
 			isa = PBXGroup;
-			path = nebu;
+			name = nebu;
+			path = ../nebu;
 			refType = 4;
 		};
 		B25206FA04B0B03400A80002 = {
@@ -1474,15 +1407,11 @@
 			path = video_system.c;
 			refType = 4;
 		};
-		B252079404B0B03500A80002 = {
-			isa = PBXFileReference;
-			path = PBProject.sit;
-			refType = 4;
-		};
 		B252079504B0B03500A80002 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = README;
+			name = README;
+			path = ../README;
 			refType = 4;
 		};
 		B252079604B0B03500A80002 = {
@@ -1501,7 +1430,8 @@
 				B25207A404B0B03500A80002,
 			);
 			isa = PBXGroup;
-			path = scripts;
+			name = scripts;
+			path = ../scripts;
 			refType = 4;
 		};
 		B252079804B0B03500A80002 = {
@@ -1591,7 +1521,8 @@
 				B252082104B0B03600A80002,
 			);
 			isa = PBXGroup;
-			path = src;
+			name = src;
+			path = ../src;
 			refType = 4;
 		};
 		B25207B004B0B03500A80002 = {
@@ -1850,7 +1781,6 @@
 				B25207F004B0B03600A80002,
 				B25207FF04B0B03600A80002,
 				B252080304B0B03600A80002,
-				B252080404B0B03600A80002,
 				B252080504B0B03600A80002,
 				B252080904B0B03600A80002,
 			);
@@ -2093,12 +2023,6 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Makefile.am;
-			refType = 4;
-		};
-		B252080404B0B03600A80002 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = Makefile.in;
 			refType = 4;
 		};
 		B252080504B0B03600A80002 = {
@@ -2444,7 +2368,8 @@
 				B252084004B0B03600A80002,
 			);
 			isa = PBXGroup;
-			path = tools;
+			name = tools;
+			path = ../tools;
 			refType = 4;
 		};
 		B252083E04B0B03600A80002 = {
@@ -3572,7 +3497,8 @@
 		B252100204B0BC2C00A80002 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Makefile.am;
+			name = Makefile.am;
+			path = ../Makefile.am;
 			refType = 4;
 		};
 		B252100404B0BCCC00A80002 = {
@@ -3671,14 +3597,13 @@
 				F52F35D402182C1A01D3D55B,
 			);
 			buildSettings = {
+				DEBUGGING_SYMBOLS = NO;
 				FRAMEWORK_SEARCH_PATHS = "\"$(HOME)/Library/Frameworks\"";
 				HEADER_SEARCH_PATHS = "include ../nebu/include ../src/include \"$(HOME)/Library/Frameworks/SDL.framework/Headers\" \"$(HOME)/Library/Frameworks/SDL_sound.framework/Headers\"";
-				LIBRARY_SEARCH_PATHS = "/Users/andreas/gltron/PBProject/lib lib";
-				OPTIMIZATION_CFLAGS = "-O0";
+				LIBRARY_SEARCH_PATHS = lib;
 				OTHER_CFLAGS = "-DPATH_SEPARATOR='/'  -DSEPARATOR='/' -DSOUND -ftraditional-cpp";
-				OTHER_LDFLAGS = "-framework Cocoa -framework OpenGL -framework SDL -framework SDL_sound -lGLEW -lz -lpng";
+				OTHER_LDFLAGS = "-framework Cocoa -framework OpenGL -framework SDL -framework SDL_sound /usr/lib/libGLEW.a -lz -lpng";
 				OTHER_REZFLAGS = "";
-				PREBINDING = NO;
 				PRECOMPILE_PREFIX_HEADER = YES;
 				PREFIX_HEADER = "include/gltron-config.h";
 				PRODUCT_NAME = GLTron;
@@ -3963,6 +3888,10 @@
 				F5F104DB0775A6E801A80276,
 				F5F104DD0775A73301A80276,
 				F5F104DE0775A73A01A80276,
+				F5EA7FC20788769E01B5F9CB,
+				F5EA7FC4078876B901B5F9CB,
+				F5EA7FC6078876C501B5F9CB,
+				F5EA7FC8078876CD01B5F9CB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3998,7 +3927,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "CP=/Developer/Tools/CpMac\nDST=build/GLTron.app/Contents/Frameworks\n\nif test -d $DST ; then\n    echo \"already built frameworks dir\"\nelse\n    mkdir -p $DST\n\n    $CP -r ~/Library/Frameworks/SDL.framework $DST/\n    $CP -r ~/Library/Frameworks/SDL_sound.framework $DST/\n    $CP -r ~/Library/Frameworks/smpeg.framework $DST/\n    \n    rm -r $DST/SDL.framework/Headers\n    rm -r $DST/SDL.framework/Versions/Current/Headers\n    rm -r $DST/SDL_sound.framework/Headers\n    rm -r $DST/SDL_sound.framework/Versions/Current/Headers\n    rm -r $DST/smpeg.framework/Headers\n    rm -r $DST/smpeg.framework/Versions/Current/Headers\nfi";
+			shellScript = "CP=/Developer/Tools/CpMac\nDST=build/GLTron.app/Contents/Frameworks\n\nif test -d $DST ; then\n    echo \"already built frameworks dir\"\nelse\n    mkdir -p $DST\n\n    $CP -r ~/Library/Frameworks/SDL.framework $DST/\n    $CP -r ~/Library/Frameworks/SDL_sound.framework $DST/\n    \n    rm -r $DST/SDL.framework/Headers\n    rm -r $DST/SDL.framework/Versions/Current/Headers\n    rm -r $DST/SDL_sound.framework/Headers\n    rm -r $DST/SDL_sound.framework/Versions/Current/Headers\nfi";
 		};
 		F52F35DD0218B88501D3D55B = {
 			buildActionMask = 2147483647;
@@ -4057,6 +3986,70 @@
 			isa = PBXFileReference;
 			path = SDLMain.m;
 			refType = 2;
+		};
+		F5EA7FC00788739E01B5F9CB = {
+			children = (
+				B252069504B0B03400A80002,
+				B25206AE04B0B03400A80002,
+				B25206F904B0B03400A80002,
+				B252079604B0B03500A80002,
+				B25207AF04B0B03500A80002,
+				B252083D04B0B03600A80002,
+				B252046204B0B03200A80002,
+				B252046804B0B03200A80002,
+				B252046A04B0B03200A80002,
+				B25206A604B0B03400A80002,
+				B252079504B0B03500A80002,
+				B252100204B0BC2C00A80002,
+			);
+			isa = PBXGroup;
+			name = Files;
+			path = "";
+			refType = 2;
+		};
+		F5EA7FC10788769E01B5F9CB = {
+			isa = PBXFileReference;
+			path = ldump.c;
+			refType = 4;
+		};
+		F5EA7FC20788769E01B5F9CB = {
+			fileRef = F5EA7FC10788769E01B5F9CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5EA7FC3078876B901B5F9CB = {
+			isa = PBXFileReference;
+			path = lopcodes.c;
+			refType = 4;
+		};
+		F5EA7FC4078876B901B5F9CB = {
+			fileRef = F5EA7FC3078876B901B5F9CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5EA7FC5078876C501B5F9CB = {
+			isa = PBXFileReference;
+			path = loadlib.c;
+			refType = 4;
+		};
+		F5EA7FC6078876C501B5F9CB = {
+			fileRef = F5EA7FC5078876C501B5F9CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5EA7FC7078876CD01B5F9CB = {
+			isa = PBXFileReference;
+			path = ltablib.c;
+			refType = 4;
+		};
+		F5EA7FC8078876CD01B5F9CB = {
+			fileRef = F5EA7FC7078876CD01B5F9CB;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F5F104CE0775A39501A80276 = {
 			isa = PBXFileReference;
