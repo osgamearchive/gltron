@@ -1,6 +1,7 @@
 /* small utility functions */
 
 #include <stdlib.h>
+#include "random.h"
 
 void randomPermutation( int N, int *nodes )
 {
