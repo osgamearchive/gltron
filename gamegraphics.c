@@ -935,9 +935,6 @@ void drawCam(Player *p, gDisplay *d) {
   glDepthMask(GL_FALSE);
 #endif
 
-  if(getSettingi("show_wall") == 1)
-    drawWalls(d);
-
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
@@ -947,6 +944,9 @@ void drawCam(Player *p, gDisplay *d) {
     drawRecognizers(1);
     glDisable(GL_CULL_FACE);
   }
+
+  if(getSettingi("show_wall") == 1)
+    drawWalls(d);
 
   drawPlayers(p);
 
