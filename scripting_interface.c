@@ -45,7 +45,9 @@ int c_startGame(lua_State *L) {
 }
 
 int c_reloadTrack(lua_State *L) {
+#ifdef SOUND
   reloadTrack();
+#endif
   return 0;
 }
 
@@ -72,8 +74,3 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_reloadArtpack", c_reloadArtpack);
   lua_register(L, "c_restoreDefaults", c_restoreDefaults);
 }
-
-
-
-
-
