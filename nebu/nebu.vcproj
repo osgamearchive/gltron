@@ -170,6 +170,9 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\base\spline.c">
+				</File>
+				<File
 					RelativePath=".\base\surface.c">
 				</File>
 				<File
@@ -314,9 +317,6 @@
 					RelativePath=".\include\base\nebu_callbacks.h">
 				</File>
 				<File
-					RelativePath=".\include\base\nebu_geom.h">
-				</File>
-				<File
 					RelativePath="include\base\nebu_math.h">
 				</File>
 				<File
@@ -327,6 +327,9 @@
 				</File>
 				<File
 					RelativePath=".\include\base\nebu_random.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_spline.h">
 				</File>
 				<File
 					RelativePath=".\include\base\nebu_surface.h">
