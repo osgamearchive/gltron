@@ -5,7 +5,7 @@ http://www.ards.net/Andreas/gltron.html#links
 
 Get a working OpenGL / Mesa
 Get libpng / zlib (standard on allmost any system)
-Get SDL-1.1 and SDL_mixer
+Get SDL-1.1 and SDL_mixer and SDL_net
 (from http://www.devolution.com/~slouken/SDL/index.html)
 
 Installation
