@@ -21,7 +21,6 @@ typedef struct RuleSet {
   int eraseCrashed;
   float speed;
   int grid_size;
-  int ai_level;
 } RuleSet;
 
 

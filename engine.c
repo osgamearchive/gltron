@@ -39,9 +39,6 @@ void initGameStructures() { /* called only once */
   game->screen = (gDisplay*) malloc(sizeof(gDisplay));
   game->viewportType = getSettingi("display_type"); 
   
-  /* Setup the game's ai */
-  initGameAI(getSettingi("ai_level"));
-  
   d = game->screen;
   d->w = getSettingi("width"); 
   d->h = getSettingi("height"); 

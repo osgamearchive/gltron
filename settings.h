@@ -10,6 +10,7 @@ typedef struct SettingsCache {
   int use_stencil;
   int show_scores;
   int show_ai_status;
+  int ai_level;
   int show_fps;
   int softwareRendering;
   int show_floor_texture;

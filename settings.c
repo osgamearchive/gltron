@@ -118,7 +118,8 @@ void updateSettingsCache() {
   /* cache lua settings that don't change during play */
   game2->settingsCache.use_stencil = getSettingi("use_stencil");
   game2->settingsCache.show_scores = getSettingi("show_scores");
-  game2->settingsCache.show_ai_status = getSettingi("show_ai_status");;
+  game2->settingsCache.show_ai_status = getSettingi("show_ai_status");
+  game2->settingsCache.ai_level = getSettingi("ai_level");
   game2->settingsCache.show_fps = getSettingi("show_fps");
   game2->settingsCache.softwareRendering = getSettingi("softwareRendering");
   game2->settingsCache.show_floor_texture = getSettingi("show_floor_texture");

@@ -1,18 +1,6 @@
 #include "gltron.h"
 #include "event.h"
 
-void initGameAI(int level) {
-
-  game2->rules.ai_level = level;
-
-  /* set ai function ptr based on difficulty level setting */
-  if (level < 2) {
-    ai_function = doComputer;
-  } else {
-    ai_function = doComputer2;
-  }
-}
-
 static void getDistPoint(int dir, int d, int *x, int *y) {
   *x += dirsX[dir] * d;
   *y += dirsY[dir] * d;
@@ -69,7 +57,7 @@ void doComputer(int player, int target) {
   }
   data = me->data;
   ai = me->ai;
-  level = game2->rules.ai_level;
+  level = game2->settingsCache.ai_level;
 
   ai->moves++;
   /* avoid to short turns */
@@ -192,7 +180,7 @@ void doComputer2(int player, int target) {
     return;
   }
   ai = me->ai;
-  level = game2->rules.ai_level;
+  level = game2->settingsCache.ai_level;
   data = me->data;
   if(abs(data->iposx - ai->lastx) < min_turn[level] &&
      abs(data->iposy - ai->lasty) < min_turn[level]) {

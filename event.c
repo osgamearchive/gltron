@@ -207,11 +207,14 @@ void idleGame(void) {
       /* run AI */
       for(i = 0; i < game->players; i++)
 	if(game->player[i].ai != NULL)
-	  if(game->player[i].ai->
-active == AI_COMPUTER &&
+	  if(game->player[i].ai->active == AI_COMPUTER &&
 	     PLAYER_IS_ACTIVE(&game->player[i])) {
 
-	    ai_function(i, 0);
+      if (game2->settingsCache.ai_level < 2) {
+        doComputer(i, 0);
+      } else {
+        doComputer2(i, 0);
+      } 
 	  }
 
       /* process any outstanding events (turns, etc) */
