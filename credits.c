@@ -21,7 +21,7 @@ char *credits[] = {
   "Jonas Gustavsson  Thomas Flynn  Charles Babbage",
   "Nicolas Zimmermann  Mattias Engdegard  Ray Kelm",
   "Martin Fierz    Joseph Valenzuela   Ryan Gordon",
-  "Sam Lantinga",
+  "Sam Lantinga                   Patrick McCarthy",
   "",
   "and everyone else, who gave feedback ",
   "and valuable advice",
