@@ -3,9 +3,8 @@
 void initTexture(gDisplay *d) {
   GLint min_filter;
   char texname[120];
+
   int i, j;
-  char fallback[] = "default";
-  char *path;
 
   if(game->settings->use_mipmaps) {
     if(game->settings->mipmap_filter == TRILINEAR)
@@ -24,23 +23,9 @@ void initTexture(gDisplay *d) {
       glBindTexture(GL_TEXTURE_2D, d->textures[ textures[i].id + j ]);
       /* todo: snprintf would be safer, but win32 doesn't have it */
       if(textures[i].count == 1) {
-	sprintf(texname, "%s%c%s%s", 
-		d->artpack.path, SEPERATOR, textures[i].name, TEX_SUFFIX);
-	if((path = getFullPath(texname)) == NULL) {
-	  sprintf(texname, "%s%c%s%s", 
-		  fallback, SEPERATOR, textures[i].name, TEX_SUFFIX);
-	} else {
-	  free(path);
-	}
+	sprintf(texname, "%s%s", textures[i].name, TEX_SUFFIX);
       } else {
-	sprintf(texname, "%s%c%s%d%s", 
-		d->artpack.path, SEPERATOR, textures[i].name, j, TEX_SUFFIX);
-	if((path = getFullPath(texname)) == NULL) {
-	  sprintf(texname, "%s%c%s%d%s", 
-		  fallback, SEPERATOR, textures[i].name, j, TEX_SUFFIX);
-	} else {
-	  free(path);
-	}
+	sprintf(texname, "%s%d%s", textures[i].name, j, TEX_SUFFIX);
       }
       loadTexture(texname, textures[i].type);
 
@@ -60,3 +45,7 @@ void deleteTextures(gDisplay *d) {
 
   checkGLError("texture.c deleted textures");
 }
+
+
+
+
