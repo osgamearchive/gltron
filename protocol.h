@@ -197,10 +197,10 @@ int       Net_checksocks         ( void );
 int       Net_checksocket        ( TCPsocket );
 int       Net_addsocket          ( TCPsocket );
 int       Net_delsocket          ( TCPsocket );
-#ifdef USEUDP
 int       Net_readyudpsock       ( UDPsocket );
 int       Net_addudpsocket       ( UDPsocket );
 int       Net_deludpsocket       ( UDPsocket );
+#ifdef USEUDP
 UDPsocket Net_getudpsock         ( void );
 #endif
 TCPsocket Net_getmainsock        ( void );

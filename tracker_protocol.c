@@ -11,6 +11,8 @@
 //Here u use UDP socks
 
 static TCPsocket              tcpsock   = NULL;
+static UDPsocket              udpsock   = NULL;
+static UDPpacket             *udppacket = NULL;
 
 #define ADD_STRING(x)     memcpy(pos, x, sizeof(x)); pos += sizeof(x)
 #define GET_STRING(x, y)  memcpy(x, y, sizeof(x));   y   += sizeof(x)
@@ -184,4 +186,75 @@ TCPsocket
 Net_gettrackersock()
 {
   return tcpsock;
+}
+
+void
+init_ping()
+{
+  //IPaddress ipaddress;
+
+
+  //SDLNet_ResolveHost(&ipaddress, INADDR_ANY, PINGPORT);
+
+  udpsock = SDLNet_UDP_Open(PINGPORT);
+  if( udpsock == NULL )
+    {
+      fprintf(stderr, "can't create udp endpoint %s\n", SDLNet_GetError());
+    }
+  Net_addudpsocket(udpsock);
+  //SDLNet_UDP_Bind(udpsock, 0, &ipaddress);
+  udppacket = SDLNet_AllocPacket(sizeof(Pingpacket));
+}
+
+void
+close_ping()
+{
+  SDLNet_UDP_Close(udpsock);
+  Net_deludpsocket(udpsock);
+  udpsock = NULL;
+  SDLNet_FreePacket(udppacket);
+}
+
+void
+make_ping(int which, char *ipaddress, int port)
+{
+  Pingpacket packet;
+  int        i;
+
+  packet.time  = SystemGetElapsedTime();
+  packet.which = which;
+
+  for(i=0; i < NBPINGPACKET; ++i )
+    {
+      packet.num = i;
+      memcpy(udppacket->data, &packet, sizeof(Pingpacket));
+      //SDLNet_UDP_Send(udpsock, 0, udppacket);
+      SDLNet_UDP_Send(udpsock, -1, udppacket);
+    }
+  
+}
+
+void
+reply_ping()
+{
+  int         n;
+
+  n = SDLNet_UDP_Recv(udpsock, udppacket);
+
+  SDLNet_UDP_Send(udpsock, -1, udppacket);
+}
+
+void
+handle_ping(Trackerslots *slots)
+{
+  Pingpacket  packet;
+  int         n;
+
+  n = SDLNet_UDP_Recv(udpsock, udppacket);
+
+  memcpy(&packet, udppacket->data, udppacket->len);
+
+  slots[packet.which].ping += SystemGetElapsedTime() -  packet.time;
+  slots[packet.which].ping /=2;
+  slots[packet.which].packets++;
 }

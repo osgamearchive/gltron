@@ -52,6 +52,7 @@ start_server()
   
   sState   = waitState;
   nbUsers  = 0;
+  init_ping();
 
   //Server is started!
   printf("server listening to port %d\n", settings.port);
@@ -80,6 +81,7 @@ void
 stop_server()
 {
   Net_cleanup();
+  close_ping();
   //TODO: See how things work when brutal disconnect? why not say to player that server will shutdown
   //May be with a message ( eg: server maintenance, etc... )
 }
@@ -1018,6 +1020,7 @@ void
 handle_server()
 {
   int   i;
+  int sockstat;
 
   if( Net_checksocks() )
   {
@@ -1028,14 +1031,27 @@ handle_server()
   //look what is said!
   for(i=0;i<MAX_PLAYERS;++i)
     {
-      if( Net_readysock(slots[i].sock) )
+      sockstat = Net_checksocket(slots[i].sock);
+      if( sockstat != socksnotready )
 	{
-	  //i said something, handle...
-	  //makeping();
-	  handle_client(i);
-	  //makeping();
-	  //printf("## handle_client took %d ms\n", getping());
+	  if( sockstat & tcpsockready )
+	    {
+	      handle_client(i);
+	    }
+	  if( sockstat & udpsockready )
+	    {
+	      reply_ping();
+	    }
 	}
+
+      /* if( Net_readysock(slots[i].sock) ) */
+/* 	{ */
+/* 	  //i said something, handle... */
+/* 	  //makeping(); */
+/* 	  handle_client(i); */
+/* 	  //makeping(); */
+/* 	  //printf("## handle_client took %d ms\n", getping()); */
+/* 	} */
     }
 }
 

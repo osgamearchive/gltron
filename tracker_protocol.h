@@ -6,6 +6,8 @@
 
 #define TPACKETSIZE sizeof(Trackerpacket)
 #define REFRESH 50
+#define NBPINGPACKET 5
+#define PINGPORT 23480
 
 //Enums-------------------------------------------------------------------
 //active state of a slot
@@ -43,6 +45,8 @@ typedef struct {
   IPaddress     ipaddress;     //what is its ip and its port?
   int           nbplayers;     //how many players on that server?
   Uint32        lastseen;      //time since last seen, to know if it is only or not.
+  int           ping;          //ping
+  int           packets;       //how many packets got
 } Trackerslots;
 
 
@@ -61,7 +65,7 @@ typedef struct {
     struct {
       int      type;          //type
       char     passwd[9];     //passwd for login to tracker( not needed for clients )
-    } login;              //Type TLOGINREP
+    } login;                  //Type TLOGINREP
     struct {
       int      speed;         //speed of the game
       int      size;          //arena size
@@ -74,6 +78,13 @@ typedef struct {
   } infos;
 } Trackerpacket;
 
+//Ping packet
+typedef struct {
+  int time;                   //time when packet is sent
+  int num;                    //number of the packet
+  int which;                  //which server.
+} Pingpacket;
+
 //Prototypes------------------------------------------------------------------
 
 /** new function specific to tracker, others still protocol's one */
@@ -85,4 +96,11 @@ int  Net_tsendpacket       ( Trackerpacket *packet , TCPsocket sock             
 int  Net_tconnect( char *server, int port);
 void Net_tdisconnect( );
 TCPsocket Net_gettrackersock();
+
+/** ping things */
+void init_ping();
+void close_ping();
+void make_ping(int which, char *ipaddress, int port);
+void handle_ping(Trackerslots *slots);
+void reply_ping();
 #endif

@@ -225,7 +225,7 @@ Net_readysock( TCPsocket sock )
    return 0;
 }
 
-#ifdef USEUDP
+//#ifdef USEUDP
 int
 Net_addudpsocket(UDPsocket sock)
 {
@@ -250,7 +250,7 @@ Net_readyudpsock( UDPsocket sock )
     }
    return 0;
 }
-#endif
+//#endif
 
 int
 Net_checksocks( )
