@@ -714,10 +714,12 @@ GameEvent *
 getNetEvent()
 {
   cnetEventList cell;
-  GameEvent *e= ( GameEvent *) malloc(sizeof(GameEvent));
+  GameEvent *e;
 
   if( neteventlist->head == NULL )
     return NULL;
+
+  e=( GameEvent *) malloc(sizeof(GameEvent));
 
   cell = neteventlist->head;
 

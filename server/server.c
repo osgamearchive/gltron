@@ -216,10 +216,12 @@ handle_client(int which)
 		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->rules.eraseCrashed,sizeof(int));
 		  //send startPositions
 		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->startPositions, (3 * game2->players * sizeof(int)));
+		  
 		}
 	    }
 	  game->players = game2->players;
 	  printf("starting game with %d players\n", game->players);
+	  printf("grid size: %d\n", game->settings->grid_size);
 	  break;
 
 	case stopGame:
@@ -499,6 +501,6 @@ SendEvents(GameEvent *e)
 	  SDLNet_TCP_Send(slots[i].sock, (char*)serverRep, sizeof(tServRepHdr));
 	  SDLNet_TCP_Send(slots[i].sock,(void *)e,sizeof(GameEvent));
 	}
-    } 
+    }
   free(serverRep);
 }

@@ -159,6 +159,7 @@ doChgeStateNetEvent()
       if( applyGameInfo() )//applying gamerules
 	fprintf(stderr, "got an error while applying GameInfo\n");
       fprintf(stderr, "starting the game\n");
+      printf("grid size: %d\n", game->settings->grid_size);
       game2->mode = GAME_PLAY;
       switchCallbacks(&pauseCallbacks);
     }
@@ -175,8 +176,8 @@ doGameNetEvent(  )
   e = Recv_gameEvent();
   addNetEvent(e);
 
-  //fprintf(stderr, "%d %d %d %d %d\n", e->type, e->player, 
-  //	 e->x, e->y, e->timestamp);
+  fprintf(stderr, "%d %d %d %d %d\n", e->type, e->player, 
+  	 e->x, e->y, e->timestamp);
 
   switch( e->type )
   {
