@@ -56,7 +56,7 @@ int processEvent(GameEvent* e) {
   return value;
 }
 
-list* doMovement(int mode, int dt) {
+static list* doMovement(int mode, int dt) {
   int i;
   float fs;
   Data *data;
@@ -227,12 +227,15 @@ void idleGame( void ) {
 }
 
 /* create an event and put it into the global event queue */
-
-void createEvent(int player, int eventType) {
+void createEvent(int player, event_type_e eventType) {
   GameEvent *e;
-  list *p;
+  list *p = &(game2->events);
 
-  for(p = &(game2->events); p->next != NULL; p = p->next);
+  /* move to the end of the event list */
+  while (p->next)
+    p = p->next;
+
+  /* TODO: handle failed malloc */
   e = (GameEvent*) malloc(sizeof(GameEvent));
   p->data = e;
   p->next = (list*) malloc(sizeof(list));
