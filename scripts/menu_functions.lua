@@ -13,11 +13,9 @@ end
 
 GetMenuValue[ MenuC.type.list ] = function ( menu )
    local value
-   if Menu[menu].read then 
-      value = Menu[menu].read()
-   else
-      value = "undef"
-   end
+   if Menu[menu].read then value = Menu[menu].read() end
+   if not value then value = "undef" end
+
    -- script_print(menu .. " --> " .. value )
    local i
    for i=1,getn(Menu[menu].values) do
@@ -87,6 +85,7 @@ GetMenuValueWidth = function ( menu )
 end
 
 GetMenuValueString = function ( menu )
+   -- write(format("GetMenuValueString: '%s'\n", menu));
    return GetMenuValue[ Menu[menu].type ]( menu )
 end
 
