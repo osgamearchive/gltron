@@ -263,7 +263,8 @@ void clearTrail(int player) {
     if(colmap[i] == player + 1)
       colmap[i] = 0;
 
-  rebuildDebugTex();
+ // This causes a substantial hiccup on OS X
+  //rebuildDebugTex();
 }
 
 void crashPlayer(int player) {

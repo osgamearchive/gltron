@@ -50,6 +50,11 @@
 #define CURRENT_DIR ""
 #endif 
 
+#ifdef __APPLE__
+#undef RC_NAME
+#define RC_NAME "Library/Preferences/gltronPrefs.txt"
+#endif
+
 /* dropped support for anything else than libpng */
 #include "png_texture.h"
 #include <png.h>

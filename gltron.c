@@ -91,7 +91,7 @@ int main( int argc, char *argv[] ) {
   fpsetmask(0);
 #endif
 
-#ifdef macintosh
+#if defined (macintosh)
     setupHomeEnvironment ();
 #endif
 
