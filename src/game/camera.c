@@ -86,10 +86,24 @@ static void initFreeCamera(Camera *cam) {
   cam->type.freedom[CAM_FREE_CHI] = 1;
 }
 
+static void initOffsetCamera(Camera *cam) {
+  cam->movement[CAM_R] = cam_defaults[CAM_FOLLOW][CAM_R];
+  cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
+  cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
+
+  cam->type.interpolated_cam = 0;
+  cam->type.interpolated_target = 0;
+  cam->type.coupled = 0;
+  cam->type.freedom[CAM_FREE_R] = 1;
+  cam->type.freedom[CAM_FREE_PHI] = 1;
+  cam->type.freedom[CAM_FREE_CHI] = 1;
+}
+
+
 void initCamera(Camera *cam, Data *data, int type) {
-	float x,y;
+  float x,y;
 	
-	getPositionFromData(&x, &y, data);
+  getPositionFromData(&x, &y, data);
 	
   cam->type.type = type;
 
@@ -98,6 +112,7 @@ void initCamera(Camera *cam, Data *data, int type) {
   case CAM_TYPE_FOLLOW: initFollowCamera(cam); break;
   case CAM_TYPE_COCKPIT: initCockpitCamera(cam); break;
   case CAM_TYPE_MOUSE: initFreeCamera(cam); break;
+  case CAM_TYPE_OFFSET: initOffsetCamera(cam); break;
   }
   cam->target[0] = x;
   cam->target[1] = y;
@@ -205,6 +220,7 @@ void playerCamera(PlayerVisual *pV, Player *p) {
     tdest[2] = B_HEIGHT;
     break;
   case CAM_TYPE_FOLLOW: /* Mike-cam */
+  case CAM_TYPE_MOUSE: /* mouse camera */
     tdest[0] = x;
     tdest[1] = y;
     tdest[2] = B_HEIGHT;
@@ -217,10 +233,29 @@ void playerCamera(PlayerVisual *pV, Player *p) {
     dest[1] = y + 4.0f * dirsY[ p->data->dir ] + 0.1f * sinf(phi);
     dest[2] = CAM_COCKPIT_Z + 0.1f;
     break;
-  case CAM_TYPE_MOUSE: /* mouse camera */
-    tdest[0] = x;
-    tdest[1] = y;
-    tdest[2] = B_HEIGHT;
+  case CAM_TYPE_OFFSET: /* AMR-cam */
+    {
+      static float px=0,py=0;
+      float dx,dy,tx,ty,gs,d;
+      gs=getSettingf("grid_size");
+      tx=(x-gs/2)*(1+15/gs)+gs/2; /* Scale position of cycle */
+      ty=(y-gs/2)*(1+15/gs)+gs/2;
+
+      dx=px-tx;
+      dy=py-ty;
+      d=1.3*sqrt(dx*dx+dy*dy); /* Find distance between old viewpoint and scaled cycle pos */
+      px=dest[0] =  tx + CAM_CIRCLE_DIST * dx/d; /* Set viewpoint a fixed distance from */
+      py=dest[1] =  ty + CAM_CIRCLE_DIST * dy/d; /* scaled pos, preserving angle */
+
+      dx=(tx-x)*(tx-x); /* find distance between scaled and actual */
+      dy=(ty-y)*(ty-y); /* cycle positions... */
+      d=sqrt(dx*dx+dy*dy)/8;
+      dest[2] = CAM_CIRCLE_Z-(d*CAM_CIRCLE_Z)/24; /* ...and lift camera when close to cycle */
+
+      tdest[0] = x;
+      tdest[1] = y;
+      tdest[2] = B_HEIGHT;
+    }
     break;
   }
   memcpy(cam->cam, dest, sizeof(cam->cam));
@@ -277,6 +312,9 @@ void nextCameraType(void) {
         break;
       case 3 :
         displayMessage(TO_CONSOLE, "[camera] Mouse Camera");
+        break;
+      case 4 :
+        displayMessage(TO_CONSOLE, "[camera] Offset Camera");
         break;
     }
   }

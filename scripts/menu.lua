@@ -120,8 +120,8 @@ Menu = {
    },
    CameraMode = {    
       type = MenuC.type.list, caption = "Camera mode",
-      labels = { "circling", "behind", "cockpit", "mouse" },
-      values = { 0, 1, 2, 3 },
+      labels = { "circling", "behind", "cockpit", "mouse", "offset" },
+      values = { 0, 1, 2, 3, 4 },
       read = function() return settings.camType; end,
       store = function(value) settings.camType = value; c_resetCamera(); end
    },
