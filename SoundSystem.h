@@ -18,6 +18,7 @@ namespace Sound {
     Vector3 _location;
     Vector3 _velocity;
     Vector3 _direction;
+    Vector3 _up;
   };
 
   class System {
