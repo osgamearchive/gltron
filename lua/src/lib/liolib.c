@@ -1,5 +1,5 @@
 /*
-** $Id: liolib.c,v 1.4 2002/02/24 19:51:55 walisser Exp $
+** $Id: liolib.c,v 1.5 2002/03/22 10:04:22 andi75 Exp $
 ** Standard I/O (and system) library
 ** See Copyright Notice in lua.h
 */
@@ -523,7 +523,8 @@ static int io_rename (lua_State *L) {
 
 static int io_tmpname (lua_State *L) {
 
-#ifdef macintosh
+/* #ifdef macintosh */
+#if 1
 	
   /* mkstemp unavailable on Mac OS 9 */
   assert (0);
