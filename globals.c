@@ -66,6 +66,9 @@ int    isConnected = 0;
 int    sChat       = 0;
 char   mesg[255] = "";
 int    me;
+
+netEventList neteventlist = NULL;
+
 #endif
 
 /* settings stuff */

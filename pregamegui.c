@@ -18,6 +18,12 @@ handlecommand(char *command, char *params)
     {
     case 's'://start
       //TODO: ask for starting the server.
+       
+      //if( isConnected && ( serverstate == preGameState ) && slots[me].isMaster )
+      //{
+	  printf("\nAsk to start the game\n");
+	  Send_header( startGame, me, 0, 0 );
+	  //  }
       break;
       //test...
     }
@@ -33,6 +39,7 @@ keyboardreadingreturn()
   if( strlen(command) > 0 )
     {
       handlecommand(command, params);
+      sprintf(buff, "");
       //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
     } else {
       fprintf(stderr, "\nsend chat: %s\n", buff);
@@ -95,7 +102,13 @@ void displaykeyboardreading() {
   SystemSwapBuffers();
 }
 
-void idlekeyboardreading() { }
+void idlekeyboardreading()
+{  
+  if( isConnected && Net_checkSocks() )
+    {
+      handleServer();
+    }
+}
 
 callbacks keyboardreadingCallbacks = {
   displaykeyboardreading, idlekeyboardreading, keyreading, initkeyreading,

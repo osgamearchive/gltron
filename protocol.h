@@ -94,12 +94,33 @@ typedef struct sslots {
 } tslots, *pslots;
 
 
+typedef struct sSslots
+{
+  int        active;      //le client est connecté
+  TCPsocket  sock;        //socket avec ce client
+  IPaddress  peer;        //adresse du client
+  char       name[256];   //nom du client
+  int        color;       //couleur du client
+  int        pingIt;      //ping du joueur
+  int        isMaster;    //est le maitre ?
+} tSslots, pSslots;
+
 typedef struct snetGameSettings {
   Grid    grid;          //taille de l'art
   RuleSet rule;          //vitesse...
   int     timeR;         //Le temps de la partie, si 0 illimité.
   int     nbGames;        //nbre de parties par jeu.
 } tnetGameSettings, *netGameSettings;
+
+typedef struct scnetEventList *cnetEventList;
+typedef struct scnetEventList {
+  GameEvent       event;
+  cnetEventList   next;
+} tcnetEventList;
+
+typedef struct snetEventList {
+  cnetEventList head;
+} tnetEventList, *netEventList;
 
 //Prototypes
 
@@ -128,6 +149,7 @@ int  Recv_who            ( pslots );
 int  Recv_chat           ( int, char *);
 //char* Recv_chat( int  );
 void Recv_Buff           ( char *, int );
+int Recv_rules           ( void );
 
 GameEvent* Recv_gameEvent();
 int  Recv_chgeState      ( int * );
@@ -136,6 +158,9 @@ int  Recv_netGameSettings( netGameSettings );
 /** Creates */
 netGameSettings createNetGameSettings  ( void );
 void            defaultNetGameSettings ( netGameSettings );
+netEventList    createNetEventList( void );
+GameEvent*      getNetEvent();
+void             addNetEvent( GameEvent *e);
 /** Prints */
 void print_serverState   ( int );
 void printNetGameSettings ( netGameSettings );

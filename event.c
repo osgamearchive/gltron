@@ -146,6 +146,12 @@ void idleGame( void ) {
 #endif
 
   if(updateTime() == 0) return;
+
+  if( isConnected && Net_checkSocks() )
+    {
+      handleServer();
+    }
+
   switch(game2->mode) {
   case GAME_NETWORK_RECORD:
 #ifdef NETWORK

@@ -50,19 +50,11 @@ void stopPlaying() {
 }
 
 GameEvent* readEvent() {
-  GameEvent *e;
-  e = (GameEvent*) malloc(sizeof(GameEvent));
-  if(fscanf(game2->play, "%d %d %d %d %d ", &(e->type), &(e->player),
-	    &(e->x), &(e->y), &(e->timestamp)) != 5) {
-    free(e);
-    return NULL;
-  }
-  return e;
+  return getNetEvent();
 }
 
 void getEvents() {
   static GameEvent *latest = NULL;
-
   if(latest == NULL)
     latest = readEvent();
   if(latest != NULL) {

@@ -8,6 +8,8 @@ void idlePause() {
 #ifdef SOUND
   soundIdle();
 #endif
+
+  switchCallbacks(&gameCallbacks);
   /* 
   if(SystemGetElapsedTime() - lasttime < 10) return;
   timediff();

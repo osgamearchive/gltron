@@ -76,7 +76,18 @@ void keyGame(int k, int unicode, int x, int y)
 	int p;
 	p = key_actions[i].player;
 	if(game->player[p].data->speed > 0)
-	  createTurnEvent(p, key_actions[i].turn);
+	  {
+	    if( ! isConnected )
+	      {
+		createTurnEvent(p, key_actions[i].turn);
+	      } else {
+		if( key_actions[i].turn == TURN_LEFT )
+		  Send_header( turnLeft, me, 0, 0);
+		else
+		  Send_header( turnRight, me, 0, 0);
+		  
+	      }
+	  }
 	return;
       }
     }

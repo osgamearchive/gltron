@@ -590,7 +590,7 @@ Recv_chgeState(int *newState)
   int rLen;
 
   rLen = SDLNet_TCP_Recv(tcpsock, (void *)newState, sizeof(int));
-  if( rLen <= sizeof(int) )
+  if( rLen <= 0 )
     {
       return connectLost;
     }
@@ -603,10 +603,58 @@ Recv_netGameSettings(netGameSettings ngS)
   int rLen;
 
   rLen = SDLNet_TCP_Recv(tcpsock, (void *)ngS, sizeof(tnetGameSettings));
-  if( rLen <= sizeof(tnetGameSettings) )
+  if( rLen <= 0 )
     {
       return connectLost;
     }
+  return noErr;
+}
+
+int
+Recv_rules()
+{
+  int rLen;
+  int ilen=sizeof(int);
+  int *speed = (int*)malloc(ilen);
+ 
+
+  fprintf(stderr, "get players\n");
+  rLen = SDLNet_TCP_Recv(tcpsock, (void *)&game2->players, sizeof(int));
+  if( rLen <= 0 )
+    {
+      return connectLost;
+    }
+  fprintf(stderr, "players: %d\n", game2->players);
+
+  fprintf(stderr, "get speed\n");
+  rLen = SDLNet_TCP_Recv(tcpsock, (void *)speed, ilen);
+  if( rLen <= 0 )
+    {
+      return connectLost;
+    } else {
+      game2->rules.speed        = *speed/1000;
+      fprintf(stderr, "speed: %f\n", game2->rules.speed);
+    }
+  fprintf(stderr, "get eraseCrashed\n");
+  rLen = SDLNet_TCP_Recv(tcpsock, (void *)&game2->rules.eraseCrashed, ilen);
+  if( rLen <= 0 )
+    {
+      return connectLost;
+    }
+  fprintf(stderr, "eraseCrashed: %d\n", game2->rules.eraseCrashed);
+
+
+  ilen = (3 * game2->players * sizeof(int));
+
+  fprintf(stderr, "set startPositions: %d\n", ilen);
+  game2->startPositions = (int*) malloc(ilen);
+  rLen = SDLNet_TCP_Recv(tcpsock, (void *)game2->startPositions, ilen);
+  if( rLen <= 0 )
+    {
+      printf("get %d <=> %d", rLen, ilen);
+      return connectLost;
+    }
+
   return noErr;
 }
 
@@ -630,6 +678,54 @@ createNetGameSettings()
   return ngS;
 }
 
+cnetEventList
+createNetEventCell( GameEvent *e )
+{
+  cnetEventList cell= ( cnetEventList ) malloc(sizeof(tcnetEventList));
+  cell->next = NULL;
+  cell->event = *e;
+  return cell;
+}
+netEventList
+createNetEventList( void )
+{
+  netEventList nl = ( netEventList ) malloc(sizeof(tnetEventList));
+  nl->head = NULL;
+  return nl;
+}
+
+void
+addNetEvent( GameEvent *e)
+{
+  cnetEventList cell;
+
+  cell = neteventlist->head;
+  if( cell == NULL )
+    {
+      neteventlist->head = createNetEventCell(e);
+      return;
+    }
+  while( cell->next )
+    { cell = cell->next; }
+  cell->next = createNetEventCell(e);  
+}
+
+GameEvent *
+getNetEvent()
+{
+  cnetEventList cell;
+  GameEvent *e= ( GameEvent *) malloc(sizeof(GameEvent));
+
+  if( neteventlist->head == NULL )
+    return NULL;
+
+  cell = neteventlist->head;
+
+  neteventlist->head = cell->next;
+  *e= cell->event;
+  free(cell);
+  return e;
+}
 /** Prints */
 
 

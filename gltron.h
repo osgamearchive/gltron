@@ -80,8 +80,8 @@ typedef png_texture texture;
 #include "texture.h"
 
 #ifdef __NETWORK__
-#include "protocol.h"
 #include <SDL/SDL_net.h>
+#include "protocol.h"
 #endif
 
 extern int game_textures;
@@ -542,6 +542,7 @@ int    isConnected;
 int    sChat;
 char   mesg[255];
 int    me;
+netEventList neteventlist;
 
 extern void handleServer( void );
 #endif

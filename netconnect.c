@@ -83,7 +83,7 @@ void initConnect() {
 
 void cleanConnect()
 {
-  Net_deconnect();
+  //Net_deconnect();
 }
 
 callbacks netConnectCallbacks = {

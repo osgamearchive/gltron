@@ -209,7 +209,7 @@ void readServer(int key, int unicode, int x, int y)
   switch(key)
     {
     case 13://return
-    case SDLK_ESCAPE:
+    case SDLK_ESCAPE://escape
       nbreads=0;
       restoreCallbacks();
       break;

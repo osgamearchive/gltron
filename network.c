@@ -17,6 +17,7 @@ login(char *name)
       //Sending welcome to the server.
       Send_welcom(name, 1); //TODO: put gltron version here...
     }
+  neteventlist = createNetEventList();
 }
 
 //get login answer
@@ -113,7 +114,8 @@ int
 doChgeStateNetEvent()
 {
   int err = noErr;
-  int newState;
+  int newState; 
+  //Data *data;   
 
   Recv_chgeState(&newState);
   fprintf(stderr, "Server has changed state:");
@@ -125,6 +127,41 @@ doChgeStateNetEvent()
       printNetGameSettings(&netSettings);
     }
   serverstate = newState;
+  if( serverstate == gameState)
+    {
+      
+      game->settings->ai_player1=( slots[0].active ) ? 0 : 2;
+      game->settings->ai_player2=( slots[1].active ) ? 0 : 2;
+      game->settings->ai_player3=( slots[2].active ) ? 0 : 2;
+      game->settings->ai_player4=( slots[3].active ) ? 0 : 2;
+      
+
+      //starting the game...
+      initData();
+      if( Recv_rules() != noErr )//getting rules from server...
+	fprintf(stderr, "got an error while reading rules\n");
+      else
+	fprintf(stderr, "rules set...\n");
+      game->players=game2->players;
+      /*
+      data = game->player[0].data;
+
+      printf("player 0 start with x: %d y: %d direction: %d\n", data->iposx,
+	                                                        data->iposy,
+	                                                        data->dir);
+
+      data = game->player[1].data;
+      printf("player 1 start with x: %d y: %d direction: %d\n", data->iposx,
+	                                                        data->iposy,
+	                                                        data->dir);
+      */
+
+      if( applyGameInfo() )//applying gamerules
+	fprintf(stderr, "got an error while applying GameInfo\n");
+      fprintf(stderr, "starting the game\n");
+      game2->mode = GAME_PLAY;
+      switchCallbacks(&pauseCallbacks);
+    }
   return err;
 }
 
@@ -136,6 +173,7 @@ doGameNetEvent(  )
   int err = noErr;
 
   e = Recv_gameEvent();
+  addNetEvent(e);
 
   //fprintf(stderr, "%d %d %d %d %d\n", e->type, e->player, 
   //	 e->x, e->y, e->timestamp);

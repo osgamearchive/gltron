@@ -59,8 +59,8 @@ void initPregame() {
 
 void cleanPregame()
 {
-  fprintf(stderr, "deconnecting...\n");
-  Net_deconnect();
+  fprintf(stderr, "pregame: deconnecting...\n");
+  //Net_deconnect();
 }
 
 callbacks netPregameCallbacks = {
