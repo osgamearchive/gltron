@@ -394,31 +394,28 @@ void drawFloor(gDisplay *d) {
     glColor4f(1.0, 1.0, 1.0, 1.0);
     l = game2->rules.grid_size / 4;
     t = l / 12;
-    for(j = 0; j < game2->rules.grid_size; j += l)
-      for(k = 0; k < game2->rules.grid_size; k += l) {
-	glBegin(GL_QUADS);
-	glTexCoord2i(0, 0);
-	glVertex2i(j, k);
-	glTexCoord2i(t, 0);
-	glVertex2i(j + l, k);
-	glTexCoord2i(t, t);
-	glVertex2i(j + l, k + l);
-	glTexCoord2i(0, t);
-	glVertex2i(j, k + l);
-	glEnd();
-	polycount += 2;
+    for (j = 0; j < game2->rules.grid_size; j += l) {
+      for (k = 0; k < game2->rules.grid_size; k += l) {
+        glBegin(GL_QUADS);
+	      glTexCoord2i(0, 0);
+	      glVertex2i(j, k);
+	      glTexCoord2i(t, 0);
+	      glVertex2i(j + l, k);
+	      glTexCoord2i(t, t);
+	      glVertex2i(j + l, k + l);
+	      glTexCoord2i(0, t);
+	      glVertex2i(j, k + l);
+	      glEnd();
+	      polycount += 2;
       }
+    }
     glDisable(GL_TEXTURE_2D);
   } else {
-    float fogcolor[4];
-    int line_spacing;
-
-    scripting_GetFloatArray("clear_color", fogcolor, 4);
-    line_spacing = game2->settingsCache.line_spacing;
+    int line_spacing = game2->settingsCache.line_spacing;
 
     glColor3f(1.0, 1.0, 1.0);
 
-    glFogfv(GL_FOG_COLOR, fogcolor);
+    glFogfv(GL_FOG_COLOR, game2->settingsCache.clear_color);
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogi(GL_FOG_START, 100);
     glFogi(GL_FOG_END, 350);
@@ -426,34 +423,17 @@ void drawFloor(gDisplay *d) {
     glEnable(GL_FOG);
    
     glBegin(GL_LINES);
-    for(i = 0; i < game2->rules.grid_size; i += line_spacing) {
-      for(j = 0; j < game2->rules.grid_size; j += line_spacing) {
-	glVertex3i(i, j, 0);
-	glVertex3i(i + line_spacing, j, 0);
-	glVertex3i(i, j, 0);
-	glVertex3i(i, j + line_spacing, 0);
+    for (i = 0; i < game2->rules.grid_size; i += line_spacing) {
+      for (j = 0; j < game2->rules.grid_size; j += line_spacing) {
+	      glVertex3i(i, j, 0);
+	      glVertex3i(i + line_spacing, j, 0);
+	      glVertex3i(i, j, 0);
+	      glVertex3i(i, j + line_spacing, 0);
       }
     }
     glEnd();
 
     glDisable(GL_FOG);
-
-    /*
-    glBegin(GL_LINES);
-    for(j = 0; j <= game2->rules.grid_size;
-	j += line_spacing) {
-	glVertex3i(0, j, 0);
-	glVertex3i(game2->rules.grid_size, j, 0);
-	polycount++;
-
-	glVertex3i(j, 0, 0);
-	glVertex3i(j, game2->rules.grid_size, 0);
-	polycount++;
-
-    }
-    glEnd();
-    */
-
   }
 }
 
