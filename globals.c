@@ -53,7 +53,6 @@ int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
 float camAngles[] = { M_PI / 2, 0, 3 * M_PI / 2, M_PI, 2 * M_PI };
 
-char *cam_names[] = { "circle", "follow", "cockpit", "free" };
 float cam_defaults[][3] =  { 
   { CAM_CIRCLE_DIST, M_PI / 3, 0 }, /* circle */
   { CAM_FOLLOW_DIST, M_PI / 4, M_PI / 72 }, /* follow */
@@ -71,22 +70,6 @@ int menutime;
 
 int polycount; /* poly count - how much do we draw each frame? */
 
-/* default settings */
-
-int default_arena_sizes[] = { 160, 240, 480, 720, 1200 };
-float default_speeds[] = { 5.0, 6.5, 8.5, 12.0, 0.0 };
-
-float colors_trail_diffuse[][4] =
-{ { .6, 0.6, 0.0, 0.6}, { 0.5, 0.05, 0.25, 0.6},
-  { 0.2, 0.6, 0.4, 0.6 }, { 0.7, 0.7, 0.7, 0.6 } };
-
-float colors_model_diffuse[][4] = 
-{ { 1.0, 1.0, 0.0, 1.0 }, { 0.7, 0.1, 0.1, 1.0 },
-  { 0.3, 1.0, 0.8, 1.0 }, { 0.8, 0.8, 0.8, 1.0 } };
-float colors_model_specular[][4] = 
-{ { 1.0, 1.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 }, 
-  { 1.0, 1.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 } };
-
 unsigned char debugcolors[6][4] = {
   { 0, 0, 0, 0 },
   { 255, 0, 0, 255 },
@@ -95,10 +78,6 @@ unsigned char debugcolors[6][4] = {
   { 0, 0, 255, 255 },
   { 255, 255, 255, 255 }
 };
-
-float menu_fgColor[4] = { 1.0, 1.0, 1.0, 1.0 };
-float menu_hlColor1[4] = { 1.0, 0.2, 0.2, 1.0 };
-float menu_hlColor2[4] = { 1.0, 1.0, 0.0, 1.0 };
 
 int vps = 4;
 int vp_max[] = { 1, 2, 4, 1 }; /* windows in this display setting */
@@ -112,7 +91,6 @@ int quadBufSize = 100;
 Quad *quadBuf;
 int *quadBufIndex;
 #endif
-
 
 int game_textures = 17; /* 10 + 6 + debug texture */
 int n_textures = 11;
@@ -129,7 +107,6 @@ texture_info textures[] = {
   { 1, "gltron_trail", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_TRAIL, 1 },
   { 1, "gltron_traildecal", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_DECAL, 1 },
   { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX, 1 }
-
 };
 
 float shadow_color[] = { 0, 0, 0, .8 };
@@ -142,4 +119,5 @@ float shadow_matrix[] = { LX * LY, 0,       0, 0,
 			  0,       0,       0, LX * LY };
 #undef LX
 #undef LY
+
 
