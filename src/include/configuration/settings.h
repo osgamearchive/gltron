@@ -19,7 +19,6 @@ typedef struct SettingsCache {
   int antialias_lines;
   int show_decals;
   int alpha_trails;
-  int shadow_lod;
   int turn_cycle;
   int light_cycles;
   int lod;
