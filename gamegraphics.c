@@ -357,11 +357,13 @@ void drawCycle(Player *p, int lod) {
     drawModel(cycle, MODEL_USE_MATERIAL, 0);
   else if(p->data->exp_radius < EXP_RADIUS_MAX) {
     float alpha;
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
-      (float) EXP_RADIUS_MAX;
-    setMaterialAlphas(cycle, alpha);
+    if(game->settings->show_alpha == 1) {
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
+	(float) EXP_RADIUS_MAX;
+      setMaterialAlphas(cycle, alpha);
+    }
     drawExplosion(cycle, p->data->exp_radius, MODEL_USE_MATERIAL, 0);
   }
 
@@ -429,7 +431,6 @@ void drawPlayers(Player *p) {
   int lod;
 
   glShadeModel(GL_SMOOTH);
-  glEnable(GL_BLEND);
   for(i = 0; i < game->players; i++) {
     height = game->player[i].data->trail_height;
     if(height > 0) {
@@ -460,7 +461,6 @@ void drawPlayers(Player *p) {
 	drawCycle(&(game->player[i]), lod);
     }
   }
-  if(game->settings->show_alpha != 1) glDisable(GL_BLEND);
   glShadeModel( game->screen->shademodel );
 }
 
@@ -523,6 +523,7 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   if(game->settings->show_alpha != 1) glDisable(GL_BLEND);
+
   glShadeModel( game->screen->shademodel );
   glPopMatrix();  
 }
@@ -583,24 +584,6 @@ void drawWalls(gDisplay *d) {
   glDisable(GL_CULL_FACE);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-
-/*
-void drawHelp(gDisplay *d) {
-  rasonly(d);
-  glColor4f(0.2, 0.2, 0.2, 0.8);
-  glEnable(GL_BLEND);
-  glBegin(GL_QUADS);
-  glVertex2i(0,0);
-  glVertex2i(d->vp_w - 1, 0);
-  glVertex2i(d->vp_w - 1, d->vp_h - 1);
-  glVertex2i(0, d->vp_h - 1);
-  glEnd();
-  if(game->settings->show_alpha != 1) glDisable(GL_BLEND);
-  glColor3f(1.0, 1.0, 0.0);
-  drawLines(d->vp_w, d->vp_h,
-	    help, HELP_LINES, 0);
-}
-*/
 
 void drawCam(Player *p, gDisplay *d) {
   int i;

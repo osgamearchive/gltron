@@ -1,16 +1,20 @@
 configurable bots (difficulty settings)
-sound effect fixes / mixer
+sound effect fixes / adjust volume settings
+
+optimize some stuff for software rendering
+lower background music volume in menu
+top-down view
+fix transparency (back to front drawing of trails)
+or do something else to make trails look better
 
 move cycle behind posx, posy
 solve cycle turning issue
-
-fix transparency (back to front drawing of trails)
-or do something else to make trails look better
 
 add more & better sound effects
 
 add mouse support
 
+add light effects (shadows, etc.)
 
 check various TODOs in the code
 

@@ -11,6 +11,11 @@ void changeAction(char *name) {
     if(game->settings->playMusic == 0)
       stopSound();
     else playSound();
+  } else if(strstr(name, "musicVolume") == name) {
+    setMusicVolume(game->settings->musicVolume);
+  } else if(strstr(name, "fxVolume") == name) {
+    setFxVolume(game->settings->fxVolume);
+    playMenuFX(fx_highlight);
   }
 #endif
   if(strstr(name, "use_mipmaps") == name) {
@@ -52,14 +57,14 @@ void changeAction(char *name) {
   }
 }
 
-void menuAction(Menu *activated) {
+void menuAction(Menu *activated, int type) {
   int x, y;
   char c;
   int *piValue;
   if(activated->nEntries > 0) {
     pCurrent = activated;
     pCurrent->iHighlight = 0;
-  } else {
+  } else if (type == MENU_ACTION) {
     switch(activated->szName[1]) { /* second char */
     case 'q': saveSettings(); exit(0); break;
     case 'r': 
@@ -127,6 +132,19 @@ void menuAction(Menu *activated) {
       break;
     default: printf("got action for menu %s\n", activated->szName); break;
     }
+  } else if(type == MENU_LEFT || type == MENU_RIGHT) {
+    float *pfValue;
+    float min, max, step;
+    char buf[64];
+    sscanf(activated->szName, "ssf_%f_%f_%f_%s", &min, &max, &step, buf);
+    pfValue = getVf(buf);
+    if(pfValue != 0) {
+      *pfValue = (type == MENU_LEFT) ? (*pfValue - step) : (*pfValue + step);
+      if(*pfValue < min) *pfValue = min;
+      if(*pfValue > max) *pfValue = max;
+    }
+    initMenuCaption(activated);
+    changeAction(buf);
   }
 }
 
@@ -167,7 +185,7 @@ void initMenuCaption(Menu *m) {
 		  (clists[clist_index])[*piValue]);
 	  break;
 	}
-      }
+      } /* end szName[2] */
       break;
     case 'k': 
       { /* set key name in menu */
@@ -187,6 +205,22 @@ void initMenuCaption(Menu *m) {
       /* free(caption); */
       break;
       }
+    case 's': /* slider */
+      printf("slider, %s\n", m->szName);
+      switch(m->szName[2]) {
+	case 'f':
+	  {
+	    char buf[64];
+	    float *pfValue;
+	    sscanf(m->szName, "ssf_%*f_%*f_%*f_%s ", buf);
+	    pfValue = getVf(buf);
+	    if(pfValue != NULL) {
+	      sprintf(m->display.szCaption, m->szCapFormat, *pfValue);
+	    }
+	    break;
+	  }
+      }
+      break;
     }
     break;
   default:
@@ -195,6 +229,7 @@ void initMenuCaption(Menu *m) {
   }
   /* printf("[menu] cap-format: %s, caption: %s\n", m->szCapFormat,
      m->display.szCaption); */
+
 }
 
 void getNextLine(char *buf, int bufsize, FILE* f) {
@@ -380,16 +415,22 @@ void drawMenu(gDisplay *d) {
 
   /* printf("%d %d %d %d %d\n", x, y, size, maxw, pCurrent->nEntries); */
   /* draw the entries */
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+
   for(i = 0; i < pCurrent->nEntries; i++) {
     if(i == pCurrent->iHighlight)
       glColor4fv(pCurrent->display.hlColor);
     else glColor4fv(pCurrent->display.fgColor);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     rasonly(d);
     drawText(guiFtx, x, y, size,
 	     ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
     y -= lineheight;
   }
+  
+  glDisable(GL_BLEND);
 }
 
 

@@ -132,6 +132,9 @@ typedef struct Settings {
   int playMusic;
   int playEffects;
 
+  float musicVolume;
+  float fxVolume;
+
   /* these two are ignored in multiplayer mode */
   int fast_finish;
   int screenSaver; /* 1: all for players are AIs when the game starts */

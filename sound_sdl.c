@@ -106,3 +106,17 @@ void stopEngine() {
     engine_channel = -1;
   }
 }
+
+void setMusicVolume(float volume) {
+  if(volume > 1) volume = 1;
+  if(volume < 0) volume = 0;
+
+  Mix_VolumeMusic((int)(volume * 128));
+}
+
+void setFxVolume(float volume) {
+  if(volume > 1) volume = 1;
+  if(volume < 0) volume = 0;
+
+  Mix_Volume(-1, (int)(volume * 128));
+}

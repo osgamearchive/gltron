@@ -289,13 +289,14 @@ extern void saveSettings();
 
 /* menu -> menu.c */
 
-extern void menuAction(Menu* activated);
+extern void menuAction(Menu* activated, int type);
 extern Menu** loadMenuFile(char* filename);
 extern void drawMenu(gDisplay *d);
 extern void showMenu();
 extern void removeMenu();
 extern void initMenuCaption(Menu *m);
 extern int* getVi(char *szName);
+extern float* getVf(char *szName);
 
 /* file handling -> file.c */
 

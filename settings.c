@@ -80,6 +80,8 @@ void initSettingData(char *filename) {
   si[33].value = &(game->settings->lod);
 
   sf[0].value = &(game->settings->speed);
+  sf[1].value = &(game->settings->musicVolume);
+  sf[2].value = &(game->settings->fxVolume);
 }
 
 int* getVi(char* name) {
@@ -87,6 +89,15 @@ int* getVi(char* name) {
   for(i = 0; i < si_count; i++) {
     if(strstr(name, si[i].name) == name) 
       return si[i].value;
+  }
+  return 0;
+}
+
+float* getVf(char* name) {
+  int i;
+  for(i = 0; i < sf_count; i++) {
+    if(strstr(name, sf[i].name) == name) 
+      return sf[i].value;
   }
   return 0;
 }
@@ -140,6 +151,9 @@ void initMainGameSettings(char *filename) {
   game->settings->display_type = 0;
   game->settings->playMusic = 1;
   game->settings->playEffects = 1;
+
+  game->settings->musicVolume = 0.5;
+  game->settings->fxVolume = 0.5;
 
   game->settings->ai_player1 = 0;
   game->settings->ai_player2 = 1;

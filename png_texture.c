@@ -57,7 +57,7 @@ png_texture* load_png_texture(char *filename) {
   /* fprintf(stderr, "png, after init user_read_data\n"); */
 
   png_read_info(png_ptr, info_ptr);
-  fprintf(stderr, "png, after read info \n");
+  /* fprintf(stderr, "png, after read info \n"); */
   png_get_IHDR(png_ptr, info_ptr, &x, &y, &bpc, &color_type, 0, 0, 0);
 
   if(color_type != PNG_COLOR_TYPE_RGB &&

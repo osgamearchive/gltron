@@ -13,6 +13,9 @@ int stopSound();
 void deleteSound();
 void soundIdle();
 
+void setMusicVolume(float volume);
+void setFxVolume(float volume);
+
 void playGameFX(int fx);
 void playMenuFX(int fx);
 

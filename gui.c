@@ -57,7 +57,6 @@ void drawGuiBackground() {
   glVertex2f(0, game->screen->vp_h);
 
   glEnd();
-
 }
 
 void drawGuiLogo() {
@@ -109,6 +108,8 @@ void drawGuiLogo() {
   glVertex2f(pos[0], pos[1] + size[1]);
 
   glEnd();
+
+  glDisable(GL_BLEND);
 
   checkGLError("gui background end");
 }
@@ -184,16 +185,15 @@ void keyboardGui(int key, int x, int y) {
     if(game->settings->playEffects)
       playMenuFX(fx_action);
 #endif
-    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight));
+    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
+    break;
+  case SYSTEM_KEY_LEFT:
+    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_LEFT);
+    break;
+  case SYSTEM_KEY_RIGHT:
+    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_RIGHT);
     break;
   case 'q': exit(0); break;
-  case 'l':
-    printf("%d entries:\n", pCurrent->nEntries);
-    for(i = 0; i < pCurrent->nEntries; i++)
-      printf("printing '%s' - %d entries\n",
-	     ((Menu*)*(pCurrent->pEntries + i))->szName,
-	     ((Menu*)*(pCurrent->pEntries + i))->nEntries);
-    break;
   case SYSTEM_KEY_DOWN:
 #ifdef SOUND
     if(game->settings->playEffects)
@@ -211,6 +211,14 @@ void keyboardGui(int key, int x, int y) {
       pCurrent->iHighlight = pCurrent->nEntries - 1;
     break;
   case SYSTEM_KEY_F12: doScreenShot(); break;
+    /* debug code follows */
+  case 'l':
+    printf("%d entries:\n", pCurrent->nEntries);
+    for(i = 0; i < pCurrent->nEntries; i++)
+      printf("printing '%s' - %d entries\n",
+	     ((Menu*)*(pCurrent->pEntries + i))->szName,
+	     ((Menu*)*(pCurrent->pEntries + i))->nEntries);
+    break;
   default: printf("got key %d\n", key);
   }
 }
@@ -231,13 +239,14 @@ void initGui() {
 }
 
 void exitGui() {
+  glShadeModel( game->screen->shademodel );
 }
 
 void initGLGui() {
   glShadeModel(GL_SMOOTH);
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // glEnable(GL_BLEND);
+  // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);

@@ -9,10 +9,13 @@ int screenShot(char *filename, gDisplay *d);
 
 void doScreenShot() {
   char buf[100];
-  
+
+#ifndef macintosh  
   sprintf(buf, "gltron-0.59-%d.png", screenshots);
   screenShot(buf, game->screen);
   screenshots++;
+
+#endif
 }
 
 FILE *fp;

@@ -1,0 +1,2 @@
+menu: xenotron.ftx
+game: xenotron.ftx

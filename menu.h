@@ -1,6 +1,12 @@
 #ifndef MENUS
 #define MENUS
 
+enum {
+  MENU_ACTION = 1,
+  MENU_LEFT = 2,
+  MENU_RIGHT = 4
+};
+
 typedef struct {
   /* fonttex *font; */
   float fgColor[4]; /* entries */

@@ -33,7 +33,7 @@ void doComputer(Player *me, Data *him) {
   int tvalue = 0;
 
   if(me->ai == NULL) {
-    printf("This player has no AI!\n");
+    printf("This player has no AI data!\n");
     return;
   }
   
