@@ -21,6 +21,8 @@ int viewport_content[4]; /* max. 4 individual viewports on the screen */
 nebu_Font *guiFtx = NULL;
 nebu_Font *gameFtx = NULL;
 
+nebu_2d *gpHUD[eHUDElementCount];
+
 gltron_Mesh* recognizer_quad;
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
 float rec_spec_color[] = {0.05f, 0.14f, 0.05f, 0.50f};
@@ -114,7 +116,6 @@ TextureInfo textures[] = {
   { 6, "skybox", GL_RGB, 
     GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX, 1 },
   { 1, "gltron_impact", GL_RGBA, GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_IMPACT, 1 },
-
 };
 
 float gShadowColor[] = { 0, 0, 0, .8f };
