@@ -2,6 +2,7 @@
 
 static Trackerslots servers[MAX_SLOTS];
 static Wlist       *serverlist = NULL;
+static WrootControl *trackerControls = NULL;
 static int nbservers = 0;
 
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
@@ -222,7 +223,8 @@ displayTrackerScreen()
   displayServerLegend();
 
   //draw server list
-  draw_wlist(serverlist);
+  //draw_wlist(serverlist);
+  updateControls(trackerControls);
 
   //Display errors
   y = 1.5 * h * 2;
@@ -258,6 +260,8 @@ displayTrackerScreen()
   sprintf(str, "%d gltron servers.", nbservers);
   x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
   drawText(netFtx, x, y, h, str);
+  drawMouse();
+
   SystemSwapBuffers();
 
 }
@@ -306,24 +310,22 @@ idleTracker()
 	  tracker_handle();
 	}
     }
+
+  
   SystemPostRedisplay();
 }
 
 void
 keyTracker(int k, int unicode, int x, int y)
 {
-  //char *str = NULL;
-  char server[255], port[255];
-  IPaddress *ipaddress=NULL;
-  //char *server=NULL, *port=NULL;
-
   switch(k)
     { 
     case SYSTEM_KEY_F11: doBmpScreenShot(); break;
     case SYSTEM_KEY_F12: doScreenShot(); break;
     case SDLK_ESCAPE:
       tracker_close();
-      free_wlist(serverlist);
+      freeRootControl(trackerControls);
+      trackerControls=NULL;
       serverlist=NULL;
       nbservers=0;
       //restoreCallbacks();
@@ -331,55 +333,9 @@ keyTracker(int k, int unicode, int x, int y)
       //switchCallbacks(&guiCallbacks);      
       changeCallback(&guiCallbacks, &guiCallbacks);
       break;
-    case SDLK_UP:
-      scroll_wlist(serverlist, LIST_SCROLL_UP);
-      break;
-    case SDLK_DOWN:
-      scroll_wlist(serverlist, LIST_SCROLL_DOWN);
-      break;
-    case 13:
-      //connect to the server
-      if(  (servers[getcurrent_wlist(serverlist)].packets > 0 && ((servers[getcurrent_wlist(serverlist)].ping/servers[getcurrent_wlist(serverlist)].packets) > PINGLIMIT)) || strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION))
-	return;
 
-      //str = getcell_wlist ( serverlist, getcurrent_wlist(serverlist), 0);
-      ipaddress = (IPaddress *)getCell_wlist( serverlist, getcurrent_wlist(serverlist), 0);
-
-      if( ipaddress == NULL )
-	{
-	  fprintf(stderr, "error ipaddress null\n");
-	  return;
-	}
-
-      //getting server address
-      sprintf(server, "%d.%d.%d.%d", 
-	      (ntohl(ipaddress->host) & 0xff000000) >> 24,
-	      (ntohl(ipaddress->host) & 0x00ff0000) >> 16,
-	      (ntohl(ipaddress->host) & 0x0000ff00) >> 8,
-	      ntohl(ipaddress->host) & 0x000000ff);
-
-      //getting port
-      sprintf(port, "%d", ipaddress->port);
-
-      if( server == NULL )
-	return;
-      printf("server %s\n", server);
-      //strcpy(server,"");
-      // sscanf(str, "%[.0-9]:%[.0-9]", server, port);
-/*       strcpy(game->settings->server, server); */
-/*       strcpy(game->settings->port, port); */
-      //if( !strcmp(server, "") )
-      //if(server == NULL )
-      //	return;
-      setconnection(server, port);
-      isConnected=0;
-      isLogged=0;
-      printf("server %s port %s\n", server, port);
-      tracker_close();
-      free_wlist(serverlist);
-      serverlist=NULL;      
-      changeCallback(&netConnectCallbacks, &trackerCallbacks);
-      //switchCallbacks(&netConnectCallbacks);
+    default:
+      keyControls(trackerControls, k);
       break;
     }
 }
@@ -493,6 +449,54 @@ focus(WlistPtr list, int line)
   printf("focus on server %d\n", line);
 }
 
+void
+action(WlistPtr list)
+{
+  char server[255], port[255];
+  IPaddress *ipaddress=NULL;
+
+     if(  (servers[getcurrent_wlist(list)].packets > 0 && ((servers[getcurrent_wlist(list)].ping/servers[getcurrent_wlist(list)].packets) > PINGLIMIT)) || strcmp(servers[getcurrent_wlist(list)].version, VERSION))
+	return;
+
+      //str = getcell_wlist ( list, getcurrent_wlist(list), 0);
+      ipaddress = (IPaddress *)getCell_wlist( list, getcurrent_wlist(list), 0);
+
+      if( ipaddress == NULL )
+	{
+	  fprintf(stderr, "error ipaddress null\n");
+	  return;
+	}
+
+      //getting server address
+      sprintf(server, "%d.%d.%d.%d", 
+	      (ntohl(ipaddress->host) & 0xff000000) >> 24,
+	      (ntohl(ipaddress->host) & 0x00ff0000) >> 16,
+	      (ntohl(ipaddress->host) & 0x0000ff00) >> 8,
+	      ntohl(ipaddress->host) & 0x000000ff);
+
+      //getting port
+      sprintf(port, "%d", ipaddress->port);
+
+      if( server == NULL )
+	return;
+      printf("server %s\n", server);
+      //strcpy(server,"");
+      // sscanf(str, "%[.0-9]:%[.0-9]", server, port);
+/*       strcpy(game->settings->server, server); */
+/*       strcpy(game->settings->port, port); */
+      //if( !strcmp(server, "") )
+      //if(server == NULL )
+      //	return;
+      setconnection(server, port);
+      isConnected=0;
+      isLogged=0;
+      printf("server %s port %s\n", server, port);
+      tracker_close();
+      freeRootControl(trackerControls);
+      trackerControls=NULL;
+      serverlist=NULL;      
+      changeCallback(&netConnectCallbacks, &trackerCallbacks);
+}
 
 int
 sortit( WlistPtr list, int line, int next )
@@ -523,8 +527,13 @@ initTracker()
   glDisable(GL_DEPTH_TEST);
   trackeruse=1;
 
-  if( serverlist != NULL )
+  if(  trackerControls != NULL )
     return;
+
+  if(  serverlist != NULL )
+    return;
+
+  trackerControls = newRootControl();
 
   colDefs = new_colDefs( 4 );
 
@@ -534,7 +543,11 @@ initTracker()
   set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr, sortit); 
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-250,
-			 10, 4, colDefs, 3, focus);
+			 10, 4, colDefs, 3, focus, action);
+  
+  newControl(trackerControls, (Wptr)serverlist, Wlistbox);
+
+  setCurrentControl( trackerControls, (Wptr)serverlist );
 
   current=-1;
 }
@@ -542,7 +555,10 @@ initTracker()
 void
 mouseTracker(int buttons, int state, int x, int y)
 {
-  
+  Wpoint pt;
+  pt.v=y;
+  pt.h=x;
+  clickControls(trackerControls, buttons, state, pt);
 }
 
 void
@@ -550,8 +566,14 @@ cleanTracker()
 {
 }
 
+void
+mousemotionTracker( int mx, int my )
+{
+  setMouse( mx, my );
+}
+
 callbacks trackerscreenCallbacks = {
   displayTrackerScreen, idleTracker, keyTracker, initTracker,
-  cleanTracker, NULL, mouseTracker, NULL
+  cleanTracker, NULL, mouseTracker, mousemotionTracker
 };
 

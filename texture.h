@@ -25,7 +25,8 @@ enum {
 #ifdef __NETWORK__
   TEX_PREGAME,
 #endif
-  TEX_SKYBOX
+  TEX_SKYBOX,
+  TEX_MOUSECURSOR
 };
 
 #endif

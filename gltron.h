@@ -71,6 +71,7 @@ typedef png_texture texture;
 #include "geom.h"
 #include "light.h"
 
+
 /* sound stuff */
 #include "sound3d.h"
 /* rendering stuff */
@@ -176,7 +177,7 @@ enum {
 
 #define PAUSE_GAME_FINISHED 1
 
-#include "wtypes.h"
+#include "wcontrols.h"
 #ifdef __NETWORK__
 #include <SDL_net.h>
 #include "protocol.h"
@@ -187,6 +188,9 @@ enum {
 #endif
 #include "wprogress.h"
 #include "splash.h"
+
+
+#include "mouse.h"
 
 extern char** artpack_list;
 extern int artpack_index;

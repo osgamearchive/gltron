@@ -16,7 +16,7 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	console.c renderer_gl.c callbacks.h camera.h data.h \
 	geom.h gltron.h light.h menu.h model.h png_texture.h \
 	quad.h renderer_gl.h switchCallbacks.h system.h texture.h credits.c \
-	wprogress.c splash.c  wprogress.h splash.h
+	wprogress.c splash.c  wprogress.h splash.h mouse.c mouse.h
 
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@
 

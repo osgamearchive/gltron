@@ -40,6 +40,7 @@ typedef struct Wlist {
   int              rlines;            //how many lines in memory?
   int              sortcol;           //column for sorting
   void  (*focus) ( WlistPtr list, int line ); //focus on a line
+  void  (*action)( WlistPtr list);    //when double clicking or hitting enter
   int             *index;             //index of lines
   char          ***lines;             //data on lines
 } Wlist;
@@ -57,7 +58,7 @@ void    set_colDef( ColDef *colDefs, int col, char *title, int colsize,
 		    int   (*sortit)( WlistPtr list, int line, int next )); 
 
 /** Creating and disposing of lists */
-Wlist *new_wlist(  int x, int y, int width, int height, int nblines, int nbcols, ColDef *colDefs, int sortcol, void  (*focus) ( WlistPtr list, int line ) );
+Wlist *new_wlist(  int x, int y, int width, int height, int nblines, int nbcols, ColDef *colDefs, int sortcol, void  (*focus) ( WlistPtr list, int line ), void  (*action)( WlistPtr list ) );
 void   free_wlist       ( Wlist *wlist );
 
 
@@ -85,4 +86,15 @@ void   scroll_wlist     ( Wlist *wlist, int dir );
 
 /** Selections */
 int getcurrent_wlist( Wlist *wlist );
+
+/** Key events */
+void key_wlist( Wlist *wlist, int key );
+
+/** Get Rect */
+Wrect getRect_wlist( Wlist *wlist );
+
+/** Mouse events */
+void mouse_wlist( Wlist *wlist, int buttons, int state, int dblClick, Wpoint mousexy );
+void mouseMotion_wlist( Wlist *wlist, Wpoint mousexy );
+
 #endif

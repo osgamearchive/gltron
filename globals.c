@@ -135,11 +135,13 @@ int *quadBufIndex;
 #endif
 
 
-int game_textures = 18; /* 10 + 6 + debug texture */
+
 #ifdef __NETWORK__
-int n_textures = 12;
+int game_textures = 19; /* 10 + 6 + debug texture */
+int n_textures = 13;
 #else
-int n_textures = 11;
+int game_textures = 18; /* 10 + 6 + debug texture */
+int n_textures = 12;
 #endif
 
 texture_info textures[] = {
@@ -156,7 +158,8 @@ texture_info textures[] = {
 #ifdef __NETWORK__
   { 1, "network", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_PREGAME },
 #endif
-  { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX }
+  { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX },
+  { 1, "mouseCursor", GL_RGBA,  GL_REPEAT, GL_REPEAT, TEX_MOUSECURSOR }
 };
 
 float shadow_color[] = { 0, 0, 0, .8 };

@@ -17,4 +17,6 @@ typedef struct Point {
   short      h;
 } Wpoint;
 
+/** define a pointer */
+typedef char *Wptr;
 #endif

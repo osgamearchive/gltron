@@ -51,7 +51,8 @@ set_colDef( ColDef *colDefs, int col, char *title, int colsize,
 Wlist *
 new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
 	    ColDef *colDefs, int sortcol, 
-	    void  (*focus) ( WlistPtr list, int line ) )
+	    void  (*focus) ( WlistPtr list, int line ),
+	    void  (*action)( WlistPtr list ))
 {
   Wlist *wlist = NULL;
   int    i;
@@ -75,6 +76,7 @@ new_wlist(  int x, int y, int width, int height, int nblines, int nbcols,
   wlist->colDefs=colDefs;
   wlist->sortcol=sortcol;
   wlist->focus  = focus;
+  wlist->action = action;
   
   //Init and allocte memory for index and datas
   wlist->index = (int *)malloc(sizeof(int)*MAXWLISTLINES);
@@ -362,4 +364,87 @@ free_wlist       ( Wlist *wlist )
 
   
   free(wlist);
+}
+
+Wrect
+getRect_wlist( Wlist *wlist )
+{
+  Wrect rect;
+
+  rect.top    = wlist->y;
+  rect.left   = wlist->x;
+  rect.bottom = wlist->y + wlist->height;
+  rect.right  = wlist->x + wlist->width;
+
+  return rect;
+}
+
+void
+key_wlist( Wlist *wlist, int key )
+{
+  switch( key )
+    {
+    case SDLK_UP:
+      scroll_wlist( wlist, LIST_SCROLL_UP    );
+      break;
+    case SDLK_DOWN:
+      scroll_wlist( wlist, LIST_SCROLL_DOWN  );
+      break;
+    case 13:
+      if( wlist->action != NULL )
+	wlist->action(wlist);
+      break;
+    }
+}
+
+static int
+find_line_wlist(Wlist *wlist, Wpoint mousexy)
+{
+  int line = -1;
+  int tmp;
+  int h = wlist->height/wlist->nblines;
+
+  printf("wlist->y = %d and mousexy.v = %d\n", wlist->y+wlist->height, mousexy.v);
+  tmp = (wlist->y+wlist->height-mousexy.v)/h;
+  line = tmp-1;
+
+  printf("line is %d\n", line);
+  return line;
+}
+
+void
+mouse_wlist( Wlist *wlist, int buttons, int state, int dblClick, Wpoint mousexy )
+{
+  int line;
+
+  if( buttons != 1 || state != SDL_PRESSED )
+    return;
+
+
+  line = find_line_wlist(wlist, mousexy);
+  if( line == -1 )
+    return;
+  line+=wlist->scroll;
+  
+  if( line >= wlist->rlines )
+    return;
+  
+  //Select that line
+  if( wlist->current != line )
+    wlist->current = line;
+
+if( wlist->focus != NULL )
+    wlist->focus(wlist, wlist->index[wlist->current]);
+
+  if( dblClick )
+    {
+      if( wlist->action != NULL )
+	wlist->action(wlist);
+    }
+}
+
+void
+mouseMotion_wlist( Wlist *wlist, Wpoint mousexy )
+{
+  
 }
