@@ -71,7 +71,6 @@ extern "C" {
     copy->SetRemovable();
     copy->SetType(Sound::eSoundFX);
     sound->AddSource(copy);
-    // fprintf(stderr, "kaboom!\n");
   }
 
   void Audio_Init() {
@@ -89,8 +88,8 @@ extern "C" {
     spec->callback = sound->GetCallback();
 
     if(SDL_OpenAudio( spec, NULL ) != 0) {
-      printf("%s\n", SDL_GetError());
-      exit(1);
+      fprintf(stderr, "[error] %s\n", SDL_GetError());
+      exit(1); // FIXME: shutdown sound system instead
     }
 
     SDL_PauseAudio(0);
@@ -165,6 +164,9 @@ extern "C" {
       crash->Load(name);
       Audio_LoadPlayers();
       break;
+    default:
+      /* programmer error, but non-critical */
+      fprintf(stderr, "[error] unkown sample %d: '%s'\n", number, name);
     }
   }
 
