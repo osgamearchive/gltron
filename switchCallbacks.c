@@ -7,12 +7,15 @@ callbacks *current_callback = NULL;
 
 void exitCallback(callbacks *cb) {
   if(cb != NULL)
+    if(cb->exit != NULL)
     (cb->exit)(); /* give them the chance to quit */
 }
 
 void initCallback(callbacks *cb) {
-  (cb->init)();
-  (cb->initGL)();
+  if(cb->init != NULL)
+    (cb->init)();
+  if(cb->initGL != NULL)
+    (cb->initGL)();
 }
 
 
@@ -60,5 +63,3 @@ void chooseCallback(char *name) {
     switchCallbacks(&guiCallbacks);
   }
 }
-
-
