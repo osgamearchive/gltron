@@ -34,19 +34,14 @@ void consoleAddLine(char *text) {
 
    position++;
    
-   /* reposition the buffer to avoid buffer overruns - tim */
+   /* reposition the buffer to avoid overruns - tim */
    if(position >= 99){
       for(i=0;i<CONSOLE_DEPTH;i++){
 	 strcpy(buffer[x], buffer[i]);
+	 buffer[i]='\0';
 	 ++x;
       }
       position -= 4;
-      /* redundency check to ensure that there's nothing in the buffer
-       * past the current position - tim 
-       */
-      for(i=(position+1);i<CONSOLE_DEPTH;i++){
-	 buffer[i][0]='\0';
-      }
    }
 }
 
