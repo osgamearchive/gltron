@@ -7,9 +7,11 @@ void freeTextureData(texture *tex) {
 
 texture* loadTextureData(char *filename) {
   texture *tex;
+  char fullname[120];
   char *path;
 
-  path = getFullPath(filename);
+  getArtPath(filename, fullname);
+  path = getFullPath(fullname);
   if(path != NULL)
     tex = LOAD_TEX(path);
   else {
@@ -49,8 +51,10 @@ void loadTexture(char *filename, int format) {
       freeTextureData(tex);
       tex = newtex;
       level++;
+      /*
       fprintf(stderr, "creating mipmap level %d, size(%d, %d)\n", 
 	      level, tex->width, tex->height);
+      */
       glTexImage2D(GL_TEXTURE_2D, level, format, tex->width, tex->height,
 		   0, internal, GL_UNSIGNED_BYTE, tex->data);
     }
