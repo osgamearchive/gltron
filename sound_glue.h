@@ -8,8 +8,10 @@ void Audio_DisableEngine(void);
 void Audio_Idle(void);
 void Audio_CrashPlayer(int player);
 void Audio_Init(void);
+void Audio_Start(void);
 void Audio_Quit(void);
 
+void Audio_LoadPlayers(void);
 void Audio_LoadSample(char *name, int number);
 void Audio_LoadMusic(char *name);
 void Audio_PlayMusic();

@@ -100,7 +100,6 @@ extern "C" {
 
     listener._up = Vector3(0, 0, 1);
 
-
     sound->SetMixMusic(game2->settingsCache.playMusic);
     sound->SetMixFX(game2->settingsCache.playEffects);
     sound->Idle();
@@ -133,6 +132,12 @@ extern "C" {
       exit(1); // FIXME: shutdown sound system instead
     }
 
+    sound->SetMixMusic(game2->settingsCache.playMusic);
+    sound->SetMixFX(game2->settingsCache.playEffects);
+  }
+
+  void Audio_Start() {
+    SDL_PauseAudio(0);
   }
 
   void Audio_Quit() {
