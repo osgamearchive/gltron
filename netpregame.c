@@ -205,6 +205,9 @@ void displayPregame() {
 }
 
 void initPregame() {
+  int top_left_x, top_left_y;
+  int width, height;
+
   coffset = SDL_GetTicks();
 
   //Reinit scores
@@ -212,7 +215,15 @@ void initPregame() {
 
   if( pregametext == NULL )
     {
-      pregametext = new_wtext(28, 17, -1, 8);
+      //make position relative to screen size in percent
+      top_left_x = 2*game->screen->vp_w /100 ;
+      top_left_y = 75*game->screen->vp_h /100 ;
+
+      //make size relative to screen size in percent.
+      width     = 55*game->screen->vp_w /100 ;
+      height    = 74*game->screen->vp_h /100;
+
+      pregametext = new_wtext(width, height, top_left_x, top_left_y, 20);
       insert_wtext(pregametext, "connected...\n", 3);
       insert_wtext(pregametext, server_message, 7);
     }
