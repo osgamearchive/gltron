@@ -366,6 +366,7 @@ Mesh* loadModel(const char *filename, float size, int flags) {
   free(pMatCount);
   free(matIndex);
 
+  fclose (f);
   /* printf("loaded model: %d vertices, %d normals, %d faces, %d materials\n",
 	nVertices, nNormals, nFaces, matCount); */
 
