@@ -495,7 +495,7 @@ void drawCycleShadow(Player *p, int lod) {
 
   if(p->data->exp_radius == 0) {
     glEnable(GL_CULL_FACE);
-    drawModel(cycle);
+    drawModel(cycle, TRI_MESH);
     glDisable(GL_CULL_FACE);
   }
 
@@ -563,7 +563,7 @@ void drawCycle(Player *p, int lod) {
     /* glRotatef(90, 0, 0, 1); */
 
     glEnable(GL_CULL_FACE);
-    drawModel(cycle);
+    drawModel(cycle, TRI_MESH);
     glDisable(GL_CULL_FACE);
   }
   else if(p->data->exp_radius < EXP_RADIUS_MAX) {
