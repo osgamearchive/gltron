@@ -31,6 +31,10 @@ void loadTexture(char *filename, int format) {
   tex = loadTextureData(filename);
   if(tex->channels == 3) internal = GL_RGB;
   else internal = GL_RGBA;
+  if(format == GL_DONT_CARE) {
+    if(tex->channels == 3) format = GL_RGB;
+    if(tex->channels == 4) format = GL_RGBA;
+  }
   /* TODO: build mipmaps the proper way, box filters suck */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   if(game->settings->use_mipmaps) {
