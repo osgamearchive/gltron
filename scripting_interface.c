@@ -45,6 +45,10 @@ int c_video_restart(lua_State *L) {
   return 0;
 }
 
+int c_update_settings_cache(lua_State *L) {
+  updateSettingsCache();
+}
+
 int c_update_audio_volume(lua_State *L) { 
 #ifdef SOUND
  setMusicVolume(getSettingf("musicVolume"));
@@ -101,6 +105,7 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_resetScores", c_resetScores);
   lua_register(L, "c_resetCamera", c_resetCamera);
   lua_register(L, "c_video_restart", c_video_restart);
+  lua_register(L, "c_update_settings_cache", c_update_settings_cache);
   lua_register(L, "c_update_audio_volume", c_update_audio_volume);
   lua_register(L, "c_startGame", c_startGame);
   lua_register(L, "c_reloadTrack", c_reloadTrack);
