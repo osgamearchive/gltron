@@ -91,7 +91,49 @@ void keyGame(int k, int unicode, int x, int y)
       break;
     */
 
-  default: 
+  default:
+#ifdef __NETWORK__
+    if( unicode >= '1' && unicode <= '9' )
+      {	//TODO: make chat possible to configure and change default
+	//before game start...
+	packet.which=me;
+	packet.type=CHAT;
+	packet.infos.chat.which=BROADCAST;
+	switch( unicode )
+	  {
+	  case '1':
+	    strcpy(packet.infos.chat.mesg, "You suck");
+	    break;
+	  case '2':
+	    strcpy(packet.infos.chat.mesg, "Die!");
+	    break;
+	  case '3':
+	    strcpy(packet.infos.chat.mesg, "blabla 3");
+	    break;
+	  case '4':
+	    strcpy(packet.infos.chat.mesg, "blabla 4");
+	    break;
+	  case '5':
+	    strcpy(packet.infos.chat.mesg, "blabla 5");
+	    break;
+	  case '6':
+	    strcpy(packet.infos.chat.mesg, "blabla 6");
+	    break;
+	  case '7':
+	    strcpy(packet.infos.chat.mesg, "blabla 7");
+	    break;
+	  case '8':
+	    strcpy(packet.infos.chat.mesg, "blabla 8");
+	    break;
+	  case '9':
+	    strcpy(packet.infos.chat.mesg, "blabla 9");
+	    break;
+	  }
+	
+	Net_sendpacket(&packet, Net_getmainsock());
+	return;
+      }
+#endif
     for(i = 0; i < KEY_ACTIONS_N; i++) {
       if(k == key_actions[i].key) {
 	int p;

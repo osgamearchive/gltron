@@ -178,7 +178,10 @@ do_chat( Packet packet )
     {
       printf("%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      drawChat(mesg);
+      if( serverstate == gameState )	
+	consoleAddLine(mesg);
+	else
+	  drawChat(mesg);
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
@@ -374,9 +377,10 @@ do_preGameState( Packet packet )
       do_netrules(packet);
       break;
     case SCORE:
+      //can't have score there...
       break;
-    case ACTION: //Is for PART
-      do_action(packet);	/*  */
+    case ACTION:
+      do_action(packet);
       break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
@@ -402,6 +406,9 @@ do_gameState( Packet packet )
       break;
     case SCORE:
       do_score(packet);
+      break;
+    case CHAT:
+      do_chat(packet);
       break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the gameState\n", packet.type);

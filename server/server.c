@@ -631,6 +631,9 @@ do_gameState( int which, Packet packet )
     case ACTION:
       do_action(which, packet);
       break;
+    case CHAT:
+      do_chat(which, packet);
+      break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
       break;
