@@ -19,7 +19,7 @@ void game_ScaleLevel(game_level *l, float fSize)
 	}
 	for(i = 0; i < l->nSpawnPoints; i++)
 	{
-		vec2_Scale(& l->spawnPoints[i], & l->spawnPoints[i], fSize);
+		vec2_Scale(& l->spawnPoints[i].v, & l->spawnPoints[i].v, fSize);
 	}
 
 	vec2_Scale(& l->boundingBox.vMin, & l->boundingBox.vMin, fSize);
@@ -53,16 +53,18 @@ game_level* game_CreateLevel(void) {
 	scripting_GetValue("spawn");
 	scripting_GetArraySize(& l->nSpawnPoints);
 	// copy spawnpoints into vec2's
-	l->spawnPoints = malloc(l->nSpawnPoints * sizeof(vec2));
+	l->spawnPoints = malloc(l->nSpawnPoints * sizeof(game_spawnpoint));
 
 	// fixme, use scalability
 	for(i = 0; i < l->nSpawnPoints; i++) {
 		scripting_GetArrayIndex(i + 1);
 
 		scripting_GetValue("x");
-		scripting_GetFloatResult(& l->spawnPoints[i].v[0]);
+		scripting_GetFloatResult(& l->spawnPoints[i].v.v[0]);
 		scripting_GetValue("y");
-		scripting_GetFloatResult(& l->spawnPoints[i].v[1]);
+		scripting_GetFloatResult(& l->spawnPoints[i].v.v[1]);
+		scripting_GetValue("dir");
+		scripting_GetIntegerResult(& l->spawnPoints[i].dir);
 
 		scripting_PopTable(); // index i
 	}
