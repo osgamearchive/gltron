@@ -4,6 +4,6 @@
 #include "gltron.h"
 
 extern void drawImpact(Player *p);
-extern void drawGlow(Player *p, gDisplay *d, float dim);
+extern void drawGlow(Player *pCam, Player *pTarget, gDisplay *d, float dim);
 
 #endif
