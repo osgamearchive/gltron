@@ -1,12 +1,8 @@
 I'm using a very old loki setup, but it seems to work
 The commandlike to generate it was
 
-sh /home/andreas/SDL/loki_setup/makeself/makeself.sh Install-Image/ gltron-0.62-linux-pre3.sh "GLtron 0.62-pre3" ./setup.sh
+sh /home/andreas/SDL/loki_setup/makeself/makeself.sh Install-Image/ gltron-0.62-linux-pre4.sh "GLtron 0.62-pre4" ./setup.sh
 
 The LIBS line for compiling the binary:
 
-LIBS = -L/usr/X11R6/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib,-Bstatic -lSD
-L_sound -lSDL -lmikmod -lsmpeg -lasound -lvorbisfile -lvorbis -logg -lXxf86dga -
-lXxf86vm -lXv -lXinerama -lXi -lpng -lz -lstdc++ -Wl,-Bdynamic -lpthread -lGL -l
-X11 -lXext -ldl
-
+LIBS = -L/usr/X11R6/lib -L/usr/local/lib -Wl,-rpath,/usr/local/lib,-Bstatic -lSDL_sound -lSDL -lmikmod -lvorbisfile -lvorbis -logg -lXxf86dga -lXxf86vm -lXv -lXinerama -lXi -lpng -lz -lstdc++ -Wl,-Bdynamic -lpthread -lGL -lX11 -lXext -ldl 
