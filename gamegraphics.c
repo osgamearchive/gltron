@@ -380,7 +380,7 @@ drawPlayersName(gDisplay *d)
   //is player visible?
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if( playerIsOnScreen(&(game->player[0]), &(game->player[i])))
+      if( playerIsOnScreen(&(game->player[0]), &(game->player[i])) && ( game->player[i].data->speed != SPEED_GONE))
 	{
 	  //find screen coordinates
 	  data = game->player[i].data;
