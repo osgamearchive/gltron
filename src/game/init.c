@@ -51,7 +51,7 @@ void initConfiguration(int argc, const char *argv[])
   }
 
   /* parse any comandline switches overrinding the loaded settings */
-  // parse_args(argc, argv);
+  parse_args(argc, argv);
 
   /* sanity check some settings */
   checkSettings();
