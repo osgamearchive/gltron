@@ -71,6 +71,8 @@ extern Game2 *game2;
 extern unsigned char* colmap;
 extern int colwidth;
 
+extern segment2 walls[];
+
 extern int dirsX[];
 extern int dirsY[];
 
@@ -81,7 +83,6 @@ extern int default_arena_sizes[];
 
 extern void initGameAI(int level);
 extern void doComputer(int player, int target);
-extern void doComputer2(int player, int target);
 
 extern void resetScores(void);
 
@@ -105,4 +106,5 @@ extern void resetPlayerData(void);
 extern void doCameraMovement(void);
 extern void initCamera(Camera *cam, Data *data, int type);
 
+extern void initWalls(void);
 #endif
