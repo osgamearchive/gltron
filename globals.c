@@ -73,6 +73,7 @@ int    timeout=0;
 int    hasstarted=0;
 
 Wtext    *pregametext = NULL;
+Wintext  *inpregametext = NULL;
 char   server_message[255] = "";
 #endif
 

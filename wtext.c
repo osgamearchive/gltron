@@ -20,7 +20,7 @@ new_wtext(int width, int height, int posx, int posy, int nblines)
   wtext->current     = 0;
   wtext->cur_char    = 0;
 
-  wtext->buffer      = ( char ** ) malloc( wtext->height * sizeof(char *) );
+  wtext->buffer      = ( char ** ) malloc( wtext->nblines * sizeof(char *) );
 
   //put blanck text for each line.
   for( i=0; i< wtext->nblines; ++i )
@@ -161,4 +161,109 @@ free_wtext(Wtext *wtext)
       free(wtext->buffer[i]);
     }
   free(wtext);
+  wtext=NULL;
+}
+
+Wintext *
+new_wintext ( int width, int height, int posx, int posy, int nbchars, int maxchars )
+{
+  Wintext *wintext;
+
+  wintext = ( Wintext * ) malloc( sizeof( Wintext ));
+
+  wintext->width       = width;
+  wintext->height      = height;
+  wintext->nbchars     = nbchars;
+  wintext->maxchars    = maxchars;
+  wintext->x           = posx;
+  wintext->y           = posy;
+
+  wintext->time        = 0;  
+  wintext->offset      = SystemGetElapsedTime();
+
+  wintext->cur_char    = 0;
+
+  wintext->buffer      = ( char * ) malloc( wintext->maxchars + 2 );
+
+  wintext->buffer[0] = '\0';
+
+  return wintext;
+}
+
+void
+free_wintext(Wintext *wintext)
+{
+  free(wintext->buffer);
+  free(wintext);
+  wintext=NULL;
+}
+
+void
+key_wintext(Wintext *wintext, int unicode)
+{
+  if( wintext->cur_char > wintext->maxchars )
+    return;
+
+  if( unicode < 0x80 && unicode > 0 )
+    {
+      
+      wintext->buffer[wintext->cur_char++]=(char)unicode;
+      wintext->buffer[wintext->cur_char]='\0';
+    }
+}
+
+void
+draw_wintext(Wintext *wintext)
+{
+  int   h;
+  int   y;
+  int   x;
+  int   start, end;
+  char *tmp;
+
+
+  if( wintext == NULL )
+    return;
+
+  
+  h = (int) ((float)wintext->width /(float) wintext->nbchars-1);
+
+  x = wintext->x;
+  y = wintext->y;
+
+  //moving window into the buffer
+  tmp = (char *) malloc(wintext->nbchars+2);
+  strcpy(tmp, "");
+  if( wintext->cur_char <= wintext->nbchars )
+    {
+      start=0;
+      end=strlen(wintext->buffer);
+    } else {
+      start=wintext->cur_char-wintext->nbchars;
+      end=wintext->nbchars;
+    }
+  
+  //printf("start %d end %d\n", start, end);
+  strncpy(tmp, &wintext->buffer[start], end);
+  tmp[end]='\0';
+  //printf("drawing %s\n", wintext->buffer);
+  drawText(gameFtx, x, y, h, tmp);   
+
+  wintext->time = SystemGetElapsedTime() - wintext->offset;
+  if( wintext->time % 1000 > 100 )
+    {
+      //no line
+      //do nothing
+    } else {
+      //a line
+      glLineWidth(2.0f);
+      glBegin(GL_LINES);
+      x+= end*h;
+      glVertex2d(x,y);	// Left Side Of Horizontal Line
+      glVertex2d(x,y+h);	// Right Side Of Horizontal Line
+      glEnd();	
+
+
+    }
+
 }

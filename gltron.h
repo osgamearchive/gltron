@@ -557,6 +557,7 @@ extern char   server_message[255];
 extern Netscores         netscores;
 
 extern Wtext    *pregametext;
+extern Wintext  *inpregametext;
 
 
 extern void  handleServer      ( void );

@@ -20,9 +20,9 @@ void keyPregame(int k, int unicode, int x, int y)
     {
     case SYSTEM_KEY_F11: doBmpScreenShot(); break;
     case SYSTEM_KEY_F12: doScreenShot(); break;
-    case 13:
-      switchCallbacks(&keyboardreadingCallbacks);
-      break;
+    /* case 13: */
+/*       switchCallbacks(&keyboardreadingCallbacks); */
+/*       break; */
     case SDLK_ESCAPE:
       fprintf(stderr, "exit network game\n");
       isConnected=0;
@@ -31,10 +31,13 @@ void keyPregame(int k, int unicode, int x, int y)
       serverstate=preGameState; //We hope that next time server will be to preGameState
       free_wtext(pregametext);
       pregametext=NULL;
+      free_wintext(inpregametext);
       changeCallback(&guiCallbacks);      
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
-      
+    default:
+      key_wintext(inpregametext, unicode);
+      break;
     }
 }
 
@@ -135,9 +138,10 @@ void drawPregame() {
   glColor3fv(colors[2]);
 /*   x = 10; */
   //x = 20;
-  x =  2 *( game->screen->vp_w / (50 * 1.5) );
-  y = h;
-  drawText(gameFtx, x, y, h, getInputEntry());
+  /* x =  2 *( game->screen->vp_w / (50 * 1.5) ); */
+/*   y = h; */
+/*   drawText(gameFtx, x, y, h, getInputEntry()); */
+  draw_wintext(inpregametext);
 
   //NetRules
   glColor3fv(colors[1]);
@@ -235,6 +239,20 @@ void initPregame() {
       pregametext = new_wtext(width, height, top_left_x, top_left_y, 20);
       insert_wtext(pregametext, "connected...\n", 3);
       insert_wtext(pregametext, server_message, 7);
+    }
+
+  if( inpregametext == NULL )
+    {
+     //make position relative to screen size in percent
+      top_left_x = 3*game->screen->vp_w /100 ;
+      top_left_y = 2*game->screen->vp_h /100 ;
+
+      //make size relative to screen size in percent.
+      width     = 55*game->screen->vp_w /100 ;
+      height    = 6*game->screen->vp_h /100;
+
+      //Wintext *new_wintext(int width, int height, int posx, int posy, int nbchars, int maxchars);
+      inpregametext = new_wintext(width, height, top_left_x, top_left_y, 20, 255);
     }
   resetScores();
   printf("entering netpregame\n");
