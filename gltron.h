@@ -45,14 +45,14 @@ extern "C" {
 #include <floatingpoint.h>
 #endif
 
-	/* MacOS port maintained by Darrell Walisser <dwaliss1@purdue.edu> */
+/* MacOS port maintained by Darrell Walisser <walisser@mac.com> */
 
 #ifdef macintosh 
 #include <string.h>
 #undef SEPERATOR
 #define SEPERATOR ':'
 #undef RC_NAME
-#define RC_NAME "gltron.ini"
+#define RC_NAME "gltronPrefs.txt"
 #endif 
 
 #ifdef __APPLE__
