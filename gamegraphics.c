@@ -746,7 +746,10 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
-	      drawCycleShadow(game->player + i, lod);
+        if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
+            p != &game->player[i]) {
+          drawCycleShadow(game->player + i, lod);
+        }
       }
     }
     if (game->player[i].data->trail_height > 0 )
