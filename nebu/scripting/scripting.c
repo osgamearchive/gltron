@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 // static lua_State *L;
 lua_State *L;
@@ -54,12 +55,22 @@ int getGlobal(const char *s, va_list ap) {
 	int count = 0;
 	while(s) {
 		lua_pushstring(L, s);
+		/* TODO: add error checking */
 		lua_gettable(L, -2);
 		count++;
 		s = va_arg(ap, char *);
 	}
 	lua_insert(L, top); /* move result to bottom */
 	lua_pop(L, count); /* restore stack */
+	return 0;
+}
+
+int scripting_GetValue(const char *name) {
+	int top = lua_gettop(L);
+	lua_pushstring(L, name);
+	lua_gettable(L, -1);
+	assert( lua_gettop(L) == top + 1 );
+
 	return 0;
 }
 

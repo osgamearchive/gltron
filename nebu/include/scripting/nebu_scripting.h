@@ -8,6 +8,8 @@ extern void scripting_Quit();
 extern void Scripting_Idle();
 
 extern int scripting_GetGlobal(const char *global, const char *s, ...);
+extern int scripting_GetValue(const char *name);
+
 extern int scripting_SetFloat(float f, const char *name, const char *global, const char *s, ...);
 
 extern int scripting_IsNilResult();
