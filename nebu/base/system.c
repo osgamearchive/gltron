@@ -6,17 +6,32 @@
 Callbacks *current = 0;
 static int return_code = -1;
 static int redisplay = 0;
+static int idle = 1;
 
 void SystemExit() {
   fprintf(stderr, "[system] shutting down SDL now\n");
   SDL_Quit();
-  fprintf(stderr, "[system] exiting application\n");
+  fprintf(stderr, "[system] schedulting application exit\n");
+	
+	/* TODO: ugly, please fix */
+	redisplay = 0;
+	idle = 0;
 }
 
-unsigned int SystemGetElapsedTime() {
+unsigned int nebu_Time_GetElapsed() {
   /* fprintf(stderr, "%d\n", SDL_GetTicks()); */
   return SDL_GetTicks();
 }
+
+static int lastFrame = 0;
+void nebu_Time_SetCurrentFrameTime(unsigned t) {
+	lastFrame = t;
+}
+
+unsigned int nebuTime_GetElapsedSinceLastFrame() {
+	return nebu_Time_GetElapsed() - lastFrame;
+}
+
 
 int SystemMainLoop() {
   SDL_Event event;
@@ -37,6 +52,7 @@ int SystemMainLoop() {
 				break;
 			case SDL_QUIT:
 				SystemExit();
+				SystemExitLoop(0);
 				break;
 			default:
 				/* ignore event */
@@ -46,15 +62,16 @@ int SystemMainLoop() {
     if(redisplay) {
       current->display();
       redisplay = 0;
-    } else
-      current->idle();
+    }
+		if(idle) 
+			current->idle();
   }
 	if(current->exit)
 		(current->exit)();
 	return return_code;
 }
   
-void SystemRegisterCallbacks(Callbacks *cb) {
+void nebu_System_SetCallbacks(Callbacks *cb) {
   current = cb;
 }
 
@@ -73,3 +90,17 @@ void nebu_System_SwapBuffers() {
 void nebu_System_SetCallback_Display( void(*display)(void) ) {
 	current->display = display;
 }
+
+void nebu_System_SetCallback_Key( void(*keyboard)(int, int, int, int) ) {
+	current->keyboard = keyboard;
+}
+
+void nebu_System_SetCallback_MouseMotion( void(*mouseMotion)(int, int) ) {
+	current->mouseMotion = mouseMotion;
+}
+
+void nebu_System_SetCallback_Idle( void(*idle)(void) ) {
+	current->idle = idle;
+}
+
+
