@@ -10,7 +10,8 @@ extern "C" {
     PATH_SNAPSHOTS, /* demos, screenshots */
     PATH_DATA,
     PATH_SCRIPTS,
-    PATH_MUSIC
+    PATH_MUSIC,
+    PATH_ART
   } Location;
 
 #if 0	

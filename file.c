@@ -184,6 +184,7 @@ const char* getDirectory( int eLocation ) {
   case PATH_DATA: return data_dir; break;
   case PATH_SCRIPTS: return scripts_dir; break;
   case PATH_MUSIC: return music_dir; break;
+  case PATH_ART: return art_dir; break;
   default:
     fprintf(stderr, "invalid path type\n");
     assert(0);
