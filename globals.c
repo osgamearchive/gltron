@@ -32,6 +32,10 @@ int colwidth;
 int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
 
+// screensaver hack
+int stoptime = 0;
+// menu hack
+int menutime;
 /* int lasttime; 
    double dt; */
 /* milliseconds since last frame */
@@ -67,6 +71,10 @@ unsigned char debugcolors[6][4] = {
   { 0, 0, 255, 255 },
   { 255, 255, 255, 255 }
 };
+
+float menu_fgColor[4] = { 1.0, 1.0, 1.0, 1.0 };
+float menu_hlColor1[4] = { 1.0, 0.2, 0.2, 1.0 };
+float menu_hlColor2[4] = { 1.0, 1.0, 0.0, 1.0 };
 
 int vps = 4;
 int vp_max[] = { 1, 2, 4, 1 }; /* windows in this display setting */
