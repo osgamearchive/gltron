@@ -1,9 +1,14 @@
 # Makefile for gltron
 
+# experimental autoconf usage
+
+prefix = @prefix@
+includedir = @includedir@
+
 SHELL = /bin/sh
 OPT = -O2
 CFLAGS = -c -pedantic -Wall -DSOUND
-GL_LIBS = -lm -lGL -lGLU -lSDL -lpthread -lz -lpng
+GL_LIBS = -lm -lGL -lGLU -lSDL -lSDL_net -lpthread -lz -lpng
 XLIBS = -L/usr/X11/lib -L/usr/X11R6/lib -lX11
 SNDLIBS =  -lSDL_mixer
 
@@ -38,7 +43,11 @@ CFILES = \
 	geom.c \
 	system.c \
 	globals.c \
-	record.c
+	record.c \
+	camera.c \
+	console.c \
+	network.c \
+	system_net.c
 
 SOUND_CFILES = \
 	sound.c

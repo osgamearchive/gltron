@@ -14,12 +14,14 @@ AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU should come with OpenGL))
 AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
 AC_CHECK_LIB(SDL, main,, AC_MSG_ERROR(SDL is needed), -lpthread)
 AC_CHECK_LIB(SDL_mixer, main,, AC_MSG_ERROR(SDL_mixer is needed))
+AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
 AC_CHECK_LIB(z, main,, AC_MSG_ERROR(libz is needed))
 AC_CHECK_LIB(png, main,, AC_MSG_ERROR(libpng is needed))
 
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS(GL/gl.h GL/glu.h,, AC_MSG_ERROR(can't find GL headers)))
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
