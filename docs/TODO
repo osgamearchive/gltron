@@ -18,22 +18,18 @@ Bugs [high priority]:
 Andreas:
 
 - new trail rendering:
- redo depth sorting using index buffers
-- fix Makefile.am and configure.in for win32 compiles (*-win32.c versions)
+  redo depth sorting using index buffers
 
 Bugs [medium priority]:
 
 Todd:
 
-- fix spoke animation [FIXED]
-- fix problem with explosion debris turning red [FIXED]
 - fix gap between the top of the front fender and the wheel on the 
     lightcycle-high model
 
 Andreas:
 
 - always hide mouse pointer when running fullscreen
-- prevent Audio menu from crashing when compiled with --disable-sound
 
 Gameplay enhancements:
 
@@ -41,7 +37,6 @@ Andreas:
 
 - fast-finish / insta-fininish
 - add armageddon physics mod
-- add speed boost / variable speed
 - new bot AI, scripted bot AI
 - add new starting positions, e.g. 3 against one
 
@@ -64,6 +59,9 @@ Andreas:
 - seperate game from engine a bit more
 - check various TODOs and FIXMEs in the code
 - switch from cockpit to third person view upon death
+- fix --disable-sound issues:
+  - fix configure.in
+  - prevent Audio menu from crashing when compiled with --disable-sound
 
 Bugs [low priority]:
 
