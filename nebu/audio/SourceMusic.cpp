@@ -30,9 +30,10 @@ namespace Sound {
 #endif
 		free(_buffer);
 		
-    if(_sample)
+    if(_sample) {
       Sound_FreeSample( _sample );
-		_sample = NULL;
+			_sample = NULL;
+		}
 
     if(_filename)
       free(_filename);
@@ -84,8 +85,10 @@ namespace Sound {
 		_read = 0;
     _decoded = 0;
 
-    if(_sample != NULL) 
+    if(_sample != NULL) {
       Sound_FreeSample(_sample);
+			_sample = NULL;
+		}
   }
 
   int SourceMusic::Mix(Uint8 *data, int len) {
@@ -134,9 +137,10 @@ namespace Sound {
 			return;
 		
 		// printf("idling\n");
-		while( _read == _decoded || 
+		while( _isPlaying && 
+					 (_read == _decoded || 
 					 (_read - _decoded + _buffersize) % _buffersize >
-					 _sample_buffersize )	{
+					 _sample_buffersize ) )	{
 			// if(_read == _decoded)	printf("_read == _decoded == %d\n", _read);
 			// fill the buffer
 			int count = Sound_Decode(_sample);
