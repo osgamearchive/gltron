@@ -63,25 +63,25 @@ typedef struct packet {
   union        infos         //Additional infos
   {
     struct {
-      char     version[255]; //Version of gltron.
-      char     nick[255];    //Nickname to use in the game.
+      char     version[9];   //Version of gltron.
+      char     nick[9];      //Nickname to use in the game.
     } login;                 //Type LOGIN
     struct {
       int      accept;       //1 if login accepted, else 0.
-      char     message[255]; //A message from the server.
+      char     message[256]; //A message from the server.
     } loginrep;              //Type LOGINREP
     struct {
       int      which;        //who are we talking about?
       int      ismaster;     //Is he the game master?
       int      color;        //server decide players's color.
-      char     nick[255];    //His nickname.
+      char     nick[9];      //His nickname.
     } userinfo;              //Type USERINFO
     struct {
       int      serverstate;  //The server state.
       int      players;      //Who many players are connected.
     } serverinfo;            //Type SERVERINFO
     struct {
-      char     mesg[1024];   //The message
+      char     mesg[256];    //The message
       int      which;        //destination of the message.
     } chat;                  //Type CHAT
     struct {
@@ -89,7 +89,7 @@ typedef struct packet {
       float    speed;        //game speed
       int      eraseCrashed; //1 if erase Crashed player.
       int      startPos[MAX_PLAYERS*3]; //startposition of players
-      Time     time;         //ot synchronize
+      Time     time;         //to synchronize
       int      gamespeed;    //The game speed
       int      grid_size;    //grid size
       int      arena_size;   //arena_size
@@ -103,7 +103,7 @@ typedef struct packet {
       int     points[MAX_PLAYERS]; //Points for each player.
     } score;
     struct {
-      GameEvent events[4];   //4 events
+      GameEvent event;       //events
     } snapshot;              //Type SNAPSHOT
     struct {
       GameEvent event;       //event
