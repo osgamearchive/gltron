@@ -55,7 +55,7 @@ void initDirectories(void) {
   sprintf(art_dir, "%s%c%s", DATA_DIR, SEPARATOR, "art");
   sprintf(scripts_dir, "%s%c%s", DATA_DIR, SEPARATOR, "scripts");
   sprintf(music_dir, "%s%c%s", DATA_DIR, SEPARATOR, "music");
-  sprintf(level_dir, "%s%c%s", DATA_DIR, SEPARATOR, "level");
+  sprintf(level_dir, "%s%c%s", DATA_DIR, SEPARATOR, "levels");
 #endif
 
 	/*
