@@ -28,10 +28,8 @@ spawn = {
 geometry = {
 	-- floor geometry is used to generate reflections, etc.
 	floor = {
-		-- triangles = 0, quads = 1
-		type = 1,
 		-- uv = 4, normal = 2, positon = 1
-		vertexformat = 7, 
+		vertexformat = 5, 
 		 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
@@ -47,56 +45,62 @@ geometry = {
 			{ pos = { x = 0, y = 1, z = 0 },
 				uv = { u = 0, v = 1 } }
 		},
-		indices = { 0, 1, 2, 3 }
+		indices = { 
+			{ 0, 1, 2 },
+			{ 0, 2, 3 }
+		}
 	},
 
 	arena = {
-		type = "quads",
+		-- uv = 4, normal = 2, positon = 1
+		vertexformat = 5, 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
 			textures = { diffuse = "walls.png" }
 		},
 		vertices = {
-			{ -- quad0
+			-- wall
 			{ pos = { x = 1, y = 0, z = 0 },
 				uv = { u = 0, v = 0 } },
 			{ pos = { x = 0, y = 0, z = 0 },
 				uv = { u = 0.25, v = 0 } },
-			{ pos = { x = 0, y = 0, z = 1 },
+			{ pos = { x = 0, y = 0, z = 0.25 },
 				uv = { u = 0.25, v = 1 } },
-			{ pos = { x = 1, y = 0, z = 1 },
-				uv = { u = 0, v = 1 } }
-			},
-			{ -- quad1
+			{ pos = { x = 1, y = 0, z = 0.25 },
+				uv = { u = 0, v = 1 } },
+			-- wall
 			{ pos = { x = 1, y = 1, z = 0 },
 				uv = { u = 0.25, v = 0 } },
 			{ pos = { x = 1, y = 0, z = 0 },
 				uv = { u = 0.5, v = 0 } },
-			{ pos = { x = 1, y = 0, z = 1 },
+			{ pos = { x = 1, y = 0, z = 0.25 },
 				uv = { u = 0.5, v = 1 } },
-			{ pos = { x = 1, y = 1, z = 1 },
-				uv = { u = 0.25, v = 1 } }
-			},
-			{ -- quad2
+			{ pos = { x = 1, y = 1, z = 0.25 },
+				uv = { u = 0.25, v = 1 } },
+			-- wall
 			{ pos = { x = 0, y = 1, z = 0 },
 				uv = { u = 0.5, v = 0 } },
 			{ pos = { x = 1, y = 1, z = 0 },
 				uv = { u = 0.75, v = 0 } },
-			{ pos = { x = 1, y = 1, z = 1 },
+			{ pos = { x = 1, y = 1, z = 0.25 },
 				uv = { u = 0.75, v = 1 } },
-			{ pos = { x = 0, y = 1, z = 1 },
-				uv = { u = 0.5, v = 1 } }
-			},
-			{ -- quad3
+			{ pos = { x = 0, y = 1, z = 0.25 },
+				uv = { u = 0.5, v = 1 } },
+			-- quad3
 			{ pos = { x = 0, y = 0, z = 0 },
 				uv = { u = 0.75, v = 0 } },
 			{ pos = { x = 0, y = 1, z = 0 },
 				uv = { u = 1, v = 0 } },
-			{ pos = { x = 0, y = 1, z = 1 },
+			{ pos = { x = 0, y = 1, z = 0.25 },
 				uv = { u = 1, v = 1 } },
-			{ pos = { x = 0, y = 0, z = 1 },
+			{ pos = { x = 0, y = 0, z = 0.25 },
 				uv = { u = 0.75, v = 1 } }
-			},
+		},
+		indices = { 
+			{ 0, 1, 2 }, { 0, 2, 3 },
+			{ 4, 5, 6 }, { 4, 6, 7 },
+			{ 8, 9, 10 }, { 8, 10, 11 },
+			{ 12, 13, 14 }, { 12, 14, 15 }
 		}
 	}
 }
