@@ -25,7 +25,7 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
 
   data = p->data;
   height = data->trail_height;
-  if(height < 0) return;
+  if(height <= 0) return;
 
   q = getNextQuad(qb);
   q->type = QUAD_COLOR;
@@ -78,6 +78,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   Data *data;
   Quad *q;
   int tex;
+
+  if(p->data->trail_height <= 0) return;
 
   tex = game->screen->textures[TEX_DECAL];
 

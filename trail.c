@@ -103,7 +103,7 @@ void drawTrailLines(Player *p) {
   cam = p->camera;
 
   height = data->trail_height;
-  if(height < 0) return;
+  if(height <= 0) return;
 
   
   /*
