@@ -1,27 +1,43 @@
+#include <stdlib.h>
+
+#include "video/nebu_mesh.h"
 #include "video/video_level.h"
 
-void video_free_level(video_level *l) {
+#include "nebu_Scripting.h"
+
+nebu_Mesh* loadMesh(void);
+
+void video_FreeLevel(video_level *l) {
 }
 
-video_level video_create_level(const char *name) {
+void video_ScaleLevel(video_level *l, float fSize)
+{
+	nebu_Mesh_Scale(l->floor, fSize);
+	nebu_Mesh_Scale(l->arena, fSize);
+}
+
+video_level* video_CreateLevel(void) {
 	video_level *l;
-	int i;
 
 	l = malloc( sizeof(video_level) );
 
 	scripting_GetGlobal("level", NULL);
 	// get scalability flag
 	scripting_GetValue("scalable");
-	l->scalable = scripting_GetIntegerResult();
+	scripting_GetIntegerResult(& l->scalable);
+
+	scripting_GetValue("geometry");
 
 	// get floor & arena meshes
 	scripting_GetValue("floor");
-	mesh_load(& l->floor );
+	l->floor = loadMesh();
 	scripting_PopTable();
 	
 	scripting_GetValue("arena");
-	mesh_load(& l->arena );
+	l->arena = loadMesh();
 	scripting_PopTable();
+
+	scripting_PopTable(); // geometry
 
 	scripting_PopTable(); // level;
 
@@ -41,61 +57,71 @@ enum {
 };
 	
 
-void mesh_load(mesh **ppMesh) {
-	mesh *pMesh;
-	int vertexSize;
-	int i;
-	void *pVertices;
+nebu_Mesh* loadMesh(void) {
+	nebu_Mesh *pMesh;
+	int i, j;
 	
-	*ppmesh = malloc( sizeof(mesh) );
-	pMesh = *ppmesh;
+	pMesh = (nebu_Mesh*) malloc( sizeof(nebu_Mesh) );
 	
 	scripting_GetValue("vertexformat");
-	pMesh->vertexFormat = scripting_GetIntegerValue();
-	vertexSize = 
-		(pMesh->vertexFormat & MESH_POSITON) * 3 * sizeof(float) +
-		(pMesh->vertexFormat & MESH_NORMAL) * 3 * sizeof(float) +
-		(pMesh->vertexFormat & MESH_TEXCOORD0) * 2 * sizeof(float);
-
-	scripting_GetValue("type");
-	pMesh->primitiveType = scripting_GetIntegerValue();
-
+	scripting_GetIntegerResult(& pMesh->vertexformat);
 	scripting_GetValue("vertices");
-	pMesh->nVertices = scripting_GetArraySize();
-	pMesh->pPackedVertices = malloc( pMesh->nVertices * vertexSize );
-	pVertices = pMesh->pPackedVertices;
-	
+	scripting_GetArraySize(& pMesh->nVertices);
+
+	if(pMesh->vertexformat & NEBU_MESH_POSITION)
+		pMesh->pVertices = malloc( pMesh->nVertices * 3 * sizeof(float) );
+	if(pMesh->vertexformat & NEBU_MESH_NORMAL)
+		pMesh->pNormals = malloc( pMesh->nVertices * 3 * sizeof(float) );
+	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD)
+		pMesh->pTexCoords = malloc( pMesh->nVertices * 2 * sizeof(float) );
+
 	for(i = 0; i < pMesh->nVertices; i++) {
-		scripting_GetArrayIndex(i);
-		if(pMesh->vertexFormat & MESH_POSITION) {
+		scripting_GetArrayIndex(i + 1);
+		if(pMesh->vertexformat & NEBU_MESH_POSITION) {
 			scripting_GetValue("pos");
 			scripting_GetValue("x");
-			(float*) ((unsigned char*) pVertices + 0) =
-				scripting_GetFloatValue();
+			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 0] );
 			scripting_GetValue("y");
-			(float*) ((unsigned char*) pVertices + 4) =
-				scripting_GetFloatValue();
+			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 1] );
 			scripting_GetValue("z");
-			(float*) ((unsigned char*) pVertices + 8) =
-				scripting_GetFloatValue();
-			scripting_PopTable();
+			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 2] );
+			scripting_PopTable(); // pos
 		}
-		if(pMesh->vertexFormat & MESH_TEXCOORD0) {
+		if(pMesh->vertexformat & NEBU_MESH_NORMAL) {
+			scripting_GetValue("normal");
+			scripting_GetValue("x");
+			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 0] );
+			scripting_GetValue("y");
+			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 1] );
+			scripting_GetValue("z");
+			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 2] );
+			scripting_PopTable(); // pos
+		}
+		if(pMesh->vertexformat & NEBU_MESH_TEXCOORD) {
 			scripting_GetValue("uv");
 			scripting_GetValue("u");
+			scripting_GetFloatResult( & pMesh->pTexCoords[2 * i + 0] );
 			scripting_GetValue("v");
-			scripting_PopTable();
+			scripting_GetFloatResult( & pMesh->pTexCoords[2 * i + 1] );
+			scripting_PopTable(); // uv
 		}
 		scripting_PopTable(); // index i
 	}
 	scripting_PopTable(); // vertices
 	
 	scripting_GetValue("indices");
-	pMesh->nFaces = scripting_GetArraySize();
-	pMesh->pIndices = malloc( pMesh->nFaces * sizeof(int) );
-	for(i = 0; i < pMesh->nFaces; i++) {
-		scripting_GetArrayIndex(i);
-		((int*)pMesh->pIndices)[i] = scripting_GetIntegerResult();
+	scripting_GetArraySize(& pMesh->nTriangles);
+	pMesh->pTriangles = malloc( pMesh->nTriangles * 3 * sizeof(int) );
+	for(i = 0; i < pMesh->nTriangles; i++) {
+		scripting_GetArrayIndex(i + 1);
+		for(j = 0; j < 3; j++)
+		{
+			scripting_GetArrayIndex(j + 1);
+			scripting_GetIntegerResult( & pMesh->pTriangles[3 * i + j] );
+		}
+		scripting_PopTable(); // index i;
 	}
 	scripting_PopTable(); // indices
+
+	return pMesh;
 }
