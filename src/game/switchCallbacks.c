@@ -6,13 +6,12 @@ Callbacks *last_callback = NULL;
 Callbacks *current_callback = NULL;
 
 void exitCallback(Callbacks *cb) {
-  if(cb != NULL)
-    if(cb->exit != NULL)
+  if(cb && cb->exit)
     (cb->exit)(); /* give them the chance to quit */
 }
 
 void initCallback(Callbacks *cb) {
-  if(cb->init != NULL)
+  if(cb && cb->init != NULL)
     (cb->init)();
 }
 
@@ -65,6 +64,10 @@ void setCallback(const char *name) {
 		fprintf(stderr, "fatal: no callback named '%s' found\n", name);
 		exit(1); // OK: programmer error, critical
 	}
+
+  last_callback = current_callback;
+  current_callback = callbackList[i];
+	
 	nebu_System_SetCallbacks(callbackList[i]);
 }
 
