@@ -121,3 +121,10 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
 void nebu_Video_WarpPointer(int x, int y) {
   SDL_WarpMouse(x, y);
 }
+
+void nebu_Video_CheckErrors(const char *where) {
+  int error;
+  error = glGetError();
+  if(error != GL_NO_ERROR)
+    printf("[glError: %s] - %d\n", where, error);
+}
