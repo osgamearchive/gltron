@@ -37,7 +37,8 @@ CFILES = \
 	mtllib.c \
 	geom.c \
 	system.c \
-	globals.c
+	globals.c \
+	record.c
 
 SOUND_CFILES = \
 	sound.c

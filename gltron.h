@@ -106,9 +106,6 @@
 /* use enums, not magic */
 
 enum { 
-  TURN_LEFT = 1,
-  TURN_RIGHT = 3,
-  
   AI_HUMAN = 0,
   AI_COMPUTER = 1,
   AI_NONE = 2
@@ -161,6 +158,9 @@ extern int sf_count;
 
 extern Game main_game;
 extern Game *game;
+extern Game2 main_game2;
+extern Game2 *game2;
+
 extern float camAngle;
 
 /* extern TexFont *txf; */
@@ -184,8 +184,11 @@ extern int dirsY[];
 extern float default_speeds[];
 extern int default_arena_sizes[];
 
+/*
 extern int lasttime; 
-extern double dt; /* milliseconds since last frame */
+extern double dt; 
+*/
+/* milliseconds since last frame */
 
 extern int polycount;
 extern int screenshots;
@@ -225,9 +228,18 @@ extern char *help[];
 /* function prototypes */
 
 /* TODO: sort these */
+
+/* record.c */
+
+extern void getEvents();
+extern void writeEvent(GameEvent *e);
+extern int startRecording(char *filename);
+extern void stopRecording();
+extern int startPlaying(char *filename);
+extern void stopPlaying();
+
 /* engine.c */
 
-extern void setCol(int x, int y, int value, int width, unsigned char *map);
 extern int getCol(int x, int y);
 
 extern void turn(Data* data, int direction);
@@ -248,6 +260,14 @@ extern void cycleDisplay(int p);
 extern void doTrail(line *t, int value);
 extern void fixTrails();
 extern void clearTrails(Data *data);
+
+extern void moveStep(Data* data);
+extern void writePosition(int player);
+
+extern void doTurn(Data* data, int time);
+extern void crashPlayer(int player);
+extern void createTurnEvent(int player, int direction);
+extern void processEvent(GameEvent *e);
 
 /* gltron.c */
 /* game.c */
@@ -297,7 +317,7 @@ extern void doScreenShot();
 
 /* ai -> computer.c */
 
-extern void doComputer(Player *me, Data *him);
+extern void doComputer(int player, Data *him);
 
 /* keyboard -> input.c */
 
@@ -341,6 +361,8 @@ extern int hsv2rgb(float, float, float, float*, float*, float*);
 extern void colorDisc();
 
 /* gltron game graphics -> gamegraphics.c */
+extern void rebuildDebugTex();
+extern void drawDebugLines(gDisplay *d);
 extern void drawDebugTex(gDisplay *d);
 extern void drawFPS(gDisplay *d);
 extern void drawScore(Player *p, gDisplay *d);
@@ -369,7 +391,7 @@ extern void draw( void );
 
 
 extern void chaseCamMove();
-extern void timediff();
+/* extern void timediff(); */
 extern void camMove();
 
 extern void movePlayers();

@@ -3,7 +3,14 @@
 
 /* data structures */
 
+#include <stdio.h>
 #include "model.h"
+
+typedef struct list list;
+struct list {
+  void *data;
+  list* next;
+};
 
 typedef struct callbacks {
   void (*display)(void);
@@ -36,9 +43,15 @@ typedef struct Time {
 } Time;
 
 enum {
-  EVENT_TURN = 1,
-  EVENT_CRASH = 2,
-  EVENT_STOP = 4
+  EVENT_TURN_LEFT = 1,
+  EVENT_TURN_RIGHT = 2,
+  EVENT_CRASH = 4,
+  EVENT_STOP = 8
+};
+
+enum {
+  TURN_LEFT = 3,
+  TURN_RIGHT = 1
 };
 
 typedef struct GameEvent {
@@ -46,21 +59,31 @@ typedef struct GameEvent {
   int player; /* who */
   int x; /* where */
   int y;
+  int timestamp;
 } GameEvent;
 
 typedef struct History History;
 struct History {
-  int timestamp;
   GameEvent event;
   History *next;
 };
   
+enum {
+  GAME_SINGLE = 1,
+  GAME_SINGLE_RECORD = 2,
+  GAME_PLAY = 4
+};
+
 typedef struct Game2 {
   Grid grid;
   RuleSet rules;
+  int mode;
   int players;
   int *startPositions;
   Time time;
+  list events;
+  FILE *record;
+  FILE *play;
   History *history;
   History *current;
 } Game2;
@@ -84,9 +107,9 @@ typedef struct Data {
   float posx, posy;
   float t;
   
-  int turn;
   int dir; int last_dir;
 
+  int turn;
   int turn_time; /* for cycle animation */
   
   int score;
@@ -213,7 +236,6 @@ typedef struct Settings {
   /* these gettings affect the gameplay */
   int erase_crashed;
   int game_speed; /* index */
-  float speed;
   float current_speed;
   int grid_size;
   int arena_size; /* index */

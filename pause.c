@@ -6,8 +6,10 @@ void idlePause() {
 #ifdef SOUND
   soundIdle();
 #endif
+  /* 
   if(SystemGetElapsedTime() - lasttime < 10) return;
   timediff();
+  */
 
   SystemPostRedisplay();
 }
@@ -30,7 +32,7 @@ void keyboardPause(int key, int x, int y) {
   case ' ':
     if(game->pauseflag & PAUSE_GAME_FINISHED)
       initData();
-    lasttime = SystemGetElapsedTime();
+    /* lasttime = SystemGetElapsedTime(); */
     switchCallbacks(&gameCallbacks);
     break;
   case 'q':

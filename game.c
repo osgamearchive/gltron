@@ -56,6 +56,7 @@ void changeDisplay() {
 }
 
 void initGame() { /* called when game mode is entered */
+  game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
   /* playEngine(); */
 #endif
@@ -140,11 +141,3 @@ void cycleDisplay(int p) {
   }
   changeDisplay();
 }
-
-
-
-
-
-
-
-

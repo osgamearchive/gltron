@@ -12,7 +12,7 @@ void switchCallbacks(callbacks *new) {
 
   SystemRegisterCallbacks(new);
 
-  lasttime = SystemGetElapsedTime();
+  /* lasttime = SystemGetElapsedTime(); */
 
  /* printf("callbacks registred\n"); */
   (new->init)();
@@ -36,7 +36,7 @@ void restoreCallbacks() {
 
   SystemRegisterCallbacks(current_callback);
   
-  lasttime = SystemGetElapsedTime();
+  /* lasttime = SystemGetElapsedTime(); */
 
   fprintf(stderr, "restoring callbacks\n");
 }

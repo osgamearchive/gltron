@@ -70,7 +70,36 @@ void menuAction(Menu *activated, int type) {
     case 'q': saveSettings(); exit(0); break;
     case 'r': 
       initData();
+      game2->mode = GAME_SINGLE;
       switchCallbacks(&pauseCallbacks);
+      break;
+    case 'd':
+      if(activated->szName[2] == 'p') {
+	initData();
+	if(startPlaying("demo.txt")) {
+	  fprintf(stderr, "starting \"play demo\" failed\n");
+	  break;
+	}
+	if(readDemoInfo()) {
+	  fprintf(stderr, "reading demo information failed\n");
+	  break;
+	}
+	applyGameInfo();
+	game2->mode = GAME_PLAY;
+	switchCallbacks(&pauseCallbacks);
+      } else if(activated->szName[2] == 'r') {
+	initData();
+	if(startRecording("demo.txt")) {
+	  fprintf(stderr, "starting \"record demo\" failed\n");
+	  break;
+	}
+	if(writeDemoInfo()) {
+	  fprintf(stderr, "writing demo information failed\n");
+	  break;
+	}
+	game2->mode = GAME_SINGLE_RECORD;
+	switchCallbacks(&pauseCallbacks);
+      }
       break;
     case 'v':
       sscanf(activated->szName, "%cv%dx%d ", &c, &x, &y);

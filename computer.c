@@ -55,10 +55,12 @@ static int spiral[] = {
   10, 10, 10, 10
 };
 	
-void doComputer(Player *me, Data *him) {
+void doComputer(int player, Data *him) {
   AI *ai;
   Data *data;
+  Player *me;
   int i, j, level, x, y, rdist, ldist;
+  me = &(game->player[ player ]);
 
   if(me->ai == NULL) {
     printf("This player has no AI data!\n");
@@ -71,7 +73,7 @@ void doComputer(Player *me, Data *him) {
 
   level = game->settings->ai_level;
   /* avoid to short turns */
-  if(SystemGetElapsedTime() - ai->lasttime < turn_time[level])
+  if(game2->time.current - ai->lasttime < turn_time[level])
     return;
 
   /* first, check if we are in danger */
@@ -113,17 +115,21 @@ void doComputer(Player *me, Data *him) {
       ai->danger--;
       return;
     } else if(rdist > ldist && ai->tdiff > -spiral[level] ) {
-      data->turn = TURN_LEFT;
+      createTurnEvent(player, TURN_RIGHT);
       ai->tdiff--;
     } else if(rdist < ldist && ai->tdiff < spiral[level] ) {
-      data->turn = TURN_RIGHT;
+      createTurnEvent(player, TURN_LEFT);
       ai->tdiff++;
     } else {
-      if(ai->tdiff > 0) { data->turn = TURN_LEFT; ai->tdiff--; }
-      else { data->turn =  TURN_RIGHT; ai->tdiff++; }
+      if(ai->tdiff > 0) { 
+	createTurnEvent(player, TURN_RIGHT);
+	ai->tdiff--; }
+      else { 
+	createTurnEvent(player, TURN_LEFT);
+	ai->tdiff++; }
     }
     ai->danger = 0;
-    ai->lasttime = SystemGetElapsedTime();
+    ai->lasttime = game2->time.current;
   }
 }
 

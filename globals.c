@@ -3,6 +3,8 @@
 /* globals */
 Game main_game;
 Game *game;
+Game2 main_game2;
+Game2 *game2;
 
 /* TexFont *txf = NULL; */
 fonttex *guiFtx = NULL;
@@ -25,8 +27,10 @@ int colwidth;
 int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
 
-int lasttime; 
-double dt; /* milliseconds since last frame */
+/* int lasttime; 
+   double dt; */
+/* milliseconds since last frame */
+
 
 /* settings stuff */
 

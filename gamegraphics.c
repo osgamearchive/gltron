@@ -7,13 +7,12 @@ void rebuildDebugTex() {
   float tx, ty;
   int color;
   unsigned char *source;
-  printf("rebuilding texture: %d -> ", SystemGetElapsedTime());
+  /* printf("rebuilding texture: %d -> ", SystemGetElapsedTime()); */
   for(y = 0; y < game->settings->grid_size; y++) {
     ty = (float) y * DEBUG_TEX_H / game->settings->grid_size;
     for(x = 0; x < game->settings->grid_size; x++) {
       tx = (float) x * DEBUG_TEX_W / game->settings->grid_size;
       color = colmap [ y * colwidth + x];
-      /* printf("got %d for (%d, %d)\n", color, x, y); */
       if(color != 0 || ((int)tx != px && (int)ty != py)) {
 	px = (int) tx; 
 	source = debugcolors[ color ];
@@ -21,9 +20,8 @@ void rebuildDebugTex() {
       }
     }
     py = (int)ty;
-    /* } */
   }
-  printf("%d\n", SystemGetElapsedTime());
+  /* printf("%d\n", SystemGetElapsedTime()); */
 }
 
 #define MAP_SIZE 256.0
@@ -164,7 +162,7 @@ void drawFPS(gDisplay *d) {
   int diff;
 
   rasonly(d);
-  diff = (dt > 0) ? dt : 1;
+  diff = (game2->time.dt > 0) ? game2->time.dt : 1;
 
   if(pos < 0) {
     fps_avg = 1000 / diff;
@@ -304,7 +302,7 @@ void drawCycle(Player *p, int lod) {
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
   if(game->settings->turn_cycle) {
-    time = abs(p->data->turn_time - SystemGetElapsedTime());
+    time = abs(p->data->turn_time - game2->time.current);
     if(time < turn_length) {
       last_dir = p->data->last_dir;
       if(p->data->dir == 3 && last_dir == 2)
@@ -657,9 +655,6 @@ void initCustomLights() {
 }
 
 void initGLGame() {
-  printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
-	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
-  printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
 
   glShadeModel( game->screen->shademodel );
 

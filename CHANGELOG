@@ -10,6 +10,7 @@
 - added mouse callbacks (glut only) and stubs in the gui
 - added mouse callbacks for SDL and SYSTEM_MOUSEUP, SYSTEM_MOUSEDOWN constants
 - colored debug texture (2D map)
+- added second 2D map for evaluation (one line drawing, one textured)
 
 0.53 to 0.59
 most important visible changes (including the ones to 0.59beta)

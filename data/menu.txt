@@ -20,13 +20,25 @@ Root
 
 # Game Submenu - Start Game / Game Settings / Configure Players
 # 2 (chooseModel)
-4
+5
 xsub
 Game
 
 0
 xreset
 Start Game
+
+2
+xsub
+Demo
+
+0
+xdp
+Play demo
+
+0
+xdr
+Record demo
 
 9
 xsub

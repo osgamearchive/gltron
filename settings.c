@@ -81,7 +81,7 @@ void initSettingData(char *filename) {
   si[34].value = &(game->settings->ai_level);
   si[35].value = &(game->settings->mipmap_filter);
 
-  sf[0].value = &(game->settings->speed);
+  sf[0].value = &(game->settings->current_speed);
   sf[1].value = &(game->settings->musicVolume);
   sf[2].value = &(game->settings->fxVolume);
 }
@@ -112,6 +112,7 @@ void initMainGameSettings(char *filename) {
   int i;
   FILE* f;
 
+  game2 = &main_game2;
   game = &main_game;
   game->settings = (Settings*) malloc(sizeof(Settings));
   initSettingData(filename);
@@ -136,7 +137,7 @@ void initMainGameSettings(char *filename) {
   game->settings->erase_crashed = 0;
   game->settings->fast_finish = 1;
   game->settings->fov = 105;
-  game->settings->speed = 7.0;
+  game->settings->current_speed = 7.0;
   game->settings->game_speed = 1; /* normal */
   /* game->settings->grid_size MUST be divisible by 8 */
   game->settings->arena_size = 1;
@@ -220,12 +221,12 @@ void initMainGameSettings(char *filename) {
   game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
 
   /* sanity check: speed, grid_size */
-  if(game->settings->speed <= 0) {
+  if(game->settings->current_speed <= 0) {
     fprintf(stderr, "[gltron] sanity check failed: speed = %.2ff\n",
-	    game->settings->speed);
-    game->settings->speed = 6.0;
+	    game->settings->current_speed);
+    game->settings->current_speed = 6.0;
     fprintf(stderr, "[gltron] reset speed: speed = %.2f\n",
-	    game->settings->speed);
+	    game->settings->current_speed);
   }
   if(game->settings->grid_size % 8) {
     fprintf(stderr, "[gltron] sanity check failed: grid_size %% 8 != 0: "
@@ -236,7 +237,7 @@ void initMainGameSettings(char *filename) {
   }
 
   /* choose speed */
-  default_speeds[4] = game->settings->speed;
+  default_speeds[4] = game->settings->current_speed;
   game->settings->current_speed = default_speeds[ game->settings->game_speed ];
   printf("[gltron] speed set to %.2f (level %d)\n",
 	 game->settings->current_speed, game->settings->game_speed);

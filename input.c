@@ -8,14 +8,14 @@
 
 
 keyAction key_actions[KEY_ACTIONS_N] = {
-  { 0, 3, 'a' },
-  { 0, 1, 's' },
-  { 1, 3, 'k' },
-  { 1, 1, 'l' },
-  { 2, 3, '5' },
-  { 2, 1, '6' },
-  { 3, 3, SYSTEM_KEY_LEFT },
-  { 3, 1, SYSTEM_KEY_RIGHT }
+  { 0, TURN_LEFT, 'a' },
+  { 0, TURN_RIGHT, 's' },
+  { 1, TURN_LEFT, 'k' },
+  { 1, TURN_RIGHT, 'l' },
+  { 2, TURN_LEFT, '5' },
+  { 2, TURN_RIGHT, '6' },
+  { 3, TURN_LEFT, SYSTEM_KEY_LEFT },
+  { 3, TURN_RIGHT, SYSTEM_KEY_RIGHT }
 };
 
 #define KEY_RESERVED_N 8
@@ -56,7 +56,7 @@ void keyGame(int k, int x, int y)
   default: 
     for(i = 0; i < KEY_ACTIONS_N; i++) {
       if(k == key_actions[i].key) {
-	game->player[ key_actions[i].player ].data->turn = key_actions[i].turn;
+	createTurnEvent(key_actions[i].player, key_actions[i].turn);
 	return;
       }
     }
