@@ -1,5 +1,5 @@
 /*
-** $Id: liolib.c,v 1.3 2002/02/22 23:15:31 jcatki Exp $
+** $Id: liolib.c,v 1.4 2002/02/24 19:51:55 walisser Exp $
 ** Standard I/O (and system) library
 ** See Copyright Notice in lua.h
 */
@@ -11,7 +11,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h> /* for close() */
+#include <assert.h>
+
+#ifndef macintosh
+#  include <unistd.h> /* for close() */
+#endif
 
 #include "lua.h"
 
@@ -519,12 +523,21 @@ static int io_rename (lua_State *L) {
 
 static int io_tmpname (lua_State *L) {
 
+#ifdef macintosh
+	
+  /* mkstemp unavailable on Mac OS 9 */
+  assert (0);
+  
+#else
+
   static char tmpfname[16];
   int fid;
   strcpy(tmpfname,"/tmp/lua.XXXXXX");
   if((fid=mkstemp(tmpfname)))
 	  close(fid);
   lua_pushstring(L, tmpfname);
+#endif 
+  
   return 1;
 }
 
