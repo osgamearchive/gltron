@@ -5,7 +5,7 @@
 
 int c_quitGame(lua_State *L) {
   saveSettings();
-	SystemExitLoop(RETURN_GAME_CREDITS);
+	SystemExitLoop(RETURN_CREDITS);
   return 0;
 }
 
@@ -81,7 +81,7 @@ int c_reloadArtpack(lua_State *L) {
 int c_restoreDefaults(lua_State *L) {
   initDefaultSettings();
   c_video_restart(L);
-  fprintf(stderr, "loaded default settings\n");
+  // fprintf(stderr, "loaded default settings\n");
   return 0;
 }
 
@@ -111,7 +111,7 @@ int c_SetCallback(lua_State *L) {
 	if(lua_isstring(L, top)) {
 		name = lua_tostring(L, top);
 	}
-	printf("enabling callback-set '%s'\n", name);
+	// printf("enabling callback-set '%s'\n", name);
 	setCallback(name);
 
 	return 0;
