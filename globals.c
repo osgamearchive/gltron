@@ -40,7 +40,6 @@ int menutime;
    double dt; */
 /* milliseconds since last frame */
 
-
 /* settings stuff */
 
 settings_int *si;
@@ -54,7 +53,9 @@ int screenshots = 0;
 
 /* default settings */
 
-int default_arena_sizes[] = { 160, 240, 400, 600, 1200 };
+// int default_arena_sizes[] = { 160, 240, 400, 600, 1200 };
+int default_arena_sizes[] = { 160, 240, 480, 720, 1200 };
+// int default_texture_modifier[] = { be 
 float default_speeds[] = { 5.0, 6.5, 8.5, 12.0, 0.0 };
 /* float colors_alpha[][4] = { { 1.0, 0.2, 0.4 , 0.4}, { 0.2, 0.3, 1.0, 0.4}, */
 float colors_alpha[][4] = { { .6, 0.6, 0.0, 0.6}, { 0.5, 0.05, 0.25, 0.6},
@@ -89,6 +90,22 @@ Quad *quadBuf;
 int *quadBufIndex;
 #endif
 
+
+int game_textures = 11; /* 10 + debug texture */
+int n_textures = 10;
+
+texture_info textures[] = {
+  { "gltron_floor", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_FLOOR },
+  { "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI },
+  { "gltron_logo", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_LOGO },
+  { "gltron_wall_1", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL1 },
+  { "gltron_wall_2", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL2 },
+  { "gltron_wall_3", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL3 },
+  { "gltron_wall_4", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL4 },
+  { "gltron_crash", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_CRASH },
+  { "gltron_trail", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_TRAIL },
+  { "gltron_traildecal", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_DECAL }
+};
 
 
 
