@@ -79,23 +79,21 @@ tracker_infos(Trackerpacket *packet)
   servers[which].ping=0;
   servers[which].packets=0;
 
-  #ifndef macintosh /* no ntohl on MacOS */
   printf("IP          : %d.%d.%d.%d:%i\n",
-	 (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
-	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16,
-	 (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8,
-	 ntohl(servers[which].ipaddress.host) & 0x000000ff,
+	 (SDLNet_Read32(&servers[which].ipaddress.host) & 0xff000000) >> 24,
+	  (SDLNet_Read32(&servers[which].ipaddress.host) & 0x00ff0000) >> 16,
+	 (SDLNet_Read32(&servers[which].ipaddress.host) & 0x0000ff00) >> 8,
+	 SDLNet_Read32(&servers[which].ipaddress.host) & 0x000000ff,
 	 servers[which].ipaddress.port
  ); 
-  #endif
   printf("nbplayers   : %d\n",servers[which].nbplayers ); 
   printf("------------------------------------------\n");
 
   sprintf(host, "%d.%d.%d.%d",
-	  (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
-	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16,
-	  (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8,
-	  ntohl(servers[which].ipaddress.host) & 0x000000ff);
+	  (SDLNet_Read32(&servers[which].ipaddress.host) & 0xff000000) >> 24,
+	  (SDLNet_Read32(&servers[which].ipaddress.host) & 0x00ff0000) >> 16,
+	  (SDLNet_Read32(&servers[which].ipaddress.host) & 0x0000ff00) >> 8,
+	  SDLNet_Read32(&servers[which].ipaddress.host) & 0x000000ff);
   
   make_ping(which, servers, host, PINGPORT);
   nbservers++;
@@ -162,10 +160,10 @@ displayServerLegend()
   //y = game->screen->vp_h - 1.5 * h;
   y = game->screen->vp_h - 50;
   sprintf(str, "Server       : %d.%d.%d.%d",
-	 (ntohl(servers[current].ipaddress.host) & 0xff000000) >> 24,
-	  (ntohl(servers[current].ipaddress.host) & 0x00ff0000) >> 16,
-	 (ntohl(servers[current].ipaddress.host) & 0x0000ff00) >> 8,
-	 ntohl(servers[current].ipaddress.host) & 0x000000ff);
+	 (SDLNet_Read32(&servers[current].ipaddress.host) & 0xff000000) >> 24,
+	  (SDLNet_Read32(&servers[current].ipaddress.host) & 0x00ff0000) >> 16,
+	 (SDLNet_Read32(&servers[current].ipaddress.host) & 0x0000ff00) >> 8,
+	 SDLNet_Read32(&servers[current].ipaddress.host) & 0x000000ff);
   drawText(gameFtx, x, y, h, str);
   y = game->screen->vp_h - 70;
 
@@ -310,10 +308,10 @@ addressToStr( WlistPtr list, int line, int col )
     } else {
 
       sprintf(str, "%d.%d.%d.%d",
-	      (ntohl(ipaddress->host) & 0xff000000) >> 24,
-	      (ntohl(ipaddress->host) & 0x00ff0000) >> 16,
-	      (ntohl(ipaddress->host) & 0x0000ff00) >> 8,
-	      ntohl(ipaddress->host) & 0x000000ff
+	      (SDLNet_Read32(&ipaddress->host) & 0xff000000) >> 24,
+	      (SDLNet_Read32(&ipaddress->host) & 0x00ff0000) >> 16,
+	      (SDLNet_Read32(&ipaddress->host) & 0x0000ff00) >> 8,
+	      SDLNet_Read32(&ipaddress->host) & 0x000000ff
 	      );
     }
   return str;
@@ -394,10 +392,10 @@ mousefocus(WlistPtr list, int line, Wpoint mousexy)
   y -=2*s;
   x+=10;
   sprintf(str, "Server       : %d.%d.%d.%d",
-	  (ntohl(servers[line].ipaddress.host) & 0xff000000) >> 24,
-	  (ntohl(servers[line].ipaddress.host) & 0x00ff0000) >> 16,
-	  (ntohl(servers[line].ipaddress.host) & 0x0000ff00) >> 8,
-	  ntohl(servers[line].ipaddress.host) & 0x000000ff);
+	  (SDLNet_Read32(&servers[line].ipaddress.host) & 0xff000000) >> 24,
+	  (SDLNet_Read32(&servers[line].ipaddress.host) & 0x00ff0000) >> 16,
+	  (SDLNet_Read32(&servers[line].ipaddress.host) & 0x0000ff00) >> 8,
+	  SDLNet_Read32(&servers[line].ipaddress.host) & 0x000000ff);
   //x=list->x+list->width/2-strlen(str)*s*1.5/2;
   drawText(gameFtx, x, y, s, str);
   y -=s;
@@ -442,10 +440,10 @@ action(WlistPtr list)
 
       //getting server address
       sprintf(server, "%d.%d.%d.%d", 
-	      (ntohl(ipaddress->host) & 0xff000000) >> 24,
-	      (ntohl(ipaddress->host) & 0x00ff0000) >> 16,
-	      (ntohl(ipaddress->host) & 0x0000ff00) >> 8,
-	      ntohl(ipaddress->host) & 0x000000ff);
+	      (SDLNet_Read32(&ipaddress->host) & 0xff000000) >> 24,
+	      (SDLNet_Read32(&ipaddress->host) & 0x00ff0000) >> 16,
+	      (SDLNet_Read32(&ipaddress->host) & 0x0000ff00) >> 8,
+	      SDLNet_Read32(&ipaddress->host) & 0x000000ff);
 
       //getting port
       sprintf(port, "%d", ipaddress->port);

@@ -119,7 +119,7 @@ do_client_login( int which )
   //prepare packet
   rep.type=TINFOS;
   printf("a client has logging in, sending hime list of servers\n");
-  j=0
+  j=0;
   for(i=0; i<MAX_SLOTS; ++i)
     {
       if( slots[i].active==ACTIVE && slots[i].type == SERVER )
@@ -169,15 +169,13 @@ do_server_infos(  int which, Trackerpacket *packet )
   printf("description : %s\n",slots[which].description ); 
   printf("version     : %s\n",slots[which].version );  
 
-  #ifndef macintosh /* no ntohl on MacOS */
   printf("IP          : %d.%d.%d.%d:%i\n",
-	 (ntohl(slots[which].ipaddress.host) & 0xff000000) >> 24,
-	  (ntohl(slots[which].ipaddress.host) & 0x00ff0000) >> 16,
-	 (ntohl(slots[which].ipaddress.host) & 0x0000ff00) >> 8,
-	 ntohl(slots[which].ipaddress.host) & 0x000000ff,
+	 (SDLNet_Read32(&slots[which].ipaddress.host) & 0xff000000) >> 24,
+	  (SDLNet_Read32(&slots[which].ipaddress.host) & 0x00ff0000) >> 16,
+	 (SDLNet_Read32(&slots[which].ipaddress.host) & 0x0000ff00) >> 8,
+	 SDLNet_Read32(&slots[which].ipaddress.host) & 0x000000ff,
 	 slots[which].ipaddress.port
  ); 
-  #endif
   printf("nbplayers   : %d\n",slots[which].nbplayers ); 
   printf("------------------------------------------\n");
 
