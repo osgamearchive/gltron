@@ -22,7 +22,7 @@ gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@
 gltron_DEPENDENCIES = @NETWORK_OBJS@ @SOUND_OBJS@
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound.h sound_glue.h \
-	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp System.cpp \
+	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp SoundSystem.cpp \
 	SourceCopy.cpp 
 
 todo:
