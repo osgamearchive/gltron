@@ -85,6 +85,9 @@ enum {
 
 /* global constants */
 
+#define SONG_PREFIX "song_"
+#define MUSIC_DIR "music"
+
 #define PLAYERS 4
 #define MAX_PLAYERS 4
 #define MAX_TRAIL 1000

@@ -37,6 +37,7 @@ CFILES = \
 	fonts.c \
 	menu.c \
 	file.c \
+	directory.c \
 	model.c \
 	modelgraphics.c \
 	screenshot.c \

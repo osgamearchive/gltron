@@ -11,3 +11,5 @@ make clean
 make
 
 This will hopefully compile successfully.
+
+"make install" is currently broken!

@@ -157,7 +157,7 @@ Turn right - %s
 # Choose Model (not implemented)
 
 # Audio Submenu (1 entry)
-4
+5
 xsub
 Audio
 
@@ -176,6 +176,10 @@ Music Volume  - %.0f%%
 0
 ssf_0_1_0.05_fxVolume
 FX Volume     - %.0f%%
+
+0 
+sm_song
+Song: %s
 
 # Video Submenu (4 entries)
 # Display Options / Misc Options / Status Information / Change Resolution

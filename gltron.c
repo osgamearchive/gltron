@@ -18,6 +18,7 @@ void drawGame() {
   gDisplay *d;
   Player *p;
 
+
   polycount = 0;
 
 
@@ -121,6 +122,8 @@ void setupDisplay(gDisplay *d) {
 
 int main( int argc, char *argv[] ) {
   char *path;
+  list *l;
+  int c;
 
 #ifdef __FreeBSD__
   fpsetmask(0);
@@ -144,8 +147,31 @@ int main( int argc, char *argv[] ) {
   printf("initializing sound\n");
   initSound();
   setFxVolume(game->settings->fxVolume);
-  path = getFullPath("gltron.it");
-  loadSound(path);
+  path = getFullPath(MUSIC_DIR);
+
+  game->settings->soundList = 
+    readDirectoryContents(path, SONG_PREFIX);
+  game->settings->soundIndex = -1;
+
+  l = game->settings->soundList;
+  c = 0;
+  if(l->next != NULL) {
+    char *tmp;
+    tmp = malloc(strlen(path) + 1 + /* seperator */
+		 strlen((char*) l->data) + 1);
+    sprintf(tmp, "%s%c%s", path, SEPERATOR, 
+	    (char*) l->data);
+    fprintf(stderr, "loading song %s\n", tmp);
+    loadSound(tmp);
+    free(tmp);
+    game->settings->soundIndex = 0;
+  }
+  while(l->next != NULL) {
+    l = l->next;
+    c++;
+  }
+  game->settings->soundSongCount = c;
+
   if(game->settings->playMusic)
     playSound();
   setMusicVolume(game->settings->musicVolume);

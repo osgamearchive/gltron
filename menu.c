@@ -10,12 +10,46 @@ void changeAction(char *name) {
   if(strstr(name, "playMusic") == name) {
     if(game->settings->playMusic == 0)
       stopSound();
-    else playSound();
+    else if(game->settings->soundIndex >= 0)
+      playSound();
   } else if(strstr(name, "musicVolume") == name) {
     setMusicVolume(game->settings->musicVolume);
   } else if(strstr(name, "fxVolume") == name) {
     setFxVolume(game->settings->fxVolume);
     playMenuFX(fx_highlight);
+  }
+  if(strstr(name, "song") == name) {
+    if(game->settings->soundIndex != -1) {
+      char *tmp;
+      char *path;
+      list *p;
+      int c;
+
+      c = 0;
+      for(p = game->settings->soundList; p->next != NULL; p = p->next) {
+	if(c == game->settings->soundIndex)
+	  break;
+	c++;
+      }      
+      if(c == game->settings->soundIndex) {
+	path = getFullPath(MUSIC_DIR);
+	tmp = malloc(strlen(path) + 1 + /* seperator */
+		     strlen((char*) p->data) + 1);
+	sprintf(tmp, "%s%c%s", path, SEPERATOR, 
+		(char*) p->data);
+	fprintf(stderr, "loading song %s\n", tmp);
+
+	if(game->settings->playMusic)
+	  stopSound();
+	loadSound(tmp);
+	free(tmp);
+	if(game->settings->playMusic)
+	  playSound();
+      }
+    } else {
+      if(game->settings->playMusic)
+	stopSound();
+    }
   }
 #endif
   if(strstr(name, "use_mipmaps") == name ||
@@ -160,21 +194,44 @@ void menuAction(Menu *activated, int type) {
     case 'c':
       chooseCallback(activated->szName + 3);
       break;
+    case 'm':
+      changeAction(activated->szName + 3);
+      break;
     default: printf("got action for menu %s\n", activated->szName); break;
     }
   } else if(type == MENU_LEFT || type == MENU_RIGHT) {
-    float *pfValue;
-    float min, max, step;
-    char buf[64];
-    sscanf(activated->szName, "ssf_%f_%f_%f_%s", &min, &max, &step, buf);
-    pfValue = getVf(buf);
-    if(pfValue != NULL) {
-      *pfValue = (type == MENU_LEFT) ? (*pfValue - step) : (*pfValue + step);
-      if(*pfValue < min) *pfValue = min;
-      if(*pfValue > max) *pfValue = max;
+    switch(activated->szName[1]) {
+    case 's': 
+      {
+	float *pfValue;
+	float min, max, step;
+	char buf[64];
+	sscanf(activated->szName, "ssf_%f_%f_%f_%s", &min, &max, &step, buf);
+	pfValue = getVf(buf);
+	if(pfValue != NULL) {
+	  *pfValue = (type == MENU_LEFT) ? (*pfValue - step) : (*pfValue + step);
+	  if(*pfValue < min) *pfValue = min;
+	  if(*pfValue > max) *pfValue = max;
+	}
+	initMenuCaption(activated);
+	changeAction(buf);
+	break;
+      }
+    case 'm':
+      switch(type) {
+      case MENU_LEFT:
+	game->settings->soundIndex--;
+	if(game->settings->soundIndex < -1) game->settings->soundIndex = -1;
+	break;
+      case MENU_RIGHT:
+	game->settings->soundIndex++;
+	if(game->settings->soundIndex >= game->settings->soundSongCount) 
+	  game->settings->soundIndex = game->settings->soundSongCount - 1;
+	break;
+      }
+      initMenuCaption(activated);
+      break;
     }
-    initMenuCaption(activated);
-    changeAction(buf);
   }
 }
 
@@ -253,6 +310,20 @@ void initMenuCaption(Menu *m) {
 	    }
 	    break;
 	  }
+      }
+      break;
+    case 'm': /* song */
+      {
+	list *p;
+	int c = 0;
+	for(p = game->settings->soundList; p->next != NULL; p = p->next) {
+	  if(c == game->settings->soundIndex)
+	    sprintf(m->display.szCaption, m->szCapFormat, 
+		    (char*) p->data + strlen(SONG_PREFIX));
+	  c++;
+	}
+	if(game->settings->soundIndex == -1)
+	  sprintf(m->display.szCaption, m->szCapFormat, "none");
       }
       break;
     }
@@ -470,21 +541,3 @@ void drawMenu(gDisplay *d) {
   
   glDisable(GL_BLEND);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
