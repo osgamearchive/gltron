@@ -87,7 +87,6 @@ void initPause() {
 }
 
 void exitPause() {
-  SystemUnhidePointer();
 }
 
 void initPauseGL() {

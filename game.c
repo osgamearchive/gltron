@@ -129,7 +129,6 @@ void initGame() { /* called when game mode is entered */
 }
 
 void exitGame() {
-  SystemUnhidePointer();
 #ifdef SOUND
   Audio_DisableEngine();
 #endif

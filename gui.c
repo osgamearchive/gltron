@@ -254,6 +254,7 @@ void keyboardGui(int key, int x, int y) {
 #endif /* 0 */
 
 void initGui() {
+  SystemUnhidePointer();
   menutime = SystemGetElapsedTime();
 #if 0
   if(pCurrent == NULL) {

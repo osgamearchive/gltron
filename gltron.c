@@ -42,6 +42,8 @@ int initWindow() {
 
   if(getSettingi("windowMode") == 0 || getSettingi("mouse_warp") == 1) {
     SystemGrabInput();
+  } else {
+    SystemUngrabInput();
   }
 
   return win_id;
@@ -98,7 +100,7 @@ int main( int argc, char *argv[] ) {
 
   SystemInit(&argc, argv);
 
-#ifndef LOCAL_DATA
+#ifdef LOCAL_DATA
   goto_installpath(argv[0]);
 #endif
   initDirectories();

@@ -69,11 +69,11 @@ void SystemWarpPointer(int x, int y) {
 }
 
 void SystemHidePointer() {
-  SDL_ShowCursor(0);
+  SDL_ShowCursor(SDL_DISABLE);
 }
 
 void SystemUnhidePointer() {
-  SDL_ShowCursor(1);
+  SDL_ShowCursor(SDL_ENABLE);
 }
 
 void SystemMouse(int buttons, int state, int x, int y) {
