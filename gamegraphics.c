@@ -322,7 +322,7 @@ void drawCam(Player *p, gDisplay *d) {
   float up[3] = { 0, 0, 1 };
   
   glColor3f(0.0, 1.0, 0.0);
-
+	
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   doPerspective(game2->settingsCache.fov, d->vp_w / d->vp_h,
@@ -371,11 +371,11 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
-	int drawTurn = 1;
+				int drawTurn = 1;
         if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
             p != &game->player[i])
-	  drawTurn = 0;
-	drawCycleShadow(game->player + i, lod, drawTurn);
+					drawTurn = 0;
+				drawCycleShadow(game->player + i, lod, drawTurn);
       }
     }
     if (game->player[i].data->trail_height > 0 )
@@ -440,8 +440,8 @@ void drawCam(Player *p, gDisplay *d) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     for (i = 0; i < game->players; i++) {
-      if ((p != &(game->player[i])) && PLAYER_IS_ACTIVE(&game->player[i])) {
-	      drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
+      if (p != game->player + i && PLAYER_IS_ACTIVE(game->player + i)) {
+	      drawGlow(p, game->player + i, d, TRAIL_HEIGHT * 4);
       }
       
     glDisable(GL_BLEND);
