@@ -59,7 +59,7 @@ void initGameStructures() { /* called only once */
     p->ai = (AI*) malloc(sizeof(AI));
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (Line*) malloc(MAX_TRAIL * sizeof(Line));
-		p->data->trailCount = 0;
+		p->data->trailOffset = 0;
     p->camera = (Camera*) malloc(sizeof(Camera));
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
@@ -178,12 +178,14 @@ void initPlayerData() {
 
       not_playing++;
     }
-    data->trail = data->trails;
-		data->trailCount = 1;
+    // data->trail = data->trails;
+		data->trailOffset = 0;
 
-    data->trail->sx = data->trail->ex = data->iposx;
-    data->trail->sy = data->trail->ey = data->iposy;
-
+    data->trails[ data->trailOffset ].sx = data->iposx;
+    data->trails[ data->trailOffset ].ex = data->iposx;
+		
+    data->trails[ data->trailOffset ].sy = data->iposy;
+    data->trails[ data->trailOffset ].ey = data->iposy;
   }
 
   free(startIndex);
@@ -301,18 +303,16 @@ void writePosition(int player) {
 }
 
 void newTrail(Data* data) {
-  Line *newline;
+  data->trails[data->trailOffset].ex = data->iposx;
+  data->trails[data->trailOffset].ey = data->iposy;
 
-  data->trail->ex = data->iposx;
-  data->trail->ey = data->iposy;
+	data->trailOffset++;
+	
+  data->trails[data->trailOffset].sx = data->iposx;
+  data->trails[data->trailOffset].sy = data->iposy;
 
-  newline = data->trail + 1; /* new line */
-
-  newline->sx = data->iposx;
-  newline->sy = data->iposy;
-
-  data->trail = newline;
-	data->trailCount++;
+  data->trails[data->trailOffset].ex = data->iposx;
+  data->trails[data->trailOffset].ey = data->iposy;
 }
       
 static void doTurn(GameEvent *e, int direction) {

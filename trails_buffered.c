@@ -5,9 +5,10 @@ int getTrailCount() {
   int c = 0;
   Line *l;
   for(i = 0; i < game->players; i++) {
-    l = game->player[i].data->trails;
-		fprintf(stderr, "trailcount: %d\n", game->player[i].data->trailCount);
-    while(l != game->player[i].data->trail) {
+		Data* data = game->player[i].data;
+    l = data->trails;
+		fprintf(stderr, "trailcount: %d\n", data->trailOffset + 1);
+    while(l != data->trails + data->trailOffset) {
       l++;
       c++;
     }
@@ -41,11 +42,11 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   bdist = (game2->settingsCache.show_model) &&
 	   PLAYER_IS_ACTIVE(p) ? 2 : 3;
 
-  sx = getSegmentEndX(data->trail, data, 0);
-  sy = getSegmentEndY(data->trail, data, 0);
+  sx = getSegmentEndX(data->trails + data->trailOffset, data, 0);
+  sy = getSegmentEndY(data->trails + data->trailOffset, data, 0);
 
-  ex = getSegmentEndX(data->trail, data, bdist);
-  ey = getSegmentEndY(data->trail, data, bdist);
+  ex = getSegmentEndX(data->trails + data->trailOffset, data, bdist);
+  ey = getSegmentEndY(data->trails + data->trailOffset, data, bdist);
 
   /* hacked texture coordinates to avoid bleeding on some cards */
 #define ONE 0.98
@@ -99,7 +100,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
   /* start drawing */
   ln = &(data->trails[0]);
-  while(ln != data->trail) { /* the last segment is special cased */
+  while(ln != data->trails + data->trailOffset) { /* the last segment is special cased */
     q = getNextQuad(qb);
     if (game2->settingsCache.softwareRendering == 0 && 
         game2->settingsCache.show_decals == 1) {

@@ -58,8 +58,9 @@ typedef struct Data {
   float exp_radius; /* explosion of the cycle model */
  
   Line *trails;
-  Line *trail; /* current trail */
-	int trailCount;
+	int trailOffset;
+  // Line *trail; /* current trail */
+	// int trailCount;
 } Data;
 
 typedef struct AI {

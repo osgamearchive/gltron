@@ -100,7 +100,7 @@ void draw2D( gDisplay *d ) {
 				glEnd();
 
 				glBegin(GL_LINES);
-				for(trail = p->data->trails; trail != p->data->trail; trail++)
+				for(trail = p->data->trails; trail != p->data->trails + p->data->trailOffset; trail++)
 				{
 						glVertex2f(trail->sx, trail->sy);
 						glVertex2f(trail->ex, trail->ey);
