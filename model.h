@@ -28,6 +28,7 @@ typedef struct {
 typedef struct {
   vec3 vMin;
   vec3 vSize;
+  float fRadius;
 } BoundingBox;
 
 typedef struct {

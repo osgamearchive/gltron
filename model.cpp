@@ -270,4 +270,5 @@ void computeBBox(Mesh *pMesh) {
   vsub(vMax.v, vMin.v, vSize.v);
   vcopy(vMin.v, pMesh->BBox.vMin.v);
   vcopy(vSize.v, pMesh->BBox.vSize.v);
+  pMesh->BBox.fRadius=length(pMesh->BBox.vSize.v)/10;
 }

@@ -5,7 +5,6 @@ Bugs:
 - stray lightcycle sounds? (sem)
 - got msg. 'player 4 was won' after player and opponent crashed at the
   same time (LIM)
-- bad FOV culling of lightcycles (LIM)
 - Make install doesn't work (Andreas)
 - Visual artefact in the lightcycle trail between textured/untextured bow
   (Andreas)

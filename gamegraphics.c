@@ -635,6 +635,15 @@ int playerVisible(Player *eye, Player *target) {
   tmp[0] = target->data->posx;
   tmp[1] = target->data->posy;
   tmp[2] = 0;
+
+  lod = (game->settings->lod > max_lod) ? max_lod : game->settings->lod;
+  /* calculate lod */
+  vsub(eye->camera->cam, tmp, v2);
+  d = length(v2);
+  for(i = 0; i < LC_LOD && d >= lod_dist[lod][i]; i++);
+  if(i >= LC_LOD)
+    return -1;
+
   vsub(tmp, eye->camera->cam, v2);
   normalize(v2);
   s = scalarprod(v1, v2);
@@ -645,19 +654,10 @@ int playerVisible(Player *eye, Player *target) {
     v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
     s, d);
   */
-  if(s < d)
+  if(s < d-(lightcycle[i]->BBox.fRadius*2))
     return -1;
-  else {
-    lod = (game->settings->lod > max_lod) ? max_lod : game->settings->lod;
-    /* calculate lod */
-    vsub(eye->camera->cam, tmp, v1);
-    d = length(v1);
-    for(i = 0; i < LC_LOD; i++) {
-      if(d < lod_dist[lod][i])
+  else
 	return i;
-    }
-    return -1;
-  }
 }
 	    
 void drawPlayers(Player *p) {
