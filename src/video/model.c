@@ -8,13 +8,13 @@
 #include "stdlib.h"
 #include "zlib.h"
 
-typedef struct {
+typedef struct face {
   int vertex[3];
   int normal[3];
   int material;
 } face;
 
-typedef struct {
+typedef struct quadFace {
  int vertex[4];
  int normal[4];
  int material;

@@ -15,7 +15,7 @@
 #define SCREENSHOT_PNG_BITDEPTH 8
 #define SCREENSHOT_BYTES_PER_PIXEL 3
 
-typedef struct {
+typedef struct screenshot_info_t {
   int width;
   int height;
   unsigned char *pixmap;

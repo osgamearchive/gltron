@@ -1,7 +1,7 @@
 #ifndef GAME_AI_H
 #define GAME_AI_H
 
-typedef struct {
+typedef struct AI_Configuration {
 	int location;
 	segment2 player;
 	segment2 opponent;
@@ -9,12 +9,12 @@ typedef struct {
 	float t_player, t_opponent;
 } AI_Configuration;
 	
-typedef struct {
+typedef struct AI_Distances {
 	float front, left, right, backleft;
 } AI_Distances;
 
-typedef struct {
-	int minTurnTime[4];
+typedef struct AI_Parameters {
+	unsigned int minTurnTime[4];
 	float maxSegLength[4];
 	float critical[4];
 	int  spiral[4];
