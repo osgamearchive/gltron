@@ -8,7 +8,6 @@ Bugs:
 - App exits on corrupt mp3 files
 - App crashes if SDL_sound is present, but doesn't support ogg/vorbis, or if
   sound fx files are corrupt
-- Menu system got broken with new scripts. Still missing: Configuring Keys
 - readDirectoryContents() doesn't use the correct path
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
@@ -35,10 +34,10 @@ Features:
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
 - explosion is missing alpha blending right now
 - Proper HUD for scores / ai info, etc.
-- keys / camera / song are not saved to ~/.gltronrc
+- camera is not saved to ~/.gltronrc
 - uv-coordinates for the model, add texture coordinate support to obj loader
 - support other controllers (i.e. joysticks)
-- new drop down console
+- quake-like drop down console
 - merge software mouse cursor from networkign branch
 - add more special effects (reflections etc.)
 - add slightly funny console messages (Robot ate Andi's tail)
@@ -57,6 +56,7 @@ Documentation:
 
 - add new default artpack author to CREDITS [ Andreas ]
 - add new programmers to CREDITS [ Andreas ]
+- compile decent ChangeLog
 
 Administrative:
 
