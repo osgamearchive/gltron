@@ -201,7 +201,7 @@ void drawDebugTex(gDisplay *d) {
   */
 
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, d->texDebug);
+  glBindTexture(GL_TEXTURE_2D, d->textures[TEX_DEBUG]);
   if(ogl_debugtex == 0) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DEBUG_TEX_W, DEBUG_TEX_H, 
 		 0, GL_RGBA, GL_UNSIGNED_BYTE, debugtex);
@@ -341,7 +341,7 @@ void drawFloor(gDisplay *d) {
 
   if(game->settings->show_floor_texture) {
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, game->screen->texFloor);
+    glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_FLOOR]);
     /* there are some strange clipping artefacts in software mode */
     /* try subdividing things... */
     glColor4f(1.0, 1.0, 1.0, 1.0);
@@ -388,7 +388,7 @@ void drawCrash(float radius) {
   glColor4f(1.0, 1.0, 1.0, (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX);
   /* printf("exp_r: %.2f\n", (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX); */
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, game->screen->texCrash);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_CRASH]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glEnable(GL_BLEND);
   glBegin(GL_QUADS);
@@ -641,47 +641,53 @@ void drawWalls(gDisplay *d) {
 #undef WALL_H
 #define WALL_H 48
   float t;
+  float h;
 
   t = game->settings->grid_size / 240.0;
+  if(game->settings->stretch_textures) {
+    h = t * WALL_H;
+    t = 1.0;
+  } else h = WALL_H;
+
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
   glDisable(GL_BLEND);
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
 #define T_TOP 1.0
-  glBindTexture(GL_TEXTURE_2D, game->screen->texWall_1);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL1]);
   glBegin(GL_QUADS);
     glTexCoord2f(t, 0.0); glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord2f(t, T_TOP); glVertex3f(0.0, 0.0, WALL_H);
-    glTexCoord2f(0.0, T_TOP); glVertex3f(game->settings->grid_size, 0.0, WALL_H);
+    glTexCoord2f(t, T_TOP); glVertex3f(0.0, 0.0, h);
+    glTexCoord2f(0.0, T_TOP); glVertex3f(game->settings->grid_size, 0.0, h);
     glTexCoord2f(0.0, 0.0); glVertex3f(game->settings->grid_size, 0.0, 0.0);
   glEnd();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->texWall_2);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL2]);
   glBegin(GL_QUADS);
     glTexCoord2f(t, 0.0); glVertex3f(game->settings->grid_size, 0.0, 0.0);
-    glTexCoord2f(t, T_TOP); glVertex3f(game->settings->grid_size, 0.0, WALL_H);
+    glTexCoord2f(t, T_TOP); glVertex3f(game->settings->grid_size, 0.0, h);
     glTexCoord2f(0.0, T_TOP); 
-    glVertex3f(game->settings->grid_size, game->settings->grid_size, WALL_H);
+    glVertex3f(game->settings->grid_size, game->settings->grid_size, h);
     glTexCoord2f(0.0, 0.0); 
     glVertex3f(game->settings->grid_size, game->settings->grid_size, 0.0);
   glEnd();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->texWall_3);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL3]);
   glBegin (GL_QUADS);
   glTexCoord2f(t, 0.0); 
     glVertex3f(game->settings->grid_size, game->settings->grid_size, 0.0);
     glTexCoord2f(t, T_TOP); 
-    glVertex3f(game->settings->grid_size, game->settings->grid_size, WALL_H);
-    glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, game->settings->grid_size, WALL_H);
+    glVertex3f(game->settings->grid_size, game->settings->grid_size, h);
+    glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, game->settings->grid_size, h);
     glTexCoord2f(0.0, 0.0); glVertex3f(0.0, game->settings->grid_size, 0.0);
   glEnd();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->texWall_4);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL4]);
   glBegin(GL_QUADS);
     glTexCoord2f(t, 0.0); glVertex3f(0.0, game->settings->grid_size, 0.0);
-    glTexCoord2f(t, T_TOP); glVertex3f(0.0, game->settings->grid_size, WALL_H);
-    glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, 0.0, WALL_H);
+    glTexCoord2f(t, T_TOP); glVertex3f(0.0, game->settings->grid_size, h);
+    glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, 0.0, h);
     glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 0.0, 0.0); 
     #undef T_TOP
   glEnd();
