@@ -95,7 +95,8 @@ Quad *quadBuf;
 int *quadBufIndex;
 #endif
 
-int game_textures = TEX_COUNT + 5; /* 11 + 6 + debug texture */
+// TODO: fix this
+int game_textures = TEX_COUNT + 5; /* 7 + 6 + debug texture */
 int n_textures = 7;
 
 #ifndef GL_VERSION_1_2
