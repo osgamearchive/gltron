@@ -35,7 +35,7 @@
 #endif
 
 #if !defined(WIN32) && !defined(macintosh)
-void goto_installpath(char *argv0)
+void goto_installpath(const char *argv0)
 {
     char temppath[PATH_MAX];
     char datapath[PATH_MAX];
