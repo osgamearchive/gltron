@@ -7,7 +7,7 @@ void idleTimedemo(void) {
 	int t;
 	int i, j;
 
-	List *p, *l;
+	nebu_List *p, *l;
 
 	Sound_idle();
 	
@@ -90,7 +90,7 @@ void initTimedemo(void) {
 	frames = 0;
 	startTime = SystemGetElapsedTime();
 	
-	tsrand(12313);
+	nebu_srand(12313);
 
 	resetRecognizer();
 	
@@ -112,7 +112,7 @@ void initTimedemo(void) {
 	setSettingi("grid_size", 200);
 		
  	game2->mode = GAME_SINGLE;
-  initData();
+  game_ResetData();
   changeDisplay(-1);
 
 	for(i = 0; i < game->players; i++) {
