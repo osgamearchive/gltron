@@ -22,7 +22,7 @@ typedef struct SettingsCache {
   int turn_cycle;
   int light_cycles;
   int lod;
-  int fov;
+  float fov;
   int stretch_textures;
   int show_skybox;
   int show_recognizer;
