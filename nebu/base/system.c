@@ -73,6 +73,8 @@ int SystemMainLoop() {
   
 void nebu_System_SetCallbacks(Callbacks *cb) {
   current = cb;
+	if(current && current->init)
+		current->init();
 }
 
 void SystemExitLoop(int value) {
