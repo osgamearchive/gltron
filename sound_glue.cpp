@@ -40,49 +40,49 @@ extern "C" {
     // iterate over all the players and update the engines
     if(sample_engine->IsPlaying()) {
       for(int i = 0; i < PLAYERS; i++) {
-	int dt = game2->time.current - game->player[i].data->turn_time;
+				int dt = game2->time.current - game->player[i].data->turn_time;
       
-	Player *p;
-	Sound::Source3D *p3d;
-	p3d = players[i];
-	p = game->player + i;
-	p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
-	if(dt < TURN_LENGTH) {
-	  float t = (float)dt / TURNLENGTH;
+				Player *p;
+				Sound::Source3D *p3d;
+				p3d = players[i];
+				p = game->player + i;
+				p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
+				if(dt < TURN_LENGTH) {
+					float t = (float)dt / TURNLENGTH;
 
-	  float vx = (1 - t) * dirsX[p->data->last_dir] +
-	    t * dirsX[p->data->dir];
-	  float vy = (1 - t) * dirsY[p->data->last_dir] +
-	    t * dirsY[p->data->dir];
-	  p3d->_velocity = Vector3(V * vx, V * vy, 0);
-	} else {
-	  p3d->_velocity = Vector3(V * dirsX[p->data->dir], 
-				   V * dirsY[p->data->dir], 
-				   0);
-	}
+					float vx = (1 - t) * dirsX[p->data->last_dir] +
+						t * dirsX[p->data->dir];
+					float vy = (1 - t) * dirsY[p->data->last_dir] +
+						t * dirsY[p->data->dir];
+					p3d->_velocity = Vector3(V * vx, V * vy, 0);
+				} else {
+					p3d->_velocity = Vector3(V * dirsX[p->data->dir], 
+																	 V * dirsY[p->data->dir], 
+																	 0);
+				}
 
-	if(i == 0) {
-	  if( dt < TURNLENGTH ) {
-	    float t = (float)dt / TURNLENGTH;
-	    float speedShift = ( 1 - t ) * 0.4 + t * 0.3;
-	    float pitchShift = ( 1 - t ) * 0.9 + t * 1.0;
-	    ( (Sound::SourceEngine*) p3d )->_speedShift = speedShift;
-	    ( (Sound::SourceEngine*) p3d )->_pitchShift = pitchShift;
-	  } else {
-	  ( (Sound::SourceEngine*) p3d )->_speedShift = 0.3;
-	  ( (Sound::SourceEngine*) p3d )->_pitchShift = 1.0;
-	  }
-	}
+				if(i == 0) {
+					if( dt < TURNLENGTH ) {
+						float t = (float)dt / TURNLENGTH;
+						float speedShift = ( 1 - t ) * 0.4 + t * 0.3;
+						float pitchShift = ( 1 - t ) * 0.9 + t * 1.0;
+						( (Sound::SourceEngine*) p3d )->_speedShift = speedShift;
+						( (Sound::SourceEngine*) p3d )->_pitchShift = pitchShift;
+					} else {
+						( (Sound::SourceEngine*) p3d )->_speedShift = 0.3;
+						( (Sound::SourceEngine*) p3d )->_pitchShift = 1.0;
+					}
+				}
       }
     }
 
     if(sample_recognizer->IsPlaying()) {
       if (game2->settingsCache.show_recognizer) {
-	Point p, v;
-	getRecognizerPositionVelocity(&p, &v);
-	// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
-	recognizerEngine->_location = Vector3(p.x, p.y, 10.0f);
-	recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
+				Point p, v;
+				getRecognizerPositionVelocity(&p, &v);
+				// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
+				recognizerEngine->_location = Vector3(p.x, p.y, 10.0f);
+				recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
       }
     }
 
@@ -125,11 +125,19 @@ extern "C" {
     spec->userdata = sound;
     spec->callback = sound->GetCallback();
 
-    if(SDL_OpenAudio( spec, NULL ) != 0) {
+		SDL_AudioSpec obtained;
+
+    if(SDL_OpenAudio( spec, &obtained ) != 0) {
       fprintf(stderr, "[error] %s\n", SDL_GetError());
       sound->SetStatus(Sound::eUninitialized);
     } else {
       sound->SetStatus(Sound::eInitialized);
+			fprintf(stderr, "frequency: %d\n", obtained.freq);
+			fprintf(stderr, "format: %d\n", obtained.format);
+			fprintf(stderr, "channels: %d\n", obtained.channels);
+			fprintf(stderr, "silence: %d\n", obtained.silence);
+			fprintf(stderr, "buffer in samples: %d\n", obtained.samples);
+			fprintf(stderr, "buffer in bytes: %d\n", obtained.size);
     }
     sound->SetMixMusic(game2->settingsCache.playMusic);
     sound->SetMixFX(game2->settingsCache.playEffects);
@@ -242,5 +250,3 @@ extern "C" {
     }
   }
 }
-
-
