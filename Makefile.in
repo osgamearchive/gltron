@@ -6,10 +6,11 @@ prefix = @prefix@
 includedir = @includedir@
 
 SHELL = /bin/sh
-OPT = -O2
+# OPT = -O2
+OPT = -g
 # CFLAGS = -c -pedantic -Wall -DSOUND -DNETWORK
 CFLAGS = -c -pedantic -Wall -DSOUND
-GL_LIBS = -lm -lGL -lGLU -lSDL -lSDL_net -lpthread -lz -lpng
+GL_LIBS = -lm -lGL -lGLU -lSDL -lpthread -lz -lpng
 XLIBS = -L/usr/X11/lib -L/usr/X11R6/lib -lX11
 SNDLIBS =  -lSDL_mixer
 
@@ -61,9 +62,9 @@ CFILES = \
 	record.c \
 	camera.c \
 	console.c \
-	network.c \
 	renderer_gl.c \
-	system_net.c
+	# network.c \
+	# system_net.c
 
 SOUND_CFILES = \
 	sound.c
