@@ -3,32 +3,38 @@
 
 #include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
+#include "filesystem/path.h"
 
 #include <lua.h>
 #include <lualib.h>
 
-void drawHudComponent(const char *s, nebu_2d *pMask) {
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.9);
+nebu_2d *gpHUD = NULL;
+nebu_2d *gpHUDMaskAnalog = NULL;
+nebu_2d *gpHUDMaskTurbo = NULL;
 
-		glEnable(GL_STENCIL_TEST);
-		glStencilFunc(GL_ALWAYS, 0, 255);
-		glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+void drawHudComponent(const char *s, nebu_2d *pMask, int maskIndex) {
+	glEnable(GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.9f);
 
-		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-		nebu_2d_Draw(pMask);
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, maskIndex, 255);
+	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 
-		glDisable(GL_ALPHA_TEST);
-		glDisable(GL_BLEND);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	nebu_2d_Draw(pMask);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-		// draw gauge where stencil is set
-		glStencilFunc(GL_LESS, 0, 255);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
 
-		scripting_Run(s);
-		
-		glDisable(GL_STENCIL_TEST);
+	// draw gauge where stencil is set
+	glStencilFunc(GL_EQUAL, maskIndex, 255);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	scripting_Run(s);
+	
+	glDisable(GL_STENCIL_TEST);
 }
 
 void drawHUD(Player *p, PlayerVisual *pV) {
@@ -48,11 +54,67 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 		rasonly(&pV->display);
 		glColor3f(1.0, 1.0, 1.0);
 		drawText(gameFtx, 
-						 pV->display.vp_w / 4, 10, 
-						 pV->display.vp_w / (2 * strlen(ai)), ai);
+						 pV->display.vp_w / 4.0f, 10.0f, 
+						 pV->display.vp_w / (2.0f * strlen(ai)), ai);
+	}
+	glDisable(GL_BLEND);
+
+ 	if(!gpHUD)
+	{
+		char *path = nebu_FS_GetPath(PATH_ART, "hud-speed.png");
+		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
+		gpHUD = nebu_2d_Create(surface, 0);
+		nebu_Surface_Free(surface);
+		free(path);
+	}
+	if(!gpHUDMaskAnalog)
+	{
+		char *path = nebu_FS_GetPath(PATH_ART, "hud-mask-speed.png");
+		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
+		gpHUDMaskAnalog = nebu_2d_Create(surface, 0);
+		nebu_Surface_Free(surface);
+		free(path);
+	}
+	if(!gpHUDMaskTurbo)
+	{
+		char *path = nebu_FS_GetPath(PATH_ART, "hud-mask-turbo.png");
+		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
+		gpHUDMaskTurbo = nebu_2d_Create(surface, 0);
+		nebu_Surface_Free(surface);
+		free(path);
+	}
+
+	{ 
+		char temp[40];
+		Visual hud = pV->display;
+		hud.vp_x = hud.vp_w + hud.vp_x - 248;
+		hud.vp_w = 248;
+		hud.vp_h = 150;
+		rasonly(&hud);
+		// rasonly(&pV->display);
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		nebu_2d_Draw(gpHUD);
+		glDisable(GL_BLEND);
+
+		glDisable(GL_DEPTH_TEST);
+
+		sprintf(temp, "drawSpeedDigital(%.2f)",
+			p->data->speed);
+		scripting_Run(temp);
+
+		sprintf(temp, "drawSpeedAnalog(%.2f)", 
+			p->data->speed / (2 * game2->rules.speed));
+		drawHudComponent(temp, gpHUDMaskAnalog, 1);
+		
+		sprintf(temp, "drawTurbo(%.2f)",
+			p->data->booster / getSettingf("booster_max"));
+		drawHudComponent(temp, gpHUDMaskTurbo, 2);
+
+		glEnable(GL_DEPTH_TEST);
 	}
 }
-
 
 void drawPause(Visual *display) {
   char pause[] = "Game is paused";
@@ -61,15 +123,12 @@ void drawPause(Visual *display) {
   char buf[100];
   char *message;
   static float d = 0;
-  static float lt = 0;
-  float delta;
+  static int lt = 0;
   int now;
 
   now = nebu_Time_GetElapsed();
-  delta = now - lt;
+  d += (now - lt) / 500.0f;
   lt = now;
-  delta /= 500.0;
-  d += delta;
   /* printf("%.5f\n", delta); */
   
   if (d > 2 * PI) { 
@@ -101,8 +160,19 @@ void drawPause(Visual *display) {
   }
 
   rasonly(gScreen);
-  drawText(gameFtx, display->vp_w / 6, 20, 
-	   display->vp_w / (6.0f / 4.0f * strlen(message)), message);
+  {
+	  float width = 0.9f;
+	  box2 box;
+	  box.vMin.v[0] = display->vp_w * (1 - width) / 2;
+	  // box.vMin.v[1] = 20.0f;
+	  box.vMin.v[1] = 320.0f;
+	  box.vMax.v[0] = display->vp_w * (1 - (1 - width) / 2);
+	  box.vMax.v[1] = (float) display->vp_h;
+	  nebu_Font_RenderToBox(gameFtx, message, strlen(message),&box,
+		  eFontFormatAlignCenter | eFontFormatAlignVCenter |
+		  eFontFormatScaleFitHorizontally |
+		  eFontFormatScaleFitVertically);
+  }
 }
 
 void drawScore(Player *p, Visual *d) {
@@ -147,26 +217,26 @@ void drawFPS(Visual *d) {
 
   sprintf(tmp, "average FPS: %d", fps_avg);
   glColor4f(1.0, 0.4f, 0.2f, 1.0);
-  drawText(gameFtx, d->vp_w - 180, d->vp_h - 20, 10, tmp);
+  drawText(gameFtx, d->vp_w - 180.0f, d->vp_h - 20.0f, 10.0f, tmp);
   sprintf(tmp, "minimum FPS: %d", fps_min);
-  drawText(gameFtx, d->vp_w - 180, d->vp_h - 35, 10, tmp);
+  drawText(gameFtx, d->vp_w - 180.0f, d->vp_h - 35.0f, 10.0f, tmp);
   sprintf(tmp, "triangles: %d", polycount);
-  drawText(gameFtx, d->vp_w - 180, d->vp_h - 50, 10, tmp);
+  drawText(gameFtx, d->vp_w - 180.0f, d->vp_h - 50.0f, 10.0f, tmp);
 }
 
 
 void drawConsoleLines(char *line, int call) {
-#define CONSOLE_SIZE 15
-#define CONSOLE_X_OFF 20
-  int size = CONSOLE_SIZE;
+#define CONSOLE_SIZE 15.0f
+#define CONSOLE_X_OFF 20.0f
+  float size = CONSOLE_SIZE;
   int length;
   /* fprintf(stdout, "%s\n", line); */
   length = strlen(line);
   while(length * size > gScreen->vp_w / 2 - CONSOLE_X_OFF)
-    size--;
+    size -= 1.0f;
     
   if(*line != 0) 
-    drawText(gameFtx, CONSOLE_X_OFF, gScreen->vp_h - 20 * (call + 1),
+    drawText(gameFtx, CONSOLE_X_OFF, gScreen->vp_h - 20.0f * (call + 1),
 	     size, line);
 }
 
@@ -200,7 +270,7 @@ static void getColor(lua_State *l, float *out) {
 	for(i = 0; i < 3; i++) {
 		lua_pushstring(l, names[i]);
 		lua_gettable(l, -2);
-		out[i] = lua_tonumber(l, -1);
+		out[i] = (float) lua_tonumber(l, -1);
 		lua_pop(l, 1); // result
 	}
 	lua_pop(l, 1); // table
@@ -215,8 +285,8 @@ int c_drawRectangle(lua_State *l) {
 	getColor(l, colors + 3);
 	getColor(l, colors + 0);
 	
-	height = lua_tonumber(l, -1);		lua_pop(l, 1);
-	width = lua_tonumber(l, -1);		lua_pop(l, 1);
+	height = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	width =  (float) lua_tonumber(l, -1);		lua_pop(l, 1);
 	
 	drawRect(width, height, colors);
 
@@ -238,11 +308,11 @@ int c_drawCircle(lua_State *l) {
 	getColor(l, c2);
 	getColor(l, c1);
 
-	r2 = lua_tonumber(l, -1);		lua_pop(l, 1);
-	r1 = lua_tonumber(l, -1);		lua_pop(l, 1);
+	r2 = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	r1 = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
 	nSegments = (int) lua_tonumber(l, -1);		lua_pop(l, 1);
-	phiEnd = lua_tonumber(l, -1);		lua_pop(l, 1);
-	phiStart = lua_tonumber(l, -1);		lua_pop(l, 1);
+	phiEnd = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	phiStart = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
 
 	drawCircle(phiStart, phiEnd, nSegments, r1, r2, c1, c2, c3, c4);
 
@@ -251,9 +321,9 @@ int c_drawCircle(lua_State *l) {
 
 int c_translate(lua_State *l) {
 	float x = 0, y = 0, z = 0;
-	z = lua_tonumber(l, -1);		lua_pop(l, 1);
-	y = lua_tonumber(l, -1);		lua_pop(l, 1);
-	x = lua_tonumber(l, -1);		lua_pop(l, 1);
+	z = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	y = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	x = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
 	glTranslatef(x,y,z);
 
 	return 0;
@@ -266,6 +336,40 @@ int c_pushMatrix(lua_State *l) {
 
 int c_popMatrix(lua_State *l) {
 	glPopMatrix();
+	return 0;
+}
+
+int c_color(lua_State *l)
+{
+	float r, g, b, a;
+	a = (float) lua_tonumber(l, -1);	lua_pop(l, 1);
+	b = (float) lua_tonumber(l, -1);	lua_pop(l, 1);
+	g = (float) lua_tonumber(l, -1);	lua_pop(l, 1);
+	r = (float) lua_tonumber(l, -1);	lua_pop(l, 1);
+	glColor4f(r, g, b, a);
+	return 0;
+}
+
+int c_drawTextFitIntoRect(lua_State *l) {
+	// text, width, height, flags
+	char *text;
+	float width;
+	float height;
+	int flags;
+	box2 box;
+
+	scripting_GetIntegerResult(&flags);
+	scripting_GetFloatResult(&height);
+	scripting_GetFloatResult(&width);
+	scripting_GetStringResult(&text);
+	// these are ignored!
+	box.vMin.v[0] = 0;
+	box.vMin.v[1] = 0;
+	box.vMax.v[0] = width;
+	box.vMax.v[1] = height;
+	nebu_Font_RenderToBox(gameFtx, text, strlen(text), &box, flags);
+	free(text);
+
 	return 0;
 }
 
@@ -296,12 +400,12 @@ void drawCircle(float phiStart, float phiEnd,
 	for(i = 0; i < nSegments + 1; i++) {
 		float t = i / (float)nSegments;
 		float rad = (1 - t) * phiStart + t * phiEnd;
-		pVertices[3 * (2 * i + 0) + 0] = cos(rad) * r1;
-		pVertices[3 * (2 * i + 0) + 1] = sin(rad) * r1;
+		pVertices[3 * (2 * i + 0) + 0] = cosf(rad) * r1;
+		pVertices[3 * (2 * i + 0) + 1] = sinf(rad) * r1;
 		pVertices[3 * (2 * i + 0) + 2] = 0;
 
-		pVertices[3 * (2 * i + 1) + 0] = cos(rad) * r2;
-		pVertices[3 * (2 * i + 1) + 1] = sin(rad) * r2;
+		pVertices[3 * (2 * i + 1) + 0] = cosf(rad) * r2;
+		pVertices[3 * (2 * i + 1) + 1] = sinf(rad) * r2;
 		pVertices[3 * (2 * i + 1) + 2] = 0;
 		
 		rgb_interpolate(pColors + 3 * (2 * i + 0), t, c1, c2);
@@ -360,4 +464,3 @@ void drawRect(float width, float height,
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 }
-
