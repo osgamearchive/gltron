@@ -46,7 +46,7 @@
 extern void SystemInit(int *argc, char *argv[]);
 extern void SystemExit();
 extern void SystemPostRedisplay();
-extern int SystemGetElapsedTime();
+extern unsigned int SystemGetElapsedTime();
 extern void SystemSwapBuffers();
 extern void SystemWarpPointer(int x, int y);
 extern void SystemHidePointer();

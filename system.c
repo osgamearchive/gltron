@@ -55,7 +55,7 @@ void SystemPostRedisplay() {
   redisplay = 1;
 }
 
-int SystemGetElapsedTime() {
+unsigned int SystemGetElapsedTime() {
   /* fprintf(stderr, "%d\n", SDL_GetTicks()); */
   return SDL_GetTicks();
 }
