@@ -83,7 +83,8 @@ void keyboardPause(int key, int x, int y) {
 void initPause() {
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  fprintf(stderr, "init pause mode\n");
+
+  updateSettingsCache();
 }
 
 void exitPause() {

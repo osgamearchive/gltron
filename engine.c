@@ -210,8 +210,6 @@ void initData() {
   game2->rules.speed = getSettingf("speed");
   game2->rules.eraseCrashed = getSettingi("erase_crashed");
   game2->rules.grid_size = getSettingi("grid_size");
-
-  updateSettingsCache();
   
   /* time management */
   game2->time.lastFrame = 0;
