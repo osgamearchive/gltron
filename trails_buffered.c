@@ -45,21 +45,25 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
   ex = getSegmentEndX(data->trail, data, bdist);
   ey = getSegmentEndY(data->trail, data, bdist);
 
+  /* hacked texture coordinates to avoid bleeding on some cards */
+#define ONE 0.98
+#define ZERO 0.02
   q_setColor4fv(q, 0, white);
-  q_setTexCoord2f(q, 0, 0.0, 0.0);
+  q_setTexCoord2f(q, 0, ZERO, ZERO);
   q_setVertex3f(q, 0, sx, sy, 0.0);
 
-  q_setColor4fv(q, 1, p->pColorDiffuse);
-  q_setTexCoord2f(q, 1, 1.0, 0.0);
-  q_setVertex3f(q, 1, ex, ey, 0.0);
+  q_setColor4fv(q, 1, white);
+  q_setTexCoord2f(q, 1, ZERO, ONE);
+  q_setVertex3f(q, 1, sx, sy, height);
 
   q_setColor4fv(q, 2, p->pColorDiffuse);
-  q_setTexCoord2f(q, 2, 1.0, 1.0);
+  q_setTexCoord2f(q, 2, ONE, ONE);
   q_setVertex3f(q, 2, ex, ey, height);
 
-  q_setColor4fv(q, 3, white);
-  q_setTexCoord2f(q, 3, 0.0, 1.0);
-  q_setVertex3f(q, 3, sx, sy, height);
+  q_setColor4fv(q, 3, p->pColorDiffuse);
+  q_setTexCoord2f(q, 3, ONE, ZERO);
+  q_setVertex3f(q, 3, ex, ey, 0.0);
+
 }
 
 void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
@@ -239,7 +243,9 @@ void doTrails(Player *p) {
       bufferPlayerBow(game->player + i, q);
     }
     index = getSortedQuads(q, p->camera->cam);
+    glEnable(GL_BLEND);
     drawTrails(q, index);
+    glDisable(GL_BLEND);
     if(index != NULL) free(index);
   } else {
     /* draw non-transparent trails first (unsorted), then draw
@@ -265,5 +271,3 @@ void doTrails(Player *p) {
      printf("%d texture mod changes\n", state->mod_changes);
   */
 }
-
-

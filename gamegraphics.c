@@ -919,8 +919,6 @@ void drawCam(Player *p, gDisplay *d) {
 
   glShadeModel(GL_SMOOTH);
 
-  glDisable(GL_BLEND);
-
   doTrails(p);
   glShadeModel(game->screen->shademodel);
 
