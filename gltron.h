@@ -88,6 +88,8 @@ typedef png_texture texture;
 /* resource management */
 #include "texture.h"
 
+#include "console.h"
+
 extern int game_textures;
 extern int n_textures;
 extern texture_info textures[];
@@ -294,13 +296,6 @@ extern keyAction key_actions[];
 
 /* function prototypes */
 /* TODO: sort these */
-
-/* console */
-void consoleInit();
-void consoleAddLine(char *text);
-void consoleDisplay(void(*func)(char *line, int call), int height);
-void consoleScrollForward(int range);
-void consoleScrollBackward(int range);
 
 /* record.c */
 
