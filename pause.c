@@ -13,6 +13,8 @@ void idlePause() {
     stoptime = 0;
     switchCallbacks(&gameCallbacks);
   }
+
+  scripting_RunGC();
   SystemPostRedisplay();
 }
 

@@ -40,6 +40,7 @@ void keyCredits(int k, int x, int y)
 }
 
 void idleCredits() {
+  scripting_RunGC();
   SystemPostRedisplay();
 }
 

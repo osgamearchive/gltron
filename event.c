@@ -215,6 +215,7 @@ void idleGame( void ) {
   doCameraMovement();
   recognizerMovement();
 
+  scripting_RunGC();
   SystemPostRedisplay();
 
 #ifdef LUA_PROFILE
