@@ -13,6 +13,8 @@ fonttex *guiFtx = NULL;
 fonttex *gameFtx = NULL;
 int fontID = 6;
 
+Mesh* recognizer;
+
 Menu** pMenuList;
 Menu* pRootMenu;
 
@@ -22,7 +24,9 @@ Menu *configureKeyMenu;
 float camAngle = 0;
 float cam_phi = 0;
 float cam_chi = 3.14 / 6.0;
-float cam_r = CAM_CIRCLE_DIST;
+float cam_r_mouse = CAM_CIRCLE_DIST;
+float cam_r_follow = CAM_FOLLOW_DIST;
+float cam_r_circle = CAM_CIRCLE_DIST;
 
 unsigned char* colmap = NULL;
 unsigned char* debugtex = NULL;
@@ -31,6 +35,15 @@ int colwidth;
 
 int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
+float camAngles[] = { M_PI / 2, 0, 3 * M_PI / 2, M_PI, 2 * M_PI };
+
+char *cam_names[] = { "circle", "follow", "cockpit", "free" };
+float cam_defaults[][3] =  { 
+  { CAM_CIRCLE_DIST, M_PI, 0 }, /* circle */
+  { CAM_FOLLOW_DIST, M_PI / 4, M_PI / 72 }, /* follow */
+  { CAM_COCKPIT_Z, 0, 0 }, /* cockpit */
+  { CAM_CIRCLE_DIST, M_PI / 3, 0 } /* free */
+};
 
 // screensaver hack
 int stoptime = 0;
@@ -110,3 +123,14 @@ texture_info textures[] = {
   { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX }
 
 };
+
+float shadow_color[] = { 0, 0, 0, .8 };
+// float shadow_color[] = { 1, 1, 1, 1 };
+#define LX 2.0
+#define LY 2.0
+float shadow_matrix[] = { LX * LY, 0,       0, 0, 
+			  0,       LX * LY, 0, 0, 
+			  -LY,    -LX,      0, 0, 
+			  0,       0,       0, LX * LY };
+#undef LX
+#undef LY
