@@ -51,6 +51,9 @@ do_loginrep(Packet packet)
   if( packet.infos.loginrep.accept != 1 )
     {
       printf("login refused : %s.\n",packet.infos.loginrep.message);
+      Net_disconnect();
+      isConnected=0;
+      serverstate=preGameState; //We hope that next time server will be to preGameState
       restoreCallbacks();
       return;
     }
@@ -196,6 +199,14 @@ do_action(Packet packet)
 	}
       slots[packet.infos.action.which].isMaster=1;
       break;
+    case HASSTARTED:
+      //deconnect
+      serverstate=preGameState; //We hope that next time server will be to preGameState
+
+      //Game has started go to netWaitCallbacks;
+      if( serverstate == preGameState )
+	switchCallbacks(&netWaitCallbacks);
+      break;
     }
 }
 
@@ -317,7 +328,7 @@ do_preGameState( Packet packet )
     case SCORE:
       break;
     case ACTION: //Is for PART
-      do_action(packet);
+      do_action(packet);	/*  */
       break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);

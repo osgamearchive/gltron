@@ -59,21 +59,22 @@ void keyboardPause(int key, int unicode, int x, int y) {
   case ' ':
 #ifdef __NETWORK__
     //restart game
-    if( serverstate == preGameState && isConnected && slots[me].isMaster  )
-	{
-	  printf("\nAsk to start the game\n");
-	  packet.which=me;
-	  packet.type=ACTION;
-	  packet.infos.action.type=STARTGAME;
-	  Net_sendpacket(&packet,  Net_getmainsock());
-	  return;
-	}
-#endif   
-
+    if( (serverstate == preGameState) && (isConnected && slots[me].isMaster == 1)  )
+      {
+	printf("\nAsk to start the game\n");
+	packet.which=me;
+	packet.type=ACTION;
+	packet.infos.action.type=STARTGAME;
+	Net_sendpacket(&packet,  Net_getmainsock());
+      } else {
+	printf("\nOnly game master can start the game...\n");
+      }
+#else
     if(game->pauseflag & PAUSE_GAME_FINISHED)
       initData();
     /* lasttime = SystemGetElapsedTime(); */
     switchCallbacks(&gameCallbacks);
+#endif   
     break;
     /* case 'q': SystemExit(); break; */
   case SYSTEM_KEY_F1: defaultDisplay(0); break;

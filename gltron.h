@@ -281,6 +281,7 @@ extern callbacks portCallbacks;
 extern callbacks netPregameCallbacks;
 extern callbacks keyboardreadingCallbacks;
 extern callbacks scoresCallbacks;
+extern callbacks netWaitCallbacks;
 #endif
 
 #define KEY_ACTIONS_N 8

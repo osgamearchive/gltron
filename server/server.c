@@ -86,7 +86,7 @@ do_lostplayer(int which )
 	{
 	  printf("Nobody left: swith to default setting and state is waitState...\n");
 	  //change to waitState
-	  sState=waitState;
+	  sState=waitState;	  
 
 	  //init NetRules
 	  netrulenbwins = 5;
@@ -94,6 +94,7 @@ do_lostplayer(int which )
     
 	  //Change game mode... nothing to do with game things...
 	  game2->mode = GAME_NETWORK_RECORD;
+	  hasstarted=0;
 	} else {
 	  
 	  //TODO: If it was the game master, change that #done
@@ -177,6 +178,23 @@ do_login( int which, Packet packet )
       slots[which].sock=NULL;
       return;
     }
+
+  if( hasstarted )
+    {
+      //game has already started, this player must be inform that it already has started!      
+      rep.which = SERVERID;
+      rep.type  = ACTION;
+      rep.infos.action.type=HASSTARTED;
+      Net_sendpacket(&rep, slots[which].sock);
+      Net_closesock(slots[which].sock);
+      Net_delsocket(slots[which].sock);
+      slots[which].active=0;
+      slots[which].sock=NULL;
+      //TODO: change that, make client possible to stay connected and be advice when
+      //game is finished...
+      return; //return here, client will have to reconnect later
+    }
+
   //Look if it is a game master
   if( nbUsers == 0 )
     {
@@ -218,7 +236,7 @@ do_login( int which, Packet packet )
   //TODO : Check for duplicate login #done
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if( slots[i].active && ! strcmp(packet.infos.login.nick, slots[i].name) )
+      if( ( slots[i].active == 1 ) && (! strcmp(packet.infos.login.nick, slots[i].name)) )
 	break;
     }
   if( i < MAX_PLAYERS )
@@ -281,7 +299,6 @@ do_login( int which, Packet packet )
   rep.infos.netrules.time   = netruletime;
   printf("Net rules : %d %d\n", netrulenbwins,  netruletime);
   Net_sendpacket(&rep, slots[which].sock);
-
 }
 
 void
@@ -415,6 +432,8 @@ do_startgame( int which, Packet packet )
 	  Net_sendpacket(&rep, slots[i].sock);
 	}
     }
+  if( ! hasstarted )
+    hasstarted = 1;
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
   printf("starting game with %d players\n", game->players); 
@@ -774,6 +793,8 @@ do_wingame( int winner)
 	{
 	  netscores.points[i]=0;
 	}
+      hasstarted=0;
+
     }
 
   game->pauseflag = PAUSE_GAME_FINISHED;

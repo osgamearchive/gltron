@@ -148,6 +148,7 @@ extern Slots             slots[MAX_PLAYERS];
 extern Netscores         netscores;
 
 extern int server_port;
+extern int hasstarted;
 
 #endif
 
