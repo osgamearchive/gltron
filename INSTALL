@@ -1,27 +1,20 @@
-Installation (general things).
+Installation from source
 
 for URL's on how to get these packages see
-http://www.ards.net/Andreas/gltron.html#links
+http://www.gltron.org/
 
 Get a working OpenGL / Mesa
 Get libpng / zlib (standard on allmost any system)
-Get SDL-1.1 and SDL_mixer and SDL_net
-(from http://www.devolution.com/~slouken/SDL/index.html)
+Get SDL-1.1 and SDL_mixer 
 
 Installation
 
 ./configure
 make
 
-Note: ./configure might fail to find some libraries, I haven't completely
-figured it out yet. If you're sure that you have all the necessary libs,
-just skip running ./configure and type 'make'.
-
 Type './gltron' to play!
 
-Optionally do (as root):
-
-make install
+Note: make install is currently broken
 
 make install will install gltron in GLTRON_INSTALLDIR and some other files
 in GLTRON_HOME as defined in the Makefile. By default, GLTRON_INSTALLDIR

@@ -1,25 +1,12 @@
-prerelease things:
-(2) do drop shadows
-(3) save key definitions to .gltronrc
-
-soon after:
-(1) panning for the camera
+todo:
+(2) recognizer sound
 (2) replay capabilities / fix demo recording / playback
-
-bugs:
-(2) demo playpack is broken after interrupt (Escape) 
-(6) switching resolution still leaks a little memory
-
-possible bugs:
-(0) more memory leaks
-(0) failing malloc's arent caught, might lock up application/system
-(0) some attributes are not saved to .gltronrc
-todo: 
+(1) bug ShreadWheat about his point-of-interest ai technology
+(2) make key pressed modifier immune (shift/capslock, etc.)
 (2) generate uv-coordinates for the model
 (1) fix back-to-front rendering
-(2) fix/find lighting problems
 (2) work a bit more on line antialiasing (trail tops)
-(2) implement one of the two top-down views and arrange HUD
+(2) make HUD configurable
 (2) size HUD according to screen resolution
 (0) investigate mipmapping artefacts under win32
 (0) check USB keyboards. can't they record multiple key presses?
@@ -32,12 +19,18 @@ todo:
 (0) fix bitmap bug to allow even faster software rendering
 (0) write software mouse cursor
 (0) move cycle behind posx, posy
-(0) generate lightcycle floor shadow
 (0) add more special effects (reflections etc.)
 (0) check various TODOs in the code
-(0) win32: sdl should dynamically load 3dfx opengl for Voodoo 1&2
-(0) make score display configurable
+(0) dynamically load OpenGL
 (0) add slightly funny console messages (Robot ate Andi's tail)
 (0) investigate halo
-at release time:
 (0) proper documentation
+
+bugs:
+(2) demo playpack is broken after interrupt (Escape) 
+(1) sound samples might overflow
+
+possible bugs:
+(0) more memory leaks
+(0) failing malloc's arent caught, might lock up application/system
+(0) some attributes are not saved to .gltronrc

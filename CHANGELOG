@@ -1,8 +1,28 @@
-0.59 to current
+0.59 to 0.60
+
+Usage:
+- new camera controls, use the mouse to tweak/rotate/zoom
+- removed the 2D map
+- simplified the menu structure
+Graphics:
+- vastly better visuals due to lighting & shadows
+- fixed many rendering artefacts
+- added recognizers
+- new textures / create your own
+Audio:
+- 3D positional sound & doppler effects
+Gameplay:
+- more movie-like default
+- much much stronger AI options (try to beat the MCP)
+Others:
+- in-game credits
+
+some details (outdated):
 - fixed load/save of player options (computer/human/none)
 - fixed crash on exit on linux/3dfx
 - converted all '// ... ' comments to '/* ... */' for added portability
-- added z-tests for everything non-transparent
+- added z-tests for almost everything to prevent visual artefacts
+- back-to-front ordering of transparent surfaces (sort-of)
 - converted 0 to NULL for null pointers
 - changed internals for:
 - collision detection, turns, movement, trails, 
@@ -15,6 +35,10 @@
 - added ligthing for trails
 - added shadows to trails
 - added line to trail-top to make them appear 'thick'
+- added 'art-pack' support
+- rewritten texture handling / loading. added 'fallback' path
+- texture repeat or stretch on larger arenas (configurable)
+- too many to add
 
 0.53 to 0.59
 most important visible changes (including the ones to 0.59beta)
