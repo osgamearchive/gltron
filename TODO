@@ -3,26 +3,12 @@ TODO list
 (name) reported it (contact for questions)
 [name] plans to fix it (contact for updates/patches)
 
-Bugs [high priority]:
-- check cycle & recognizer sounds again (pause/menu/unpause/game)
-
-Features [high priority]:
-
-- stream music from disk instead of reading the whole file to memory
-  (serious OS 9 problem, for example), this allows handling of large mp3 files
-  too and gets rid of the fixed size buffer
-- fast finish should be relative to the arena size (or really finish instantly)
-
 Optimizations/Cleanups [high priority]
 
 Documentation & Packaging:
 
 - apply icon to win32 version
-- check for appname: in win32 it seems to be 'SDL_app'
-
 - decide about artpacks & sound & music included
-- Tune diffuse / specular materials for the lightcycle, trail & recognizers
-  [ nicolas, kokido ]
 
 Bugs [medium priority]:
 - fix messed up normals on the back fender of the lightcycle-high model
@@ -45,6 +31,9 @@ Optimizations/Cleanups [medium priority]
 - delete the sound object in Audio_Quit to allow restarting the whole
   sound system without memory leaks
 - check various TODOs and FIXMEs in the code
+
+- Tune diffuse / specular materials for the lightcycle, trail & recognizers
+  [ nicolas, kokido ]
 
 Bugs [low priority]:
 
