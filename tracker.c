@@ -3,6 +3,7 @@
 static Trackerslots servers[MAX_SLOTS];
 static Wlist       *serverlist = NULL;
 static WrootControl *trackerControls = NULL;
+static Wstatictext *servertext = NULL;
 static int nbservers = 0;
 
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
@@ -52,9 +53,8 @@ void
 tracker_infos(Trackerpacket *packet)
 {
   int which = packet->which;
-  //char **cols;
   char  host[255];
-  //char *cols[6];
+  char  str[255];
   int i;
 
   //here we get the information from a server
@@ -91,26 +91,6 @@ tracker_infos(Trackerpacket *packet)
   printf("nbplayers   : %d\n",servers[which].nbplayers ); 
   printf("------------------------------------------\n");
 
-/*   cols = (char**)malloc(sizeof(char*)*6); */
-/*   for(i=0; i<6; ++i) */
-/*     { */
-/*       cols[i] = (char *) malloc(255); */
-/*     } */
-
-/*   sprintf(cols[0], "%d.%d.%d.%d:%d", */
-/* 	 (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24, */
-/* 	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16, */
-/* 	 (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8, */
-/* 	 ntohl(servers[which].ipaddress.host) & 0x000000ff, */
-/* 	  servers[which].ipaddress.port); */
-/*   sprintf(cols[1], "v:%d s:%d e:%d", servers[which].speed, */
-/* 	  servers[which].size, servers[which].erase); */
-/*   sprintf(cols[2], "%s", servers[which].description); */
-/*   sprintf(cols[3], "%d", servers[which].nbplayers); */
-/*   sprintf(cols[4], "%s", servers[which].version); */
-/*   sprintf(cols[5], "%d", servers[which].ping); */
-
-
   sprintf(host, "%d.%d.%d.%d",
 	  (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
 	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16,
@@ -128,6 +108,9 @@ tracker_infos(Trackerpacket *packet)
       setCell_wlist ( serverlist, (char *)&servers[which].nbplayers, sizeof(int), i, 2 );
       setCell_wlist ( serverlist, (char *)&servers[which].ping, sizeof(int), i, 3 );
     }
+  sprintf(str, "%d gltron server%c.", nbservers, (nbservers > 1 )? 's':' ');
+  set_wstatictext(servertext, str);
+  
 }
 
 void
@@ -201,71 +184,13 @@ displayServerLegend()
 void
 displayTrackerScreen()
 {
-  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { .8, .1, .1 }};
-  int x, y;
-  int h;
-  char str[255];
-
   rasonly(game->screen);
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  //draw Title
-  h = game->screen->vp_h / (24 * 1.5);
-
-
-  glColor3fv(colors[0]);
-/*   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) ); */
-/*   y = game->screen->vp_h - 1.5 * h; */
-  /* drawText(gameFtx, x, y, h+3, "GLTRON SERVERS"); */
-  
-  //draw server info
-  /* displayServerLegend(); */
-
-  //draw server list
-  //draw_wlist(serverlist);
-
-
-  //Display errors
-  /* y = 1.5 * h * 2; */
-/*   glColor3fv(colors[3]); */
-/*   if(getcurrent_wlist(serverlist)>=0 ) */
-/*     { */
-/*       if( servers[getcurrent_wlist(serverlist)].packets > 0 && ((servers[getcurrent_wlist(serverlist)].ping/servers[getcurrent_wlist(serverlist)].packets) > PINGLIMIT)) */
-/* 	{ */
-/* 	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION)) */
-/* 	    { */
-/* 	      sprintf(str, "Your version is not comptatible and ping is too high" ); */
-/* 	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) ); */
-/* 	      drawText(netFtx, x, y, h-1, str); */
-/* 	    } else { */
-/* 	      sprintf(str, "ping is too high"); */
-/* 	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) ); */
-/* 	      drawText(netFtx, x, y, h-1, str); */
-/* 	    } */
-/* 	} else { */
-/* 	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION)) */
-/* 	    { */
-/* 	      sprintf(str, "Your version is not comptatible"); */
-/* 	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) ); */
-/* 	      drawText(netFtx, x, y, h-1, str); */
-/* 	    } */
-/* 	} */
-/*     } */
-
-
-  //draw number of servers
-  y = 1.5 * h;
-  glColor3fv(colors[1]);
-  sprintf(str, "%d gltron servers.", nbservers);
-  x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
-  drawText(netFtx, x, y, h, str);
-
-
   updateControls(trackerControls);
   drawMouse();
   SystemSwapBuffers();
-
 }
 
 void
@@ -369,22 +294,6 @@ drawit( WlistPtr list, int x, int y, int line, int col )
   glVertex3f(x+1, y-h/2-1, 0.0f);         //Bottom left
   glEnd();
 
-
-  //glColor3f(list->colDefs[col].color[0], list->colDefs[col].color[1], list->colDefs[col].color[2] );
-  /* glColor3f(.8, .4, .4); */
-/*   glBegin(GL_LINES); */
-/*   glVertex2d(x,                                            y-h/2); */
-/*   glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y+h/2); */
-/*   glEnd(); */
-/*   glBegin(GL_LINES); */
-/*   glVertex2d(x,                                            y+h/2); */
-/*   glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y-h/2); */
-/*   glEnd(); */
-
-
-  //fprintf(stderr, "line %d col %d\n", line, col);
-  //fprintf(stderr, "%s\n", serverlist->lines[line][col]);
-  //drawText(netFtx, x, y-h/2+7, s, serverlist->lines[line][col]);
   
 }
 
@@ -681,13 +590,19 @@ initTracker()
  
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
 
+  x = game->screen->vp_w/2 - 1.5 * 12 *( game->screen->vp_w / (50 * 1.5) );
+  y = 1.5 * h;
+  servertext = new_wstatictext( x, y, 1.5 * 24 *( game->screen->vp_w / (50 * 1.5)), h+2, "Loading servers list ...", h, netFont, colors[1]);
+
+  newControl(trackerControls, (Wptr)servertext, WstaticText);
+
   //a button for testing
   newControl(trackerControls, (Wptr)new_wbutton(game->screen->vp_w/2-40, 40, 80, 15, "Refresh", NULL, buttonaction, NULL, buttonMouseFocus), WcontrolButton);
 
   //title
   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h;
-  newControl(trackerControls, (Wptr)new_wstatictext( x, y, x+1.5 * 7 *( game->screen->vp_w / (50 * 1.5)*14), h+5, "GLTRON SERVERS", h+3, gameFont, colors[0]), WstaticText);
+  newControl(trackerControls, (Wptr)new_wstatictext( x, y, 1.5 * 14 *( game->screen->vp_w / (50 * 1.5)), h+5, "GLTRON SERVERS", h+3, gameFont, colors[0]), WstaticText);
 
 
 

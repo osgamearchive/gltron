@@ -35,7 +35,9 @@ draw_wstatictext(Wstatictext *wstatictext)
   fonttex *theFont=NULL;
   int      maxchar;
   char    *str;
-  
+  int      x;
+  int      y;
+
   glColor3fv(wstatictext->color);
 
   switch( wstatictext->font )
@@ -60,7 +62,11 @@ draw_wstatictext(Wstatictext *wstatictext)
   str = (char *)malloc(maxchar+1);
   strncpy(str, wstatictext->text, maxchar);
 
-  drawText(theFont, wstatictext->x, wstatictext->y, wstatictext->size, str);
+  //draw middle of the box
+  x = wstatictext->x + wstatictext->width/2 - wstatictext->size*strlen(str)/2;
+  y = wstatictext->y + (wstatictext->height-wstatictext->size)/2;
+
+  drawText(theFont, x, y, wstatictext->size, str);
   free(str);
 }
 
