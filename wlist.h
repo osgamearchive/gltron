@@ -110,5 +110,5 @@ Wrect getRect_wlist( Wlist *wlist );
 /** Mouse events */
 void mouse_wlist( Wlist *wlist, int buttons, int state, int dblClick, Wpoint mousexy );
 void mouseMotion_wlist( Wlist *wlist, Wpoint mousexy );
-void mouseFocus_wlist( Wlist *wlist, Wpoint mousexy );
+int  mouseFocus_wlist( Wlist *wlist, Wpoint mousexy );
 #endif

@@ -466,19 +466,20 @@ if( wlist->focus != NULL )
     wlist->focus(wlist, wlist->index[wlist->current]);
 }
 
-void
+int
 mouseFocus_wlist( Wlist *wlist, Wpoint mousexy )
 {
   int line;
   
   line = find_line_wlist(wlist, mousexy);
   if( line == -1 )
-    return;
+    return 0;
   line+=wlist->scroll;
   
   if( line >= wlist->rlines )
-    return;
+    return 0;
   
   if( wlist->mouseFocus != NULL )
     wlist->mouseFocus(wlist, wlist->index[line], mousexy);
+  return 1;
 }

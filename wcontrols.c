@@ -50,6 +50,7 @@ newControl( WrootControl  *root, Wptr control, int type )
     case WoutputText:
       break;
     case  WstaticText:
+      wcontrol->controlRect = getRect_wstatictext((Wstatictext*)wcontrol->control);
       break;
     case Wlistbox:
       wcontrol->controlRect = getRect_wlist((Wlist*)wcontrol->control);
@@ -168,6 +169,7 @@ updateControls( WrootControl  *root )
 	  draw_wtext((Wtext*)wcontrol->control);
 	  break;
 	case  WstaticText:
+	  draw_wstatictext((Wstatictext*)wcontrol->control);
 	  break;
 	case Wlistbox:
 	  draw_wlist((Wlist *)wcontrol->control);
@@ -180,6 +182,7 @@ updateControls( WrootControl  *root )
     }
   
   //drawing mouse focus
+  //printf("SDL_GetTicks() %d root->lastFocus %d\n", SDL_GetTicks(), root->lastFocus);
   if( root->activeFocus && (SDL_GetTicks() - root->lastFocus) > 1500 )
     {
       wcontrol = getControl( root, root->currentFocus );
@@ -203,7 +206,7 @@ updateControls( WrootControl  *root )
 	case  WstaticText:
 	  break;
 	case Wlistbox:
-	  mouseFocus_wlist((Wlist *)wcontrol->control, pt );
+	  root->activeFocus = mouseFocus_wlist((Wlist *)wcontrol->control, pt );
 	  break;
 	case Wscrollbar:	  
 	  break;
@@ -297,20 +300,21 @@ mouseControls( WrootControl  *root, Wpoint mousexy )
   
   if( wcontrol == NULL )
     {
-      root->activeFocus = 0;
+      root->activeFocus  = 0;
+      root->currentFocus = -1;
       return;
     }
  
 
 
-  if( root->activeFocus && i == root->currentFocus )
+  if( root->activeFocus == 1 && i == root->currentFocus )
     return;
     
   root->currentFocus  = i;
-  root->lastFocus     = SDL_GetTicks();
   root->activeFocus   = 1;
+  root->lastFocus     = SDL_GetTicks();
 
-  printf("new focus is %d", root->currentFocus );
+  printf("new focus is %d\n", root->currentFocus );
 
 /*   switch( wcontrol->type ) */
 /*     { */
@@ -405,7 +409,8 @@ freeRootControl( WrootControl *root)
 	case WoutputText:
 	  free_wtext((Wtext*)wcontrol->control);
 	  break;
-	case  WstaticText:
+	case WstaticText:
+	  free_wstatictext((Wstatictext*)wcontrol->control);
 	  break;
 	case Wlistbox:
 	  free_wlist((Wlist *)wcontrol->control);

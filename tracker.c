@@ -217,10 +217,10 @@ displayTrackerScreen()
   glColor3fv(colors[0]);
   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h;
-  drawText(gameFtx, x, y, h+3, "GLTRON SERVERS");
+  /* drawText(gameFtx, x, y, h+3, "GLTRON SERVERS"); */
   
   //draw server info
-  displayServerLegend();
+  /* displayServerLegend(); */
 
   //draw server list
   //draw_wlist(serverlist);
@@ -580,7 +580,13 @@ initTracker()
 {
   float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { .4, 0.9, .4 }};
   ColDef *colDefs;
+  int x, y, h;
 
+ //draw Title
+  h = game->screen->vp_h / (24 * 1.5);
+
+
+  
 
 
   glShadeModel(GL_FLAT);
@@ -608,6 +614,14 @@ initTracker()
 			 10, 4, colDefs, 3, focus, action, mousefocus );
  
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
+
+  //title
+  x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );
+  y = game->screen->vp_h - 1.5 * h;
+  newControl(trackerControls, (Wptr)new_wstatictext( x, y, x+1.5 * 7 *( game->screen->vp_w / (50 * 1.5)*14), h+5, "GLTRON SERVERS", h+3, gameFont, colors[0]), WstaticText);
+
+
+
 
   setCurrentControl( trackerControls, (Wptr)serverlist );
 
