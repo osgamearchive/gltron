@@ -2,7 +2,7 @@ TODO list
 
 Bugs:
 
-- stray lightcycle sounds? (sem)
+- transparent trails don't work (sem,Andreas)
 - Make install doesn't work (Andreas)
 - Visual artefact in the lightcycle trail between textured/untextured bow
   (Andreas)
