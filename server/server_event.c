@@ -3,6 +3,9 @@
 int processEvent(GameEvent* e) {
   int value = 0;
   Data *data;
+  int  i;
+  int  sState = preGameState;
+  pServRepHdr    serverRep;
 
   //if(game2->mode == GAME_PLAY) {
     writeEvent(e);
@@ -48,6 +51,24 @@ int processEvent(GameEvent* e) {
     printf("%s\n", messages);
 
     game->pauseflag = PAUSE_GAME_FINISHED;
+    //start a new game...
+    game2->mode = GAME_NETWORK_RECORD;
+    
+    //go to pregame state...
+
+    serverRep = (pServRepHdr) malloc( sizeof(tServRepHdr) );
+    
+    serverRep->which = SERVERID;
+    serverRep->type  = chgeState;	
+    for(i=0; i<4; ++i)
+      {
+	if( slots[i].active )
+	  {
+	    SDLNet_TCP_Send(slots[i].sock,(char *)serverRep, sizeof(tServRepHdr));
+	    SDLNet_TCP_Send(slots[i].sock,(char *)&sState,sizeof(int));
+	  }
+      }
+    free(serverRep);
     value = 1;
     break;
   }

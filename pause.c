@@ -10,7 +10,15 @@ void idlePause() {
 #endif
 
 #ifdef __NETWORK__
-  switchCallbacks(&gameCallbacks);
+  if( serverstate == gameState )
+    {
+      switchCallbacks(&gameCallbacks);
+    } else {
+      if( isConnected && Net_checkSocks() )
+	{
+	  handleServer();
+	}
+    }
 #endif
 
   /* 
@@ -41,6 +49,15 @@ void keyboardPause(int key, int unicode, int x, int y) {
     switchCallbacks(&guiCallbacks);
     break;
   case ' ':
+    //restart game
+    if( serverstate == preGameState && isConnected  )
+	{
+	  printf("\nAsk to start the game\n");
+	  Send_header( startGame, me, 0, 0 );
+	  return;
+	}
+    
+
     if(game->pauseflag & PAUSE_GAME_FINISHED)
       initData();
     /* lasttime = SystemGetElapsedTime(); */

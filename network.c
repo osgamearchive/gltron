@@ -128,8 +128,10 @@ doChgeStateNetEvent()
   print_serverState(newState);
   if( newState == preGameState )
     {
-      Recv_netGameSettings(&netSettings);
-      printNetGameSettings(&netSettings);
+      if( serverstate != gameState ) {
+	Recv_netGameSettings(&netSettings);
+	printNetGameSettings(&netSettings);
+      }
     }
   serverstate = newState;
   if( serverstate == gameState)
