@@ -214,7 +214,7 @@ int main( int argc, char *argv[] ) {
 }
 
 callbacks gameCallbacks = { 
-  displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion
+  displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
 };
 
 

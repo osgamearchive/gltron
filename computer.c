@@ -22,12 +22,12 @@ static int probe_dists[][2] = {
 };
 
 /*
-static int target_dir[][2] = {
+	static int target_dir[][2] = {
   { 0, 1 },
   { 2, 1 },
   { 3, 0 },
   { 3, 2 }
-};
+	};
 */
 
 static int turn_time[] = {
@@ -72,8 +72,8 @@ void doComputer(int player, int target) {
       setPos(data, &x, &y);
       getDistPoint(data->dir, j, &x, &y);
       if(getCol(x, y)) {
-	ai->danger = j;
-	break;
+				ai->danger = j;
+				break;
       }
     }
     if(ai->danger != 0) break;
@@ -87,16 +87,16 @@ void doComputer(int player, int target) {
       setPos(data, &x, &y);
       getDistPoint(LEFT(data->dir), i, &x, &y);
       if(getCol(x, y)) {
-	ldist = i;
-	break;
+				ldist = i;
+				break;
       } else { ldist = i; }
     }
     for(i = 1; i < MAX_PROBE_DIST; i++) {
       setPos(data, &x, &y);
       getDistPoint(RIGHT(data->dir), i, &x, &y);
       if(getCol(x, y)) {
-	rdist = i;
-	break;
+				rdist = i;
+				break;
       } else { rdist = i; }
     }
     /* decide where to turn */
@@ -111,11 +111,11 @@ void doComputer(int player, int target) {
       ai->tdiff++;
     } else {
       if(ai->tdiff > 0) { 
-	createEvent(player, EVENT_TURN_RIGHT);
-	ai->tdiff--; }
+				createEvent(player, EVENT_TURN_RIGHT);
+				ai->tdiff--; }
       else { 
-	createEvent(player, EVENT_TURN_LEFT);
-	ai->tdiff++; }
+				createEvent(player, EVENT_TURN_LEFT);
+				ai->tdiff++; }
     }
     ai->danger = 0;
     ai->lasttime = game2->time.current;
@@ -145,7 +145,7 @@ static int freeway2(const Data* data, int xdir, int ydir, int c) {
   }
 
   while(getCol(data->iposx + xdir * c, 
-	       data->iposy + ydir * c) == 0) c++;
+							 data->iposy + ydir * c) == 0) c++;
   return c;
 }
 
