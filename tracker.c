@@ -621,6 +621,7 @@ mousemotionTracker( int mx, int my )
 
   setMouse( mx, my );
   mouseControls( trackerControls, pt );
+
 }
 
 callbacks trackerscreenCallbacks = {

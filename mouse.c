@@ -31,6 +31,14 @@ setMouse( int nx, int ny )
 {
   x=nx;
   y=game->screen->vp_h-ny;
+  if( y < 0 )
+    y = 0;
+  if( x < 0 )
+    x = 0;
+  if( y > game->screen->vp_h )
+    y = game->screen->vp_h;
+  if( x > game->screen->vp_w )
+    x = game->screen->vp_w;
 }
 
 

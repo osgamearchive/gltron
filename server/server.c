@@ -353,9 +353,9 @@ do_login( int which, Packet packet )
   rep.infos.gameset.gamespeed    = game->settings->game_speed;
   rep.infos.gameset.arena_size   = game->settings->arena_size;
   rep.infos.gameset.ai_level     = game->settings->ai_level;
-  printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
-	 packet.infos.gameset.eraseCrashed,
-	 packet.infos.gameset.arena_size);
+  printf("GameSet : %d %d %d\n", rep.infos.gameset.gamespeed,
+	 rep.infos.gameset.eraseCrashed,
+	 rep.infos.gameset.arena_size);
   Net_sendpacket(&rep, slots[which].sock);
   lastping=SystemGetElapsedTime()-4500;
 
