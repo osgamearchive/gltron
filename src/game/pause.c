@@ -46,7 +46,7 @@ void keyboardPause(int state, int key, int x, int y) {
 		break;
 
 	default:
-    if(game->pauseflag & PAUSE_GAME_FINISHED)
+    if(game->pauseflag == PAUSE_GAME_FINISHED)
       initData();
     /* lasttime = SystemGetElapsedTime(); */
     SystemExitLoop(RETURN_GAME_UNPAUSE);
