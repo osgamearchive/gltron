@@ -12,15 +12,15 @@ static int    starting      = 0;
 static Uint32 starttime     = 0;
 static int    timetostart   = 0;
 static int    timeserver    = 0;
-static int    synchCount    = 0;
 static int    nbSynch       = 0;
+static Uint32 base;
 
 static int  getping();
 static void makeping();
 
 typedef struct {
-  int lag;
-  int phase;
+  float   lag;
+  int     phase;
 } Synch;
 
 static Synch synch[MAX_PLAYERS];
@@ -603,7 +603,9 @@ do_startgame( int which, Packet packet )
 
   //Start Synch
   clear_synch();
-  game2->time.current = SDL_GetTicks();
+  base                             = (Uint32)SDL_GetTicks();
+
+  //Send first synch packet
   rep.which                        = SERVERID;
   rep.type                         = SYNCH;
   rep.infos.synch.t1               = 0;
@@ -616,8 +618,7 @@ do_startgame( int which, Packet packet )
 	  Net_sendpacket(&rep, slots[i].sock);
 	}
     }
-  synchCount = 1;
-  nbSynch    = 1;
+  nbSynch    = 0;
 
 }
 
@@ -888,7 +889,7 @@ do_synch( int which, Packet packet )
 {
   Packet rep;
   int    i;
-  int users = 0;
+  int    users = 0;
   Uint32 now;
 
   for(i = 0; i < MAX_PLAYERS; ++i ) 
@@ -897,49 +898,13 @@ do_synch( int which, Packet packet )
 	users++;
     }
 
+  if ( nbSynch / users >= 5 )
+    {
 
-  
-  printf(">>>>>>>>>>>>>>>>>> phase %d from synch %d-%d\n", synch[ packet.which ].phase, synchCount, nbSynch);
-  switch( synch[ packet.which ].phase ) {
-  case 0:
-    now = SystemGetElapsedTime() -  game2->time.current;
-    synch[packet.which].lag = ( now - packet.infos.synch.t1 ) / 2;	
-    rep.infos.synch.t2      = packet.infos.synch.t2;
-    printf("now %d\n", now);
-    break;
-  case 1:
-    now = SystemGetElapsedTime() -  game2->time.current;
-    synch[packet.which].lag += packet.infos.synch.t1;
-    rep.infos.synch.t2               = ( now - packet.infos.synch.t2 ) / 2 ;
-    break;
-  default:
-    printf("synch error %d users %d\n", synchCount, users);
-    break;
-  }
-  synch[ packet.which ].phase++;
-  //Start Synch
-  rep.which                        = SERVERID;
-  rep.type                         = SYNCH;
-  rep.infos.synch.t1               = SystemGetElapsedTime() - game2->time.current + synch[packet.which].lag;
-  
-  
-  Net_sendpacket(&rep, slots[which].sock);
-  synchCount++;
-  if( synch[ packet.which ].phase >= 2 )
-    {
-      printf(">>>>>>>>>>>>> start synch %d\n", synchCount / users);
-      clear_synch();
-      game2->time.current = SDL_GetTicks();
-      rep.which                        = SERVERID;
-      rep.type                         = SYNCH;
-      rep.infos.synch.t1               = 0;
-      rep.infos.synch.t2               = ~0L;
-      synchCount = 1;
-      nbSynch++;
-      Net_sendpacket(&rep, slots[which].sock);
-    }
-  if ( nbSynch / users >= 4 )
-    {
+      game2->time.current   = (int)now;
+      game2->time.lastFrame = (int)now;
+      game2->time.current   = (int)now;
+      game2->time.offset    = SystemGetElapsedTime();
       printf("######################## TIME %d #####################\n", game2->time.current);
       sState = gameState;
       rep.which=SERVERID;
@@ -955,7 +920,6 @@ do_synch( int which, Packet packet )
 	      Net_sendpacket(&rep, slots[i].sock);
 	    } 
 	}
-      game2->time.offset    = game2->time.current;
       
       if( ! hasstarted )
 	{
@@ -967,6 +931,46 @@ do_synch( int which, Packet packet )
       game2->mode = GAME_SINGLE;
       return;
     }
+  
+  //Do synch
+  printf(">>>>>>>>>>>>>>>>>> phase %d from synch %d\n", synch[ packet.which ].phase,nbSynch);
+  switch( synch[ packet.which ].phase ) {
+  case 0:
+    now = SDL_GetTicks() -  base;
+    printf("now %d\n", now);
+    synch[packet.which].lag = ( now - packet.infos.synch.t1 ) / 2.0;	
+    rep.infos.synch.t2      = packet.infos.synch.t2;
+    break;
+  case 1:
+    now = SDL_GetTicks() -  base;
+    printf("now %d\n", now);
+    synch[packet.which].lag += packet.infos.synch.t1;
+    rep.infos.synch.t2               = ( now - packet.infos.synch.t2 ) / 2 ;
+    break;
+  default:
+    printf("synch error %d users %d\n", synch[ packet.which ].phase, users);
+    break;
+  }
+  synch[ packet.which ].phase++;
+  //Start Synch
+  rep.which                        = SERVERID;
+  rep.type                         = SYNCH;
+  rep.infos.synch.t1               = SDL_GetTicks() - base + (Uint32)synch[packet.which].lag;
+  
+  
+  Net_sendpacket(&rep, slots[which].sock);
+  if( synch[ packet.which ].phase >= 2 )
+    {
+      printf("---------------- >>>> nbSynch %d\n", nbSynch);
+      clear_synch();
+      rep.which                        = SERVERID;
+      rep.type                         = SYNCH;
+      rep.infos.synch.t1               = 0;
+      rep.infos.synch.t2               = ~0;
+      nbSynch++;
+      Net_sendpacket(&rep, slots[which].sock);
+    }
+
 
 }
 

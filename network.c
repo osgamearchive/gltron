@@ -17,7 +17,8 @@ static const int chatcolor[4] = {4, 2, 5, 0};
 static Uint32 ping[5]       = {0, 0, 0, 0, 0};
 static Uint32 savedtime     = 0;
 static int    observerstate = 0;
-static Sint32 current = 0;
+static Uint32 now;
+static Uint32 base;
 
 //Enums----------------------------------------------------------------------------------------
 enum
@@ -143,9 +144,6 @@ do_loginrep(Packet packet)
   strcpy(server_message, packet.infos.loginrep.message);
   updateUsersListData();
   nbUsers++;
-  synchCount    = 0;
-  nbSynch       = 0;
-  current = 0;
   switchCallbacks(&netPregameCallbacks);
 }
 
@@ -185,8 +183,10 @@ do_serverinfo(Packet packet)
 	  game2->players=nbUsers;
 
 	  applyGameInfo();
-
-	  printf("######################## TIME %d #####################\n", game2->time.current);
+	  game2->time.current   = now;
+	  game2->time.lastFrame = now;
+	  game2->time.current   = now;
+	  game2->time.offset    = SystemGetElapsedTime();
 #ifdef DEBUG
 	  printf("time is %d\n", game2->time.current);
 #endif
@@ -224,6 +224,8 @@ do_serverinfo(Packet packet)
 	  game2->mode = GAME_NETWORK_PLAY;
 	  ping[0] = slots[me].ping;
 	  savedtime  = 0;
+	  game2->time.current   = now;
+	  printf("######################## << TIME %d >> #####################\n", game2->time.current);
 	  //game2->time.current=0;
 
 #ifdef DEBUG	  
@@ -596,12 +598,9 @@ do_event(Packet packet)
 }
 
 
-int    synchCount    = 0;
-int    nbSynch       = 0;
-
 typedef struct {
-  int lag;
-  int phase;
+  float   lag;
+  int     phase;
 } Synch;
 
 static Synch synch;
@@ -612,71 +611,55 @@ clear_synch() {
   synch.phase = 0;
 }
 
-Uint32 base;
-
+int nbSynch;
 void
 do_synch( Packet packet )
 {
   Packet rep;
-  char   str[2];
-  int    now;
-  if( nbSynch == 0 && synchCount == 0 )
-    current = 0;
-  if ( nbSynch  >= 5 )
-    {
-      game2->time.current   = current;
-      game2->time.lastFrame = current;
-      game2->time.current   = current;
-      game2->time.offset    = SystemGetElapsedTime();
-      printf("######################## TIME %d #####################\n", current);
-/*       game2->time.current = SystemGetElapsedTime(); */
-/*       rep.infos.synch.t1 = packet.infos.synch.t1; */
-/*       rep.infos.synch.t2 = game2->time.current;       */
-      return;
-    }
+  char   str[3];
+  Sint32 now;
   
-  if( synchCount  >= 3 )
-    {
-      printf("######################## TIME %d #####################\n", current);
-      synchCount = 0;
-      sprintf(str, "%d", 5 - nbSynch );
-      insert_wtext(pregame.pregametext, str, 3);
-      clear_synch();
-      nbSynch++;
-      
-    }
   rep.which                        = me;
   rep.type                         = SYNCH;
-  printf(">>>>>>>>>>>>>>>>>> phase %d from synch %d-%d\n", synch.phase, synchCount, nbSynch);
   switch( synch.phase ) {
   case 0:
-    base = SystemGetElapsedTime();
+    base = SDL_GetTicks();
     rep.infos.synch.t1  = packet.infos.synch.t1;
     rep.infos.synch.t2  = 0 ;
     Net_sendpacket(&rep, Net_getmainsock());
+    synch.phase++;
     break;
   case 1:
-    now =  SystemGetElapsedTime() - base;
-    printf("----------->>>>>>>>>>>> now %d\n", now);
+    now =  SDL_GetTicks() - base;
     synch.lag = ( now - packet.infos.synch.t2 ) / 2.0;
-    printf("lag = %d\n", synch.lag);
+    printf("lag = %f\n", synch.lag);
     base -= synch.lag;
     now +=  synch.lag;
-    rep.infos.synch.t1  = ( now - packet.infos.synch.t1 ) / 2;
-    rep.infos.synch.t2  = now;
+    printf("----------->>>>>>>>>>>> now %d\n", now);
+    rep.infos.synch.t1  = ((Sint32)( now - packet.infos.synch.t1 )) / 2;
+    rep.infos.synch.t2  = SDL_GetTicks() - base + synch.lag;
     Net_sendpacket(&rep, Net_getmainsock());
+    synch.phase++;
     break;
   case 2:
-    now =  SystemGetElapsedTime() - base;
-    printf("----------->>>>>>>>>>>> now %d ( %d )\n", now, packet.infos.synch.t2);
-    current += ( Sint32 ) ( now + packet.infos.synch.t2 ) / 2;
+    now   =  SDL_GetTicks() - base;
+    synch.lag  += (Sint32)packet.infos.synch.t2;
+    base -= (Sint32)packet.infos.synch.t2;
+    now  += (Sint32)packet.infos.synch.t2;
+    printf("----------->>>>>>>>>>>> now %d\n", now);
+    sprintf(str, "%d\n", 5 - nbSynch );
+    if( nbSynch == 5 )
+      nbSynch = 0;
+    else
+      nbSynch++;
+
+    clear_synch();
+    insert_wtext(pregame.pregametext, str, 3);
     break;
   default:
     printf(">>>>>>>>>>> synch error");
     break;
   }
-  synch.phase++;
-  synchCount++;
 
 }
 
@@ -1066,8 +1049,8 @@ correctTurn( GameEvent *e )
   game->player[e->player].data->iposy = game->player[e->player].data->posy;
 
   old = game->player[e->player].data->trail-1;
-  old->ex = ( dirsY[ game->player[e->player].data->dir] ) ? game->player[e->player].data->iposx : old->ex  ;
-  old->ey = ( dirsX[ game->player[e->player].data->dir] ) ? game->player[e->player].data->iposy : old->ey  ;
+  old->ex = ( dirsY[ game->player[e->player].data->dir] != 0 ) ? game->player[e->player].data->iposx : old->ex  ;
+  old->ey = ( dirsX[ game->player[e->player].data->dir] != 0 ) ? game->player[e->player].data->iposy : old->ey  ;
  
 	  
   cur = game->player[e->player].data->trail;

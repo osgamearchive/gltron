@@ -17,8 +17,7 @@ void idlePause() {
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY && serverstate == gameState )
     {
-      nbSynch = 1;
-      synchCount = 0;
+      nbSynch = 0;
       initTurnList();
       switchCallbacks(&gameCallbacks);
     } else {
