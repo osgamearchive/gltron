@@ -26,11 +26,39 @@ void initArtpacks() {
   artpack_list[i] = NULL;
 }
 
+void getArtPath(char *name, char *fullname) {
+  char *path;
+  char fallback[] = "default";
+  sprintf(fullname, "%s%c%s", game->screen->artpack.path, SEPERATOR, name);
+  if((path = getFullPath(fullname)) == NULL) {
+    sprintf(fullname, "%s%c%s", fallback, SEPERATOR, name);
+  } else {
+    free(path);
+    return;
+  }
+}
+
+void loadArt() {
+  char buf[120];
+  char *path;
+
+  game->screen->artpack.path = artpack_list[artpack_index];
+
+  getArtPath("artpack.ini", buf);
+  path = getFullPath(buf);
+  if(path != NULL) {
+    loadIniFile(path);
+    free(path);
+  }
+
+  initTexture(game->screen);
+  initFonts();
+}
+
 void reloadArt() {
   printf("reloading art\n");
   deleteTextures(game->screen);
-  game->screen->artpack.path = artpack_list[artpack_index];
-  initTexture(game->screen);
+  loadArt();
 }
     
 
