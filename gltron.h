@@ -103,7 +103,7 @@ extern void reloadArt(void);
 
 /* do Sound */
 #ifdef SOUND
-#include "sound.h"
+#include "Sound.h"
 #include "sound_glue.h"
 #endif
 

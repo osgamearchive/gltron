@@ -1,4 +1,4 @@
-#include "sound.h"
+#include "Sound.h"
 #include "gltron.h"
 
 #include "SDL.h"
