@@ -1,126 +1,141 @@
 #include "gltron.h"
+#include "file.h"
+#include "console.h"
 
 #include <png.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
-int screenShot(char *filename, gDisplay *d);
-int bmpScreenShot(char *filename, gDisplay *d);
+#define SCREENSHOT_PREFIX "gltron"
+#define SCREENSHOT_PNG_BITDEPTH 8
+#define SCREENSHOT_BYTES_PER_PIXEL 3
 
-void doScreenShot() {
-  char buf[100];
-  char *path;
-#ifndef macintosh  
-  sprintf(buf, "gltron-0.61-%d.png", screenshots);
-  path = getPossiblePath(PATH_SNAPSHOTS, buf);
-  if(path != NULL) {
-    screenShot(path, game->screen);
-    screenshots++;
-    free(path);
-  }
-#endif
-}
+typedef struct {
+  int width;
+  int height;
+  unsigned char *pixmap;
+} screenshot_info_t;
 
-void doBmpScreenShot() {
-  char buf[100];
-  char *path;
+static FILE *fp;
+static char filename[PATH_MAX];
 
-  sprintf(buf, "gltron-0.61-%d.bmp", screenshots);
-  path = getPossiblePath(PATH_SNAPSHOTS, buf);
-  if(path != NULL) {
-    bmpScreenShot(path, game->screen);
-    screenshots++;
-    free(path);
-  }
-}
-
-FILE *fp;
-
-void user_write_data(png_structp png_ptr,
+static void user_write_data(png_structp png_ptr,
 		     png_bytep data, png_size_t length) {
   fwrite(data, length, 1, fp);
 }
 
-void user_flush_data(png_structp png_ptr) {
+static void user_flush_data(png_structp png_ptr) {
   fflush(fp);
 }
 
-int screenShot(char *filename, gDisplay *d) {
-  unsigned char *data;
-
+static int writePixmapToPng(screenshot_info_t *screenshot, char *fname) {
   png_structp png_ptr;
   png_infop info_ptr;
-  png_byte **row_pointers;
-  int colortype;
-  int width, height;
+  png_byte **row_ptrs;
   int i;
 
-  width = d->w;
-  height = d->h;
-  data = malloc(width * height * 3);
-  
-  glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-  
-  fp = fopen(filename, "wb");
-  if(!fp) {
-    fprintf(stderr, "can't open %s for writing\n", filename);
-    return 1;
+  if (!(fp = fopen(fname, "wb"))) {
+    fprintf(stderr, "can't open %s for writing\n", fname);
+    return -1;
   }
-  
-  png_ptr = png_create_write_struct
-    /*     (PNG_LIBPNG_VER_STRING, (png_voidp)user_error_ptr,
-	   user_error_fn, user_warning_fn); */
-    (PNG_LIBPNG_VER_STRING, 0, 0, 0);
 
-  if (!png_ptr)
-    return 1;
-
-  info_ptr = png_create_info_struct(png_ptr);
-  if (!info_ptr) {
-      png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-      return 1;
+  if (!(png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 
+                                          NULL, NULL, NULL))) {
+    return -1;
   }
-  /* png_init_io(png_ptr, fp); */
+
+  if (!(info_ptr = png_create_info_struct(png_ptr))) {
+    png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+    return -1;
+  }
+
   png_set_write_fn(png_ptr, 0, user_write_data, user_flush_data);
+  /* png_init_io(png_ptr, fp); */
 
-  colortype = PNG_COLOR_TYPE_RGB;
-
-  png_set_IHDR(png_ptr, info_ptr, width, height,
-	       8, colortype, PNG_INTERLACE_NONE,
-	       PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+  png_set_IHDR(png_ptr, info_ptr, screenshot->width, screenshot->height,
+	             SCREENSHOT_PNG_BITDEPTH, PNG_COLOR_TYPE_RGB, 
+	             PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+	             PNG_FILTER_TYPE_DEFAULT);
   png_write_info(png_ptr, info_ptr);
 
   /* get pointers */
-  row_pointers = (png_byte**) malloc(height * sizeof(png_byte*));
-  for(i = 0; i < height; i++)
-    row_pointers[i] = data + (height - i - 1) 
-      * 3 * width;
-
-  png_write_image(png_ptr, row_pointers);
-  png_write_end(png_ptr, info_ptr);
-  png_destroy_write_struct(&png_ptr, &info_ptr);
+  if(!(row_ptrs = (png_byte**) malloc(screenshot->height * sizeof(png_byte*)))) {
+    png_destroy_write_struct(&png_ptr, &info_ptr);
+    return -1;
+  }
   
-  free(row_pointers);
-  free(data);
+  for(i = 0; i < screenshot->height; i++) {
+    row_ptrs[i] = screenshot->pixmap + (screenshot->height - i - 1) 
+      * SCREENSHOT_BYTES_PER_PIXEL * screenshot->width;
+  }
 
-  fprintf(stderr, "written screenshot to %s\n", filename);
+  png_write_image(png_ptr, row_ptrs);
+  png_write_end(png_ptr, info_ptr);
+  png_destroy_write_struct(&png_ptr, &info_ptr); 
+  
+  free(row_ptrs);
   return 0;
 }
 
-
-int bmpScreenShot(char *filename, gDisplay *d) {
-  unsigned char *data;
-  int width, height;
-    
-  width = d->w;
-  height = d->h;
-  data = malloc(width * height * 3);
-  glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-  SystemWriteBMP(filename, width, height, data);
-  free(data);
-  fprintf(stderr, "written screenshot to %s\n", filename);
+/*
+    getNextFilename - find the next free filename in series.
+ */
+static void getNextFilename(char *fname, const char *suffix, int *start_at) {
+  do {
+    (*start_at)++;
+    sprintf(fname, "%s-%s-%d%s", SCREENSHOT_PREFIX, VERSION, *start_at, 
+            suffix);
+  } while (fileExists(fname));
+}
+  
+static int captureScreenToPixmap(screenshot_info_t *img, gDisplay *display) { 
+  img->width = display->w;
+  img->height = display->h;
+  if (!(img->pixmap = malloc(img->width * 
+                             img->height * SCREENSHOT_BYTES_PER_PIXEL))) {
+    return -1;
+  }
+  glReadPixels(0, 0, img->width, img->height, GL_RGB, GL_UNSIGNED_BYTE, 
+               img->pixmap);
   return 0;
 }
 
+void doPngScreenShot(gDisplay *display) {
+  screenshot_info_t screenshot;
+  static int last_png_num; /* store last free file index. */
+  
+  getNextFilename(filename, ".png", &last_png_num);
+  if (captureScreenToPixmap(&screenshot, display) != 0) {
+    fprintf(stderr, "Error capturing screenshot\n");
+    return;
+  }
+  
+  if (writePixmapToPng(&screenshot, filename) != 0) {
+    fprintf(stderr, "Error writing screenshot %s\n", filename);
+  } else {
+    fprintf(stderr, "Screenshot written to %s\n", filename);
+  }
+  
+  free(screenshot.pixmap);
+}
 
-
+void doBmpScreenShot(gDisplay *display) {
+  screenshot_info_t screenshot;
+  static int last_bmp_num; /* store last free file index. */
+  
+  getNextFilename(filename, ".bmp", &last_bmp_num);
+  if (captureScreenToPixmap(&screenshot, display) != 0) {
+    fprintf(stderr, "Error capturing screenshot\n");
+    return;
+  }
+  
+  if (SystemWriteBMP(filename, screenshot.width, screenshot.height,
+      screenshot.pixmap) != 0) {
+    fprintf(stderr, "Error writing screenshot %s\n", filename);
+  } else {
+    fprintf(stderr, "Screenshot written to %s\n", filename);
+  }
+  
+  free(screenshot.pixmap);
+}
