@@ -2,12 +2,6 @@
 Game main_game;
 Game *game;
 
-/* 
-unsigned int global_texFloor;
-unsigned int global_texWall;
-unsigned int global_texGui;
-*/
-
 /* TexFont *txf = NULL; */
 fonttex *ftx = NULL;
 int fontID = 6;
@@ -33,9 +27,9 @@ int si_count;
 settings_float *sf;
 int sf_count;
 
-/* poly count */
 
-int polycount;
+int polycount; /* poly count - how much do we draw each frame? */
+int screenshots = 0;
 
 /* default settings */
 

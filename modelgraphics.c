@@ -22,6 +22,8 @@ void drawMeshPart(MeshPart* meshpart, int flag) {
 	glVertex3fv(vertex);
       }
       glEnd();
+      polycount += c - 2
+;
     } 
   }
 }
@@ -69,6 +71,7 @@ void drawExplosionPart(MeshPart* meshpart, float radius, int flag) {
 	glVertex3fv(vertex);
       }
       glEnd();
+      polycount += c - 2;
       glPopMatrix();
     } 
   }

@@ -45,6 +45,7 @@ void keyboardPause(int key, int x, int y) {
     for(i = 0; i < game->players; i++)
       game->player[i].camera->camType = game->settings->camType;
     break;
+  case SYSTEM_KEY_F12: doScreenShot(); break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
   }

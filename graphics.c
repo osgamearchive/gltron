@@ -60,6 +60,8 @@ void drawFPS(gDisplay *d) {
   drawText(d->vp_w - 180, d->vp_h - 20, 10, tmp);
   sprintf(tmp, "minimum FPS: %d", fps_min);
   drawText(d->vp_w - 180, d->vp_h - 35, 10, tmp);
+  sprintf(tmp, "triangles: %d", polycount);
+  drawText(d->vp_w - 180, d->vp_h - 50, 10, tmp);
 }
 
 void drawText(int x, int y, int size, char *text) {
@@ -79,7 +81,7 @@ void drawText(int x, int y, int size, char *text) {
   glDisable(GL_TEXTURE_2D);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  polycount += strlen(text);
+  polycount += 2 * strlen(text); /* quads are two triangles */
 }
 
 int hsv2rgb(float h, float s, float v, float *r, float *g, float *b) {

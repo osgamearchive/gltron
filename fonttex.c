@@ -90,15 +90,15 @@ void ftxEstablishTexture(fonttex *ftx, unsigned char setupMipmaps) {
 		 (*(ftx->textures + i))->width, (*(ftx->textures + i))->height,
 		 0, GL_RGBA, GL_UNSIGNED_BYTE, 
 		 (*(ftx->textures + i))->data);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); */
-    /*glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); */
+    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); */
+    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); */
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   }
-  /* checkGLError(FTX_ERR " establishing textures"); */
+  checkGLError(FTX_ERR " establishing textures");
 }
 
 void ftxRenderString(fonttex *ftx, char *string, int len) {
@@ -125,6 +125,7 @@ w);
     /* bind texture */
     if(tex != bound) {
       glBindTexture(GL_TEXTURE_2D, ftx->texID[tex]);
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
       bound = tex;
     }
     /* find texture coordinates */

@@ -1,14 +1,9 @@
 #include "gltron.h"
 #include <string.h>
 
-#define MENU_BUFSIZE 100
-
-#define MENU_TEXT_START_X 8
-#define MENU_TEXT_START_Y 3
-#define MENU_TEXT_SCREEN_SIZE 32
-#define MENU_TEXT_LINEHEIGHT 2.0
-
 Menu *pCurrent = 0;
+
+#define MENU_BUFSIZE 100
 
 void changeAction(char *name) {
 #ifdef SOUND
@@ -196,17 +191,19 @@ void initMenuCaption(Menu *m) {
     break;
   default:
     sprintf(m->display.szCaption, "%s", m->szCapFormat);
-    printf("using default capformat\n");
+    // printf("using default capformat\n");
   }
-  printf("[menu] cap-format: %s, caption: %s\n", m->szCapFormat,
-	 m->display.szCaption);
+  /* printf("[menu] cap-format: %s, caption: %s\n", m->szCapFormat,
+     m->display.szCaption); */
 }
 
 void getNextLine(char *buf, int bufsize, FILE* f) {
   fgets(buf, bufsize, f);
-  while((buf[0] == '\n' || buf[0] == '#') && /* ignore empty lines, comments */
+  while((buf[0] == '\n' || buf[0] == '#') &&
 	fgets(buf, bufsize, f));
 }
+
+/* loadMenu returns the current Menu (sub-) tree */
 
 Menu* loadMenu(FILE* f, char* buf, Menu* parent, int level) {
   Menu* m;
@@ -224,12 +221,13 @@ Menu* loadMenu(FILE* f, char* buf, Menu* parent, int level) {
   sscanf(buf, "%d ", &(m->nEntries));
 
   getNextLine(buf, MENU_BUFSIZE, f);
+  /* TODO: this is horribly broken, 31 is probably wrong
+     anyway, so handle arbitrary strings or use magic enums */
   buf[31] = 0; /* enforce menu name limit; */
   sprintf(m->szName, "%s", buf);
   if(*(m->szName + strlen(m->szName) - 1) == '\n')
     *(m->szName + strlen(m->szName) - 1) = 0;
   
-
   getNextLine(buf, MENU_BUFSIZE, f);
   buf[31] = 0; /* enforce menu caption limit; */
   sprintf(m->szCapFormat, "%s", buf);
@@ -243,9 +241,9 @@ Menu* loadMenu(FILE* f, char* buf, Menu* parent, int level) {
   initMenuCaption(m);
 	
   /* printf("menu '%s': %d entries\n", m->szName, m->nEntries); */
-  if(m->nEntries > 0) {
+  if(m->nEntries > 0) { /* contains a submenu */
     m->pEntries = malloc(sizeof(Menu*) * m->nEntries);
-    for(i = 0; i < m->nEntries; i++) {
+    for(i = 0; i < m->nEntries; i++) { /* load these sub menus */
       /* printf("loading menu number %d\n", i); */
       if(i > 10) {
 	printf("item limit reached - aborting\n");
@@ -283,6 +281,7 @@ Menu** loadMenuFile(char *filename) {
   /* load data */
   for(i = 0; i < nMenus; i++) {
     /* printf("loading menu set %d\n", i); */
+    /* TODO: bad magic */
     if(i > 10) exit(1);
     *(list + i) = loadMenu(f, buf, NULL, 0);
   }
@@ -294,6 +293,7 @@ Menu** loadMenuFile(char *filename) {
   /* traverse Menu Tree and set Menu Color to some boring default */
   /* printf("finished parsing file - now traversing menus\n"); */
   /* setup stack */
+
   z = (node*) malloc(sizeof(node));
   z->next = z;
   head = (node*) malloc(sizeof(node));
@@ -316,9 +316,9 @@ Menu** loadMenuFile(char *filename) {
 
       /* TODO(0): put the color defaults somewhere else */
 
-      m->display.fgColor[0] = 0.0;
-      m->display.fgColor[1] = 0.0;
-      m->display.fgColor[2] = 0.0;
+      m->display.fgColor[0] = 1.0;
+      m->display.fgColor[1] = 1.0;
+      m->display.fgColor[2] = 1.0;
       m->display.fgColor[3] = 1.0;
       m->display.hlColor[0] = 255.0 / 255.0;
       m->display.hlColor[1] = 20.0 / 255.0;
@@ -342,22 +342,49 @@ Menu** loadMenuFile(char *filename) {
 
 void drawMenu(gDisplay *d) {
   /* draw Menu pCurrent */
+
   int i;
   int x, y, size, lineheight;
+  int hsize, vsize;
+  int maxw = 0;
 
   rasonly(d);
 
-  x = d->vp_w / MENU_TEXT_START_X;
-  size = d->vp_w / MENU_TEXT_SCREEN_SIZE;
-  y = 2 * d->vp_h / MENU_TEXT_START_Y;
-  lineheight = size * MENU_TEXT_LINEHEIGHT;
+#define MENU_TEXT_START_X 0.08
+#define MENU_TEXT_START_Y 0.40
 
+#define MENU_WIDTH 0.60
+#define MENU_HEIGHT 0.40
+
+#define MENU_TEXT_LINEHEIGHT 1.5
+
+  x = (int) (d->vp_w * MENU_TEXT_START_X);
+  y = (int) (d->vp_h * MENU_TEXT_START_Y);
+
+  /* new stuff: calculate menu dimensions */
+  for(i = 0; i < pCurrent->nEntries; i++) {
+    int len;
+    len =  strlen(((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
+    if(len > maxw)
+      maxw = len;
+  }
+  /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
+
+  hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float)maxw );
+  vsize = (int) ((float)d->vp_h * MENU_HEIGHT / 
+		 ( (float)pCurrent->nEntries * MENU_TEXT_LINEHEIGHT));
+
+  size = (hsize < vsize) ? hsize : vsize;
+
+  lineheight = (int)( (float) size * MENU_TEXT_LINEHEIGHT);  
+
+  /* printf("%d %d %d %d %d\n", x, y, size, maxw, pCurrent->nEntries); */
   /* draw the entries */
   for(i = 0; i < pCurrent->nEntries; i++) {
     if(i == pCurrent->iHighlight)
       glColor4fv(pCurrent->display.hlColor);
     else glColor4fv(pCurrent->display.fgColor);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     rasonly(d);
     drawText(x, y, size,
 	     ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);

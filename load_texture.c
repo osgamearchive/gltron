@@ -1,8 +1,5 @@
 #include "gltron.h"
 
-#define SGI_TEX
-/* #define SDL_TEX */
-
 #ifdef SGI_TEX
 #include "sgi_texture.h"
 
@@ -45,7 +42,7 @@ void loadTexture(char *filename, int format) {
 #include <SDL/SDL_image.h>
 
 
-int loadTexture(char *name, int wantedFormat) {
+void loadTexture(char *name, int wantedFormat) {
   /* wantedFormat is ignored */
   SDL_Surface *image;
   int tex_id;
@@ -53,8 +50,15 @@ int loadTexture(char *name, int wantedFormat) {
   int x, y;
   int bpp;
   unsigned char *data;
+  char *path;
 
-  image = IMG_Load(name);
+  path = getFullPath(name);
+  if(path != 0) {
+    image = IMG_Load(path);
+  } else {
+    fprintf(stderr, "fatal: could not load %s, exiting...\n", name);
+    exit(1);
+  }
 
   if(image == 0) {
     fprintf(stderr, "can't load image: %s\n", SDL_GetError());
@@ -74,10 +78,11 @@ int loadTexture(char *name, int wantedFormat) {
   data = (unsigned char*) malloc(image->w * image->h * bpp / 8);
   /* copy every pixel */
   for(y = 0; y < image->h; y++) {
-    for(x = 0; x < image->h; x++) {
+    for(x = 0; x < image->w; x++) {
 
       Uint8 *bufp;
-      bufp = (Uint8 *)image->pixels + y*image->pitch + (bpp / 8) * x;
+      bufp = (Uint8 *)image->pixels + (image->h - y - 1) * image->pitch +
+	(bpp / 8) * x;
       *(data + (bpp / 8) * (y * image->w + x) + 0) =
 	*(bufp + image->format->Rshift / 8);
       *(data + (bpp / 8) * (y * image->w + x) + 1) =

@@ -25,7 +25,8 @@ int reserved_keys[] = {
   SYSTEM_KEY_F2,
   SYSTEM_KEY_F3,
   SYSTEM_KEY_F5,
-  SYSTEM_KEY_F10
+  SYSTEM_KEY_F10,
+  SYSTEM_KEY_F12
 };
 
 void keyGame(int k, int x, int y)
@@ -48,6 +49,7 @@ void keyGame(int k, int x, int y)
     break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
+  case SYSTEM_KEY_F12: doScreenShot(); break;
 
   default: 
     for(i = 0; i < KEY_ACTIONS_N; i++) {

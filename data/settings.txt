@@ -1,7 +1,7 @@
 2
 f1
 speed
-i32
+i33
 show_help
 show_fps
 show_wall
@@ -34,3 +34,4 @@ playEffects
 use_mipmaps
 game_speed
 arena_size
+alpha_trails

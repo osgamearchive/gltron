@@ -76,6 +76,7 @@ void initSettingData(char *filename) {
   si[29].value = &(game->settings->use_mipmaps);
   si[30].value = &(game->settings->game_speed);
   si[31].value = &(game->settings->arena_size);
+  si[32].value = &(game->settings->alpha_trails);
 
   sf[0].value = &(game->settings->speed);
 }
@@ -111,6 +112,7 @@ void initMainGameSettings(char *filename) {
   game->settings->show_glow = 1;
   game->settings->show_2d = 0;
   game->settings->show_alpha = 1;
+  game->settings->alpha_trails = 0;
   game->settings->show_floor_texture = 1;
   game->settings->show_crash_texture = 1;
   game->settings->show_model = 1;

@@ -16,7 +16,7 @@ void drawDebugTex(gDisplay *d) {
   glVertex2i(x + colwidth * 8, y + game->settings->grid_size);
   glVertex2i(x - 1, y + game->settings->grid_size);
   glEnd();
-  polycount++;
+  polycount += 4;
 }
 
 void drawScore(Player *p, gDisplay *d) {
@@ -52,7 +52,7 @@ void drawFloor(gDisplay *d) {
 	glTexCoord2i(0, t);
 	glVertex2i(j, k + l);
 	glEnd();
-	polycount++;
+	polycount += 2;
       }
     glDisable(GL_TEXTURE_2D);
     glDepthMask(GL_FALSE);
@@ -75,35 +75,157 @@ void drawFloor(gDisplay *d) {
 void drawTraces(Player *p, gDisplay *d, int instance) {
   line *line;
   float height;
+  float bdist;
+  float blength;
+  float tlength;
 
   Data *data;
   data = p->data;
   height = data->trail_height;
+
   if(height > 0) {
     // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-    glColor4fv(p->model->color_alpha);
-    /* glColor4f(0.5, 0.5, 0.5, 0.8); */
+    if(game->settings->alpha_trails) {
+      glColor4fv(p->model->color_alpha);
+    } else {
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+      glColor3fv(p->model->color_alpha);
+    }
+
     line = &(data->trails[0]);
-    glBegin(GL_TRIANGLE_STRIP);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
     glVertex3f(line->sx, line->sy, 0.0);
+    glTexCoord2f(0.0, 1.0);
     glVertex3f(line->sx, line->sy, height);
+
     while(line != data->trail) {
+      tlength = (line->ex - line->sx + line->ey - line->sy);
+      if(tlength < 0) tlength = -tlength;
+#define DECAL_WIDTH 20.0
+      glTexCoord2f(tlength / DECAL_WIDTH, 1.0);
+      glVertex3f(line->ex, line->ey, height);
+
+      glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
       glVertex3f(line->ex, line->ey, 0.0);
-      glVertex3f(line->ex, line->ey, height);    
+
       line++;
+
+      glTexCoord2f(0.0, 0.0);
+      glVertex3f(line->sx, line->sy, 0.0);
+      glTexCoord2f(0.0, 1.0);
+      glVertex3f(line->sx, line->sy, height);
+
       polycount++;
     }
 
-    /* modify end of trail */
+    /* calculate distance of cycle to last corner */
+    tlength = (line->ex - line->sx + line->ey - line->sy);
+    if(tlength < 0) tlength = -tlength;
+
 #define BOW_LENGTH 6
-    glVertex3f(line->ex - BOW_LENGTH * dirsX[ data->dir ], 
-	       line->ey - BOW_LENGTH * dirsY[ data->dir ], 0.0);
-    glVertex3f(line->ex - BOW_LENGTH * dirsX[ data->dir ], 
-	       line->ey - BOW_LENGTH * dirsY[ data->dir ], height);
+    blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
 #undef BOW_LENGTH
+
+    /* modify end of trail */
+    glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 1.0);
+    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	       line->ey - 2 * blength * dirsY[ data->dir ], height);
+    glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 0.0);
+    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	       line->ey - 2 * blength * dirsY[ data->dir ], 0.0);
+
     polycount += 2;
     glEnd();
+
+#undef DECAL_WIDTH
+
+    glDisable(GL_TEXTURE_2D);
+
+    /* experimental trail effect */
+    checkGLError("before trail");
+
+
+    glEnable(GL_BLEND);
+    glShadeModel(GL_SMOOTH);
+    if(data->speed > 0) {
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    }
+     
+
+#define BOW_DIST2 0.85
+#define BOW_DIST1 0.4
+
+#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
+
+    bdist = (game->settings->show_model &&
+	     data->speed > 0) ? BOW_DIST1 : 0;
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(TEX_SPLIT, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
+
+    glTexCoord2f(TEX_SPLIT, 1.0);
+    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+
+
+    if(game->settings->alpha_trails) glColor4fv(p->model->color_alpha);
+    else glColor3fv(p->model->color_alpha);
+
+    glTexCoord2f(-1.0, 1.0);
+    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	       line->ey - 2 * blength * dirsY[ data->dir ], height);
+
+
+    glTexCoord2f(-1.0, 0.0);
+    glVertex3f(line->ex - 2 * blength * dirsX[ data->dir ], 
+	       line->ey - 2 * blength * dirsY[ data->dir ], 0.0);
+
+    glEnd();
+
+
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(TEX_SPLIT, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
+
+    glTexCoord2f(1.0, 0.0);
+    glColor3fv(p->model->color_model);
+    glVertex3f(line->ex - bdist * blength * dirsX[ data->dir ], 
+	       line->ey - bdist * blength * dirsY[ data->dir ], 0.0);
+
+    glTexCoord2f(1.0, 1.0);
+    glColor3fv(p->model->color_model);
+    glVertex3f(line->ex - bdist * blength * dirsX[ data->dir ], 
+	       line->ey - bdist * blength * dirsY[ data->dir ], height);
+
+    glTexCoord2f(TEX_SPLIT, 1.0);
+    glColor3f(1.0, 1.0, 1.0);
+    glVertex3f(line->ex - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	       line->ey - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+    glEnd();
+
+    polycount += 4;
+
+#undef BOW_DIST1
+#undef BOW_DIST2
+#undef TEX_SPLIT
+
+    if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
+
+    checkGLError("after trail");
 
     if(game->settings->camType == 1) {
       //       glLineWidth(3);
@@ -117,7 +239,7 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
 
       glEnd();
       // glLineWidth(1);
-      polycount++;
+      polycount += 2;
     }
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
@@ -131,6 +253,7 @@ void drawCrash(float radius) {
   /* printf("exp_r: %.2f\n", (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX); */
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, game->screen->texCrash);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glEnable(GL_BLEND);
   glBegin(GL_QUADS);
   glTexCoord2f(0.0, 0.0);
@@ -142,6 +265,9 @@ void drawCrash(float radius) {
   glTexCoord2f(0.0, 1.0);
   glVertex3f(- CRASH_W / 2, 0.0, CRASH_H);
   glEnd();
+
+  polycount += 2;
+
   glDisable(GL_TEXTURE_2D);
   if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
 }
@@ -295,6 +421,7 @@ void drawPlayers(Player *p) {
 		   game->player[i].data->posy,
 		   0);
       /* draw Quad */
+      /*
       dir = game->player[i].data->dir;
       glColor3fv(game->player[i].model->color_model);
       glBegin(GL_QUADS);
@@ -305,7 +432,9 @@ void drawPlayers(Player *p) {
       glColor3fv(game->player[i].model->color_model);
       glVertex3f(0, 0, height);
       glEnd();
-      polycount++;
+
+      polycount += 2;
+      */
       glPopMatrix();
     }
     if(game->settings->show_model) {
@@ -383,8 +512,8 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 
 void drawWalls(gDisplay *d) {
 #undef WALL_H
-#define WALL_H 24
-  float t = 2;
+#define WALL_H 48
+  float t = 1;
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -430,7 +559,7 @@ void drawWalls(gDisplay *d) {
     glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 0.0, 0.0); 
     #undef T_TOP
   glEnd();
-  polycount += 4;
+  polycount += 8;
 
   glDisable(GL_TEXTURE_2D);
 
@@ -465,7 +594,7 @@ void drawCam(Player *p, gDisplay *d) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(game->settings->fov, d->vp_w / d->vp_h,
-		 3.0, game->settings->grid_size * 1.5);
+		 1.0, game->settings->grid_size * 1.5);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();

@@ -1,18 +1,17 @@
-move sound updates to display callback
-write s3m/it player and move to plib for low latency
-add sound effects
-add mouse support
+move cycle behind posx, posy
+solve cycle turning issue
+
 fix transparency (back to front drawing of trails)
 or do something else to make trails look better
+
+add more & better sound effects
+
+add mouse support
+
 configurable bots (difficulty settings)
-win32: use gameglut
-show key settings somewhere
-configurable keys
+
 check various TODOs in the code
-remove all the unused variables & functions
-materials: check shinyness
+
 fix rpm's
 
-do intro screen/cinematics
-win32: dynamically load 3dfx opengl for Voodoo 1&2
-include freeglut & fullscreen stuff (for GLX / DRI users)
+win32: sdl should dynamically load 3dfx opengl for Voodoo 1&2

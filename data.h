@@ -73,6 +73,8 @@ typedef struct gDisplay {
   unsigned int texWall_4;
   unsigned int texGui;
   unsigned int texCrash;
+  unsigned int texTrail;
+  unsigned int texTrailDecal;
 } gDisplay;
 
 typedef struct Player {
@@ -100,6 +102,8 @@ typedef struct Settings {
   int show_wall;
   int show_2d;
   int show_alpha;
+  int alpha_trails;
+
   int show_floor_texture;
   int show_glow;
   int show_ai_status;

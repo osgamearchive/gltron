@@ -1,6 +1,13 @@
 to 0.59
 visible changes
 - different arena sizes (menu item)
+- added trail decals on solid trails (option)
+- added trail bow before cycle
+- added polygon counter
+- adjusted clip plane (better 1st person view now)
+- changed GUI background
+- resized menu (dynamic size now)
+- added screenshot function (F12)
 
 to 0.59beta
 visible changes

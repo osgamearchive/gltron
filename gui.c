@@ -114,8 +114,43 @@ void drawGui() {
     mouseWarp();
 }
 
+void drawGuiBackground() {
+  checkGLError("gui background start");
+
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  rasonly(game->screen);
+
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, game->screen->texGui);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+  glColor3f(1.0, 1.0, 1.0);
+  glBegin(GL_QUADS);
+
+  glTexCoord2f(0.0, 0.0);
+  glVertex2f(0, 0);
+
+  glTexCoord2f(1.0, 0.0);
+  glVertex2f(game->screen->vp_w, 0);
+
+  glTexCoord2f(1.0, .75);
+  glVertex2f(game->screen->vp_w, game->screen->vp_h);
+
+  glTexCoord2f(0.0, .75);
+  glVertex2f(0, game->screen->vp_h);
+
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
+  checkGLError("gui background end");
+}
+  
 void displayGui() {
-  drawGui();
+  /* drawGui(); */
+  drawGuiBackground();
+  drawMenu(game->screen);
+
   SystemSwapBuffers();  
 }
 
@@ -205,6 +240,7 @@ void keyboardGui(int key, int x, int y) {
     if(pCurrent->iHighlight < 0)
       pCurrent->iHighlight = pCurrent->nEntries - 1;
     break;
+  case SYSTEM_KEY_F12: doScreenShot(); break;
   default: printf("got key %d\n", key);
   }
 }

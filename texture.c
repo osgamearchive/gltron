@@ -8,6 +8,8 @@ void deleteTextures(gDisplay *d) {
   glDeleteTextures(1, &(d->texWall_4));
   glDeleteTextures(1, &(d->texGui));
   glDeleteTextures(1, &(d->texCrash));
+  glDeleteTextures(1, &(d->texTrail));
+  glDeleteTextures(1, &(d->texTrailDecal));
   checkGLError("texture.c deleted textures");
 }
 
@@ -19,6 +21,8 @@ void initTextureNames(gDisplay *d) {
   glGenTextures(1, &(d->texWall_3));
   glGenTextures(1, &(d->texWall_4));
   glGenTextures(1, &(d->texCrash));
+  glGenTextures(1, &(d->texTrail));
+  glGenTextures(1, &(d->texTrailDecal));
   checkGLError("texture.c allocated texture names");
 }
 
@@ -36,8 +40,7 @@ void initTexture(gDisplay *d) {
 
   /* floor texture */
   glBindTexture(GL_TEXTURE_2D, d->texFloor);
-  loadTexture("gltron_floor.sgi", GL_RGB16);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  loadTexture("gltron_floor" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -46,8 +49,7 @@ void initTexture(gDisplay *d) {
   /* menu icon */
 
   glBindTexture(GL_TEXTURE_2D, d->texGui);
-  loadTexture("gltron.sgi", GL_RGBA);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  loadTexture("gltron" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
@@ -56,8 +58,7 @@ void initTexture(gDisplay *d) {
   /* wall texture 1*/
 
   glBindTexture(GL_TEXTURE_2D, d->texWall_1);
-  loadTexture("gltron_wall_1.sgi", GL_RGB);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  loadTexture("gltron_wall_1" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -66,8 +67,7 @@ void initTexture(gDisplay *d) {
   /* wall texture 2*/
 
   glBindTexture(GL_TEXTURE_2D, d->texWall_2);
-  loadTexture("gltron_wall_2.sgi", GL_RGB);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  loadTexture("gltron_wall_2" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -76,18 +76,17 @@ void initTexture(gDisplay *d) {
   /* wall texture 3 */
 
   glBindTexture(GL_TEXTURE_2D, d->texWall_3);
-  loadTexture("gltron_wall_3.sgi", GL_RGB);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  loadTexture("gltron_wall_3" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   
   /* wall texture 4*/
 
   glBindTexture(GL_TEXTURE_2D, d->texWall_4);
-  loadTexture("gltron_wall_4.sgi", GL_RGB);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  loadTexture("gltron_wall_4" TEX_SUFFIX, GL_RGB);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -96,11 +95,28 @@ void initTexture(gDisplay *d) {
   /* crash texture */
 
   glBindTexture(GL_TEXTURE_2D, d->texCrash);
-  loadTexture("gltron_crash.sgi", GL_RGBA);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  loadTexture("gltron_crash" TEX_SUFFIX, GL_RGBA);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+
+  /* trail bow texture */
+
+  glBindTexture(GL_TEXTURE_2D, d->texTrail);
+  loadTexture("gltron_trail" TEX_SUFFIX, GL_LUMINANCE_ALPHA);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+
+  glBindTexture(GL_TEXTURE_2D, d->texTrailDecal);
+  loadTexture("gltron_traildecal" TEX_SUFFIX, GL_LUMINANCE_ALPHA);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
   checkGLError("texture.c initTextures - end");

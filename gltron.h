@@ -14,6 +14,9 @@
 #define RC_NAME ".gltronrc"
 #define CURRENT_DIR "."
 
+#define SGI_TEX
+/* #define SDL_TEX */
+
 /* win32 additions by Jean-Bruno Richard <jean-bruno.richard@mg2.com> */
 
 #ifdef WIN32
@@ -24,7 +27,15 @@
 #define SEPERATOR '\\'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
+
+#ifdef SGI_TEX
+#undef SGI_TEX
 #endif
+
+#define SDL_TEX
+
+#endif /* WIN32 */
+
 
 /* FreeBSD additions by Andrey Zakhatov <andy@icc.surw.chel.su>  */
 
@@ -42,6 +53,16 @@
 #define SEPERATOR ':'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
+#endif 
+
+/* under windows, use SDL_image to load PNG textures */
+
+#ifdef SGI_TEX
+#define TEX_SUFFIX ".sgi"
+#endif
+
+#ifdef SDL_TEX
+#define TEX_SUFFIX ".png"
 #endif
 
 #define COS(X)	cos( (X) * M_PI/180.0 )
@@ -145,6 +166,7 @@ extern int lasttime;
 extern double dt; /* milliseconds since last frame */
 
 extern int polycount;
+extern int screenshots;
 
 extern float colors_alpha[][4];
 extern float colors_trail[][4];
@@ -236,6 +258,9 @@ extern void deleteTextures();
 /* texture loading -> load_texture.c */
 /* uses sgi_texture.c or sdl_texture.c */
 extern void loadTexture(char *filename, int format);
+
+/* screenshot.c */
+extern void doScreenShot();
 
 /* help -> character.c */
 
