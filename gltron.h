@@ -46,6 +46,8 @@
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
 #define CURRENT_EQ_DATA_DIR 
+#undef CURRENT_DIR
+#define CURRENT_DIR ""
 #endif 
 
 /* dropped support for anything else than libpng */
@@ -69,6 +71,8 @@ typedef png_texture texture;
 #include "geom.h"
 #include "light.h"
 
+/* sound stuff */
+#include "sound3d.h"
 /* rendering stuff */
 #include "renderer_gl.h"
 
@@ -118,6 +122,7 @@ enum {
 #define B_HEIGHT 0
 #define TRAIL_HEIGHT 3.5
 #define CYCLE_HEIGHT 8
+#define RECOGNIZER_HEIGHT 20
 #define WALL_H 12
 
 #define CAM_TYPE_CIRCLING 0
@@ -126,14 +131,14 @@ enum {
 #define CAM_TYPE_MOUSE 3
 
 #define CAM_COUNT 4
-#define CAM_CIRCLE_DIST 15
+#define CAM_CIRCLE_DIST 17
 #define CAM_CIRCLE_Z 8.0
 
-#define CAM_FOLLOW_DIST 12
+#define CAM_FOLLOW_DIST 18
 #define CAM_FOLLOW_Z 6.0
 #define CAM_FOLLOW_SPEED 0.05
 #define CAM_FOLLOW_SPEED_FACTOR 1.0 / 82.0
-#define CAM_SPEED 2.0
+#define CAM_SPEED 0.000349
 
 #define CAM_COCKPIT_Z 3
 
@@ -141,6 +146,8 @@ enum {
 #define CAM_R_MAX 100
 #define CAM_CHI_MIN M_PI / 6
 #define CAM_CHI_MAX M_PI / 2 - M_PI / 6
+
+#define CAM_DR 6.4
 
 #define MOUSE_ORIG_X 100
 #define MOUSE_ORIG_Y 100
@@ -188,13 +195,17 @@ extern Game2 *game2;
 extern float camAngle;
 extern float cam_phi;
 extern float cam_chi;
-extern float cam_r;
+extern float cam_r_mouse;
+extern float cam_r_follow;
+extern float cam_r_circle;
 
 #ifdef DEPTH_SORT
 extern int quadBufSize;
 extern Quad* quadBuf;
 extern int* quadBufIndex;
 #endif
+
+extern Mesh* recognizer;
 
 /* extern TexFont *txf; */
 extern fonttex *gameFtx;
@@ -213,6 +224,7 @@ extern int colwidth;
 
 extern int dirsX[];
 extern int dirsY[];
+extern float camAngles[];
 
 extern float default_speeds[];
 extern int default_arena_sizes[];
@@ -237,6 +249,10 @@ extern float vp_y[4][4];
 extern float vp_w[4][4];
 extern float vp_h[4][4];
 extern unsigned char debugcolors[6][4];
+
+extern float shadow_color[4];
+extern float shadow_matrix[16];
+
 /* configure keys stuff */
 
 extern int *configureKeyEntry;
@@ -311,6 +327,7 @@ extern void initClientData();
 extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 extern void changeDisplay();
 extern void initModel(Player *p, int p_num);
+extern void initModelLights(int light);
 
 extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
@@ -394,10 +411,8 @@ extern void goto_installpath(char *executable);
 
 /* callback stuff -> switchCallbacks.c */
 
-extern void chooseCallback(char*);
-extern void restoreCallbacks();
-extern void switchCallbacks(callbacks*);
-extern void updateCallbacks();
+#include "switchCallbacks.h"
+
 
 /* probably common graphics stuff -> graphics.c */
 
@@ -425,10 +440,10 @@ extern void drawCam(Player *p, gDisplay *d);
 
 /* trail.c */
 /* extern void drawTrails(Player *p, Player *p_eye, gDisplay *d); */
-extern void drawTrailBow(Player *p);
+extern void drawTrailBow(Player *p, int flag);
 extern void drawTrailLines(Player *p);
 extern void doTrails(Player *p);
-extern void drawTrailShadow(Data *d);
+extern void drawTrailShadow(Player *p);
 extern void drawTrailQuadBow(Player *p, int *q);
 extern void drawTrailsWithQuadBuf(Player *p_eye);
 extern float getSegmentUV(line *line);
@@ -439,6 +454,10 @@ extern void checkQuad2D(char *flags, int q, int n);
 
 /* clip.c */
 int testfrustum(float *x, float *y, float *p, float *a, float *b);
+
+/* recognizer stuff */
+extern void recognizerMovement();
+extern void drawRecognizers(int flag);
 
 /* demo stuff */
 /* record.c */
@@ -462,8 +481,10 @@ extern void resetScores();
 
 extern void draw( void );
 
-extern void chaseCamMove();
-extern void camMove();
+#include "camera.h"
+
+extern void doCameraMovement();
+extern void initCamera(Camera *cam, Data *data, int type);
 
 extern void movePlayers();
 
