@@ -269,6 +269,7 @@ void updateSettingsCache() {
   game2->settingsCache.show_model = getSettingi("show_model");
   game2->settingsCache.show_decals = getSettingi("show_decals");
   game2->settingsCache.alpha_trails = getSettingi("alpha_trails");
+  game2->settingsCache.antialias_lines = getSettingi("antialias_lines");
   game2->settingsCache.shadow_lod = getSettingi("shadow_lod"); 
   game2->settingsCache.turn_cycle = getSettingi("turn_cycle"); 
   game2->settingsCache.light_cycles = getSettingi("light_cycles"); 
