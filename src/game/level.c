@@ -1,12 +1,15 @@
 #include "game/game_level.h"
+#include "nebu_Scripting.h"
+#include <stdlib.h>
 
-void game_free_level(game_level *l) {
+void game_FreeLevel(game_level *l) {
 	free(l->boundaries);
 	free(l->spawnPoints);
 	free(l);
 }
 
-game_level* game_create_level(const char *name) {
+game_level* game_CreateLevel(const char *name) {
+	int i;
 	game_level* l;
 
 	l = malloc( sizeof(game_level) );
@@ -15,19 +18,19 @@ game_level* game_create_level(const char *name) {
 	scripting_GetGlobal("level", NULL);
 	// get scalability flag
 	scripting_GetValue("scalable");
-	l->scalable = scripting_GetIntegerResult();
+	scripting_GetIntegerResult(& l->scalable);
 	// get number of spawnpoints
 	scripting_GetValue("spawn");
-	l->nSpawnPoints = scripting_GetArraySize();
+	scripting_GetArraySize(& l->nSpawnPoints);
 	// copy spawnpoints into vec2's
 	l->spawnPoints = malloc(l->nSpawnPoints * sizeof(vec2));
 	for(i = 0; i < l->nSpawnPoints; i++) {
 		scripting_GetArrayIndex(i);
 
 		scripting_GetValue("x");
-		l->spawnPoints[i].v[0] = scripting_GetFloatResult();
+		scripting_GetFloatResult(& l->spawnPoints[i].v[0]);
 		scripting_GetValue("y");
-		l->spawnPoints[i].v[1] = scripting_GetFloatResult();
+		scripting_GetFloatResult(& l->spawnPoints[i].v[1]);
 
 		scripting_PopTable(); // index i
 	}
@@ -38,23 +41,25 @@ game_level* game_create_level(const char *name) {
 	l->nBoundaries = scripting_GetArraySize();
 	// copy boundaries into segments
 	l->boundaries = malloc(l->nBoundaries * sizeof(segment2));
-	for(i = 0; i < l->nSpawnPonts; i++) {
+	for(i = 0; i < l->nSpawnPoints; i++) {
 		scripting_GetArrayIndex(i);
 		
 		scripting_GetArrayIndex(0);
 		scripting_GetValue("x");
-		l->boundaries[i].vStart.v[0] = scripting_GetFloatResult();
+		scripting_GetFloatResult(& l->boundaries[i].vStart.v[0]);
 		scripting_GetValue("y");
-		l->boundaries[i].vStart.v[1] = scripting_GetFloatResult();
+		scripting_GetFloatResult(& l->boundaries[i].vStart.v[1]);
 		scripting_PopTable(); // index 0
 		
 		scripting_GetArrayIndex(1);
-		scripting_GetValue("x");
-		l->boundaries[i].vDirection.v[0] = 
-			scripting_GetFloatResult() - l->boundaries[i].vStart.v[0];
-		scripting_GetValue("y");
-		l->boundaries[i].vDirection.v[1] =
-			scripting_GetFloatResult() - l->boundaries[i].vStart.v[1];
+		{
+			vec2 v;
+			scripting_GetValue("x");
+			scripting_GetFloatResult(& v.v[0]);
+			scripting_GetValue("y");
+			scripting_GetFloatResult(& v.v[1]);
+			vec2_Sub(& l->boundaries[i].vDirection, &v, &l->boundaries[i].vStart);
+		}
 		scripting_PopTable(); // index 1
 	
 		scripting_PopTable(); // index i
