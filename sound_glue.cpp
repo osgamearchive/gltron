@@ -99,6 +99,7 @@ extern "C" {
   }
 
   void Audio_Quit() {
+    SDL_PauseAudio(1);
     Sound_Quit();
     SDL_CloseAudio();
   }
