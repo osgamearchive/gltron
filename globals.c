@@ -98,15 +98,24 @@ int n_textures = 11;
 texture_info textures[] = {
   { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR, 64 },
   { 1, "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI, 1 },
-  { 1, "gltron_logo", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_LOGO, 1 },
-  { 1, "gltron_wall_1", GL_DONT_CARE, GL_REPEAT, GL_CLAMP, TEX_WALL1, 1 },
-  { 1, "gltron_wall_2", GL_DONT_CARE, GL_REPEAT, GL_CLAMP, TEX_WALL2, 1 },
-  { 1, "gltron_wall_3", GL_DONT_CARE, GL_REPEAT, GL_CLAMP, TEX_WALL3, 1 },
-  { 1, "gltron_wall_4", GL_DONT_CARE, GL_REPEAT, GL_CLAMP, TEX_WALL4, 1 },
-  { 1, "gltron_crash", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_CRASH, 1 },
-  { 1, "gltron_trail", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_TRAIL, 1 },
-  { 1, "gltron_traildecal", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_DECAL, 1 },
-  { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX, 1 }
+  { 1, "gltron_logo", GL_RGBA, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_LOGO, 1 },
+  { 1, "gltron_wall_1", GL_DONT_CARE, 
+    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL1, 1 },
+  { 1, "gltron_wall_2", GL_DONT_CARE, 
+    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL2, 1 },
+  { 1, "gltron_wall_3", GL_DONT_CARE, 
+    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL3, 1 },
+  { 1, "gltron_wall_4", GL_DONT_CARE, 
+    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL4, 1 },
+  { 1, "gltron_crash", GL_RGBA, 
+    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_CRASH, 1 },
+  { 1, "gltron_trail", GL_RGBA, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_TRAIL, 1 },
+  { 1, "gltron_traildecal", GL_RGBA, 
+    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_DECAL, 1 },
+  { 6, "skybox", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX, 1 }
 };
 
 float shadow_color[] = { 0, 0, 0, .8 };
