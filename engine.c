@@ -59,6 +59,7 @@ void initGameStructures() { /* called only once */
     p->ai = (AI*) malloc(sizeof(AI));
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (Line*) malloc(MAX_TRAIL * sizeof(Line));
+		p->data->trailCount = 0;
     p->camera = (Camera*) malloc(sizeof(Camera));
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
@@ -178,6 +179,7 @@ void initPlayerData() {
       not_playing++;
     }
     data->trail = data->trails;
+		data->trailCount = 1;
 
     data->trail->sx = data->trail->ex = data->iposx;
     data->trail->sy = data->trail->ey = data->iposy;
@@ -310,6 +312,7 @@ void newTrail(Data* data) {
   newline->sy = data->iposy;
 
   data->trail = newline;
+	data->trailCount++;
 }
       
 static void doTurn(GameEvent *e, int direction) {

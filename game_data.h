@@ -59,6 +59,7 @@ typedef struct Data {
  
   Line *trails;
   Line *trail; /* current trail */
+	int trailCount;
 } Data;
 
 typedef struct AI {

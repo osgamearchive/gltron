@@ -6,12 +6,14 @@ int getTrailCount() {
   Line *l;
   for(i = 0; i < game->players; i++) {
     l = game->player[i].data->trails;
+		fprintf(stderr, "trailcount: %d\n", game->player[i].data->trailCount);
     while(l != game->player[i].data->trail) {
       l++;
       c++;
     }
+		c++;
   }
-  /* fprintf(stderr, "trails: %d\n", c); */
+  fprintf(stderr, "trails: %d\n", c);
   return c;
 }
 
