@@ -70,7 +70,7 @@ void reshape(int x, int y) {
     game->screen->vp_x = (x - getSettingi("width")) / 2;
   if(y > getSettingi("height") )
     game->screen->vp_y = (y - getSettingi("height")) / 2;
-  changeDisplay();
+  changeDisplay(-1);
 }
 
 void shutdownDisplay(gDisplay *d) {

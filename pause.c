@@ -31,10 +31,10 @@ void keyboardPause(int key, int x, int y) {
   case 27:
     switchCallbacks(&guiCallbacks);
     break;
-  case SYSTEM_KEY_F1: defaultDisplay(0); break;
-  case SYSTEM_KEY_F2: defaultDisplay(1); break;
-  case SYSTEM_KEY_F3: defaultDisplay(2); break;
-  case SYSTEM_KEY_F4: defaultDisplay(3); break;
+  case SYSTEM_KEY_F1: changeDisplay(0); break;
+  case SYSTEM_KEY_F2: changeDisplay(1); break;
+  case SYSTEM_KEY_F3: changeDisplay(2); break;
+  case SYSTEM_KEY_F4: changeDisplay(3); break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
 

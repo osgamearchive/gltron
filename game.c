@@ -59,8 +59,7 @@ static void defaultViewportPositions() {
 
 
 /*
-  autoConfigureDisplay
-      config viewports so every human player has one
+  autoConfigureDisplay - configure viewports so every human player has one
  */
 static void autoConfigureDisplay() {
   int n_humans = 0;
@@ -99,13 +98,21 @@ static void autoConfigureDisplay() {
   updateDisplay(vp);
 }
 
-void changeDisplay() {
-  if (getSettingi("display_type") == 3) {
-     autoConfigureDisplay(); 
+void changeDisplay(int view) {
+
+  if (view == -1) {
+    view = getSettingi("display_type");
+  }
+  
+  if (view == 3) {
+    autoConfigureDisplay(); 
   } else {
     defaultViewportPositions(); 
-    updateDisplay(getSettingi("display_type"));
+    updateDisplay(view);
   }
+
+  displayMessage(TO_STDOUT, "set display to %d", view);
+  setSettingi("display_type", view);
 }
 
 void updateDisplay(ViewportType newVP) {
@@ -142,13 +149,6 @@ void exitGame() {
   /* fprintf(stderr, "exit game\n"); */
 }
 
-void defaultDisplay(int n) {
-  printf("set display to %d\n", n);
-  setSettingi("display_type", n);
-  defaultViewportPositions();
-  updateDisplay(n);
-}
-
 void initGameScreen() {
   gDisplay *d;
   d = game->screen;
@@ -156,17 +156,6 @@ void initGameScreen() {
   d->h = getSettingi("height"); 
   d->vp_x = 0; d->vp_y = 0;
   d->vp_w = d->w; d->vp_h = d->h;
-}
-
-void cycleDisplay(int p) {
-  int q;
-  q = (viewport_content[p] + 1) % game->players;
-  while(q != viewport_content[p]) {
-    if(game->player[q].display->onScreen == 0)
-      viewport_content[p] = q;
-    else q = (q + 1) % game->players;
-  }
-  changeDisplay();
 }
 
 void gameMouseMotion(int x, int y) {

@@ -98,7 +98,7 @@ void initGameStructures() { /* called only once */
   }
   free(path);
 
-  changeDisplay();
+  changeDisplay(-1);
 
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;

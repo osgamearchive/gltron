@@ -293,8 +293,6 @@ extern void initGame();
 extern void exitGame();
 extern void initGameStructures();
 extern void initGameScreen();
-extern void defaultDisplay(int n);
-extern void cycleDisplay(int p);
 extern void doTrail(Line *t, int value);
 extern void fixTrails();
 extern void clearTrails(Data *data);
@@ -308,7 +306,7 @@ extern void writePosition(int player);
 
 extern void initClientData();
 extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
-extern void changeDisplay();
+extern void changeDisplay(int view);
 extern void updateDisplay(ViewportType VPtype); /* vp types defined in data.h */
 extern void initModelLights(int light);
 

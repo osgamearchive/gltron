@@ -32,13 +32,10 @@ void keyGame(int k, int x, int y)
     break;
   case ' ': switchCallbacks(&pauseCallbacks); break;
 
-  case SYSTEM_KEY_F1: defaultDisplay(0); break;
-  case SYSTEM_KEY_F2: defaultDisplay(1); break;
-  case SYSTEM_KEY_F3: defaultDisplay(2); break;
-  case SYSTEM_KEY_F4: 
-    setSettingi("display_type", 3);
-    changeDisplay();
-    break;
+  case SYSTEM_KEY_F1: changeDisplay(0); break;
+  case SYSTEM_KEY_F2: changeDisplay(1); break;
+  case SYSTEM_KEY_F3: changeDisplay(2); break;
+  case SYSTEM_KEY_F4: changeDisplay(3); break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
 

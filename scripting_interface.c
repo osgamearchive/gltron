@@ -41,7 +41,7 @@ int c_video_restart(lua_State *L) {
   shutdownDisplay( game->screen );
   setupDisplay( game->screen );
   updateCallbacks();
-  changeDisplay();
+  changeDisplay(-1);
   return 0;
 }
 
@@ -61,7 +61,7 @@ int c_update_audio_volume(lua_State *L) {
 int c_startGame(lua_State *L) { 
   game2->mode = GAME_SINGLE;
   initData();
-  changeDisplay();
+  changeDisplay(-1);
   switchCallbacks(&pauseCallbacks);
   return 0;
 }
