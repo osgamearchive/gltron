@@ -2,6 +2,8 @@
 
 namespace Sound {
   int SourceCopy::Mix(Uint8 *data, int len) {
+    if(_source->_buffer == NULL) return 0;
+
     int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
     // fprintf(stderr, "playing copy sample at %d, position: %d\n", volume, _position);
     int buffersize = _source->_buffersize;

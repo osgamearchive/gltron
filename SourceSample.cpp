@@ -30,7 +30,7 @@ namespace Sound {
     if(sample == NULL) {
       fprintf(stderr, "[error] failed loading sample from '%s': %s\n", 
 	      filename, Sound_GetError());
-      exit(1); // FIXME: handle failed decoding gracefully
+      return;
     }
     
     Sound_DecodeAll(sample);
@@ -46,6 +46,9 @@ namespace Sound {
   }
 
   int SourceSample::Mix(Uint8 *data, int len) {
+    if(_buffer == NULL)
+      return 0;
+
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
     assert(len < _buffersize);
 

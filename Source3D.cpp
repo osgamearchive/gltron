@@ -147,6 +147,8 @@ namespace Sound {
   }
 
   int Source3D::Mix(Uint8 *data, int len) {
+    if(_source->_buffer == NULL) return 0;
+
     if(_source->IsPlaying()) {
       int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
       float pan, shift, vol;
