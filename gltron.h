@@ -92,6 +92,7 @@ extern void reloadArt(void);
 
 /* graphics libs */
 #include <GL/gl.h>
+#include <GL/glext.h>
 
 /* do Sound */
 #ifdef SOUND
