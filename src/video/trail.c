@@ -4,10 +4,8 @@
 #define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 #undef TEX_SPLIT
 
-#ifndef NEW_LEVEL_DRAW
 static float normal1[] = { 1.0, 0.0, 0.0 };
 static float normal2[] = { 0.0, 1.0, 0.0 };
-#endif
 
 /* 
    getDists returns the minimum distance from (the wall) *line to the
@@ -79,7 +77,6 @@ float getSegmentUV(segment2 *s) {
 */
 
 void drawTrailLines(Player *p, PlayerVisual *pV) {
-#ifndef NEW_LEVEL_DRAW
   segment2 *s;
   float height;
 
@@ -117,7 +114,9 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 		/* the current line is not drawn */
     /* compute distance from line to eye point */
     dist = getDist(s, cam->cam);
-		alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+		// alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+		alpha = (400 - dist / 2) / 400;
+		if(alpha < 0) alpha = 0;
     // trail_top[3] = alpha;
     glColor4fv(trail_top);
     
@@ -137,7 +136,9 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 
   /* compute distance from line to eye point */
   dist = getDist(s, cam->cam);
-  alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+  // alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+	alpha = (400 - dist / 2) / 400;
+	if(alpha < 0) { alpha = 0; }
 	// trail_top[3] = alpha;
   glColor4fv(trail_top);
 
@@ -160,7 +161,6 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
   */
-#endif
 }
 
 /* 
