@@ -34,7 +34,7 @@ void drawGame() {
       drawCam(p, d);
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY )
-    drawPlayersName(game->screen);
+    drawPlayersName(game->screen); 
 #endif
       glDisable(GL_DEPTH_TEST);
       glDepthMask(GL_FALSE);
@@ -332,6 +332,8 @@ drawPlayersName(gDisplay *d)
   int   i;
   int   x, y;
   int   j, k, l;
+  int   len;
+  float color[4];
   float projection_matrix[16], camera_matrix[16], res[16], view[16], v[4], v2[4];
 
   /**
@@ -380,12 +382,58 @@ drawPlayersName(gDisplay *d)
 	      v2[k]=res[k]*v[0]+res[k+4]*v[1]
 		+res[k+8]*v[2]+res[k+12]*v[3];
 	    }
-	  x=view[0] + view[3] * (v2[0]/v2[3] + 1) / 2;
-	  y=view[1] + view[2] * (v2[1]/v2[3] + 1) / 2;
+	  /* x=view[0] + view[3] * (v2[0]/v2[3] + 1) / 2; */
+/* 	  y=view[1] + view[2] * (v2[1]/v2[3] + 1) / 2; */
+	  x=view[0] + view[3] * (v2[0]/v2[3]+1)/2 ;
+	  y=view[1] + view[2] * (v2[1]/v2[3]+1)/2 ;
+	  //position is not really good
+	  x+=50;
+	  y-=40;
 	  j=getWhich(i);
 	  //world coord are data->posx, data->posy, 0
-	  rasonly(d);
+
+	  //trying to draw a nice box behind the name
+
+	  /* glEnable(GL_BLEND); */
+	  /* glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); */
+
+	  rasonly(d);	  
+	  glDepthMask(GL_FALSE);
+	  glDisable(GL_DEPTH_TEST);	  
+	  //glShadeModel( game->screen->shademodel );
+	  
+	  glEnable(GL_BLEND);
+	  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	  glPushMatrix();
+	  glTranslatef(x, y, 0);
+	  //glColor3f(1.0f, 0.0f, 0.0f); //setting color to red	  
+	  setColor4fv(game->player[i].model->color_alpha);
+	  glShadeModel(GL_SMOOTH);
+
+	  light4fv(color);
+	  glColor4fv(color);
+
+	  glBegin(GL_QUADS);
+	  len=strlen(slots[j].name);
+	  
+	  glVertex3f(0.0f, 20.0f, 0.0f);   //top left
+	  glVertex3f(len*20.0f, 20.0f, 0.0f);   //top right
+	  glVertex3f(len*20.0f, 0.0f, 0.0f);  //Bottom right
+	  glVertex3f(0.0f, 0.0f, 0.0f);  //Bottom left
+
+	  //glVertex3f(0.0f, 10, 0.0f);   //top
+	  //glVertex3f(len*20/2, -10, 0.0f);  //Bottom left
+	  //glVertex3f(-len*20/2, -10, 0.0f);  //Bottom right
+	  glEnd();
+	  glPopMatrix();
+
+	  glDisable(GL_BLEND);
+
+	  glEnable(GL_DEPTH_TEST);
+	  glDepthMask(GL_TRUE);
+
 	  //printf("printing %s at %d and %d\n", slots[j].name, x, y);
+	  glColor3f(1.0f, 1.0f, 1.0f); //setting color to green
 	  drawText(gameFtx, x, y, 20, slots[j].name);
 	}
     }
