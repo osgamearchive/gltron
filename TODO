@@ -12,13 +12,15 @@ Optimizations/Cleanups [high priority]:
 Darrell or Andreas:
 
 - portable locking solution for sound idle/mix (callback must not block on os 9)
+
 Bugs [high priority]:
 
 Andreas:
 
 - new trail rendering:
- replace bow with texture
+ replace bow texture with geometry
  redo depth sorting using index buffers
+- fix Makefile.am and configure.in for win32 compiles (*-win32.c versions)
 
 Bugs [medium priority]:
 
@@ -30,6 +32,7 @@ Todd:
 Andreas:
 
 - always hide mouse pointer when running fullscreen
+- prevent Audio menu from crashing when compiled with --disable-sound
 
 Gameplay enhancements:
 
