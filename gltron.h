@@ -331,10 +331,7 @@ extern void clearTrails(Data *data);
 extern void moveStep(Data* data);
 extern void writePosition(int player);
 
-extern void doTurn(Data* data, int time);
 extern void crashPlayer(int player);
-extern void createTurnEvent(int player, int direction);
-extern int processEvent(GameEvent *e);
 
 /* gltron.c */
 /* game.c */

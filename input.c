@@ -1,5 +1,6 @@
 #define KEYBOARD
 #include "gltron.h"
+#include "event.h"
 
 /* I hear people are reading this file because they couldn't find the
    manual! Go to http://www.ards.net/Andreas/gltron.html#usage         */
@@ -7,14 +8,14 @@
 /* default actions */
 
 keyAction key_actions[KEY_ACTIONS_N] = {
-  { 0, TURN_LEFT, 'a' },
-  { 0, TURN_RIGHT, 's' },
-  { 1, TURN_LEFT, 'k' },
-  { 1, TURN_RIGHT, 'l' },
-  { 2, TURN_LEFT, '5' },
-  { 2, TURN_RIGHT, '6' },
-  { 3, TURN_LEFT, SYSTEM_KEY_LEFT },
-  { 3, TURN_RIGHT, SYSTEM_KEY_RIGHT }
+  { 0, EVENT_TURN_LEFT, 'a' },
+  { 0, EVENT_TURN_RIGHT, 's' },
+  { 1, EVENT_TURN_LEFT, 'k' },
+  { 1, EVENT_TURN_RIGHT, 'l' },
+  { 2, EVENT_TURN_LEFT, '5' },
+  { 2, EVENT_TURN_RIGHT, '6' },
+  { 3, EVENT_TURN_LEFT, SYSTEM_KEY_LEFT },
+  { 3, EVENT_TURN_RIGHT, SYSTEM_KEY_RIGHT }
 };
 
 #define KEY_RESERVED_N 8
@@ -79,7 +80,7 @@ void keyGame(int k, int x, int y)
 	int p;
 	p = key_actions[i].player;
 	if(PLAYER_IS_ACTIVE(&game->player[p]))
-	  createTurnEvent(p, key_actions[i].turn);
+	  createEvent(p, key_actions[i].turn);
 	return;
       }
     }

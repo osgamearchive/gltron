@@ -36,17 +36,6 @@ typedef struct Time {
   /* float timeScale; */
 } Time;
 
-enum {
-  EVENT_TURN_LEFT = 1,
-  EVENT_TURN_RIGHT = 2,
-  EVENT_CRASH = 4,
-  EVENT_STOP = 8
-};
-
-enum {
-  TURN_LEFT = 3,
-  TURN_RIGHT = 1
-};
 
 typedef struct GameEvent {
   int type; /* what */
@@ -138,7 +127,6 @@ typedef struct Data {
   
   int dir; int last_dir;
 
-  int turn;
   int turn_time; /* for cycle animation */
   
   int score;

@@ -1,4 +1,5 @@
 #include "gltron.h"
+#include "event.h"
 
 int startPlaying(char *filename) {
   /*

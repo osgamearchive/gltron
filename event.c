@@ -1,4 +1,6 @@
 #include "gltron.h"
+#include "event.h"
+#include "engine.h"
 
 int processEvent(GameEvent* e) {
   int value = 0;
@@ -9,22 +11,10 @@ int processEvent(GameEvent* e) {
   }
   switch(e->type) {
   case EVENT_TURN_LEFT:
-    data = game->player[e->player].data;
-    if(data->speed > 0) {
-      data->iposx = e->x;
-      data->iposy = e->y;
-      data->turn = TURN_LEFT;
-      doTurn(data, e->timestamp);
-    }
+    doLeftTurn(e);
     break;
   case EVENT_TURN_RIGHT:
-    data = game->player[e->player].data;
-    if(data->speed > 0) {
-      data->iposx = e->x;
-      data->iposy = e->y;
-      data->turn = TURN_RIGHT;
-      doTurn(data, e->timestamp);
-    }
+    doRightTurn(e);
     break;
   case EVENT_CRASH: 
     data = game->player[e->player].data;
@@ -33,7 +23,7 @@ int processEvent(GameEvent* e) {
     sprintf(messages, "player %d crashed", e->player + 1);
     fprintf(stderr, "%s\n", messages);
     consoleAddLine(messages);
-    crashPlayer(e->player);
+    doCrashPlayer(e);
     break;
   case EVENT_STOP:
     fprintf(stderr, "game stopped\n");
@@ -45,10 +35,10 @@ int processEvent(GameEvent* e) {
       game2->mode = GAME_SINGLE;
     }
     if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
-    game->winner = e->player;
-    sprintf(messages, "winner: %d", game->winner + 1);
-    printf("%s\n", messages);
-    consoleAddLine(messages);
+      game->winner = e->player;
+      sprintf(messages, "winner: %d", game->winner + 1);
+      printf("%s\n", messages);
+      consoleAddLine(messages);
     } else {
       game->winner = -2;
       strcpy(messages, "everyone died! no one wins!");
@@ -71,7 +61,6 @@ list* doMovement(int mode, int dt) {
   float fs;
   Data *data;
   list *l = NULL;
-  GameEvent *e;
 
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
@@ -90,13 +79,7 @@ list* doMovement(int mode, int dt) {
 	moveStep(data);
 	data->t--;
 	if(getCol(data->iposx, data->iposy) && mode) {
-	  e = (GameEvent*) malloc(sizeof(GameEvent));
-	  e->type = EVENT_CRASH;
-	  e->player = i;
-	  e->x = data->iposx;
-	  e->y = data->iposy;
-	  e->timestamp = game2->time.current;
-	  addList(&l, e);
+	  createEvent(i, EVENT_CRASH);
 	  break;
 	} else {
 	  writePosition(i);
@@ -124,12 +107,7 @@ list* doMovement(int mode, int dt) {
 	    }
 	  }
 	  if(mode) {
-	    e = (GameEvent*) malloc(sizeof(GameEvent));
-	    e->type = EVENT_STOP;
-	    e->player = winner;
-	    e->timestamp = game2->time.current;
-	    e->x = 0; e->y = 0;
-	    addList(&l, e);
+            createEvent(winner, EVENT_STOP);
 	    /* a stop event is the last event that happens */
 	    return l;
 	  }
@@ -139,7 +117,6 @@ list* doMovement(int mode, int dt) {
   }
   return l;
 }
-
  
 void idleGame( void ) {
   list *l;
@@ -165,7 +142,7 @@ void idleGame( void ) {
     if(game->settings->fast_finish == 1) {
       int factor = 4;
       for(i = 0; i < game->players; i++) {
-	if(game->player[i].ai->active != 1 &&
+	if(game->player[i].ai->active != AI_COMPUTER &&
 	   game->player[i].data->exp_radius < EXP_RADIUS_MAX)
 	  factor = 1;
       }
@@ -181,7 +158,12 @@ void idleGame( void ) {
       for(i = 0; i < game->players; i++)
 	if(game->player[i].ai != NULL)
 	  if(game->player[i].ai->active == 1 &&
-	     game->player[i].data->speed > 0) {
+	     PLAYER_IS_ACTIVE(&game->player[i])) {
+
+            /* 
+              TODO: replace this block with a pointer
+                    to the correct doComputer function
+	    */
 	    if(game->settings->ai_level < 2)
 	      doComputer(i, 0);
 	    else 
@@ -246,7 +228,7 @@ void idleGame( void ) {
 
 /* create an event and put it into the global event queue */
 
-void createTurnEvent(int player, int direction) {
+void createEvent(int player, int eventType) {
   GameEvent *e;
   list *p;
 
@@ -255,10 +237,7 @@ void createTurnEvent(int player, int direction) {
   p->data = e;
   p->next = (list*) malloc(sizeof(list));
   p->next->next = NULL;
-  switch(direction) {
-  case TURN_LEFT: e->type = EVENT_TURN_LEFT; break;
-  case TURN_RIGHT: e->type = EVENT_TURN_RIGHT; break;
-  }
+  e->type = eventType;
   e->x = game->player[player].data->iposx;
   e->y = game->player[player].data->iposy;
   e->player = player;

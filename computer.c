@@ -1,4 +1,5 @@
 #include "gltron.h"
+#include "event.h"
 
 int freeway(Data *data, int dir) {
   int i;
@@ -113,17 +114,17 @@ void doComputer(int player, int target) {
       ai->danger--;
       return;
     } else if(rdist > ldist && ai->tdiff > -spiral[level] ) {
-      createTurnEvent(player, TURN_RIGHT);
+      createEvent(player, EVENT_TURN_RIGHT);
       ai->tdiff--;
     } else if(rdist < ldist && ai->tdiff < spiral[level] ) {
-      createTurnEvent(player, TURN_LEFT);
+      createEvent(player, EVENT_TURN_LEFT);
       ai->tdiff++;
     } else {
       if(ai->tdiff > 0) { 
-	createTurnEvent(player, TURN_RIGHT);
+	createEvent(player, EVENT_TURN_RIGHT);
 	ai->tdiff--; }
       else { 
-	createTurnEvent(player, TURN_LEFT);
+	createEvent(player, EVENT_TURN_LEFT);
 	ai->tdiff++; }
     }
     ai->danger = 0;
@@ -230,17 +231,17 @@ void doComputer2(int player, int target) {
 #if 0
     if(critical <= rear_right && left > critical) {
       /* turn left */
-      createTurnEvent(player, TURN_LEFT);
+      createEvent(player, EVENT_TURN_LEFT);
       fprintf(stderr, "turning left\n");
       return;
     }
 #endif
     if(left < right) {
       /* turn right */
-      createTurnEvent(player, TURN_RIGHT);
+      createEvent(player, EVENT_TURN_RIGHT);
     } else {
       /* turn left */
-      createTurnEvent(player, TURN_LEFT);
+      createEvent(player, EVENT_TURN_LEFT);
     }
     ai->lastx = data->iposx;
     ai->lasty = data->iposy;

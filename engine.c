@@ -1,4 +1,10 @@
 #include "gltron.h"
+#include "event.h"
+
+enum {
+  TURN_LEFT = 3,
+  TURN_RIGHT = 1
+};
 
 int getCol(int x, int y) {
   if(x < 0 || x >= game->settings->grid_size -1 ||
@@ -133,7 +139,6 @@ void initPlayerData() {
     data->posx = data->iposx;
     data->posy = data->iposy;
     data->t = 0;
-    data->turn = 0;
     data->turn_time = -TURN_LENGTH;
 
     /* if player is playing... */
@@ -278,22 +283,22 @@ void clearTrail(int player) {
 #endif
 }
 
-void crashPlayer(int player) {
+void doCrashPlayer(GameEvent *e) {
   int j;
 
 #ifdef SOUND
-  Audio_CrashPlayer(player);
-  Audio_StopEngine(player);
+  Audio_CrashPlayer(e->player);
+  Audio_StopEngine(e->player);
 #endif
 
   for(j = 0; j < game->players; j++) 
-    if(j != player && PLAYER_IS_ACTIVE(&(game->player[j])))
+    if(j != e->player && PLAYER_IS_ACTIVE(&(game->player[j])))
       game->player[j].data->score++;
 
-  game->player[player].data->speed = SPEED_CRASHED;
+  game->player[e->player].data->speed = SPEED_CRASHED;
 
   if(game2->rules.eraseCrashed == 1)
-    clearTrail(player);
+    clearTrail(e->player);
 }
 
 void writePosition(int player) {
@@ -328,13 +333,21 @@ void newTrail(Data* data) {
   data->trail = newline;
 }
       
-void doTurn(Data *data, int time) {
+static void doTurn(GameEvent *e, int direction) {
+  Data *data = game->player[e->player].data;
+
   newTrail(data);
   data->last_dir = data->dir;
-  data->dir = (data->dir + data->turn) % 4;
-  data->turn = 0;
+  data->dir = (data->dir + direction) % 4;
   data->turn_time = game2->time.current;
-  data->posx = data->iposx + data->t * dirsX[data->dir];
-  data->posy = data->iposy + data->t * dirsY[data->dir];
+  data->posx = e->x + data->t * dirsX[data->dir];
+  data->posy = e->y + data->t * dirsY[data->dir];
 }
 
+void doRightTurn(GameEvent *e) {
+  doTurn(e, TURN_RIGHT);
+}
+
+void doLeftTurn(GameEvent *e) {
+  doTurn(e, TURN_LEFT);
+}
