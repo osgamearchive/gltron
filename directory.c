@@ -148,6 +148,7 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
 #include <dirent.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <unistd.h>
 
 list* readDirectoryContents(const char *dirname, char *prefix) {
   DIR *dir;
