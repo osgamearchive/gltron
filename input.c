@@ -42,11 +42,12 @@ void keyGame(int k, int x, int y)
 
   case SYSTEM_KEY_F10:
     setSettingi("camType", (getSettingi("camType") + 1) % CAM_COUNT);
+    updateSettingsCache();
     for(i = 0; i < game->players; i++)
-      if(game->player[i].ai->active == AI_HUMAN)
-	initCamera(game->player[i].camera, 
-		   game->player[i].data, 
-		   getSettingi("camType"));
+      if (game->player[i].ai->active == AI_HUMAN)
+          initCamera(game->player[i].camera, 
+          game->player[i].data, 
+		      getSettingi("camType"));
     break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
