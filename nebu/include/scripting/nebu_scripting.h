@@ -22,9 +22,9 @@ extern int scripting_GetArraySize(int *i);
 extern int scripting_GetArrayIndex(int i);
 extern int scripting_PopTable(void);
 
-extern void scripting_RunFile(const char *name);
-extern void scripting_Run(const char *command);
-extern void scripting_RunFormat(const char *format, ...);
+extern int scripting_RunFile(const char *name);
+extern int scripting_Run(const char *command);
+extern int scripting_RunFormat(const char *format, ...);
 extern void scripting_RunGC();
 extern void scripting_Register(const char *name, int(*func) (lua_State *L));
 

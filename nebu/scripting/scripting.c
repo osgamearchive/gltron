@@ -198,22 +198,22 @@ int scripting_PopTable(void)
 	return 0;
 }
 
-void scripting_RunFile(const char *name) {
-  lua_dofile(L, name);
+int scripting_RunFile(const char *name) {
+  return lua_dofile(L, name);
 }
 
-void scripting_Run(const char *command) {
+int scripting_Run(const char *command) {
   /* fprintf(stderr, "[command] %s\n", command); */
-  lua_dostring(L, command);
+  return lua_dostring(L, command);
 }
 
-void scripting_RunFormat(const char *format, ... ) {
+int scripting_RunFormat(const char *format, ... ) {
   char buf[4096];
   va_list ap;
   va_start(ap, format);
   vsprintf(buf, format, ap);
   va_end(ap);
-  scripting_Run(buf);
+  return scripting_Run(buf);
 }
 
 void scripting_RunGC() {
