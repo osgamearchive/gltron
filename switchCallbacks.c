@@ -63,7 +63,7 @@ void setCallback(const char *name) {
 			break;
 	}
 	if(i == N_CALLBACKS) {
-		fprintf(stderr, "fatal: no callback named '%s' found\n");
+		fprintf(stderr, "fatal: no callback named '%s' found\n", name);
 		exit(1); // OK: programmer error, critical
 	}
 	switchCallbacks(callbackList[i]);
