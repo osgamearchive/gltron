@@ -1,5 +1,9 @@
 #include "server_gltron.h"
 
+#ifdef WIN32
+# define M_PI           3.14159265358979323846  /* pi */
+#endif 
+
 int processEvent(GameEvent* e) {
   int      value = 0;
   Data     *data;
