@@ -8,7 +8,8 @@ enum {
   TURN_RIGHT = 1
 };
 
-inline int getCol(int x, int y) {
+
+int getCol(int x, int y) {
   return x < 1 || x >= game2->rules.grid_size ||
          y < 1 || y >= game2->rules.grid_size ||
          colmap[ y * colwidth + x ];
