@@ -35,6 +35,7 @@ CFILES = \
 	pause.c \
 	computer.c \
 	engine.c \
+	event.c \
 	game.c \
 	gltron.c \
 	gamegraphics.c \
