@@ -3,9 +3,7 @@
 /* very brief - just the pause mode */
 
 void idlePause() {
-#ifdef SOUND
   Sound_idle();
-#endif
   game2->time.dt = 0;
   doCameraMovement();
 	
@@ -68,9 +66,7 @@ void initPause() {
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
 
   /* disable game sound effects */
-#ifdef SOUND
   Audio_DisableEngine();
-#endif
 
   /* 
    * TODO: Provide an option to disable game music here. 
@@ -83,9 +79,7 @@ void initPause() {
 
 void exitPause() {
 /* sound effects are re-enabled in initGame() */
-//#ifdef SOUND  
 // Audio_EnableEngine(); 
-//#endif
 }
 
 void initPauseGL() {

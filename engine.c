@@ -263,10 +263,8 @@ void clearTrail(int player) {
 void doCrashPlayer(GameEvent *e) {
   int j;
 
-#ifdef SOUND
   Audio_CrashPlayer(e->player);
   Audio_StopEngine(e->player);
-#endif
 
   for(j = 0; j < game->players; j++) 
     if(j != e->player && PLAYER_IS_ACTIVE(&(game->player[j])))

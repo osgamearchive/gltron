@@ -119,11 +119,8 @@ extern "C" {
 #include <GL/gl.h>
 	// #include <GL/glext.h>
 
-	/* do Sound */
-#ifdef SOUND
 #include "Sound.h"
 #include "sound_glue.h"
-#endif
 
 	/* use enums, not magic */
 	enum {

@@ -90,11 +90,14 @@ AC_HELP_STRING([--disable-sound],[Don't compile in sound @<:@default=off@:>@]),
 if test "x$use_sound" = xyes; then
 	AC_CHECK_LIB(mikmod, main,, AC_MSG_WARN(mikmod not found - music playback may not work correctly))
 	AC_CHECK_LIB(SDL_sound, Sound_Init,
-		CFLAGS="$CFLAGS -DSOUND";
 		LIBS="-lSDL_sound $LIBS";
 		SOUND_OBJS="sound.o sound_glue.o Source.o Source3D.o SourceMusic.o SourceSample.o SoundSystem.o SourceCopy.o SourceEngine.o",
-		AC_MSG_WARN(SDL_sound not found - disabling sound))
+		AC_MSG_WARN(SDL_sound not found - disabling sound);
+		SOUND_OBJS="sound_stubs.o sound_glue_stubs.o")
 	
+	AC_SUBST(SOUND_OBJS)
+else
+	SOUND_OBJS="sound_stubs.o sound_glue_stubs.o"
 	AC_SUBST(SOUND_OBJS)
 fi
 

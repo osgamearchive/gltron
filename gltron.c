@@ -198,9 +198,7 @@ int main( int argc, char *argv[] ) {
   // printf("[status] menu loaded\n");
 
   setupDisplay(game->screen);
-#ifdef SOUND
   Sound_setup();
-#endif
 
   /* switch callbacks twice to establish stack */
 	{ 

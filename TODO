@@ -35,6 +35,7 @@ Features [medium priority]
 - add screen resolution independent font rendering
 - stenciled shadow volumes
 - load cockpit model
+- make fov a configuration parameter
 
 Optimizations/Cleanups [medium priority]
 
@@ -51,6 +52,7 @@ Bugs [low priority]:
   
 Features [low priority]:
 
+- glare/lense flare around the bright trail part behind the cycle
 - configurable zoom functionality (e.g. other mouse buttons)
 - better GUI support for mouse / gamepad
 - fix GUI resizing all the time

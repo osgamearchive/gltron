@@ -14,9 +14,7 @@ static int video_initialized = 0;
 
 void SystemExit() {
   fprintf(stderr, "[system] shutting down sound now\n");
-#ifdef SOUND
   Sound_shutdown();
-#endif
   fprintf(stderr, "[system] shutting down network now\n");
 #ifdef NETWORK
   SystemNetExit();

@@ -149,9 +149,7 @@ void idleGame(void) {
   /* TODO: handle fast finish in updateTime() */
   if(updateTime() == 0) return;
 
-#ifdef SOUND
   soundIdle();
-#endif
   /* TODO: do game ai, animation, physics and process events */
 
   doCameraMovement();
@@ -175,9 +173,7 @@ void idleGame(void) {
 #endif
 
 
-#ifdef SOUND
 		Sound_idle();
-#endif
 
 		if(updateTime() == 0) return;
 

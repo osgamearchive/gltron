@@ -9,9 +9,7 @@ void idleTimedemo(void) {
 
 	list *p, *l;
 
-#ifdef SOUND
 	Sound_idle();
-#endif
 	
 	game2->time.current += 20;
 	

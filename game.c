@@ -28,10 +28,8 @@ void initClientData() {
       sprintf(name, "trail_diffuse_%d", i);
       scripting_GetFloatArray(name, game->player[i].pColorAlpha, 4);
     }
-#ifdef SOUND
     if( game->player[i].data->speed > 0)
       Audio_StartEngine(i);
-#endif
   }
 }
 
@@ -144,9 +142,7 @@ void initGame() { /* called when game mode is entered */
 }
 
 void exitGame() {
-#ifdef SOUND
   Audio_DisableEngine();
-#endif
   /* fprintf(stderr, "exit game\n"); */
 }
 

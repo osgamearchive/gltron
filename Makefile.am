@@ -43,9 +43,11 @@ man_MANS = gltron.6
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound_glue.h \
 	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp \
-	SoundSystem.cpp SourceEngine.h SourceEngine.cpp \
-	SourceCopy.cpp Sound.h SoundSystem.h SourceMusic.h SourceCopy.h Source3D.h \
-	Source.h Vector3.h SourceSample.h
+	SoundSystem.cpp SourceCopy.cpp SourceEngine.cpp \
+	Sound.h SoundSystem.h SourceEngine.h SourceMusic.h \
+	SourceCopy.h Source3D.h \
+	Source.h Vector3.h SourceSample.h \
+	sound_stubs.c sound_glue_stubs.cpp
 
 todo:
 	perl todo2html.pl < TODO > TODO.html

@@ -130,10 +130,7 @@ void displayConfigure() {
 }
 
 void idleGui() {
-#ifdef SOUND
   Sound_idle();
-#endif
-
   scripting_RunGC();
 	SDL_Delay(10);
   SystemPostRedisplay(); /* animate menu */
@@ -238,10 +235,8 @@ void guiMouse(int buttons, int state, int x, int y) {
 
   /* fprintf(stderr, "testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
   if (state == SYSTEM_MOUSEPRESSED) {	
-#ifdef SOUND
     if(getSettingi("playEffects"))
       playMenuFX(fx_action);
-#endif
     SystemPostRedisplay();
   }
 }
