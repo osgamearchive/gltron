@@ -6,6 +6,7 @@ TODO list
 Bugs [high priority]:
 - make sure starting positions are really randomized right now, to prevent
   unfair advantage for player 0
+- fix first person view, e.g. don't draw cycle
 
 Features [high priority]:
 
