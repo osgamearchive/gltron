@@ -32,7 +32,7 @@ void drawMenu(Visual *d) {
   scripting_Run("return Menu.current");
   scripting_CopyStringResult(pMenuName, 200);
   /* obtain some information about the active menu */
-  scripting_RunFormat("return getn( Menu.%s.items )", pMenuName);
+  scripting_RunFormat("return table.getn( Menu.%s.items )", pMenuName);
   scripting_GetIntegerResult(&nEntries);
 
   /* new stuff: calculate menu dimensions */
@@ -40,7 +40,7 @@ void drawMenu(Visual *d) {
     int len_label = 0;
     int len_data = 0;
 
-    scripting_RunFormat("return strlen( Menu[Menu.%s.items[%d]].caption )", 
+    scripting_RunFormat("return string.len( Menu[Menu.%s.items[%d]].caption )", 
 			pMenuName, i + 1);
     scripting_GetIntegerResult(&len_label);
     len_label += 2; /* add ': ' */

@@ -37,20 +37,22 @@ void saveSettings(void) {
 	free(script);
 
 #ifdef WIN32
-	scripting_RunFormat("writeto(\"%s\")", "gltron.ini");
+	scripting_Run("file = io.open(\"gltron.ini\", \"w\")");
+	scripting_Run("io.output(file)");
 #else
 	{
 		char *path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
 		if(path == NULL)
 			return;
-		scripting_RunFormat("writeto(\"%s\")", path);
+		scripting_RunFormat("file = io.open(\"%s\", \"w\")", path);
+		scripting_Run("io.output(file)");
 		free(path);
 	}
 #endif
 
 	scripting_Run("save()");
-	scripting_Run("write \"save_completed = 1\\n\"");
-	scripting_Run("writeto()"); // select stdout again
+	scripting_Run("io.write \"save_completed = 1\\n\"");
+	scripting_Run("io.output(io.stdout)"); // select stdout again
 }
 
 int getSettingi(const char *name) {

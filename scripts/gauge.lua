@@ -51,7 +51,7 @@ function drawSpeedDigital(speed, rect, color) -- between 0 and N
 	if(speed > 0) then
 		c_color(color.r, color.g, color.b, color.a)
  		c_drawTextFitIntoRect(
- 			format("%.0f", speed * 10), -- TODO: reformat speed into string
+ 			string.format("%.0f", speed * 10), -- TODO: restring.format speed into string
  			rect.w, rect.h,
  			FontFormat.ScaleFitHorizontally + 
  			FontFormat.ScaleFitVertically)
@@ -63,7 +63,7 @@ function drawSpeedAnalog(speed, circle, angles)
 	-- speed: between 0 and 1
 	-- circle center in pixel coordinates
 	-- circle inner and outer radius in pixels
-	-- write("speed: ", speed, "\n")
+	-- io.write("speed: ", speed, "\n")
 	-- for each area, draw a circle arc, with optional color
 	-- interpolation through the arc
 	for index, range in angles do
@@ -94,37 +94,48 @@ function drawSpeedAnalog(speed, circle, angles)
 	end
 end
 
-function drawTurbo(charge, rect, ranges) -- between 0 and 1
-	 -- write("charge: ", charge, "\n")
-	 -- write(format("rect: %.2f, %.2f, %.2f, %.2f\n", rect.top, rect.left, rect.right, rect.bottom))
-	 -- Rectangle in pixel coordinates
-	 -- for each area, draw a rectangle, with optional color
-	 -- interpolation through the arc
-	 for index, range in ranges do
-			-- write(format("range: %.2f, %.2f %.2f, %.2f\n", range.range_start.charge, range.range_end.charge, range.range_start.width, range.range_end.width))
-			if(charge > range.range_start.charge) then
-				 if(charge > range.range_end.charge) then
-						drawRectangle(rect, range)
-				 else
-						local t = (charge - range.range_start.charge) / 
-							 (range.range_end.charge - range.range_start.charge)
-						local r = {
-							range_start = {
-								charge = range.range_start.charge,
-								color = range.range_start.color,
-								width = range.range_start.width
-							},
-							range_end = {
-								charge = range.range_end.charge
-							}
-						}
-						r.range_end.width = 
-							 (1 - t) * range.range_start.width + 
-							 t * range.range_end.width
-						r.range_end.color = 
-							 color_interpolate(t, range.range_start.color, range.range_end.color)
-						drawRectangle(rect, r)
-				 end
+function drawBar(charge, clear, rect, ranges) -- between 0 and 1
+	-- io.write("charge: ", charge, "\n")
+	-- io.write(string.format("rect: %.2f, %.2f, %.2f, %.2f\n", rect.top, rect.left, rect.right, rect.bottom))
+	-- Rectangle in pixel coordinates
+	-- for each area, draw a rectangle, with optional color
+	-- interpolation through the arc
+	for index, range in ranges do
+		-- io.write(string.format("range: %.2f, %.2f %.2f, %.2f\n", range.range_start.charge, range.range_end.charge, range.range_start.width, range.range_end.width))
+		if(charge > range.range_start.charge) then
+			if(charge > range.range_end.charge) then
+				local r = range
+				if(charge < clear) then
+					r.range_start.color = range.range_start.color_disabled
+					r.range_end.color = 
+						color_interpolate(t, range.range_start.color_disabled, range.range_end.color_disabled)
+				end		
+				drawRectangle(rect, r)
+			else
+				local t = (charge - range.range_start.charge) / 
+						(range.range_end.charge - range.range_start.charge)
+				local r = {
+					range_start = {
+						charge = range.range_start.charge,
+						color = range.range_start.color,
+						width = range.range_start.width
+					},
+					range_end = {
+						charge = range.range_end.charge
+					}
+				}
+				r.range_end.width = 
+						(1 - t) * range.range_start.width + 
+						t * range.range_end.width
+				r.range_end.color = 
+						color_interpolate(t, range.range_start.color, range.range_end.color)
+				if(charge < clear) then
+					r.range_start.color = range.range_start.color_disabled
+					r.range_end.color = 
+						color_interpolate(t, range.range_start.color_disabled, range.range_end.color_disabled)
+				end
+				drawRectangle(rect, r)
 			end
-	 end
+		end
+	end
 end

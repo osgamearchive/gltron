@@ -19,7 +19,7 @@ RETURN_PAUSE_ESCAPE = 13
 if(nil) then
 	SetCallback("timedemo")
 	c_mainLoop()
-	exit()
+	os.exit()
 end
 
 callback = "gui"
@@ -45,20 +45,20 @@ next_callback[ RETURN_QUIT ] = nil
 
 while 1 do
 	SetCallback(callback)
-	-- write(format("[lua] setting callback '%s'\n", callback))
+	-- io.write(string.format("[lua] setting callback '%s'\n", callback))
 	 
 	status = c_mainLoop()
-	-- write(format("[lua] system returned (%d)\n", status))
+	-- io.write(string.format("[lua] system returned (%d)\n", status))
 	 
 	if(next_callback[ status ]) then
 		 callback = next_callback[ status ]
 	else
 		if(status == RETURN_QUIT) then
-			write(format("[lua] clean exit\n"))
-			exit()
+			io.write(string.format("[lua] clean exit\n"))
+			os.exit()
                 else
-			write(format("[lua] unhandled callback (%d)\n", status))
-			exit()
+			io.write(string.format("[lua] unhandled callback (%d)\n", status))
+			os.exit()
 		end
 	end
 end

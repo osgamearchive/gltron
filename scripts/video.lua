@@ -4,8 +4,8 @@ function setupArtpacks()
 	artpacks = c_loadDirectory(ePath.ART);
 	local i,name
 	for i,name in artpacks do
-		write("found artpack: ", name)
-		write("\n")
+		io.write("found artpack: ", name)
+		io.write("\n")
 	end
 	for i,name in artpacks do
 		if name == settings.current_artpack then
@@ -20,7 +20,7 @@ function setupArtpacks()
 end
 
 function nextArtpack()
-	if current_artpack_index < getn(artpacks) then
+	if current_artpack_index < table.getn(artpacks) then
 		current_artpack_index = current_artpack_index + 1
 	else
 		current_artpack_index = 1
@@ -32,7 +32,7 @@ function previousArtpack()
 	if current_artpack_index > 1 then
 		current_artpack_index = current_artpack_index - 1
 	else
-		current_artpack_index = getn(artpacks) 
+		current_artpack_index = table.getn(artpacks) 
 	end
 	tmp.current_artpack = artpacks[ current_artpack_index ]
 end
@@ -42,8 +42,8 @@ function setupLevels()
 	levels = c_loadDirectory(ePath.LEVEL);
 	local i,name
 		for i,name in levels do
-			write("found level: ", name)
-			write("\n")
+			io.write("found level: ", name)
+			io.write("\n")
 		end
 	for i,name in levels do
 		if name == settings.current_level then
@@ -56,7 +56,7 @@ function setupLevels()
 end
 
 function nextLevel()
-	if current_level_index < getn(levels) then
+	if current_level_index < table.getn(levels) then
 		current_level_index = current_level_index + 1
 	else
 		current_level_index = 1
@@ -68,7 +68,7 @@ function previousLevel()
 	if current_level_index > 1 then
 		current_level_index = current_level_index - 1
 	else
-		current_level_index = getn(levels) 
+		current_level_index = table.getn(levels) 
 	end
 	tmp.current_level = levels[ current_level_index ]
 end

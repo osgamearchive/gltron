@@ -1,8 +1,8 @@
 function script_print(...)
-   write("[script] ")
+   io.write("[script] ")
    for i=1,arg.n do
-      write(arg[i])
+      io.write(arg[i])
    end
-   write("\n")
+   io.write("\n")
 end
 

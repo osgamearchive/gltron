@@ -3,16 +3,16 @@
 function savevar (n,v)
  if v == nil then return end
  if type(v)=="userdata" or type(v)=="function" then return end
- -- if type(v)=="userdata" or type(v)=="function" then write("\t-- ") end
+ -- if type(v)=="userdata" or type(v)=="function" then io.write("\t-- ") end
  -- don't print lua constants
- if strsub(n, 1, 1) == "_" then return end
- write("settings.", n," = ")
- if type(v) == "string" then write(format("%q",v))
+ if string.sub(n, 1, 1) == "_" then return end
+ io.write("settings.", n," = ")
+ if type(v) == "string" then io.write(string.format("%q",v))
  elseif type(v) == "table" then
    if v.__visited__ ~= nil then
-     write(v.__visited__)
+     io.write(v.__visited__)
    else
-    write("{ }\n")
+    io.write("{ }\n")
     v.__visited__ = n
     for r,f in v do
       if r ~= "__visited__" then
@@ -24,10 +24,10 @@ function savevar (n,v)
       end
     end
    end
- else write(tostring(v)) end
- write("\n")
+ else io.write(tostring(v)) end
+ io.write("\n")
 end
 
 function save ()
-  foreach(settings,savevar)
+  table.foreach(settings,savevar)
 end

@@ -154,12 +154,12 @@ int c_loadDirectory(lua_State *L) {
 	int top = lua_gettop(L); // number of arguments
 	if(top != 1) {
 		// wrong number of arguments
-		lua_error(L, "wrong number of arguments for function "
-			"c_loadDirectory: should be 1\n");
+		// lua_error(L, "wrong number of arguments for function "
+		//	"c_loadDirectory: should be 1\n");
 	}
 	if(!lua_isnumber(L, -1)) {
-		lua_error(L, "number  expected for arg1 to function "
-			"c_loadDirecotry");
+		// lua_error(L, "number  expected for arg1 to function "
+		//	"c_loadDirecotry");
 	}
 	dir = (int) lua_tonumber(L, -1);
 

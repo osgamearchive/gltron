@@ -291,7 +291,7 @@ Menu = {
       type = MenuC.type.slider, caption = "Threshold",
       right = JoyThresholdUp,
       left = JoyThresholdDown,
-      read = function() return format("%.0f%%", settings.joy_threshold * 100); end
+      read = function() return string.format("%.0f%%", settings.joy_threshold * 100); end
    },
 
 	-- TODO: fill in the rest of the items
@@ -425,11 +425,11 @@ Menu = {
 	Resolution = {
 		type = MenuC.type.list, caption = "Resolution",
 		init = function(menu)
-			write("[resolution] running init\n")
+			io.write("[resolution] running init\n")
 			-- check if matching resolution is found
 			tmp.resolution = 0
 			local i
-			local n = getn(Menu[menu].widths)
+			local n = table.getn(Menu[menu].widths)
 			for i = 1,n do
 				if (settings.width == Menu[menu].widths[i]) and (settings.height == Menu[menu].heights[i]) then
 					tmp.resolution = i
@@ -438,10 +438,10 @@ Menu = {
 			if(tmp.resolution == 0) then
 				Menu[menu].widths[n] = settings.width
 				Menu[menu].heights[n] = settings.height
-				-- Menu[menu].labels[n] = format(Menu[menu].labels[n], settings.width, settings.height)
+				-- Menu[menu].labels[n] = string.format(Menu[menu].labels[n], settings.width, settings.height)
 				tmp.resolution = n
 			end
-			write(format("[resolution] resolution: %d\n", tmp.resolution))
+			io.write(string.format("[resolution] resolution: %d\n", tmp.resolution))
 		end,	
 			
 		labels = {
@@ -537,13 +537,13 @@ Menu = {
       type = MenuC.type.slider, caption = "Music Volume",
       right = function() MusicVolumeUp(); end,
       left = function() MusicVolumeDown(); end,
-      read = function() return format("%.0f%%", settings.musicVolume * 100); end
+      read = function() return string.format("%.0f%%", settings.musicVolume * 100); end
    },
    FX_Volume = {
       type = MenuC.type.slider, caption = "FX Volume",
       right = function() FXVolumeUp(); end,
       left = function() FXVolumeDown(); end,
-      read = function() return format("%.0f%%", settings.fxVolume * 100); end
+      read = function() return string.format("%.0f%%", settings.fxVolume * 100); end
    },
    Song = {
       type = MenuC.type.slider, caption = "Song",

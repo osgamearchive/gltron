@@ -11,7 +11,7 @@ GetMenuValue[ MenuC.type.list ] = function ( menu )
 
    -- script_print(menu .. " --> " .. value )
    local i
-   for i=1,getn(Menu[menu].values) do
+   for i=1,table.getn(Menu[menu].values) do
       if Menu[menu].values[i] == value then return Menu[menu].labels[i] end
    end
    return "unknown (" .. value .. ")"
@@ -30,10 +30,10 @@ end
 MenuAction[ MenuC.type.menu ] = function ( menu )
 	Menu.current = menu 
 	Menu.active = 1
-	-- write(format("setting %s (%d items) as active menu\n", menu, getn(Menu[menu].items) ))
+	-- io.write(string.format("setting %s (%d items) as active menu\n", menu, table.getn(Menu[menu].items) ))
 	local i
-	for i = 1,getn(Menu[menu].items) do
-		-- write(format("checking %s for init-function\n", Menu[menu].items[i]))
+	for i = 1,table.getn(Menu[menu].items) do
+		-- io.write(string.format("checking %s for init-function\n", Menu[menu].items[i]))
 		if Menu[ Menu[menu].items[i] ].init then
 			Menu[ Menu[menu].items[i] ].init(Menu[menu].items[i])
 		end
@@ -61,7 +61,7 @@ end
 
 function menuListCycle(menu, offset)
 
-	local nValues = getn(Menu[menu].values)
+	local nValues = table.getn(Menu[menu].values)
 	local i
 	local index
 	local value = Menu[menu].read()
@@ -106,14 +106,14 @@ end
 
 GetMenuValueWidth = function ( menu )
 	if GetMenuValue[ Menu[menu].type ] then
-		return strlen( GetMenuValue[ Menu[menu].type ]( menu ) )
+		return string.len( GetMenuValue[ Menu[menu].type ]( menu ) )
 	else
 		return 0
 	end
 end
 
 GetMenuValueString = function ( menu )
-   -- write(format("GetMenuValueString: '%s'\n", menu));
+   -- io.write(string.format("GetMenuValueString: '%s'\n", menu));
 	if GetMenuValue[ Menu[menu].type ] then
 		return GetMenuValue[ Menu[menu].type ]( menu )
 	else
@@ -176,7 +176,7 @@ end
 
 
 MenuFunctions.Next = function ()
-	if Menu.active < getn(Menu[Menu.current].items) then
+	if Menu.active < table.getn(Menu[Menu.current].items) then
 		Menu.active = Menu.active + 1
 	else
 		Menu.active = 1
@@ -187,7 +187,7 @@ MenuFunctions.Previous = function ()
 	if Menu.active > 1 then 
 		Menu.active = Menu.active - 1
 	else
-		Menu.active = getn(Menu[Menu.current].items)
+		Menu.active = table.getn(Menu[Menu.current].items)
 	end
 end
 

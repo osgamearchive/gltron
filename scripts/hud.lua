@@ -15,6 +15,7 @@ eHUD = {
 -- 	- Speed digital (absolute value)
 -- 	- Speed analog (1 for default speed, > 1 during acceleration)
 -- 	- Booster value (between 0 and 1)
+--  - Wall buster value (between 0 and 1)
 
 function fabs(d)
 	if(d < 0) then
@@ -27,17 +28,17 @@ end
 function getConfig(aspect)
 	best = -1
 	best_aspect = 999
-	for i = 1,getn(HUDConfig) do
+	for i = 1,table.getn(HUDConfig) do
 		if(fabs(HUDConfig[i].aspect - aspect) < best_aspect) then
 			best_aspect = fabs(HUDConfig[i].aspect - aspect)
 			best = i
 		end
 	end
-	-- write(format("aspect: %f, config: %d (%f)\n", aspect, best, HUDConfig[best].aspect))
+	-- io.write(string.format("aspect: %f, config: %d (%f)\n", aspect, best, HUDConfig[best].aspect))
 	return HUDConfig[best]
 end
 
-function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster, fps, 
+function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster, wall_buster, fps, 
 	pause_message, pause_color_r, pause_color_g, pause_color_b)
 	config = getConfig(width / height)
 	-- speedometer
@@ -49,11 +50,20 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 		c_drawHUDMask(eHUD.MaskSpeed, 17)
 		drawSpeedAnalog(speed_analog, HUDSpeedDial.circle, HUDSpeedDial.angles)
 		c_drawHUDMask(eHUD.MaskTurbo, 18)
-		drawTurbo(booster, HUDTurbo.rect, HUDTurbo.ranges)
+		drawBar(booster, settings.booster_min / settings.booster_max, HUDTurbo.rect, HUDTurbo.ranges)
 		c_drawHUDMask(-1, -1)
 		c_popMatrix()
 	end
 	
+	-- wallbuster
+	if settings.show_wall_buster == 1 then
+		c_pushMatrix()
+		c_translate(config.Buster.x, config.Buster.y, 0)
+		c_drawHUDMask(eHUD.MaskTurbo, 19)
+		drawBar(wall_buster, settings.wall_buster_min / settings.wall_buster_max, HUDBuster.rect, HUDBuster.ranges)
+		c_drawHUDMask(-1,-1)
+		c_popMatrix()
+	end
 	-- 2d map
 	if settings.show_2d == 1 then
 		c_pushMatrix()
@@ -74,7 +84,7 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 		c_drawHUDSurface(eHUD.Scores)
 		c_translate(config.Score.x, config.Score.y, 0)
 		c_color(HUDColors.Score.r, HUDColors.Score.g, HUDColors.Score.b, HUDColors.Score.a)
-		c_drawTextFitIntoRect(format("%d", score),
+		c_drawTextFitIntoRect(string.format("%d", score),
 			config.Score.w, config.Score.h,
 			FontFormat.ScaleFitVertically)
 		c_popMatrix()
@@ -100,7 +110,7 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 		c_drawHUDSurface(eHUD.Console)
 		c_translate(config.Console_Text.x, config.Console_Text.y, 0)
 		for i = 0,config.Console.lines - 1 do
-			-- write(format("[console] %d: %s\n", i, console_GetLine(i)))
+			-- io.write(string.format("[console] %d: %s\n", i, console_GetLine(i)))
 			c_drawTextFitIntoRect(
 				console_GetLine(i),
 				config.Console_Text.w,
@@ -119,7 +129,7 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 		c_drawHUDSurface(eHUD.FPS)
 		c_translate(config.FPS_Text.x, config.FPS_Text.y, 0)
 		c_drawTextFitIntoRect(
-			format("%d", fps),
+			string.format("%d", fps),
 			config.FPS_Text.w,
 			config.FPS_Text.h,
 			FontFormat.ScaleFitVertically)

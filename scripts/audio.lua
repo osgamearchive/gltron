@@ -12,7 +12,7 @@ function setupSoundTrack()
 end
 
 function nextTrack()
-   if current_track_index < getn(tracks) then
+   if current_track_index < table.getn(tracks) then
       current_track_index = current_track_index + 1
    else
       current_track_index = 1
@@ -25,7 +25,7 @@ function previousTrack()
    if current_track_index > 1 then
       current_track_index = current_track_index - 1
    else
-      current_track_index = getn(tracks) 
+      current_track_index = table.getn(tracks) 
    end
    settings.current_track = tracks[ current_track_index ]
    c_reloadTrack()

@@ -23,6 +23,7 @@ HUDConfig = {
 		aspect = 1.333, -- aspect ratio
 		Speed = { x = 776, y = 0 }, -- the speed dial graphic starts here
 		Speed_Text = { x = 150, y = 60, w = 44, h = 28 }, -- that's where the digital speed number gets written to
+		Buster = { x = 776, y = 41 }, -- the wall_buster status
 		MapFrame = { x = 10, y = 10 }, -- the 2D map frame
 		Map = { x = 10, y = 10, w = 190, h = 190 }, -- the 2D map itself, relative to the frame
 		ScoreFrame = { x = 220, y = 10 }, -- the frame for the score
@@ -39,6 +40,7 @@ HUDConfig = {
 		aspect = 1.6,
 		Speed = { x = 776, y = 0 },
 		Speed_Text = { x = 150, y = 60, w = 44, h = 28 },
+		Buster = { x = 776, y = 41 }, -- the wall_buster status
 		MapFrame = { x = 10, y = 10 },
 		Map = { x = 10, y = 10, w = 190, h = 190 },
 		-- Speed = { x = 0, y = 0 },
@@ -58,6 +60,7 @@ HUDConfig = {
 		aspect = 2.6,
 		Speed = { x = 776, y = 0 },
 		Speed_Text = { x = 150, y = 60, w = 44, h = 28 },
+		Buster = { x = 776, y = 41 }, -- the wall_buster status
 		MapFrame = { x = 10, y = 10 },
 		Map = { x = 10, y = 10, w = 190, h = 190 },
 		-- Speed = { x = 0, y = 0 },
@@ -76,6 +79,7 @@ HUDConfig = {
 		aspect = 3.13,
 		Speed = { x = 776, y = 0 },
 		Speed_Text = { x = 150, y = 60, w = 44, h = 28 },
+		Buster = { x = 776, y = 41 }, -- the wall_buster status
 		MapFrame = { x = 10, y = 3 },
 		Map = { x = 10, y = 10, w = 190, h = 190 },
 		-- Speed = { x = 0, y = 0 },
@@ -94,10 +98,10 @@ HUDConfig = {
 }
 
 HUDColors = {
-	Speed = { r = 0, g = 0, b = .4, a = 1 }, -- Speed (text)
-	Score = { r = 1, g = 1, b = 0, a = 1 }, -- Score (text)
+	Speed = { r = 1, g = 1, b = 1, a = 1 }, -- Speed (text)
+	Score = { r = 1, g = 1, b = 1, a = 1 }, -- Score (text)
 	AI_Status = { r = 1, g = 1, b = 1, a = 1 }, -- AI message (text)
-	FPS = { r = 1, g = 1, b = 0, a = 1 } -- FPS number (text)
+	FPS = { r = 1, g = 1, b = 1, a = 1 } -- FPS number (text)
 }
 -- TODO: console
 
@@ -135,7 +139,7 @@ HUDSpeedDial = {
 		},
 	 	arc_end = { 
 			angle = angle_MathFromClock360(190),
-			color = { r = 1, g = 1, b = 0 },
+			color = { r = 0, g = 1, b = 0 },
 			speed = 0.7,
 		},
 		},
@@ -143,7 +147,7 @@ HUDSpeedDial = {
 		{
 		arc_start = {
 			angle = angle_MathFromClock360(190),
-			color = { r = 1, g = 1, b = 0 },
+			color = { r = .7, g = .7, b = 0 },
 			speed = 0.7,
 		},
 	 	arc_end = { 
@@ -160,21 +164,21 @@ HUDSpeedDial = {
 			speed = 0.8,
 		},
 	 	arc_end = { 
-			angle = angle_MathFromClock360(300),
-			color = { r = 1, g = 0, b = 0 },
+			angle = angle_MathFromClock360(313),
+			color = { r = 1, g = 1, b = 0 },
 			speed = 0.9,
 		},
 		},
 	-- angles, and speed range for red area
 		{
 		arc_start = {
-		angle = angle_MathFromClock360(300),
-		color = { r = 1, g = 0, b = 0 },
+		angle = angle_MathFromClock360(313),
+		color = { r = .6, g = .1, b = 0 },
 		speed = 0.9,
 		},
 	 	arc_end = { 
 			angle = angle_MathFromClock360(359),
-			color = { r = 1, g = 0, b = 0 },
+			color = { r = 1, g = .1, b = 0 },
 			speed = 1.0,
 		},
 		},
@@ -189,12 +193,14 @@ HUDTurbo = {
 		{
 		-- width, and charge range for red area
 			range_start = {
-				color = { r = .6, g = 0, b = 0 },
+				color = { r = .3, g = 0, b = 0 },
+				color_disabled = { r = .3, g = 0, b = 0 },
 				charge = 0.0,
 				width = 0.0,
 			},
 			range_end = {
-				color = { r = 1, g = 0, b = 0 },
+				color = { r = .3, g = 0, b = 0 },
+				color_disabled = { r = .3, g = 0, b = 0 },
 				charge = 0.3,
 				width = 0.3,
 			},
@@ -202,41 +208,55 @@ HUDTurbo = {
 		-- width, and charge range for yellow to red fade
 		{
 			range_start = {
-				color = { r = 1, g = 0, b = 0 },
+				color = { r = .3, g = 0, b = .0 },
+				color_disabled = { r = .3, g = 0, b = 0 },
 				charge = 0.3,
 				width = 0.3,
 			},
 			range_end = {
-				color = { r = 1, g = 1, b = 0 },
-				charge = 0.5,
-				width = 0.5,
+				color = { r = 1, g = 0, b = .0 },
+				color_disabled = { r = 1, g = 0, b = 0 },
+				charge = 1,
+				width = 1,
 			},
 		},
-		-- width, and charge range for green to yellow fade
+	}
+}
+
+-- Same settings for the wall_buster bar
+
+HUDBuster = {
+	rect = { top = 5, left = 5, right = 130, bottom = 45 },
+	ranges = {
 		{
+		-- width, and charge range for red area
 			range_start = {
-				color = { r = 1, g = 1, b = 0 },
-				charge = 0.5,
-				width = 0.5,
+				color = { r = .3, g = 0, b = 0 },
+				color_disabled = { r = .0, g = .0, b = .0 },
+				charge = 0.0,
+				width = 0.0,
 			},
 			range_end = {
-				color = { r = 0, g = 1, b = 0 },
-				charge = 0.7,
-				width = 0.7,
+				color = { r = .3, g = 0, b = 0 },
+				color_disabled = { r = .3, g = .3, b = .3 },
+				charge = 0.3,
+				width = 0.3,
 			},
 		},
-		-- width, and charge range for green area
+		-- width, and charge range for yellow to red fade
 		{
 			range_start = {
-				color = { r = 0, g = 1, b = 0 },
-				charge = 0.7,
-				width = 0.7,
+				color = { r = .3, g = 0, b = .0 },
+				color_disabled = { r = .3, g = .3, b = .3 },
+				charge = 0.3,
+				width = 0.3,
 			},
 			range_end = {
-				color = { r = 0, g = .6, b = 0 },
-				charge = 1.0,
-				width = 1.0,
+				color = { r = 1, g = 0, b = .0 },
+				color_disabled = { r = .6, g = .6, b = .6 },
+				charge = 1,
+				width = 1,
 			},
-		}
+		},
 	}
 }
