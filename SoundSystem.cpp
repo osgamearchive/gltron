@@ -1,4 +1,4 @@
-#include "System.h"
+#include "SoundSystem.h"
 
 namespace Sound {
   System::System(SDL_AudioSpec *spec) { 
