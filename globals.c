@@ -53,6 +53,21 @@ int menutime;
    double dt; */
 /* milliseconds since last frame */
 
+/* Networks stuff */
+#ifdef __NETWORK__
+tslots slots[4]; //slots of the server.
+
+int    nbUsers = 0; 
+int    serverstate = -1;
+char   name[255];
+tnetGameSettings netSettings;
+
+int    isConnected = 0;
+int    sChat       = 0;
+char   mesg[255] = "";
+int    me;
+#endif
+
 /* settings stuff */
 
 settings_int *si;

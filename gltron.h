@@ -79,6 +79,11 @@ typedef png_texture texture;
 /* resource management */
 #include "texture.h"
 
+#ifdef __NETWORK__
+#include "protocole.h"
+#include <SDL/SDL_net.h>
+#endif
+
 extern int game_textures;
 extern int n_textures;
 extern texture_info textures[];
@@ -267,6 +272,12 @@ extern callbacks pauseCallbacks;
 extern callbacks configureCallbacks;
 extern callbacks promptCallbacks;
 extern callbacks creditsCallbacks;
+#ifdef __NETWORK__
+extern callbacks netConnectCallbacks;
+extern callbacks nicknameCallbacks;
+extern callbacks serverCallbacks;
+extern callbacks netPregameCallbacks;
+#endif
 
 #define KEY_ACTIONS_N 8
 
@@ -518,6 +529,21 @@ extern void ftxRenderString(fonttex *ftx, char *string, int len);
 /* extern void ftxGetStringWidth(fontTex *ftx, */
 /*                               char *string, int len, int *width); */
 /* can't get max_ascent, max_descent yet */
+
+#ifdef __NETWORK__
+tslots slots[4]; //slots of the server.
+int    nbUsers; 
+int    serverstate;
+char   name[255];
+tnetGameSettings netSettings;
+
+int    isConnected;
+int    sChat;
+char   mesg[255];
+int    me;
+
+extern void handleServer( void );
+#endif
 
 #endif
 

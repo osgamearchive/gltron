@@ -48,10 +48,11 @@ show_scores
 shadow_lod
 show_gl_logo
 show_recognizer
-v5
+v7
 keys
 cycle_colors
 trail_colors
 cam_settings
 artpack
-
+nickname
+server

@@ -1,79 +1,248 @@
 #include "gltron.h"
 
-#define HEADER_SIZE 6
 
-void clientConnectToServer() {
+
+void
+login(char *name)
+{
+  int           i;
+
+  for(i=0;i<4;++i)
+    {
+      slots[i].active=0;
+    }
+
+  if( Net_SockisValid()  )
+    {
+      //Sending welcome to the server.
+      Send_welcom(name, 1); //TODO: put gltron version here...
+    }
+}
+
+//get login answer
+int
+doLoginNetEvent(int accepted, int which, int len, int time)
+{
+  char message[512];
+  int  i;
+
+  //which must be serverid
+  if( which != SERVERID )
+    {
+
+      fprintf(stderr, "Getting a packet from the server but has an id different from -1!!.\n");
+      return corruptedPacket;
+    }
   
-}
+  //Get a message from the server
+  Recv_Buff(message, len); //Getting Welcome message from Server.
 
-void sendNetEvent(GameEvent *e) {
-  unsigned char buf[HEADER_SIZE];
-  buf[0] = NET_EVENT;
-  buf[1] = '\0';
-  SystemNet_Write32(sizeof(GameEvent), buf + 2);
-  /* TODO: decide if to send to server or multiple clients */
-  SystemTCPsend(buf, sizeof(buf));
-  SystemTCPsend((char*) e, sizeof(GameEvent));
-}
-
-void updateNet() {
-  unsigned char buf[HEADER_SIZE];
-  NetData *data;
-  list *p;
-  list *l;
-
-  while(SystemCheckSockets()) {
-    data = (NetData*) malloc(sizeof(NetData));
-    for(p = game2->network->data; p->next != NULL; p = p->next);
-    l = (list*) malloc(sizeof(list));
-    p->next = l;
-    l->next = NULL;
-    l->data = data;
-
-    SystemTCPrecv(buf, sizeof(buf));
-    data->type[0] = buf[0];
-    data->type[1] = buf[1];
-    data->length = SystemNet_Read32(buf + 2);
-    if(data->length != 0) {
-      data->data = (char*) malloc(data->length);
-      SystemTCPrecv(data->data, data->length);
+  if( ! accepted )
+    { 
+      fprintf(stderr, "Connection refused: %s", message);
+      return loginNotAccepted;
     }
-  }
-  return;
+
+
+  fprintf(stderr, "%s\n", message);
+
+  //Get login info.
+  Recv_login( &serverstate, &nbUsers );
+
+  print_serverState(serverstate);
+
+  //get our info, who we are, etc...
+  which = Recv_who(slots);
+  me = which;
+  
+  //are we the master?
+  if( slots[which].isMaster )
+    {
+      fprintf(stderr, "You 're the game Master\n");
+    }
+      fprintf(stderr, "Cycle's color is: %d ( %s )\n", slots[which].color, slots[which].name);
+
+
+  //Getting users list.
+  fprintf(stderr, "%d palyers in the game\n", nbUsers);
+
+  for(i=0; i<nbUsers; ++i)
+    {
+      which = Recv_who(slots);
+    }
+  return noErr;
 }
 
-GameEvent* getNetEvent() {
-  static GameEvent *current = NULL;
-  GameEvent *result;
-  list *p;
-  list *l;
-  NetData *data;
+//Get a magic event, for connection.
+int
+doMagicNetEvent()
+{
+  int err = noErr;
+  err = Send_header(magic, SERVERID, 0, 0);
+  //now we can logging in.
+ login(game->settings->nickname); //logging in
+  return err;
+}
 
-  if(game2->network == NULL) {
-    fprintf(stderr, "networking not even initialized\n");
-    return NULL;
-  }
+// S1 join
+int
+doJoinNetEvent()
+{
+  int  err = noErr;
+  int  which = Recv_who(slots);
 
-  if(current == NULL) {
-    for(p = game2->network->data; p->next != NULL; p  = p->next) {
-      data = (NetData*) p->data;
-      if(data->type[0] == NET_EVENT) {
-	current = (GameEvent*) data->data;
-	/* remove event from list now */
-	p->data = p->next->data;
-	l = p->next;
-	p->next = p->next->next;
-	free(l);
-      }
+  fprintf(stderr, "%s join the game\n", slots[which].name);
+  nbUsers++;
+  return err;
+}
+
+//S& part
+int
+doPartNetEvent(int which)
+{
+  int err = noErr;
+  fprintf(stderr, "%s part\n", slots[which].name);
+  slots[which].active = 0;
+  nbUsers--;
+  return err;
+}
+
+//Server change state...
+int
+doChgeStateNetEvent()
+{
+  int err = noErr;
+  int newState;
+
+  Recv_chgeState(&newState);
+  fprintf(stderr, "Server has changed state:");
+
+  print_serverState(newState);
+  if( newState == preGameState )
+    {
+      Recv_netGameSettings(&netSettings);
+      printNetGameSettings(&netSettings);
     }
+  serverstate = newState;
+  return err;
+}
+
+//Had a game event during playing...
+int
+doGameNetEvent(  )
+{
+  GameEvent   *e;
+  int err = noErr;
+
+  e = Recv_gameEvent();
+
+  //fprintf(stderr, "%d %d %d %d %d\n", e->type, e->player, 
+  //	 e->x, e->y, e->timestamp);
+
+  switch( e->type )
+  {
+  case EVENT_TURN_LEFT:
+    fprintf(stderr, "%s has turn left.\n", slots[e->player].name);
+    break;
+  case EVENT_TURN_RIGHT:
+    fprintf(stderr,"%s has turn right.\n", slots[e->player].name);
+    break;
+  case EVENT_CRASH:
+    fprintf(stderr,"%s has crashed.\n", slots[e->player].name);
+    break;
+  case EVENT_STOP:
+    fprintf(stderr,"%s is the winner.\n", slots[e->player].name);
+    break;
+  default:
+    fprintf(stderr,"Unknown game event.\n");
+    break;
   }
 
-  if(current != NULL) { /* werde wohl kaum events aus der Zukunft bekommen */
-    if(current->timestamp < game2->time.current) {
-      result = current;
-      current = NULL;
-      return result;
-    }      
-  }
-  return NULL;
+  return err;
+}
+
+int
+doChatNetEvent(int len, int which)
+{
+  int err=noErr;
+  char mesg[255];
+  
+  Recv_chat(len, mesg);
+  mesg[len]='\0';
+  fprintf(stderr,"%s ( %d ) > %s\n", slots[which].name, which, mesg);
+
+
+  return err;
+}
+/** Handle network traffic. */
+void
+handleServer()
+{
+  int         len;
+  int         which;
+  int         type;
+  int         time;
+
+  //get header to see what's about, who, when. 
+  if( (Recv_header(&type, &which, &len, &time) )!= noErr )
+    {
+      Net_deconnect();
+      fprintf(stderr,"Connection lost\n");
+      //exit(2);
+      //Connection 's lost.
+    } else {
+      switch( type )
+	{
+	case loginAccept: //login accept
+	  if( doLoginNetEvent(1, which, len, time) != noErr )
+	    {
+	      //exit(2);
+	    } else {
+	      switchCallbacks(&netPregameCallbacks);
+	    }
+	  break;
+	case loginRefuse://login refused
+	  if( doLoginNetEvent(0, which, len, time) != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	case magic:
+	  if( doMagicNetEvent() != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	case joinPlayer:
+	  if(doJoinNetEvent() != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	case leftPlayer:
+	  if(doPartNetEvent(which) != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	case gameEvent:
+	  if(doGameNetEvent() != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	case chgeState:
+	  if(doChgeStateNetEvent() != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	case chat:
+	  if(doChatNetEvent(len, which) != noErr )
+	    {
+	      //exit(2);
+	    }
+	  break;
+	}
+    }
 }

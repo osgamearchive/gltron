@@ -310,6 +310,13 @@ typedef struct Settings {
   float current_speed;
   int grid_size;
   int arena_size; /* index */
+
+#ifdef __NETWORK__
+  /* these settings affect network play. */
+  char nickname[255];
+  char server[255];
+#endif
+
 } Settings;
 
 typedef struct Game {

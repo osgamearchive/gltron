@@ -145,6 +145,23 @@ void menuAction(Menu *activated, int type) {
       game2->mode = GAME_SINGLE;
       switchCallbacks(&pauseCallbacks);
       break;
+#ifdef __NETWORK__
+    case 'n':
+      switch( activated->szName[3] )
+	{
+	case 't':
+	  printf("connect menu chosen\n");
+	  switchCallbacks(&netConnectCallbacks);
+	  break;
+	case 's':
+	  switchCallbacks(&serverCallbacks);
+	  break;
+	case 'n':
+	  switchCallbacks(&nicknameCallbacks);
+	  break;
+	}
+      break;
+#endif
     case 'a': // this menu code is turning uglier and uglier 
       printf("artpack menu chosen\n");
       artpack_index++;
@@ -303,6 +320,20 @@ void initMenuCaption(Menu *m) {
       sprintf(m->display.szCaption, m->szCapFormat, 
 	      artpack_list[artpack_index]);
       break;
+#ifdef __NETWORK__
+    case 'n':
+      if( m->szName[3] == 'n' )
+	{
+	  printf("setting network menu caption ( nickname )\n");
+	  sprintf(m->display.szCaption, m->szCapFormat, 
+		  game->settings->nickname);
+	} else {
+	  printf("setting network menu caption ( server )\n");
+	  sprintf(m->display.szCaption, m->szCapFormat, 
+		  game->settings->server);
+	}
+      break;
+#endif
     case 't':
       switch(m->szName[2]) {
       case 'i':
