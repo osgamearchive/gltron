@@ -170,6 +170,8 @@ extern settings_int *si;
 extern int si_count;
 extern settings_float *sf;
 extern int sf_count;
+extern settings_v *sv;
+extern int sv_count;
 
 extern Game main_game;
 extern Game *game;
