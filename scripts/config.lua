@@ -10,6 +10,8 @@ settings.speed = 8.5
 settings.ai_level = 2
 settings.grid_size = 720
 settings.erase_crashed = 1
+settings.map_ratio_w = 0.333
+settings.map_ratio_h = 0.333
 
 settings.ai_player1 = 0
 settings.ai_player2 = 1
@@ -17,7 +19,7 @@ settings.ai_player3 = 1
 settings.ai_player4 = 1
 -- game settings
 settings.fast_finish = 1
-settings.camType = 3
+settings.camType = 1
 settings.display_type = 3
 
 -- video
@@ -37,7 +39,7 @@ settings.alpha_trails = 0
 settings.show_glow = 1
 settings.show_model = 1
 settings.show_recognizer = 1
-settings.show_impact = 0
+settings.show_impact = 1
 settings.lod = 1
 settings.shadow_lod = 1
 settings.show_fps = 0
