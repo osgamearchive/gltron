@@ -1,11 +1,13 @@
 prerelease things:
-(1) fix back-to-front rendering
-(2) generate uv-coordinates for the model
 (2) do drop shadows
-(3) key definitions are not saved to .gltronrc
-(2) fix lighting problems
-(3) fix demo recording / playback
+(3) save key definitions to .gltronrc
 (3) decide on packaging (installer?)
+(1) art pack support
+(2) modified bot-AI
+
+soon after:
+(1) panning for the camera
+(2) replay capabilities / fix demo recording / playback
 
 bugs:
 (2) demo playpack is broken after interrupt (Escape) 
@@ -16,11 +18,12 @@ possible bugs:
 (0) failing malloc's arent caught, might lock up application/system
 (0) some attributes are not saved to .gltronrc
 todo: 
+(2) generate uv-coordinates for the model
+(1) fix back-to-front rendering
+(2) fix/find lighting problems
 (2) work a bit more on line antialiasing (trail tops)
 (2) implement one of the two top-down views and arrange HUD
 (2) size HUD according to screen resolution
-(2) add menu items for view (1,2,4-players)
-(2) add menu items for camera control (circle/behind/1st/mouse)
 (0) investigate mipmapping artefacts under win32
 (0) check USB keyboards. can't they record multiple key presses?
 (0) change color values to something less yogurt-like
