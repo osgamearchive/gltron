@@ -1,5 +1,5 @@
-GLtron has (if SDL_sound was comfigured correctly) now the ability to
-playback mp3 files and other music.
+GLtron has now the ability to playback mp3 files and other music (if
+SDL_sound was configured correctly).
 
 Put your music in the data/music/ directory and prefix the song name with
 'song_', e.g. 'song_aybabtu.mp3'. Use the arrow keys on the Audio->Song
