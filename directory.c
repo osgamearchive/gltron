@@ -150,6 +150,10 @@ list* readDirectoryContents(char *dirname, char *prefix) {
   p->next = NULL;
 
   dir = opendir(dirname);
+  if(dir == NULL) {
+    fprintf(stderr, "warning: cannot find music directory\n");
+    return l;
+  }
   while((entry = readdir(dir)) != NULL) {
     char *name;
     if(prefix == NULL || strstr(entry->d_name, prefix) == entry->d_name) {
