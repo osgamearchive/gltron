@@ -60,7 +60,14 @@ AC_CHECK_LIB(png, main,, AC_MSG_ERROR(libpng is needed))
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
-AC_CHECK_HEADERS(GL/gl.h GL/glu.h,, AC_MSG_ERROR(cannot find GL headers))
+
+AC_CHECK_HEADERS(GL/gl.h GL/glu.h,,
+AC_CHECK_HEADERS("/usr/X11R6/include/GL/gl.h" \
+                 "/usr/X11R6/include/GL/glu.h",
+		 INCS="$INCS -I/usr/X11R6/include",
+AC_MSG_ERROR(cant find GL headers)))
+
+AC_SUBST(INCS)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
