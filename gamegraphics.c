@@ -423,9 +423,6 @@ drawPlayersName(gDisplay *d)
 
 	  //trying to draw a nice box behind the name
 
-	  /* glEnable(GL_BLEND); */
-	  /* glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); */
-
 	  rasonly(d);	  
 	  glDepthMask(GL_FALSE);
 	  glDisable(GL_DEPTH_TEST);	  

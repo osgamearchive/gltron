@@ -64,8 +64,8 @@ fi
 
 dnl network set-up
 AC_ARG_ENABLE(network,
-[ --enable-network             Experimental network mode [default=off]],
-	enable_network=$enableval, enable_network=off)
+[ --enable-network             Experimental network mode [default=on]],
+	enable_network=$enableval, enable_network=on)
 if test "x$enable_network" = xyes; then
 	AC_CHECK_LIB(SDL_net, SDLNet_Init,
 	CFLAGS="$CFLAGS -D__NETWORK__";

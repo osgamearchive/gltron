@@ -270,6 +270,17 @@ do_action(Packet packet)
 	      slots[i].isMaster = 0;
 	    }
 	}
+      sprintf(mesg, "%s is new Game Master\n", slots[packet.infos.action.which].name);
+      printf("%s", mesg);
+
+      if( serverstate == preGameState )
+	{
+	  insert_wtext(pregametext, mesg, 2);
+	  //drawMessage(mesg);
+	} else if ( serverstate == gameState )
+	  {
+	    consoleAddLine(mesg);
+	  }
       slots[packet.infos.action.which].isMaster=1;
       break;
     case HASSTARTED:
