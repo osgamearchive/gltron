@@ -1,7 +1,9 @@
 #ifndef NEBU_RENDERER_GL_H
 #define NEBU_RENDERER_GL_H
 
-#include "SDL_opengl.h"
+// #include "SDL_opengl.h"
+#include <GL/glew.h>
+
 #include <stdio.h>
 #include "video/nebu_quad.h"
 
