@@ -75,7 +75,7 @@ void draw2D( Visual *d ) {
 		for(i = 0; i < game->players; i++) {
 				Player *p = &game->player[i];
 				PlayerVisual *pV = gPlayerVisuals + i;
-				Line* trail;
+				segment2* trail;
 				
 				// fixme: check if trails vanish
         if (p->data->trail_height <= 0) {
@@ -104,20 +104,54 @@ void draw2D( Visual *d ) {
 				glBegin(GL_LINES);
 				for(trail = p->data->trails; trail != p->data->trails + p->data->trailOffset; trail++)
 				{
-						glVertex2f(trail->sx, trail->sy);
-						glVertex2f(trail->ex, trail->ey);
+						glVertex2f(trail->vStart.v[0], 
+											 trail->vStart.v[1]
+											 );
+						glVertex2f(trail->vStart.v[0] + trail->vDirection.v[0], 
+											 trail->vStart.v[1] + trail->vDirection.v[1]
+											 );
 				}
 				if(trail != p->data->trails)
 				{
 						trail--;
-						glVertex2f(trail->ex, trail->ey);
+						glVertex2f(trail->vStart.v[0] + trail->vDirection.v[0], 
+											 trail->vStart.v[1] + trail->vDirection.v[1]
+											 );
 						glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
 				}
 				else
 				{
-						glVertex2f(trail->sx, trail->sy);
+						glVertex2f(trail->vStart.v[0], 
+											 trail->vStart.v[1]
+											 );
 						glVertex2f( floorf(p->data->posx), floorf(p->data->posy));
 				}
+				
+#if 0
+				// draw AI debug lines
+				glColor3f(1,1,1);
+				glVertex2f(p->ai->front.vStart.v[0],
+									 p->ai->front.vStart.v[1]);
+				glVertex2f(p->ai->front.vStart.v[0] + p->ai->front.vDirection.v[0],
+									 p->ai->front.vStart.v[1] + p->ai->front.vDirection.v[1]);
+				glColor3f(0,1,0);
+				glVertex2f(p->ai->left.vStart.v[0],
+									 p->ai->left.vStart.v[1]);
+				glVertex2f(p->ai->left.vStart.v[0] + p->ai->left.vDirection.v[0],
+									 p->ai->left.vStart.v[1] + p->ai->left.vDirection.v[1]);
+				glColor3f(0,0,1);
+				glVertex2f(p->ai->right.vStart.v[0],
+									 p->ai->right.vStart.v[1]);
+				glVertex2f(p->ai->right.vStart.v[0] + p->ai->right.vDirection.v[0],
+									 p->ai->right.vStart.v[1] + p->ai->right.vDirection.v[1]);
+				glColor3f(0,1,1);
+				glVertex2f(p->ai->backleft.vStart.v[0],
+									 p->ai->backleft.vStart.v[1]);
+				glVertex2f(p->ai->backleft.vStart.v[0] + 
+									 p->ai->backleft.vDirection.v[0],
+									 p->ai->backleft.vStart.v[1] + 
+									 p->ai->backleft.vDirection.v[1]);
+#endif
 				glEnd();
 		}
 		glDisable(GL_BLEND);

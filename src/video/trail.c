@@ -12,14 +12,13 @@ static float normal2[] = { 0.0, 1.0, 0.0 };
    specified (eye) point
    the z component is ignored
  */
-float getDist(Line *ln, float* eye) {
-
+float getDist(segment2 *s, float* eye) {
   float n[2];
   float tmp[2];
-  n[0] = ln->sx + (ln->ey - ln->sy);
-  n[1] = ln->sy - (ln->ex - ln->sx);
-  tmp[0] = eye[0] - ln->sx;
-  tmp[1] = eye[1] - ln->sy;
+  n[0] = s->vStart.v[0] + s->vDirection.v[1];
+  n[1] = s->vStart.v[1] - s->vDirection.v[0];
+  tmp[0] = eye[0] - s->vStart.v[0];
+  tmp[1] = eye[1] - s->vStart.v[1];
   if(n[0] == n[1] == 0) return length(tmp);
   return abs(scalarprod2(n, tmp) / length(n));
 }
@@ -33,43 +32,37 @@ float dists[] = { BOW_DIST2, BOW_DIST3, BOW_DIST1, 0 };
 
 float getSegmentEndX(Data *data, int dist) {
   float tlength, blength;
-	Line *line = data->trails + data->trailOffset;
+	segment2 *s = data->trails + data->trailOffset;
 	
   if(dirsX[data->dir] == 0) return data->posx;
 
-  tlength = data->posx - line->sx + data->posy - line->sy;
-  if(tlength < 0) tlength = -tlength;
+  tlength = segment2_Length(s);
   blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
   return data->posx - dists[dist] * blength * dirsX[ data->dir ];
 }
 
 float getSegmentEndY(Data *data, int dist) {
   float tlength, blength;
-	Line *line = data->trails + data->trailOffset;
+	segment2 *s = data->trails + data->trailOffset;
 
   if(dirsY[data->dir] == 0) return data->posy;
 
-  tlength = data->posx - line->sx + data->posy - line->sy;
-  if(tlength < 0) tlength = -tlength;
+  tlength = segment2_Length(s);
   blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
   return data->posy - dists[dist] * blength * dirsY[ data->dir ];
 }
 
 /* getSegmentEndUV() calculates the texture coordinates for the last segment */
-float getSegmentEndUV(Line *line, Data *data) {
+float getSegmentEndUV(segment2 *s, Data *data) {
   float tlength, blength;
-  tlength = data->posx - line->sx + data->posy - line->sy;
-  if(tlength < 0) tlength = -tlength;
+  tlength = segment2_Length(s);
   blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
   return (tlength - 2 * blength) / DECAL_WIDTH;
 }
 
 /* getSegmentUV gets UV coordinates for an ordinary segment */
-float getSegmentUV(Line *line) {
-  float tlength;
-  tlength = line->ex - line->sx + line->ey - line->sy;
-  if(tlength < 0) tlength = -tlength;
-  return tlength / DECAL_WIDTH;
+float getSegmentUV(segment2 *s) {
+  return segment2_Length(s) / DECAL_WIDTH;
 }
 
 /* 
@@ -78,7 +71,7 @@ float getSegmentUV(Line *line) {
 */
 
 void drawTrailLines(Player *p, PlayerVisual *pV) {
-  Line *line;
+  segment2 *s;
   float height;
 
   float *normal;
@@ -110,35 +103,40 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 
   glBegin(GL_LINES);
 
-  line = &(data->trails[0]);
-  while(line != data->trails + data->trailOffset) { 
+  s = data->trails;
+  while(s != data->trails + data->trailOffset) { 
 		/* the current line is not drawn */
     /* compute distance from line to eye point */
-    dist = getDist(line, cam->cam);
+    dist = getDist(s, cam->cam);
 		alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
     // trail_top[3] = alpha;
     glColor4fv(trail_top);
     
-    if(line->sy == line->ey) normal = normal1;
+    if(s->vDirection.v[1] == 0) normal = normal1;
     else normal = normal2;
     glNormal3fv(normal);
-    glVertex3f(line->sx, line->sy, height);
-    glVertex3f(line->ex, line->ey, height);
-
-    line++;
+    glVertex3f(s->vStart.v[0],
+							 s->vStart.v[1],
+							 height);
+    glVertex3f(s->vStart.v[0] + s->vDirection.v[0],
+							 s->vStart.v[1] + s->vDirection.v[1],
+							 height);
+    s++;
     polycount++;
   }
   glEnd();
 
   /* compute distance from line to eye point */
-  dist = getDist(line, cam->cam);
+  dist = getDist(s, cam->cam);
   alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
 	// trail_top[3] = alpha;
   glColor4fv(trail_top);
 
   glBegin(GL_LINES);
 
-  glVertex3f(line->sx, line->sy, height);
+	glVertex3f(s->vStart.v[0],
+						 s->vStart.v[1],
+						 height);
   glVertex3f( getSegmentEndX(data, 0),
 	      getSegmentEndY(data, 0),
 	      height );

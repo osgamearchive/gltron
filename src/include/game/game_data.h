@@ -67,17 +67,15 @@ typedef struct Data {
 	int last_dir;
 	unsigned int turn_time; /* for cycle animation */
  
-  Line *trails;
+  segment2 *trails;
 	int trailOffset;
 } Data;
 
 typedef struct AI {
   int active;
   int tdiff;
-  int moves;
   long lasttime;
-  int danger;
-  int lastx, lasty;
+	segment2 left, right, front, backleft;
 } AI;
 
 typedef struct Player {

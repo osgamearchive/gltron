@@ -213,7 +213,7 @@ extern void ftxRenderString(FontTex *ftx, const char *string, int len);
 /*                               const char *string, int len, int *width); */
 /* can't get max_ascent, max_descent yet */
 
-extern void doTrail(Line *t, int value);
+extern void doTrail(segment2 *t, int value);
 
 extern void initDisplay(Visual *d, int type, int p, int onScreen);
 extern void changeDisplay(int view);
@@ -259,8 +259,8 @@ extern void draw2D( Visual *d );
 /* trail.c */
 extern void drawTrailLines(Player *p, PlayerVisual *pV);
 extern void drawTrailShadow(Player *p, PlayerVisual *pV);
-extern float getSegmentUV(Line *line);
-extern float getSegmentEndUV(Line *line, Data *data);
+extern float getSegmentUV(segment2 *line);
+extern float getSegmentEndUV(segment2 *line, Data *data);
 extern float getSegmentEndX(Data *data, int type);
 extern float getSegmentEndY(Data *data, int type);
 
