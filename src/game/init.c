@@ -48,12 +48,20 @@ void initConfiguration(int argc, const char *argv[])
     }
   }
 	
-	if(!isSettingf("version") || getSettingf("version") < 0.70f) {
+	if(!isSetting("version") || getSettingf("version") < 0.70f) {
 		/* load some more defaults from config file */
 		runScript(PATH_SCRIPTS, "config.lua");
 		runScript(PATH_SCRIPTS, "artpack.lua");
 		printf("[warning] old config file found, overriding using defaults\n");
 	}
+	// check if config is valid
+	scripting_GetGlobal("save_completed", NULL);
+	if(scripting_IsNilResult()) {
+		runScript(PATH_SCRIPTS, "config.lua");
+		runScript(PATH_SCRIPTS, "artpack.lua");
+		printf("[warning] defunct config file found, overriding using defaults\n");
+	}
+		
 	setSettingf("version", 0.70f);
 
   /* parse any comandline switches overrinding the loaded settings */
