@@ -40,34 +40,18 @@ void keyboardPause(int key, int x, int y) {
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;
-  case SYSTEM_KEY_F4:
-    /* FIXME: why is this not calling defaultDisplay() ? */
-    setSettingi("display_type", 3);
-    changeDisplay();
-    break;
-    /* doesn't really work on my box */
-    /*
-  case SYSTEM_KEY_F6: 
-    Gamma -= 0.1;
-    shutdownDisplay(game->screen);
-    SystemSetGamma(Gamma, Gamma, Gamma);
-    setupDisplay(game->screen);
-    break;
-  case SYSTEM_KEY_F7: 
-    Gamma += 0.1;
-    shutdownDisplay(game->screen);
-    SystemSetGamma(Gamma, Gamma, Gamma);
-    setupDisplay(game->screen);
-    break;
-    */
+  case SYSTEM_KEY_F4: defaultDisplay(3); break;
+
+  case SYSTEM_KEY_F5: saveSettings(); break;
+
   case SYSTEM_KEY_F10: nextCameraType(1); break;
+
   case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
   case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
     
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
 
-  case SYSTEM_KEY_F5: saveSettings(); break;
   case SYSTEM_KEY_TAB: switchCallbacks(&promptCallbacks); break;
   }
 }
@@ -82,8 +66,9 @@ void initPause() {
 #endif
 
   /* 
-   * TODO: Disable game music here. Game should be totally silent in pause
-   * mode. (Nice when the boss is walking by, phone call, etc...)
+   * TODO: Provide an option to disable game music here. 
+   * Game should be totally silent in pause mode. (Nice when 
+   * the boss is walking by, phone call, etc...)
    */
   
   updateSettingsCache();
