@@ -52,15 +52,21 @@ namespace Sound {
 
   void SourceMusic::CreateSample(void) {
     _rwops = SDL_RWFromFile(_filename, "rb");
-    _sample = Sound_NewSample(_rwops, NULL,
+	char *ext = _filename;
+	for(int i = 0; *(_filename + i); i++)
+	{
+		if(*(_filename + i) == '.')
+			ext = _filename + i + 1;
+	}
+    _sample = Sound_NewSample(_rwops, ext,
 															_system->GetAudioInfo(),
 															_sample_buffersize );
 
     if(_sample == NULL) {
-      fprintf(stderr, "[error] failed loading sample: %s\n", 
-							Sound_GetError());
-      return;
-    } 
+		fprintf(stderr, "[error] failed loading sample type %s, from %s: %s\n", ext,
+			_filename, Sound_GetError());
+		return;
+	}
 
     _read = 0;
     _decoded = 0;
