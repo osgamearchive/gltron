@@ -1,13 +1,82 @@
 #ifndef Vector3_H
 #define Vector3_H
 
+#include "iostream.h"
+#include "math.h"
+
 class Vector3 {
  public:
   Vector3() { };
   Vector3(float a, float b, float c) {
     x = a; y = b; z = c;
   };
+  Vector3(float *v) {
+    x = v[0]; y = v[1]; z = v[2];
+  };
   float x, y, z;
+
+  Vector3 operator+ (const Vector3& v) const {
+    return Vector3(x + v.x, y + v.y, z + v.z);
+  };
+
+  Vector3 operator- (const Vector3& v) const {
+    return Vector3(x - v.x, y - v.y, z - v.z);
+  };
+
+  float operator* (const Vector3& v) const {
+    return x * v.x + y * v.y + z * v.z;
+  };
+
+  Vector3 operator* (float f) const {
+    return Vector3(x * f, y * f, z * f);
+  }
+
+  Vector3& operator*= (float f) {
+    x *= f; y *= f; z *= f;
+    return *this;
+  }
+
+  Vector3& operator/= (float f) {
+    x /= f; y /= f; z /= f;
+    return *this;
+  }
+
+  float Length() const {
+    return sqrt(*this * *this);
+  }
+
+  float Length2() {
+    return *this * *this;
+  }
+
+  Vector3& Normalize() {
+    float length = Length();
+    if(length != 0)
+      *this /= length;
+    return *this;
+  }
+
+  Vector3 Cross(const Vector3& v) const {
+    return Vector3(y * v.z - z * v.y,
+		   z * v.x - x * v.z, 
+		   x * v.y - y * v.z);
+  }
+
+  friend ostream& 
+    operator<<(ostream& os, const Vector3& v);
+
+  friend Vector3
+    operator*(float f, const Vector3& v);
+
 };
+
+inline Vector3 operator*(float f, const Vector3& v) {
+  return v * f;
+}
+
+inline ostream& operator<<(ostream& os, const Vector3& v) {
+  os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+  return os;
+}
 
 #endif
