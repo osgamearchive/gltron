@@ -11,6 +11,7 @@ Sound::SourceSample *crash = NULL;
 Sound::SourceSample *engine = NULL;
 
 Sound::Source3D *players[PLAYERS];
+Sound::Source3D *recognizerEngine;
 
 extern "C" {
 
@@ -41,6 +42,15 @@ extern "C" {
 				 V * dirsY[p->data->dir],
 				 0);
       }
+#ifdef RECOGNIZER_SOUND
+      if(game->settings->show_recognizer) {
+	Point p, v;
+	getRecognizerPositionVelocity(&p, &v);
+	recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
+	recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
+      }
+#endif
+
       Sound::Listener& listener = sound->GetListener();
       listener._location = players[0]->_location;
       listener._velocity = players[0]->_velocity;
@@ -126,12 +136,15 @@ extern "C" {
   }
     
   void Audio_LoadPlayers() {
-#if 1
     for(int i = 0; i < PLAYERS; i++) {
       players[i] = new Sound::Source3D(sound, engine);
       if(i != 0)
 	sound->AddSource(players[i]);
     }
+#ifdef RECOGNIZER_SOUND
+    recognizerEngine = new Sound::Source3D(sound, engine);
+    recognizerEngine->Start();
+    sound->AddSource(recognizerEngine);
 #endif
   }
   void Audio_LoadSample(char *name, int number) {
@@ -149,7 +162,3 @@ extern "C" {
   }
 
 }
-
-
-
-
