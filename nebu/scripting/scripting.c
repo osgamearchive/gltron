@@ -68,7 +68,7 @@ int getGlobal(const char *s, va_list ap) {
 int scripting_GetValue(const char *name) {
 	int top = lua_gettop(L);
 	lua_pushstring(L, name);
-	lua_gettable(L, -1);
+	lua_gettable(L, -2);
 	assert( lua_gettop(L) == top + 1 );
 
 	return 0;
@@ -112,7 +112,7 @@ int scripting_SetFloat(float f, const char *name, const char *global, const char
 
 int scripting_GetFloatResult(float *f) {
 	if(lua_isnumber(L, -1)) {
-    *f = lua_tonumber(L, -1);
+    *f = (float) lua_tonumber(L, -1);
 		lua_pop(L, 1); /* restore stack */
 		return 0;
 	} else {
@@ -180,16 +180,34 @@ int scripting_CopyStringResult(char *s, int len) {
   return status;
 }    
 
-void scripting_RunFile(char *name) {
+int scripting_GetArraySize(int *i)
+{
+	*i = lua_getn(L, -1);
+	return 0;
+}
+
+int scripting_GetArrayIndex(int i)
+{
+	lua_rawgeti(L, -1, i);
+	return 0;
+}
+
+int scripting_PopTable(void)
+{
+	lua_pop(L, 1);
+	return 0;
+}
+
+void scripting_RunFile(const char *name) {
   lua_dofile(L, name);
 }
 
-void scripting_Run(char *command) {
+void scripting_Run(const char *command) {
   /* fprintf(stderr, "[command] %s\n", command); */
   lua_dostring(L, command);
 }
 
-void scripting_RunFormat(char *format, ... ) {
+void scripting_RunFormat(const char *format, ... ) {
   char buf[4096];
   va_list ap;
   va_start(ap, format);

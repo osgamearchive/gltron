@@ -18,7 +18,9 @@ extern int scripting_GetFloatResult(float *f);
 extern void scripting_GetFloatArrayResult(float *f, int n);
 extern int scripting_GetStringResult(char **s);
 extern int scripting_CopyStringResult(char *s, int len);
-
+extern int scripting_GetArraySize(int *i);
+extern int scripting_GetArrayIndex(int i);
+extern int scripting_PopTable(void);
 
 extern void scripting_RunFile(const char *name);
 extern void scripting_Run(const char *command);
