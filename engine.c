@@ -10,8 +10,6 @@ int getCol(int x, int y) {
 
 void initGameStructures() { /* called only once */
   /* default art names */
-  char artpack_name[] = "TRON style";
-  char artpack_path[] = "default";
   char *path;
   /* init game screen */
   /* init players. for each player: */
@@ -43,12 +41,6 @@ void initGameStructures() { /* called only once */
   d->wall = 1;
   d->onScreen = -1;
   d->textures = (unsigned int*) malloc(game_textures * sizeof(unsigned int));
-
-  // TODO: change that
-  d->artpack.name = malloc(sizeof(artpack_name));
-  memcpy(d->artpack.name, artpack_name, sizeof(artpack_name));
-  d->artpack.path = malloc(sizeof(artpack_path));
-  memcpy(d->artpack.path, artpack_path, sizeof(artpack_path));
 
   game->players = PLAYERS;
   game->player = (Player *) malloc(MAX_PLAYERS * sizeof(Player));
