@@ -61,18 +61,18 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 		curVertex += 2;
 		curIndex += 4;
 	}
-#if 0
-	if(i)
+#if 1
+	if(i > 1)
 	{
 		Line line;
 		line.sx = (pData->trail - 1)->ex;
 		line.sy = (pData->trail - 1)->ey;
-		line.ex = pData->posx;
-		line.ex = pData->posy;
+		line.ex = pData->iposx;
+		line.ey = pData->iposy;
 		storeVertex(pMesh, curVertex, &line, 1,
 								pData->trail_height);
-		curVertex += 2;
 		storeIndices(pIndices + curIndex, curVertex - 4);
+		curVertex += 2;
 		curIndex += 4;
 	}
 #endif
@@ -94,7 +94,7 @@ void trailRender(TrailMesh *pMesh) {
 	glNormalPointer(GL_FLOAT, 0, pMesh->pNormals);
 
 	{ 
-		float color[] = { 1, 1, 1, 1 }; 
+		float color[] = { 1, 1, .2, 1 }; 
 		float black[] = { 0, 0, 0, 1 };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
