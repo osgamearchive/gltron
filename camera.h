@@ -33,4 +33,6 @@ enum { CAM_R = 0, CAM_CHI, CAM_PHI };
 extern char *cam_names[];
 extern float cam_defaults[][3];
 
+void nextCameraType(int console_message);
+
 #endif
