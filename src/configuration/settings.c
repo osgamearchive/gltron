@@ -121,7 +121,7 @@ void updateSettingsCache(void) {
   gSettingsCache.turn_cycle = getSettingi("turn_cycle"); 
   gSettingsCache.light_cycles = getSettingi("light_cycles"); 
   gSettingsCache.lod = getSettingi("lod"); 
-  gSettingsCache.fov = getSettingi("fov"); 
+  gSettingsCache.fov = getSettingf("fov"); 
 
   gSettingsCache.show_floor_texture = getVideoSettingi("show_floor_texture");
   gSettingsCache.show_skybox = getVideoSettingi("show_skybox"); 
