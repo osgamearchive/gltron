@@ -270,6 +270,8 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
 
   buff = malloc(PACKETSIZE);
 
+  printf("packet size %d ( float is %d )\n", sizeof(Packet), sizeof(float));
+
   len =  Net_preparepacket(packet, buff);
   printf("sending packet size: %d\n", len);
   printf("type %d from %d\n", packet->type, packet->which);

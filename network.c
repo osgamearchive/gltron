@@ -178,6 +178,7 @@ do_gamerules(Packet packet)
   game->settings->ai_player2= ( slots[1].active ) ? 0 : 2;
   game->settings->ai_player3= ( slots[2].active ) ? 0 : 2;
   game->settings->ai_player4= ( slots[3].active ) ? 0 : 2;
+
   
   initNetEventList( neteventlist );
   game->players               = packet.infos.gamerules.players;

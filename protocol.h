@@ -7,7 +7,7 @@
 
 #define BROADCAST  -1        //Used when chat is not private.
 
-#define PACKETSIZE 268       //Size of packet
+#define PACKETSIZE  96       //Size of packet
 
 //Enums-----------------------------------------------------------------------
 /** Possible errors */
@@ -70,7 +70,7 @@ typedef struct packet {
     } login;                 //Type LOGIN
     struct {
       int      accept;       //1 if login accepted, else 0.
-      char     message[256]; //A message from the server.
+      char     message[32];  //A message from the server.
     } loginrep;              //Type LOGINREP
     struct {
       int      which;        //who are we talking about?
@@ -83,7 +83,7 @@ typedef struct packet {
       int      players;      //Who many players are connected.
     } serverinfo;            //Type SERVERINFO
     struct {
-      char     mesg[256];    //The message
+      char     mesg[32];     //The message
       int      which;        //destination of the message.
     } chat;                  //Type CHAT
     struct {
