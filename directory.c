@@ -20,6 +20,8 @@ static char* subdir = "data";
 #include <Files.h>
 #include <Processes.h>
 
+static char *filter_prefix = NULL;
+
 /* -dw- From Technical Q&A FL14 */
 /* http://developer.apple.com/qa/fl/fl14.html */
 
@@ -56,17 +58,19 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    int   len;
    
    list *l = (list*) user_data;
-	
-    #define FOLDER_BIT 0x10	/* bit 5 is folder bit, never is set for files */
-   if ( (cpb_ptr->hFileInfo.ioFlAttrib & FOLDER_BIT) == 0) {	
-   	#undef FOLDER_BIT
-   	
-   	while (l->next != NULL)
-   	   l++;
+	/* filter invisible files & folders */
+   if ( (cpb_ptr->hFileInfo.ioFlFndrInfo.fdFlags & kIsInvisible) == 0) {	
    	
    	len = cpb_ptr->hFileInfo.ioNamePtr[0];
    	cpb_ptr->hFileInfo.ioNamePtr[len+1] = '\0';
    	filename = cpb_ptr->hFileInfo.ioNamePtr + 1;
+   	
+   	/* filter file names if necessary */
+   	if ( filter_prefix && (strstr (filename, filter_prefix) != filename) )
+   		return;
+   	
+   	while (l->next != NULL)
+   	   l=l->next;
    	
    	l->data = malloc (sizeof(char) * len + 1);  							  
       strcpy (l->data, filename);
@@ -87,11 +91,11 @@ list* readDirectoryContents(char *dirname, char *prefix) {
   short vRefNum;
   long  dirID;
   FSSpec spec;
-  
-  int len = strlen(dirname) + 1;
-  relPath[0] = len;
-  memcpy (relPath + 1, dirname, len);
-  relPath[ len ] = ':';
+
+  if (*dirname != ':')
+    sprintf (relPath, "%c:%s", strlen(dirname) + 1, dirname);
+  else
+    sprintf (relPath, "%c%s", strlen(dirname) , dirname);
 
   err = GetApplicationDirectory (&vRefNum, &dirID);
   if (err != noErr) {
@@ -110,6 +114,8 @@ list* readDirectoryContents(char *dirname, char *prefix) {
   l->data = NULL;
   l->next = NULL;
  
+  filter_prefix = prefix;
+  
   err = FSpIterateDirectory (&spec, 1, iterateProc, l);
     
   if (err != noErr)  {
@@ -148,12 +154,12 @@ list* readDirectoryContents(char *dirname, char *prefix) {
     char *name;
     if(prefix == NULL || strstr(entry->d_name, prefix) == entry->d_name) {
       if(entry->d_name[0] != '.') {
-	name = malloc(strlen(entry->d_name) + 1);
-	memcpy(name, entry->d_name, strlen(entry->d_name) + 1);
-	p->data = name;
-	p->next = (list*) malloc(sizeof(list));
-	p = p->next;
-	p->next = NULL;
+		name = malloc(strlen(entry->d_name) + 1);
+		memcpy(name, entry->d_name, strlen(entry->d_name) + 1);
+		p->data = name;
+		p->next = (list*) malloc(sizeof(list));
+		p = p->next;
+		p->next = NULL;
       }
     }
   }
