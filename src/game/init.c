@@ -5,7 +5,7 @@
 #include "scripting/scripting.h"
 #include "audio/nebu_audio_system.h"
 
-#define INI_VERSION 0.705f
+#define INI_VERSION 0.7105f
 
 void initSubsystems(int argc, const char *argv[]) {
 	initFilesystem(argc, argv);
