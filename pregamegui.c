@@ -161,6 +161,12 @@ handlecommand(char *command, char *params)
 	    }
 	}
       break;
+    case 'h': //print help
+      insert_wtext(pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\n", 0);
+      break;
+    default:
+      insert_wtext(pregametext, "unknown command\ntype /h for hep\n", 0);
+      break;
     }
 }
 

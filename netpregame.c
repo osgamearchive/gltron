@@ -210,7 +210,7 @@ void initPregame() {
 
   if( pregametext == NULL )
     {
-      pregametext = new_wtext(30, 10, 10, 100);
+      pregametext = new_wtext(28, 15, 10, 100);
       insert_wtext(pregametext, "connected...\n", 3);
       insert_wtext(pregametext, server_message, 7);
     }

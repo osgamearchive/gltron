@@ -86,7 +86,7 @@ insert_wtext(Wtext *wtext, char *text, int color_code)
 	  /* wtext->buffer[wtext->current][i++]=3; */
 /* 	  wtext->buffer[wtext->current][i++]=color_code; */
 	} else {	  
-	  if( i > (wtext->width-1) )
+	  if( i >= (wtext->width-1) )
 	    {
 	      printf("changing line: %s\n", wtext->buffer[wtext->current]);
 	      wtext->buffer[wtext->current][i]='\0';
