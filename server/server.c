@@ -264,6 +264,7 @@ do_startgame( int which, Packet packet )
   //Send game rules...
 
   initData();
+  game->pauseflag = 0;
 
   game2->players                   = nbUsers;
   for(i=0; i< game2->players; ++i)
@@ -346,8 +347,8 @@ do_startgame( int which, Packet packet )
     }
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
-  game2->players = nbUsers;
-  game->players=game2->players;
+  //game2->players = nbUsers;
+  //game->players=game2->players;
   printf("starting game with %d players\n", game->players); 
   printf("- do_startgame\n");
 }
@@ -562,6 +563,7 @@ SendEvents(GameEvent *e)
   rep.which = SERVERID;
   rep.type  = EVENT;
   rep.infos.event.event = *e;
+
 
   for( i=0; i <4; ++i)
       if( slots[i].active == 1 )

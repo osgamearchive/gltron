@@ -56,7 +56,6 @@ int processEvent(GameEvent* e) {
 
     game->pauseflag = PAUSE_GAME_FINISHED;
     //start a new game...
-    //game2->mode = GAME_NETWORK_RECORD;
     
     game2->mode = GAME_NETWORK_RECORD;
     //go to pregame state...

@@ -97,7 +97,7 @@ void initPlayerData() {
     ai->lasttime = 0;
   }
   game->running = game->players - not_playing; /* not everyone is alive */
-  /* printf("starting game with %d players\n", game->running); */
+  printf("starting game with %d players\n", game->running);
   game->winner = -1;
 }
 

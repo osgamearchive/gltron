@@ -97,7 +97,7 @@ void keyGame(int k, int unicode, int x, int y)
 		createTurnEvent(p, key_actions[i].turn);
 #ifdef __NETWORK__
 	      } else {
-		packet.which=getWhich(me);
+		packet.which=me;
 		packet.type=ACTION;
 		if( key_actions[i].turn == TURN_LEFT )
 		  packet.infos.action.type=TURNLEFT;

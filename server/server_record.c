@@ -30,6 +30,8 @@ void stopRecording() {
 
 void writeEvent(GameEvent* e) {
   SendEvents(e);
+  printf("send event %d %d %d %d %d\n", e->type, e->player, 
+  	 e->x, e->y, e->timestamp);
 }
 
 int startRecording(char *filename) {
