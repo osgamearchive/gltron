@@ -62,6 +62,80 @@ int processEvent(GameEvent* e) {
   return value;
 }
 
+int crashTestPlayers(int i, const segment2 *movement) {
+	int j, k;
+	int crash = 0;
+	Data *data = game->player[i].data;
+	segment2 *current = data->trails + data->trailOffset;
+	// debug: only test player0 against himself
+	// j = 0; 
+	// if(i == 0) { 
+	for(j = 0; j < game->players; j++) {
+		int crash = 0;
+
+		if(game->player[j].data->trail_height < TRAIL_HEIGHT)
+			continue;
+
+		for(k = 0; k < game->player[j].data->trailOffset + 1; k++) {
+			segment2 *wall;
+			vec2 v;
+			float t1, t2;
+						
+			if(j == i && k >= game->player[j].data->trailOffset - 1)
+				break;
+
+			wall = game->player[j].data->trails + k;
+						
+			if(segment2_Intersect(&v, &t1, &t2, movement, wall)) {
+#if 0
+				printf("(%.2f, %.2f), (%.2f, %.2f), %.2f, %.2f\n",
+							 data->posx, data->posy,
+							 v.v[0], v.v[1],
+							 t1, t2); 
+#endif
+				if(t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
+					data->posx = v.v[0];
+					data->posy = v.v[1];
+					current->vDirection.v[0] = data->posx - current->vStart.v[0];
+					current->vDirection.v[1] = data->posy - current->vStart.v[1];
+					createEvent(i, EVENT_CRASH);
+					crash = 1;
+					break;
+				}
+			}
+		}
+		if(crash)
+			break;
+	}
+	return crash;
+}
+
+int crashTestWalls(int i, const segment2 *movement) {
+	int j;
+	vec2 v;
+	float t1, t2;
+	int crash = 0;
+
+	Data *data = game->player[i].data;
+	segment2 *current = data->trails + data->trailOffset;
+	
+	for(j = 0; j < 4; j++) {
+		if(segment2_Intersect(&v, &t1, &t2, current, walls + j)) {
+			if(t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) {
+				data->posx = v.v[0];
+				data->posy = v.v[1];
+				current->vDirection.v[0] = data->posx - current->vStart.v[0];
+				current->vDirection.v[1] = data->posy - current->vStart.v[1];
+				createEvent(i, EVENT_CRASH);
+				crash = 1;
+				break;
+			}
+		}
+	}
+	return crash;
+}
+
+
 /*! \fn static list* doMovement(int mode, int dt)
   do physics, create CRASH and STOP events
 */
@@ -101,22 +175,6 @@ List* doMovement(int mode, int dt) {
 						data->booster = booster_max;
 				}
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			// if(i == 0)
 			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
 				
@@ -126,29 +184,25 @@ List* doMovement(int mode, int dt) {
 						2.0f * PI / SPEED_OZ_FREQ);
 
       t = dt / 100.0f * data->speed * fs;
-      while(t > 0) {
-				if(t < 1) {
-					float posx = floorf(data->posx);
-					float posy = floorf(data->posy);
-					data->posx += t * dirsX[data->dir];
-					data->posy += t * dirsY[data->dir];
-					t = 0;
-					// don't write to the same pixel again
-					if(posx == floorf(data->posx) &&
-						 posy == floorf(data->posy))
-						 break;
-				}	else {
-					 data->posx += 1.0f * dirsX[data->dir];
-					 data->posy += 1.0f * dirsY[data->dir];
-					 t -= 1.0f;
-				}
-				if(getCol( floorf(data->posx), floorf(data->posy)) && mode) {
-					createEvent(i, EVENT_CRASH);
-					break;
-				} else {
-					writePosition(i);
-				}
-      }
+			
+			{
+				segment2 *current = data->trails + data->trailOffset;
+				segment2 movement;
+				int crash = 0;
+				
+				movement.vStart.v[0] = data->posx;
+				movement.vStart.v[1] = data->posy;
+				movement.vDirection.v[0] = t * dirsX[data->dir];
+				movement.vDirection.v[1] = t * dirsY[data->dir];
+				
+				current->vDirection.v[0] += t * dirsX[data->dir];
+				current->vDirection.v[1] += t * dirsY[data->dir];
+				data->posx += t * dirsX[data->dir];
+				data->posy += t * dirsY[data->dir];
+
+				crash = crash || crashTestPlayers(i, &movement);
+				crash = crash || crashTestWalls(i, &movement);
+			}
     } else { /* already crashed */
       if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
 				data->trail_height -= (dt * TRAIL_HEIGHT) / 1000.0f;
@@ -228,12 +282,7 @@ void Game_Idle(void) {
 				if(game->player[i].ai != NULL)
 					if(game->player[i].ai->active == AI_COMPUTER &&
 						 PLAYER_IS_ACTIVE(&game->player[i])) {
-
-						if (game2->settingsCache.ai_level < 2) {
-							doComputer(i, 0);
-						} else {
-							doComputer2(i, 0);
-						} 
+						doComputer(i, 0);
 					}
 
 			/* process any outstanding events (turns, etc) */
