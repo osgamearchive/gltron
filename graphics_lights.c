@@ -7,8 +7,8 @@ void setupLights(int type) {
 	float gray10[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	float black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	
-	float posWorld0[] = { 1, 1, 4, 0 };
-	float posWorld1[] = { -1, -1, 4, 0 };
+	float posWorld0[] = { 1, 0, 0, 0 };
+	float posWorld1[] = { 0, 1, 0, 0 };
 
 	float posCycles0[] = { 0, 0, 0, 1 };
 	
@@ -16,6 +16,8 @@ void setupLights(int type) {
 	
 	// turn global ambient lighting off
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
 	switch(type) {
 	case eWorld:
@@ -27,15 +29,19 @@ void setupLights(int type) {
 		
 		glEnable(GL_LIGHT0);
 		glLightfv(GL_LIGHT0, GL_POSITION, posWorld0);
-		glLightfv(GL_LIGHT0, GL_AMBIENT, gray10);
+		// glLightfv(GL_LIGHT0, GL_AMBIENT, gray10);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, black);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, gray66);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, gray66);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
 
 		glEnable(GL_LIGHT1);
-		glLightfv(GL_LIGHT0, GL_POSITION, posWorld1);
-		glLightfv(GL_LIGHT0, GL_AMBIENT, gray10);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, gray22);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, gray22);
+		glLightfv(GL_LIGHT1, GL_POSITION, posWorld1);
+		// glLightfv(GL_LIGHT1, GL_AMBIENT, gray10);
+		glLightfv(GL_LIGHT1, GL_AMBIENT, black);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, gray22);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, white);
+		
+		glDisable(GL_LIGHT1);
 		
 		for(i = 2; i < 8; i++)
 				glDisable(GL_LIGHT0 + i);
