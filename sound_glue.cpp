@@ -25,7 +25,8 @@ extern "C" {
 
   void Audio_EnableEngine(void) {
     sample_engine->Start();
-    sample_recognizer->Start();
+    if (game2->settingsCache.show_recognizer)
+      sample_recognizer->Start();
     printf("turning on engine sound\n");
   }
 
@@ -77,14 +78,11 @@ extern "C" {
 
     if(sample_recognizer->IsPlaying()) {
       if (game2->settingsCache.show_recognizer) {
-	sample_recognizer->UnPause();
 	Point p, v;
 	getRecognizerPositionVelocity(&p, &v);
 	// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
 	recognizerEngine->_location = Vector3(p.x, p.y, 10.0f);
 	recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
-      } else {
-	sample_recognizer->Pause();
       }
     }
 
@@ -187,7 +185,7 @@ extern "C" {
     players[iPlayer]->Stop();
   }
  
-  void Audio_LoadPlayers() {
+  void Audio_LoadPlayers(void) {
     for(int i = 0; i < PLAYERS; i++) {
       if(i != 0) {
 	players[i] = new Sound::Source3D(sound, sample_engine);
