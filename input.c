@@ -98,7 +98,9 @@ void parse_args(int argc, char *argv[]) {
 	case 'g': setSettingi("show_glow", 0); break;
 	case 'w': setSettingi("show_wall", 0); break;
 	case 'C': setSettingi("show_ai_status", 1); break;
+#ifdef 0
 	case 'v': setSettingi("screenSaver", 1); break;
+#endif
 	case 'i': setSettingi("windowMode", 1); break;
 	case 'O': setSettingi("softwareRendering", 1); break;
 	case '1': /* default is 4 */
