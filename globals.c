@@ -66,6 +66,8 @@ int    me;
 int    isLogged;
 netEventList neteventlist = NULL;
 
+Splash   *splash = NULL;
+
 int    packet_type = HEADER;
 Netscores         netscores;
 

@@ -42,6 +42,9 @@ void initGameStructures() { /* called only once */
   d->onScreen = -1;
   d->textures = (unsigned int*) malloc(game_textures * sizeof(unsigned int));
 
+  //Setup display here
+  setupDisplay(game->screen);
+  
   game->players = PLAYERS;
   game->player = (Player *) malloc(MAX_PLAYERS * sizeof(Player));
   for(i = 0; i < game->players; i++) {
@@ -55,6 +58,7 @@ void initGameStructures() { /* called only once */
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
     /* init model & display & ai */
+    update_splash(splash, 0.3+i*.1, "init model");
     initModel(p, i);
 
     ai = p->ai;
@@ -79,6 +83,7 @@ void initGameStructures() { /* called only once */
   }
 
   /* load recognizer model */
+  update_splash(splash, 0.7, "loading recognizer");
   path = getFullPath("recognizer.obj");
   if(path != NULL)
     // recognizer = loadModel(path, RECOGNIZER_HEIGHT, 0);

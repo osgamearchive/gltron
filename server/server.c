@@ -117,9 +117,9 @@ do_lostplayer(int which )
 
 	  //Change game mode... nothing to do with game things...
 	  game2->mode = GAME_NETWORK_RECORD;
-	  hasstarted=0;
-	  lastping = 0;
-	  slowest    = 0;
+	  hasstarted  = 0;
+	  lastping    = 0;
+	  slowest     = 0;
 	  starting = 0;
 	} else {
 	  
@@ -342,7 +342,7 @@ do_login( int which, Packet packet )
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
   Net_sendpacket(&rep, slots[which].sock);
-  lastping=SystemGetElapsedTime();
+  lastping=SystemGetElapsedTime()-4500;
 
   if( hasstarted == 1 )
     {

@@ -66,14 +66,36 @@ void shutdownDisplay(gDisplay *d) {
 }
 
 void setupDisplay(gDisplay *d) {
+  //int i;
+
   fprintf(stderr, "trying to create window\n");
   d->win_id = initWindow();
   fprintf(stderr, "window created\n");
+  
+  //loading fonts
+  initFonts();
+
+  fprintf(stderr, "trying to splash screen\n");
+  //Setup splash
+  splash = new_splash(300, 358, "gltron.png", 0);
+  draw_splash( splash );
+  //while(!(SDL_PollEvent(&event) && (event.type == SDL_KEYDOWN) )) { draw_splash(splash);};
+  fprintf(stderr, "splash screen created\n");
+
   printRendererInfo();
+  /* for(i=0; i< 100; ++i) */
+/*     { */
+/*       update_splash(splash, (float)(i/100.0), "loading art"); */
+/*       SDL_Delay(1); */
+/*     } */
+  //update_splash(splash, 0.1, "loading art");
+
   /* printf("win_id is %d\n", d->win_id); */
   fprintf(stderr, "loading art\n");
+  update_splash(splash, 0.1, "loading art");
   loadArt();
 
+  update_splash(splash, 0.2, "init Bitmaps");
   initBitmaps(game->screen);
   SystemReshapeFunc(reshape);
 }
@@ -101,11 +123,9 @@ int main( int argc, char *argv[] ) {
   goto_installpath(argv[0]);
 #endif
 
-#ifdef __NETWORK__
-  Net_init();
-#endif
 
-  /* initialize artpack list before loading settigns! */
+
+  /* initialize artpack list before loading settings! */
   initArtpacks();
 
   path = getFullPath("settings.txt");
@@ -115,6 +135,17 @@ int main( int argc, char *argv[] ) {
     printf("fatal: could not settings.txt, exiting...\n");
     exit(1);
   }
+ 
+  initGameStructures();
+  //setupDisplay(game->screen);
+
+  //splash = new_splash(640, 480, "art/default/gltron.png", 0);
+
+#ifdef __NETWORK__
+  update_splash(splash, 0.8, "init network");
+  Net_init();
+#endif
+
 
   parse_args(argc, argv);
 
@@ -129,6 +160,7 @@ int main( int argc, char *argv[] ) {
 
 #ifdef SOUND
   printf("initializing sound\n");
+  update_splash(splash, 0.9, "initlize sound");
   initSound();
   setFxVolume(game->settings->fxVolume);
 
@@ -156,7 +188,8 @@ int main( int argc, char *argv[] ) {
   setMusicVolume(game->settings->musicVolume);
   free(path);
 #endif
-
+  
+  update_splash(splash, 0.95, "loading menu");
   printf("loading menu\n");
   path = getFullPath("menu.txt");
   if(path != NULL)
@@ -169,10 +202,11 @@ int main( int argc, char *argv[] ) {
   free(path);
 
   consoleInit();
-  initGameStructures();
+  //initGameStructures();
   resetScores();
 
-  setupDisplay(game->screen);
+  update_splash(splash, 1.0, "starting");
+  //setupDisplay(game->screen);
   switchCallbacks(&guiCallbacks);
   switchCallbacks(&guiCallbacks);
 

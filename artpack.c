@@ -48,12 +48,13 @@ void loadArt() {
   getArtPath("artpack.ini", buf);
   path = getFullPath(buf);
   if(path != NULL) {
+    update_splash(splash, 0.15, "init file loaded");
     loadIniFile(path);
     free(path);
   }
 
   initTexture(game->screen);
-  initFonts();
+  //initFonts();
 }
 
 void reloadArt() {
