@@ -3,7 +3,7 @@
 int processEvent(GameEvent* e) {
   int value = 0;
   Data *data;
-  //printf("proccess event\n");
+  printf("proccess event ( current time %d )\n", game2->time.current);
   if(game2->mode == GAME_SINGLE_RECORD) {
     writeEvent(e);
   }

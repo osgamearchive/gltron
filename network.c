@@ -93,6 +93,7 @@ do_serverinfo(Packet packet)
 	case gameState:
 	  //game->players = game2->players;
 	  applyGameInfo();
+	  printf("time is %d\n", game2->time.current);
 	  game2->mode = GAME_PLAY;
 	  switchCallbacks(&pauseCallbacks);
 	  break;

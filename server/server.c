@@ -771,7 +771,7 @@ do_wingame( int winner)
   if(  max >= netrulenbwins )
     {
       //The game is finished
-      netscores.winner=winner;
+      netscores.winner=getWhich(winner);
 
       //Sending scores to every one.
       rep.which = SERVERID;
@@ -791,7 +791,7 @@ do_wingame( int winner)
       netscores.winner=-1;
       for(i=0; i<MAX_PLAYERS; ++i)
 	{
-	  netscores.points[i]=0;
+	  netscores.points[getWhich(i)]=0;
 	}
       hasstarted=0;
 
