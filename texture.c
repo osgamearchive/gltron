@@ -21,10 +21,11 @@ void initTexture(gDisplay *d) {
   checkGLError("texture.c initTexture - creating textures");
   for(i = 0; i < n_textures; i++) {
     glBindTexture(GL_TEXTURE_2D, d->textures[ textures[i].id ]);
-    snprintf(texname, sizeof(texname), "%s%c%s%s", 
+    /* todo: snprintf would be safer, but win32 doesn't have it */
+    sprintf(texname, "%s%c%s%s", 
 	     d->artpack.path, SEPERATOR, textures[i].name, TEX_SUFFIX);
     if((path = getFullPath(texname)) == NULL) {
-      snprintf(texname, sizeof(texname), "%s%c%s%s", 
+      sprintf(texname, "%s%c%s%s", 
 	       fallback, SEPERATOR, textures[i].name, TEX_SUFFIX);
     } else {
       free(path);
