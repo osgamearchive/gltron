@@ -198,7 +198,7 @@ typedef struct AI {
 
 typedef struct {
   char *path;
-  char *name;
+  /* char *name; currently ignored */
 } Artpack;
 
 typedef struct gDisplay {
@@ -265,6 +265,7 @@ typedef struct Settings {
   int lod;
   int shadow_lod;
   int show_crash_texture;
+  int show_gl_logo;
   int model_backwards;
   int turn_cycle; /* smooth turning */
   int line_spacing; /* space between lines when the floor texture is
