@@ -15,7 +15,10 @@ extern "C" {
 #include <stdlib.h>
 #include <limits.h>
 
-  /* basic io wrapper */
+	/* portable random numbers */
+#include "random.h"
+
+	/* basic io wrapper */
 #include "file_io.h"
 
 #define SEPERATOR '/'
