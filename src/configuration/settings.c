@@ -11,7 +11,7 @@
 #define MAX_VAR_NAME_LEN 64
 
 void checkSettings(void) {
-  /* sanity check: speed, grid_size */
+  /* sanity check: speed */
   if(getSettingf("speed") <= 0) {
     fprintf(stderr, "[gltron] sanity check failed: speed = %.2ff\n",
 	    getSettingf("speed"));
@@ -19,6 +19,7 @@ void checkSettings(void) {
     fprintf(stderr, "[gltron] reset speed: speed = %.2f\n",
 	    getSettingf("speed"));
   }
+#ifndef NEW_LEVEL
   if(getSettingi("grid_size") % 8) {
     fprintf(stderr, "[gltron] sanity check failed: grid_size %% 8 != 0: "
 	    "grid_size = %d\n", getSettingi("grid_size"));
@@ -26,6 +27,7 @@ void checkSettings(void) {
     fprintf(stderr, "[gltron] reset grid_size: grid_size = %d\n",
 	    getSettingi("grid_size"));
   }
+#endif
 }
 
 void saveSettings(void) {
