@@ -5,6 +5,11 @@
 // #include "System.h"
 
 namespace Sound {
+  enum {
+    eSoundMusic = 1,
+    eSoundFX = 2
+  };
+
   class System;
 
   class Source { // an abstract class, the basic interface for all Sources
@@ -21,6 +26,8 @@ namespace Sound {
     virtual float GetVolume();
     virtual void SetLoop(Uint8 loop);
     virtual Uint8 GetLoop();
+    virtual void SetType(int type);
+    virtual int GetType(void);
 
   protected:
     virtual void Reset();
@@ -30,6 +37,7 @@ namespace Sound {
     Uint8 _loop;
     Uint8 _removable;
     float _volume;
+    int _type;
   };
 }
 

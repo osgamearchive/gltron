@@ -7,6 +7,7 @@ namespace Sound {
     _loop = 0;
     _removable = 0;
     _volume = 0.5;
+    _type = 0;
   }
   void Source::Mix(Uint8 *data, int len) { }
   void Source::Reset() { }
@@ -21,4 +22,6 @@ namespace Sound {
   float Source::GetVolume() { return _volume; }
   void Source::SetLoop(Uint8 loop) { _loop = loop; }
   Uint8 Source::GetLoop() { return _loop; }
+  void Source::SetType(int type) { _type = type; }
+  int Source::GetType(void) { return _type; }
 }
