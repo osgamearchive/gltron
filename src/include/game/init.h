@@ -10,8 +10,4 @@ extern void initInput(void);
 extern void initGame(void);
 
 /* platform stuff */
-
-extern void videoInit(void);
-extern void audioInit(void);
-extern void inputInit(void);
 #endif
