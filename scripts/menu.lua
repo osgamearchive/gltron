@@ -59,29 +59,29 @@ Menu = {
       type = MenuC.type.list, caption = "Game speed",
       labels = { "boring", "normal", "fast", "crazy" },
       values = { 5.0, 6.5, 8.5, 12.0 },
-      read = function() return speed; end, 
-      store = function (value) speed = value; c_resetGame(); end
+      read = function() return settings.speed; end, 
+      store = function (value) settings.speed = value; c_resetGame(); end
    },
    BotSkill = {
       type = MenuC.type.list, caption = "Bot Skill",
       labels = { "dumb", "normal", "strong", "the MCP himself" },
       values = { 0, 1, 2, 3 },
-      read = function() return ai_level; end,
-      store = function (value) ai_level = value; end
+      read = function() return settings.ai_level; end,
+      store = function (value) settings.ai_level = value; end
    },
    ArenaSize = {
       type = MenuC.type.list, caption = "Arena Size",
       labels = { "tiny", "medium", "big", "vast", "extreme" },
       values = { 160, 240, 480, 720, 1200 },
-      read = function() return grid_size; end,
-      store = function (value) grid_size = value; c_resetGame(); end
+      read = function() return settings.grid_size; end,
+      store = function (value) settings.grid_size = value; c_resetGame(); end
    },
    EraseDeadPlayers = {    
       type = MenuC.type.list, caption = "Erase dead players",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return erase_crashed; end,
-      store = function(value) erase_crashed = value; c_resetGame(); end
+      read = function() return settings.erase_crashed; end,
+      store = function(value) settings.erase_crashed = value; c_resetGame(); end
    },
 
    -- GameSettings
@@ -89,22 +89,22 @@ Menu = {
       type = MenuC.type.list, caption = "Fast finish",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return fast_finish; end,
-      store = function(value) fast_finish = value; end
+      read = function() return settings.fast_finish; end,
+      store = function(value) settings.fast_finish = value; end
    },
    CameraMode = {    
       type = MenuC.type.list, caption = "Camera mode",
       labels = { "circling", "behind", "cockpit", "mouse" },
       values = { 0, 1, 2, 3 },
-      read = function() return camType; end,
-      store = function(value) camType = value; end
+      read = function() return settings.camType; end,
+      store = function(value) settings.camType = value; end
    },
    Viewports = {    
       type = MenuC.type.list, caption = "Viewports",
       labels = { "single", "split", "4 player", "auto" },
       values = { 0, 1, 2, 3 },
-      read = function() return display_type; end,
-      store = function(value) display_type = value; end
+      read = function() return settings.display_type; end,
+      store = function(value) settings.display_type = value; end
    },
 
    -- Player
@@ -112,32 +112,32 @@ Menu = {
       type = MenuC.type.list, caption = "Player 1", 
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
-      read = function() return ai_player1; end,
-      store = function(value) ai_player1 = value; c_resetGame(); end
+      read = function() return settings.ai_player1; end,
+      store = function(value) settings.ai_player1 = value; c_resetGame(); end
    },
 
    Player2 = {    
       type = MenuC.type.list, caption = "Player 2", 
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
-      read = function() return ai_player2; end,
-      store = function(value) ai_player2 = value; c_resetGame(); end
+      read = function() return settings.ai_player2; end,
+      store = function(value) settings.ai_player2 = value; c_resetGame(); end
    },
 
    Player3 = {    
       type = MenuC.type.list, caption = "Player 3", 
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
-      read = function() return ai_player3; end,
-      store = function(value) ai_player3 = value; c_resetGame(); end
+      read = function() return settings.ai_player3; end,
+      store = function(value) settings.ai_player3 = value; c_resetGame(); end
    },
 
    Player4 = {    
       type = MenuC.type.list, caption = "Player 4", 
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
-      read = function() return ai_player4; end,
-      store = function(value) ai_player4 = value; c_resetGame(); end
+      read = function() return settings.ai_player4; end,
+      store = function(value) settings.ai_player4 = value; c_resetGame(); end
    },
 
    -- PlayerX_Key
@@ -184,63 +184,63 @@ Menu = {
       right = nextArtpack,
       left = previousArtpack,
       action = nextArtpack,
-      read = function() return current_artpack; end
+      read = function() return settings.current_artpack; end
    },
    Floor = {
       type = MenuC.type.list, caption = "Floor texture",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_floor_texture; end,
-      store = function(value) show_floor_texture = value; end
+      read = function() return settings.show_floor_texture; end,
+      store = function(value) settings.show_floor_texture = value; end
    },
    Wall = {
       type = MenuC.type.list, caption = "Wall texture",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_wall; end,
-      store = function(value) show_wall = value; end
+      read = function() return settings.show_wall; end,
+      store = function(value) settings.show_wall = value; end
    },
    Crash = {
       type = MenuC.type.list, caption = "Crash texture",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_crash_texture; end,
-      store = function(value) show_crash_texture = value; end
+      read = function() return settings.show_crash_texture; end,
+      store = function(value) settings.show_crash_texture = value; end
    },
    Skybox = {
       type = MenuC.type.list, caption = "Skybox texture",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_skybox; end,
-      store = function(value) show_skybox = value; end
+      read = function() return settings.show_skybox; end,
+      store = function(value) settings.show_skybox = value; end
    },
    Decals = {
       type = MenuC.type.list, caption = "Trail decals",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_decals; end,
-      store = function(value) show_decals = value; end
+      read = function() return settings.show_decals; end,
+      store = function(value) settings.show_decals = value; end
    },
    Mipmaps = {
       type = MenuC.type.list, caption = "Use mipmaps",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return use_mipmaps; end,
-      store = function(value) use_mipmaps = value; end
+      read = function() return settings.use_mipmaps; end,
+      store = function(value) settings.use_mipmaps = value; end
    },
    Filtering = {
       type = MenuC.type.list, caption = "Mitmap filter",
       labels = { "bilinear", "trilinear" },
       values = { 0, 1 },
-      read = function() return mipmap_filter; end,
-      store = function(value) mipmap_filter = value; end
+      read = function() return settings.mipmap_filter; end,
+      store = function(value) settings.mipmap_filter = value; end
    },
    WallScaling = {
       type = MenuC.type.list, caption = "Wall Scaling",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return stretch_textures; end,
-      store = function(value) stretch_textures = value; end
+      read = function() return settings.stretch_textures; end,
+      store = function(value) settings.stretch_textures = value; end
    },
 
    -- Detail
@@ -248,136 +248,136 @@ Menu = {
       type = MenuC.type.list, caption = "Transparent trails",
       labels = { "off", "on" },
       values = { 0, 1 }, 
-      read = function() return show_alpha; end,     
-      store = function(value) show_alpha = value; end
+      read = function() return settings.alpha_trails; end,     
+      store = function(value) settings.alpha_trails = value; end
    },
    Halos = {
       type = MenuC.type.list, caption = "Halos",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_glow; end,
-      store = function(value) show_glow = value; end
+      read = function() return settings.show_glow; end,
+      store = function(value) settings.show_glow = value; end
    },
    Lightcycles = {
       type = MenuC.type.list, caption = "Lightcycles",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_model; end,
-      store = function(value) show_model = value; end
+      read = function() return settings.show_model; end,
+      store = function(value) settings.show_model = value; end
    },
    Recognizer = {
       type = MenuC.type.list, caption = "Recognizers",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_recognizer; end,
-      store = function(value) show_recognizer = value; end
+      read = function() return settings.show_recognizer; end,
+      store = function(value) settings.show_recognizer = value; end
    },
    CycleLod = {
       type = MenuC.type.list, caption = "Cycle LOD",
       labels = { "ugly", "low", "high" },
       values = { 2, 1, 0 },
-      read = function() return lod; end,
-      store = function(value) lod = value; end
+      read = function() return settings.lod; end,
+      store = function(value) settings.lod = value; end
    },
    ShadowLod = {
       type = MenuC.type.list, caption = "Shadow LOD",
       labels = { "normal", "high" },
       values = { 0, 1 },
-      read = function() return shadow_lod; end,
-      store = function(value) shadow_lod = value; end
+      read = function() return settings.shadow_lod; end,
+      store = function(value) settings.shadow_lod = value; end
    },
    FPS_Counter = {
       type = MenuC.type.list, caption = "FPS counter",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_fps; end,
-      store = function(value) show_fps = value; end
+      read = function() return settings.show_fps; end,
+      store = function(value) settings.show_fps = value; end
    },
    AI_Status = {
       type = MenuC.type.list, caption = "AI status",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_ai_status; end,
-      store = function(value) show_ai_status = value; end
+      read = function() return settings.show_ai_status; end,
+      store = function(value) settings.show_ai_status = value; end
    },
    Scores = {
       type = MenuC.type.list, caption = "Scores",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return show_scores; end,
-      store = function(value) show_scores = value; end
+      read = function() return settings.show_scores; end,
+      store = function(value) settings.show_scores = value; end
    },
 
    -- Screen
    _320x240 = {
       type = MenuC.type.action, caption = "320 x 240",
-      action =  function() width = 320; height = 240; c_video_restart(); end
+      action =  function() settings.width = 320; settings.height = 240; c_video_restart(); end
    },
    _512x384 = {
       type = MenuC.type.action, caption = "512 x 384",
-      action =  function() width = 512; height = 384; c_video_restart(); end
+      action =  function() settings.width = 512; settings.height = 384; c_video_restart(); end
    },
    _640x480 = {
       type = MenuC.type.action, caption = "640 x 480",
-      action =  function() width = 640; height = 480; c_video_restart(); end
+      action =  function() settings.width = 640; settings.height = 480; c_video_restart(); end
    },
    _800x600 = {
       type = MenuC.type.action, caption = "800 x 600",
-      action =  function() width = 800; height = 600; c_video_restart(); end
+      action =  function() settings.width = 800; settings.height = 600; c_video_restart(); end
    },
    _1024x768 = {
       type = MenuC.type.action, caption = "1024 x 768",
-      action =  function() width = 1024; height = 768; c_video_restart(); end
+      action =  function() settings.width = 1024; settings.height = 768; c_video_restart(); end
    },
    _1280x1024 = {
       type = MenuC.type.action, caption = "1280 x 1024",
-      action =  function() width = 1280; height = 1024; c_video_restart(); end
+      action =  function() settings.width = 1280; settings.height = 1024; c_video_restart(); end
    },
    _1600x1200 = {
       type = MenuC.type.action, caption = "1600 x 1200",
-      action =  function() width = 1600; height = 1200; c_video_restart(); end
+      action =  function() settings.width = 1600; settings.height = 1200; c_video_restart(); end
    },
    WindowMode = {
       type = MenuC.type.list, caption = "Windowed",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return windowMode; end,
-      store = function(value) windowMode = value; c_video_restart(); end
+      read = function() return settings.windowMode; end,
+      store = function(value) settings.windowMode = value; c_video_restart(); end
    },
 
    -- Audio
    Music = {
       type = MenuC.type.list, caption = "Music",
       labels = { "off", "on" },
-      read = function() return playMusic; end,
+      read = function() return settings.playMusic; end,
       values = { 0, 1 },
-      store = function(value) playMusic = value; end
+      store = function(value) settings.playMusic = value; end
    },
    FX = {
       type = MenuC.type.list, caption = "Sound FX",
       labels = { "off", "on" },
       values = { 0, 1 },
-      read = function() return playEffects; end,
-      store = function(value) playEffects = value; end
+      read = function() return settings.playEffects; end,
+      store = function(value) settings.playEffects = value; end
    },
    Music_Volume = {
       type = MenuC.type.slider, caption = "Music Volume",
       right = function() MusicVolumeUp(); end,
       left = function() MusicVolumeDown(); end,
-      read = function() return format("%.0f%%", musicVolume * 100); end
+      read = function() return format("%.0f%%", settings.musicVolume * 100); end
    },
    FX_Volume = {
       type = MenuC.type.slider, caption = "FX Volume",
       right = FXVolumeUp,
       left = FXVolumeDown,
-      read = function() return format("%.0f%%", fxVolume * 100); end
+      read = function() return format("%.0f%%", settings.fxVolume * 100); end
    },
    Song = {
       type = MenuC.type.slider, caption = "Song",
       right = nextTrack,
       left = previousTrack,
       action = nextTrack,
-      read = function() _, _, name = strfind(current_track, "song_([^\.]*)"); return name; end
+      read = function() _, _, name = strfind(settings.current_track, "song_([^\.]*)"); return name; end
    }
 }
 

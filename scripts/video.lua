@@ -3,12 +3,12 @@
 function setupArtpacks()
    local i,name
    for i,name in artpacks do
-      if name == current_artpack then
+      if name == settings.current_artpack then
 	 current_artpack_index = i
 	 return
       end
    end
-   current_artpack = artpacks[1]
+   settings.current_artpack = artpacks[1]
    current_artpack_index = 1
 end
 
@@ -18,7 +18,7 @@ function nextArtpack()
    else
       current_artpack_index = 1
    end
-   current_artpack = artpacks[ current_artpack_index ]
+   settings.current_artpack = artpacks[ current_artpack_index ]
    c_reloadArtpack()
 end
 
@@ -28,7 +28,7 @@ function previousArtpack()
    else
       current_artpack_index = getn(artpacks) 
    end
-   current_artpack = artpacks[ current_artpack_index ]
+   settings.current_artpack = artpacks[ current_artpack_index ]
    c_reloadArtpack()
 end
 

@@ -72,7 +72,7 @@ end
 GetMenuValue[ MenuC.type.key ] = function ( menu )
    local player = Menu[menu].player
    local event = Menu[menu].event
-   return c_getKeyName( keys[ player ][ event ] )
+   return c_getKeyName( settings.keys[ player ][ event ] )
 end
 
 GetMenuValue[ MenuC.type.action ] = function ( menu )
