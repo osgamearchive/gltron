@@ -86,6 +86,9 @@ enum {
 
 /* global constants */
 
+/* physics recomputed every 10ms */
+#define PHYSICS_RATE 20
+
 #define SONG_PREFIX "song_"
 #define MUSIC_DIR "music"
 
@@ -244,7 +247,7 @@ extern void writePosition(int player);
 extern void doTurn(Data* data, int time);
 extern void crashPlayer(int player);
 extern void createTurnEvent(int player, int direction);
-extern void processEvent(GameEvent *e);
+extern int processEvent(GameEvent *e);
 
 /* gltron.c */
 /* game.c */
