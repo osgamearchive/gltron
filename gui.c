@@ -137,6 +137,7 @@ void idleGui() {
 #ifdef SOUND
   soundIdle();
 #endif
+  SystemPostRedisplay(); /* animate menu */
 }
 
 void keyboardConfigure(int key, int x, int y) {
@@ -212,6 +213,7 @@ void keyboardGui(int key, int x, int y) {
 }
 
 void initGui() {
+  menutime = SystemGetElapsedTime();
   if(pCurrent == NULL) {
     pCurrent = *pMenuList; /* erstes Menu ist RootMenu - Default pCurrent */
     pCurrent->iHighlight = 0;
