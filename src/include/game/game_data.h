@@ -11,8 +11,9 @@
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
 enum {
-  GAME_SINGLE = 1,
+  GAME_SINGLE = 1
 #ifdef RECORD
+  ,
   GAME_SINGLE_RECORD = 2,
   GAME_PLAY = 4,
   GAME_PLAY_NETWORK = 8,

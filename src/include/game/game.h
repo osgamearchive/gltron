@@ -33,7 +33,7 @@ enum {
 	RETURN_QUIT,
 	RETURN_GUI_ESCAPE,
 	RETURN_PROMPT_ESCAPE,
-	RETURN_PAUSE_ESCAPE,
+	RETURN_PAUSE_ESCAPE
 };
 
 /* physics recomputed every 10ms */
