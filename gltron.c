@@ -62,9 +62,7 @@ void setupDisplay(gDisplay *d) {
   printf("trying to create window\n");
   d->win_id = initWindow();
   printf("window created\n");
-  printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
-	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
-  printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
+  printRendererInfo();
   /* printf("win_id is %d\n", d->win_id); */
   printf("loading fonts...\n");
   initFonts();

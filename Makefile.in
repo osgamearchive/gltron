@@ -61,6 +61,7 @@ CFILES = \
 	camera.c \
 	console.c \
 	network.c \
+	renderer_gl.c \
 	system_net.c
 
 SOUND_CFILES = \
