@@ -429,8 +429,8 @@ Menu.Left = function ()
       script_print("calling left of '" .. menu .. "'")
       Menu[ menu ].left()
    else
-      script_print("calling action of '" .. menu .. "', type " .. type )
-      MenuAction[ type ]( menu )      
+      -- script_print("calling action of '" .. menu .. "', type " .. type )
+      -- MenuAction[ type ]( menu )      
    end
 end
 
@@ -441,8 +441,8 @@ Menu.Right = function ()
       script_print("calling right of '" .. menu .. "'")
       Menu[ menu ].right()
    else
-      script_print("calling action of '" .. menu .. "', type " .. type )
-      MenuAction[ type ]( menu )
+      -- script_print("calling action of '" .. menu .. "', type " .. type )
+      -- MenuAction[ type ]( menu )
    end
 end
 
