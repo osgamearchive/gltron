@@ -312,7 +312,6 @@ extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 extern void changeDisplay();
 extern void updateDisplay(ViewportType VPtype); /* vp types defined in data.h */
 extern void initModelLights(int light);
-extern void initRecognizerLights(int light, float rec_spec_color[]);
 
 extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
@@ -441,11 +440,6 @@ extern void checkQuad2D(char *flags, int q, int n);
 
 /* clip.c */
 int testfrustum(float *x, float *y, float *p, float *a, float *b);
-
-/* recognizer stuff */
-extern void recognizerMovement();
-extern void drawRecognizers(int flag);
-extern void getRecognizerPositionVelocity(Point *p, Point *v);
 
 /* demo stuff */
 /* record.c */

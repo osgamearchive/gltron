@@ -1,5 +1,6 @@
 #include "gltron.h"
 #include "skybox.h"
+#include "recognizer.h"
 #include "floor.h"
 
 static float arena[] = { 1.0, 1.2, 1, 0.0 };
@@ -902,42 +903,15 @@ void drawCam(Player *p, gDisplay *d) {
   }
 
   if (game2->settingsCache.show_recognizer) {
-    glPushMatrix();
-    glMultMatrixf(shadow_matrix);
-    glColor4fv(shadow_color);
-    glEnable(GL_CULL_FACE);
-#ifdef DO_STENCIL
-    glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_GREATER,1,1);
-#endif
-    drawRecognizers(0);
-#ifdef DO_STENCIL
-    glDisable(GL_STENCIL_TEST);
-#endif
-    glDisable(GL_CULL_FACE);
-    glPopMatrix();
+    drawRecognizerShadow();
   }
-
-  /* z-buffer hack to do away with explosions */
-  /* fixme: use clip-plane instead (no fill rate penalty) */
-
-#if 0
-  glDepthMask(GL_TRUE);
-  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-  drawFloor(d);
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-  glDepthMask(GL_FALSE);
-#endif
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 
   if (game2->settingsCache.show_recognizer) {
-    glEnable(GL_CULL_FACE);
-    drawRecognizers(1);
-    glDisable(GL_CULL_FACE);
+    drawRecognizer();
   }
 
   if (game2->settingsCache.show_wall == 1) {

@@ -88,6 +88,7 @@ void initGameStructures() { /* called only once */
   }
   free(path);
 
+  initRecognizer(getSettingi("grid_size"));
 
   /* load lyghtcycle models */
   for(i = 0; i < LC_LOD; i++) {
