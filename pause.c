@@ -6,6 +6,7 @@ void idlePause() {
 #ifdef SOUND
   soundIdle();
 #endif
+  game2->time.dt = 0;
   doCameraMovement();
   if(getSettingi("screenSaver") && stoptime != 0 &&
      SystemGetElapsedTime() - stoptime > 2000) {
