@@ -7,6 +7,8 @@
 
 #define BROADCAST  -1        //Used when chat is not private.
 
+#define PACKETSIZE 268       //Size of packet
+
 //Enums-----------------------------------------------------------------------
 /** Possible errors */
 enum {

@@ -268,13 +268,13 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
       return cantsendpacket;
     }
 
-  buff = malloc(sizeof(Packet));
+  buff = malloc(PACKETSIZE);
 
   len =  Net_preparepacket(packet, buff);
   printf("sending packet size: %d\n", len);
   printf("type %d from %d\n", packet->type, packet->which);
   //Packet mus be the same size...
-  if( ( SDLNet_TCP_Send(sock, buff, sizeof(Packet)) <= 0 ))
+  if( ( SDLNet_TCP_Send(sock, buff, PACKETSIZE)) < PACKETSIZE )
     {
       free(buff);
       buff=NULL;
@@ -377,12 +377,12 @@ Net_receivepacket( Packet *packet, TCPsocket sock )
     {
       return cantgetpacket;
     }
-  buff =  malloc(sizeof(Packet));
+  buff =  malloc(PACKETSIZE);
 
 
-  rLen = SDLNet_TCP_Recv(sock, (void *) buff, sizeof(Packet));
+  rLen = SDLNet_TCP_Recv(sock, (void *) buff, PACKETSIZE);
 
-  if( rLen <= 0 )
+  if( rLen < PACKETSIZE )
     {
       free(buff);
       buff=NULL;
@@ -390,7 +390,6 @@ Net_receivepacket( Packet *packet, TCPsocket sock )
     }
 
   //Only do the work if necessary
-  printf("get packet size: %d\n", sizeof(Packet));
   Net_handlepacket(packet, buff);
 
   free(buff);
