@@ -39,8 +39,8 @@ QuadBuffer* createQuadBuffer(int size) {
       return q;
     } else free(q);
   }
-  fprintf(stderr, "failed to allocate quad buffer\n");
-  exit(2);
+  fprintf(stderr, "[error] failed to allocate quad buffer\n");
+  exit(1); /* OK: critical, out of memory */
 }
 
 void freeQuadBuffer(QuadBuffer *q) {

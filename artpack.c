@@ -10,7 +10,7 @@ void initArtpacks() {
   artList = readDirectoryContents(art_path, NULL);
   if(artList->next == NULL) {
     fprintf(stderr, "no art files found...exiting\n");
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
   
   i = 1;

@@ -37,7 +37,7 @@ void updateCallbacks() {
 void restoreCallbacks() {
   if(last_callback == NULL) {
     fprintf(stderr, "fatal: no last callback present, exiting\n");
-    exit(1);
+    exit(1); // OK: programmer error, critical
   }
 
   exitCallback(last_callback);

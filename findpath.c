@@ -96,7 +96,7 @@ void goto_installpath(char *argv0)
     }
     if ( ! *datapath || (chdir(datapath) < 0) ) {
         fprintf(stderr, "Couldn't change to install directory\n");
-        exit(1);
+        exit(1); /* OK: critical, installation corrupt */
     }
 }
 #endif

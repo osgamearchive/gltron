@@ -25,12 +25,12 @@ void initFonts() {
     free(path);
   } else {
     fprintf(stderr, "can't load fonts.txt\n");
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
 
   if(game == NULL || gui == NULL) {
     fprintf(stderr, "incomplete font definition in fonts.txt\n");
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
 
   gameFtx = ftxLoadFont(game);
@@ -38,12 +38,12 @@ void initFonts() {
 
   if(gameFtx == NULL) {
     fprintf(stderr, "can't load font %s\n", game);
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
 
   if(guiFtx == NULL) {
     fprintf(stderr, "can't load font %s\n", gui);
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
 }
 

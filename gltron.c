@@ -37,7 +37,7 @@ int initWindow() {
 
   if (win_id < 0) {
     printf("could not create window...exiting\n");
-    exit(1);
+    exit(1); /* OK: critical, no visual */
   }
 
   if(getSettingi("windowMode") == 0 || getSettingi("mouse_warp") == 1) {

@@ -30,9 +30,9 @@ void loadFX() {
       Audio_LoadSample(path, i);
       free(path);
     } else {
-      printf("error: can't load sound file %s\n",
+      fprintf(stderr, "[error] can't load sound fx file %s\n",
 	     game_fx_names[i]);
-      exit(1);
+      exit(1); // FIXME: handle missing fx somewhere else
     }
   }
 }
@@ -46,7 +46,7 @@ void reloadTrack() {
   free(song);
   if(path == NULL) {
     fprintf(stderr, "can't find song...exiting\n");
-    exit(1);
+    exit(1); // FIXME: handle missing song somewhere else
   }
   loadSound(path);
   playSound();
@@ -107,7 +107,7 @@ void initSoundTracks() {
   soundList = readDirectoryContents(music_path, SONG_PREFIX);
   if(soundList->next == NULL) {
     fprintf(stderr, "no music files found...exiting\n");
-    exit(1);
+    exit(1); // FIXME: handle missing songs somewhere else
   }
     
   i = 1;

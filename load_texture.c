@@ -20,7 +20,7 @@ texture* loadTextureData(const char *filename) {
 
   if(tex == NULL) {    
     fprintf(stderr, "fatal: failed load %s, exiting...\n", filename);
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
   return tex;
 }
