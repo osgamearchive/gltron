@@ -6,6 +6,7 @@
 typedef struct {
   float m[16]; // column order
 } matrix;
+typedef matrix nebu_Matrix4D;
 
 vec4* vec4Transform(vec4* pOut, const vec4* pV, const matrix *pM);
 float matrixCofactor(const matrix *pM, int cf_row, int cf_col);
