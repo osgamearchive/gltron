@@ -9,6 +9,21 @@ void initSubsystems(int argc, const char *argv[]) {
 	initScripting();
 	init_c_interface();
 	initConfiguration(argc, argv);
+	
+	//fixme: move this code somewhere else
+	{
+		char *path = getPath(PATH_LEVEL, "square.lua");
+		if(path) {
+			scripting_RunFile(path);
+			free(path);
+		}
+		else
+		{
+			printf("[fatal] can't get valid path for level\n");
+			exit(1); // fatal
+		}
+	}
+
 	initGame();
 	initVideo();
 	initAudio();
@@ -83,6 +98,12 @@ void initVideo(void) {
 
 	consoleInit();
 	initArtpacks();
+
+#if 1
+	gWorld = video_CreateLevel();
+	if(gWorld->scalable)
+		video_ScaleLevel(gWorld, 600.0f);
+#endif
 	runScript(PATH_SCRIPTS, "menu.lua");
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
   setupDisplay(gScreen);
