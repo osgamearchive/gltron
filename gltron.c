@@ -98,6 +98,9 @@ int main( int argc, char *argv[] ) {
 
   parse_args(argc, argv);
 
+  /* initialize artpack list */
+  initArtpacks();
+
   /* sound */
 #ifndef WIN32
   path = getMusicPath(MUSIC_DIR);
