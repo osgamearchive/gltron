@@ -32,7 +32,6 @@ void initGameStructures() { /* called only once */
   /* Data *data; */
   /* Camera *c; */
   /* Model *m; */
-  AI *ai;
   Player *p;
 
   game->winner = -1;
@@ -65,27 +64,6 @@ void initGameStructures() { /* called only once */
     p->camera = (Camera*) malloc(sizeof(Camera));
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
-    /* init ai */
-
-    ai = p->ai;
-    if(getSettingi("screenSaver")) {
-      ai->active = AI_COMPUTER;
-    } else {
-      switch(i) {
-      case 0: ai->active = getSettingi("ai_player1"); break;
-      case 1: ai->active = getSettingi("ai_player2"); break;
-      case 2: ai->active = getSettingi("ai_player3"); break;
-      case 3: ai->active = getSettingi("ai_player4"); break;
-      default:
-	fprintf(stderr, "player index #%d not caught!\n", i);
-	ai->active = AI_NONE;
-      }
-    }
-    ai->tdiff = 0;
-    ai->moves = 0;
-    ai->danger = 0;
-    ai->lastx = 0;
-    ai->lasty = 0;
   }
 
   /* load recognizer model */
@@ -143,6 +121,26 @@ void initPlayerData() {
 
     data = game->player[i].data;
     ai = game->player[i].ai;
+    /* init ai */
+
+    if(getSettingi("screenSaver")) {
+      ai->active = AI_COMPUTER;
+    } else {
+      switch(i) {
+      case 0: ai->active = getSettingi("ai_player1"); break;
+      case 1: ai->active = getSettingi("ai_player2"); break;
+      case 2: ai->active = getSettingi("ai_player3"); break;
+      case 3: ai->active = getSettingi("ai_player4"); break;
+      default:
+	fprintf(stderr, "player index #%d not caught!\n", i);
+	ai->active = AI_NONE;
+      }
+    }
+    ai->tdiff = 0;
+    ai->moves = getSettingi("grid_size") / 10;
+    ai->danger = 0;
+    ai->lastx = 0;
+    ai->lasty = 0;
 
     /* arrange players in circle around center */
 
@@ -175,10 +173,6 @@ void initPlayerData() {
     data->trail->sx = data->trail->ex = data->iposx;
     data->trail->sy = data->trail->ey = data->iposy;
 
-    ai->tdiff = 0;
-    ai->moves = getSettingi("grid_size") / 10;
-    ai->danger = 0;
-    ai->lasttime = 0;
   }
   game->running = game->players - not_playing; /* not everyone is alive */
   /* printf("starting game with %d players\n", game->running); */
