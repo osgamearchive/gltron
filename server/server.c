@@ -407,12 +407,15 @@ do_login( int which, Packet packet )
       Net_sendpacket(&rep, slots[which].sock);
       sendEventlist(eventList, which);
     }
+  
+  #ifndef macintosh /* no ntohl on MacOS */
   fprintf(stderr, "Connection from %d.%d.%d.%d:%d by %s\n",
 	  (ntohl(slots[which].peer.host) & 0xff000000) >> 24,
 	  (ntohl(slots[which].peer.host) & 0x00ff0000) >> 16,
 	  (ntohl(slots[which].peer.host) & 0x0000ff00) >> 8,
 	  ntohl(slots[which].peer.host) & 0x000000ff,
 	  slots[which].peer.port, slots[which].name);
+  #endif
 }
 
 void

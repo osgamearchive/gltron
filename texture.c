@@ -27,15 +27,16 @@ void initTexture(gDisplay *d) {
       } else {
 	sprintf(texname, "%s%d%s", textures[i].name, j, TEX_SUFFIX);
       }
-      loadTexture(texname, textures[i].type);
-      update_splash(splash, 0.16+i/1000, texname);
-
+      
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textures[i].wrap_s);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textures[i].wrap_t);
-
+      
+      loadTexture(texname, textures[i].type);
       checkGLError("texture.c initTextures");
+      
+      update_splash(splash, 0.16+i/1000, texname);
     }
   }
 }

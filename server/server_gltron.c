@@ -28,6 +28,12 @@ int main( int argc, char *argv[] ) {
   while(1) {
     idleGame();
     SDL_Delay(1);
+    
+    // On OS 9, we have to give up the processor every now and then
+   #ifdef macintosh
+    mac_yield_cpu ();
+   #endif
+   
   }
   stop_server();
   return 0;

@@ -27,10 +27,12 @@ new_splash( int width, int height,  char *background, int options )
   splash->options = options;
 
   //load background texture
+  
   glGenTextures(1, splash_textures);
   glBindTexture(GL_TEXTURE_2D, splash_textures[0]);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
   loadTexture(background, GL_RGBA);
 
   //Create progress things.
@@ -69,12 +71,16 @@ draw_splash( Splash *splash )
 {
   if( splash == NULL )
     return;
+  
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   rasonly(game->screen);
+  
   drawbg_splash( splash );
   draw_wprogressstatus(splash->wstatus);
   drawv_splash( splash );
   draw_wprogressbar(splash->wprogress);
-
 
   SystemSwapBuffers();  
 }
@@ -84,14 +90,8 @@ static void drawbg_splash(Splash *splash ) {
 
   checkGLError("splash background start");
 
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  rasonly(game->screen);
-
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, splash_textures[0]);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
   glColor3f(1.0, 1.0, 1.0);
   glBegin(GL_QUADS);
@@ -110,7 +110,7 @@ static void drawbg_splash(Splash *splash ) {
   
   glEnd();
 
-  //glDisable(GL_TEXTURE_2D);
+  glDisable(GL_TEXTURE_2D);
 
 }
 
