@@ -135,9 +135,6 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   if(pV->exp_radius != 0)
     return;
 
-  lod += game2->settingsCache.shadow_lod;
-  if(lod > LC_LOD - 1) lod = LC_LOD - 1;
-
   cycle = lightcycle[lod];
 
   /* states */
