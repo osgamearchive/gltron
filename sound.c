@@ -6,16 +6,18 @@
 
 /* linux only, at the moment */
 
-#define NUM_GAME_FX 2
+#define NUM_GAME_FX 3
 
 static char *game_fx_names[] = {
 
 #ifdef macintosh 
   "game_engine.wav",
-  "game_crash.wav"
+  "game_crash.wav",
+  "game_recognizer.wav"
 #else
   "game_engine.ogg",
-  "game_crash.ogg"
+  "game_crash.ogg",
+  "game_recognizer.ogg"
 #endif
 };
 
@@ -58,6 +60,10 @@ int initSound() {
   Audio_Init();
 
   loadFX();
+  Audio_LoadPlayers();
+
+  SDL_PauseAudio(0);
+
   return 0;
 }
 
