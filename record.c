@@ -16,37 +16,42 @@ int startPlaying(char *filename) {
     fprintf(stderr, "[playing] no demo file %s available\n", filename);
   }
   */
-
+  /*
   if((game2->play = fopen(filename, "rb")) == NULL) {
     fprintf(stderr, "[playing] no demo file %s available\n", filename);
     return 1;
   }
+  */
   return 0;
 }
 
 void stopRecording() {
-  fclose(game2->record);
+  //fclose(game2->record);
 }
 
 void writeEvent(GameEvent* e) {
+  /**
   if(fprintf(game2->record, "%d %d %d %d %d\n", e->type, e->player, 
 	     e->x, e->y, e->timestamp) == 0) {
     fprintf(stderr, "[recording] couldn't write to file\n");
   }
+  */
 }
 
 int startRecording(char *filename) {
+  /**
   fprintf(stderr, "starting demo recording\n");
   if((game2->record = fopen(filename, "wb")) == NULL) {
       fprintf(stderr, "[recording] can't open file %s for writing\n", 
 	      filename);    
       return 1;
   }
+  */
   return 0;
 }
 
 void stopPlaying() {
-  fclose(game2->play);
+  //fclose(game2->play);
 }
 
 GameEvent* readEvent() {
@@ -70,6 +75,7 @@ void getEvents() {
 }
   
 int writeDemoInfo() {
+  /*
   int i;
   Data *data;
 
@@ -88,10 +94,12 @@ int writeDemoInfo() {
 	    data->dir);
 
   }
+  */
   return 0;
 }
 
 int readDemoInfo() {
+  /*
   int i;
 
   if(game2->play == NULL) {
@@ -110,6 +118,7 @@ int readDemoInfo() {
 	      (game2->startPositions + 3 * i + 2)) != 3)
       return 1;
   }
+  */
   return 0;
 }
 									   

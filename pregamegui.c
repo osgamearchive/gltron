@@ -39,7 +39,7 @@ keyboardreadingreturn()
   if( strlen(command) > 0 )
     {
       handlecommand(command, params);
-      sprintf(buff, "");
+      strcpy(buff, "");
       //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
     } else {
       fprintf(stderr, "\nsend chat: %s\n", buff);

@@ -174,6 +174,8 @@ doGameNetEvent(  )
   int err = noErr;
 
   e = Recv_gameEvent();
+  if( e == NULL )
+    return noErr;
   addNetEvent(e);
 
   fprintf(stderr, "%d %d %d %d %d\n", e->type, e->player, 

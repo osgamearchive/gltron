@@ -146,11 +146,12 @@ void idleGame( void ) {
 #endif
 
   if(updateTime() == 0) return;
-
+#ifdef __NETWORK__
   if( isConnected && Net_checkSocks() )
     {
       handleServer();
     }
+#endif
 
   switch(game2->mode) {
   case GAME_NETWORK_RECORD:
