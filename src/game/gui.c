@@ -8,20 +8,20 @@
 void playMenuFX(int foo) { }
 
 void guiProjection(int x, int y) {
-  checkGLError("gui.c guiProj - start");
+  nebu_Video_CheckErrors("gui.c guiProj - start");
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   /*glOrtho(0, 0, x, y, -1, 1); */
-  checkGLError("gui.c guiProj - proj");
+  nebu_Video_CheckErrors("gui.c guiProj - proj");
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glViewport(gScreen->vp_x, gScreen->vp_y,
 	     x, y);
-  checkGLError("gui.c guiProj - end");
+  nebu_Video_CheckErrors("gui.c guiProj - end");
 }
 
 void drawGuiBackground(void) {
-  checkGLError("gui background start");
+  nebu_Video_CheckErrors("gui background start");
 
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -60,7 +60,7 @@ void drawGuiLogo(void) {
   float glpos = 64;
   float glsize = 32;
 
-  checkGLError("gui logo start");
+  nebu_Video_CheckErrors("gui logo start");
   
   rasonly(gScreen);
 
@@ -101,7 +101,7 @@ void drawGuiLogo(void) {
 
   glDisable(GL_BLEND);
 
-  checkGLError("gui background end");
+  nebu_Video_CheckErrors("gui background end");
 }
   
 void displayGui(void) {

@@ -187,7 +187,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   */
 
   /* experimental trail effect */
-  checkGLError("before trail");
+  nebu_Video_CheckErrors("before trail");
 
   q = getNextQuad(qb);
   q->type = QUAD_COLOR;

@@ -60,7 +60,7 @@ void trailRender(TrailMesh *pMesh) {
 	glTexCoordPointer(2, GL_FLOAT, 0, pMesh->pTexCoords);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, pMesh->pColors);
 
-	checkGLError("texcoord pointer");
+	nebu_Video_CheckErrors("texcoord pointer");
 
 	glDrawElements(GL_TRIANGLES, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -68,5 +68,5 @@ void trailRender(TrailMesh *pMesh) {
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 
-	checkGLError("trail");
+	nebu_Video_CheckErrors("trail");
 }

@@ -198,5 +198,5 @@ w);
     glVertex2f(i, 1);
     glEnd();
   }
-  /* checkGLError("FontTex.c ftxRenderString\n"); */
+  /* nebu_Video_CheckErrors("FontTex.c ftxRenderString\n"); */
 }

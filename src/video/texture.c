@@ -1,4 +1,6 @@
 #include "video/video.h"
+#include "base/nebu_surface.h"
+#include "video/nebu_2d.h"
 
 void initTexture(Visual *d) {
   GLint min_filter;
@@ -25,10 +27,10 @@ void initTexture(Visual *d) {
 	printf("using min_filter: %d (setting: %d)\n", min_filter,
 				 getSettingi("mipmap_filter"));
 
-  checkGLError("texture.c initTexture - start");
+  nebu_Video_CheckErrors("texture.c initTexture - start");
   /* todo: move that somewhere else */
   glGenTextures(game_textures, d->textures);
-  checkGLError("texture.c initTexture - creating textures");
+  nebu_Video_CheckErrors("texture.c initTexture - creating textures");
   for(i = 0; i < n_textures; i++) {
     for( j = 0; j < textures[i].count; j++) {
       glBindTexture(GL_TEXTURE_2D, d->textures[ textures[i].id + j ]);
@@ -62,14 +64,20 @@ void initTexture(Visual *d) {
 				}
 #endif
       }
-      checkGLError("texture.c initTextures");
+      nebu_Video_CheckErrors("texture.c initTextures");
     }
   }
+
+	// load 2d stuff
+	{
+		nebu_Surface* pSurface = nebu_Surface_LoadPNG("speedometer.png");
+		gpHUD = nebu_2d_Create(pSurface, 0);
+	}
 }
 
 void deleteTextures(Visual *d) {
   glDeleteTextures(game_textures, d->textures);
-  checkGLError("texture.c deleted textures");
+  nebu_Video_CheckErrors("texture.c deleted textures");
 }
 
 
