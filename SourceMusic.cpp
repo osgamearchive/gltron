@@ -14,6 +14,16 @@ namespace Sound {
     _rwops = NULL;
   }
 
+  SourceMusic::~SourceMusic() { 
+    fprintf(stderr, "SourceMusic destructor called\n");
+    if(_sample)
+      Sound_FreeSample( _sample );
+
+    if(_mem)
+      free(_mem);
+    // Source::~Source();
+  }
+
   void SourceMusic::CreateSample(void) {
     _rwops = SDL_RWFromMem(_mem, _mem_size);
     _sample = Sound_NewSample(_rwops, NULL,

@@ -9,6 +9,10 @@ namespace Sound {
     _volume = 0.5;
     _type = 0;
   }
+  Source::~Source() {
+    fprintf(stderr, "Source destructor called\n");
+  }
+
   void Source::Mix(Uint8 *data, int len) { }
   void Source::Reset() { }
   void Source::Start() { _isPlaying = 1; Reset(); }
@@ -18,6 +22,7 @@ namespace Sound {
 
   Uint8 Source::IsPlaying() { return _isPlaying; }
   void Source::SetRemovable() { _removable = 1; }
+  Uint8 Source::IsRemovable() { return _removable; }
   void Source::SetVolume(float volume) { _volume = volume; }
   float Source::GetVolume() { return _volume; }
   void Source::SetLoop(Uint8 loop) { _loop = loop; }

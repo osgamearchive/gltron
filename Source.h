@@ -15,6 +15,7 @@ namespace Sound {
   class Source { // an abstract class, the basic interface for all Sources
   public:
     Source();
+    virtual ~Source();
     virtual void Start();
     virtual void Stop();
     virtual void Pause();
@@ -22,6 +23,7 @@ namespace Sound {
     virtual Uint8 IsPlaying();
     virtual void Mix(Uint8 *data, int len); // abstract
     virtual void SetRemovable(void);
+    virtual Uint8 IsRemovable(void);
     virtual void SetVolume(float volume);
     virtual float GetVolume();
     virtual void SetLoop(Uint8 loop);

@@ -10,6 +10,7 @@ namespace Sound {
   class SourceSample : public Source {
   public:
     SourceSample(System *system);
+    virtual ~SourceSample();
     void Load(char *filename);
     virtual void Mix(Uint8 *data, int len);
 

@@ -26,6 +26,18 @@ namespace Sound {
 	   )
 	     s->Mix(data, len);
 	// fprintf(stderr, "done mixing\n");
+      } else {
+	// check if source is removable
+	if(s->IsRemovable()) {
+	  // get rid of data
+	  delete (Source*) p->data;
+	  p->data = p->next->data;
+	  list *tmp = p->next;
+	  p->next = p->next->next;
+	  delete tmp;
+	  if(p->next == NULL)
+	    break;
+	}
       }
     }
   }

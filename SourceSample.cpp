@@ -11,25 +11,17 @@ namespace Sound {
     _decoded = 0;
   }
 
+  SourceSample::~SourceSample() {
+    fprintf(stderr, "SourceSample destructor called\n");
+    if(_buffer)
+      delete _buffer;
+    // Source::~Source();
+  }
 
   void SourceSample::Load(char *filename) {
 #define BUFSIZE 1024 * 1024
-    int size;
-    void *mem;
     SDL_RWops *rwops;
 
-    /*
-    fprintf(stderr, "opening sample '%s'\n", filename);
-
-    gzFile file = gzopen(filename, "r");
-    mem = (void*) malloc(BUFSIZE);
-    size = gzread(file, mem, BUFSIZE);
-    gzclose(file);
-
-    fprintf(stderr, "done reading sample '%s'\n", filename);
-
-    rwops = SDL_RWFromMem(mem, size);
-    */
     rwops = SDL_RWFromFile(filename, "r");
 
     Sound_Sample *sample = Sound_NewSample(rwops, NULL,
@@ -41,8 +33,6 @@ namespace Sound {
     _buffer = new Uint8[_buffersize];
     memcpy(_buffer, sample->buffer, _buffersize);
 
-    // free(mem);
-    // SDL_FreeRW(rwops);
     Sound_FreeSample(sample);
     
     fprintf(stderr, "done decoding sample '%s'\n", filename);
