@@ -4,6 +4,30 @@
 /* I hear people are reading this file because they couldn't find the
    manual! Go to http://www.ards.net/Andreas/gltron.html#usage         */
 
+/* default actions */
+
+
+keyAction key_actions[KEY_ACTIONS_N] = {
+  { 0, 3, 'a' },
+  { 0, 1, 's' },
+  { 1, 3, 'k' },
+  { 1, 1, 'l' },
+  { 2, 3, '5' },
+  { 2, 1, '6' },
+  { 3, 3, SYSTEM_KEY_LEFT },
+  { 3, 1, SYSTEM_KEY_RIGHT }
+};
+
+#define KEY_RESERVED_N 8
+int reserved_keys[] = {
+  'q', 27, ' ',
+  SYSTEM_KEY_F1,
+  SYSTEM_KEY_F2,
+  SYSTEM_KEY_F3,
+  SYSTEM_KEY_F5,
+  SYSTEM_KEY_F10
+};
+
 void keyGame(int k, int x, int y)
 {
   int i;
@@ -12,19 +36,6 @@ void keyGame(int k, int x, int y)
   case 'q': exit(0); break; /* panic button */
   case 27: switchCallbacks(&guiCallbacks); break;
   case ' ': switchCallbacks(&pauseCallbacks); break;
-
-    /* steering player 0 */
-  case 'a': case 'A': turn(game->player[0].data, 3); break;
-  case 's': case 'S': turn(game->player[0].data, 1); break;
-    /* steering player 1 */
-  case 'k': case 'K': turn(game->player[1].data, 3); break;
-  case 'l': case 'L': turn(game->player[1].data, 1); break;
-    /* steering player 2 */
-  case '5': turn(game->player[2].data, 3); break;
-  case '6': turn(game->player[2].data, 1); break;
-    /* steering player 3 */
-  case SYSTEM_KEY_LEFT: turn(game->player[3].data, 3); break;
-  case SYSTEM_KEY_RIGHT: turn(game->player[3].data, 1); break;
 
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
@@ -37,7 +48,16 @@ void keyGame(int k, int x, int y)
     break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
-  default: fprintf(stderr, "key %d is not bound\n", k);
+
+  default: 
+    for(i = 0; i < KEY_ACTIONS_N; i++) {
+      if(k == key_actions[i].key) {
+	turn(game->player[ key_actions[i].player ].data,
+	     key_actions[i].turn);
+	return;
+      }
+    }
+    fprintf(stderr, "key %d is not bound\n", k);
   }
 }
 

@@ -41,6 +41,7 @@ extern int SystemCreateWindow(char *name);
 extern void SystemDestroyWindow(int id);
 extern void SystemReshapeFunc(void(*reshape)(int, int));
 
+extern char* SystemGetKeyName(int key);
 #endif
 
 

@@ -30,7 +30,7 @@ void guiProjection(int x, int y) {
 }
 
 #define GUI_BLUE 0.3
-void displayGui() {
+void drawGui() {
   float x, y, w, h;
   float y1, y2;
   float a, b1, b2, c1, c2;
@@ -112,6 +112,20 @@ void displayGui() {
 
   if(game->settings->mouse_warp)
     mouseWarp();
+}
+
+void displayGui() {
+  drawGui();
+  SystemSwapBuffers();  
+}
+
+void displayConfigure() {
+  char message[] = "Press a key for this action!";
+  drawGui();
+  rasonly(game->screen);
+  glColor3f(0.0, 0.0, 0.0);
+  drawText(game->screen->vp_w / 6, 20,
+	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
   SystemSwapBuffers();
 }
 
@@ -137,6 +151,14 @@ void idleGui() {
   }
 
   SystemPostRedisplay();
+}
+
+void keyboardConfigure(int key, int x, int y) {
+  *configureKeyEntry = key;
+  initMenuCaption(configureKeyMenu);
+  /* todo: update menu caption */
+
+  restoreCallbacks();
 }
 
 void keyboardGui(int key, int x, int y) {
@@ -194,8 +216,10 @@ void initGui() {
   bgs.posy = -1;
   bgs.lt = SystemGetElapsedTime();
 
-  pCurrent = *pMenuList; /* erstes Menu ist RootMenu - Default pCurrent */
-  pCurrent->iHighlight = 0;
+  if(pCurrent == 0) {
+    pCurrent = *pMenuList; /* erstes Menu ist RootMenu - Default pCurrent */
+    pCurrent->iHighlight = 0;
+  }
 
   /* rasonly(game->screen); */
 }
@@ -213,6 +237,10 @@ void initGLGui() {
   glDisable(GL_DEPTH_TEST);
 
 }
+
+callbacks configureCallbacks = {
+  displayConfigure, idleGui, keyboardConfigure, initGui, exitGui, initGLGui
+};
 
 callbacks guiCallbacks = {
   displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui

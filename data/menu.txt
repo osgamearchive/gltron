@@ -20,7 +20,7 @@ Root
 
 # Game Submenu - Start Game / Game Settings / Configure Players
 # 2 (chooseModel)
-3
+4
 xsub
 Game
 
@@ -33,7 +33,7 @@ xsub
 Game Settings
 
 0
-stl_0_4_game_speed
+stl_0_3_game_speed
 Game speed:  %s
 
 0
@@ -79,6 +79,58 @@ Player 3 - %s
 0
 stl_1_2_ai_player4
 Player 4 - %s
+
+4 
+xsub 
+Configure Keys
+
+2
+xsub
+Player 1
+
+0
+sk_0_3
+Turn left  - %s
+
+0
+sk_0_1
+Turn right - %s
+
+2
+xsub
+Player 2
+
+0
+sk_1_3
+Turn left  - %s
+
+0
+sk_1_1
+Turn right - %s
+
+2
+xsub
+Player 3
+
+0
+sk_2_3
+Turn left  - %s
+
+0
+sk_2_1
+Turn right - %s
+
+2
+xsub
+Player 4
+
+0
+sk_3_3
+Turn left  - %s
+
+0
+sk_3_1
+Turn right - %s
 
 # 0
 # xc_chooseModel

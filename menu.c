@@ -8,7 +8,7 @@
 #define MENU_TEXT_SCREEN_SIZE 32
 #define MENU_TEXT_LINEHEIGHT 2.0
 
-Menu *pCurrent;
+Menu *pCurrent = 0;
 
 void changeAction(char *name) {
 #ifdef SOUND
@@ -75,6 +75,21 @@ void menuAction(Menu *activated) {
       updateCallbacks();
       changeDisplay();
       break;
+    case 'k': {
+      int player, turn;
+      int i;
+      /* TODO: set target key name */
+      sscanf(activated->szName + 1, "k_%d_%d ", &player, &turn);
+      for(i = 0; i < KEY_ACTIONS_N; i++)
+	if(key_actions[i].player == player &&
+	   key_actions[i].turn == turn) {
+	  configureKeyEntry = &(key_actions[i].key);
+	  break;
+	}
+      configureKeyMenu = activated;
+      switchCallbacks(&configureCallbacks);
+      break;
+    }
     case 't':
       switch(activated->szName[2]) {
       case 'i':
@@ -113,8 +128,6 @@ static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom" };
 static char *player_list[] = { "human", "computer", "none" };
 static char **clists[] = { speed_list, player_list };
 
-
-
 void initMenuCaption(Menu *m) {
   int *piValue;
 
@@ -147,13 +160,33 @@ void initMenuCaption(Menu *m) {
 	  break;
 	}
       }
+      break;
+    case 'k': 
+      { /* set key name in menu */
+      int player, turn;
+      int i;
+      int key;
+      char *caption;
+      sscanf(m->szName + 1, "k_%d_%d ", &player, &turn);
+      for(i = 0; i < KEY_ACTIONS_N; i++)
+	if(key_actions[i].player == player &&
+	   key_actions[i].turn == turn) {
+	  key = key_actions[i].key;
+	  break;
+	}
+      caption = SystemGetKeyName(key);
+      sprintf(m->display.szCaption, m->szCapFormat, caption);
+      /* free(caption); */
+      break;
+      }
     }
     break;
-    /* c entries change the callback */
-
   default:
     sprintf(m->display.szCaption, "%s", m->szCapFormat);
+    printf("using default capformat\n");
   }
+  printf("[menu] cap-format: %s, caption: %s\n", m->szCapFormat,
+	 m->display.szCaption);
 }
 
 void getNextLine(char *buf, int bufsize, FILE* f) {

@@ -110,6 +110,16 @@ void SystemDestroyWindow(int id) {
 void SystemReshapeFunc(void(*reshape)(int, int)) {
 }
 
+extern char* SystemGetKeyName(int key) {
+  char *buf;
+  /*
+  buf = malloc(2);
+  buf[0] = (char)key;
+  buf[1] = 0;
+  return buf;
+  */
+  return SDL_GetKeyName(key);
+}  
 
 
 

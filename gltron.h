@@ -150,13 +150,27 @@ extern float vp_y[3][4];
 extern float vp_w[3][4];
 extern float vp_h[3][4];
 
+/* configure keys stuff */
+
+int *configureKeyEntry;
+Menu *configureKeyMenu;
+
+#define KEY_ACTIONS_N 8
+
+typedef struct {
+  int player;
+  int turn;
+  int key;
+} keyAction;
+
+extern keyAction key_actions[];
 /*
 #define HELP_LINES 18
 #define HELP_FONT GLUT_BITMAP_9_BY_15
 #define HELP_DY 20
-*/
 
 extern char *help[];
+*/
 
 /* function prototypes */
 
@@ -300,5 +314,6 @@ extern callbacks gameCallbacks;
 extern callbacks guiCallbacks;
 /* extern callbacks chooseModelCallbacks; */
 extern callbacks pauseCallbacks;
+extern callbacks configureCallbacks;
 
 #endif
