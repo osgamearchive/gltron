@@ -14,16 +14,17 @@ extern "C" {
   } Location;
 
 #if 0	
-extern char* getFullPath(char *filename);
+extern char* getFullPath(const char *filename);
 #endif
 
-extern int fileExists(char *path);
+extern int itemExists(const char *path);
+extern int fileExists(const char *path);
 extern void initDirectories();
 
 extern const char* getDirectory(int eLocation);
-extern char* getPath(int eLocation, char *filename);
-extern char* getPossiblePath(int eLocation, char *filename);
-extern char* getArtPath(char *artpack, char *filename);
+extern char* getPath(int eLocation, const char *filename);
+extern char* getPossiblePath(int eLocation, const char *filename);
+extern char* getArtPath(const char *artpack, const char *filename);
 
 #ifdef __cplusplus
 }

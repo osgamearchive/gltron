@@ -41,7 +41,7 @@ static char *dirs[] = { "data", "art" };
 
 extern OSStatus GetApplicationDirectory(short *vRefNum, long *dirID); /* in directory.c */
 
-static int itemExists ( const char* path ) {
+int itemExists (const char* path) {
     
   OSStatus  err;
   Str255    relPath; 
@@ -69,18 +69,14 @@ static int itemExists ( const char* path ) {
 
 #include <unistd.h>
 
-#if 0
-
-static int itemExists (const char* path) {
+int itemExists (const char* path) {
     return (access (path, F_OK) == 0);
 }
-
-#endif /* 0 */
 
 #endif
 
 #if 0
-char* getFullPath(char *filename) {
+char* getFullPath(const char *filename) {
   char *path;
 
   int i;
@@ -150,7 +146,7 @@ void initDirectories() {
 	 music_dir);
 }
 
-char* getPath( int eLocation, char *filename) {
+char* getPath( int eLocation, const char *filename) {
   char *path = getPossiblePath( eLocation, filename );
   if( fileExists(path) )
     return path;
@@ -164,7 +160,7 @@ char* getPath( int eLocation, char *filename) {
   return NULL;
 }
 
-char* getPossiblePath( int eLocation, char *filename ) {
+char* getPossiblePath( int eLocation, const char *filename ) {
   char *path = malloc( PATH_MAX );
   sprintf(path, "%s%c%s", getDirectory( eLocation ), SEPERATOR, filename);
   return path;
@@ -182,7 +178,7 @@ const char* getDirectory( int eLocation ) {
     assert(0);
   }
 }
-char *getArtPath( char *artpack, char *filename ) {
+char *getArtPath(const char *artpack, const char *filename ) {
   char *path = malloc( PATH_MAX );
   sprintf(path, "%s%c%s%c%s", 
 	  art_dir, SEPERATOR, artpack, SEPERATOR, filename);
@@ -201,7 +197,7 @@ char *getArtPath( char *artpack, char *filename ) {
   return NULL;
 }
     
-int fileExists(char *path) {
+int fileExists(const char *path) {
   FILE* f;
   if((f = fopen(path, "r"))) {
     fclose(f);
