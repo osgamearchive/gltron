@@ -11,10 +11,10 @@ int c_quitGame(lua_State *L) {
 
 int c_resetGame(lua_State *L) {
   initData();
+  return 0;
 }
 
 int c_resetScores(lua_State *L) {
-  printf("c_resetScores called");
   resetScores();
   return 0;
 }
@@ -44,30 +44,12 @@ int c_startGame(lua_State *L) {
   return 0;
 }
 
-int c_reloadMusic(lua_State *L) {
-#ifdef SOUND
-  char *tmp, *path;
-#if 0
-  path = getPath(PATH_DATA, MUSIC_DIR);
-  tmp = (char*)malloc(strlen(path) + 1 + /* seperator */
-		      strlen((char*) p->data) + 1);
-  sprintf(tmp, "%s%c%s", path, SEPERATOR, 
-	  (char*) p->data);
-  fprintf(stderr, "loading song %s\n", tmp);
-
-  if(getSettingi("playMusic"))
-    stopSound();
-  loadSound(tmp);
-  free(tmp);
-  if(getSettingi("playMusic"))
-    playSound();
-#endif
-
-#endif
+int c_reloadTrack(lua_State *L) {
+  reloadTrack();
   return 0;
 }
 
-int c_reloadTextures(lua_State *L) {
+int c_reloadArtpack(lua_State *L) {
   reloadArt();
   return 0;
 }
@@ -86,8 +68,12 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_video_restart", c_video_restart);
   lua_register(L, "c_update_audio_volume", c_update_audio_volume);
   lua_register(L, "c_startGame", c_startGame);
-  lua_register(L, "c_reloadMusic", c_reloadMusic);
-  lua_register(L, "c_reloadTextures", c_reloadTextures);
+  lua_register(L, "c_reloadTrack", c_reloadTrack);
+  lua_register(L, "c_reloadArtpack", c_reloadArtpack);
   lua_register(L, "c_restoreDefaults", c_restoreDefaults);
 }
+
+
+
+
 
