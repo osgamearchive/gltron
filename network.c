@@ -95,6 +95,7 @@ do_loginrep(Packet packet)
   printf("logged ( slot %d )...\n%s\n", me, packet.infos.loginrep.message);
   //sprintf(server_message, "%s\n", packet.infos.loginrep.message);
   strcpy(server_message, packet.infos.loginrep.message);
+  updateUsersListData();
   nbUsers++;
   switchCallbacks(&netPregameCallbacks);
   //changeCallback(&netPregameCallbacks, &trackerscreenCallbacks);
@@ -204,7 +205,7 @@ do_userinfo(Packet packet)
       if( serverstate == preGameState )
 	{
 	  //drawMessage(mesg);	  
-	  insert_wtext(pregametext, mesg, 8);
+	  insert_wtext(pregame.pregametext, mesg, 8);
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);
@@ -224,10 +225,25 @@ do_userinfo(Packet packet)
 	{
 	  sprintf(mesg, "logged...\n");
 	  printf("logged...\n");
-	  insert_wtext(pregametext, mesg, 3);
+	  insert_wtext(pregame.pregametext, mesg, 3);
+	}
+
+      //if we are the master activate controls
+      if( slots[me].isMaster )
+	{	  
+	  activateControl( pregame.pregameControls, (Wptr)pregame.level );
+	  activateControl( pregame.pregameControls, (Wptr)pregame.speed );
+	  activateControl( pregame.pregameControls, (Wptr)pregame.size  );
+	  activateControl( pregame.pregameControls, (Wptr)pregame.gameRule );
+	  activateControl( pregame.pregameControls, (Wptr)pregame.gameType );
+	  activateControl( pregame.pregameControls, (Wptr)pregame.start   );
 	}
     } else {
       slots[which].player=(which==0)?me:which;
+    }
+  if( serverstate == preGameState )
+    {
+      updateUsersListData();
     }
 }
 
@@ -251,13 +267,13 @@ do_chat( Packet packet )
       if( serverstate == gameState )	
 	consoleAddLine(mesg);
       else
-	insert_wtext(pregametext, mesg, chatcolor[packet.which]);
+	insert_wtext(pregame.pregametext, mesg, chatcolor[packet.which]);
 	  
 	  //drawChat(mesg);
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      insert_wtext(pregametext, mesg, 75);
+      insert_wtext(pregame.pregametext, mesg, 75);
       //drawChat(mesg);
     }
 }
@@ -293,6 +309,7 @@ do_action(Packet packet)
     {
     case JOIN:
       slots[packet.infos.action.which].active=-1;
+      updateUsersListData();
       nbUsers++;
       break;
     case PART:
@@ -303,7 +320,8 @@ do_action(Packet packet)
 
       if( serverstate == preGameState )
 	{
-	  insert_wtext(pregametext, mesg, 56);
+	  insert_wtext(pregame.pregametext, mesg, 56);
+	  updateUsersListData();
 	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
@@ -328,7 +346,8 @@ do_action(Packet packet)
 
       if( serverstate == preGameState )
 	{
-	  insert_wtext(pregametext, mesg, 67);
+	  insert_wtext(pregame.pregametext, mesg, 67);
+	  updateUsersListData();
 	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
@@ -352,6 +371,7 @@ do_action(Packet packet)
       break;
     case AIPLAYER:
       do_aiplayer(packet);
+      updateUsersListData();
       break;
     }
 }
@@ -359,6 +379,7 @@ do_action(Packet packet)
 void
 do_netrules(Packet packet)
 {
+  int gametype;
 
   packet.which     = SERVERID;
   packet.type      = NETRULES;
@@ -366,6 +387,22 @@ do_netrules(Packet packet)
   netruletime      = packet.infos.netrules.time;
   printf("Net rules : %d %d\n", packet.infos.netrules.nbWins, packet.infos.netrules.time);
   
+  //Set Here the controls
+  if( netruletime != 0 )    
+    gametype = 1;
+  else 
+    gametype = 0;
+      select_wpopmenu(pregame.gameType, gametype );
+    
+  switch( gametype )
+    {
+    case 0:
+      select_wpopmenu(pregame.gameRule, netrulenbwins/5-1 );
+      break;
+    case 1:
+      select_wpopmenu(pregame.gameRule, netruletime/5-1 );
+      break;
+    }
 }
 
 void
@@ -409,7 +446,11 @@ do_gamerules(Packet packet)
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
   
 
-    initData();
+  select_wpopmenu(pregame.speed, game->settings->game_speed );
+  select_wpopmenu(pregame.size, game->settings->arena_size );
+
+
+  initData();
   game2->time                 = packet.infos.gamerules.time;
   printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
   printf("initData with game speed = %d and so speed is %f\n", game->settings->game_speed, game->settings->current_speed );
@@ -479,6 +520,9 @@ do_gameset( Packet packet )
   game->settings->erase_crashed   = packet.infos.gameset.eraseCrashed;
   game->settings->arena_size  = packet.infos.gameset.arena_size;
   game->settings->ai_level    = packet.infos.gameset.ai_level;
+  select_wpopmenu(pregame.speed, game->settings->game_speed );
+  select_wpopmenu(pregame.size, game->settings->arena_size );
+  select_wpopmenu(pregame.level, game->settings->ai_level );
 }
 
 void
@@ -490,6 +534,7 @@ do_playersping( Packet packet )
     {
       slots[i].ping = packet.infos.playersping.ping[i];
     }
+  updateUsersListData();
 }
 
 

@@ -99,39 +99,40 @@ draw_wlist( Wlist *wlist )
   int x, y, s, i, j;
 
 
-  glColor3f(1.0, 1.0, 1.0);
+/*   glColor3f(1.0, 1.0, 1.0); */
 
-  //Draw Borders
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x,                wlist->y);
-  glVertex2d(wlist->x+wlist->width,   wlist->y);
-  glEnd();
+/*   //Draw Borders */
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(wlist->x,                wlist->y); */
+/*   glVertex2d(wlist->x+wlist->width,   wlist->y); */
+/*   glEnd(); */
 
  
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x+wlist->width,   wlist->y);
-  glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
-  glEnd();
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(wlist->x+wlist->width,   wlist->y); */
+/*   glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height); */
+/*   glEnd(); */
 
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
-  glVertex2d(wlist->x,   wlist->y+wlist->height);
-  glEnd();
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height); */
+/*   glVertex2d(wlist->x,   wlist->y+wlist->height); */
+/*   glEnd(); */
 
 
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x,   wlist->y+wlist->height );
-  glVertex2d(wlist->x,  wlist->y );
-  glEnd();
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(wlist->x,   wlist->y+wlist->height ); */
+/*   glVertex2d(wlist->x,  wlist->y ); */
+/*   glEnd(); */
 
-  //draw Titles
-  glBegin(GL_LINES);
-  glVertex2d(wlist->x,               wlist->y+wlist->height-h+1 );
-  glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h+1 );
-  glEnd();
+/*   //draw Titles */
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(wlist->x,               wlist->y+wlist->height-h+1 ); */
+/*   glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h+1 ); */
+/*   glEnd(); */
 
   y = wlist->y+wlist->height-h/2;
-  s = h-10;
+  //s = wlist->width / (wlist->nbcols*12);
+  s =h-10;
 
   x = wlist->x;
   for( i = 0; i < wlist->nbcols; ++i )
@@ -170,13 +171,13 @@ draw_wlist( Wlist *wlist )
 		  //draw hilight
 		  glColor3f(.1, .1, 0.4);
 		  glBegin(GL_QUADS);	  
-		  glVertex3f(x+1, y+h/2+1, 0.0f);     //top left
+		  glVertex3f(x+1, y+h/2, 0.0f);     //top left
 		  if( j == wlist->nbcols-1 )
 		    {
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2+1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2-1, 0.0f);   //top right
 		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y-h/2-1, 0.0f);   //Bottom right
 		    } else {
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2+1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2-1, 0.0f);   //top right
 		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y-h/2-1, 0.0f);   //Bottom right
 		    }
 		  glVertex3f(x+1, y-h/2-1, 0.0f);         //Bottom left
@@ -199,6 +200,36 @@ draw_wlist( Wlist *wlist )
 	    }
 	}
     }
+  glColor3f(1.0, 1.0, 1.0);
+
+  //Draw Borders
+  glBegin(GL_LINES);
+  glVertex2d(wlist->x,                wlist->y);
+  glVertex2d(wlist->x+wlist->width,   wlist->y);
+  glEnd();
+
+ 
+  glBegin(GL_LINES);
+  glVertex2d(wlist->x+wlist->width,   wlist->y);
+  glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
+  glEnd();
+
+  glBegin(GL_LINES);
+  glVertex2d(wlist->x+wlist->width,   wlist->y+wlist->height);
+  glVertex2d(wlist->x,   wlist->y+wlist->height);
+  glEnd();
+
+
+  glBegin(GL_LINES);
+  glVertex2d(wlist->x,   wlist->y+wlist->height );
+  glVertex2d(wlist->x,  wlist->y );
+  glEnd();
+
+  //draw Titles
+  glBegin(GL_LINES);
+  glVertex2d(wlist->x,               wlist->y+wlist->height-h+1 );
+  glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h+1 );
+  glEnd();
 }
 
 void
@@ -373,9 +404,9 @@ getRect_wlist( Wlist *wlist )
 {
   Wrect rect;
 
-  rect.top    = wlist->y;
+  rect.top    = wlist->y + wlist->height;
   rect.left   = wlist->x;
-  rect.bottom = wlist->y + wlist->height;
+  rect.bottom = wlist->y;
   rect.right  = wlist->x + wlist->width;
 
   return rect;
@@ -482,4 +513,52 @@ mouseFocus_wlist( Wlist *wlist, Wpoint mousexy )
   if( wlist->mouseFocus != NULL )
     wlist->mouseFocus(wlist, wlist->index[line], mousexy);
   return 1;
+}
+
+char *
+intToStr_wlist( WlistPtr list, int line, int col )
+{
+  char *str = malloc(255);
+  int *val;
+
+  val = (int *)(list->lines[line][col]);
+  if( val == NULL )
+    {
+      strcpy(str, "N/A");
+    } else {
+
+      //val = (int)(*(list->lines[line][col]));
+
+      sprintf(str, "%d", *val);
+    }
+  return str;
+}
+
+char *
+charToStr_wlist(WlistPtr list, int line, int col )
+{
+  char *str = malloc(255);
+
+  if(  list->lines[line][col] == NULL )
+    {
+      strcpy(str, "N/A");
+    } else {
+      sprintf(str, "%s", list->lines[line][col]);
+    }
+  return str;
+}
+
+int
+sortint_wlist( WlistPtr list, int line, int next )
+{
+  int *a;
+  int *b;
+
+  a = (int *)(list->lines[line][list->sortcol]);
+  b = (int *)(list->lines[next][list->sortcol]);
+
+  if( a == NULL || b == NULL )
+    return 0;
+  //printf(" comparing %d (%d) and %d (%d) %d\n", *a,line, *b,next, (*a > *b));
+  return (*a > *b);
 }

@@ -260,7 +260,7 @@ keyTracker(int k, int unicode, int x, int y)
       break;
 
     default:
-      keyControls(trackerControls, k);
+      keyControls(trackerControls, k, unicode);
       break;
     }
 }
@@ -317,24 +317,24 @@ addressToStr( WlistPtr list, int line, int col )
   return str;
 }
 
-char *
-intToStr( WlistPtr list, int line, int col )
-{
-  char *str = malloc(255);
-  int *val;
+/* char * */
+/* intToStr( WlistPtr list, int line, int col ) */
+/* { */
+/*   char *str = malloc(255); */
+/*   int *val; */
 
-  val = (int *)(list->lines[line][col]);
-  if( val == NULL )
-    {
-      strcpy(str, "N/A");
-    } else {
+/*   val = (int *)(list->lines[line][col]); */
+/*   if( val == NULL ) */
+/*     { */
+/*       strcpy(str, "N/A"); */
+/*     } else { */
 
-      //val = (int)(*(list->lines[line][col]));
+/*       //val = (int)(*(list->lines[line][col])); */
 
-      sprintf(str, "%d", *val);
-    }
-  return str;
-}
+/*       sprintf(str, "%d", *val); */
+/*     } */
+/*   return str; */
+/* } */
 
 
 char *
@@ -533,20 +533,7 @@ buttonMouseFocus( Wbutton *wbutton )
   y -=s;
 }
 
-int
-sortit( WlistPtr list, int line, int next )
-{
-  int *a;
-  int *b;
 
-  a = (int *)(list->lines[line][list->sortcol]);
-  b = (int *)(list->lines[next][list->sortcol]);
-
-  if( a == NULL || b == NULL )
-    return 0;
-  printf(" comparing %d (%d) and %d (%d) %d\n", *a,line, *b,next, (*a > *b));
-  return (*a > *b);
-}
 
 void
 initTracker()
@@ -579,9 +566,9 @@ initTracker()
   colDefs = new_colDefs( 4 );
 
   set_colDef( colDefs, 0, "Address", 30, colors[1], drawit, addressToStr, NULL); 
-  set_colDef( colDefs, 1, "Description", 40, colors[1], drawit, charToStr, NULL); 
-  set_colDef( colDefs, 2, "Players", 20, colors[1], drawit, intToStr, NULL); 
-  set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr, sortit); 
+  set_colDef( colDefs, 1, "Description", 40, colors[1], drawit, charToStr_wlist, NULL); 
+  set_colDef( colDefs, 2, "Players", 20, colors[1], drawit, intToStr_wlist, NULL); 
+  set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr_wlist, sortint_wlist); 
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-100,
 			 16, 4, colDefs, 3, focus, action, mousefocus );

@@ -319,9 +319,13 @@ typedef struct Settings {
   char port[16];
   char tracker[255];
   char tport[16];
+
+
 #endif
 
 } Settings;
+
+
 
 typedef struct Game {
   gDisplay *screen;

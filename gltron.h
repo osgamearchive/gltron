@@ -569,9 +569,33 @@ extern int    hasstarted;
 extern char   server_message[255];
 extern Netscores         netscores;
 
-extern Wtext    *pregametext;
-extern Wintext  *inpregametext;
+/* extern Wtext    *pregametext; */
+/* extern Wintext  *inpregametext; */
 
+
+typedef struct PregameControls {
+  WrootControl *pregameControls;
+  Wlist        *userslist;
+  Wpopmenu     *gameType;    
+  Wtext        *pregametext;
+  Wintext      *inpregametext;
+  Wpopmenu     *gameRule;
+  Wpopmenu     *speed;
+  Wpopmenu     *size;
+  Wpopmenu     *level;
+  Wbutton      *start;
+} PregameControls;
+/* static Wlist        *userslist = NULL; */
+/* static WrootControl *pregameControls = NULL; */
+/* static Wpopmenu     *gameType   = NULL; */
+/* static Wpopmenu     *gameRule   = NULL; */
+
+/* static Wpopmenu     *speed      = NULL; */
+/* static Wpopmenu     *size       = NULL; */
+/* static Wpopmenu     *level      = NULL; */
+
+
+extern PregameControls pregame;
 
 extern void  handleServer      ( void );
 extern void  login             ( char* );
@@ -594,6 +618,8 @@ extern int   undoTurn          ( int, int, int );
 extern int   tracker_connect();
 extern int   trackeruse;
 extern void setconnection(char *server, char *port);
+extern void getServer(char *server, int *port);
+extern void updateUsersListData();
 #ifdef USEUDP
 extern void  handleUDP         ( void );
 #endif

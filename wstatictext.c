@@ -93,9 +93,9 @@ getRect_wstatictext( Wstatictext *wstatictext )
 {
   Wrect rect;
 
-  rect.top    = wstatictext->y;
+  rect.top    = wstatictext->y + wstatictext->height;
   rect.left   = wstatictext->x;
-  rect.bottom = wstatictext->y + wstatictext->height;
+  rect.bottom = wstatictext->y;
   rect.right  = wstatictext->x + wstatictext->width;
 
   return rect;

@@ -9,6 +9,11 @@ static int coffset;
 static char message[255] ="pregame";
 static char chat[1024]   = "";
 
+
+static int oldType;
+
+
+
 #define MAX_CHARS 255
 
 void
@@ -201,10 +206,10 @@ handlecommand(char *command, char *params)
 	}
       break;
     case 'h': //print help
-      insert_wtext(pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\na : add ai player ( nb ai player )\nl : change ai level ( 0 to 3)\n\n", 0);
+      insert_wtext(pregame.pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\na : add ai player ( nb ai player )\nl : change ai level ( 0 to 3)\n\n", 0);
       break;
     default:
-      insert_wtext(pregametext, "unknown command\ntype /h for help\n", 0);
+      insert_wtext(pregame.pregametext, "unknown command\ntype /h for help\n", 0);
       break;
     }
 }
@@ -225,7 +230,7 @@ keyboardreadingreturn(char *buff)
       if( strlen(command) == 1 )
 	handlecommand(command, params);
       else
-	insert_wtext(pregametext, "unknown command\ntype /h for help\n", 0);
+	insert_wtext(pregame.pregametext, "unknown command\ntype /h for help\n", 0);
 
       //strcpy(buff, "");
       //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
@@ -258,8 +263,10 @@ keyboardreadingreturn(char *buff)
 
 void mousePregame (int buttons, int state, int x, int y)
 {
-  //if ( state == SYSTEM_MOUSEPRESSED )
-      //  switchCallbacks(&guiCallbacks);
+  Wpoint pt;
+  pt.v=y;
+  pt.h=x;
+  clickControls(pregame.pregameControls, buttons, state, pt);
 }
 
 void keyPregame(int k, int unicode, int x, int y)
@@ -270,11 +277,11 @@ void keyPregame(int k, int unicode, int x, int y)
     case SYSTEM_KEY_F11: doBmpScreenShot(); break;
     case SYSTEM_KEY_F12: doScreenShot(); break;
     case 13:
-      str = get_wintext(inpregametext);
+      str = get_wintext(pregame.inpregametext);
       keyboardreadingreturn(str);
       free(str);
       str=NULL;
-      clear_wintext(inpregametext);
+      clear_wintext(pregame.inpregametext);
       break;
     case SDLK_ESCAPE:
       fprintf(stderr, "exit network game\n");
@@ -282,10 +289,12 @@ void keyPregame(int k, int unicode, int x, int y)
       isLogged=0;
       Net_disconnect();
       serverstate=preGameState; //We hope that next time server will be to preGameState
-      free_wtext(pregametext);
-      pregametext=NULL;
-      free_wintext(inpregametext);
-      inpregametext=NULL;
+      freeRootControl(pregame.pregameControls);
+      pregame.pregameControls=NULL;
+      //free_wtext(pregametext);
+      pregame.pregametext=NULL;
+      //free_wintext(inpregametext);
+      pregame.inpregametext=NULL;
       if( trackeruse == 1 )
 	{
 	  if( ! tracker_connect() )
@@ -298,7 +307,7 @@ void keyPregame(int k, int unicode, int x, int y)
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
     default:
-      key_wintext(inpregametext, k, unicode);
+      keyControls(pregame.pregameControls, k, unicode);
       break;
     }
 }
@@ -348,20 +357,9 @@ void drawPregame() {
   //rasonly(game->screen);
   
   h = game->screen->vp_h / (24 * 1.5);
-  //Message
-/*   glColor3fv(colors[1]); */
-/*   x = 10; */
-/*   y = game->screen->vp_h - 1.5 * h * (0 + 1); */
-/*   drawText(gameFtx, x, y, h, message); */
-
-  //chat
-/*   glColor3fv(colors[0]); */
-/*   x = 10; */
-/*   y = game->screen->vp_h - 1.5 * h * (5 + 1); */
-/*   drawText(gameFtx, x, y, h, chat); */
   
   //Draw pregametext
-  draw_wtext(pregametext);
+  draw_wtext(pregame.pregametext);
   
   //calculate the max len of a name;
   len=5; //for empty;
@@ -401,12 +399,7 @@ void drawPregame() {
 
   //Inputs
   glColor3fv(colors[2]);
-/*   x = 10; */
-  //x = 20;
-  /* x =  2 *( game->screen->vp_w / (50 * 1.5) ); */
-/*   y = h; */
-/*   drawText(gameFtx, x, y, h, getInputEntry()); */
-  draw_wintext(inpregametext);
+  draw_wintext(pregame.inpregametext);
 
   //NetRules
   glColor3fv(colors[1]);
@@ -436,6 +429,125 @@ void drawPregame() {
 
   
   
+}
+
+void
+drawUsersListBox(WlistPtr list, int x, int y, int line, int col)
+{
+  int     h = list->height/list->nblines;
+  float   colors[][3] = { {.4, .1, .1}, { .7, .1, .1 }, { .7, .7, .1 }, { .1, .7, .1 } };
+
+  if( line < 0 || line > MAX_PLAYERS || slots[line].active != 1 )
+    return;
+
+  if( slots[line].isMaster )
+    {
+      //Draw a red background
+      glColor3fv(colors[0]);
+      glBegin(GL_QUADS);	  
+      glVertex3f(x+1, y+h/2+1, 0.0f);     //top left
+      if( col == list->nbcols-1 )
+	{
+	  glVertex3f(x+ list->width*list->colDefs[col].colsize/100-1, y+h/2+1, 0.0f);   //top right
+	  glVertex3f(x+ list->width*list->colDefs[col].colsize/100-1, y-h/2-1, 0.0f);   //Bottom right
+	} else {
+	  glVertex3f(x+ list->width*list->colDefs[col].colsize/100+1, y+h/2+1, 0.0f);   //top right
+	  glVertex3f(x+ list->width*list->colDefs[col].colsize/100+1, y-h/2-1, 0.0f);   //Bottom right
+	}
+      glVertex3f(x+1, y-h/2-1, 0.0f);         //Bottom left
+      glEnd();
+    }
+
+  //draw ping
+  glLineWidth(4.0f);
+
+  if( slots[line].ping <= 0 )
+    {      
+      checkGLError("cross ping == 0 1");
+      glColor3fv(colors[1]);
+      //Draw a cross
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5,    y+h/2-8 );
+      glVertex2d(x+h*3.5+8,  y-h/2+8 );
+      glEnd();
+      checkGLError("cross ping == 0 2");
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5,   y-h/2+8   );
+      glVertex2d(x+h*3.5+8, y+h/2-8  );
+      glEnd();
+      glLineWidth(1.0f);
+      return;
+    }
+
+  
+  glColor3fv(colors[3]);
+  if( slots[line].ping > 0 )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5,    y+h/2-8 );
+      glVertex2d(x+h*3.5,    y-h/2+8 );
+      glEnd();
+    }
+  if( slots[line].ping > 50 )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5+8,    y+h/2-8 );
+      glVertex2d(x+h*3.5+8,    y-h/2+8 );
+      glEnd();
+    }
+  if( slots[line].ping > 100 )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5+8*2,    y+h/2-8 );
+      glVertex2d(x+h*3.5+8*2,    y-h/2+8 );
+      glEnd();
+    }
+  glColor3fv(colors[2]);
+  if( slots[line].ping > 150 )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5+8*3,    y+h/2-8 );
+      glVertex2d(x+h*3.5+8*3,    y-h/2+8 );
+      glEnd();
+    }
+  if( slots[line].ping > 200 )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5+8*4,    y+h/2-8 );
+      glVertex2d(x+h*3.5+8*4,    y-h/2+8 );
+      glEnd();
+    }
+  glColor3fv(colors[1]);
+  if( slots[line].ping > 250 )
+    {
+      glBegin(GL_LINES);
+      glVertex2d(x+h*3.5+8*5,    y+h/2-8 );
+      glVertex2d(x+h*3.5+8*5,    y-h/2+8 );
+      glEnd();
+    }
+  glLineWidth(1.0f);
+}
+
+void
+updateUsersListData()
+{
+  int i;
+
+  if(pregame.userslist == NULL )
+    return;
+
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      if( slots[i].active == 1 )
+	{
+	  setCell_wlist( pregame.userslist, slots[i].name, strlen(slots[i].name)+1, i, 0);
+	} else {
+	  if( slots[i].active == 2 )
+	    setCell_wlist( pregame.userslist, "Computer", 9, i, 0);
+	  else
+	    setCell_wlist( pregame.userslist, "Empty", 6, i, 0);
+	}
+    }
 }
 
 void drawPregameBackground() {
@@ -478,50 +590,382 @@ void drawPregameBackground() {
 
 
 void displayPregame() {
-  drawPregameBackground();
-  if(!game->settings->softwareRendering)
-    drawGuiLogo();
-  drawPregame();
+  /* drawPregameBackground(); */
+/*   if(!game->settings->softwareRendering) */
+/*     drawGuiLogo(); */
+
+  rasonly(game->screen);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+  updateControls(pregame.pregameControls);
+  drawMouse();
   SystemSwapBuffers();
+}
+
+
+void
+startaction( Wbutton *wbutton )
+{
+  Packet packet;
+
+  if( serverstate == preGameState && isConnected )
+    {
+      if( slots[me].isMaster )
+	{
+	  printf("\nAsk to start the game\n");	      
+	  makeping(game2->time.current);
+	  printf("ping ask when start game is%d\n", getping());
+	  packet.which=me;
+	  packet.type=ACTION;
+	  packet.infos.action.type=STARTGAME;
+	  Net_sendpacket(&packet, Net_getmainsock());
+	} else {
+	  fprintf(stderr,"\nYour are not allowed to start the game, u must be Game Master\n");
+	}
+    }
+}
+
+void
+startMouseFocus( Wbutton *wbutton )
+{  
+  float color[4] = { 0.1f, 0.2f, 0.8f, .8f };
+  int   x, y;
+  int   width    = 210;
+  //int   h      = wbutton->height;
+  int   s        = 8;
+  int   height   = s*3;
+  char  str[255];
+
+  //draw a beautifull transparent box using alpha trucs
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glColor4fv(color);
+
+  //find pos x, y
+  x = wbutton->x + wbutton->width/2;
+  y = wbutton->y + 10;
+  glBegin(GL_QUADS); 
+  glVertex3f(x, y, 0.0f);   //top left
+  glVertex3f(x+width, y, 0.0f);   //top right
+  glVertex3f(x+width, y-height, 0.0f);  //Bottom right
+  glVertex3f(x, y-height, 0.0f);  //Bottom left  
+  glEnd();
+  glDisable(GL_BLEND);
+
+  glColor3f(1.0,1.0, 1.0);
+  glBegin(GL_LINES);
+  glVertex2d(x,y);
+  glVertex2d(x+width, y);
+  glEnd();
+  
+  
+  glBegin(GL_LINES);
+  glVertex2d(x+width, y);
+  glVertex2d(x+width, y-height);
+  glEnd();
+  
+      
+  glBegin(GL_LINES);
+  glVertex2d(x+width, y-height);
+  glVertex2d(x, y-height);
+  glEnd();
+  
+
+  glBegin(GL_LINES);
+  glVertex2d(x, y-height);
+  glVertex2d(x, y);
+  glEnd();
+
+  y -=2*s;
+  x+=10;
+  sprintf(str, "Starting gltron's Server");
+  drawText(gameFtx, x, y, s, str);
+  y -=s;
+}
+
+
+void changeGameType( Wpopmenu *wpopmenu )
+{
+  int    type;
+  Packet packet;
+
+  //Here we change game type.
+  type = getValue_wpopmenu(wpopmenu);
+  printf("oldType = %d, new type = %d\n", oldType, type);
+
+  switch( type )
+    {
+    case 0:
+      if( type == oldType )
+	return;
+      setTitle_wpopmenu(pregame.gameRule, "Games Number");
+      select_wpopmenu(pregame.gameRule, netrulenbwins/5-1 );
+      netruletime=0;
+      netrulenbwins=5;
+	break;
+    case 1:
+      if( type == oldType )
+	return;
+      setTitle_wpopmenu(pregame.gameRule, "Time ( mins )");
+      select_wpopmenu(pregame.gameRule, netruletime/5-1 );
+      netrulenbwins=5;
+      netruletime=5;
+      break;
+    default:
+      fprintf(stderr, "an error occured\n");
+      return;
+    }
+  oldType=type;
+
+  //Send packets
+  if( serverstate == preGameState && isConnected  )
+    {
+      if( slots[me].isMaster )
+	{
+	  packet.which=me;
+	  packet.type=ACTION;
+	  packet.infos.action.type=CHGENBWINS;
+	  packet.infos.action.which = netrulenbwins;
+	  Net_sendpacket(&packet, Net_getmainsock());
+	  
+	  packet.which=me;
+	  packet.type=ACTION;
+	  packet.infos.action.type=CHGETIMEOUT;
+	  packet.infos.action.which = netruletime;
+	  if( packet.infos.action.which < 60 && packet.infos.action.which >= 0 )
+	    {
+	      Net_sendpacket(&packet, Net_getmainsock());
+	    } else {
+	      fprintf(stderr,"\nValue is out of bound..%d\n", packet.infos.action.which);		  
+	    }	  
+	} else {
+	  fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	}
+    }
+}
+
+
+void changeGameRule( Wpopmenu *wpopmenu )
+{
+  int    type;
+  int    value;
+  Packet packet;
+
+  //Here we change game type.
+  type  = getValue_wpopmenu(pregame.gameType);
+  value = getValue_wpopmenu(wpopmenu);
+
+  switch( type )
+    {
+    case 0:
+      packet.which=me;
+      packet.type=ACTION;
+      packet.infos.action.type=CHGENBWINS;
+      packet.infos.action.which = (value+1)*5;
+	break;
+    case 1:
+      packet.which=me;
+      packet.type=ACTION;
+      packet.infos.action.type=CHGETIMEOUT;
+      packet.infos.action.which = (value+1)*5;
+      break;
+    default:
+      fprintf(stderr, "an error occured\n");
+      return;
+    }
+  Net_sendpacket(&packet, Net_getmainsock());
+}
+
+void changeSpeed( Wpopmenu *wpopmenu )
+{
+  int    value;
+  Packet packet;
+  value = getValue_wpopmenu(wpopmenu);
+
+  packet.which=me;
+  packet.type=ACTION;
+  packet.infos.action.type=CHGESPEED;
+  packet.infos.action.which = value;
+  Net_sendpacket(&packet, Net_getmainsock());
+}
+
+void changeSize( Wpopmenu *wpopmenu )
+{
+  int    value;
+  Packet packet;
+  value = getValue_wpopmenu(wpopmenu);
+
+  packet.which=me;
+  packet.type=ACTION;
+  packet.infos.action.type=CHGESIZE;
+  packet.infos.action.which = value;
+  Net_sendpacket(&packet, Net_getmainsock());
+}
+
+void changeLevel( Wpopmenu *wpopmenu )
+{
+  int    value;
+  Packet packet;
+  value = getValue_wpopmenu(wpopmenu);
+
+  packet.which=me;
+  packet.type=ACTION;
+  packet.infos.action.type=AILEVEL;
+  packet.infos.action.which = value;
+  Net_sendpacket(&packet, Net_getmainsock());
+
 }
 
 void initPregame() {
   int top_left_x, top_left_y;
   int width, height;
+  int x, y, h;
+  int i;
+  char empty[] = "Empty";
+  char serveradd[1024];
+  int port;
+  char server[1024];
+  ColDef    *colDefs;
+  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { .4, 0.9, .4 }};
 
-  coffset = SDL_GetTicks();
+
+  //init OPENGL
+  glShadeModel ( GL_FLAT       );
+  glDisable    ( GL_BLEND      );
+  glDisable    ( GL_LIGHTING   );
+  glDisable    ( GL_DEPTH_TEST );
+
+
+/* static Wlist        *userslist = NULL; */
+/* static Wstatictext  *servertext = NULL; */
+
+  if(pregame.pregameControls != NULL )
+    return;
+
+  //Root controls
+  pregame.pregameControls = newRootControl();
+
+  h = game->screen->vp_h / (24 * 1.5);
+
+  //Creating the user list
+  colDefs = new_colDefs( 1 );
+
+  set_colDef( colDefs, 0, "Users", 100, colors[1], drawUsersListBox, charToStr_wlist, NULL);
+
+  x = game->screen->vp_w - 1.5 * 16 *( game->screen->vp_w / (50 * 1.5) );
+  y = game->screen->vp_h - 230;
+  pregame.userslist = new_wlist(x, y, 150, 140, 5, 1, colDefs, 0, NULL, NULL, NULL );
+
+  //Default value
+  i = addRow_wlist     ( pregame.userslist, 4 );
+  if( i >= 0 )
+    {
+      setCell_wlist( pregame.userslist, empty, strlen(empty)+1, i, 0);
+      setCell_wlist( pregame.userslist, empty, strlen(empty)+1, i+1, 0);
+      setCell_wlist( pregame.userslist, empty, strlen(empty)+1, i+2, 0);
+      setCell_wlist( pregame.userslist, empty, strlen(empty)+1, i+3, 0);
+    }			
+  newControl(pregame.pregameControls, (Wptr)pregame.userslist, Wlistbox);
 
   //Reinit scores
   netscores.winner = -1;
 
-  if( pregametext == NULL )
-    {
-      //make position relative to screen size in percent
-      top_left_x = 3*game->screen->vp_w /100 ;
-      top_left_y = 75*game->screen->vp_h /100 ;
+  //make position relative to screen size in percent
+  top_left_x = 3*game->screen->vp_w /100 ;
+  top_left_y = 75*game->screen->vp_h /100 ;
+  
+  //make size relative to screen size in percent.
+  width     = 55*game->screen->vp_w /100 ;
+  height    = 74*game->screen->vp_h /100;
+  
+  pregame.pregametext = new_wtext(width, height, top_left_x, top_left_y, 20);
+  insert_wtext(pregame.pregametext, "connected...\n", 3);
+  insert_wtext(pregame.pregametext, server_message, 7);
+  newControl(pregame.pregameControls, (Wptr)pregame.pregametext, WoutputText);
 
-      //make size relative to screen size in percent.
-      width     = 55*game->screen->vp_w /100 ;
-      height    = 74*game->screen->vp_h /100;
+  //make position relative to screen size in percent
+  top_left_x = 3*game->screen->vp_w /100 ;
+  top_left_y = 2*game->screen->vp_h /100 ;
+  
+  //make size relative to screen size in percent.
+  width     = 55*game->screen->vp_w /100 ;
+  height    = 6*game->screen->vp_h /100;
 
-      pregametext = new_wtext(width, height, top_left_x, top_left_y, 20);
-      insert_wtext(pregametext, "connected...\n", 3);
-      insert_wtext(pregametext, server_message, 7);
-    }
+  pregame.inpregametext = new_wintext(width, height, top_left_x, top_left_y, 20, MAX_CHARS);
+  newControl(pregame.pregameControls, (Wptr)pregame.inpregametext, WinputText);
 
-  if( inpregametext == NULL )
-    {
-     //make position relative to screen size in percent
-      top_left_x = 3*game->screen->vp_w /100 ;
-      top_left_y = 2*game->screen->vp_h /100 ;
+  getServer(serveradd, &port);
+  sprintf(server, "Server %s:%i", serveradd, port);
+  printf("server is %s\n", server);
+  top_left_x = game->screen->vp_w /2 - (strlen(server)/2)*( game->screen->vp_w / (50 * 1.5));
+  top_left_y = game->screen->vp_h - 2*h ;
 
-      //make size relative to screen size in percent.
-      width     = 55*game->screen->vp_w /100 ;
-      height    = 6*game->screen->vp_h /100;
+  newControl(pregame.pregameControls, (Wptr)new_wstatictext( top_left_x, top_left_y, 1.5 * strlen(server) *( game->screen->vp_w / (50 * 1.5)), h+5, server, h+3, gameFont, colors[0]), WstaticText);
+  
+  //Settings now
 
-      //Wintext *new_wintext(int width, int height, int posx, int posy, int nbchars, int maxchars);
-      inpregametext = new_wintext(width, height, top_left_x, top_left_y, 20, MAX_CHARS);
-    }
+  //game type
+  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 45*game->screen->vp_h /100, 180, h+5, "Game Type", changeGameType);
+  addchoice_wpopmenu(pregame.gameType, "Games", 0 );
+  addchoice_wpopmenu(pregame.gameType, "Time",  1 );
+  select_wpopmenu(pregame.gameType, 0 );
+  newControl(pregame.pregameControls, (Wptr)pregame.gameType, WpopupMenu);
+  oldType=0;
+
+
+  //Game Rules
+  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 40*game->screen->vp_h /100, 180, h+5, "Games Number", changeGameRule);
+  addchoice_wpopmenu(pregame.gameRule, "5",   0 );
+  addchoice_wpopmenu(pregame.gameRule, "10",  1 );
+  addchoice_wpopmenu(pregame.gameRule, "15",  2 );
+  addchoice_wpopmenu(pregame.gameRule, "20",  3 );
+  addchoice_wpopmenu(pregame.gameRule, "25",  4 );
+  select_wpopmenu(pregame.gameRule, 0 );
+  newControl(pregame.pregameControls, (Wptr)pregame.gameRule, WpopupMenu);
+
+  //Speed
+  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 180, h+5, "Speed", changeSpeed);
+  addchoice_wpopmenu(pregame.speed, speed_list[0],  0 );
+  addchoice_wpopmenu(pregame.speed, speed_list[1],  1 );
+  addchoice_wpopmenu(pregame.speed, speed_list[2],  2 );
+  addchoice_wpopmenu(pregame.speed, speed_list[3],  3 );
+  select_wpopmenu(pregame.speed, 0 );
+  newControl(pregame.pregameControls, (Wptr)pregame.speed, WpopupMenu);
+
+  //Size
+  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 25*game->screen->vp_h /100, 180, h+5, "Size", changeSize);
+  addchoice_wpopmenu(pregame.size, arena_list[0],  0 );
+  addchoice_wpopmenu(pregame.size, arena_list[1],  1 );
+  addchoice_wpopmenu(pregame.size, arena_list[2],  2 );
+  addchoice_wpopmenu(pregame.size, arena_list[3],  3 );
+  select_wpopmenu(pregame.size, 0 );
+  newControl(pregame.pregameControls, (Wptr)pregame.size, WpopupMenu);
+
+  //Level
+  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 180, h+5, "AI level", changeLevel);
+  addchoice_wpopmenu(pregame.level, ai_list[0],  0 );
+  addchoice_wpopmenu(pregame.level, ai_list[1],  1 );
+  addchoice_wpopmenu(pregame.level, ai_list[2],  2 );
+  addchoice_wpopmenu(pregame.level, ai_list[3],  3 );
+  select_wpopmenu(pregame.level, 0 );
+  newControl(pregame.pregameControls, (Wptr)pregame.level, WpopupMenu);
+
+  //Deactivation of controls. if we are the game master it'll be reactivate
+  deActivateControl( pregame.pregameControls, (Wptr)pregame.level );
+  deActivateControl( pregame.pregameControls, (Wptr)pregame.speed );
+  deActivateControl( pregame.pregameControls, (Wptr)pregame.size  );
+  deActivateControl( pregame.pregameControls, (Wptr)pregame.gameRule );
+  deActivateControl( pregame.pregameControls, (Wptr)pregame.gameType );
+
+  //The start button
+  pregame.start = new_wbutton(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 80, 15, "Start game", NULL, startaction, NULL, startMouseFocus);
+  newControl(pregame.pregameControls, (Wptr)pregame.start, WcontrolButton);
+  deActivateControl( pregame.pregameControls, (Wptr)pregame.start );
+
+  setCurrentControl(pregame.pregameControls, (Wptr)pregame.inpregametext);
+
   resetScores();
   printf("entering netpregame\n");
 }
@@ -534,8 +978,20 @@ void cleanPregame()
   //Net_deconnect();
 }
 
+static void
+mousemotionPregame( int mx, int my )
+{
+  Wpoint pt;
+
+  pt.h=mx;
+  pt.v=my;
+
+  setMouse( mx, my );
+  mouseControls( pregame.pregameControls, pt );
+}
+
 callbacks netPregameCallbacks = {
   displayPregame, idlePregame, keyPregame, initPregame,
-  cleanPregame, NULL, mousePregame, NULL
+  cleanPregame, NULL, mousePregame, mousemotionPregame
 };
 

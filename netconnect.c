@@ -28,6 +28,13 @@ void setconnection(char *server, char *port)
   strcpy(serveradd, server);
 }
 
+void getServer(char *server, int *port)
+{
+  strcpy(server, serveradd);
+  *port=serverport;
+
+}
+
 
 void idleConnect() {
   //int serverport = strtol(game->settings->port, (char**) NULL, 10);

@@ -33,6 +33,14 @@
 #include "wbutton.h"
 #endif
 
+#ifndef __WPOPMENU_H__
+#include "wpopmenu.h"
+#endif
+
+#ifndef __WCHECKBOX_H__
+#include "wcheckbox.h"
+#endif
+
 #ifndef __WLIST_H__
 #include "wlist.h"
 #endif
@@ -47,9 +55,10 @@ typedef Wcontrol* WcontrolRef;
 struct ControlRecord
 {
   WcontrolRef   next;            //next control
+  WcontrolRef   prev;            //previous control
   Wrect         controlRect;     //position of the control and size.
   int           visible;         //if control is visible
-  int           enable;          //if control is enable ( not yet implemented )
+  int           enable;          //if control is enable
   int           highlight;       //if control is highlighted
   int           type;            //type of control
   Wptr          control;         //pointer to the control.
@@ -61,6 +70,7 @@ struct ControlRecord
 typedef struct WrootControl
 {
   WcontrolRef     controlList;   //control list
+  WcontrolRef     drawList;      //control list
   int             currentcontrol;//current control selected id
   int             lastClick;     //time of last click ( for double clicking )
   int             currentFocus;  //current controls focused
@@ -114,6 +124,14 @@ enum {
   Wscrollbar     =  60          //a scroll bar ( not yet implemented )
 };
 
+/*
+ *  PopupMenu
+ */
+enum {
+  WpopupMenu     = 70           //a menu pop up
+};
+
+
 /** Creating Root Control               */
 WrootControl*     newRootControl();
 
@@ -134,13 +152,20 @@ void              clickControls( WrootControl  *root, int buttons, int state, Wp
 void              mouseControls( WrootControl  *root, Wpoint mousexy );
 
 /** Key Event                           */
-void              keyControls(WrootControl  *root, int key );
+void              keyControls(WrootControl  *root, int key, int unicode );
 
 /** Set current control                 */
 void              setCurrentControl( WrootControl  *root, Wptr controldata );
 
 /** Free Root Control and its controls  */
 void              freeRootControl( WrootControl *root);
+
+/** Update Rects */
+void              updateRectsControls( WrootControl *root );
+
+/** Active or Deactive controls */
+void              activateControl(   WrootControl *root, Wptr controldata );
+void              deActivateControl( WrootControl *root, Wptr controldata );
 
 void globalMouseToLocal(Wpoint *mousexy);
 #endif

@@ -514,3 +514,28 @@ history_length_wintext(Wintext *wintext)
 
   return size;
 }
+
+Wrect
+getRect_wtext( Wtext *wtext )
+{
+  Wrect rect;
+
+  rect.top    = wtext->y + wtext->height;
+  rect.left   = wtext->x;
+  rect.bottom = wtext->y;
+  rect.right  = wtext->x + wtext->width;
+
+  return rect;
+}
+Wrect
+getRect_wintext( Wintext *wintext )
+{
+  Wrect rect;
+
+  rect.top    = wintext->y + wintext->height;
+  rect.left   = wintext->x;
+  rect.bottom = wintext->y;
+  rect.right  = wintext->x + wintext->width;
+
+  return rect;
+}

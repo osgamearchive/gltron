@@ -111,4 +111,11 @@ Wrect getRect_wlist( Wlist *wlist );
 void mouse_wlist( Wlist *wlist, int buttons, int state, int dblClick, Wpoint mousexy );
 void mouseMotion_wlist( Wlist *wlist, Wpoint mousexy );
 int  mouseFocus_wlist( Wlist *wlist, Wpoint mousexy );
+
+/** Convertions */
+char *intToStr_wlist( WlistPtr list, int line, int col );
+char *charToStr_wlist(WlistPtr list, int line, int col );
+
+/** Sort        */
+int   sortint_wlist( WlistPtr list, int line, int next );
 #endif

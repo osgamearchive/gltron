@@ -40,7 +40,7 @@ Wbutton*   new_wbutton( int x, int y, int width, int height,
 			void (*mouseFocus) (WbuttonRef wbutton));
 
 /** Draw the button */
-void         draw_wbutton(Wbutton *wbutton);
+void         draw_wbutton(Wbutton *wbutton, int active);
 
 /** Destroy the button */
 void         free_wbutton(Wbutton *wbutton);

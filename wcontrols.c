@@ -3,6 +3,9 @@
 #include "mouse.h"
 #include "wcontrols.h"
 
+
+static void mouseFocusControls( WrootControl  *root, Wpoint mousexy, WcontrolRef wcontrol );
+
 WrootControl*
 newRootControl()
 {
@@ -16,6 +19,7 @@ newRootControl()
   root->currentFocus      = -1;
   root->lastFocus         = 0;
   root->activeFocus       = 0;
+  root->drawList          = NULL;
   return root;
 }
 
@@ -29,12 +33,13 @@ newControl( WrootControl  *root, Wptr control, int type )
 
   wcontrol = ( WcontrolRef ) malloc(sizeof(Wcontrol));
 
-  wcontrol->next = NULL;
-  wcontrol->visible = 1;
-  wcontrol->enable = 1;
-  wcontrol->highlight=0;
-  wcontrol->type = type;
-  wcontrol->control = control;
+  wcontrol->next       = NULL;
+  wcontrol->prev       = NULL;
+  wcontrol->visible    = 1;
+  wcontrol->enable     = 1;
+  wcontrol->highlight  = 0;
+  wcontrol->type       = type;
+  wcontrol->control    = control;
   
   //setting the rect
   switch(wcontrol->type )
@@ -47,8 +52,10 @@ newControl( WrootControl  *root, Wptr control, int type )
     case WprogressStatus:
       break;
     case WinputText:
+      wcontrol->controlRect = getRect_wintext((Wintext*)wcontrol->control);
       break;
     case WoutputText:
+      wcontrol->controlRect = getRect_wtext((Wtext*)wcontrol->control);
       break;
     case  WstaticText:
       wcontrol->controlRect = getRect_wstatictext((Wstatictext*)wcontrol->control);
@@ -58,19 +65,71 @@ newControl( WrootControl  *root, Wptr control, int type )
       break;
     case Wscrollbar:	  
       break;
+    case WpopupMenu:
+      wcontrol->controlRect = getRect_wpopmenu((Wpopmenu*)wcontrol->control);
+      break;
     }
 
 
   //adding to the list in queue
 
-  tmp = root->controlList;
+/*   tmp = root->controlList; */
 
+/*   if( tmp == NULL ) */
+/*     { */
+/*       root->controlList = wcontrol; */
+/*     } else { */
+/*       while( tmp->next != NULL ) { tmp = tmp->next; } */
+/*       tmp->next = wcontrol; */
+/*     } */
+  tmp = root->controlList;
   if( tmp == NULL )
+    root->drawList = wcontrol;
+  else
+    tmp->prev = wcontrol;
+  root->controlList = wcontrol;
+  wcontrol->next = tmp;
+
+}
+
+void
+updateRectsControls( WrootControl *root )
+{
+  WcontrolRef wcontrol;
+
+  wcontrol = root->controlList;
+
+  while( wcontrol != NULL )
     {
-      root->controlList = wcontrol;
-    } else {
-      while( tmp->next != NULL ) { tmp = tmp->next; }
-      tmp->next = wcontrol;
+      //setting the rect
+      switch(wcontrol->type )
+	{
+	case WcontrolButton:
+	  wcontrol->controlRect = getRect_wbutton((Wbutton*)wcontrol->control);
+	  break;
+	case WprogressBar:
+	  break;
+	case WprogressStatus:
+	  break;
+	case WinputText:
+	  wcontrol->controlRect = getRect_wintext((Wintext*)wcontrol->control);
+	  break;
+	case WoutputText:
+	  wcontrol->controlRect = getRect_wtext((Wtext*)wcontrol->control);
+	  break;
+	case  WstaticText:
+	  wcontrol->controlRect = getRect_wstatictext((Wstatictext*)wcontrol->control);
+	  break;
+	case Wlistbox:
+	  wcontrol->controlRect = getRect_wlist((Wlist*)wcontrol->control);
+	  break;
+	case Wscrollbar:	  
+	  break;
+	case WpopupMenu:
+	  wcontrol->controlRect = getRect_wpopmenu((Wpopmenu*)wcontrol->control);
+	  break;
+	}
+      wcontrol=wcontrol->next;
     }
 }
 
@@ -144,43 +203,94 @@ setCurrentControl( WrootControl  *root, Wptr controldata )
 void
 updateControls( WrootControl  *root )
 {
-  WcontrolRef wcontrol;  
+  WcontrolRef wcontrol;
+  WcontrolRef current;
   int nx, ny;
   Wpoint pt;
+  int    done = 0;
 
-  wcontrol = root->controlList;
+  current = getCurrentControl( root );
+  wcontrol = root->drawList;
+  
 
   /** here we draw all controls */
-  while (wcontrol != NULL)
+  while (wcontrol != NULL && done != 2)
     {
-      switch( wcontrol->type )
+      if(  wcontrol == current  )
 	{
-	case WcontrolButton:
-	  draw_wbutton((Wbutton*)wcontrol->control);
-	  break;
-	case WprogressBar:
-	  draw_wprogressbar((Wprogressbar*)wcontrol->control);
-	  break;
-	case WprogressStatus:
-	  draw_wprogressstatus((Wprogressstatus*)wcontrol->control);
-	  break;
-	case WinputText:
-	  draw_wintext((Wintext*)wcontrol->control);
-	  break;
-	case WoutputText:
-	  draw_wtext((Wtext*)wcontrol->control);
-	  break;
-	case  WstaticText:
-	  draw_wstatictext((Wstatictext*)wcontrol->control);
-	  break;
-	case Wlistbox:
-	  draw_wlist((Wlist *)wcontrol->control);
-	  break;
-	case Wscrollbar:	  
-	  break;
+	  if( done == 0 && wcontrol->prev != NULL  )
+	    {
+	      wcontrol = wcontrol->prev;
+	    } else {
+	      done = 2;
+	      switch( wcontrol->type )
+		{
+		case WcontrolButton:
+		  draw_wbutton((Wbutton*)wcontrol->control, wcontrol->enable);
+		  break;
+		case WprogressBar:
+		  draw_wprogressbar((Wprogressbar*)wcontrol->control);
+		  break;
+		case WprogressStatus:
+		  draw_wprogressstatus((Wprogressstatus*)wcontrol->control);
+		  break;
+		case WinputText:
+		  draw_wintext((Wintext*)wcontrol->control);
+		  break;
+		case WoutputText:
+		  draw_wtext((Wtext*)wcontrol->control);
+		  break;
+		case  WstaticText:
+		  draw_wstatictext((Wstatictext*)wcontrol->control);
+		  break;
+		case Wlistbox:
+		  draw_wlist((Wlist *)wcontrol->control);
+		  break;
+		case Wscrollbar:	  
+		  break;
+		case WpopupMenu:
+		  draw_wpopmenu((Wpopmenu*)wcontrol->control, wcontrol->enable);
+		  break;
+		}
+	    }
+	} else {
+	  switch( wcontrol->type )
+	    {
+	    case WcontrolButton:
+	      draw_wbutton((Wbutton*)wcontrol->control, wcontrol->enable);
+	      break;
+	    case WprogressBar:
+	      draw_wprogressbar((Wprogressbar*)wcontrol->control);
+	      break;
+	    case WprogressStatus:
+	      draw_wprogressstatus((Wprogressstatus*)wcontrol->control);
+	      break;
+	    case WinputText:
+	      draw_wintext((Wintext*)wcontrol->control);
+	      break;
+	    case WoutputText:
+	      draw_wtext((Wtext*)wcontrol->control);
+	      break;
+	    case  WstaticText:
+	      draw_wstatictext((Wstatictext*)wcontrol->control);
+	      break;
+	    case Wlistbox:
+	      draw_wlist((Wlist *)wcontrol->control);
+	      break;
+	    case Wscrollbar:	  
+	      break;
+	    case WpopupMenu:
+	      draw_wpopmenu((Wpopmenu*)wcontrol->control, wcontrol->enable);
+	      break;
+	    }
+	  if( wcontrol->prev == NULL )
+	    {
+	      wcontrol = current;
+	      done = 1;
+	    }  else {
+	      wcontrol = wcontrol->prev;
+	    }
 	}
-
-      wcontrol = wcontrol->next;
     }
   
   //drawing mouse focus
@@ -188,6 +298,8 @@ updateControls( WrootControl  *root )
   if( root->activeFocus && (SDL_GetTicks() - root->lastFocus) > 1500 )
     {
       wcontrol = getControl( root, root->currentFocus );
+      if( wcontrol == NULL || wcontrol->enable == 0 )
+	return;
 
       getMouse( &nx, &ny );
       pt.v=ny;
@@ -213,6 +325,9 @@ updateControls( WrootControl  *root )
 	  break;
 	case Wscrollbar:	  
 	  break;
+	case WpopupMenu:
+	  //draw_wpopmenu((Wpopmenu*)wcontrol->control);
+	  break;
 	}
     }
 
@@ -226,20 +341,26 @@ pointinRect( Wpoint pt, Wrect rect )
 /*   printf("checking %d <= %d\n",  pt.v, rect.bottom); */
 /*   printf("checking %d <= %d\n",  pt.h, rect.right); */
 /*   printf("checking %d >= %d\n",  pt.h, rect.left); */
-  return(    pt.v >= rect.top && pt.v <= rect.bottom
+  return(    pt.v <= rect.top && pt.v >= rect.bottom
 	     && pt.h <= rect.right && pt.h >= rect.left );
 }
 
 void
 clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 {
-  WcontrolRef wcontrol;
-  int         dblClick = 0;
+  WcontrolRef wcontrol, oldcontrol;
+  int         dblClick  = 0;
+  int         controlID = 0;
 
   globalMouseToLocal(&mousexy);
 
+  
+  updateRectsControls( root );
   //first we need to find on which control do we click
   wcontrol = root->controlList;
+
+  if( wcontrol != NULL )
+    controlID++;
 
   if( state == SDL_PRESSED )
     {
@@ -252,11 +373,45 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 	 ! pointinRect(mousexy, wcontrol->controlRect ) )
     {
       wcontrol = wcontrol->next;
+      controlID++;
     }
 
-  if( wcontrol == NULL )
-    return;
+  if( controlID != root->currentcontrol )    
+    //mouseFocusControls( root, mousexy, getCurrentControl( root ) );
+    {
+      oldcontrol = getCurrentControl( root );
+      if( oldcontrol != NULL )
+	{
+	  switch( oldcontrol->type )
+	    {
+	    case WcontrolButton:
+	      break;
+	    case WprogressBar:
+	      break;
+	    case WprogressStatus:
+	      break;
+	    case WinputText:
+	      break;
+	    case WoutputText:
+	      break;
+	    case WstaticText:
+	      break;
+	    case Wlistbox:
+	      break;
+	    case Wscrollbar:	  
+	      break;
+	    case WpopupMenu:
+	      mouse_wpopmenu((Wpopmenu*)oldcontrol->control, buttons, !SDL_PRESSED, dblClick, mousexy);
+	      break;
+	    }
+	}
+    }
 
+  if( wcontrol == NULL || wcontrol->enable == 0 )
+      return;
+
+  root->currentcontrol =  controlID;
+  printf("change currentcontrol to %d\n", controlID);
   switch( wcontrol->type )
     {
     case WcontrolButton:
@@ -277,6 +432,9 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
       break;
     case Wscrollbar:	  
       break;
+    case WpopupMenu:
+      mouse_wpopmenu((Wpopmenu*)wcontrol->control, buttons, state, dblClick, mousexy);
+      break;
     }
 
 }
@@ -285,7 +443,14 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 static void
 mouseFocusControls( WrootControl  *root, Wpoint mousexy, WcontrolRef wcontrol )
 {
-switch( wcontrol->type )
+
+  
+  updateRectsControls( root );
+
+  if( wcontrol == NULL || wcontrol->enable == 0 )
+    return;
+
+  switch( wcontrol->type )
     {
     case WcontrolButton:
       mouseMotion_wbutton((Wbutton *)wcontrol->control, mousexy, root->activeFocus);
@@ -305,6 +470,9 @@ switch( wcontrol->type )
       break;
     case Wscrollbar:	  
       break;
+    case WpopupMenu:
+      mouseMotion_wpopmenu((Wpopmenu *)wcontrol->control, mousexy );
+      break;
     }
 }
 void
@@ -314,6 +482,10 @@ mouseControls( WrootControl  *root, Wpoint mousexy )
   int         i = 0;
 
   globalMouseToLocal(&mousexy);
+
+
+  
+  updateRectsControls( root );
 
   //managing mouse focus
   wcontrol = root->controlList;
@@ -345,24 +517,31 @@ mouseControls( WrootControl  *root, Wpoint mousexy )
       root->currentFocus = -1;
     } else {
  
-      if( root->activeFocus == 1 && i == root->currentFocus )
-	{
-	  return;
-	}
+      if(  wcontrol->enable == 0 )
+	return;
+
+      /* if( root->activeFocus == 1 && i == root->currentFocus ) */
+/* 	{ */
+/* 	  return; */
+/* 	} */
       
+      if( root->activeFocus == 1 && i != root->currentFocus )
+	{
+	  //deactivate old control
+	  mouseFocusControls( root, mousexy, getCurrentControl( root ) );	  
+	}
       root->currentFocus  = i;
       root->activeFocus   = 1;
       root->lastFocus     = SDL_GetTicks();
-      
 
       mouseFocusControls( root, mousexy, wcontrol );
-      printf("new focus is %d\n", root->currentFocus );
+      //printf("new focus is %d\n", root->currentFocus );
     }
 }
 
 
 void
-keyControls(WrootControl  *root, int key )
+keyControls(WrootControl  *root, int key, int unicode )
 {
   WcontrolRef wcontrol;
 
@@ -370,6 +549,8 @@ keyControls(WrootControl  *root, int key )
     return;
 
   wcontrol = getCurrentControl(root);
+  if( wcontrol == NULL || wcontrol->enable == 0 )
+    return;
 
   switch( wcontrol->type )
     {
@@ -380,6 +561,7 @@ keyControls(WrootControl  *root, int key )
     case WprogressStatus:
       break;
     case WinputText:
+      key_wintext((Wintext *)wcontrol->control, key, unicode);
       break;
     case WoutputText:
       break;
@@ -389,6 +571,9 @@ keyControls(WrootControl  *root, int key )
       key_wlist((Wlist *)wcontrol->control, key);
       break;
     case Wscrollbar:	  
+      break;
+    case WpopupMenu:
+      //draw_wpopmenu((Wpopmenu*)wcontrol->control);
       break;
     }
 }
@@ -439,11 +624,48 @@ freeRootControl( WrootControl *root)
 	  break;
 	case Wscrollbar:	  
 	  break;
+	case WpopupMenu:
+	  free_wpopmenu((Wpopmenu*)wcontrol->control);
+	  break;
 	}
       wcontrol = wcontrol->next;
     }
 
   //Free RootControl
   free(root);
+
+}
+
+
+void
+activateControl(   WrootControl *root, Wptr controldata )
+{
+  WcontrolRef       wcontrol;
+
+  wcontrol = root->controlList;
+
+  while( wcontrol != NULL && wcontrol->control != controldata )
+    {
+      wcontrol=wcontrol->next;
+    }
+  if( wcontrol == NULL )
+    return;
+  wcontrol->enable=1;
+}
+
+void
+deActivateControl( WrootControl *root, Wptr controldata )
+{
+  WcontrolRef       wcontrol;
+
+  wcontrol = root->controlList;
+
+  while( wcontrol != NULL && wcontrol->control != controldata )
+    {
+      wcontrol=wcontrol->next;
+    }
+  if( wcontrol == NULL )
+    return;
+  wcontrol->enable=0;
 
 }

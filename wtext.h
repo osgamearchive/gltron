@@ -51,4 +51,9 @@ void     key_wintext(Wintext  *wintext, int charcode, int unicode);
 void     draw_wintext(Wintext *wintext);
 char    *get_wintext(Wintext  *wintext);
 void     clear_wintext(Wintext *wintext);
+
+/** Get Rect */
+Wrect getRect_wtext( Wtext *wtext );
+Wrect getRect_wintext( Wintext *wintext );
+
 #endif

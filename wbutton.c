@@ -32,7 +32,7 @@ Wbutton*  new_wbutton( int x, int y, int width, int height,
 
 
 void
-draw_wbutton(Wbutton *wbutton)
+draw_wbutton(Wbutton *wbutton, int active)
 {
   int x, y, s;
   if( wbutton->drawit != NULL )
@@ -46,8 +46,10 @@ draw_wbutton(Wbutton *wbutton)
 	    wbutton->focus(wbutton);
 	  else
 	    glColor3f(1.0, .2, .2);
-	} else
+	} else if( active )
 	  glColor3f(1.0, 1.0, 1.0);
+      else
+	glColor3f(.5, .5, .5);
 
 	//Draw Borders
 	glBegin(GL_LINES);
@@ -105,9 +107,9 @@ getRect_wbutton( Wbutton *wbutton )
 {
   Wrect rect;
 
-  rect.top    = wbutton->y;
+  rect.top    = wbutton->y + wbutton->height;
   rect.left   = wbutton->x;
-  rect.bottom = wbutton->y + wbutton->height;
+  rect.bottom = wbutton->y;
   rect.right  = wbutton->x + wbutton->width;
 
   return rect;
