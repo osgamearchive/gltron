@@ -8,7 +8,7 @@ char *credits[] = {
   "",
   " Contributors:",
   " Programming: Darrell Walisser       Jon Atkins",
-  "              Todd Kirby",
+  "              Todd Kirby        Nicolas Deniaud",
   " Art:         Nicolas Zimmermann",
   "              Charles Babbage       Tracy Brown"
   "              Tyler Esselstrom       Allen Bond",
