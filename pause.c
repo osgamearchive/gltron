@@ -52,12 +52,13 @@ void keyboardPause(int key, int unicode, int x, int y) {
     break;
   case ' ':
     //restart game
-    if( serverstate == preGameState && isConnected  )
+    if( serverstate == preGameState && isConnected && slots[me].isMaster  )
 	{
 	  printf("\nAsk to start the game\n");
 	  packet.which=me;
 	  packet.type=ACTION;
 	  packet.infos.action.type=STARTGAME;
+	  Net_sendpacket(&packet,  Net_getmainsock());
 	  return;
 	}
     

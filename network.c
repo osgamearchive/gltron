@@ -46,15 +46,18 @@ do_loginrep(Packet packet)
       restoreCallbacks();
       return;
     }
-  printf("logged...\n%s\n", packet.infos.loginrep.message);
   isLogged=1;
   me = packet.which;
+  slots[me].active=1;
+  printf("logged ( slot %d )...\n%s\n", me, packet.infos.loginrep.message);
+  nbUsers++;
   switchCallbacks(&netPregameCallbacks);
 }
 
 void
 do_serverinfo(Packet packet)
 {
+  int lastserverstate = serverstate;
   nbUsers = packet.infos.serverinfo.players;
 
   //check if we changed state
@@ -64,7 +67,12 @@ do_serverinfo(Packet packet)
       switch(serverstate)
 	{
 	case preGameState:
-	  switchCallbacks(&netPregameCallbacks);
+	  if( lastserverstate == gameState )
+	    {
+	      switchCallbacks(&pauseCallbacks);
+	    } else {
+	      switchCallbacks(&netPregameCallbacks);
+	    }
 	  break;
 	case gameState:
 	  //game->players = game2->players;
@@ -79,12 +87,15 @@ do_serverinfo(Packet packet)
 void
 do_userinfo(Packet packet)
 {
-  int which = packet.infos.userinfo.which;
+  char mesg[255];
+  int  which = packet.infos.userinfo.which;
   //Just put in the slots...
 
   if( slots[which].active == -1 )
     {
       printf("%s join\n", packet.infos.userinfo.nick);
+      sprintf(mesg, "%s join\n", packet.infos.userinfo.nick);
+      drawMessage(mesg);
     }
 
   slots[which].active   = 1;
@@ -92,23 +103,42 @@ do_userinfo(Packet packet)
   slots[which].points   = 0;
   slots[which].color    = packet.infos.userinfo.color;
   slots[which].isMaster = packet.infos.userinfo.ismaster;
-
+  
+  if( which == me )
+    {
+      slots[me].player=0;
+      if( slots[which].active == 1 )
+    {
+      sprintf(mesg, "logged...\n");
+      printf("logged...\n");
+      drawMessage(mesg);
+    }
+    } else {
+      slots[which].player=(which==0)?me:which;
+    }
 }
 
 void
 do_chat( Packet packet )
 {
+  char mesg[255];
+
   if( packet.infos.chat.which == BROADCAST )
     {
       printf("%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+      sprintf(mesg, "%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+      drawChat(mesg);
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+      sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+      drawChat(mesg);
     }
 }
 
 void
 do_action(Packet packet)
 {
+  char mesg[255];
   switch( packet.infos.action.type )
     {
     case JOIN:
@@ -117,6 +147,8 @@ do_action(Packet packet)
       break;
     case PART:
       slots[packet.infos.action.which].active=0;
+      sprintf(mesg, "%s part\n", slots[packet.infos.action.which].name);
+      drawMessage(mesg);
       nbUsers--;
       break;
     }
@@ -125,12 +157,13 @@ do_action(Packet packet)
 void
 do_netrules(Packet packet)
 {
-  Packet rep;
 
-  rep.which     = SERVERID;
-  rep.type      = NETRULES;
-  netrulenbwins = rep.infos.netrules.nbWins;
-  netruletime   = rep.infos.netrules.time;
+  packet.which     = SERVERID;
+  packet.type      = NETRULES;
+  netrulenbwins    = packet.infos.netrules.nbWins;
+  netruletime      = packet.infos.netrules.time;
+  printf("Net rules : %d %d\n", packet.infos.netrules.nbWins, packet.infos.netrules.time);
+  
 }
 
 void

@@ -3,6 +3,9 @@
 
 static int coffset;
 
+static char message[255] ="pregame";
+static char chat[1024]   = "";
+
 void mousePregame (int buttons, int state, int x, int y)
 {
     if ( state == SYSTEM_MOUSEPRESSED )
@@ -15,6 +18,7 @@ void keyPregame(int k, int unicode, int x, int y)
     {
       switchCallbacks(&keyboardreadingCallbacks);
     } else {
+      Net_disconnect();
       switchCallbacks(&guiCallbacks);
     }
 }
@@ -27,28 +31,97 @@ void idlePregame() {
     }
 }
 
+void
+drawMessage(char *str)
+{
+  strcpy(message, str);
+}
+
+void
+drawChat(char *str)
+{
+  //TODO: multiline chat...
+  strcpy(chat, str);
+}
 
 void drawPregame() {
   int time;
   int x, y;
   int h;
-  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 } };
+  int i, len;
+  char str[255];
+  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.1, 0.1, 0.5} };
   time = SDL_GetTicks() - coffset;
   
-  glClearColor(.0, .0, .0, .0);
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //glClearColor(.0, .0, .0, .0);
+  //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  rasonly(game->screen);
+  //rasonly(game->screen);
   
+  //Message
   h = game->screen->vp_h / (24 * 1.5);
   glColor3fv(colors[1]);
   x = 10;
   y = game->screen->vp_h - 1.5 * h * (0 + 1);
-  drawText(gameFtx, x, y, h, "Pregame: Type Enter to make command");
+  drawText(gameFtx, x, y, h, message);
+
+  //chat
+  glColor3fv(colors[0]);
+  x = 10;
+  y = game->screen->vp_h - 1.5 * h * (5 + 1);
+  drawText(gameFtx, x, y, h, chat);
+  
+  //calculate the max len of a name;
+  len=5; //for empty;
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      if( slots[i].active && strlen( slots[i].name)>len)
+	{
+	  len= strlen( slots[i].name);
+	}
+    }
+  glColor3fv(colors[1]);
+  x = game->screen->vp_w - 1.5 * (len+1)*( game->screen->vp_w / (50 * 1.5) );
+  y = game->screen->vp_h - 1.5 * h * (5);
+  drawText(gameFtx, x, y, h, "Users");
+
+  //Users
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      y = game->screen->vp_h - 1.5 * h * (i + 6);
+      if( slots[i].active )
+	{
+	    drawText(gameFtx, x, y, h, slots[i].name);
+	} else {
+	  drawText(gameFtx, x, y, h, "Empty");
+	}
+    }
+
+  //Inputs
+  glColor3fv(colors[2]);
+  x = 10;
+  y = h-1;
+  drawText(gameFtx, x, y, h, getInputEntry());
+
+  //NetRules
+  glColor3fv(colors[1]);
+  x = game->screen->vp_w - 1.5 * 15*( game->screen->vp_w / (50 * 1.5) );
+  y = game->screen->vp_h - 1.5 * h * 10;
+  drawText(gameFtx, x, y, h, "Game Settings"); 
+  sprintf(str, "Games: %d", netrulenbwins);
+  y = game->screen->vp_h - 1.5 * h * 11; 
+  drawText(gameFtx, x, y, h, str);
+  sprintf(str, "Time: %d", netruletime);
+  y = game->screen->vp_h - 1.5 * h * 12; 
+  drawText(gameFtx, x, y, h, str);
+  
   
 }
 
 void displayPregame() {
+  drawGuiBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
   drawPregame();
   SystemSwapBuffers();
 }

@@ -7,11 +7,19 @@ static int nbsocks = 2;
 #include "server_gltron.h"
 static int nbsocks = MAX_PLAYERS+1;
 #endif
-
+int netrulenbwins = 5;
+int netruletime  = -1;
 
 static SDLNet_SocketSet       socketset = NULL;
 static TCPsocket              tcpsock   = NULL;
 int isConnected = 0;
+
+
+static void *pos;
+#define ADD_STRING(x) memcpy(pos, x, sizeof(x)); pos += sizeof(x)
+#define ADD_INT(x) SDLNet_Write32(x, pos); pos += 4
+
+
 /** Core functions */
 void
 Net_init( )
@@ -162,15 +170,84 @@ Net_getmainsock( )
   return tcpsock;
 }
 
+
+int
+Net_preparepacket(Packet* packet, void *buf)
+{
+  if( buf == NULL )
+    return 0;
+  
+  pos = buf;
+  ADD_INT(packet->type);
+  ADD_INT(packet->which);
+  switch(packet->type) {
+  case LOGIN:
+    ADD_STRING(packet->infos.login.version);
+    ADD_STRING(packet->infos.login.nick);
+    break;
+  case LOGINREP:
+    ADD_INT(packet->infos.loginrep.accept);
+    ADD_STRING(packet->infos.loginrep.message);
+    break;
+  case USERINFO:
+    ADD_INT(packet->infos.userinfo.which);
+    ADD_INT(packet->infos.userinfo.ismaster);
+    ADD_INT(packet->infos.userinfo.color);
+    ADD_STRING(packet->infos.userinfo.nick);
+    break;
+  case SERVERINFO:
+    ADD_INT(packet->infos.serverinfo.serverstate);
+    ADD_INT(packet->infos.serverinfo.players);
+    break;
+  case CHAT:
+    ADD_INT(packet->infos.chat.which);
+    ADD_STRING(packet->infos.chat.mesg);
+    break;
+  case GAMERULES:
+    ADD_INT(packet->infos.gamerules.players);
+    //ADD_INT(packet->infos.gamerules.speed*1000);
+    ADD_INT(packet->infos.gamerules.eraseCrashed);
+    //TODO: nee do be finished: how to add Time, float, and int * for
+    //startPos
+    break;
+  case NETRULES:
+    ADD_INT(packet->infos.netrules.nbWins);
+    ADD_INT(packet->infos.netrules.time);   
+    break;
+  case SCORE:
+    ADD_INT(packet->infos.score.winner);
+    //TODO: same int* for points ?
+    break;
+  case SNAPSHOT:
+    //TODO: how send events[]
+    break;
+  case EVENT:
+    //TODO: how send an event?
+    break;
+  case ACTION:
+    ADD_INT(packet->infos.action.type);
+    ADD_INT(packet->infos.action.which);   
+    
+    break;
+  }
+  return pos - buf;
+}
+
 int
 Net_sendpacket( Packet  *packet , TCPsocket sock )
 {
+  void *buff = malloc(sizeof(packet));
+  int  len = Net_preparepacket(packet, buff);
+
   if( packet == NULL )
     {
       return cantsendpacket;
     }
-  printf("sending packet size: %d\n", sizeof(Packet));
-  if( ( SDLNet_TCP_Send(sock, (void *)packet, sizeof(Packet))) <= 0 )
+
+  
+
+  printf("sending packet size: %d\n", len);
+  if( ( SDLNet_TCP_Send(sock, buff, len) <= 0 ))
     {
       return connectionclosed;
     }

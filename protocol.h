@@ -129,8 +129,8 @@ typedef struct {
 
 //Globals---------------------------------------------------------------------
 extern int isConnected;
-int netrulenbwins;
-int netruletime;
+extern int netrulenbwins;
+extern int netruletime;
 
 //Prototypes------------------------------------------------------------------
 

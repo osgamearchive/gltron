@@ -35,6 +35,7 @@ void
 keyboardreadingreturn()
 {
   char command[MAX_CHARS]="", params[MAX_CHARS]="";
+  Packet packet;
 
   //We have our buffer.
   sscanf(buff, "/%[A-Za-z] %[A-Za-z0-9 ]", command, params);
@@ -45,7 +46,19 @@ keyboardreadingreturn()
       //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
     } else {
       fprintf(stderr, "\nsend chat: %s\n", buff);
+      packet.which=me;
+      packet.type=CHAT;
+      packet.infos.chat.which=BROADCAST;
+      strcpy(packet.infos.chat.mesg, buff);
+      Net_sendpacket(&packet, Net_getmainsock());
     }
+  strcpy(buff, "");
+}
+
+char*
+getInputEntry()
+{
+  return buff;
 }
 
 void
@@ -85,6 +98,7 @@ void keyreading(int k, int unicode, int x, int y)
 	  if( nbreads > 0 )
 	    {
 	      nbreads--;
+	      buff[nbreads]='\0';
 	      keyboardreadingpressed(unicode);
 	    }
 	  break;
@@ -101,11 +115,13 @@ void keyreading(int k, int unicode, int x, int y)
 }
 
 void displaykeyboardreading() {
+  displayPregame();
   SystemSwapBuffers();
 }
 
 void idlekeyboardreading()
 {  
+  SystemPostRedisplay();
   if( isConnected && Net_checksocks() )
     {
       handleServer();
@@ -113,6 +129,7 @@ void idlekeyboardreading()
 }
 
 callbacks keyboardreadingCallbacks = {
-  displaykeyboardreading, idlekeyboardreading, keyreading, initkeyreading,
+  //displaykeyboardreading, idlekeyboardreading, keyreading, initkeyreading,
+  displayPregame, idlekeyboardreading, keyreading, initkeyreading,
   cleankeyreading, NULL, NULL, NULL
 };

@@ -542,13 +542,14 @@ int    isLogged;
 int    sChat;
 char   mesg[255];
 int    me;
-int    netrulenbwins;
-int    netruletime;
 
 netEventList neteventlist;
 
 extern void handleServer( void );
 extern void login       ( char* );
+extern void drawMessage ( char* );
+extern void drawMessage ( char* );
+extern void displayPregame();
 #endif
 
 #endif

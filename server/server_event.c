@@ -4,6 +4,7 @@ int processEvent(GameEvent* e) {
   int      value = 0;
   Data     *data;
   Packet   rep;
+  int      i;
   /**
   int  i;
   int  sState = preGameState;
@@ -55,13 +56,19 @@ int processEvent(GameEvent* e) {
 
     game->pauseflag = PAUSE_GAME_FINISHED;
     //start a new game...
-    game2->mode = GAME_NETWORK_RECORD;
+    //game2->mode = GAME_NETWORK_RECORD;
     
     //go to pregame state...
     rep.which=SERVERID;
     rep.type=SERVERINFO;
     rep.infos.serverinfo.serverstate=preGameState;
-    
+    for(i=0; i<4; ++i)
+      {
+	if( slots[i].active )
+	  {
+	    Net_sendpacket(&rep, slots[i].sock);
+	  }
+      }
     /*
     serverRep = (pServRepHdr) malloc( sizeof(tServRepHdr) );
     

@@ -85,9 +85,12 @@ do_lostplayer(int which )
 	{
 	  if( slots[i].active )
 	    {	 
-	      Net_sendpacket(&rep, slots[which].sock);
+	      Net_sendpacket(&rep, slots[i].sock);
 	    }
 	}
+      //TODO: if there is no1 left, init game to default
+      //and go to waitState.
+
     }
   Net_delsocket(slots[which].sock);
   Net_closesock(slots[which].sock);
@@ -97,6 +100,7 @@ do_lostplayer(int which )
 int
 check_version(char *vers )
 {
+  //TODO: check version.
   return 1;
 }
 
@@ -210,6 +214,7 @@ do_login( int which, Packet packet )
   rep.type  = NETRULES;
   rep.infos.netrules.nbWins = netrulenbwins;
   rep.infos.netrules.time   = netruletime;
+  printf("Net rules : %d %d\n", netrulenbwins,  netruletime);
   Net_sendpacket(&rep, slots[which].sock);
 
 }
@@ -230,8 +235,12 @@ do_chat( int which, Packet packet )
   if( packet.infos.chat.which == BROADCAST )
     {
       for(i=0; i<4; ++i)
+	{
 	if( slots[i].active )
-	  Net_sendpacket(&rep, slots[i].sock);
+	  {
+	    Net_sendpacket(&rep, slots[i].sock);
+	  }
+	}
     } else {
       Net_sendpacket(&rep, slots[packet.infos.chat.which].sock);
     }
@@ -242,6 +251,8 @@ do_startgame( int which, Packet packet )
 {
   Packet   rep;
   int      i;
+  Player *p;
+  AI     *ai;
 
   printf("+ do_startgame\n");
   printf("Starting the game\n");
@@ -251,11 +262,25 @@ do_startgame( int which, Packet packet )
   initData();
   //Send game rules...
 
+  for(i=0; i< MAX_PLAYERS; ++i)
+    {
+    p = (game->player + i);
+    ai = p->ai;
+    ai->active = ( slots[i].active ) ? 0 : 2;
+    ai->tdiff = 0;
+    ai->moves = 0;
+    ai->danger = 0;
+    ai->lastx = 0;
+    ai->lasty = 0;
+    }
 
-  initGameStructures();
-  resetScores();
+  //resetScores();
   initData();
   game2->players                   = nbUsers;
+
+
+
+  
 
   rep.which                        = SERVERID;
   rep.type                         = GAMERULES;
@@ -468,7 +493,7 @@ handle_connection()
       //Savings slots
       slots[which].sock = newsock;
       slots[which].peer = *SDLNet_TCP_GetPeerAddress(newsock); //Get remote address
-      //slots[which].active = 1;
+      slots[which].active = -1;
 
       Net_addsocket( slots[which].sock );
       printf("New Connection on slot %d\n", which);
