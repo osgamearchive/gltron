@@ -72,6 +72,9 @@ void setupDisplay(gDisplay *d) {
   d->win_id = initWindow();
   fprintf(stderr, "window created\n");
   
+  // hack around having to load fonts before artpacks are fully loaded.
+  d->artpack.path = NULL;
+  
   //loading fonts
   initFonts();
 

@@ -30,12 +30,18 @@ void initArtpacks() {
 void getArtPath(char *name, char *fullname) {
   char *path;
   char fallback[] = "default";
-  sprintf(fullname, "%s%c%s", game->screen->artpack.path, SEPERATOR, name);
-  if((path = getFullPath(fullname)) == NULL) {
+  
+  if (game->screen->artpack.path == NULL) {
     sprintf(fullname, "%s%c%s", fallback, SEPERATOR, name);
-  } else {
-    free(path);
-    return;
+  }
+  else {
+    sprintf(fullname, "%s%c%s", game->screen->artpack.path, SEPERATOR, name);
+    if((path = getFullPath(fullname)) == NULL) {
+        sprintf(fullname, "%s%c%s", fallback, SEPERATOR, name);
+    } else {
+        free(path);
+        return;
+    }
   }
 }
 
