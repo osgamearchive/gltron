@@ -154,7 +154,9 @@ void keyboardGui(int state, int key, int x, int y) {
 			// not in the root menu -> go up one menu
       scripting_Run("Menu.GotoParent()");
     } else {
-			SystemExitLoop(RETURN_GUI_ESCAPE);
+			// is a game already in process? then resume
+			if(game->pauseflag != PAUSE_NO_GAME)
+				SystemExitLoop(RETURN_GUI_ESCAPE);
     }
     break;
   case ' ': 
