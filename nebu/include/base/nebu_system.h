@@ -25,4 +25,6 @@ unsigned int nebu_Time_GetElapsed();
 unsigned int nebu_Time_GetElapsedSinceLastFrame();
 void nebu_Time_SetCurrentFrameTime(unsigned t);
 
+void nebu_System_Sleep(int ms);
+
 #endif

@@ -28,7 +28,7 @@ void nebu_Time_SetCurrentFrameTime(unsigned t) {
 	lastFrame = t;
 }
 
-unsigned int nebuTime_GetElapsedSinceLastFrame() {
+unsigned int nebu_Time_GetElapsedSinceLastFrame() {
 	return nebu_Time_GetElapsed() - lastFrame;
 }
 
@@ -103,6 +103,10 @@ void nebu_System_SetCallback_MouseMotion( void(*mouseMotion)(int, int) ) {
 
 void nebu_System_SetCallback_Idle( void(*idle)(void) ) {
 	current->idle = idle;
+}
+
+void nebu_System_Sleep(int ms) {
+	SDL_Delay(ms);
 }
 
 
