@@ -84,10 +84,20 @@ void initPause() {
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
 
+  /* disable game sound effects */
+  Audio_DisableEngine();
+
+  /* 
+   * TODO: Disable game music here. Game should be totally silent in pause
+   * mode. (Nice when the boss is walking by, phone call, etc...)
+   */
+  
   updateSettingsCache();
 }
 
 void exitPause() {
+  /* re-enable game sound effects */
+  Audio_EnableEngine();
 }
 
 void initPauseGL() {
