@@ -1,4 +1,41 @@
-todo:
+TODO list
+
+Bugs:
+
+- stray lightcycle sounds? (sem)
+- got msg. 'player 4 was won' after player and opponent crashed at the
+  same time (LIM)
+- bad FOV culling of lightcycles (LIM)
+- Make install doesn't work (Andreas)
+- Visual artefact in the lightcycle trail between textured/untextured bow
+  (Andreas)
+- Screen garbled in-game after switching resolutions (hofi)
+
+Features:
+
+- glClearColor() doesn't match artpack. Move glClearColor to settings and
+  include in artpack.ini
+- Clear up artpack system, default artpack 
+- Add 3d sound source for recognizer
+- Add sound for own cycle. Modulate pitch (or volume) after turns
+- Consider 'smooth turning' for other cycle sounds (doppler/panning)
+- Rework LOD system a bit.
+
+Documentation:
+
+- add new default artpack author to CREDITS
+
+Administrative:
+
+- consider gltron-LE release. talk to overcode about the CD
+- document tools used. included 'sponsor' message for 3d exploration
+
+Optimizations/Cleanups
+- Scale the mesh on load time, to avoid need for GL_NORMALIZE
+- Rewrite trail handling code
+
+Old TODO list, clean up when time available (priority):
+
 (0) fix z-buffer problems (disable z-write on arena walls, adjust near on recognizer, etc.)
 (0) look at cycle collision problem
 (1) investigate framerate drop in win32 cycle collision test
