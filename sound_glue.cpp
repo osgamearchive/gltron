@@ -2,6 +2,7 @@
 #include "SourceMusic.h"
 #include "SourceCopy.h"
 #include "Source3D.h"
+#include "Source.h"
 
 #include "gltron.h"
 
@@ -67,6 +68,7 @@ extern "C" {
     Sound::SourceCopy *copy = new Sound::SourceCopy(crash);
     copy->Start();
     copy->SetRemovable();
+    copy->SetType(Sound::eSoundFX);
     sound->AddSource(copy);
     // fprintf(stderr, "kaboom!\n");
   }
@@ -107,6 +109,7 @@ extern "C" {
     music = new Sound::SourceMusic(sound);
     music->Load(name);
     music->SetLoop(255);
+    music->SetType(Sound::eSoundMusic);
     sound->AddSource(music);
   }
 
@@ -138,12 +141,14 @@ extern "C" {
   void Audio_LoadPlayers() {
     for(int i = 0; i < PLAYERS; i++) {
       players[i] = new Sound::Source3D(sound, engine);
+      players[i]->SetType(Sound::eSoundFX);
       if(i != 0)
 	sound->AddSource(players[i]);
     }
 #ifdef RECOGNIZER_SOUND
     recognizerEngine = new Sound::Source3D(sound, engine);
     recognizerEngine->Start();
+    recognizerEngine->SetType(eSoundFX);
     sound->AddSource(recognizerEngine);
 #endif
   }

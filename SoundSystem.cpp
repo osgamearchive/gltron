@@ -17,7 +17,13 @@ namespace Sound {
       Source* s = (Source*) p->data;
       if(s->IsPlaying()) {
 	// fprintf(stderr, "mixing source\n");
-	s->Mix(data, len);
+	if(!(
+	     (s->GetType() & eSoundFX &&
+	      !game->settings->playEffects) ||
+	     (s->GetType() & eSoundMusic &&
+	       !game->settings->playMusic)
+	     ))
+	     s->Mix(data, len);
 	// fprintf(stderr, "done mixing\n");
       }
     }
