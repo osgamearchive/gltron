@@ -13,8 +13,7 @@ extern "C" {
 #define BUF_SIZE 120
 
 #define NO_SDL_GLEXT
-#include "SDL_opengl.h"
-// #include <GL/gl.h>
+#include "video/nebu_renderer_gl.h"
 
 #include "Nebu_base.h"
 #include "Nebu_filesystem.h"

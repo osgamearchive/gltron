@@ -4,11 +4,10 @@
 #include "video.h"
 #include "game/game.h"
 
-extern void drawAI(Visual *d);
-extern void drawPause(Visual *d);
+extern void drawHUD(Player *p, PlayerVisual *pV);
 
-extern void drawScore(Player *p, Visual *d);
 extern void drawFPS(Visual *d);
+extern void drawPause(Visual *d);
 
 extern void drawConsoleLines(char *line, int call);
 extern void drawConsole(Visual *d);
