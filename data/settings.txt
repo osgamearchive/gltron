@@ -3,7 +3,7 @@ f3
 speed
 musicVolume
 fxVolume
-i37
+i38
 show_help
 show_fps
 show_wall
@@ -41,6 +41,7 @@ lod
 ai_level
 mipmap_filter
 stretch_textures
+show_skybox
 v3
 keys
 cycle_colors

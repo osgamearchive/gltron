@@ -209,7 +209,7 @@ Display Options
 sa_artpack
 Artpack: %s
 
-6
+7
 xsub
 Texture Detail
 
@@ -224,6 +224,10 @@ Wall Texture       - %s
 0
 sti_show_crash_texture
 Show crash texture - %s
+
+0
+sti_show_skybox
+Skybox             - %s
 
 0
 sti_use_mipmaps

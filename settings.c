@@ -147,6 +147,7 @@ void initSettingData(char *filename) {
   si[34].value = &(game->settings->ai_level);
   si[35].value = &(game->settings->mipmap_filter);
   si[36].value = &(game->settings->stretch_textures);
+  si[37].value = &(game->settings->show_skybox);
 
   sf[0].value = &(game->settings->current_speed);
   sf[1].value = &(game->settings->musicVolume);
@@ -211,6 +212,7 @@ void initMainGameSettings(char *filename) {
   game->settings->show_alpha = 1;
   game->settings->light_cycles = 1;
   game->settings->alpha_trails = 0;
+  game->settings->show_skybox = 0;
   game->settings->show_floor_texture = 1;
   game->settings->show_crash_texture = 1;
   game->settings->show_model = 1;

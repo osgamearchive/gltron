@@ -230,6 +230,7 @@ typedef struct Settings {
   int alpha_trails;
   int light_cycles;
 
+  int show_skybox;
   int show_floor_texture;
   int show_glow;
   int show_ai_status;
