@@ -391,6 +391,7 @@ extern void parse_args(int argc, char *argv[]);
 
 extern void loadIniFile(char *name);
 extern void initMainGameSettings();
+extern void initDefaultSettings();
 extern void saveSettings();
 
 /* menu -> menu.c */
@@ -400,6 +401,7 @@ extern Menu** loadMenuFile(char* filename);
 extern void drawMenu(gDisplay *d);
 extern void showMenu();
 extern void removeMenu();
+extern void initMenuCaptions();
 extern void initMenuCaption(Menu *m);
 extern int* getVi(char *szName);
 extern float* getVf(char *szName);
