@@ -823,8 +823,10 @@ void drawCam(Player *p, gDisplay *d) {
   drawFloor(d);
   glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
+  glDepthMask(GL_FALSE);
   if(game->settings->show_wall == 1)
     drawWalls(d);
+  glDepthMask(GL_TRUE);
 
   glShadeModel(GL_SMOOTH);
   drawPlayers(p);
@@ -863,6 +865,13 @@ void drawCam(Player *p, gDisplay *d) {
 
   if(game->settings->show_recognizer) {
     glClear(GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    doPerspective(game->settings->fov, d->vp_w / d->vp_h,
+		  game->settings->znear * 2, game->settings->grid_size * 6.5);
+
+    glMatrixMode(GL_MODELVIEW);
+
     drawRecognizers(1);
   }
 
