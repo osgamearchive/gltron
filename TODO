@@ -13,7 +13,14 @@ Bugs:
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM) (Note: proper back-to-front drawing
   should take care of this. Andreas) [ won't fix ]
-- Alpha channel in metaltron doesn't show correctly. It will show up when 2 players have died and alpha trails are turned on. (Darrell)
+- Alpha channel in metaltron doesn't show correctly. It will show up when 2
+  players have died and alpha trails are turned on. (Darrell)
+- save screenshots to somwhere else on UNIX. Users can't write to the
+  dir where gltron is installed, usually. (LIM)
+- fix pointer not showing up when game was started but not initially unpaused,
+  but user went back to menu. (LIM) (software cursor time?)
+- fix mouse not being released when going from fullscreen to windowed in some
+  situations. (LIM)
 
 Features:
 
