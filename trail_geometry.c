@@ -17,7 +17,10 @@ void storeColor(TrailMesh *pMesh, int offset, Player *p, int type) {
 
 	switch(type) {
 	case COLOR_TRAIL:
-		memcpy(color, p->pColorAlpha, 3 * sizeof(float));
+		if(game2->settingsCache.alpha_trails)
+			memcpy(color, p->pColorAlpha, 4 * sizeof(float));
+		else
+			memcpy(color, p->pColorAlpha, 3 * sizeof(float));
 		break;
 	case COLOR_BRIGHT:
 		memcpy(color, white, 3 * sizeof(float));

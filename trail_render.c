@@ -22,6 +22,11 @@ void trailStatesNormal(Player *pPlayer, int texture) {
 		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 		glEnable(GL_COLOR_MATERIAL);
 	}
+
+	if(game2->settingsCache.alpha_trails) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
 }
 
 void trailStatesShadowed(void) {
@@ -42,6 +47,7 @@ void trailStatesRestore(void) {
 	glCullFace(GL_BACK);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 	glEnable(GL_LIGHTING);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
