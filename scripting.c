@@ -2,6 +2,7 @@
 #include "lualib.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 static lua_State *L;
 
@@ -61,6 +62,23 @@ void scripting_GetFloatArray(char *name, float *f, int n) {
     lua_pop(L, 1);
   }
   lua_pop(L, 1); /* restore stack */
+}
+
+int scripting_GetString(char *name, char **s) {
+  int status;
+
+  lua_getglobal(L, name);
+  if(lua_isstring(L, 1)) {
+    int size;
+    status = 0;
+    size = lua_strlen(L, 1);
+    *s = malloc( size );
+    memcpy( *s, lua_tostring(L, 1), size );
+  } else
+    status = 1;
+
+  lua_pop(L, 1);
+  return status;
 }
 
 void scripting_DoFile(char *name) {
