@@ -22,6 +22,7 @@ CFILES = \
 	gltron.c \
 	graphics.c \
 	gamegraphics.c \
+	trail.c \
 	input.c \
 	settings.c \
 	texture.c \

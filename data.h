@@ -12,10 +12,12 @@ typedef struct callbacks {
   void (*init)(void);
   void (*exit)(void);
   void (*initGL)(void);
+  void (*mouse)(int, int, int, int);
+  void (*mouseMotion)(int, int);
 } callbacks;
 
 typedef struct line {
-  float sx, sy, ex, ey;
+  int sx, sy, ex, ey;
 } line;
 
 typedef struct Model {
@@ -29,10 +31,14 @@ typedef struct Model {
 } Model;
 
 typedef struct Data {
-  float posx; float posy;
-
+  int iposx, iposy;
+  float posx, posy;
+  float t;
+  
+  int turn;
   int dir; int last_dir;
-  int turn_time;
+
+  int turn_time; /* for cycle animation */
   
   int score;
   float speed; /* set to -1 when dead */
@@ -78,6 +84,7 @@ typedef struct gDisplay {
   unsigned int texCrash;
   unsigned int texTrail;
   unsigned int texTrailDecal;
+  unsigned int texDebug;
 } gDisplay;
 
 typedef struct Player {

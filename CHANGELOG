@@ -4,6 +4,11 @@
 - converted all '// ... ' comments to '/* ... */' for added portability
 - added z-tests for everything non-transparent
 - converted 0 to NULL for null pointers
+- changed internals for:
+  collision detection, turns, movement, trails, 
+- messed with trail drawing (z-buffer), moved that to trail.c
+- added mouse callbacks (glut only) and stubs in the gui
+- colored debug texture (2D map)
 
 0.53 to 0.59
 most important visible changes (including the ones to 0.59beta)

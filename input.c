@@ -54,8 +54,7 @@ void keyGame(int k, int x, int y)
   default: 
     for(i = 0; i < KEY_ACTIONS_N; i++) {
       if(k == key_actions[i].key) {
-	turn(game->player[ key_actions[i].player ].data,
-	     key_actions[i].turn);
+	game->player[ key_actions[i].player ].data->turn = key_actions[i].turn;
 	return;
       }
     }

@@ -213,10 +213,21 @@ void initGLGui() {
   SystemPostRedisplay();
 }
 
+void guiMouse(int buttons, int states, int x, int y) {
+  fprintf(stderr, "Mouse buttons: %d, State %d, Position (%d, %d)\n",
+	  buttons, states, x, y);
+}
+
+void guiMouseMotion(int x, int y) {
+  fprintf(stderr, "Mouse motion at (%d, %d)\n", x, y);
+}
+
 callbacks configureCallbacks = {
-  displayConfigure, idleGui, keyboardConfigure, initGui, exitGui, initGLGui
+  displayConfigure, idleGui, keyboardConfigure, initGui, exitGui, initGLGui,
+  NULL, NULL
 };
 
 callbacks guiCallbacks = {
-  displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui
+  displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui, 
+  guiMouse, guiMouseMotion
 };

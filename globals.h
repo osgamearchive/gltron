@@ -16,6 +16,7 @@ Menu *configureKeyMenu;
 float camAngle = 0;
 
 unsigned char* colmap = NULL;
+unsigned char* debugtex = NULL;
 int colwidth;
 
 int dirsX[] = { 0, -1, 0, 1 };

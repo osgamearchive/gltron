@@ -36,6 +36,18 @@ void SystemMainLoop() {
   glutMainLoop();
 }
 
+void SystemMouse(int buttons, int state, int x, int y) {
+  if(current)
+    if(current->mouse != NULL)
+      current->mouse(buttons, state, x, y);
+}
+
+void SystemMouseMotion(int x, int y) {
+  if(current)
+    if(current->mouseMotion != NULL)
+      current->mouseMotion(x, y);
+}
+
 void SystemKeyboard(unsigned char key, int x, int y) {
   if(current)
     current->keyboard(key, x, y);
@@ -52,6 +64,8 @@ void SystemRegisterCallbacks(callbacks *cb) {
   glutDisplayFunc(cb->display);
   glutKeyboardFunc(SystemKeyboard);
   glutSpecialFunc(SystemKeyboard);
+  glutMouseFunc(SystemMouse);
+  glutPassiveMotionFunc(SystemMouseMotion);
 }
 
 void SystemInitWindow(int x, int y, int w, int h) {
@@ -75,6 +89,7 @@ int SystemCreateWindow(char *name) {
     glutInitDisplayMode(flags);
     return glutCreateWindow(name);
   }
+  return 0;
 }
 
 void SystemDestroyWindow(int id) {
@@ -93,8 +108,3 @@ extern char* SystemGetKeyName(int key) {
   buf[1] = 0;
   return buf;
 }  
-
-
-
-
-

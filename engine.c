@@ -1,48 +1,12 @@
 #include "gltron.h"
 #include "geom.h"
 
-void setCol(int x, int y, int value, int width, unsigned char *map) {
-  int offset, mask;
-  if(x < 0 || x > width * 8 - 1 || y < 0 || y > width * 8 - 1) {
-    fprintf(stderr, "setCol: %d %d is out of range!\n", x, y);
-    return;
-  }
-  offset = x / 8 + y * width;
-  mask = 128 >> (x % 8);
-  if(value)
-    *(map + offset) |= mask;
-  else 
-    *(map + offset) &= !mask;
-}
-
-int getCol(int x, int y, int width, unsigned char *map) {
-  int offset, mask;
-  if(x < 0 || x > width * 8 - 1 || y < 0 || y > width * 8 - 1)
-    return -1;
-  offset = x / 8 + y * width;
-  mask = 128 >> (x % 8);
-  return *(map + offset) & mask;
-}
-
-void turn(Data* data, int direction) {
-  line *new;
-
-  if(data->speed > 0) { /* only allow turning when in-game */
-    data->trail->ex = data->posx;
-    data->trail->ey = data->posy;
-
-    /* smooth turning */
-    data->last_dir = data->dir;
-    data->turn_time = SystemGetElapsedTime();
-
-    data->dir = (data->dir + direction) % 4;
-
-    new = (data->trail) + 1;
-    new->ex = new->sx = data->trail->ex;
-    new->ey = new->sy = data->trail->ey;
-
-    data->trail = new;
-  }
+int getCol(int x, int y) {
+  if(x < 0 || x >= game->settings->grid_size -1 ||
+     y < 0 || y >= game->settings->grid_size -1 ||
+     colmap[ y * colwidth + x ] != 0)
+    return 1;
+  else return 0;
 }
 
 void initGameStructures() { /* called only once */
@@ -128,18 +92,23 @@ void initData() {
     ai = game->player[i].ai;
 
     /* arrange players in circle around center */
-    data->posx = game->settings->grid_size / 2 +
+    data->iposx = game->settings->grid_size / 2 +
       game->settings->grid_size / 4 *
       (float) cos ( (float) (i * 2 * M_PI) / (float) game->players );
 
-    data->posy = game->settings->grid_size / 2 +
+    data->iposy = game->settings->grid_size / 2 +
       game->settings->grid_size / 4 * 
       (float) sin ( (float) (i * 2 * M_PI) / (float) game->players );
+
+    data->posx = data->iposx;
+    data->posy = data->iposy;
+    data->t = 0;
 
     /* randomize starting direction */
     data->dir = rand() & 3;
     data->last_dir = data->dir;
     data->turn_time = 0;
+    data->turn = 0;
 
     /* if player is playing... */
     if(ai->active != 2) {
@@ -155,9 +124,8 @@ void initData() {
     }
     data->trail = data->trails;
 
-
-    data->trail->sx = data->trail->ex = data->posx;
-    data->trail->sy = data->trail->ey = data->posy;
+    data->trail->sx = data->trail->ex = data->iposx;
+    data->trail->sy = data->trail->ey = data->iposy;
 
     ai->tdiff = 0;
     ai->moves = game->settings->grid_size / 10;
@@ -169,96 +137,30 @@ void initData() {
   /* printf("starting game with %d players\n", game->running); */
   game->winner = -1;
   /* colmap */
-  /* game->settings->grid_size MUST be divisible by 8 */
 
-  /* TODO: check if grid_size/colwidth has changed and 
-   *       reallocate colmap accordingly */
-  colwidth = game->settings->grid_size / 8;
+  /* TODO: check if grid_size/colwidth has changed and  
+   *       reallocate colmap accordingly                */
+
+  colwidth = game->settings->grid_size;
   if(colmap != NULL)
     free(colmap);
   colmap = (unsigned char*) malloc(colwidth * game->settings->grid_size);
   for(i = 0; i < colwidth * game->settings->grid_size; i++)
     *(colmap + i) = 0;
 
+  if(debugtex != NULL)
+    free(debugtex);
+
+  debugtex = (unsigned char*) malloc(4 * 256 * 256);
+
   initClientData();
   lasttime = SystemGetElapsedTime();
   game->pauseflag = 0;
 }
 
-
-int colldetect(float sx, float sy, float ex, float ey, int dir, int *x, int *y) {
-  if(getenv("TRON_NO_COLL")) return 0;
-  *x = (int) sx;
-  *y = (int) sy;
-
-  while(*x != (int) ex || *y != (int) ey) {
-    *x += dirsX[dir];
-    *y += dirsY[dir];
-    if(getCol(*x, *y, colwidth, colmap)) {
-      /* check if x/y are in bounds and correct it */
-      /* I can't actually remember why I'd need that
-	 I guess it has do to with the explosion appearing at the correct
-	 location */
-      if(*x < 0) *x = 0;
-      if(*x >= game->settings->grid_size) *x = game->settings->grid_size -1; 
-      if(*y < 0) *y = 0;
-      if(*y >= game->settings->grid_size) *y = game->settings->grid_size -1; 
-      return 1;
-    }
-  }
-  return 0;
-}
-
-void doTrail(line *t, int value) {	  
-  int x, y, ex, ey, dx, dy;
-
-  x = (t->sx < t->ex) ? t->sx : t->ex;
-  y = (t->sy < t->ey) ? t->sy : t->ey;
-  ex = (t->sx > t->ex) ? t->sx : t->ex;
-  ey = (t->sy > t->ey) ? t->sy : t->ey;
-  dx = (x == ex) ? 0 : 1;
-  dy = (y == ey) ? 0 : 1;
-  if(dx == 0 && dy == 0) {
-    setCol(x, y, value, colwidth, colmap);
-  } else 
-    while(x <= ex && y <= ey) {
-      setCol(x, y, value, colwidth, colmap);
-      x += dx;
-      y += dy;
-    }
-}
-
-void fixTrails() {
-  int i;
-  Data *d;
-  line *t;
-  for(i = 0; i < game->players; i++) {
-    d = game->player[i].data;
-    if(d->speed > 0) {
-      t = &(d->trails[0]);
-      while(t != d->trail) {
-	doTrail(t, 1);
-	t++;
-      }
-      doTrail(t, 1);
-    }
-  }
-}
-
-void clearTrails(Data *data) {
-  line *t = &(data->trails[0]);
-  while(t != data->trail) {
-    doTrail(t, 0);
-    t++;
-  }
-  doTrail(t, 0);
-}
-
-
 void idleGame( void ) {
   int i, j;
   int loop; 
-
 
 #ifdef SOUND
   soundIdle();
@@ -300,19 +202,63 @@ void resetScores() {
     game->player[i].data->score = 0;
 }
 
-void movePlayers() {
-  int i, j;
-  float newx, newy;
-  int x, y;
-  int col;
-  int winner;
-  Data *data;
-  float fs;
+void moveStep(Data* data) {
+  data->iposx += dirsX[data->dir];
+  data->iposy += dirsY[data->dir];
+}
 
-  /* do movement and collision */
+void clearTrail(int player) {
+  int i;
+
+  for(i = 0; i < colwidth * game->settings->grid_size; i++)
+    if(colmap[i] == player + 1)
+      colmap[i] = 0;
+}
+
+void crashPlayer(int player) {
+  int j;
+
+  if(game->settings->playEffects)
+    playGameFX(fx_crash);
+
+  for(j = 0; j < game->players; j++) 
+    if(j != player && game->player[j].data->speed > 0)
+      game->player[j].data->score++;
+
+  game->player[player].data->speed = SPEED_CRASHED;
+
+  if(game->settings->erase_crashed == 1)
+    clearTrail(player);
+}
+
+void writePosition(int player) {
+  colmap[ game->player[player].data->iposy * colwidth +
+	game->player[player].data->iposx ] = player + 1;
+}
+
+void newTrail(Data* data) {
+  line *new;
+
+  data->trail->ex = data->iposx;
+  data->trail->ey = data->iposy;
+
+  new = data->trail + 1; /* new line */
+
+  new->sx = data->iposx;
+  new->sy = data->iposy;
+
+  data->trail = new;
+}
+  
+void movePlayers() {
+  int i;
+  float fs;
+  Data *data;
+
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
     if(data->speed > 0) { /* still alive */
+
 #define FREQ 1200
 #define FACTOR 0.09
       fs = 1.0 - FACTOR + 
@@ -320,54 +266,34 @@ void movePlayers() {
 #undef FREQ
 #undef FACTOR
 
-      newx = data->posx + dt / 100 * data->speed * dirsX[data->dir] * fs;
-      newy = data->posy + dt / 100 * data->speed * dirsY[data->dir] * fs;
-      
-      if((int)data->posx != newx || (int)data->posy != newy) {
-	/* collision-test here */
-	/* boundary-test here */
-	col = colldetect(data->posx, data->posy, newx, newy,
-			 data->dir, &x, &y);
-	if (col) {
-#ifdef SOUND
-
-	  /* playCrash(); */
-	  if(game->settings->playEffects)
-	    playGameFX(fx_crash);
-#endif
-	  /* set endpoint to collision coordinates */
-	  newx = (float)x;
-	  newy = (float)y;
-	  /* update scores; */
-	  if(game->settings->screenSaver != 1)
-	  for(j = 0; j < game->players; j++) {
-	    if(j != i && game->player[j].data->speed > 0)
-	      game->player[j].data->score++;
-	  }
-	  data->speed = SPEED_CRASHED;
-	}
-
-	/* now draw marks in the bitfield */
-	x = (int) data->posx;
-	y = (int) data->posy;
-	while(x != (int)newx ||
-	      y != (int)newy ) {
-	  x += dirsX[data->dir];
-	  y += dirsY[data->dir];
-	  setCol(x, y, 1, colwidth, colmap);
-	}
-	data->trail->ex = data->posx = newx;
-	data->trail->ey = data->posy = newy;
-
-	if(col && game->settings->erase_crashed == 1) {
-	  clearTrails(data);
-	  fixTrails(); /* clearTrails does too much... */
+      data->t += dt / 100.0 * data->speed * fs;
+      while(data->t >= 1) {
+	moveStep(data);
+	data->t--;
+	if(getCol(data->iposx, data->iposy)) {
+	  crashPlayer(i);
+	  break;
+	} else {
+	  writePosition(i);
 	}
       }
-    } else { /* do trail countdown && explosion */
+      if(data->turn) {
+	newTrail(data);
+	data->last_dir = data->dir;
+	data->dir = (data->dir + data->turn) % 4;
+	data->turn = 0;
+      }
+      data->posx = data->iposx + data->t * dirsX[data->dir];
+      data->posy = data->iposy + data->t * dirsY[data->dir];
+    } else { /* already crashed */
+      if(game->settings->erase_crashed == 1 && data->trail_height > 0)
+	data->trail_height -= (float)(dt * TRAIL_HEIGHT) / 1000;
+
       if(data->exp_radius < EXP_RADIUS_MAX)
 	data->exp_radius += (float)dt * EXP_RADIUS_DELTA;
       else if (data->speed == SPEED_CRASHED) {
+	int winner;
+
 	data->speed = SPEED_GONE;
 	game->running--;
 	if(game->running <= 1) { /* all dead, find survivor */
@@ -380,9 +306,7 @@ void movePlayers() {
 	  game->pauseflag = PAUSE_GAME_FINISHED;
 	}
       }
-      if(game->settings->erase_crashed == 1 && data->trail_height > 0)
-	data->trail_height -= (float)(dt * TRAIL_HEIGHT) / 1000;
-    }
+    }      
   }
 }
 

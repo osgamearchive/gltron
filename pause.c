@@ -63,7 +63,7 @@ void initPauseGL() {
 
 callbacks pauseCallbacks = {
   displayPause, idlePause, keyboardPause,
-  initPause, exitPause, initPauseGL
+  initPause, exitPause, initPauseGL, NULL, NULL
 };
 
 

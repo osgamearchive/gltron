@@ -5,8 +5,9 @@ int freeway(Data *data, int dir) {
   int wd = 20;
 
   for(i = 1; i < wd; i++)
-    if(getCol((int)data->posx + dirsX[dir] * i, (int)data->posy + dirsY[dir] * i,
-       colwidth, colmap)) break;
+    if(getCol((int)data->posx + dirsX[dir] * i, 
+	      (int)data->posy + dirsY[dir] * i)) 
+      break;
   return i;
 }
 
@@ -79,7 +80,7 @@ void doComputer(Player *me, Data *him) {
     for(j = probe_dists[i][0]; j <= probe_dists[i][1]; j++) {
       setPos(data, &x, &y);
       getDistPoint(data->dir, j, &x, &y);
-      if(getCol(x, y, colwidth, colmap)) {
+      if(getCol(x, y)) {
 	ai->danger = j;
 	break;
       }
@@ -94,7 +95,7 @@ void doComputer(Player *me, Data *him) {
     for(i = 1; i < MAX_PROBE_DIST; i++) {
       setPos(data, &x, &y);
       getDistPoint(LEFT(data->dir), i, &x, &y);
-      if(getCol(x, y, colwidth, colmap)) {
+      if(getCol(x, y)) {
 	ldist = i;
 	break;
       } else { ldist = i; }
@@ -102,7 +103,7 @@ void doComputer(Player *me, Data *him) {
     for(i = 1; i < MAX_PROBE_DIST; i++) {
       setPos(data, &x, &y);
       getDistPoint(RIGHT(data->dir), i, &x, &y);
-      if(getCol(x, y, colwidth, colmap)) {
+      if(getCol(x, y)) {
 	rdist = i;
 	break;
       } else { rdist = i; }
@@ -112,14 +113,14 @@ void doComputer(Player *me, Data *him) {
       ai->danger--;
       return;
     } else if(rdist > ldist && ai->tdiff > -spiral[level] ) {
-      turn(data, TURN_LEFT);
+      data->turn = TURN_LEFT;
       ai->tdiff--;
     } else if(rdist < ldist && ai->tdiff < spiral[level] ) {
-      turn(data, TURN_RIGHT);
+      data->turn = TURN_RIGHT;
       ai->tdiff++;
     } else {
-      if(ai->tdiff > 0) { turn(data, TURN_LEFT); ai->tdiff--; }
-      else { turn(data, TURN_RIGHT); ai->tdiff++; }
+      if(ai->tdiff > 0) { data->turn = TURN_LEFT; ai->tdiff--; }
+      else { data->turn =  TURN_RIGHT; ai->tdiff++; }
     }
     ai->danger = 0;
     ai->lasttime = SystemGetElapsedTime();

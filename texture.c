@@ -11,6 +11,7 @@ void deleteTextures(gDisplay *d) {
   glDeleteTextures(1, &(d->texCrash));
   glDeleteTextures(1, &(d->texTrail));
   glDeleteTextures(1, &(d->texTrailDecal));
+  glDeleteTextures(1, &(d->texDebug));
 
   checkGLError("texture.c deleted textures");
 }
@@ -26,6 +27,7 @@ void initTextureNames(gDisplay *d) {
   glGenTextures(1, &(d->texCrash));
   glGenTextures(1, &(d->texTrail));
   glGenTextures(1, &(d->texTrailDecal));
+  glGenTextures(1, &(d->texDebug));
   checkGLError("texture.c allocated texture names");
 }
 

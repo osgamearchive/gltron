@@ -43,6 +43,9 @@ extern void SystemDestroyWindow(int id);
 extern void SystemReshapeFunc(void(*reshape)(int, int));
 
 extern char* SystemGetKeyName(int key);
+
+extern void SystemMouse(int buttons, int state, int x, int y);
+extern void SystemMouseMotion(int x, int y);
 #endif
 
 

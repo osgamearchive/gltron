@@ -5,6 +5,7 @@ fix transparency bow problem (draw AFTER solid stuff)
 save keyboard settings in .gltronrc
 fix settings loading code ignoring some settings and unsaved settings
   (e.g. keyboard controls)
+warp mouse when running fullscreen
 
 
 move cycle behind posx, posy

@@ -172,6 +172,7 @@ extern Menu* pRootMenu;
 extern Menu* pCurrent;
 
 extern unsigned char* colmap;
+extern unsigned char* debugtex;
 extern int colwidth;
 
 extern int dirsX[];
@@ -223,7 +224,7 @@ extern char *help[];
 /* engine.c */
 
 extern void setCol(int x, int y, int value, int width, unsigned char *map);
-extern int getCol(int x, int y, int width, unsigned char *map);
+extern int getCol(int x, int y);
 
 extern void turn(Data* data, int direction);
 
