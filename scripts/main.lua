@@ -23,7 +23,6 @@ if(nil) then
 end
 
 callback = "gui"
-last_callback = "gui"
 
 next_callback = {}
 next_callback[ RETURN_GAME_LAUNCH ] = "pause"
@@ -34,8 +33,8 @@ next_callback[ RETURN_CREDITS ] = "credits"
 next_callback[ RETURN_GAME_CREDITS ] = "credits"
 
 next_callback[ RETURN_GAME_ESCAPE ] = "gui"
-next_callback[ RETURN_GUI_ESCAPE ] = "last"
-next_callback[ RETURN_PROMPT_ESCAPE ] = "last"
+next_callback[ RETURN_GUI_ESCAPE ] = "pause"
+next_callback[ RETURN_PROMPT_ESCAPE ] = "gui"
 next_callback[ RETURN_PAUSE_ESCAPE ] = "gui"
 
 next_callback[ RETURN_GUI_PROMPT ] = "configure"
@@ -45,24 +44,19 @@ next_callback[ RETURN_QUIT ] = nil
 
 
 while 1 do
-	 SetCallback(callback)
-	 -- write(format("[lua] setting callback '%s'\n", callback))
+	SetCallback(callback)
+	-- write(format("[lua] setting callback '%s'\n", callback))
 	 
-	 status = SystemMainLoop()
-	 -- write(format("[lua] system returned (%d)\n", status))
+	status = SystemMainLoop()
+	-- write(format("[lua] system returned (%d)\n", status))
 	 
-	 if(next_callback[ status ]) then
-			if(next_callback[ status ] == "last") then
-				 last_callback, callback = callback, last_callback
-			else
-				 last_callback = callback
-				 callback = next_callback[ status ]
-			end
-	 else
-			if(status == 10) then
-				 write(format("[lua] unhandled callback (%d)\n", status))
-				 exit()
-			end
-	 end
+	if(next_callback[ status ]) then
+		 callback = next_callback[ status ]
+	else
+		if(status == 10) then
+			write(format("[lua] unhandled callback (%d)\n", status))
+			exit()
+		end
+	end
 end
 			
