@@ -75,12 +75,14 @@ void setupDisplay(gDisplay *d) {
   //loading fonts
   initFonts();
 
-  fprintf(stderr, "trying to splash screen\n");
   //Setup splash
-  splash = new_splash(358, 358, "splashscreen.png", 0);
-  draw_splash( splash );
-  //while(!(SDL_PollEvent(&event) && (event.type == SDL_KEYDOWN) )) { draw_splash(splash);};
+  if( game->settings->softwareRendering != 1 )
+    {
+      fprintf(stderr, "trying to splash screen\n");
+      splash = new_splash(358, 358, "splashscreen.png", 0);
+      draw_splash( splash );
   fprintf(stderr, "splash screen created\n");
+    }
 
   printRendererInfo();
   /* for(i=0; i< 100; ++i) */

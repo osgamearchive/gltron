@@ -67,6 +67,8 @@ new_splash( int width, int height,  char *background, int options )
 void
 draw_splash( Splash *splash )
 {
+  if( splash == NULL )
+    return;
   rasonly(game->screen);
   drawbg_splash( splash );
   draw_wprogressstatus(splash->wstatus);
@@ -114,7 +116,9 @@ static void drawbg_splash(Splash *splash ) {
 
 void
 update_splash(Splash *splash, float prog, char *status)
-{
+{  
+  if( splash == NULL )
+    return;
   if( prog < 0.0 && prog > 1.0 )
     return;
   update_wprogressbar(splash->wprogress, prog);
