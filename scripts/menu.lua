@@ -100,7 +100,7 @@ Menu = {
       labels = { "tiny", "medium", "big", "vast", "extreme" },
       values = { 160, 240, 480, 720, 1200 },
       read = function() return settings.grid_size; end,
-      store = function (value) settings.grid_size = value; c_resetGame(); end
+      store = function (value) settings.grid_size = value; c_reloadLevel(); end
    },
    EraseDeadPlayers = {    
       type = MenuC.type.list, caption = "Erase dead players",
@@ -269,6 +269,20 @@ Menu = {
    -- TODO: fill in the rest of the items
 
    -- Video
+   Level = {
+      type = MenuC.type.slider, caption = "Level",
+      right = nextLevel,
+      left = previousLevel,
+      action = nextLevel,
+      read = function()
+								_,_,name = strfind(settings.current_level, "(.*)%..+")
+								if name then
+									 return name
+								else
+									 return settings.current_track
+								end
+						 end
+   },
 
    Artpack = {
       type = MenuC.type.slider, caption = "Artpack",
@@ -302,6 +316,16 @@ Menu = {
       read = function() return settings.show_glow; end,
       store = function(value) settings.show_glow = value; end
    },
+	 Reflections = {
+			type = MenuC.type.list, caption = "Reflections",
+			labels = { 
+				 "off", "low", "medium", "high", "very high", "perfect mirror",
+				 "ask artpack"
+			},
+			values = { "0.0", "0.1", "0.3", "0.6", "0.8", "1.0", "-1" },
+			read = function() return settings.reflection; end,
+	    store = function(value) settings.reflection = value; end
+	 },
    Lightcycles = {
       type = MenuC.type.list, caption = "Lightcycles",
       labels = { "off", "on" },
@@ -556,12 +580,12 @@ Menu.Player4_KeyMenu.items = {
 }
 
 Menu.VideoMenu.items = {
-	 "Artpack", "DetailsMenu", 
+	 "Level", "Artpack", "DetailsMenu", 
 	 "ScreenMenu" --, "TimeDemo" 
 }
 
 Menu.DetailsMenu.items = {
-   "Filtering", "AlphaTrails", "Halos",
+   "Filtering", "AlphaTrails", "Halos", "Reflections",
     -- "Lightcycles",
     "Recognizer", "Lod", 
 	 "ShadowStyle", "FPS_Counter", "AI_Status", "Scores"
