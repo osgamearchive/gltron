@@ -36,6 +36,22 @@ void loadFX() {
     }
   }
 }
+
+reloadTrack() {
+  char *song;
+  char *path;
+  scripting_GetString("current_track", &song);
+  fprintf(stderr, "loading song %s\n", song);
+  path = getPath( PATH_MUSIC, song );
+  free(song);
+  if(path == NULL) {
+    fprintf(stderr, "can't find song...exiting\n");
+  }
+  loadSound(path);
+  playSound();
+
+  free(path);
+}
  
 int initSound() {
   Audio_Init();
@@ -78,4 +94,33 @@ void setFxVolume(float volume) {
   if(volume > 1) volume = 1;
   if(volume < 0) volume = 0;
   Audio_SetFxVolume(volume);
+}
+
+void initSoundTracks() {
+  char *music_path;
+  list *soundList;
+  list *p;
+  int i;
+
+  music_path = getDirectory( PATH_MUSIC );
+  soundList = readDirectoryContents(music_path, SONG_PREFIX);
+  if(soundList->next == NULL) {
+    fprintf(stderr, "no music files found...exiting\n");
+    exit(1);
+  }
+    
+  i = 1;
+  for(p = soundList; p->next != NULL; p = p->next) {
+    scripting_RunFormat("tracks[%d] = \"%s\"", i, (char*) p->data);
+    i++;
+  }
+  scripting_Run("setupSoundTrack()");
+}
+
+void setupSound() {
+  printf("initializing sound\n");
+  initSound();
+  setFxVolume(getSettingf("fxVolume"));
+  reloadTrack();
+  setMusicVolume(getSettingf("musicVolume"));
 }
