@@ -41,9 +41,7 @@ void keyboardPause(int key, int x, int y) {
     /* lasttime = SystemGetElapsedTime(); */
     switchCallbacks(&gameCallbacks);
     break;
-  case 'q':
-    SystemExit();
-    break;
+    /* case 'q': SystemExit(); break; */
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;

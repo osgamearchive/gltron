@@ -37,7 +37,7 @@ void keyGame(int k, int x, int y)
   int i;
 
   switch (k) {
-  case 'q': SystemExit(); break; /* panic button */
+    /* case 'q': SystemExit(); break; */
   case 27:
     switchCallbacks(&pauseCallbacks);
     switchCallbacks(&guiCallbacks);
@@ -64,9 +64,11 @@ void keyGame(int k, int x, int y)
 
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
+    /* toggle lighting
   case SYSTEM_KEY_F6: 
       game->settings->light_cycles = !game->settings->light_cycles;
       break;
+    */
 
   default: 
     for(i = 0; i < KEY_ACTIONS_N; i++) {
@@ -92,9 +94,6 @@ void parse_args(int argc, char *argv[]) {
       i = 0;
       while(argv[argc][++i] != 0) {
 	switch(argv[argc][i]) {
-	case 'k': game->settings->erase_crashed = 1; break;
-	case 'f': game->settings->fast_finish = 1; break;
-	case 'b': game->settings->show_alpha = 0; break;
 	case 'm': game->settings->show_model = 0; break;
 	case 'x': game->settings->show_crash_texture = 0; break;
 	case 'F': game->settings->show_fps = 0; break;
@@ -105,7 +104,6 @@ void parse_args(int argc, char *argv[]) {
 	case 'C': game->settings->show_ai_status = 1; break;
 	case 'v': game->settings->screenSaver = 1; break;
 	case 'i': game->settings->windowMode = 1; break;
-	case 'M': game->settings->mouse_warp = 1; break;
 	case 'O': game->settings->softwareRendering = 1; break;
 	case '1': /* default is -2 */
 	  game->settings->width = 320;
@@ -135,13 +133,10 @@ void parse_args(int argc, char *argv[]) {
 	default:
 	  printf("Usage: %s [-FftwbghcCsk1234simo]\n\n", argv[0]);
 	  printf("Options:\n\n");
-	  printf("-k\terase crashed players (like in the movie)\n");
-	  printf("-f\tfast finish after human has crashed\n");
 	  printf("-F\tdon't display FPS counter\n");
 	  printf("-t\tdon't display floor texture, use lines instead"
 		 "(huge speed gain)\n");
 	  printf("-w\tdon't display walls (speed gain)\n");
-	  printf("-b\tdon't use blending (speed gain)\n");
 	  printf("-m\tdon't show lightcycle (speed gain)\n");
 	  printf("-x\tdon't show crash texture (speed gain)\n");
 	  printf("-g\tdon't show glows (small speed gain)\n");
@@ -155,7 +150,6 @@ void parse_args(int argc, char *argv[]) {
 	  printf("-s\tDon't play sound\n");
 	  /* printf("-v\tStart in demo/screensaver mode\n"); */
 	  printf("-i\tforce startup in a window\n");
-	  printf("-M\tcapture mouse (useful for Voodoo1/2 owners)\n");
 	  printf("-O\toptimize for software rendering (SLOWER on "
 		 "3D cards!)\n");
 	  printf("-h\tthis help\n");

@@ -135,7 +135,11 @@ void menuAction(Menu *activated, int type) {
     pCurrent->iHighlight = 0;
   } else if (type == MENU_ACTION) {
     switch(activated->szName[1]) { /* second char */
-    case 'q': saveSettings(); SystemExit(); break;
+    case 'q': 
+      saveSettings(); 
+      /* SystemExit(); */
+      switchCallbacks(&creditsCallbacks);
+      break;
     case 'r': 
       initData();
       game2->mode = GAME_SINGLE;
