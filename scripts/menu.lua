@@ -282,7 +282,7 @@ Menu = {
    CycleLod = {
       type = MenuC.type.list, caption = "Cycle LOD",
       labels = { "ugly", "low", "high" },
-      values = { 0, 1, 2 },
+      values = { 2, 1, 0 },
       read = function() return lod; end,
       store = function(value) lod = value; end
    },
