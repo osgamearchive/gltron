@@ -21,13 +21,6 @@ struct list {
 #include "gltron.h"
 #endif
 
-
-#ifdef macintosh
-static char* subdir = ":Data";
-#else 
-static char* subdir = "data";
-#endif
-
 /* the following code doesn't compile under non-POSIX systems (they
    don't have dirent.h), so we do lots of special casing */
 
