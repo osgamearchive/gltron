@@ -7,11 +7,15 @@ enum {
   MENU_RIGHT = 4
 };
 
+extern float menu_fgColor[4];
+extern float menu_hlColor1[4];
+extern float menu_hlColor2[4];
+
 typedef struct {
   /* fonttex *font; */
   float fgColor[4]; /* entries */
-  float hlColor[4]; /* the highlighted one */
-
+  float hlColor1[4]; /* the highlighted one */
+  float hlColor2[4];
   char szCaption[64];
 } mDisplay;
 
@@ -31,6 +35,8 @@ typedef struct {
   void* next;
 } node;
 
+  // hack
+extern int menutime;
 #endif
 
 
