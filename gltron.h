@@ -21,7 +21,6 @@
 
 #ifdef WIN32
 #include <windows.h>
-#define SOUND
 
 #undef SEPERATOR
 #define SEPERATOR '\\'
