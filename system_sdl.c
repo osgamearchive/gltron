@@ -142,6 +142,7 @@ int SystemCreateWindow(char *name) {
 }
 
 void SystemDestroyWindow(int id) {
+  SDL_FreeSurface(screen);
 }
 
 void SystemReshapeFunc(void(*reshape)(int, int)) {
