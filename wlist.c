@@ -133,7 +133,7 @@ void
 newline_wlist(Wlist *wlist, char **cols)
 {
   int i;
-  wlist->lines[wlist->rlines++]=(char **)malloc(sizeof(char *)*wlist->nbcols);
+  wlist->lines[wlist->rlines++] = (char **) malloc( wlist->nbcols * sizeof(char *) );
   for(i=0; i<wlist->nbcols; ++i)
     {
       wlist->lines[wlist->rlines-1][i]=(char *)malloc(strlen(cols[i]));

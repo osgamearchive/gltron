@@ -21,7 +21,7 @@ void
 tracker_connect()
 {
   Trackerpacket packet;
-  printf("conecting to tracker %s:%d\n", settings.tracker, settings.tport);
+  printf("connecting to tracker %s:%d\n", settings.tracker, settings.tport);
   if( Net_tconnect(settings.tracker, settings.tport) )
     {
       fprintf(stderr, "can't connect to the tracker! %s\n", SDLNet_GetError());

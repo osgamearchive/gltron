@@ -192,17 +192,31 @@ void
 init_ping(int type)
 {
   IPaddress ipaddress;
-
+  int       i;
 
   if( type == 0 )
-    SDLNet_ResolveHost(&ipaddress, INADDR_ANY, PINGPORT);
-
-  udpsock = SDLNet_UDP_Open(PINGPORT+type);
+    {
+      for( i=PINGPORT; i<10 && udpsock != NULL; ++i)
+	{
+	  udpsock = SDLNet_UDP_Open(i);
+	}
+      if( udpsock==NULL )
+	{
+	  fprintf(stderr, "can't open udpsock %s\n", SDLNet_GetError());
+	  exit(1);
+	} else {
+	  SDLNet_ResolveHost(&ipaddress, INADDR_ANY, PINGPORT);
+	  SDLNet_UDP_Bind(udpsock, 0, &ipaddress);
+	}
+    } else {
+      udpsock = SDLNet_UDP_Open(PINGPORT+10);
+      if( udpsock == NULL )
+	{
+	  fprintf(stderr, "can't open udpsock %s\n", SDLNet_GetError());
+	}
+    }
 
   //SDLNet_ResolveHost(&udppacket->address, ipaddress, port);
-  if( type == 0 )
-    SDLNet_UDP_Bind(udpsock, 0, &ipaddress);
-
   if( udpsock == NULL )
     {
       fprintf(stderr, "can't create udp endpoint %s\n", SDLNet_GetError());
@@ -231,14 +245,6 @@ make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
 
   packet.which = which;
   slots[packet.which].ping=0;
-
-  /* SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT); */
-/*   SDLNet_UDP_Bind(udpsock, 0, &udppacket->address); */
-
-  /* SDLNet_ResolveHost(&address, ipaddress, PINGPORT); */
-/*   SDLNet_UDP_Bind(udpsock, 1, &address); */
-/*   SDLNet_ResolveHost(&address, ipaddress, PINGPORT+1); */
-/*   SDLNet_UDP_Bind(udpsock, 0, &address); */
   SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT);
   for(i=0; i < NBPINGPACKET; ++i )
     {
@@ -252,27 +258,17 @@ make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
     }
   
 }
-static int c=1;
+
 void
 reply_ping()
 {
   int         n;
-  //IPaddress   address;
-  //Pingpacket  packet;
   
   printf("reply to a ping\n");
 
   n = SDLNet_UDP_Recv(udpsock, udppacket);
   printf("ping from %s:%hd\n", SDLNet_ResolveIP(&udppacket->address), ntohs(udppacket->address.port));
-  //SDLNet_ResolveHost(&udppacket->address, udppacket->address.host, PINGPORT+1);
-  //udppacket->address.port=23481;
-  /* address.host=udppacket->address.host; */
-/*   address.port=23481; */
-/*   SDLNet_UDP_Bind(udpsock, ++c, &address); */
-/*   SDLNet_UDP_Send(udpsock, c, udppacket); */
-/*   udppacket->address.port=23481; */
-  //SDLNet_UDP_Bind(udpsock, ++c, &udppacket->address);
-  //SDLNet_UDP_Send(udpsock, c, udppacket);
+
   SDLNet_UDP_Bind(udpsock, 1, &udppacket->address);
   SDLNet_UDP_Send(udpsock, 1, udppacket);
   SDLNet_UDP_Unbind(udpsock, 1);

@@ -8,7 +8,7 @@ static int coffset;
 static char message[255] ="pregame";
 static char chat[1024]   = "";
 
-#define MAX_CHARS 31
+#define MAX_CHARS 255
 
 void
 handlecommand(char *command, char *params)
@@ -61,6 +61,10 @@ handlecommand(char *command, char *params)
 	      return;
 	    }
 	  str = strtok(NULL, " ");
+	  if( strlen(str) > 31 )
+	    {
+	      str[31]='\0';
+	    }
 	  strcpy(packet.infos.chat.mesg, str);
 	  Net_sendpacket(&packet, Net_getmainsock());	  
 	}
@@ -173,6 +177,7 @@ keyboardreadingreturn(char *buff)
 {
   char command[MAX_CHARS]="", params[MAX_CHARS]="";
   Packet packet;
+  int    i, j;
 
   if( strlen(buff) == 0 )
     return;
@@ -193,8 +198,22 @@ keyboardreadingreturn(char *buff)
       packet.which=me;
       packet.type=CHAT;
       packet.infos.chat.which=BROADCAST;
-      strcpy(packet.infos.chat.mesg, buff);
-      Net_sendpacket(&packet, Net_getmainsock());
+      j=strlen(buff);
+      i=0;
+      do {
+	  if( j > 31 )
+	    {
+	      strncpy(packet.infos.chat.mesg, &buff[31*i], 31);	    
+	      packet.infos.chat.mesg[31]='\0';
+	    } else {
+	      strncpy(packet.infos.chat.mesg, &buff[31*i], j);	    
+	      packet.infos.chat.mesg[j]='\0';
+	    }
+	  Net_sendpacket(&packet, Net_getmainsock());
+	  j-=31;
+	  ++i;
+       } while (  j > 0 );
+     
     }
   //strcpy(buff, "");
 }
