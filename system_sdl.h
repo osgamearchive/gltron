@@ -15,6 +15,9 @@
 #define SYSTEM_KEY_F10 SDLK_F10
 #define SYSTEM_KEY_F12 SDLK_F12
 
+#define SYSTEM_MOUSEUP SDL_MOUSEBUTTONUP
+#define SYSTEM_MOUSEDOWN SDL_MOUSEBUTTONDOWN
+
 #define SYSTEM_RGBA 1
 #define SYSTEM_DOUBLE 2
 #define SYSTEM_DEPTH 4
@@ -37,6 +40,9 @@ extern void SystemDestroyWindow(int id);
 extern void SystemReshapeFunc(void(*reshape)(int, int));
 
 extern char* SystemGetKeyName(int key);
+
+extern void SystemMouse(int buttons, int state, int x, int y);
+extern void SystemMouseMotion(int x, int y);
 #endif
 
 

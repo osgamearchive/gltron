@@ -23,6 +23,9 @@
 #define SYSTEM_KEY_F10 GLUT_KEY_F10
 #define SYSTEM_KEY_F12 GLUT_KEY_F12
 
+#define SYSTEM_MOUSEUP GLUT_UP
+#define SYSTEM_MOUSEDOWN GLUT_DOWN
+
 #define SYSTEM_RGBA GLUT_RGBA
 #define SYSTEM_DOUBLE GLUT_DOUBLE
 #define SYSTEM_DEPTH GLUT_DEPTH
@@ -47,5 +50,7 @@ extern char* SystemGetKeyName(int key);
 extern void SystemMouse(int buttons, int state, int x, int y);
 extern void SystemMouseMotion(int x, int y);
 #endif
+
+
 
 

@@ -45,6 +45,18 @@ void SystemWarpPointer(int x, int y) {
   SDL_WarpMouse(x, y);
 }
 
+void SystemMouse(int buttons, int state, int x, int y) {
+  if(current)
+    if(current->mouse != NULL)
+      current->mouse(buttons, state, x, y);
+}
+
+void SystemMouseMotion(int x, int y) {
+  if(current)
+    if(current->mouseMotion != NULL)
+      current->mouseMotion(x, y);
+}
+
 void SystemMainLoop() {
   SDL_Event event;
   char *keyname;
@@ -52,7 +64,6 @@ void SystemMainLoop() {
 
   while(1) {
     while(SDL_PollEvent(&event) && current) {
-
       if(event.type == SDL_KEYDOWN) {
 	keyname = SDL_GetKeyName(event.key.keysym.sym);
 	key = 0;
@@ -69,6 +80,12 @@ void SystemMainLoop() {
 	  current->keyboard(key, 0, 0);
 	else
 	  current->keyboard(event.key.keysym.sym, 0, 0);
+      } else if(event.type == SDL_MOUSEBUTTONDOWN ||
+		event.type == SDL_MOUSEBUTTONUP) {
+	SystemMouse(event.button.button, event.type, 
+		    event.button.x, event.button.y);
+      } else if(event.type == SDL_MOUSEMOTION) {
+	SystemMouseMotion(event.motion.x, event.motion.y);
       }
     }
     if(redisplay) {

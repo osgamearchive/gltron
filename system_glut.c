@@ -65,6 +65,7 @@ void SystemRegisterCallbacks(callbacks *cb) {
   glutKeyboardFunc(SystemKeyboard);
   glutSpecialFunc(SystemKeyboard);
   glutMouseFunc(SystemMouse);
+  glutMotionFunc(SystemMouseMotion);
   glutPassiveMotionFunc(SystemMouseMotion);
 }
 
