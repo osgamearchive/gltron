@@ -3,7 +3,7 @@ f3
 speed
 musicVolume
 fxVolume
-i35
+i36
 show_help
 show_fps
 show_wall
@@ -39,6 +39,7 @@ arena_size
 alpha_trails
 lod
 ai_level
+mipmap_filter
 
 
 

@@ -36,9 +36,13 @@ void initTexture(gDisplay *d) {
 
   initTextureNames(d);
 
-  if(game->settings->use_mipmaps)
-    min_filter = GL_LINEAR_MIPMAP_LINEAR;
-    // min_filter = GL_LINEAR_MIPMAP_NEAREST;
+  if(game->settings->use_mipmaps) {
+    if(game->settings->mipmap_filter == TRILINEAR)
+      min_filter = GL_LINEAR_MIPMAP_LINEAR;
+    else
+      min_filter = GL_LINEAR_MIPMAP_NEAREST;
+  }
+  
   else
     min_filter = GL_LINEAR;
 

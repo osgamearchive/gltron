@@ -7,18 +7,18 @@ Thanks to
 
 Xavier Bouchoux, Mike Field, Steve Baker, Jean-Bruno Richard,
 Andrey Zahkhatov, Bjonar Henden, Shaul Kedem, Darrell Walisser,
-Jonas Gustavsson for sending in patches, doing ports, pointing out bugs,
-giving valuable tips etc.
-
-Special Thanks to Thomas Flynn for cleaning up with version 0.47,
-doing a proper Makefile / install, providing the rpm.spec etc. etc.
-I hope I didn't mess it all up with 0.50
+Jonas Gustavsson, Thomas Flynn, Charles Babbage, Nicolas Zimmermann
+for sending in patches, doing ports, pointing out bugs, giving valuable
+tips etc.
 
 Thanks to Peter Hajba for the song 'Revenge of Cats'. More stuff on his
 homepage at http://isis.yok.utu.fi/~skaven/music.html
 
-Thanks to Jonas Gustavsson for the experimental low-poly lightcycle
-model.
+Thanks to Charles Babbage for the great new lightcycle models and
+the menu background & font.
+
+Thanks to Nicolas Zimmermann for the wall & floor textures and the menu
+logo & font editing.
 
 Thanks to everyone else who commented on the game. It would not have
 been possible without your feedback.

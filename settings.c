@@ -79,6 +79,7 @@ void initSettingData(char *filename) {
   si[32].value = &(game->settings->alpha_trails);
   si[33].value = &(game->settings->lod);
   si[34].value = &(game->settings->ai_level);
+  si[35].value = &(game->settings->mipmap_filter);
 
   sf[0].value = &(game->settings->speed);
   sf[1].value = &(game->settings->musicVolume);
@@ -148,6 +149,7 @@ void initMainGameSettings(char *filename) {
   game->settings->windowMode = 0;
   game->settings->model_backwards = 0;
   game->settings->use_mipmaps = 1;
+  game->settings->mipmap_filter = TRILINEAR;
 
   game->settings->display_type = 0;
   game->settings->playMusic = 1;

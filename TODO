@@ -1,6 +1,3 @@
-configurable bots (difficulty settings)
-scale floor texture accordingly
-
 optimize some stuff for software rendering
 lower background music volume in menu
 top-down view
@@ -9,12 +6,13 @@ or do something else to make trails look better
 
 move cycle behind posx, posy
 solve cycle turning issue
+move things to integer coordinates
 
 add more & better sound effects
 
 add mouse support
 
-add light effects (shadows, etc.)
+add light effects (shadows, mirrors etc.)
 
 check various TODOs in the code
 

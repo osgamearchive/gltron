@@ -1,13 +1,44 @@
-to 0.59
-visible changes
+0.53 to 0.59
+most important visible changes (including the ones to 0.59beta)
+Game play:
+- rewrote computer player / added skill levels
 - different arena sizes (menu item)
+- different speeds (menu item)
+- experimental speed oszillation
+- configure players (human, computer, none)
+Other:
+- very cool new model from Charles Babbage
+- levels-of-detail for the model
+- configure keyboard controls (not saved between games yet)
+- added volume settings for music / fx to Audio menu
+- used wall & floor texture from Nicolas Zimmermann
+- (optional) sound effects, SDL version only
 - added trail decals on solid trails (option)
 - added trail bow before cycle
-- added polygon counter
-- adjusted clip plane (better 1st person view now)
 - changed GUI background
 - resized menu (dynamic size now)
-- added screenshot function (F12)
+- added screenshot function (F12 - disabled on MacOS)
+- fixed lightcycle going backwards (if you liked the old way better,
+  that's an option now)
+- added arena overview camera mode when dead
+- GNU autoconf WOOO! WOOO!
+- textures in png format
+
+other visible changes (including the ones to 0.59beta)
+- played with wall dimensions
+- fixed chase camera starting position
+- fixed bug with crash texture turning then crashing during smooth turn
+- 4 different wall textures (Nicolas, Darrell)
+- added mipmapping with GLU box filter (Darrell)
+- choose bitween bilinear & trilinear filtering
+- fixed wall textures being upside down
+- adjusted clip plane (better 1st person view now)
+- added polygon counter
+- added support for multiple fonts
+- cam chase speed scales with cycle speed now
+
+code changes:
+- see cvs logs
 
 to 0.59beta
 visible changes

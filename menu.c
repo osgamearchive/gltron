@@ -18,7 +18,8 @@ void changeAction(char *name) {
     playMenuFX(fx_highlight);
   }
 #endif
-  if(strstr(name, "use_mipmaps") == name) {
+  if(strstr(name, "use_mipmaps") == name ||
+     strstr(name, "mipmap_filter") == name) {
     deleteFonts();
     deleteTextures(game->screen);
     initFonts();
@@ -154,8 +155,10 @@ static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme" };
 static char *lod_list[] = { "normal", "lower", "ugly" };
 static char *ai_list[] = { "sluggish (0)", "dumb (1)", "stupid (2)", 
 			   "mindless (3)" };
+static char *filter_list[] = { "bilinear", "trilinear" };
+
 static char **clists[] = { speed_list, player_list, arena_list, lod_list,
-			   ai_list };
+			   ai_list, filter_list };
 
 void initMenuCaption(Menu *m) {
   int *piValue;

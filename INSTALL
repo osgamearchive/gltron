@@ -4,6 +4,7 @@ for URL's on how to get these packages see
 http://www.ards.net/Andreas/gltron.html#links
 
 Get a working OpenGL / Mesa
+Get libpng / zlib (standard on allmost any system)
 Get SDL-1.1 and SDL_mixer
 (from http://www.devolution.com/~slouken/SDL/index.html)
 
@@ -11,6 +12,10 @@ Installation
 
 ./configure
 make
+
+Note: ./configure might fail to find some libraries, I haven't completely
+figured it out yet. If you're sure that you have all the necessary libs,
+just skip running ./configure and type 'make'.
 
 Type './gltron' to play!
 

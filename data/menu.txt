@@ -171,20 +171,30 @@ FX Volume     - %.0f%%
 xsub
 Video
 
-# Options Submenu (10 entries)
-10
+# Options Submenu (11 entries)
+2
 xsub
 Display Options
 
 0
 sti_windowMode
 Window Mode        - %s
+
+10
+xsub
+Detail Settings
 0
 sti_use_mipmaps
 Use MipMaps        - %s
+
+0
+stl_5_1_mipmap_filter
+Mipmap Filtering   - %s
+
 0
 sti_show_floor_texture
 Floor Texture      - %s
+
 0
 sti_show_wall
 Wall Texture       - %s

@@ -96,6 +96,12 @@ typedef struct Player {
    4) add a default to initMainGameSettings() in settings.c
    5) make a menu entry in menu.txt
 */
+
+enum {
+  BILINEAR = 0,
+  TRILINEAR = 1
+};
+
 typedef struct Settings {
   /* these settings affect the visuals and sound etc.
      and are client side only */
@@ -118,6 +124,7 @@ typedef struct Settings {
   int line_spacing; /* space between lines when the floor texture is
 		       disabled */
   int use_mipmaps; /* enable / disable mipmapping */
+  int mipmap_filter; /* bilinear / trilinear */
 
   int camType;
   int mouse_warp;
