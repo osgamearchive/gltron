@@ -105,9 +105,8 @@ namespace Sound {
 
 
       GetModifiers(pan, vol, shift);
-      /*
-       printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
-       */
+      // printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
+
       int clen = (int)((len / 4) * shift + 1) * 4;
       assert(clen < _source->_buffersize);
 
