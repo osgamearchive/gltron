@@ -231,6 +231,7 @@ void initData() {
   initClientData();
 }
 
+#if 0
 int applyGameInfo() {
   int i; 
   Data *data;
@@ -260,6 +261,7 @@ int applyGameInfo() {
   }
   return 0;
 }
+#endif
 
 int updateTime() {
   game2->time.lastFrame = game2->time.current;
