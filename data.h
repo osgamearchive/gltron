@@ -262,7 +262,6 @@ typedef struct Settings {
   float musicVolume;
   float fxVolume;
 
-  list* soundList;
   int soundIndex;
   int soundSongCount;
   /* these two are ignored in multiplayer mode */
@@ -275,9 +274,6 @@ typedef struct Settings {
   int ai_player3;
   int ai_player4;
   int ai_level;
-
-  /* which ai function to call for the current ai level */
-  void (*ai_function)(int,int);
 
   /* these gettings affect the gameplay */
   int erase_crashed;

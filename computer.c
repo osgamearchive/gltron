@@ -5,9 +5,9 @@ void initGameAI(int level) {
 
   /* set ai function ptr based on difficulty level setting */
   if (level < 2) {
-    game->settings->ai_function = doComputer;
+    ai_function = doComputer;
   } else {
-    game->settings->ai_function = doComputer2;
+    ai_function = doComputer2;
   }
 }
 

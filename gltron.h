@@ -205,6 +205,8 @@ extern Game2 main_game2;
 extern Game2 *game2;
 
 extern int viewport_content[4];
+extern list* soundList;
+extern void (*ai_function)(int,int);
 
 extern float camAngle;
 extern float cam_phi;

@@ -155,7 +155,7 @@ void idleGame( void ) {
 	  if(game->player[i].ai->active == AI_COMPUTER &&
 	     PLAYER_IS_ACTIVE(&game->player[i])) {
 
-	    game->settings->ai_function(i, 0);
+	    ai_function(i, 0);
 	  }
 
       /* process any outstanding events (turns, etc) */

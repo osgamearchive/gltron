@@ -43,7 +43,7 @@ void changeAction(char *name) {
       int c;
 
       c = 0;
-      for(p = game->settings->soundList; p->next != NULL; p = p->next) {
+      for(p = soundList; p->next != NULL; p = p->next) {
 	if(c == game->settings->soundIndex)
 	  break;
 	c++;
@@ -367,7 +367,7 @@ void initMenuCaption(Menu *m) {
       {
 	list *p;
 	int c = 0;
-	for(p = game->settings->soundList; p->next != NULL; p = p->next) {
+	for(p = soundList; p->next != NULL; p = p->next) {
 	  if(c == game->settings->soundIndex)
 	    sprintf(m->display.szCaption, m->szCapFormat, 
 		    (char*) p->data + strlen(SONG_PREFIX));

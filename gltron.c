@@ -125,12 +125,12 @@ int main( int argc, char *argv[] ) {
 
   /* sound */
   path = getMusicPath(MUSIC_DIR);
-  game->settings->soundList = 
+  soundList = 
     readDirectoryContents(path, SONG_PREFIX);
   
   game->settings->soundIndex = -1;
 
-  l = game->settings->soundList;
+  l = soundList;
 
 #ifdef SOUND
   printf("initializing sound\n");
