@@ -182,7 +182,7 @@ do_login( int which, Packet packet )
 	  rep.infos.userinfo.ismaster = slots[i].isMaster;
 	  rep.infos.userinfo.color = 1; //TODO: get right color..
 	  strcpy(rep.infos.userinfo.nick, slots[i].name);
-	  Net_sendpacket(&rep, slots[which].sock);
+	  Net_sendpacket(&rep, slots[i].sock);
 	}
     }
 	  
