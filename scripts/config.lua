@@ -11,6 +11,8 @@ camType = 3
 display_type = 3
 
 -- video
+artpacks = { }
+current_artpack = "metalTron"
 -- texture settings
 show_floor_texture = 1
 show_wall = 1
@@ -25,7 +27,7 @@ alpha_trails = 1
 show_glow = 1
 show_model = 1
 show_recognizer = 1
-lod = 1
+lod = 0
 shadow_lod = 1
 show_fps = 0
 show_ai_status = 1
@@ -35,6 +37,9 @@ show_gl_logo = 1
 windowMode = 1
 
 -- audio
+tracks = { }
+current_track = "song_bruce.mp3"
+-- music & fx settings
 playEffects = 1
 playMusic = 1
 fxVolume = 0.3
