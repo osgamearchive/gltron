@@ -5,6 +5,26 @@ Menu *pCurrent = 0;
 
 #define MENU_BUFSIZE 100
 
+
+// static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom", NULL };
+static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
+static char *player_list[] = { "human", "computer", "none", NULL };
+static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
+static char *lod_list[] = { "normal", "lower", "ugly", NULL };
+static char *ai_list[] = { "sluggish (0)", "dumb (1)", "stupid (2)", 
+			   "mindless (3)", NULL };
+static char *filter_list[] = { "bilinear", "trilinear", NULL };
+static char *camera_list[] = { "circling", "behind", "cockpit", "mouse", NULL };
+static char *viewports_list[] = { "single", "split", "4 player", NULL };
+
+// this one is not static, since it's initialized from initArtpacks
+char **artpack_list;
+
+static char **clists[] = { speed_list, player_list, arena_list, lod_list,
+			   ai_list, filter_list, camera_list, viewports_list,
+			   NULL 
+};
+
 void changeAction(char *name) {
 #ifdef SOUND
   if(strstr(name, "playMusic") == name) {
@@ -17,7 +37,10 @@ void changeAction(char *name) {
   } else if(strstr(name, "fxVolume") == name) {
     setFxVolume(game->settings->fxVolume);
     playMenuFX(fx_highlight);
+  } else if(strstr(name, "artpack") == name) {
+    reloadArt();
   }
+
   if(strstr(name, "song") == name) {
     if(game->settings->soundIndex != -1) {
       char *tmp;
@@ -110,6 +133,14 @@ void menuAction(Menu *activated, int type) {
       game2->mode = GAME_SINGLE;
       switchCallbacks(&pauseCallbacks);
       break;
+    case 'a': // this menu code is turning uglier and uglier 
+      printf("artpack menu chosen\n");
+      artpack_index++;
+      if(artpack_list[artpack_index] == NULL)
+	artpack_index = 0;
+      initMenuCaption(activated);
+      changeAction(activated->szName + 3);
+      break;
     case 'd':
       if(activated->szName[2] == 'p') {
 	initData();
@@ -178,13 +209,17 @@ void menuAction(Menu *activated, int type) {
       case 'l':
 	{
 	  char buf[64];
-	  int max_value;
+	  // int max_value;
 	  int dummy;
-	  sscanf(activated->szName, "stl_%d_%d_%s", &dummy, &max_value, buf);
+	  int clist_index;
+	  
+	  // sscanf(activated->szName, "stl_%d_%d_%s", &dummy, &max_value, buf);
+	  sscanf(activated->szName, "stl_%d_%d_%s", &clist_index, &dummy, buf);
 	  piValue = getVi(buf);
 	  if(piValue != NULL) {
 	    (*piValue)++;
-	    if(*piValue > max_value) *piValue = 0;
+	    // if(*piValue > max_value) *piValue = 0;
+	    if(clists[clist_index][*piValue] == NULL) *piValue = 0;
 	    initMenuCaption(activated);
 	    changeAction(buf);
 	    break;
@@ -238,18 +273,6 @@ void menuAction(Menu *activated, int type) {
   }
 }
 
-static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom" };
-static char *player_list[] = { "human", "computer", "none" };
-static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme" };
-static char *lod_list[] = { "normal", "lower", "ugly" };
-static char *ai_list[] = { "sluggish (0)", "dumb (1)", "stupid (2)", 
-			   "mindless (3)" };
-static char *filter_list[] = { "bilinear", "trilinear" };
-static char *camera_list[] = { "circling", "behind", "cockpit", "mouse" };
-static char *viewports_list[] = { "single", "split", "4 player" };
-static char **clists[] = { speed_list, player_list, arena_list, lod_list,
-			   ai_list, filter_list, camera_list, viewports_list };
-
 void initMenuCaption(Menu *m) {
   int *piValue;
 
@@ -257,6 +280,11 @@ void initMenuCaption(Menu *m) {
   switch(m->szName[0]) {
   case 's':
     switch(m->szName[1]) {
+    case 'a':
+      printf("setting artpack menu caption\n");
+      sprintf(m->display.szCaption, m->szCapFormat, 
+	      artpack_list[artpack_index]);
+      break;
     case 't':
       switch(m->szName[2]) {
       case 'i':

@@ -14,6 +14,7 @@
 1
 
 # Root Menu - Game / Audio / Video / Quit
+
 4
 Root
 Root
@@ -200,11 +201,15 @@ xsub
 Video
 
 # Options Submenu (11 entries)
-3
+4
 xsub
 Display Options
 
-5
+0
+sa_artpack
+Artpack: %s
+
+6
 xsub
 Texture Detail
 
@@ -227,6 +232,10 @@ Use MipMaps        - %s
 0
 stl_5_1_mipmap_filter
 Mipmap Filtering   - %s
+
+0
+sti_stretch_textures
+Stretch Textures   - %s
 
 5
 xsub
