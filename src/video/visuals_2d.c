@@ -9,20 +9,25 @@ void draw2D( Visual *d ) {
 		int i;
 
 		float aspect = (float)d->vp_w / (float)d->vp_h;
-		if(d->vp_w / game2->grid.width < d->vp_h / game2->grid.height) {
+
+		float grid_width = game2->level_scale * 
+			box2_Width(& game2->level->boundingBox);
+		float grid_height = game2->level_scale * 
+			box2_Height(& game2->level->boundingBox);
+		
+		if(d->vp_w / grid_width < d->vp_h / grid_height) {
 				// black borders top/bottom
-				width = game2->grid.width + 1.0f;
+				width = grid_width + 1.0f;
 				height = width / aspect;
-				border_bottom = (height - game2->grid.height) / 2;
+				border_bottom = (height - grid_height) / 2;
 				border_left = 0;
 		} else {
 				// black borders left/right
-				height = game2->grid.height + 1.0f;
+				height = grid_height + 1.0f;
 				width = height * aspect;
-				border_left = (width - game2->grid.width) / 2;
+				border_left = (width - grid_width) / 2;
 				border_bottom = 0;
 		}
-
 		/*
 		{
 				static int foo = 0;
@@ -42,8 +47,8 @@ void draw2D( Visual *d ) {
 		glTranslatef(border_left, border_bottom, 0);
 
 		{
-			float w = game2->grid.width;
-			float h = game2->grid.height;
+			float w = grid_width;
+			float h = grid_height;
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -61,8 +66,8 @@ void draw2D( Visual *d ) {
 		// glDisable(GL_BLEND);
 		glEnable(GL_BLEND);
 		{
-				float w = game2->grid.width;
-				float h = game2->grid.height;
+				float w = grid_width;
+				float h = grid_height;
 				glColor3f(1, 1, 1);
 				glBegin(GL_LINE_LOOP);
 				glVertex3f( 0, 0, 0 );
@@ -83,7 +88,7 @@ void draw2D( Visual *d ) {
         if (p->data->trail_height <= 0) {
           continue;
         }
-        
+
         if (p->data->trail_height < TRAIL_HEIGHT) {
           /* 
              if player crashed but the trail hasn't disappeared yet, fade
