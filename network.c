@@ -179,7 +179,15 @@ do_gamerules(Packet packet)
   
   initNetEventList( neteventlist );
   game->players               = packet.infos.gamerules.players;
+
+  /** before doing initData check for active players */
+  for(i=0; i<MAX_PLAYERS;  ++i)
+    {
+      game->player[i].ai->active = ( slots[i].active ) ? 0 : 2;
+    }
+
   initData();
+
   //game->players=game2->players;
   game2->rules.speed          = packet.infos.gamerules.speed;
   game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
