@@ -17,8 +17,13 @@ namespace Sound {
 
   void System::Callback(Uint8* data, int len) {
     // printf("callback got called for %d bytes of data\n", len);
+
     // ensure silence
     memset(data, 0, len);
+
+    if(_status == eUninitialized) 
+      return;
+
     list* p;
     int sources_mixed = 0;
     for(p = & _sources; p->next != NULL; p = p->next) {
