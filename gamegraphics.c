@@ -854,24 +854,35 @@ void drawPause(gDisplay *display) {
   d += delta;
   /* printf("%.5f\n", delta); */
   
-  if(d > 2 * M_PI) { 
+  if (d > 2 * M_PI) { 
     d -= 2 * M_PI;
   }
 
-  if((game->pauseflag & PAUSE_GAME_FINISHED) &&
-     game->winner != -1) {
-    if(game->winner >= -1) {
-    message = buf;
-    sprintf(message, winner, game->winner + 1);
+  if ((game->pauseflag & PAUSE_GAME_FINISHED) && game->winner != -1) {
+    if (game->winner >= -1) {
+
+      float* player_color = game->player[game->winner].pColorDiffuse;
+
+      /* 
+         make the 'Player wins' message oscillate between 
+         white and the winning bike's color 
+       */
+      glColor3f((player_color[0] + ((sin(d) + 1) / 2) * (1 - player_color[0])),
+                (player_color[1] + ((sin(d) + 1) / 2) * (1 - player_color[1])),
+                (player_color[2] + ((sin(d) + 1) / 2) * (1 - player_color[2]))); 
+
+      message = buf;
+      sprintf(message, winner, game->winner + 1);
     } else {
+      glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
       message = nowinner;
     }
   } else {
+    glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
     message = pause;
   }
 
   rasonly(game->screen);
-  glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
   drawText(gameFtx, display->vp_w / 6, 20, 
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
 }
