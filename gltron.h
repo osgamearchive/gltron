@@ -85,7 +85,9 @@ extern texture_info textures[];
 
 /* artpack stuff */
 
+extern void getArtPath(char *texname, char *fullpath);
 extern void initArtpacks(void);
+extern void loadArt(void);
 extern void reloadArt(void);
 
 /* graphics libs */
@@ -386,6 +388,7 @@ extern void parse_args(int argc, char *argv[]);
 
 /* settings -> settings.c */
 
+extern void loadIniFile(char *name);
 extern void initMainGameSettings();
 extern void saveSettings();
 
