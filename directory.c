@@ -140,6 +140,11 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
   return l;
 }
 
+void makeDirectory(const char *name) {
+
+
+}
+
 /* end of macintosh code */
 
 #else /* unix code */
