@@ -140,6 +140,7 @@ AC_OUTPUT(Makefile \
 	art/Makefile \
 	art/arcade_spots/Makefile \
 	art/biohazard/Makefile \
+	art/classic/Makefile \
 	art/default/Makefile \
 	art/metalTron/Makefile \
 	data/Makefile \
