@@ -93,30 +93,20 @@ int *quadBufIndex;
 #endif
 
 
-int game_textures = 11; /* 10 + debug texture */
-int n_textures = 10;
+int game_textures = 17; /* 10 + 6 + debug texture */
+int n_textures = 11;
 
 texture_info textures[] = {
-  { "gltron_floor", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_FLOOR },
-  { "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI },
-  { "gltron_logo", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_LOGO },
-  { "gltron_wall_1", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL1 },
-  { "gltron_wall_2", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL2 },
-  { "gltron_wall_3", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL3 },
-  { "gltron_wall_4", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL4 },
-  { "gltron_crash", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_CRASH },
-  { "gltron_trail", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_TRAIL },
-  { "gltron_traildecal", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_DECAL }
+  { 1, "gltron_floor", GL_RGB, GL_REPEAT, GL_REPEAT, -1 },
+  { 1, "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI },
+  { 1, "gltron_logo", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_LOGO },
+  { 1, "gltron_wall_1", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL1 },
+  { 1, "gltron_wall_2", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL2 },
+  { 1, "gltron_wall_3", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL3 },
+  { 1, "gltron_wall_4", GL_RGB, GL_REPEAT, GL_CLAMP, TEX_WALL4 },
+  { 1, "gltron_crash", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_CRASH },
+  { 1, "gltron_trail", GL_RGBA, GL_CLAMP, GL_CLAMP, TEX_TRAIL },
+  { 1, "gltron_traildecal", GL_RGBA, GL_REPEAT, GL_CLAMP, TEX_DECAL },
+  { 6, "skybox", GL_RGB, GL_CLAMP, GL_CLAMP, TEX_SKYBOX }
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
