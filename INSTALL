@@ -15,24 +15,34 @@ Required libraries for SDL_sound: libmikmod 3.1.5 or newer, libvorbis
 for ogg/vorbis support and smpeg for mp3 support. Your average distribution
 has most of them already installed (except maybe smpeg).
 
-Compiling
+Compiling:
 
 ./configure
 make
 
-Type './gltron' to play!
-make install is currently broken
+And (probably as root)
+make install
 
-Note: make install is currently broken
+Data files get installed by default to /usr/local/share/gltron
+The config file gets stored in $HOME/.gltronrc and any screenshots you
+make get stored in $HOME/gltron-$version-$index.png
 
-You can install the data files (folders art/ and data/) into any directory,
-as long as you put the executable in the same directory as art/ and data/
-Thenput a symlink in /usr/local/bin or somewhere else in your $PATH
-and you're done.
+You can tweak most file locations using ./configure options.
+Try ./configure --help
 
-'gltron -h' lists a few options. Most notably is the -O option, which will
-speed things up greatly *if you don't have a 3D card*. Don't use this
-unless the game runs really slow, the visuals will suffer terribly.
+If you want to play from the source directory, use
+./configure --enable-localdata
+
+GLtron will then chdir() to the binary location upon startup, and
+load things from there. This is useful for the loki installer.
+You can put everything (binary & data) into one directory, and but
+a symlink into e.g. /usr/local/bin.
+
+Usage:
+
+'gltron -h' lists a few runtime options. Most notably is the -O option,
+which will speed things up greatly *if you don't have a 3D card*. Don't
+use this unless the game runs really slow, the visuals will suffer terribly.
 
 Start gltron with the -s option if you don't want the sound playing.
 
