@@ -471,7 +471,7 @@ extern int applyGameInfo();
 
 
 /* pixel stuff */
-extern unsigned char* loadPixels(char *filename, gDisplay *d);
+extern unsigned char* loadPixels(const char *filename, gDisplay *d);
 extern unsigned char* scalePixels(unsigned char *source, int sw, int sh,
 				  int x, int y, int w, int h,
 				  int dw, int dh, int bytes);
