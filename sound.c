@@ -5,7 +5,6 @@
 
 static char *game_fx_names[] = {
 
-  /* #ifdef WIN32 || macintosh */
 #if 1
   "game_engine.wav",
   "game_crash.wav",
