@@ -175,6 +175,10 @@ int main( int argc, char *argv[] ) {
   /* sanity check some settings */
   checkSettings();
 
+  /* intialize the settings cache, remember to do that everytime you
+     change something */
+  updateSettingsCache();
+
   /* initialize the rest of the game's datastructures */
   consoleInit();
   initGameStructures();
