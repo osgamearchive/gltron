@@ -11,9 +11,8 @@ CPPFLAGS=@CPPFLAGS@ -I$(srcdir)/lua/src -I$(srcdir)/lua/include
 
 gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	pause.c computer.c engine.c event.c game.c gltron.c gamegraphics.c \
-	light.c trail.c trails_buffered.c quad.c quadbuf.c \
-	input.c settings.c texture.c load_texture.c fonttex.c \
-	fonts.c menu.c findpath.c file.c directory.c file_io.c \
+	light.c input.c settings.c texture.c load_texture.c fonttex.c \
+	fonts.c menu.c findpath.c file.c directory.c dirsetup.c file_io.c \
 	screenshot.c geom.c model.c material.c explosion.c explosion.h \
 	system.c globals.c camera.c recognizer.c \
 	console.c renderer_gl.c callbacks.h camera.h data.h \
@@ -31,7 +30,8 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	graphics_hud.c graphics_hud.h \
 	graphics_fx.c graphics_fx.h \
 	graphics_utility.c graphics_utility.h \
-	trail_geometry.c trail_render.c trail_geometry.h \
+	trail.c trail_geometry.c trail_render.c trail_geometry.h \
+	# trail.c trails_buffered.c quad.c quadbuf.c \
 	# extgl.h extgl.c 
 
 
