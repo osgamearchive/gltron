@@ -11,15 +11,29 @@ initkeyreading()
 }
 
 void
+handlecommand(char *command, char *params)
+{
+  //check commands here.
+  switch( command[0] )
+    {
+    case 's'://start
+      //TODO: ask for starting the server.
+      break;
+      //test...
+    }
+}
+
+void
 keyboardreadingreturn()
 {
   char command[MAX_CHARS]="", params[MAX_CHARS]="";
 
   //We have our buffer.
-  sscanf(buff, "/%[a-z] %s", command, params);
+  sscanf(buff, "/%[A-Za-z] %[A-Za-z0-9 ]", command, params);
   if( strlen(command) > 0 )
     {
-      fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
+      handlecommand(command, params);
+      //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
     } else {
       fprintf(stderr, "\nsend chat: %s\n", buff);
     }

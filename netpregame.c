@@ -44,7 +44,7 @@ void drawPregame() {
   glColor3fv(colors[1]);
   x = 10;
   y = game->screen->vp_h - 1.5 * h * (0 + 1);
-  drawText(gameFtx, x, y, h, "Pregame: lot of things to do there");
+  drawText(gameFtx, x, y, h, "Pregame: Type Enter to make command");
   
 }
 
