@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rm -f sound.c sound.h
+ln -s sound_sdl.c sound.c
+ln -s sound_sdl.h sound.h

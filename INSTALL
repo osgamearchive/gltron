@@ -1,0 +1,50 @@
+Installation (general things).
+
+for URL's on how to get these packages see
+http://www.ards.net/Andreas/gltron.html#links
+
+Get a working OpenGL / Mesa
+Get Glut (glut is in the MesaDemos package)
+
+Installation (without sound)
+
+% make
+% ./gltron
+
+Installation (with sound)
+
+Get libmikmod and install it
+
+% make sound
+% ./gltron
+
+STOP: make install is currently broken!
+
+Optionally:
+
+% su
+# make install
+
+will install gltron in GLTRON_INSTALLDIR and gltron.it (if present),
+settings.txt, menu.txt, helvetica.txf in GLTRON_HOME as defined in the
+Makefile.  By default, GLTRON_INSTALLDIR is /usr/bin and
+GLTRON_HOME is /usr/share/games/gltron.
+
+gltron will look for the following files:
+
+gltron.it (only if compiled with sound)
+settings.txt menu.txt gltron.sgi gltron_floor.sgi gltron_wall.sgi
+xenotron.ftx xenotron.0.sgi xenotron.1.sgi t-u-low.obj tron.mtl
+
+If the environment variable GLTRON_HOME is defined, it will look
+there first, ./ second, /usr/share/games/gltron third and at last in
+/usr/local/share/games/gltron. If you do a make install and have changed
+GLTRON_HOME, you _must_ set the GLTRON_HOME environment variable.
+
+You might also want to put the GLTRON_HOME environment variable into
+your ~/.profile (bash) or ~/.tcshrc (tcsh).
+
+Start gltron with the -s option if you don't want the sound playing.
+
+These instructions are very brief. I'd be glad if someone could write
+them better.

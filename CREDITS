@@ -1,0 +1,29 @@
+gltron is written by Andreas Umbach and released under the
+GNU General Public License
+
+'Revenve of Cats' is copyright by Peter Hajba <skaven@remedy.fi>
+
+Thanks to
+
+Xavier Bouchoux, Mike Field, Steve Baker, Jean-Bruno Richard,
+Andrey Zahkhatov, Bjonar Henden, Shaul Kedem, Darrell Walisser,
+Jonas Gustavsson for sending in patches, doing ports, pointing out bugs,
+giving valuable tips etc.
+
+Special Thanks to Thomas Flynn for cleaning up with version 0.47,
+doing a proper Makefile / install, providing the rpm.spec etc. etc.
+I hope I didn't mess it all up with 0.50
+
+Thanks to Peter Hajba for the song 'Revenge of Cats'. More stuff on his
+homepage at http://isis.yok.utu.fi/~skaven/music.html
+
+Thanks to Jonas Gustavsson for the experimental low-poly lightcycle
+model.
+
+Thanks to everyone else who commented on the game. It would not have
+been possible without your feedback.
+
+If you think your name should be mentioned here, please tell me. Maybe
+I just forgot about you.
+
+Andreas Umbach <marvin@dataway.ch>

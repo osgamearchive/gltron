@@ -1,0 +1,185 @@
+# Menu File
+# Format: 
+#  first line: 1 (there is only one menu tree currently)
+#  then: menu entry
+#  a menu entry consists of three lines
+#  - number of entries in the menu (always 0 for normal entries)
+#  - menu code
+#  - menu caption
+
+# if the menu code is 'xsub', the menu contains a submenu (i.e. has
+# no action). The entry is followed by the submenu description (i.e. more
+# menu entries)
+
+1
+
+# Root Menu - Game / Audio / Video / Quit
+4
+Root
+Root
+
+# Game Submenu - Start Game / Game Settings / Configure Players
+# 2 (chooseModel)
+3
+xsub
+Game
+
+0
+xreset
+Start Game
+
+7
+xsub
+Game Settings
+
+0
+stl_0_4_game_speed
+Game speed:  %s
+
+0
+sti_fast_finish
+Fast Finish          - %s
+
+0
+sti_erase_crashed
+Erase dead players   - %s
+
+0
+sti_turn_cycle
+Cycle turns smooth   - %s
+
+0
+sti_show_2d
+Show 2D map          - %s
+
+0
+sti_show_ai_status
+Show AI status       - %s
+
+0
+xp__resetScores
+Reset Scores
+
+4
+xsub
+Configure Players (bots)
+
+0
+sti_ai_player1
+Player 1 - %s
+
+0
+sti_ai_player2
+Player 2 - %s
+
+0
+sti_ai_player3
+Player 3 - %s
+
+0
+sti_ai_player4
+Player 4 - %s
+
+# 0
+# xc_chooseModel
+# Choose Model (not implemented)
+
+# Audio Submenu (1 entry)
+2
+xsub
+Audio
+
+0
+sti_playMusic
+Music         - %s
+
+0
+sti_playEffects
+Sound Effects - %s
+
+# Video Submenu (4 entries)
+# Display Options / Misc Options / Status Information / Change Resolution
+4
+xsub
+Video
+
+# Options Submenu (8 entries)
+8
+xsub
+Display Options
+
+0
+sti_windowMode
+Window Mode        - %s
+0
+sti_use_mipmaps
+Use MipMaps        - %s
+0
+sti_show_floor_texture
+Floor Texture      - %s
+0
+sti_show_wall
+Wall Texture       - %s
+0
+sti_show_alpha
+Alpha Blending     - %s
+0
+sti_show_glow
+Halos              - %s
+0
+sti_show_model
+Show Lightcycles   - %s
+0
+sti_show_crash_texture
+Show crash texture - %s
+
+# Misc Options Sub Menu
+2
+xsub
+Misc Options
+
+0
+sti_mouse_warp
+Capture mouse  - %s
+0
+sti_model_backwards
+Lightcycle backwards - %s
+
+# Status information sub menu
+2
+xsub
+Status Information
+0
+sti_show_fps
+Show FPS counter          - %s
+0
+sti_show_ai_status
+Show AI status            - %s
+
+# Change Resolution sub menu
+6
+xsub
+Change Resolution
+0
+xv320x240
+320 x 240
+0
+xv400x300
+400 x 300
+0
+xv512x384
+512 x 384
+0
+xv640x480
+640 x 480
+0
+xv800x600
+800 x 600
+0
+xv1024x768
+1024 x 768
+
+# Quit entry (saves settings)
+0
+xquit
+Quit
