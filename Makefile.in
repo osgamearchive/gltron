@@ -30,6 +30,7 @@ CFILES = \
 	file.c \
 	model.c \
 	modelgraphics.c \
+	screenshot.c \
 	mtllib.c \
 	geom.c \
 	system.c \
