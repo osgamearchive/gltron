@@ -105,3 +105,53 @@ void unload_png_texture(png_texture *tex) {
   free(tex->data);
   free(tex);
 }
+
+#define TARGET(X, Y, I) (mip->data + I + mip->channels * (X + Y * mip->width))
+#define SOURCE(X, Y, I) (source->data + I + \
+			 source->channels * (X + Y * source->width))
+
+png_texture* mipmap_png_texture(png_texture *source, int level, 
+		    int clamp_u, int clamp_v) {
+  png_texture *mip;
+  int i;
+  int x, y;
+  int fx, fy;
+
+  if(level != 1) return NULL;
+  mip = (png_texture*) malloc(sizeof(png_texture));
+  mip->channels = source->channels;
+  fx = (source->width > 1) ? 2 : 1;
+  fy = (source->height > 1) ? 2 : 1;
+			  
+  mip->width = source->width / fx;
+  mip->height = source->height / fy;
+  mip->data = (unsigned char*) malloc(mip->width * mip->height *
+				      mip->channels);
+
+  /* simple linear filtering */
+  for(i = 0; i < mip->channels; i++) {
+    for(y = 0; y < mip->height; y++) {
+      for(x = 0; x < mip->width; x++) {
+	/*
+	*( TARGET(x, y, i) ) = ( *( SOURCE(x * fx, y * fy, i) )  +
+				 *( SOURCE((x + 1) * fx, (y + 1) * fy, i) ) +
+				 *( SOURCE((x + 1) * fx, y * fy, i) ) + 
+				 *( SOURCE(x * fx, (y + 1) * fy, i) ) ) / 4;
+				 */
+	int sx, sy, xoff, yoff;
+	sx = fx * x;
+	sy = fy * y;
+	xoff = fx - 1;
+	yoff = fy - 1;
+
+	*( mip->data + i + mip->channels * ( x + y * mip->width ) ) =
+	  ( *( source->data + i + source->channels * ( sx + sy * source->width) ) +
+	    *( source->data + i + source->channels * ( sx + xoff + sy * source->width) ) +
+	    *( source->data + i + source->channels * ( sx + xoff + (sy + yoff) * source->width) ) +
+	    *( source->data + i + source->channels * ( sx + (sy + yoff) * source->width) ) ) / 4;
+
+      }
+    }
+  }
+  return mip;
+}
