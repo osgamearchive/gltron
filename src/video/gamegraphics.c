@@ -410,10 +410,14 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	float up[3] = { 0, 0, 1 };
 	Visual *d = & pV->display;
 	
-	float reflectivity = getSettingf("reflection");
-	if(reflectivity < 0)
-		reflectivity = getVideoSettingf("reflection");
-  
+  float reflectivity = getSettingf("reflection");
+  if(reflectivity < 0)
+    reflectivity = getVideoSettingf("reflection");
+
+  // need stencil for reflections
+  if(gSettingsCache.use_stencil == 0)
+	  reflectivity = 0;
+
   glColor3f(0.0, 1.0, 0.0);
 	
   glMatrixMode(GL_PROJECTION);
