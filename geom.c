@@ -2,6 +2,14 @@
 
 #include <math.h>
 
+float length2(float *v) {
+  return sqrt(v[0] * v[0] + v[1] * v[1]);
+}
+
+float length3(float *v) {
+  return length(v);
+}
+
 float length(float *v) {
 	return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }

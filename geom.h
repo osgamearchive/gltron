@@ -3,7 +3,10 @@
 #ifndef GEOM_H
 #define GEOM_H
 
-float length(float *v);
+
+float length2(float *v);
+float length3(float *v);
+// deprecated float length(float *v);
 void normalize(float *v);
 void crossprod(float *v1, float *v2, float *out);
 void normcrossprod(float *v1, float *v2, float *out);
