@@ -94,7 +94,7 @@ void Sound_initTracks() {
   int i;
 
   music_path = getDirectory( PATH_MUSIC );
-  soundList = readDirectoryContents(music_path, SONG_PREFIX);
+	soundList = readDirectoryContents(music_path, NULL);
   if(soundList->next == NULL) {
     fprintf(stderr, "no music files found...exiting\n");
     exit(1); // FIXME: handle missing songs somewhere else
