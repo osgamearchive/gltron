@@ -145,6 +145,14 @@ namespace Sound {
     fShift = 
       (USOUND + ( vListenerVelocity * vTarget ) / vTarget.Length() ) / 
       (USOUND + ( vSourceVelocity * vTarget ) / vTarget.Length() );
+		if(fShift < 0.5) {
+			printf("clamping fShift from %.2f to 0.5\n", fShift);
+			fShift = 0.5f;
+		}
+		if(fShift > 1.5) {
+			printf("clamping fShift from %.2f to 1.5\n", fShift);
+			fShift = 1.5f;
+		}
 
     /* done doppler */
   }
@@ -154,11 +162,11 @@ namespace Sound {
 
     if(_source->IsPlaying()) {
       int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
-      float pan, shift, vol;
+      float pan = 0, shift = 1.0f, vol = 1.0f;
       int clen, shifted_len;
 
       GetModifiers(pan, vol, shift);
-      // printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
+      // printf("received: volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
 
       shifted_len = 4 * fxComputeShiftLen( shift, len / 4 );
       clen = MAX(len, shifted_len) + 32; // safety distance
@@ -189,14 +197,3 @@ namespace Sound {
     return 0; // didn't mix anything to the stream
   }
 }
-
-
-
-
-
-
-
-
-
-
-
