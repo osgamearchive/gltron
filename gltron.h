@@ -300,7 +300,7 @@ extern void initGameStructures();
 extern void initGameScreen();
 extern void defaultDisplay(int n);
 extern void cycleDisplay(int p);
-extern void doTrail(line *t, int value);
+extern void doTrail(Line *t, int value);
 extern void fixTrails();
 extern void clearTrails(Data *data);
 
@@ -434,10 +434,10 @@ extern void doTrails(Player *p);
 extern void drawTrailShadow(Player *p);
 extern void drawTrailQuadBow(Player *p, int *q);
 extern void drawTrailsWithQuadBuf(Player *p_eye);
-extern float getSegmentUV(line *line);
-extern float getSegmentEndUV(line *line, Data *data);
-extern float getSegmentEndX(line *line, Data *data, int type);
-extern float getSegmentEndY(line *line, Data *data, int type);
+extern float getSegmentUV(Line *line);
+extern float getSegmentEndUV(Line *line, Data *data);
+extern float getSegmentEndX(Line *line, Data *data, int type);
+extern float getSegmentEndY(Line *line, Data *data, int type);
 extern void checkQuad2D(char *flags, int q, int n);
 
 /* clip.c */

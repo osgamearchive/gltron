@@ -164,7 +164,7 @@ void drawDebugLines(gDisplay *d) {
   int i;
   Player *p;
   Data *data;
-  line *line;
+  Line *line;
   int size;
   float scale;
 

@@ -133,9 +133,9 @@ typedef struct Game2 {
   Input input;
 } Game2;
   
-typedef struct line {
+typedef struct Line {
   int sx, sy, ex, ey;
-} line;
+} Line;
 
 typedef struct fontbmp {
   int texwidth; /* texture width */
@@ -179,8 +179,8 @@ typedef struct Data {
   float speed; /* set to -1 when dead */
   float trail_height; /* countdown to zero when dead */
   float exp_radius; /* explosion of the cycle model */
-  line *trails;
-  line *trail; /* current trail */
+  Line *trails;
+  Line *trail; /* current trail */
 } Data;
 
 enum { 

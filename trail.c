@@ -11,7 +11,7 @@ static float normal2[] = { 0.0, 1.0, 0.0 };
    specified (eye) point
    the z component is ignored
  */
-float getDist(line *ln, float* eye) {
+float getDist(Line *ln, float* eye) {
 
   float n[2];
   float tmp[2];
@@ -37,7 +37,7 @@ float getDist(line *ln, float* eye) {
 
 float dists[] = { BOW_DIST2, BOW_DIST3, BOW_DIST1, 0 };
 
-float getSegmentEndX(line *line, Data *data, int dist) {
+float getSegmentEndX(Line *line, Data *data, int dist) {
   float tlength, blength;
 
   if(dirsX[data->dir] == 0) return data->posx;
@@ -48,7 +48,7 @@ float getSegmentEndX(line *line, Data *data, int dist) {
   return data->posx - dists[dist] * blength * dirsX[ data->dir ];
 }
 
-float getSegmentEndY(line *line, Data *data, int dist) {
+float getSegmentEndY(Line *line, Data *data, int dist) {
   float tlength, blength;
   if(dirsY[data->dir] == 0) return data->posy;
 
@@ -59,7 +59,7 @@ float getSegmentEndY(line *line, Data *data, int dist) {
 }
 
 /* getSegmentEndUV() calculates the texture coordinates for the last segment */
-float getSegmentEndUV(line *line, Data *data) {
+float getSegmentEndUV(Line *line, Data *data) {
   float tlength, blength;
   tlength = data->posx - line->sx + data->posy - line->sy;
   if(tlength < 0) tlength = -tlength;
@@ -68,7 +68,7 @@ float getSegmentEndUV(line *line, Data *data) {
 }
 
 /* getSegmentUV gets UV coordinates for an ordinary segment */
-float getSegmentUV(line *line) {
+float getSegmentUV(Line *line) {
   float tlength;
   tlength = line->ex - line->sx + line->ey - line->sy;
   if(tlength < 0) tlength = -tlength;
@@ -88,7 +88,7 @@ float getSegmentUV(line *line) {
 */
 
 void drawTrailLines(Player *p) {
-  line *line;
+  Line *line;
   float height;
 
   float *normal;
@@ -172,7 +172,7 @@ void drawTrailLines(Player *p) {
 */
 
 void drawTrailShadow(Player* p) {
-  line *line;
+  Line *line;
   float height;
   float ex, ey;
   Data *data;

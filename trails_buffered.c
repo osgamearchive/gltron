@@ -3,7 +3,7 @@
 int getTrailCount() {
   int i;
   int c = 0;
-  line *l;
+  Line *l;
   for(i = 0; i < game->players; i++) {
     l = game->player[i].data->trails;
     while(l != game->player[i].data->trail) {
@@ -67,7 +67,7 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
 }
 
 void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
-  line *ln;
+  Line *ln;
   float height;
   float uv, ex, ey;
   float normal1[] = { 1.0, 0.0, 0.0 };

@@ -61,7 +61,7 @@ void initGameStructures() { /* called only once */
     p->display = (gDisplay*) malloc(sizeof(gDisplay));
     p->ai = (AI*) malloc(sizeof(AI));
     p->data = (Data*) malloc(sizeof(Data));
-    p->data->trails = (line*) malloc(MAX_TRAIL * sizeof(line));
+    p->data->trails = (Line*) malloc(MAX_TRAIL * sizeof(Line));
     p->camera = (Camera*) malloc(sizeof(Camera));
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
@@ -336,7 +336,7 @@ void writePosition(int player) {
 }
 
 void newTrail(Data* data) {
-  line *newline;
+  Line *newline;
 
   data->trail->ex = data->iposx;
   data->trail->ey = data->iposy;
