@@ -22,6 +22,12 @@ typedef struct Grid {
   unsigned char *data;
 } Grid;
 
+/* 
+   this struct contains all the necessary parameters to define a game round
+   (except number of players)
+   any change forces a restart of the round 
+*/
+
 typedef struct RuleSet {
   int eraseCrashed;
   float speed;
