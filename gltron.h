@@ -176,6 +176,7 @@ enum {
 
 #define PAUSE_GAME_FINISHED 1
 
+#include "wtypes.h"
 #ifdef __NETWORK__
 #include <SDL_net.h>
 #include "protocol.h"
@@ -224,6 +225,7 @@ extern Mesh* recognizer;
 /* extern TexFont *txf; */
 extern fonttex *gameFtx;
 extern fonttex *guiFtx;
+extern fonttex *netFtx;
 extern int fontID;
 #define MAX_FONTS 17
 

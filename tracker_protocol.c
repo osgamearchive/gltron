@@ -231,6 +231,7 @@ make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
 
   packet.time  = SystemGetElapsedTime();
   packet.which = which;
+  slots[packet.which].ping=0;
 
   /* SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT); */
 /*   SDLNet_UDP_Bind(udpsock, 0, &udppacket->address); */
@@ -270,8 +271,11 @@ reply_ping()
 /*   SDLNet_UDP_Bind(udpsock, ++c, &address); */
 /*   SDLNet_UDP_Send(udpsock, c, udppacket); */
 /*   udppacket->address.port=23481; */
-  SDLNet_UDP_Bind(udpsock, ++c, &udppacket->address);
-  SDLNet_UDP_Send(udpsock, c, udppacket);
+  //SDLNet_UDP_Bind(udpsock, ++c, &udppacket->address);
+  //SDLNet_UDP_Send(udpsock, c, udppacket);
+  SDLNet_UDP_Bind(udpsock, 1, &udppacket->address);
+  SDLNet_UDP_Send(udpsock, 1, udppacket);
+  SDLNet_UDP_Unbind(udpsock, 1);
 }
 
 void

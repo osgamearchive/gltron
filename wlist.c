@@ -41,7 +41,7 @@ new_wlist( int x, int y, int width, int height, int nblines, int nbcols, char *t
 
 
 void
-draw_wlist(Wlist *wlist)
+draw_wlist(Wlist *wlist, Trackerslots *slots)
 {
   int h = wlist->height/wlist->nblines;
   int c = wlist->width/wlist->nbcols;
@@ -80,7 +80,7 @@ draw_wlist(Wlist *wlist)
   
 
   y = wlist->y+wlist->height-h/2;
-  s = (wlist->width/wlist->height)*12;
+  s = (wlist->width/wlist->height)*9;
   for(i=0; i < wlist->nbcols; ++i)
     {
       x = wlist->x+i*c+10;
@@ -90,7 +90,7 @@ draw_wlist(Wlist *wlist)
       glVertex2d(x-10,  y+h/2 );
       glEnd();
       glColor3f(1.0, 0.0, 0.0);
-      drawText(gameFtx, x, y, s, wlist->titles[i]);
+      drawText(netFtx, x, y, s, wlist->titles[i]);
     }
 
   glColor3f(0.4, 1.0, 0.4);
@@ -101,15 +101,20 @@ draw_wlist(Wlist *wlist)
       y = wlist->y+wlist->height-(i+1)*h-h/2;
       if( wlist->lines[i] != NULL )
 	{
-	  if( i == wlist->current )
-	      glColor3f(0.4, 0.4, 1.0);
-	  else
-	      glColor3f(0.4, 1.0, 0.4);
+	  if( slots[i].packets==0 || (slots[i].ping/slots[i].packets > 400) || (strcmp(slots[i].version, VERSION) ))
+	    {
+	      glColor3f(0.7, 0.7, .7);	    
+	    } else {
+	      if( i == wlist->current )
+		glColor3f(0.4, 0.4, 1.0);
+	      else
+		glColor3f(0.4, 1.0, 0.4);
+	    }
 	  for(j=0; j< wlist->nbcols; ++j)
 	    {
 	      x = wlist->x+j*c+10;
 	      
-	      drawText(gameFtx, x, y, s, wlist->lines[i][j]);
+	      drawText(netFtx, x, y, s, wlist->lines[i][j]);
 	    }
 	  glColor3f(1.0, 1.0, 1.0);
 	  glBegin(GL_LINES);

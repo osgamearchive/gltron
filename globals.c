@@ -11,6 +11,8 @@ char messages[80];
 /* TexFont *txf = NULL; */
 fonttex *guiFtx = NULL;
 fonttex *gameFtx = NULL;
+fonttex *netFtx = NULL;
+
 int fontID = 6;
 
 Mesh* recognizer;

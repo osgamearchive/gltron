@@ -2,7 +2,7 @@
 
 static Trackerslots servers[MAX_SLOTS];
 static Wlist       *serverlist = NULL;
-
+static int nbservers = 0;
 int
 tracker_connect()
 {
@@ -18,7 +18,7 @@ tracker_connect()
 
   Net_allocsocks();
   Net_addsocket(Net_gettrackersock());
-
+  nbservers=0;
   //init pings
   init_ping(1);
 
@@ -107,6 +107,7 @@ tracker_infos(Trackerpacket *packet)
 	  ntohl(servers[which].ipaddress.host) & 0x000000ff);
 
   make_ping(which, servers, host, PINGPORT);
+  nbservers++;
   newline_wlist(serverlist, cols);
 }
 
@@ -143,7 +144,7 @@ displayTrackerScreen()
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  draw_wlist(serverlist);
+  draw_wlist(serverlist, servers);
   SystemSwapBuffers();
 }
 
@@ -151,7 +152,7 @@ void
 idleTracker()
 {
   int sockstat = socksnotready;
-  //int i;
+  int i;
   char str[255];
 
   sockstat = Net_checksocket(Net_gettrackersock());
@@ -160,13 +161,17 @@ idleTracker()
     {
       handle_ping(servers);
 	  /** */
-	  printf("%d %d\n", servers[0].ping, servers[0].packets);
-	  if( servers[0].packets > 0 )
+      for(i=0; i<nbservers; ++i)
+	{
+	  printf("%d %d\n", servers[i].ping, servers[i].packets);
+	  if( servers[i].packets > 0 )
 	    {
-	      printf("new ping is %d ( %d )\n", servers[0].ping, servers[0].packets);
-	      sprintf(str, "%d", servers[0].ping/servers[0].packets);
-	      updatecell_wlist( serverlist, str, 0, 5);
+	      printf("new ping is %d ( %d )\n", servers[i].ping, servers[i].packets);
+	      
+	      sprintf(str, "%d", servers[i].ping/servers[i].packets);
+	      updatecell_wlist( serverlist, str, i, 5);
 	    }
+	}
 	  /** */
     }
 
@@ -189,6 +194,7 @@ keyTracker(int k, int unicode, int x, int y)
 {
   char *str;
   char server[255], port[255];
+  //char *server=NULL, *port=NULL;
 
   switch(k)
     { 
@@ -209,10 +215,16 @@ keyTracker(int k, int unicode, int x, int y)
     case 13:
       //connect to the server
       str = getcell_wlist ( serverlist, getcurrent_wlist(serverlist), 0);
+      if( str == NULL )
+	return;
       printf("server %s\n", str);
+      //strcpy(server,"");
       sscanf(str, "%[.0-9]:%[.0-9]", server, port);
 /*       strcpy(game->settings->server, server); */
 /*       strcpy(game->settings->port, port); */
+      //if( !strcmp(server, "") )
+      //if(server == NULL )
+      //	return;
       setconnection(server, port);
       isConnected=0;
       isLogged=0;
