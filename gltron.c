@@ -77,7 +77,7 @@ void setupDisplay(gDisplay *d) {
 
   fprintf(stderr, "trying to splash screen\n");
   //Setup splash
-  splash = new_splash(300, 358, "gltron.png", 0);
+  splash = new_splash(358, 358, "splashscreen.png", 0);
   draw_splash( splash );
   //while(!(SDL_PollEvent(&event) && (event.type == SDL_KEYDOWN) )) { draw_splash(splash);};
   fprintf(stderr, "splash screen created\n");
