@@ -3,40 +3,47 @@ TODO list
 (name) reported it (contact for questions)
 [name] plans to fix it (contact for updates/patches)
 
-Optimizations/Cleanups [high priority]
-
 Documentation & Packaging:
+- gltron.org: FAQ, Roadmap, Contributor's options
+- innosetup: compile patch installer
 
-- apply icon to win32 version
-- decide about artpacks & sound & music included
+Bugs [high priority]:
+- joystick fixes (screenshots)
+
+Optimizations/Cleanups [high priority]
+- portable locking solution for sound idle/mix (callback must not block on os 9)
 
 Bugs [medium priority]:
 - fix gap between the top of the front fender and the wheel on the 
     lightcycle-high model
+- always hide mouse pointer when running fullscreen
 
 Features [medium priority]
+- timedemo support
+- fast-finish / insta-fininish
+- add armageddon physics mod
+- add speed boost / variable speed
 - add extra faces for spokes instead of using existing rim triangles. (todd)
 - remove space around single player view
 - fix camera zoom generally (speed / settings)
-- new bot AI
-- add speed boost / variable speed
-- Add new starting positions, e.g. 3 against one
+- new bot AI, scripted bot AI
+- add new starting positions, e.g. 3 against one
 - add screen resolution independent font rendering
+- stenciled shadow volumes
+- load cockpit model
 
 Optimizations/Cleanups [medium priority]
 
+- decent 2D overlay handling in scene management
 - seperate game from engine a bit more
 - delete the sound object in Audio_Quit to allow restarting the whole
   sound system without memory leaks
 - check various TODOs and FIXMEs in the code
-- Tune diffuse / specular materials for the lightcycle, trail & recognizers
-  [ nicolas, kokido ]
 
 Bugs [low priority]:
 
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
-- fix crash texture so it draws in front of player trails 
   
 Features [low priority]:
 
@@ -52,7 +59,6 @@ Features [low priority]:
 - quake-like drop down console
 - add slightly funny console messages (Robot ate Andi's tail)
 - quick way to restore sane camera angle (e.g. middle mouse button)
-- add armagetron style physics mod 
 - add (merge) software mouse cursor (from networking branch)
 
 Optimizations/Cleanups [low priority]
