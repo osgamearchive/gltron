@@ -51,7 +51,7 @@ void chaseCamMove() {
     } else {
       
       switch(cam->camType) {
-      case 0: /* Andi-cam */
+      case CAM_TYPE_CIRCLING: /* Andi-cam */
 	cam->cam[0] = data->posx + CAM_CIRCLE_DIST * COS(camAngle);
 	cam->cam[1] = data->posy + CAM_CIRCLE_DIST * SIN(camAngle);
 	cam->cam[2] = CAM_CIRCLE_Z;
@@ -59,7 +59,7 @@ void chaseCamMove() {
 	cam->target[1] = data->posy;
 	cam->target[2] = B_HEIGHT;
 	break;
-      case 1: /* Mike-cam */
+      case CAM_TYPE_FOLLOW: /* Mike-cam */
 	cam->target[0] = data->posx;
 	cam->target[1] = data->posy;
 	cam->target[2] = B_HEIGHT;
@@ -90,18 +90,16 @@ void chaseCamMove() {
 	  } else cam->cam[1] += dcamy;
 	}
 	break;
-      case 2: /* 1st person */
-#define H 3
+      case CAM_TYPE_COCKPIT: /* 1st person */
 	cam->target[0] = data->posx + dirsX[data->dir];
 	cam->target[1] = data->posy + dirsY[data->dir];
-	cam->target[2] = H;
+	cam->target[2] = CAM_COCKPIT_Z;
 
 	cam->cam[0] = data->posx;
 	cam->cam[1] = data->posy;
-	cam->cam[2] = H + 0.5;
-#undef H
+	cam->cam[2] = CAM_COCKPIT_Z + 0.5;
 	break;
-      case 3: /* mouse camera */
+      case CAM_TYPE_MOUSE: /* mouse camera */
 	cam->target[0] = data->posx + dirsX[data->dir];
 	cam->target[1] = data->posy + dirsY[data->dir];
 	cam->target[2] = B_HEIGHT;
