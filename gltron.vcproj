@@ -21,10 +21,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./src/include,./nebu/include"
+				AdditionalIncludeDirectories="./src/include,./nebu/include,./lua/include"
 				PreprocessorDefinitions="_WINDOWS,PREF_DIR=\&quot;.\&quot;,SNAP_DIR=\&quot;\&quot;,DATA_DIR=\&quot;\&quot;,LOCAL_DATA=\&quot;\&quot;,SEPARATOR=&apos;\\&apos;,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;,SEPERATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Debug/gltron.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib opengl32.lib SDLmaind.lib sdl.lib libpng.lib zlib.lib sdl_sound.lib libcmtd.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib opengl32.lib SDLmaind.lib sdl.lib libpng.lib libz.lib sdl_sound.lib msvcrtd.lib"
 				OutputFile=".\Debug/gltron.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -56,7 +56,7 @@
 				TypeLibraryName=".\Debug/gltron.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy Debug\gltron.exe gltron.exe"/>
+				CommandLine="copy Debug\gltron.exe bin\gltron-debug.exe"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -98,7 +98,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib opengl32.lib SDLmain.lib sdl.lib libpng.lib zlib.lib sdl_sound.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib opengl32.lib SDLmain.lib sdl.lib libpng.lib libz.lib sdl_sound.lib"
 				OutputFile=".\Release/gltron.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -331,6 +331,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="src\game\level.c">
+			</File>
+			<File
 				RelativePath=".\src\video\load_texture.c">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -440,6 +443,9 @@
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories="./src/include,./nebu/include;./lua/include;$(NoInherit)"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="levels\square.lua">
 			</File>
 			<File
 				RelativePath=".\src\game\switchCallbacks.c">
@@ -561,6 +567,9 @@
 			</File>
 			<File
 				RelativePath=".\src\include\game\game_data.h">
+			</File>
+			<File
+				RelativePath="src\include\game\game_level.h">
 			</File>
 			<File
 				RelativePath=".\src\include\game\gltron.h">

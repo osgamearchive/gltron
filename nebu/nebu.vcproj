@@ -68,7 +68,7 @@
 				AdditionalIncludeDirectories="./include"
 				PreprocessorDefinitions="_LIB,WIN32,_DEBUG,VERSION=\&quot;0.63alpha1\&quot;"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Debug/nebu.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -309,6 +309,9 @@
 			</File>
 			<File
 				RelativePath=".\include\video\nebu_light.h">
+			</File>
+			<File
+				RelativePath="include\base\nebu_math.h">
 			</File>
 			<File
 				RelativePath=".\include\base\nebu_matrix.h">
