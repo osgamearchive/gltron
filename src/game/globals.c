@@ -18,9 +18,8 @@ SettingsCache gSettingsCache;
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 
 /* TexFont *txf = NULL; */
-FontTex *guiFtx = NULL;
-FontTex *gameFtx = NULL;
-int fontID = 6;
+nebu_Font *guiFtx = NULL;
+nebu_Font *gameFtx = NULL;
 
 gltron_Mesh* recognizer_quad;
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
