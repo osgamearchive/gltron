@@ -25,7 +25,8 @@ void initClientData() {
 	   colors_model_specular[i], sizeof( float[4] ));
     memcpy(game->player[i].pColorAlpha, colors_trail_diffuse[i], sizeof( float[4] ));
 #ifdef SOUND
-    Audio_StartEngine(i);
+    if( game->player[i].data->speed > 0)
+      Audio_StartEngine(i);
 #endif
   }
 }
