@@ -304,7 +304,7 @@ Menu = {
 		left = previousLevel,
 		action = nextLevel,
 		read = function()
-			_,_,name = strfind(tmp.current_level, "(.*)%..+")
+			_,_,name = string.find(tmp.current_level, "(.*)%..+")
 			if name then
 				return name
 			else
@@ -551,7 +551,7 @@ Menu = {
       left = function() previousTrack(); end,
       action = function() nextTrack(); end,
       read = function()
-								_,_,name = strfind(settings.current_track, "(.*)%..+")
+								_,_,name = string.find(settings.current_track, "(.*)%..+")
 								if name then
 									 return name
 								else
