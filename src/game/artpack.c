@@ -53,6 +53,9 @@ void reloadArt() {
   printf("[status] reloading art\n");
   deleteTextures(gScreen);
   loadArt();
+
+	video_FreeLevel(gWorld);
+	gWorld = video_CreateLevel();
 }
     
 
