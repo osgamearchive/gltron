@@ -12,7 +12,8 @@ extern "C" {
 
 #define BUF_SIZE 120
 
-#include <GL/gl.h>
+#include "SDL_opengl.h"
+// #include <GL/gl.h>
 
 #include "Nebu_base.h"
 #include "Nebu_filesystem.h"
