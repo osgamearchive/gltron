@@ -12,6 +12,7 @@ void initGameStructures() { /* called only once */
   /* default art names */
   char artpack_name[] = "TRON style";
   char artpack_path[] = "default";
+  char *path;
   /* init game screen */
   /* init players. for each player: */
   /*   init model */
@@ -59,6 +60,8 @@ void initGameStructures() { /* called only once */
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (line*) malloc(MAX_TRAIL * sizeof(line));
     p->camera = (Camera*) malloc(sizeof(Camera));
+    p->camera->movement = (CameraMovement*) malloc(sizeof(CameraMovement));
+    p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
     /* init model & display & ai */
     initModel(p, i);
@@ -83,6 +86,19 @@ void initGameStructures() { /* called only once */
     ai->lastx = 0;
     ai->lasty = 0;
   }
+
+  /* load recognizer model */
+  path = getFullPath("recognizer.obj");
+  if(path != NULL)
+    // recognizer = loadModel(path, RECOGNIZER_HEIGHT, 0);
+    // recognizer = loadModel(path, 60, MODEL_NORMALIZE | MODEL_INVERT_NORMALS);
+    recognizer = loadModel(path, 60, MODEL_NORMALIZE );
+  else {
+    printf("fatal: could not load recognizer - exiting...\n");
+    exit(1);
+  }
+  free(path);
+
 
   changeDisplay();
 
