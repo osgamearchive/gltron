@@ -81,6 +81,31 @@ void exitGame() {
 #endif
 }
 
+void initModel(Player *p) {
+  // load player mesh, currently only one type
+  path = getFullPath("t-u-low.obj");
+  // path = getFullPath("tron-med.obj");
+  if(path != 0)
+    // model size == CYCLE_HEIGHT
+    p->model->mesh = loadModel(path, CYCLE_HEIGHT, 0);
+  else {
+    printf("fatal: could not load model - exiting...\n");
+    exit(1);
+  }
+    
+  free(path);
+
+    /* copy contents from colors_a[] to model struct */
+  for(j = 0; j < 4; j++) {
+    p->model->color_alpha[j] = colors_alpha[i][j];
+    p->model->color_trail[j] = colors_trail[i][j];
+    p->model->color_model[j] = colors_model[i][j];
+  }
+  // set material 0 to color_model
+  setMaterialAmbient(p->model->mesh, 0, p->model->color_model);
+  setMaterialDiffuse(p->model->mesh, 0, p->model->color_model);
+}
+
 void initGameStructures() { /* called only once */
   /* init game screen */
   /* init players. for each player: */
@@ -124,29 +149,7 @@ void initGameStructures() { /* called only once */
     p->camera = (Camera*) malloc(sizeof(Camera));
 
     // init model & display & ai
-
-    // load player mesh, currently only one type
-    path = getFullPath("t-u-low.obj");
-    // path = getFullPath("tron-med.obj");
-    if(path != 0)
-      // model size == CYCLE_HEIGHT
-      p->model->mesh = loadModel(path, CYCLE_HEIGHT, 0);
-    else {
-      printf("fatal: could not load model - exiting...\n");
-      exit(1);
-    }
-    
-    free(path);
-
-    /* copy contents from colors_a[] to model struct */
-    for(j = 0; j < 4; j++) {
-      p->model->color_alpha[j] = colors_alpha[i][j];
-      p->model->color_trail[j] = colors_trail[i][j];
-      p->model->color_model[j] = colors_model[i][j];
-    }
-    // set material 0 to color_model
-    setMaterialAmbient(p->model->mesh, 0, p->model->color_model);
-    setMaterialDiffuse(p->model->mesh, 0, p->model->color_model);
+    initModel(p);
 
     ai = p->ai;
     ai->active = (i == 0 && game->settings->screenSaver == 0) ? -1 : 1;

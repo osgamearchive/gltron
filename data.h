@@ -19,7 +19,10 @@ typedef struct line {
 } line;
 
 typedef struct Model {
-  Mesh* mesh; /* model */
+  Mesh **mesh; /* models (lod) */
+  int lod; /* number of models */
+  int *lod_dist;
+  
   float color_alpha[4]; /* alpha trail */
   float color_trail[4]; /* solid edges of trail */
   float color_model[4]; /* model color */

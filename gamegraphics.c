@@ -160,6 +160,7 @@ void drawCycle(Player *p) {
      neigung_dir = 1.0;
   }
 
+  /* TODO: decide on LOD */
   cycle = p->model->mesh;
     
   glPushMatrix();
