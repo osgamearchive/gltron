@@ -197,7 +197,6 @@ Menu = {
 
    -- Video
 
-   -- Texture
    Artpack = {
       type = MenuC.type.slider, caption = "Artpack",
       right = nextArtpack,
@@ -205,57 +204,17 @@ Menu = {
       action = nextArtpack,
       read = function() return settings.current_artpack; end
    },
-   Floor = {
-      type = MenuC.type.list, caption = "Floor texture",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.show_floor_texture; end,
-      store = function(value) settings.show_floor_texture = value; end
-   },
-   Wall = {
-      type = MenuC.type.list, caption = "Wall texture",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.show_wall; end,
-      store = function(value) settings.show_wall = value; end
-   },
-   Skybox = {
-      type = MenuC.type.list, caption = "Skybox texture",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.show_skybox; end,
-      store = function(value) settings.show_skybox = value; end
-   },
-   Decals = {
-      type = MenuC.type.list, caption = "Trail decals",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.show_decals; end,
-      store = function(value) settings.show_decals = value; end
-   },
-   Mipmaps = {
-      type = MenuC.type.list, caption = "Use mipmaps",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.use_mipmaps; end,
-      store = function(value) settings.use_mipmaps = value; end
-   },
+	 -- Details
    Filtering = {
       type = MenuC.type.list, caption = "Mipmap filter",
-      labels = { "bilinear", "trilinear" },
-      values = { 0, 1 },
+      labels = { "nearest", "linear", "mipmap", "trilinear" },
+      values = { 0, 1, 2, 3 },
       read = function() return settings.mipmap_filter; end,
-      store = function(value) settings.mipmap_filter = value; end
+      store = function(value) 
+								 settings.mipmap_filter = value
+								 c_reloadArtpack()
+							end
    },
-   WallScaling = {
-      type = MenuC.type.list, caption = "Wall Scaling",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.stretch_textures; end,
-      store = function(value) settings.stretch_textures = value; end
-   },
-
-   -- Detail
    AlphaTrails = {
       type = MenuC.type.list, caption = "Transparent trails",
       labels = { "off", "on" },
@@ -284,26 +243,12 @@ Menu = {
       read = function() return settings.show_recognizer; end,
       store = function(value) settings.show_recognizer = value; end
    },
-   ImpactAnimation = {
-      type = MenuC.type.list, caption = "Impact Animation",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.show_impact; end,
-      store = function(value) settings.show_impact = value; end
-   }, 
-   CycleLod = {
-      type = MenuC.type.list, caption = "Cycle LOD",
+   Lod = {
+      type = MenuC.type.list, caption = "Cycle Detail",
       labels = { "ugly", "low", "high", "ultra-high" },
       values = { 3, 2, 1, 0 },
       read = function() return settings.lod; end,
       store = function(value) settings.lod = value; end
-   },
-   ShadowLod = {
-      type = MenuC.type.list, caption = "Shadow LOD",
-      labels = { "normal", "high" },
-      values = { 0, 1 },
-      read = function() return settings.shadow_lod; end,
-      store = function(value) settings.shadow_lod = value; end
    },
    ShadowStyle = {
       type = MenuC.type.list, caption = "Shadow Type",
@@ -312,6 +257,7 @@ Menu = {
       read = function() return settings.use_stencil; end,
       store = function(value) settings.use_stencil = value; c_video_restart(); end
    },
+	 -- Status Display
    FPS_Counter = {
       type = MenuC.type.list, caption = "FPS counter",
       labels = { "off", "on" },
@@ -423,10 +369,14 @@ Menu.SetParent = function ( menu )
 										-- script_print("processing menu '" .. menu .. "'")
 										local _,entry
 										for _,entry in Menu[menu].items do
-											 Menu[entry].parent = menu
-											 -- script_print("processing item '" .. entry .. "'")
-											 if Menu[entry].type == MenuC.type.menu then
-													Menu.SetParent( entry )
+											 if Menu[entry] == nil then
+													script_print("menu '" .. entry .. "' does not exist")
+											 else 
+													Menu[entry].parent = menu
+													-- script_print("processing item '" .. entry .. "'")
+													if Menu[entry].type == MenuC.type.menu then
+														 Menu.SetParent( entry )
+													end
 											 end
 										end
 								 end
@@ -516,20 +466,16 @@ Menu.Player2_KeyMenu.items = { "Player2_Left", "Player2_Right" }
 Menu.Player3_KeyMenu.items = { "Player3_Left", "Player3_Right" }
 Menu.Player4_KeyMenu.items = { "Player4_Left", "Player4_Right" }
 
-Menu.VideoMenu.items = { 
-	 "TextureMenu", "DetailsMenu", 
+Menu.VideoMenu.items = {
+	 "Artpack", "DetailsMenu", 
 	 "ScreenMenu", "TimeDemo" 
 }
 
-Menu.TextureMenu.items = { 
-   "Artpack", "Floor", "Wall", "Skybox", 
-   "Decals", "Mipmaps", "Filtering", "WallScaling"
-}
 Menu.DetailsMenu.items = {
-   "AlphaTrails", "Halos",
+   "Filtering", "AlphaTrails", "Halos",
     -- "Lightcycles",
-    "Recognizer", "ImpactAnimation", 
-   "CycleLod", "ShadowLod", "ShadowStyle", "FPS_Counter", "AI_Status", "Scores"
+    "Recognizer", "Lod", 
+	 "ShadowStyle", "FPS_Counter", "AI_Status", "Scores"
 }
 Menu.ScreenMenu.items = {
    "_320x240", "_512x384", "_640x480", "_800x600", "_1024x768", "_1280x1024",
