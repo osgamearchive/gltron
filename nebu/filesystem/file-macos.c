@@ -1,12 +1,5 @@
-#include "file.h"
 
-#include <assert.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <limits.h>
-#include <unistd.h>
 
 
 /* fopen() in MacOS on a directory returns NULL, here is a better solution */
