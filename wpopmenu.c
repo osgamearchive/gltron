@@ -143,7 +143,7 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
     {
       x=wpopmenu->x+10;
       y=wpopmenu->y+4;
-      drawText(gameFtx, x, y, wpopmenu->height-8, wpopmenu->title);
+      drawText(netFtx, x, y, wpopmenu->height-8, wpopmenu->title);
     }
 
   //Draw the closed box
@@ -204,7 +204,7 @@ draw_wpopmenu(Wpopmenu *wpopmenu, int active)
     }
 
   // s = wpopmenu->height-8;
-  s = 7*wpopmenu->width/200;;
+  s = 8*wpopmenu->width/200;;
 
     glColor3f(1.0, 1.0, 1.0);
   //Draw current value

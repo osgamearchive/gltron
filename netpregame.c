@@ -632,7 +632,7 @@ void changeGameType( Wpopmenu *wpopmenu )
     case 0:
       if( type == oldType )
 	return;
-      setTitle_wpopmenu(pregame.gameRule, "Nb Rounds   ");
+      setTitle_wpopmenu(pregame.gameRule, "Nb Rounds");
       select_wpopmenu(pregame.gameRule, netrulenbwins/5-1 );
       netruletime=0;
       netrulenbwins=5;
@@ -640,7 +640,7 @@ void changeGameType( Wpopmenu *wpopmenu )
     case 1:
       if( type == oldType )
 	return;
-      setTitle_wpopmenu(pregame.gameRule, "Time ( mins )");
+      setTitle_wpopmenu(pregame.gameRule, "Time     ");
       select_wpopmenu(pregame.gameRule, netruletime/5-1 );
       netrulenbwins=5;
       netruletime=5;
@@ -855,7 +855,7 @@ void initPregame() {
   //Settings now
 
   //game type
-  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Game Type   ", changeGameType);
+  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Game Type", changeGameType);
   addchoice_wpopmenu(pregame.gameType, "Rounds", 0 );
   addchoice_wpopmenu(pregame.gameType, "Time",  1 );
   select_wpopmenu(pregame.gameType, 0 );
@@ -864,7 +864,7 @@ void initPregame() {
 
 
   //Game Rules
-  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Nb Rounds   ", changeGameRule);
+  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Nb Rounds", changeGameRule);
   addchoice_wpopmenu(pregame.gameRule, "5",   0 );
   addchoice_wpopmenu(pregame.gameRule, "10",  1 );
   addchoice_wpopmenu(pregame.gameRule, "15",  2 );
@@ -878,7 +878,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.erase, WcheckBox);
 
   //Speed
-  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Speed       ", changeSpeed);
+  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Speed    ", changeSpeed);
   addchoice_wpopmenu(pregame.speed, speed_list[0],  0 );
   addchoice_wpopmenu(pregame.speed, speed_list[1],  1 );
   addchoice_wpopmenu(pregame.speed, speed_list[2],  2 );
@@ -887,7 +887,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.speed, WpopupMenu);
 
   //Size
-  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Size        ", changeSize);
+  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Size     ", changeSize);
   addchoice_wpopmenu(pregame.size, arena_list[0],  0 );
   addchoice_wpopmenu(pregame.size, arena_list[1],  1 );
   addchoice_wpopmenu(pregame.size, arena_list[2],  2 );
@@ -897,7 +897,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.size, WpopupMenu);
 
   //Level
-  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 10*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "AI level    ", changeLevel);
+  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 10*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "AI level ", changeLevel);
   addchoice_wpopmenu(pregame.level, ai_list[0],  0 );
   addchoice_wpopmenu(pregame.level, ai_list[1],  1 );
   addchoice_wpopmenu(pregame.level, ai_list[2],  2 );

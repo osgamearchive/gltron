@@ -37,7 +37,7 @@ draw_wcheckbox( Wcheckbox *wcheckbox, int active )
 
   x=wcheckbox->x+10;
   y=wcheckbox->y+4;
-  drawText(gameFtx, x, y, wcheckbox->height-8, wcheckbox->title);
+  drawText(netFtx, x, y, wcheckbox->height-8, wcheckbox->title);
 
   //Draw the little box
   //x=wcheckbox->x+(strlen(wcheckbox->title)+2)*(wcheckbox->height-8);
