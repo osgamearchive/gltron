@@ -52,8 +52,6 @@ namespace Sound {
   }
 
   void System::Idle(void) {
-    /* FIXME: remove dead sound sources */
-
 		/* idle processing */
 		list *p;
 		for(p = & _sources; p->next != NULL; p = p->next) {
