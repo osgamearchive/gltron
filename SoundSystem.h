@@ -30,12 +30,16 @@ namespace Sound {
     void AddSource(Source* source);
     Sound_AudioInfo* GetAudioInfo() { return &_info; };
     Listener& GetListener() { return _listener; };
+    void SetMixMusic(int value) { _mix_music = value; };
+    void SetMixFX(int value) { _mix_fx = value; };
 
   protected:
     SDL_AudioSpec *_spec;
     Sound_AudioInfo _info;
     Listener _listener;
     list _sources;
+    int _mix_music;
+    int _mix_fx;
   };
 
 }

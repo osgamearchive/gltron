@@ -60,6 +60,8 @@ extern "C" {
 #undef V
     }
 #endif
+    sound->SetMixMusic( getSettingi("playMusic") );
+    sound->SetMixFX( getSettingi("playEffects") );
     sound->Idle();
 
   }

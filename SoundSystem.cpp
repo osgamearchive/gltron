@@ -8,6 +8,9 @@ namespace Sound {
     _info.format = _spec->format;
     _info.rate = spec->freq;
     _info.channels = spec->channels;
+    
+    _mix_music = 1;
+    _mix_fx = 1;
   }
 
   void System::Callback(Uint8* data, int len) {
@@ -18,11 +21,9 @@ namespace Sound {
       if(s->IsPlaying()) {
 	// fprintf(stderr, "mixing source\n");
 	if(!(
-	     (s->GetType() & eSoundFX &&
-	      ! getSettingi("playEffects") ) ||
-	     (s->GetType() & eSoundMusic &&
-	       ! getSettingi("playMusic") )
-	     ))
+	     (s->GetType() & eSoundFX && ! _mix_fx ) ||
+	     (s->GetType() & eSoundMusic && ! _mix_music) )
+	   )
 	     s->Mix(data, len);
 	// fprintf(stderr, "done mixing\n");
       }
