@@ -1,4 +1,8 @@
-#include "gltron.h"
+// #include "gltron.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SEPERATOR '/'
 
 /* #ifdef UNIX */
 static char *share1 = "/usr/share/games/gltron";
