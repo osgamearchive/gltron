@@ -8,6 +8,7 @@ void GameMode_Idle() {
 	Game_Idle();
 	Video_Idle();
 	Scripting_Idle();
+	SystemPostRedisplay();
 }
 
 void enterGame() { /* called when game mode is entered */
