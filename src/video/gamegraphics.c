@@ -406,14 +406,13 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 }
 
 void drawCam(Player *p, PlayerVisual* pV) {
-  int i;
-  float up[3] = { 0, 0, 1 };
+	int i;
+	float up[3] = { 0, 0, 1 };
+	Visual *d = & pV->display;
 	
 	float reflectivity = getSettingf("reflection");
 	if(reflectivity < 0)
 		reflectivity = getVideoSettingf("reflection");
-
-	Visual *d = & pV->display;
   
   glColor3f(0.0, 1.0, 0.0);
 	
