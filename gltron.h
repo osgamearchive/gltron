@@ -104,8 +104,8 @@ extern void loadArt(void);
 extern void reloadArt(void);
 
 /* graphics libs */
-#include "extgl.h"
-// #include <GL/gl.h>
+// #include "extgl.h"
+#include <GL/gl.h>
 // #include <GL/glext.h>
 
 /* do Sound */

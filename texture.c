@@ -40,6 +40,8 @@ void initTexture(gDisplay *d) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
+#define GL_TEXTURE_MAX_ANISOTROPY_EXT     0x84FE
+
 	if(renderer.ext_filter_anisotropic) {
 	  /* fprintf(stderr, "enabling anisotropic filtering\n"); */
 	  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
