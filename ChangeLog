@@ -1,3 +1,13 @@
+0.62 to 0.70
+
+- booster
+- wall acceleration
+- better handling of .ini file (versioning & protection against partly
+  written files)
+- simplified GUI
+- new bot AI
+
+
 0.61 to 0.62
 - better & faster shadows
 - red outlines on the recognizer

@@ -36,8 +36,7 @@ Gameplay enhancements:
 Andreas:
 
 - fast-finish / insta-fininish
-- add armageddon physics mod
-- new bot AI, scripted bot AI
+- better bot AI, scripted bot AI
 - add new starting positions, e.g. 3 against one
 
 Polish [medium priority]:
@@ -58,7 +57,6 @@ Andreas:
 - decent 2D overlay handling in scene management
 - seperate game from engine a bit more
 - check various TODOs and FIXMEs in the code
-- switch from cockpit to third person view upon death
 - fix --disable-sound issues:
   - fix configure.in
   - prevent Audio menu from crashing when compiled with --disable-sound
