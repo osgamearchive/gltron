@@ -10,9 +10,9 @@
 #define MAX_LOD_LEVEL 3
 static int lod_dist[MAX_LOD_LEVEL + 1][LC_LOD + 1] = { 
   { 1000, 1000, 1000 }, /* insane */
-  { 25, 50, 250 }, /* high */
-  { 5, 30, 200 }, /* low */
-  { 1, 5, 150 } /* ugly */
+  { 100, 200, 400 }, /* high */
+  { 30, 100, 200 }, /* low */
+  { 10, 30, 150 } /* ugly */
 };
 
 /* spoke colors */
