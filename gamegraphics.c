@@ -658,7 +658,6 @@ void doLookAt(float *cam, float *target, float *up) {
   glTranslatef( -cam[0], -cam[1], -cam[2]);
 }
 
-
 void drawCam(Player *p, gDisplay *d) {
   int i;
   float up[3] = { 0, 0, 1 };
@@ -716,7 +715,8 @@ void drawCam(Player *p, gDisplay *d) {
 	drawCycleShadow(game->player + i, lod);
       }
     }
-    drawTrailShadow(game->player + i);
+    if( game->player[i].data->trail_height > 0 )
+      drawTrailShadow(game->player + i);
   }
 
   glDepthMask(GL_TRUE);
@@ -740,7 +740,6 @@ void drawCam(Player *p, gDisplay *d) {
   glShadeModel(game->screen->shademodel);
 
   initTrailLights(0);
-
 
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonOffset(1,1);
