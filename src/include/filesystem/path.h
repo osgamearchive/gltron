@@ -13,7 +13,8 @@ enum {
   PATH_DATA,
   PATH_SCRIPTS,
   PATH_MUSIC,
-  PATH_ART
+  PATH_ART,
+	PATH_LEVEL
 };
 
 #endif

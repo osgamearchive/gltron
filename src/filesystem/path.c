@@ -22,6 +22,7 @@ static char data_dir[PATH_MAX];
 static char art_dir[PATH_MAX];
 static char music_dir[PATH_MAX];
 static char scripts_dir[PATH_MAX];
+static char level_dir[PATH_MAX];
 
 void initDirectories(void) {
   if(PREF_DIR[0] != '~')
@@ -40,11 +41,13 @@ void initDirectories(void) {
   sprintf(art_dir, ":art");
   sprintf(scripts_dir, ":scripts");
   sprintf(music_dir, ":music");
+  sprintf(level_dir, ":level");
   #else
   sprintf(data_dir, "data");
   sprintf(art_dir, "art");
   sprintf(scripts_dir, "scripts");
   sprintf(music_dir, "music");
+  sprintf(level_dir, "level");
   #endif
 
 #else
@@ -52,6 +55,7 @@ void initDirectories(void) {
   sprintf(art_dir, "%s%c%s", DATA_DIR, SEPARATOR, "art");
   sprintf(scripts_dir, "%s%c%s", DATA_DIR, SEPARATOR, "scripts");
   sprintf(music_dir, "%s%c%s", DATA_DIR, SEPARATOR, "music");
+  sprintf(level_dir, "%s%c%s", DATA_DIR, SEPARATOR, "level");
 #endif
 
 	/*
@@ -99,6 +103,7 @@ const char* getDirectory( int eLocation ) {
   case PATH_SCRIPTS: return scripts_dir; break;
   case PATH_MUSIC: return music_dir; break;
   case PATH_ART: return art_dir; break;
+	case PATH_LEVEL: return level_dir; break;
   default:
     fprintf(stderr, "invalid path type\n");
     assert(0);
