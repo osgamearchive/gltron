@@ -158,3 +158,8 @@ nebu_Mesh* nebu_Mesh_Create(int flags, int nVertices, int nTriangles)
 	pMesh->pTriangles = (int*) malloc(3 * sizeof(int) * nTriangles);
 	return pMesh;
 }
+
+void nebu_Mesh_ComputeBBox(nebu_Mesh *pMesh, box3* box)
+{
+	box3_Compute(box, (vec3*)pMesh->pVertices, pMesh->nVertices);
+}

@@ -1,6 +1,7 @@
 #ifndef NEBU_MESH_H
 #define NEBU_MESH_H
 
+#include "base/nebu_vector.h"
 enum {
 	NEBU_MESH_POSITION    = 0x0001,
 	NEBU_MESH_NORMAL      = 0x0002,
@@ -16,7 +17,6 @@ enum {
 
 	NEBU_MESH_FLAGS = 10
 };
-
 
 typedef struct {
 	int nVertices;
@@ -38,5 +38,5 @@ void nebu_Mesh_ComputeNormals(nebu_Mesh *pMesh);
 void nebu_Mesh_ComputeTriangleNormal(nebu_Mesh *pMesh, int triangle, float* normal);
 void nebu_Mesh_Scale(nebu_Mesh *pMesh, float fScale);
 void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh);
-
+void nebu_Mesh_ComputeBBox(nebu_Mesh *pMesh, box3* box3);
 #endif
