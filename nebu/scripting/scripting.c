@@ -26,54 +26,104 @@ void scripting_Quit() {
   lua_close(L);
 }
 
-int scripting_GetFloatSetting(char *name, float *f) {
-  int status;
-  lua_getglobal(L, "settings");
-  lua_pushstring(L, name);
-  lua_gettable(L, -2);
 
-  if(lua_isnumber(L, -1)) {
-    status = 0; /* all's well */
-    *f = (float)lua_tonumber(L, -1);
-  } else
-    status = 1;
-
-  lua_pop(L, 2); /* restore stack */
-  return status;
+void showStack() {
+	int i;
+	printf("dumping stack with %d elements\n", lua_gettop(L));
+	for(i = 0; i < lua_gettop(L); i++) {
+		int type = lua_type(L, - (i+1));
+		switch(type) {
+		case LUA_TNIL: printf("nil\n"); break;
+		case LUA_TNUMBER: printf("number\n"); break;
+		case LUA_TSTRING: printf("string\n"); break;
+		case LUA_TTABLE: printf("table\n"); break;
+		case LUA_TFUNCTION: printf("function\n"); break;
+		case LUA_TUSERDATA: printf("userdata\n"); break;
+		}
+	}
 }
 
-
-int scripting_GetIntegerSetting(char *name, int *i) {
-  float f;
-  int status;
-  status = scripting_GetFloatSetting(name, &f);
-  *i = (int)f;
-  return status;
+int scripting_IsNilResult() {
+	int result = lua_isnil(L, -1);
+	lua_pop(L, 1);
+	return result;
 }
 
-int scripting_GetIntegerResult(int *i) {
-  int status;
-   if(lua_isnumber(L, -1)) {
-    status = 0; /* all's well */
-    *i = (int)lua_tonumber(L, -1);
-  } else
-    status = 1;
+int getGlobal(const char *s, va_list ap) {
+	int top = lua_gettop(L);
+	int count = 0;
+	while(s) {
+		lua_pushstring(L, s);
+		lua_gettable(L, -2);
+		count++;
+		s = va_arg(ap, char *);
+	}
+	lua_insert(L, top); /* move result to bottom */
+	lua_pop(L, count); /* restore stack */
+	return 0;
+}
 
-  lua_pop(L, 1); /* restore stack */
-  return status;
+int scripting_GetGlobal(const char *global, const char *s, ...) {
+	lua_getglobal(L, global);
+	if(s) {
+		va_list ap;
+		va_start(ap, s);
+		getGlobal(s, ap);
+		va_end(ap);
+	}
+	return 0;
+}	
+
+int scripting_SetFloat(float f, const char *name, const char *global, const char *s, ...) {
+	va_list ap;
+	
+	if(global == NULL) {
+		lua_pushnumber(L, f);
+		lua_setglobal(L, global);
+		return 0;
+	}
+	
+	lua_getglobal(L, global);
+	
+	if(s) {
+		va_start(ap, s);
+		getGlobal(s, ap);
+		va_end(ap);
+	}
+	
+	lua_pushstring(L, name);
+	lua_pushnumber(L, f);
+	lua_settable(L, -3);
+	lua_pop(L, 1);
+
+	return 0;
+}
+
+int scripting_GetFloatResult(float *f) {
+	if(lua_isnumber(L, -1)) {
+    *f = lua_tonumber(L, -1);
+		lua_pop(L, 1); /* restore stack */
+		return 0;
+	} else {
+		showStack();
+    return 1;
+	}
 }  
 
-void scripting_SetFloatSetting(char *name, float f) {
-  lua_getglobal(L, "settings");
-  lua_pushstring(L, name);
-  lua_pushnumber(L, f);
-  lua_settable(L, -3);
-  lua_pop(L, 1);
-}
+int scripting_GetIntegerResult(int *i) {
+	if(lua_isnumber(L, -1)) {
+    *i = (int)lua_tonumber(L, -1);
+		lua_pop(L, 1); /* restore stack */
+		return 0;
+	} else {
+		showStack();
+		return 1;
+	}
+}  
 
-void scripting_GetFloatArray(char *name, float *f, int n) {
+void scripting_GetFloatArrayResult(float *f, int n) {
   int i;
-  lua_getglobal(L, name);
+	
   for(i = 0; i < n; i++) {
     lua_rawgeti(L, -1, i + 1);
     if(lua_isnumber(L, -1)) {
@@ -81,19 +131,10 @@ void scripting_GetFloatArray(char *name, float *f, int n) {
     } else {
       fprintf(stderr, "element %d is not number!\n", i);
     }
-    lua_pop(L, 1);
+    lua_pop(L, 1); /* remove number from stack */
   }
-  lua_pop(L, 1); /* restore stack */
-}
 
-int scripting_GetStringSetting(char *name, char **s) {
-  int status;
-  lua_getglobal(L, "settings");
-  lua_pushstring(L, name);
-  lua_gettable(L, -2);
-  status = scripting_GetStringResult(s);
-  lua_pop(L, 1);
-  return status;
+	lua_pop(L, 1); /* remove table from stack */
 }
 
 int scripting_GetStringResult(char **s) {
