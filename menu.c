@@ -95,18 +95,26 @@ void drawMenu(gDisplay *d) {
     }
 
       {
-	char line[200];
-	scripting_RunFormat("return "
-			    "Menu[Menu.%s.items[%d]].caption .. ': '",
-			    pMenuName, i + 1);
-	scripting_CopyStringResult(line, sizeof(line));
-	drawText(guiFtx, x, y, size, line);
-
+	char line_label[100];
+	char line_data[100];
 	scripting_RunFormat("return "			    
 			    "GetMenuValueString( Menu.%s.items[%d] )",
 			    pMenuName, i + 1);
-	scripting_CopyStringResult(line, sizeof(line));
-	drawText(guiFtx, x + max_label * size, y, size, line);
+	scripting_CopyStringResult(line_data, sizeof(line_data));
+
+	if(line_data[0] != 0)
+	  scripting_RunFormat("return "
+			      "Menu[Menu.%s.items[%d]].caption .. ': '",
+			      pMenuName, i + 1);
+	else
+	  scripting_RunFormat("return "
+			      "Menu[Menu.%s.items[%d]].caption",
+			      pMenuName, i + 1);
+
+	scripting_CopyStringResult(line_label, sizeof(line_label));
+
+	drawText(guiFtx, x, y, size, line_label);
+	drawText(guiFtx, x + max_label * size, y, size, line_data);
       }
 
     /*
