@@ -10,13 +10,16 @@ settings.debug_output = 1
 -- game
 -- game rules
 settings.speed = 8.5
+
+settings.booster_on = 1
 settings.booster_min = 1.0
 settings.booster_max = 6.5
 settings.booster_use = 1.0
 settings.booster_decrease = 0.8
 settings.booster_regenerate = 0.4
 
-settings.wall_accel_limit = 30.0
+settings.wall_accel_on = 0
+settings.wall_accel_limit = 20.0
 settings.wall_accel_use = 1.0
 settings.wall_accel_decrease = 0.8
 
