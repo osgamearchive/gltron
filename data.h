@@ -86,6 +86,7 @@ typedef struct DisplayList {
  * considered and const as they are never written back out to lua.
  */
 typedef struct SettingsCache {
+  int use_stencil;
   int show_scores;
   int show_ai_status;
   int show_2d;
