@@ -20,7 +20,6 @@ HFILES = \
 	data.h \
 	gltron.h \
 	png_texture.h \
-	fonttex.h \
 	menu.h \
 	geom.h \
 	model.h \
@@ -39,6 +38,7 @@ CFILES = \
 	game.c \
 	gltron.c \
 	gamegraphics.c \
+	light.c
 	software.c \
 	trail.c \
 	input.c \

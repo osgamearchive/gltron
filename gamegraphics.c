@@ -1,5 +1,7 @@
 #include "gltron.h"
 
+static float arena[] = { 1.0, 1.2, 1, 0.0 };
+
 void drawGame() {
   GLint i;
   gDisplay *d;
@@ -93,17 +95,14 @@ void initModelLights(int light) {
   glLightfv(light, GL_AMBIENT, amb);
   glLightfv(light, GL_SPECULAR, col);
   glLightfv(light, GL_DIFFUSE, dif);
+  
 }
 
 void initTrailLights(int light) {
-  /* float col[] = { .77, .77, .77, 1.0 }; */
-  float col[] = { .0, .0, .0, 1.0 };
-  float dif[] =  { 0.8, 0.8, 0.8, 1};
-  float amb[] = { 0.3, 0.3, 0.3, 1};
-
-  glLightfv(light, GL_AMBIENT, amb);
-  glLightfv(light, GL_SPECULAR, col);
-  glLightfv(light, GL_DIFFUSE, dif);
+  /* doing my own lighting for that now */
+  /* int light is currently ignored */
+  setFactor3fv(amb);
+  setLight4fv(arena);
 }
 
 void rebuildDebugTex() {
@@ -696,9 +695,6 @@ void drawWalls(gDisplay *d) {
 void drawCam(Player *p, gDisplay *d) {
   int i;
 
-  float arena[] = { 1.0, 1.0, 1, 0.0 };
-
-
   /* 
   if (d->fog == 1) {
     glEnable(GL_FOG);
@@ -714,7 +710,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glLightfv(GL_LIGHT0, GL_POSITION, arena);
+  /* set positions for GL lights in world coordinates */
   glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
   gluLookAt(p->camera->cam[0], p->camera->cam[1], p->camera->cam[2],
 	    p->camera->target[0], p->camera->target[1], p->camera->target[2],
@@ -724,17 +720,12 @@ void drawCam(Player *p, gDisplay *d) {
   if(game->settings->show_wall == 1)
     drawWalls(d);
 
-
   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
   glEnable(GL_COLOR_MATERIAL);
   glShadeModel(GL_SMOOTH);
-  initTrailLights(GL_LIGHT0);
-  glDisable(GL_LIGHT1);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_LIGHTING);
+  initTrailLights(0);
   for(i = 0; i < game->players; i++)
     drawTraces(&(game->player[i]), d);
-  glDisable(GL_LIGHTING);
 
   drawPlayers(p);
 
@@ -788,7 +779,6 @@ void drawPause(gDisplay *display) {
   drawText(gameFtx, display->vp_w / 6, 20, 
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
 }
-
 
 void initGLGame() {
   glShadeModel( game->screen->shademodel );

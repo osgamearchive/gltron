@@ -12,6 +12,7 @@ void drawTraces(Player *p, gDisplay *d) {
   float normal1[] = { 1.0, 0.0, 0.0 };
   float normal2[] = { 0.0, 1.0, 0.0 };
   float *normal;
+  float color[4];
 
   Data *data;
 
@@ -44,6 +45,8 @@ void drawTraces(Player *p, gDisplay *d) {
     glColor3fv(p->model->color_alpha);
   }
 
+  setColor3fv(p->model->color_alpha);
+
   glShadeModel(GL_SMOOTH);
 
   line = &(data->trails[0]);
@@ -56,6 +59,11 @@ void drawTraces(Player *p, gDisplay *d) {
     else normal = normal2;
 
     glNormal3fv(normal);
+    setNormal3fv(normal);
+    setVertex3f((line->sx + line->ex) / 2, (line->sy + line->ey) / 2, 0);
+    light3fv(color);
+    glColor3fv(color);
+
     glTexCoord2f(0.0, 0.0);
     glVertex3f(line->sx, line->sy, 0.0);
 
@@ -82,6 +90,11 @@ void drawTraces(Player *p, gDisplay *d) {
   if(sy == py) normal = normal1;
   else normal = normal2;
   glNormal3fv(normal);
+
+  setNormal3fv(normal);
+  setVertex3f((line->sx + line->ex) / 2, (line->sy + line->ey) / 2, 0);
+  light3fv(color);
+  glColor3fv(color);
     
   /* calculate distance of cycle to last corner */
   tlength = px - sx + py - sy;
@@ -126,7 +139,10 @@ void drawTraces(Player *p, gDisplay *d) {
 	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
 
   if(game->settings->alpha_trails) glColor4fv(p->model->color_alpha);
-  else glColor3fv(p->model->color_alpha);
+  else {
+    glColor3fv(color);
+    /* glColor3fv(p->model->color_alpha); */
+  }
 
   glVertex3f(px - 2 * blength * dirsX[ data->dir ], 
 	     py - 2 * blength * dirsY[ data->dir ], height);
@@ -216,7 +232,7 @@ void drawTraces(Player *p, gDisplay *d) {
     line = &(data->trails[0]);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4f(0.2, 0.2, 0.2, 0.8);
+    glColor4f(0.0, 0.0, 0.0, 0.6);
     glBegin(GL_QUADS);
 
     line = &(data->trails[0]);

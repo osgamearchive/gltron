@@ -65,6 +65,7 @@ typedef png_texture texture;
 
 #include "system.h"
 #include "geom.h"
+#include "light.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h>
