@@ -80,7 +80,6 @@ void parse_args(int argc, char *argv[]) {
       i = 0;
       while(argv[argc][++i] != 0) {
 	switch(argv[argc][i]) {
-	case 'm': setSettingi("show_model", 0); break;
 	case 'x': setSettingi("show_crash_texture", 0); break;
 	case 'F': setSettingi("show_fps", 0); break;
 	case 't': setSettingi("show_floor_texture", 0); break;
@@ -133,7 +132,6 @@ void parse_args(int argc, char *argv[]) {
 	  printf("-t\tdon't display floor texture, use lines instead"
 		 "(huge speed gain)\n");
 	  printf("-w\tdon't display walls (speed gain)\n");
-	  printf("-m\tdon't show lightcycle (speed gain)\n");
 	  printf("-x\tdon't show crash texture (speed gain)\n");
 	  printf("-g\tdon't show glows (small speed gain)\n");
 	  printf("-c\tdon't show ai status\n");

@@ -40,7 +40,6 @@ settings.stretch_textures = 1
 -- detail settings
 settings.alpha_trails = 0
 settings.show_glow = 1
-settings.show_model = 1
 settings.show_recognizer = 1
 settings.show_impact = 1
 settings.lod = 1

@@ -297,24 +297,20 @@ int playerVisible(Player *eye, Player *target) {
 
 void drawPlayers(Player *p) {
   int i;
-  float height;
-  int lod;
 
   for(i = 0; i < game->players; i++) {
-    height = game->player[i].data->trail_height;
+		int lod;
+		int drawTurn = 1;
 
-    if (game2->settingsCache.show_model) {
-      int drawTurn = 1;
-      if (game2->settingsCache.camType == CAM_TYPE_COCKPIT && 
-          p == &game->player[i]) {
-        drawTurn = 0;
-      }
-      lod = playerVisible(p, &(game->player[i]));
-      if (lod >= 0) { 
-        drawCycle(&(game->player[i]), lod, drawTurn);
-      }
-    }
-  }
+		if (game2->settingsCache.camType == CAM_TYPE_COCKPIT && 
+				p == &game->player[i])
+			drawTurn = 0;
+
+		lod = playerVisible(p, &(game->player[i]));
+		if (lod >= 0) { 
+			drawCycle(&(game->player[i]), lod, drawTurn);
+		}
+	}
 }
 
 void drawCam(Player *p, gDisplay *d) {
@@ -367,20 +363,17 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* shadows on the floor: cycle, recognizer, trails */
   for(i = 0; i < game->players; i++) {
-    int lod;
-    if (game2->settingsCache.show_model) {
-      lod = playerVisible(p, game->player + i);
-      if (lod >= 0) {
-				int drawTurn = 1;
-        if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
-            p != &game->player[i])
-					drawTurn = 0;
-				drawCycleShadow(game->player + i, lod, drawTurn);
-      }
-    }
-    if (game->player[i].data->trail_height > 0 )
-      drawTrailShadow(game->player + i);
-  }
+    int lod = playerVisible(p, game->player + i);
+		if (lod >= 0) {
+			int drawTurn = 1;
+			if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
+					p != &game->player[i])
+				drawTurn = 0;
+			drawCycleShadow(game->player + i, lod, drawTurn);
+		}
+		if (game->player[i].data->trail_height > 0 )
+			drawTrailShadow(game->player + i);
+	}
 
   glDepthMask(GL_TRUE);
   if (game2->settingsCache.show_recognizer) {
@@ -416,13 +409,29 @@ void drawCam(Player *p, gDisplay *d) {
 		TrailMesh mesh;
 		mesh.pVertices = (vec3*) malloc(1000 * sizeof(vec3));
 		mesh.pNormals = (vec3*) malloc(1000 * sizeof(vec3));
+		mesh.pColors = (float*) malloc(1000 * 4 * sizeof(float));
+		mesh.pTexCoords = (vec2*) malloc(1000 * sizeof(vec2));
 		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
 		for(i = 0; i < game->players; i++) {
-			trailGeometry(game->player + i, &mesh);
-			trailRender(game->player + i, &mesh);
+			if (game->player[i].data->trail_height > 0 ) {
+					trailGeometry(game->player + i, &mesh);
+					glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+					trailRender(game->player + i, &mesh, 
+											game->screen->textures[TEX_DECAL]);
+					bowGeometry(game->player + i, &mesh);
+					glColor3f(1.0f, 1.0f, 1.0f);
+					glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					trailRender(game->player + i, &mesh, 
+											game->screen->textures[TEX_TRAIL]);
+					glDisable(GL_BLEND);
+			}
 		}
 		free(mesh.pVertices);
 		free(mesh.pNormals);
+		free(mesh.pColors);
+		free(mesh.pTexCoords);
 		free(mesh.pIndices);
 	}
 #endif
@@ -431,7 +440,8 @@ void drawCam(Player *p, gDisplay *d) {
   glDisable(GL_POLYGON_OFFSET_FILL);
 
   for(i = 0; i < game->players; i++)
-    drawTrailLines(&(game->player[i]));
+    if (game->player[i].data->trail_height > 0 )
+			drawTrailLines(&(game->player[i]));
 
   /* transparent stuff */
   /* draw the glow around the other players: */

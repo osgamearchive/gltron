@@ -126,7 +126,6 @@ void updateSettingsCache() {
   game2->settingsCache.softwareRendering = getSettingi("softwareRendering");
   game2->settingsCache.show_floor_texture = getSettingi("show_floor_texture");
   game2->settingsCache.line_spacing = getSettingi("line_spacing");
-  game2->settingsCache.show_model = getSettingi("show_model");
   game2->settingsCache.show_decals = getSettingi("show_decals");
   game2->settingsCache.alpha_trails = getSettingi("alpha_trails");
   game2->settingsCache.antialias_lines = getSettingi("antialias_lines");

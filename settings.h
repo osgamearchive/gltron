@@ -17,7 +17,6 @@ typedef struct SettingsCache {
   int show_floor_texture;
   int line_spacing;
   int antialias_lines;
-  int show_model; 
   int show_decals;
   int alpha_trails;
   int shadow_lod;
