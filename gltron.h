@@ -14,8 +14,10 @@
 #define RC_NAME ".gltronrc"
 #define CURRENT_DIR "."
 
-#define SGI_TEX
+/* #define SGI_TEX */
 /* #define SDL_TEX */
+
+#define PNG_TEX
 
 /* win32 additions by Jean-Bruno Richard <jean-bruno.richard@mg2.com> */
 
@@ -28,11 +30,11 @@
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
 
-#ifdef SGI_TEX
+#undef SDL_TEX
 #undef SGI_TEX
-#endif
+#undef PNG_TEX
 
-#define SDL_TEX
+#define PNG_TEX
 
 #endif /* WIN32 */
 
@@ -55,13 +57,15 @@
 #define RC_NAME "gltron.ini"
 #endif 
 
-/* under windows, use SDL_image to load PNG textures */
-
 #ifdef SGI_TEX
 #define TEX_SUFFIX ".sgi"
 #endif
 
 #ifdef SDL_TEX
+#define TEX_SUFFIX ".png"
+#endif
+
+#ifdef PNG_TEX
 #define TEX_SUFFIX ".png"
 #endif
 

@@ -2,13 +2,14 @@
 
 void initFonts() {
   if(ftx != NULL) ftxUnloadFont(ftx);
-  ftx = ftxLoadFont("xenotron.ftx");
+  ftx = ftxLoadFont("babbage.ftx");
   
   if(ftx == NULL) {
     fprintf(stderr, "can't load font xenotron.ftx\n");
     exit(1);
   }
-  ftxEstablishTexture(ftx, GL_TRUE);
+  fprintf(stderr, "initFonts end\n");
+  // ftxEstablishTexture(ftx, GL_TRUE);
 }
 
 void deleteFonts() {

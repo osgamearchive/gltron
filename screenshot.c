@@ -1,8 +1,6 @@
 #include "gltron.h"
 
-#ifndef WIN32
 #include <png.h>
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,10 +15,20 @@ void doScreenShot() {
   screenshots++;
 }
 
+FILE *fp;
+
+void user_write_data(png_structp png_ptr,
+		     png_bytep data, png_uint_32 length) {
+  fwrite(data, length, 1, fp);
+}
+
+void user_flush_data(png_structp png_ptr) {
+  fflush(fp);
+}
+
 int screenShot(char *filename, gDisplay *d) {
-#ifndef WIN32
   unsigned char *data;
-  FILE *fp;
+
   png_structp png_ptr;
   png_infop info_ptr;
   png_byte **row_pointers;
@@ -53,7 +61,8 @@ int screenShot(char *filename, gDisplay *d) {
       png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
       return 1;
   }
-  png_init_io(png_ptr, fp);
+  /* png_init_io(png_ptr, fp); */
+  png_set_write_fn(png_ptr, 0, user_write_data, user_flush_data);
 
   colortype = PNG_COLOR_TYPE_RGB;
 
@@ -77,7 +86,6 @@ int screenShot(char *filename, gDisplay *d) {
 
   fprintf(stderr, "written screenshot to %s\n", filename);
   return 0;
-#endif
 }
   
 

@@ -12,7 +12,7 @@
 #include <GL/gl.h>
 
 typedef struct fonttex {
-  sgi_texture **textures;
+  // sgi_texture **textures;
   int nTextures;
   
   int texwidth; /* texture width */

@@ -15,9 +15,8 @@ fonttex *ftxLoadFont(char *filename) {
   char buf[100];
   char texname[100];
   int i;
-  
   fonttex *ftx;
-
+  
   path = getFullPath(filename);
   if(path == 0) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
@@ -36,60 +35,17 @@ fonttex *ftxLoadFont(char *filename) {
   getLine(buf, sizeof(buf), file);
   ftx->fontname = malloc(strlen(buf) + 1);
   memcpy(ftx->fontname, buf, strlen(buf) + 1);
-  
-  ftx->textures = (sgi_texture**) 
-    malloc(ftx->nTextures * sizeof(sgi_texture*));
+
+  ftx->texID = (unsigned int*) malloc(ftx->nTextures * sizeof(unsigned int));
+  glGenTextures(ftx->nTextures, ftx->texID);
+
   for(i = 0; i < ftx->nTextures; i++) {
     getLine(buf, sizeof(buf), file);
 
     // no spaces in texture filesnames
     sscanf(buf, "%s ", texname);
-    path = getFullPath(texname);
-    if(path == 0) {
-      // clean up allocated memory & spit out error
-      int j;
-      for(j = 0; j < i; j++)
-	unload_sgi_texture(*(ftx->textures + j));
-      free(ftx->textures);
-      free(ftx->fontname);
-      free(ftx);
-      fprintf(stderr, FTX_ERR "can't load texture file '%s'\n", texname);
-      return 0;
-    }
-    *(ftx->textures + i) = load_sgi_texture(path);
-    free(path);
-  }
-  fclose(file);
-  return ftx;
-}
-
-void ftxUnloadFont(fonttex *ftx) {
-  int i;
-
-  glDeleteTextures(ftx->nTextures, ftx->texID);
-
-  for(i = 0; i < ftx->nTextures; i++)
-    unload_sgi_texture(*(ftx->textures + i));
-  free(ftx->textures);
-  free(ftx->texID);
-  free(ftx->fontname);
-  free(ftx);
-}
-
-void ftxEstablishTexture(fonttex *ftx, unsigned char setupMipmaps) {
-  /* TODO(1): add support for mipmaps */
-  int i;
-  
-  ftx->texID = (unsigned int*) malloc(ftx->nTextures * sizeof(unsigned int));
-  glGenTextures(ftx->nTextures, ftx->texID);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  for(i = 0; i < ftx->nTextures; i++) {
     glBindTexture(GL_TEXTURE_2D, ftx->texID[i]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
-		 (*(ftx->textures + i))->width, (*(ftx->textures + i))->height,
-		 0, GL_RGBA, GL_UNSIGNED_BYTE, 
-		 (*(ftx->textures + i))->data);
+    loadTexture(texname, GL_RGBA);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -98,7 +54,20 @@ void ftxEstablishTexture(fonttex *ftx, unsigned char setupMipmaps) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   }
-  checkGLError(FTX_ERR " establishing textures");
+  fclose(file);
+  return ftx;
+}
+
+void ftxUnloadFont(fonttex *ftx) {
+  glDeleteTextures(ftx->nTextures, ftx->texID);
+
+  free(ftx->texID);
+  free(ftx->fontname);
+  free(ftx);
+}
+
+void ftxEstablishTexture(fonttex *ftx, unsigned char setupMipmaps) {
+  fprintf(stderr,"this should not get called!\n");
 }
 
 void ftxRenderString(fonttex *ftx, char *string, int len) {

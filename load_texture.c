@@ -2,17 +2,34 @@
 
 #ifdef SGI_TEX
 #include "sgi_texture.h"
+typedef sgi_texture texture;
+#define LOAD_TEX(x) load_sgi_texture(x)
+#endif
+
+#ifdef PNG_TEX
+#include "png_texture.h"
+#include <png.h>
+typedef png_texture texture;
+#define LOAD_TEX(x) load_png_texture(x)
+#endif
+
+#ifndef SDL_TEX
 
 void loadTexture(char *filename, int format) {
   char *path;
-  sgi_texture *tex;
+  texture *tex;
   GLint internal;
 
   path = getFullPath(filename);
   if(path != 0)
-    tex = load_sgi_texture(path);
+    tex = LOAD_TEX(path);
   else {
     fprintf(stderr, "fatal: could not load %s, exiting...\n", filename);
+    exit(1);
+  }
+
+  if(tex == 0) {    
+    fprintf(stderr, "fatal: failed load %s, exiting...\n", filename);
     exit(1);
   }
 
@@ -33,18 +50,17 @@ void loadTexture(char *filename, int format) {
 }
 #endif
 
-/* the following code uses SDL_image to load the textures */
-/* currently not used */
+
+/* the following code uses SDL_image to load textures */
+/* not used currently */
 
 #ifdef SDL_TEX
-
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
-
 void loadTexture(char *name, int wantedFormat) {
   /* wantedFormat is ignored */
-  SDL_Surface *image;
+  SDL_surface *image;
   int tex_id;
   int format;
   int x, y;
