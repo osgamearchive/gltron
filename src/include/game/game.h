@@ -1,6 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
 
+#ifdef WIN32
+#define floorf floor
+#endif
+
 #include "game_data.h"
 #include "engine.h"
 #include "event.h"
