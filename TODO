@@ -21,6 +21,7 @@ Optimizations/Cleanups [high priority]
 
 Documentation & Packaging:
 
+- apply icon to win32 version
 - decide about artpacks & sound & music included
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
   [ nicolas, kokido ]
