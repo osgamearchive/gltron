@@ -46,7 +46,7 @@ fi
 dnl library checks
 AM_PATH_SDL(1.1.0, CFLAGS="$CFLAGS $SDL_CFLAGS"; LIBS="$LIBS $SDL_LIBS",
 	AC_MSG_ERROR(SDL is not installed))
-AC_CHECK_LIB(GL, glEnable,, AC_MSG_ERROR(OpenGL is not installed))
+AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(OpenGL is not installed))
 AC_CHECK_LIB(png, png_read_info,, AC_MSG_ERROR(libpng is not installed))
 
 dnl sound set-up
