@@ -20,6 +20,9 @@ void getPositionFromData(float *x, float *y, Data *data) {
 
 void initGameLevel(void) {
 	game2->level = game_CreateLevel("square.lua");
+
+	if(game2->level->scalable)
+		game_ScaleLevel(game2->level, 600.0f);
 }
 void initGameStructures(void) { /* called only once */
   int i;
@@ -59,9 +62,6 @@ void resetPlayerData(void) {
   randomPermutation(game->players, startIndex);
 
   for(i = 0; i < game->players; i++) {
-    float startpos[][2] = { 
-			{ 0.5, 0.25 }, { 0.75, 0.5 }, { 0.5, 0.75 }, { 0.25, 0.5 }
-    };
 		float x, y;
 
     data = game->player[i].data;
@@ -82,8 +82,8 @@ void resetPlayerData(void) {
 		/* arrange players in circle around center */
 
 		/* randomize position on the grid */
-		x = startpos[ startIndex[i] ][0] * getSettingi("grid_size");
-		y = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
+		x = game2->level->spawnPoints[ startIndex[i] ].v[0];
+		y = game2->level->spawnPoints[ startIndex[i] ].v[1];
 		/* randomize starting direction */
 		data->dir = trand() & 3;
 		/* data->dir = startdir[i]; */
@@ -144,8 +144,6 @@ void initData(void) {
 
   resetVideoData();
 	resetPlayerData();
-
-  initWalls();
 }
 
 void Time_Idle(void) {
@@ -196,27 +194,4 @@ void doTurn(GameEvent *e, int direction) {
 	data->last_dir = data->dir;
 	data->dir = (data->dir + direction) % 4;
 	data->turn_time = game2->time.current;
-}
-
-void initWalls(void) {
-#ifndef NEW_LEVEL
-	float raw[4][4] = {
-		{ 0.0f, 0.0f, 1.0f,  0.0f },
-		{ 1.0f, 0.0f, 0.0f, 1.0f },
-		{ 1.0f, 1.0f, -1.0f, 0.0f },
-		{ 0.0f, 1.0f, 0.0f, -1.0f }
-	};
-
-	float width = game2->rules.grid_size;
-	float height = game2->rules.grid_size;
-	
-	int j;
-
-	for(j = 0; j < 4; j++) {
-		walls[j].vStart.v[0] = raw[j][0] * width;
-		walls[j].vStart.v[1] = raw[j][1] * height;
-		walls[j].vDirection.v[0] = raw[j][2] * width;
-		walls[j].vDirection.v[1] = raw[j][3] * height;
-	}
-#endif
 }
