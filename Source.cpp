@@ -8,9 +8,16 @@ namespace Sound {
     _removable = 0;
     _volume = 0.5;
     _type = 0;
+		
+		_mutex = SDL_CreateMutex();
+		_sem = SDL_CreateSemaphore(1);
   }
+	
   Source::~Source() {
     fprintf(stderr, "Source destructor called\n");
+				
+		SDL_DestroyMutex(_mutex);
+		SDL_DestroySemaphore(_sem);
   }
 
   int Source::Mix(Uint8 *data, int len) { }

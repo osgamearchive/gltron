@@ -44,6 +44,9 @@ namespace Sound {
     float _volume;
     int _type;
     char* _name;
+		
+		SDL_mutex* _mutex;
+		SDL_sem * _sem;
   };
 }
 
