@@ -10,8 +10,7 @@
 #define SHOCKWAVE_SEGMENTS 25
 #define NUM_SHOCKWAVES 3 
 
-#define DEGREES_TO_RADIANS(x) ((x)*(M_PI/180.0))
-
+/* draw a single semi-circular shockwave of a given radius */
 static void drawWave(double radius) {
   int i, j;
   double angle;
@@ -48,6 +47,7 @@ void drawShockwaves(float *radius) {
   *radius += SHOCKWAVE_SPEED;
 }
 
+/* impact spire behavior constants */
 #define SPIRE_SPEED 0.60
 #define SPIRE_MAX_RADIUS 25
 #define SPIRE_WIDTH 0.50
@@ -108,7 +108,6 @@ void drawSpires(float *spire_radius) {
     glVertex3fv(right);
     glVertex3f(sp_rad * vectors[i][0], sp_rad * vectors[i][1], 0.0);
     glVertex3fv(left);
-
   } 
   
   glEnd();
