@@ -113,6 +113,13 @@ int main( int argc, char *argv[] ) {
 
   /* initialize lua */
   scripting_Init();
+  /* load basic scripting services */
+  { 
+    char *path;
+    path = getPath(PATH_SCRIPTS, "basics.lua");
+    scripting_RunFile(path);
+    free(path);
+  }
 
   /* initialize some global variables */
   initMainGameSettings();
@@ -124,7 +131,7 @@ int main( int argc, char *argv[] ) {
   { 
     char *path;
     path = getPath(PATH_SCRIPTS, "config.lua");
-    scripting_DoFile(path);
+    scripting_RunFile(path);
     free(path);
   }
 
@@ -134,7 +141,7 @@ int main( int argc, char *argv[] ) {
     path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
     if(path != NULL) {
       if(fileExists(path)) 
-	scripting_DoFile(path);
+	scripting_RunFile(path);
       else
 	printf("cannot load %s from %s\n", RC_NAME, path);
       free(path);
@@ -197,19 +204,18 @@ int main( int argc, char *argv[] ) {
     setMusicVolume(getSettingf("musicVolume"));
 #endif
 
-    {
+    printf("loading menu\n");
+    { 
       char *path;
-      printf("loading menu\n");
-      path = getPath(PATH_DATA, "menu.txt");
-      if(path != NULL)
-	pMenuList = loadMenuFile(path);
-      else {
-	printf("fatal: could not load menu.txt, exiting...\n");
-	exit(1);
-      }
-      printf("menu loaded\n");
+      path = getPath(PATH_SCRIPTS, "menu.lua");
+      scripting_RunFile(path);
+      free(path);
+
+      path = getPath(PATH_SCRIPTS, "menu_functions.lua");
+      scripting_RunFile(path);
       free(path);
     }
+    printf("menu loaded\n");
 
     setupDisplay(game->screen);
 
