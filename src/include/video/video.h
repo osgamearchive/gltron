@@ -17,12 +17,12 @@ typedef png_texture texture;
 #define LOAD_TEX(x) load_png_texture(x)
 #define TEX_SUFFIX ".png"
 
-typedef struct {
+typedef struct Artpack {
   char *path;
   /* char *name; currently ignored */
 } Artpack;
 
-typedef struct {
+typedef struct PlayerVisual {
 	Visual display;
 
 	float pColorDiffuse[4];
@@ -150,6 +150,19 @@ extern video_level *gWorld;
 extern nebu_Font *gameFtx;
 extern nebu_Font *guiFtx;
 
+enum { 
+	eHUDSpeed = 0,
+	eHUDMaskSpeed,
+	eHUDMaskTurbo,
+	eHUDAIStatus,
+	eHUDMap,
+	eHUDScores,
+	eHUDFPS,
+	eHUDElementCount
+};
+
+extern nebu_2d *gpHUD[];
+
 extern float camAngles[];
 
 extern int polycount;
@@ -229,7 +242,7 @@ extern void drawDebugTex(Visual *d);
 extern void drawPlayers(Player *p, PlayerVisual *pV);
 extern void drawCam(Player *p, PlayerVisual *pV);
 
-extern void draw2D( Visual *d );
+extern void draw2D( nebu_Rect *pRect );
 		
 /* trail.c */
 extern void drawTrailLines(Player *p, PlayerVisual *pV);

@@ -28,6 +28,32 @@ void initArtpacks(void) {
   scripting_Run("setupArtpacks()");
 }
 
+void artpack_LoadSurfaces(void)
+{
+	// char *pHUDNames[eHUDElementCount] = {
+	char *pHUDNames[] = {
+		"hud-speed.png",
+		"hud-mask-speed.png",
+		"hud-mask-turbo.png",
+		"hud-ai.png",
+		"hud-map.png",
+		"hud-scores.png",
+		"hud-fps.png"
+	};
+	int i;
+	for(i = 0; i < eHUDElementCount; i++)
+	{
+		char *path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
+		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
+
+		if(gpHUD[i]) { nebu_2d_Free(gpHUD[i]); gpHUD[i] = NULL; }
+		gpHUD[i] = nebu_2d_Create(surface, 0);
+
+		nebu_Surface_Free(surface);
+		free(path);
+	}
+}
+
 void loadArt(void) {
 	char *path;
 
@@ -45,6 +71,8 @@ void loadArt(void) {
 	fprintf(stderr, "[status] done loading textures...\n");
 	initFonts();
 	fprintf(stderr, "[status] done loading fonts...\n");
+	
+	artpack_LoadSurfaces();
 
 	video_LoadLevel();
 	fprintf(stderr, "[status] done loading level...\n");
