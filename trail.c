@@ -82,7 +82,6 @@ float getSegmentUV(line *line) {
 #undef DECAL_WIDTH
 #undef BOW_LENGTH
 
-
 /* 
    drawTrailLines() draws a white line on top of each trail segment
    the alpha value is reduced with increasing distance to the player
@@ -216,6 +215,7 @@ void drawTrailShadow(Player* p) {
   glPopMatrix();
 }
 
+#if 0
 /*
    drawTraces() draws all the trail segments.
    The last one is split in three parts:
@@ -347,6 +347,7 @@ void drawTraces(Player *p, gDisplay *d) {
 
   glDepthMask(GL_TRUE);
 }
+#endif 
 
 void drawTrailBow(Player *p, int flag) {
   Data *data;
@@ -412,6 +413,3 @@ void drawTrailBow(Player *p, int flag) {
   glDisable(GL_TEXTURE_2D);
 
 }
-
-
-
