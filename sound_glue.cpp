@@ -117,11 +117,18 @@ extern "C" {
     crash->SetVolume(volume);
   }
 
+  void Audio_StartEngine(int iPlayer) {
+    players[iPlayer]->Start();
+  }
+
+  void Audio_StopEngine(int iPlayer) {
+    players[iPlayer]->Stop();
+  }
+    
   void Audio_LoadPlayers() {
 #if 1
     for(int i = 0; i < PLAYERS; i++) {
       players[i] = new Sound::Source3D(sound, engine);
-      players[i]->Start();
       if(i != 0)
 	sound->AddSource(players[i]);
     }

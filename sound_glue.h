@@ -17,6 +17,8 @@ void Audio_StopMusic();
 void Audio_SetMusicVolume(float volume);
 void Audio_SetFxVolume(float volume);
 
+void Audio_StartEngine(int player);
+void Audio_StopEngine(int player);
 #ifdef __cplusplus
 }
 #endif

@@ -282,6 +282,7 @@ void crashPlayer(int player) {
 
 #ifdef SOUND
   Audio_CrashPlayer(player);
+  Audio_StopEngine(player);
 #endif
 
   for(j = 0; j < game->players; j++) 
