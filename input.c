@@ -98,7 +98,7 @@ void parse_args(int argc, char *argv[]) {
 	case 'g': game->settings->show_glow = 0; break;
 	case 'w': game->settings->show_wall = 0; break;
 	case 'C': game->settings->show_ai_status = 1; break;
-	  /* case 'v': game->settings->screenSaver = 1; break; */
+	case 'v': game->settings->screenSaver = 1; break;
 	case 'i': game->settings->windowMode = 1; break;
 	case 'M': game->settings->mouse_warp = 1; break;
 	case 'O': game->settings->softwareRendering = 1; break;
@@ -117,6 +117,10 @@ void parse_args(int argc, char *argv[]) {
 	case '4': 
 	  game->settings->width = 1024;
 	  game->settings->height = 768;
+	  break;
+	case '5': 
+	  game->settings->width = 1280;
+	  game->settings->height = 1024;
 	  break;
 	case 's':
 	  game->settings->playMusic = 0;
@@ -142,6 +146,7 @@ void parse_args(int argc, char *argv[]) {
 	  printf("-2\tSet resolution to 640x480 (default)\n");
 	  printf("-3\tSet resolution to 800x600\n");
 	  printf("-4\tSet resolution to 1024x768\n");
+	  printf("-5\tSet resolution to 1280x1024\n");
 	  printf("-s\tDon't play sound\n");
 	  /* printf("-v\tStart in demo/screensaver mode\n"); */
 	  printf("-i\tforce startup in a window\n");
