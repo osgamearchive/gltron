@@ -140,18 +140,13 @@ void saveSettings() {
   char *script;
 
   script = getPath(PATH_SCRIPTS, "save.lua");
-  scripting_DoFile(script);
+  scripting_RunFile(script);
   free(script);
 
   path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
   if(path != NULL) {
-    char command[] = "writeto(\"%s\")";
-    char buf[260];
-    sprintf(buf, command, path);
-
-
-    scripting_DoString(buf);
-    scripting_DoString("save()");
+    scripting_RunFormat("writeto(\"%s\")", path);
+    scripting_Run("save()");
     free(path);
   }
 }
