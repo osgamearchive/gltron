@@ -76,6 +76,11 @@ extern int game_textures;
 extern int n_textures;
 extern texture_info textures[];
 
+/* artpack stuff */
+
+extern void initArtpacks(void);
+extern void reloadArt(void);
+
 /* graphics libs */
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -341,6 +346,7 @@ extern void loadTexture(char *filename, int format);
 
 /* screenshot.c */
 extern void doScreenShot();
+extern void doBmpScreenShot();
 
 /* help -> character.c */
 
