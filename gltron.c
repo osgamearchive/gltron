@@ -101,7 +101,7 @@ int main( int argc, char *argv[] ) {
   SystemInit(&argc, argv);
 
 #ifdef LOCAL_DATA
-#ifndef WIN32
+#if !defined(WIN32) && !defined(macintosh)
   goto_installpath(argv[0]);
 #endif
 #endif
