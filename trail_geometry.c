@@ -1,16 +1,44 @@
 #include "trail_geometry.h"
 
+enum {
+	COLOR_TRAIL, COLOR_BRIGHT, COLOR_CYCLE
+};
+
+void storeColor(TrailMesh *pMesh, int offset, Player *p, int type) {
+  float color[] = { 0, 0, 0, 1 };
+	float white[] = { 1, 1, 1, 1 };
+
+	switch(type) {
+	case COLOR_TRAIL:
+		memcpy(color, p->pColorAlpha, 3 * sizeof(float));
+		break;
+	case COLOR_BRIGHT:
+		memcpy(color, white, 3 * sizeof(float));
+		break;
+	case COLOR_CYCLE:
+		memcpy(color, p->pColorDiffuse, 3 * sizeof(float));
+		break;
+	}
+	memcpy(pMesh->pColors + 4 * offset, color, 4 * sizeof(float));
+	memcpy(pMesh->pColors + 4 * (offset + 1), color, 4 * sizeof(float));
+}
+		
 void storeVertex(TrailMesh *pMesh, int offset, 
-								 Line *line, int bUseEnd, int trail_height) {
+								 Line *line, int bUseEnd, 
+								 float trail_height, float fSegLength, float fTotalLength) {
 	vec3 *pVertices = pMesh->pVertices + offset;
 	vec3 *pNormals = pMesh->pNormals + offset;
+	vec2 *pTexCoords = pMesh->pTexCoords + offset;
 	vec3 v;
+	vec2 uv;
+	float fUStart;
 	vec3 pvNormals[] = {
 		{ { 1, 0, 0 } },
 		{ { -1, 0, 0 } },
 		{ { 0, 1, 0 } },
 		{ { 0, -1, 0 } }
 	};
+	
 	
 	int iNormal;
 	if(line->sx == line->ex)
@@ -19,22 +47,30 @@ void storeVertex(TrailMesh *pMesh, int offset,
 	else
 		// iNormal = (line->sy <= line->sy) ? 2 : 3;
 		iNormal = 2;
+
+	fUStart = (fTotalLength / DECAL_WIDTH) - floorf(fTotalLength / DECAL_WIDTH);
 	
 	if(!bUseEnd) {
 		v.v[0] = line->sx;
 		v.v[1] = line->sy;
 		v.v[2] = 0;
+		uv.v[0] = fUStart;
 	} else {
 		v.v[0] = line->ex;
 		v.v[1] = line->ey;
 		v.v[2] = 0;
+		uv.v[0] = fUStart + fSegLength / DECAL_WIDTH;
 	}
+	uv.v[1] = 0;
 	vec3Copy(pVertices, &v);
 	vec3Copy(pNormals, pvNormals + iNormal);
+	vec2Copy(pTexCoords, &uv);
 			
 	v.v[2] = trail_height;
+	uv.v[1] = 1;
 	vec3Copy(pVertices + 1, &v);
 	vec3Copy(pNormals + 1, pvNormals + iNormal);
+	vec2Copy(pTexCoords + 1, &uv);
 }
 
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset) {
@@ -69,83 +105,99 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 	Data *pData = pPlayer->data;
 	int curVertex = 0, curIndex = 0;
 	int i;
-
+	float fTotalLength = 0;
+	float fSegLength;
 	for(i = 0; i < pData->trailOffset; i++) {
+		fSegLength = 
+			fabs( (pData->trails + i)->ex - (pData->trails + i)->sx) +
+			fabs( (pData->trails + i)->ey - (pData->trails + i)->sy);
 		if(i == 0 || cmpdir(pData->trails + i - 1, pData->trails + i)) {
-			storeVertex(pMesh, curVertex, pData->trails + i, 0, pData->trail_height);
+			storeVertex(pMesh, curVertex, pData->trails + i, 0, 
+									pData->trail_height, fSegLength, fTotalLength);
+			storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 			curVertex += 2;
 		}
+			
 		storeVertex(pMesh, curVertex, pData->trails + i, 1,
-								pData->trail_height);
-		storeIndices(pMesh, curIndex, curVertex - 2);
+								pData->trail_height, fSegLength, fTotalLength);
+		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 		curVertex += 2;
+
+		storeIndices(pMesh, curIndex, curVertex - 4);
 		curIndex += 4;
+
+		fTotalLength += fSegLength;
+
 	}
 	{
 		Line line;
 		line.sx = pData->trails[pData->trailOffset].sx;
 		line.sy = pData->trails[pData->trailOffset].sy;
-		line.ex = pData->iposx;
-		line.ey = pData->iposy;
+		line.ex = getSegmentEndX( pData, 1 );
+		line.ey = getSegmentEndY( pData, 1 );
+
+		fSegLength = 
+			fabs( line.ex - line.sx) +
+			fabs( line.ey - line.sy);
 		
 		storeVertex(pMesh, curVertex, &line, 0,
-								pData->trail_height);
+								pData->trail_height, fSegLength, fTotalLength);
+		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+		curVertex += 2;
+		
+		storeVertex(pMesh, curVertex, &line, 1,
+								pData->trail_height, fSegLength, fTotalLength);
+		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
+		curVertex += 2;
+
+		storeIndices(pMesh, curIndex, curVertex - 4);
+		curIndex += 4;
+
+		fTotalLength += fSegLength;
+
+		line.sx = line.ex;
+		line.sy = line.ey;
+		line.ex = getSegmentEndX( pData, 0 );
+		line.ey = getSegmentEndY( pData, 0 );
+
+		fSegLength = 
+			fabs( line.ex - line.sx) +
+			fabs( line.ey - line.sy);
+
+		storeVertex(pMesh, curVertex, &line, 0,
+								pData->trail_height, fSegLength, fTotalLength);
+		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeVertex(pMesh, curVertex, &line, 1,
-								pData->trail_height);
-		storeIndices(pMesh, curIndex, curVertex - 2);
+								pData->trail_height, fSegLength, fTotalLength);
+		storeColor(pMesh, curVertex, pPlayer, COLOR_BRIGHT);
 		curVertex += 2;
+
+		storeIndices(pMesh, curIndex, curVertex - 4);
 		curIndex += 4;
 	}
 
 	pMesh->iUsed = curIndex;
 }
-								 
-void trailRender(Player *pPlayer, TrailMesh *pMesh) {
-	if(pMesh->iUsed == 0)
-		return;
 
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	// glDisable(GL_LIGHTING);
-	
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, pMesh->pVertices);
-	glNormalPointer(GL_FLOAT, 0, pMesh->pNormals);
+void bowGeometry(Player *pPlayer, TrailMesh *pMesh) {
+	Data *pData = pPlayer->data;
+	Line line;
+	int bdist = PLAYER_IS_ACTIVE(pPlayer) ? 2 : 3;
 
-	// glEnable(GL_CULL_FACE);
-	glDisable(GL_CULL_FACE);
-	glShadeModel(GL_SMOOTH);
+	line.sx = getSegmentEndX( pData, 0 );
+	line.sy = getSegmentEndY( pData, 0 );
+	line.ex = getSegmentEndX( pData, bdist );
+	line.ey = getSegmentEndY( pData, bdist );
+	storeVertex(pMesh, 0, &line, 0, pData->trail_height, DECAL_WIDTH, 0);
+	storeColor(pMesh, 0, pPlayer, COLOR_BRIGHT);
+	storeVertex(pMesh, 2, &line, 1, pData->trail_height, DECAL_WIDTH, 0);
+	storeColor(pMesh, 2, pPlayer, COLOR_CYCLE);
 
-	{ 
-		float black[] = { 0, 0, 0, 1 };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, 
-								 pPlayer->pColorAlpha);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
-	}
-	
-	// glCullFace(GL_BACK);
-	glDrawElements(GL_QUADS, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
-
-#if 0
-	{ 
-		float color[] = { 1, .2, .2, 1 }; 
-		float black[] = { 0, 0, 0, 1 };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
-	}
-
-	glCullFace(GL_FRONT);
-	glDrawElements(GL_QUADS, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
-#endif
-
-	glCullFace(GL_BACK);
-	glDisable(GL_CULL_FACE);
-	
-	// glEnable(GL_LIGHTING);
-	checkGLError("trail");
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	storeIndices(pMesh, 0, 0);
+	pMesh->iUsed = 4;
 }
+	
+	
+	
