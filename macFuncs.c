@@ -1,5 +1,3 @@
-#ifdef macintosh
-
 /* we want GLTron to run on locked volumes (CD-ROMs etc),
    so we must save settings to the prefs and screenshots
    to the desktop folder */
@@ -48,5 +46,3 @@ void setupMacDirectories () {
 	_MacOS_Desktop_Directory = getStandardDirectory (kDesktopFolderType);
 	assert (_MacOS_Desktop_Directory != NULL);
 }
-
-#endif
