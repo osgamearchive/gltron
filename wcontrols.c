@@ -20,6 +20,9 @@ newControl( WrootControl  *root, Wptr control, int type )
 {
   WcontrolRef wcontrol, tmp;
 
+  if( control == NULL )
+    return;
+
   wcontrol = ( WcontrolRef ) malloc(sizeof(Wcontrol));
 
   wcontrol->next = NULL;
