@@ -5,7 +5,6 @@
 
 void enableSkyboxTexture();
 void disableSkyboxTexture();
-void bindSkyboxTexture(int index);
 GLuint buildSkyboxDispList(GLuint skybox_list);
 
 #endif /* SKYBOX_H */
