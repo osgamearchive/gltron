@@ -125,9 +125,11 @@ static void loadModels(void) {
 }
 
 void initVideoData(void) {
-  gScreen = (Visual*) malloc(sizeof(Visual));
-  gViewportType = getSettingi("display_type"); 
-  
+	int i;
+
+	gScreen = (Visual*) malloc(sizeof(Visual));
+	gViewportType = getSettingi("display_type"); 
+
 	{
 		Visual *d = gScreen;
 		d->w = getSettingi("width"); 
@@ -142,7 +144,12 @@ void initVideoData(void) {
 
 	loadModels();
 
-  changeDisplay(-1);
+	for(i = 0; i < eHUDElementCount; i++)
+	{
+		gpHUD[i] = NULL;
+	}
+
+	changeDisplay(-1);
 }
 
 void initGameScreen(void) {
@@ -210,7 +217,6 @@ static void defaultViewportPositions(void) {
   viewport_content[2] = 2;
   viewport_content[3] = 3;
 }
-
 
 /*
   autoConfigureDisplay - configure viewports so every human player has one

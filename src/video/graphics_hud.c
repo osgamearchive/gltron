@@ -8,11 +8,7 @@
 #include <lua.h>
 #include <lualib.h>
 
-nebu_2d *gpHUD = NULL;
-nebu_2d *gpHUDMaskAnalog = NULL;
-nebu_2d *gpHUDMaskTurbo = NULL;
-
-void drawHudComponent(const char *s, nebu_2d *pMask, int maskIndex) {
+void hud_MaskSetup(int maskId, int maskIndex) {
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.9f);
@@ -22,7 +18,7 @@ void drawHudComponent(const char *s, nebu_2d *pMask, int maskIndex) {
 	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	nebu_2d_Draw(pMask);
+	nebu_2d_Draw(gpHUD[maskId]);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
 	glDisable(GL_ALPHA_TEST);
@@ -31,89 +27,47 @@ void drawHudComponent(const char *s, nebu_2d *pMask, int maskIndex) {
 	// draw gauge where stencil is set
 	glStencilFunc(GL_EQUAL, maskIndex, 255);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+}
 
-	scripting_Run(s);
-	
+void hud_MaskFinish(void)
+{
 	glDisable(GL_STENCIL_TEST);
 }
 
 void drawHUD(Player *p, PlayerVisual *pV) {
-	if (gSettingsCache.show_scores) {
-		char tmp[10]; /* hey, they won't reach such a score */
-		sprintf(tmp, "%d", p->data->score);
-		
-		rasonly(&pV->display);
-		glColor4f(1.0, 1.0, 0.2f, 1.0);
-		drawText(gameFtx, 5, 5, 32, tmp);
-	}
+	char temp[256];
 
-	if(gSettingsCache.show_ai_status &&
-		 p->ai->active == AI_COMPUTER) {
-		char ai[] = "computer player";
+	glDisable(GL_DEPTH_TEST);
+	glDepthMask(GL_FALSE);
+	rasonly(&pV->display);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*
+		drawHud: parameters
+		- Viewport Width
+		- Viewport Height
+		- Score (or -1 if disabled)
+		- AI status ("computer player" or "")
+		- Speed digital (absolute value)
+		- Speed analog (1 for default speed, > 1 during acceleration)
+		- Booster value (between 0 and 1)
+	*/
 
-		rasonly(&pV->display);
-		glColor3f(1.0, 1.0, 1.0);
-		drawText(gameFtx, 
-						 pV->display.vp_w / 4.0f, 10.0f, 
-						 pV->display.vp_w / (2.0f * strlen(ai)), ai);
-	}
+	sprintf(temp, "drawHUD(%d, %d, %d, %s, %f, %f, %f)",
+		pV->display.vp_w, pV->display.vp_h,
+		gSettingsCache.show_scores ? p->data->score : -1,
+		gSettingsCache.show_ai_status ?
+		(p->ai->active ? "\"AI_COMPUTER\"" : "\"\"") : "\"\"",
+		p->data->speed,
+		p->data->speed / (2 * game2->rules.speed),
+		p->data->booster / getSettingf("booster_max")
+		);
+	// fprintf(stderr, "%s\n", temp);
+	scripting_Run(temp);
+
 	glDisable(GL_BLEND);
-
- 	if(!gpHUD)
-	{
-		char *path = nebu_FS_GetPath(PATH_ART, "hud-speed.png");
-		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
-		gpHUD = nebu_2d_Create(surface, 0);
-		nebu_Surface_Free(surface);
-		free(path);
-	}
-	if(!gpHUDMaskAnalog)
-	{
-		char *path = nebu_FS_GetPath(PATH_ART, "hud-mask-speed.png");
-		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
-		gpHUDMaskAnalog = nebu_2d_Create(surface, 0);
-		nebu_Surface_Free(surface);
-		free(path);
-	}
-	if(!gpHUDMaskTurbo)
-	{
-		char *path = nebu_FS_GetPath(PATH_ART, "hud-mask-turbo.png");
-		nebu_Surface *surface = nebu_Surface_LoadPNG(path);
-		gpHUDMaskTurbo = nebu_2d_Create(surface, 0);
-		nebu_Surface_Free(surface);
-		free(path);
-	}
-
-	{ 
-		char temp[40];
-		Visual hud = pV->display;
-		hud.vp_x = hud.vp_w + hud.vp_x - 248;
-		hud.vp_w = 248;
-		hud.vp_h = 150;
-		rasonly(&hud);
-		// rasonly(&pV->display);
-		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		nebu_2d_Draw(gpHUD);
-		glDisable(GL_BLEND);
-
-		glDisable(GL_DEPTH_TEST);
-
-		sprintf(temp, "drawSpeedDigital(%.2f)",
-			p->data->speed);
-		scripting_Run(temp);
-
-		sprintf(temp, "drawSpeedAnalog(%.2f)", 
-			p->data->speed / (2 * game2->rules.speed));
-		drawHudComponent(temp, gpHUDMaskAnalog, 1);
-		
-		sprintf(temp, "drawTurbo(%.2f)",
-			p->data->booster / getSettingf("booster_max"));
-		drawHudComponent(temp, gpHUDMaskTurbo, 2);
-
-		glEnable(GL_DEPTH_TEST);
-	}
+	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void drawPause(Visual *display) {
@@ -373,6 +327,42 @@ int c_drawTextFitIntoRect(lua_State *l) {
 	return 0;
 }
 
+int c_draw2D(lua_State* l)
+{
+	nebu_Rect rect = { 0, 0, 0, 0 };
+	scripting_GetFloatResult(&rect.height);
+	scripting_GetFloatResult(&rect.width);
+	draw2D(&rect);
+	return 0;
+}
+
+int c_drawHUDSurface(lua_State* l)
+{
+	int surface;
+	scripting_GetIntegerResult(&surface);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	nebu_2d_Draw(gpHUD[surface]);
+	glDisable(GL_BLEND);
+	return 0;
+}
+
+int c_drawHUDMask(lua_State* l)
+{
+	int maskId, maskIndex;
+	scripting_GetIntegerResult(&maskIndex);
+	scripting_GetIntegerResult(&maskId);
+	if(maskId < 0)
+	{
+		hud_MaskFinish();
+	}
+	else
+	{
+		hud_MaskSetup(maskId, maskIndex);
+	}
+}
+		
 void rgb_interpolate(float *color, float t, float *c1, float *c2) {
 	int i;
 	// printf("%.2f\n", t);

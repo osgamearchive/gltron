@@ -75,7 +75,7 @@ void keyTimedemo(int state, int key, int x, int y) {
 		SystemExitLoop(RETURN_TIMEDEMO_ABORT);
 }
 
-struct {
+struct svaeRules {
 	float speed;
 	int eraseCrashed, grid_size;
 } saveRules;

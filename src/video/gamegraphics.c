@@ -525,22 +525,18 @@ void drawCam(Player *p, PlayerVisual* pV) {
     }
   }
 
+#if 0
 	/* 2d hack */
 	if(gSettingsCache.map_ratio_w > 0)
 	{
-		Visual d2d;
-		memcpy(&d2d, d, sizeof(Visual));
-		d2d.vp_w = (int) (d2d.vp_w * gSettingsCache.map_ratio_w);
-		d2d.vp_h = (int) (d2d.vp_h * gSettingsCache.map_ratio_h);
-
-		d2d.vp_x += 20;
-		d2d.vp_y += 20;
-		
-		glDepthMask(GL_FALSE);
-		glDisable(GL_DEPTH_TEST);
-		draw2D(&d2d);
-		glDepthMask(GL_TRUE);
-		glEnable(GL_DEPTH_TEST);
+		nebu_Rect rect;
+		rect.width = pV->display.vp_w * gSettingsCache.map_ratio_w;
+		rect.height = pV->display.vp_h * gSettingsCache.map_ratio_h;
+		rect.x = 20;
+		rect.y = 20;
+		rasonly(&pV->display);
+		draw2D(&rect);
 	}
+#endif
 }
 
