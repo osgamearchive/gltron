@@ -34,6 +34,8 @@ HFILES = \
 	menu.h \
 	geom.h \
 	model.h \
+	quad.h \
+	renderer_gl.h \
 	system.h \
 	sound.h \
 	system_net.h 
@@ -54,6 +56,9 @@ CFILES = \
 	light.c \
 	software.c \
 	trail.c \
+	trails_buffered.c \
+	quad.c \
+	quadbuf.c \
 	input.c \
 	settings.c \
 	texture.c \
@@ -75,13 +80,13 @@ CFILES = \
 	console.c \
 	renderer_gl.c \
 	@NETWORK_FILES@
-	#network.c \
-	#system_net.c
+#	network.c \
+#	system_net.c
 
 
 SOUND_CFILES = \
 	sound.c
-	
+
 DISTFILES = $(DIST_COMMON) $(EXTRA_DIST) $(CFILES) $(HFILES) $(SOUND_CFILES)
 
 OBJ = $(CFILES:.c=.o)
