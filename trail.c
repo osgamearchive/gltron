@@ -106,8 +106,10 @@ void drawTrailLines(Player *p) {
   if(height < 0) return;
 
   
+  /*
   glDepthMask(GL_FALSE);
   glDisable(GL_DEPTH_TEST);
+  */
 
   glEnable (GL_LINE_SMOOTH); /* enable line antialiasing */
   glEnable(GL_BLEND);
@@ -153,8 +155,10 @@ void drawTrailLines(Player *p) {
   glDisable(GL_BLEND);
   glDisable(GL_LINE_SMOOTH); /* disable line antialiasing */
   
+  /*
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
+  */
 }
 
 /* 

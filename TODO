@@ -4,7 +4,6 @@ Bugs:
 
 - The recognizer shadow draws over the wall (LIM)
 - The recognizer draws over the bike when it shouldn't (LIM)
-- The wall edge lines draw over the bike when they shouldn't (LIM)
 - Make install doesn't work (Andreas)
 - Screen garbled in-game after switching resolutions (hofi)
 - sound FX garbled on MacOS (sem,darrell)

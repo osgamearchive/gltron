@@ -917,10 +917,13 @@ void drawCam(Player *p, gDisplay *d) {
   initTrailLights(0);
 
 
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  glPolygonOffset(1,1);
   glShadeModel(GL_SMOOTH);
 
   doTrails(p);
   glShadeModel(game->screen->shademodel);
+  glDisable(GL_POLYGON_OFFSET_FILL);
 
   for(i = 0; i < game->players; i++)
     drawTrailLines(&(game->player[i]));
