@@ -373,7 +373,7 @@ float GetDistance(float *v, float *p, float *d) {
   return sqrt( scalarprod(tmp, tmp) );
 }
 
-void drawFloor(gDisplay *d, Camera *cam) {
+void drawFloor(gDisplay *d) {
   int i, j, k, l, t;
 
   if(getSettingi("show_floor_texture")) {
@@ -892,7 +892,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
-  drawFloor(d, p->camera);
+  drawFloor(d);
   /* glDepthMask(GL_FALSE); */
 
   /* shadows on the floor: cycle, recognizer, trails */
