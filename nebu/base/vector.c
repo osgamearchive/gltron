@@ -340,3 +340,4 @@ void box2_Center(vec2 *pOut, const box2* pBox)
 	vec2_Add(pOut, &pBox->vMin, &pBox->vMax);
 	vec2_Scale(pOut, pOut, 0.5f);
 }
+
