@@ -7,7 +7,7 @@ char *credits[] = {
   "   GLtron is written by " "\x03" "4" "Andreas Umbach",
   "",
   " Contributors:",
-  " Programming: Darrell Walisser      John Atkins",
+  " Programming: Darrell Walisser       Jon Atkins",
   "              Todd Kirby",
   " Art:         Nicolas Zimmermann",
   "              Charles Babbage       Tracy Brown"
