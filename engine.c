@@ -280,7 +280,7 @@ void moveStep(Data* data) {
 void clearTrail(int player) {
   int i;
 
-  for(i = 0; i < colwidth * getSettingi("grid_size"); i++)
+  for(i = 0; i < colwidth *  game2->rules.grid_size; i++)
     if(colmap[i] == player + 1)
       colmap[i] = 0;
 
@@ -321,8 +321,8 @@ void writePosition(int player) {
 
   /* debug texture */
   source = debugcolors[ colmap [ y * colwidth + x ] ];
-  tx = (float) x * DEBUG_TEX_W / getSettingi("grid_size");
-  ty = (float) y * DEBUG_TEX_H / getSettingi("grid_size");
+  tx = (float) x * DEBUG_TEX_W /  game2->rules.grid_size; 
+  ty = (float) y * DEBUG_TEX_H /  game2->rules.grid_size;
   memcpy(debugtex + (int)ty * DEBUG_TEX_W * 4 + (int)tx * 4, source, 4);
 }
 
