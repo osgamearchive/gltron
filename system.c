@@ -36,7 +36,6 @@ void SystemInit(int *argc, char *argv[]) {
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
 #warning "disable sound system"
   }
-  atexit(SystemExit);
 
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
 #ifdef NETWORK
