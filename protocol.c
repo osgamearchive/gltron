@@ -617,6 +617,7 @@ Recv_rules()
   int ilen=sizeof(int);
   int *speed = (int*)malloc(ilen);
   int *startPos;
+  int i;
 
 
   fprintf(stderr, "get players\n");
@@ -655,10 +656,22 @@ Recv_rules()
       printf("get %d <=> %d", rLen, ilen);
       return connectLost;
     }
-  game2->startPositions=startPos;
-  printf("start : x %d\n", game2->startPositions[0]);
-  printf("game2->startPositions %d\n", *game2->startPositions);
 
+  game2->startPositions= (int *) malloc( ilen );
+  //Change startPositions to fit with the right player.
+  for(i=0; i<game2->players;++i)
+    {
+      printf("adding tp player %d ( %d ) %d %d %d\n", i, getPlayer(i),startPos[3*getPlayer(i)],
+	     getPlayer(i),startPos[3*getPlayer(i)+1],getPlayer(i),startPos[3*getPlayer(i)+2] );
+      rLen = getPlayer(i); //Change player start Position.
+      game2->startPositions[3*i+0]=startPos[3*rLen+0];
+      game2->startPositions[3*i+1]=startPos[3*rLen+1];
+      game2->startPositions[3*i+2]=startPos[3*rLen+2];
+    }
+  free(startPos);
+  printf("start : x %d y %d dir %d\n", game2->startPositions[0], game2->startPositions[1], game2->startPositions[2]);
+  printf("game2->startPositions %d\n", *game2->startPositions);
+  //game2->startPositions=startPos;
 
   fprintf(stderr, "get time\n");	
   rLen = SDLNet_TCP_Recv(tcpsock, (void *)&game2->time, sizeof(Time));
@@ -796,4 +809,24 @@ printNetGameSettings ( netGameSettings ngS )
   ngS->timeR,
   ngS->nbGames);
 }
+  
+int
+getPlayer(int which)
+{
+  return slots[which].player;
+}
 
+int
+getWhich(int player)
+{
+  int i;
+  for(i=0; i<MAX_PLAYERS;++i)
+    {
+      if( slots[i].player == player )
+	{
+	  printf("getWich %d -> %d\n", player, i);
+	  return i;
+	}
+    }
+  return player;
+}

@@ -68,6 +68,8 @@ void getEvents() {
     //printf("%d < %d...\n", latest->timestamp, game2->time.current);
     while(latest->timestamp < game2->time.current) {
       /* TODO: check if it's safe to ignore the return value here */
+      printf("event change player %d to %d\n", latest->player, getPlayer(latest->player));
+      latest->player = getPlayer(latest->player);
       fprintf(stderr, "process : %d %d %d %d %d\n", latest->type, latest->player, 
   	 latest->x, latest->y, latest->timestamp);
       processEvent(latest);

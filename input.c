@@ -82,9 +82,9 @@ void keyGame(int k, int unicode, int x, int y)
 		createTurnEvent(p, key_actions[i].turn);
 	      } else {
 		if( key_actions[i].turn == TURN_LEFT )
-		  Send_header( turnLeft, me, 0, 0);
+		  Send_header( turnLeft, getWhich(me), 0, 0);
 		else
-		  Send_header( turnRight, me, 0, 0);
+		  Send_header( turnRight, getWhich(me), 0, 0);
 		  
 	      }
 	  }

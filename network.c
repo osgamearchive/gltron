@@ -56,6 +56,9 @@ doLoginNetEvent(int accepted, int which, int len, int time)
   //get our info, who we are, etc...
   which = Recv_who(slots);
   me = which;
+  slots[me].player=0;
+
+  
   
   //are we the master?
   if( slots[which].isMaster )
@@ -66,13 +69,14 @@ doLoginNetEvent(int accepted, int which, int len, int time)
 
 
   //Getting users list.
-  fprintf(stderr, "%d palyers in the game\n", nbUsers);
+  fprintf(stderr, "%d players in the game\n", nbUsers);
 
   for(i=0; i<nbUsers; ++i)
     {
       which = Recv_who(slots);
-      //slots[which].player=(which==0)?me:which;
+      slots[which].player=(which==0)?me:which;
     }
+  nbUsers++;
   return noErr;
 }
 
@@ -135,9 +139,11 @@ doChgeStateNetEvent()
       game->settings->ai_player2=( slots[1].active ) ? 0 : 2;
       game->settings->ai_player3=( slots[2].active ) ? 0 : 2;
       game->settings->ai_player4=( slots[3].active ) ? 0 : 2;
-      
+      printf("nbUsers: %d\n", nbUsers);
+      game->players=nbUsers;
 
       //starting the game...
+      printf("initData with %d players\n", game->players);
       initData();
       if( Recv_rules() != noErr )//getting rules from server...
 	fprintf(stderr, "got an error while reading rules\n");
@@ -145,13 +151,10 @@ doChgeStateNetEvent()
 	fprintf(stderr, "rules set...\n");
       //game->players=game2->players;
       
-      
-
-
       if( applyGameInfo() )//applying gamerules
 	fprintf(stderr, "got an error while applying GameInfo\n");
 
-      data = game->player[me].data;
+      data = game->player[getWhich(me)].data;
       //data = (Data *)game2->startPositions[0];
 
       printf("init position with x: %d y: %d direction: %d\n", data->iposx,

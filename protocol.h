@@ -91,6 +91,7 @@ typedef struct sslots {
   int      color;        //Couleur de la moto
   int      pingIt;       //Ping de l'utilisateur
   int      isMaster;     //Est ce le maitre du jeu
+  int      player;       //player in the game.
 } tslots, *pslots;
 
 
@@ -162,7 +163,10 @@ netEventList    createNetEventList( void );
 GameEvent*      getNetEvent();
 void             addNetEvent( GameEvent *e);
 /** Prints */
-void print_serverState   ( int );
-void printNetGameSettings ( netGameSettings );
+void print_serverState     ( int );
+void printNetGameSettings  ( netGameSettings );
 
+/** Getters */
+int getPlayer        ( int );
+int getWhich         ( int );
 #endif

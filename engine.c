@@ -205,6 +205,9 @@ int applyGameInfo() {
 
   for(i = 0; i < game2->players; i++) {
     data = game->player[i].data;
+    printf("old init position Player %d  x: %d y: %d direction: %d\n", i, data->iposx,
+	    data->iposy,
+	    data->dir);
     data->speed = game2->rules.speed;
     data->iposx = game2->startPositions[3 * i + 0];
     data->iposy = game2->startPositions[3 * i + 1];
@@ -214,7 +217,12 @@ int applyGameInfo() {
     data->dir = game2->startPositions[3 * i + 2];
     data->last_dir = data->dir;
 
-     printf("chaging init position Player %d  x: %d y: %d direction: %d\n", i, data->iposx,
+    data->trail = data->trails;
+
+    data->trail->sx = data->trail->ex = data->iposx;
+    data->trail->sy = data->trail->ey = data->iposy;
+
+     printf("changing init position Player %d  x: %d y: %d direction: %d\n", i, data->iposx,
 	    data->iposy,
 	    data->dir);
 

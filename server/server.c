@@ -83,6 +83,8 @@ stop_server()
       SDLNet_FreeSocketSet(socketset);
       socketset = NULL;
     }
+  SDLNet_Quit();
+  SDL_Quit();
 }
 
 void
