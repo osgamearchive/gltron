@@ -71,15 +71,15 @@ void storeVertex(TrailMesh *pMesh, int offset,
 	uv.v[0] = fUStart + t * fSegLength / DECAL_WIDTH;
 
 	uv.v[1] = 0;
-	vec3Copy(pVertices, &v);
-	vec3Copy(pNormals, pvNormals + iNormal);
-	vec2Copy(pTexCoords, &uv);
+	vec3_Copy(pVertices, &v);
+	vec3_Copy(pNormals, pvNormals + iNormal);
+	vec2_Copy(pTexCoords, &uv);
 			
 	v.v[2] = fTop;
 	uv.v[1] = 1;
-	vec3Copy(pVertices + 1, &v);
-	vec3Copy(pNormals + 1, pvNormals + iNormal);
-	vec2Copy(pTexCoords + 1, &uv);
+	vec3_Copy(pVertices + 1, &v);
+	vec3_Copy(pNormals + 1, pvNormals + iNormal);
+	vec2_Copy(pTexCoords + 1, &uv);
 }
 
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset) {
@@ -142,7 +142,7 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 	}
 	{
 		segment2 s;
-		vec2Copy(&s.vStart, & pData->trails[pData->trailOffset].vStart);
+		vec2_Copy(&s.vStart, & pData->trails[pData->trailOffset].vStart);
 		s.vDirection.v[0] = getSegmentEndX( pData, 1 ) - s.vStart.v[0];
 		s.vDirection.v[1] = getSegmentEndY( pData, 1 ) - s.vStart.v[1];
 
@@ -165,7 +165,7 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 
 		fTotalLength += fSegLength;
 
-		vec2Add(&s.vStart, &s.vStart, &s.vDirection);
+		vec2_Add(&s.vStart, &s.vStart, &s.vDirection);
 		s.vDirection.v[0] = getSegmentEndX( pData, 0 ) - s.vStart.v[0];
 		s.vDirection.v[1] = getSegmentEndY( pData, 0 ) - s.vStart.v[1];
 		fSegLength = segment2_Length(&s);

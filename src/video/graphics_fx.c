@@ -30,7 +30,7 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 		v.v[0] = x - pCam->cam[0];
 		v.v[1] = y - pCam->cam[1];
 		v.v[2] = 0 - pCam->cam[2];
-		dist = vec3Length(&v);
+		dist = vec3_Length(&v);
 	}
 	{
 	  const float fMin = 30;
