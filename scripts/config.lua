@@ -4,6 +4,9 @@ settings = { }
 artpacks = { }
 tracks = { }
 
+-- debugginb
+settings.debug_output = 1
+
 -- game
 -- game rules
 settings.speed = 8.5
