@@ -1,13 +1,12 @@
 bugs:
 (4 / 6) console messages don't show correct player numbers
 (1 / 3) fast finish is broken
-(4 / 1) trail bows are writing to z-buffer, creating visible artefacts
 (5 / 2) transparent trails are drawn in the wrong order (artefacts) 
+(2) transparent trails are pretty broken
 (5 / 5) key definitions are not saved to .gltronrc
 (6) switching resolution still leaks a little memory
 (3) trails intersect after crash
 (2) demo playpack is broken after interrupt (Escape) 
-(4) bow isn't perfectly joining trail
 (4) don't show resolutions that can't be accelerated
 possible bugs:
 (0) more memory leaks
