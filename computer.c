@@ -238,12 +238,12 @@ void doComputer2(int player, int target) {
     if(left < right) {
       // turn right
       createTurnEvent(player, TURN_RIGHT);
-      fprintf(stderr, "turning right\n");
+      // fprintf(stderr, "turning right\n");
       // return;
     } else {
       // turn left 
       createTurnEvent(player, TURN_LEFT);
-      fprintf(stderr, "turning left\n");
+      // fprintf(stderr, "turning left\n");
       // return;
     }
     ai->lastx = data->iposx;
