@@ -17,7 +17,7 @@ AC_PROG_CPP
 AC_PROG_RANLIB
 
 dnl CFLAGS set-up
-dnl CFLAGS=""
+CFLAGS="-DSEPARATOR=\"'/'\""
 dnl CFLAGS="-ansi -pedantic"
 dnl CXXFLAGS=""
 dnl CPPFLAGS=""
