@@ -8,10 +8,9 @@ static int sound_open = 0;
 #define SOUND_IS_OK if(!sound_open) return;
 /*
 #define NUM_GAME_FX 5
-#define NUM_MENU_FX 2
 */
 #define NUM_GAME_FX 2
-#define NUM_MENU_FX 0
+#define NUM_MENU_FX 2
 
 Mix_Chunk *game_fx[NUM_GAME_FX];
 static Mix_Chunk *menu_fx[NUM_MENU_FX];
@@ -72,6 +71,7 @@ int initSound() {
 
 void shutdownSound() {
   SOUND_IS_OK;
+  stopSound();
   Mix_CloseAudio();
 }
   
