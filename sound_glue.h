@@ -1,3 +1,5 @@
+#ifndef SOUND_GLUE_H
+#define SOUND_GLUE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,4 +26,6 @@ void Audio_StartEngine(int player);
 void Audio_StopEngine(int player);
 #ifdef __cplusplus
 }
+#endif
+
 #endif

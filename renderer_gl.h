@@ -1,3 +1,6 @@
+#ifndef RENDERER_GL_H
+#define RENDERER_GL_H
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -36,3 +39,5 @@ typedef struct Renderer {
 
 extern Renderer renderer;
 extern GLstate *state;
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef MENUS
-#define MENUS
+#ifndef MENU_H
+#define MENU_H
 
 enum {
   MENU_ACTION = 1,
@@ -39,4 +39,3 @@ typedef struct {
 extern int menutime;
 
 #endif
-

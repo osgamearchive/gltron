@@ -1,3 +1,6 @@
+#ifndef SCRIPTING_H
+#define SCRIPTING_H
+
 extern void scripting_Init();
 extern void scripting_Quit();
 
@@ -14,3 +17,5 @@ extern void scripting_RunFile(char *name);
 extern void scripting_Run(char *command);
 extern void scripting_RunFormat(char *format, ...);
 extern void scripting_RunGC();
+
+#endif

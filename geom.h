@@ -1,7 +1,7 @@
-/* some geometric routines always needed */
-
 #ifndef GEOM_H
 #define GEOM_H
+
+/* some geometric routines always needed */
 
 typedef struct {
   float v[4];
@@ -45,7 +45,3 @@ void vcopy4(float *v1, float *out);
 void vmul(float *v, float f);
 
 #endif
-
-
-
-

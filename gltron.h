@@ -1,10 +1,10 @@
+#ifndef GLTRON_H
+#define GLTRON_H
+
 /*
   gltron
   Copyright (C) 1999 by Andreas Umbach <marvin@dataway.ch>
 */
-
-#ifndef GLTRON_H
-#define GLTRON_H
 
 #ifdef __cplusplus
 extern "C" {
