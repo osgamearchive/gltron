@@ -153,7 +153,7 @@ extern "C" {
 
   void Audio_Init(void) {
     Sound_Init(); // Init SDL_Sound
-	output_decoders();
+    // output_decoders();
 
     SDL_AudioSpec* spec = new SDL_AudioSpec;
     spec->freq = 22050;
