@@ -122,8 +122,13 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
      time, since the game maybe hasn't started yet, or was paused */
   static Uint32 last=0;
   Uint32 dt;
-  dt = SDL_GetTicks() - last;
-  last = SDL_GetTicks();
+
+	if(game2->time.dt == 0) {
+		dt = SDL_GetTicks() - last;
+		last = SDL_GetTicks();
+	} else {
+		dt = game2->time.dt;
+	}
 
   if(cam->type->freedom[CAM_FREE_R]) {
     if(game2->input.mouse1 == 1)
