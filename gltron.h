@@ -85,7 +85,14 @@ extern "C" {
 #include "recognizer.h"
 
 	/* rendering stuff */
+#include "explosion.h"
 #include "renderer_gl.h"
+
+#include "graphics_utility.h"
+#include "graphics_fx.h"
+#include "graphics_hud.h"
+#include "graphics_lights.h"
+#include "graphics_world.h"
 
 	/* resource management */
 #include "texture.h"
@@ -328,8 +335,8 @@ extern "C" {
 	extern void initClientData();
 	extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 	extern void changeDisplay(int view);
-	extern void updateDisplay(ViewportType VPtype); /* vp types defined in data.h */
-	extern void initModelLights(int light);
+	extern void updateDisplay(ViewportType VPtype); 
+	/* vp types defined in data.h */
 
 	extern void gameMouseMotion(int x, int y);
 	extern void gameMouse(int buttons, int state, int x, int y);
@@ -430,14 +437,8 @@ extern "C" {
 	extern void rebuildDebugTex();
 	extern void drawDebugLines(gDisplay *d);
 	extern void drawDebugTex(gDisplay *d);
-	extern void drawFPS(gDisplay *d);
-	extern void drawConsole(gDisplay *d);
-	extern void drawScore(Player *p, gDisplay *d);
-	extern void drawAI(gDisplay *d);
-	extern void drawPause(gDisplay *d);
 	/* extern void drawHelp(gDisplay *d); */
 	extern void drawPlayers(Player *);
-	extern void  drawWalls();
 	extern void drawCam(Player *p, gDisplay *d);
 
 	extern void draw2D( gDisplay *d );
