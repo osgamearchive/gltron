@@ -1,11 +1,14 @@
-#include "path.h"
-#include "file-macos.h"
 
 void setupMacDirectories();
 
 void dirSetup(const char *executable[]) {
+  setupMacDirectories();
   initDirectories();
-	setupMacDirectories();
+}
+
+char* getHome() {
+	
+	return "<<fake-home-dir>>";
 }
 
 /* we want GLTron to run on locked volumes (CD-ROMs etc),
@@ -14,11 +17,7 @@ void dirSetup(const char *executable[]) {
 
 #include <Folders.h>
 #include "FullPath.h" /* MoreFiles Library */
-#include <stdlib.h>
-#include <string.h>
 #include <assert.h>
-
-#include "SDL.h"
 
 char *_MacOS_Prefs_Directory;
 char *_MacOS_Desktop_Directory;
