@@ -42,4 +42,6 @@ void nebu_Font_Render(nebu_Font* font, const char *text, int len);
 void nebu_Font_RenderFormatted(nebu_Font* font, nebu_Font_Format *format, const char *text);
 void nebu_Font_RenderToBox(nebu_Font* font, const char *text, int len, box2 *box, int flags);
 void nebu_Font_RenderToBoxFormatted(nebu_Font* font, nebu_Font_Format *format, const char *text, box2 *box);
+
 #endif
+
