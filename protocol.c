@@ -213,11 +213,6 @@ Net_preparepacket(Packet* packet, void *buf)
     ADD_INT(packet->infos.gamerules.speed*1000);
     ADD_INT(packet->infos.gamerules.eraseCrashed);
     //TODO: need do be finished: how to add Time, float, and int * for
-    //startPos
-    for(i=0; i< MAX_PLAYERS*3; ++i)
-      {
-	ADD_INT(packet->infos.gamerules.startPos[i]);
-      }
     //Time
     ADD_INT(packet->infos.gamerules.time.current);
     ADD_INT(packet->infos.gamerules.time.lastFrame);
@@ -227,6 +222,13 @@ Net_preparepacket(Packet* packet, void *buf)
     ADD_INT(packet->infos.gamerules.gamespeed);
     ADD_INT(packet->infos.gamerules.grid_size);
     ADD_INT(packet->infos.gamerules.arena_size);
+    break;
+  case STARTPOS:
+    //startPos
+    for(i=0; i< MAX_PLAYERS*3; ++i)
+      {
+	ADD_INT(packet->infos.startpos.startPos[i]);
+      }
     break;
   case NETRULES:
     ADD_INT(packet->infos.netrules.nbWins);
@@ -326,11 +328,6 @@ Net_handlepacket(Packet* packet, void *buf)
     GET_INT(packet->infos.gamerules.speed, buf);
     packet->infos.gamerules.speed/=1000;
     GET_INT(packet->infos.gamerules.eraseCrashed, buf);
-    //startPos
-    for(i=0; i< MAX_PLAYERS*3; ++i)
-      {
-	GET_INT(packet->infos.gamerules.startPos[i], buf);
-      }
     //time...
     GET_INT(packet->infos.gamerules.time.current, buf);
     GET_INT(packet->infos.gamerules.time.lastFrame, buf);
@@ -340,6 +337,13 @@ Net_handlepacket(Packet* packet, void *buf)
     GET_INT(packet->infos.gamerules.gamespeed, buf);
     GET_INT(packet->infos.gamerules.grid_size, buf);
     GET_INT(packet->infos.gamerules.arena_size, buf);
+    break;
+  case STARTPOS:   
+    //startPos
+    for(i=0; i< MAX_PLAYERS*3; ++i)
+      {
+	GET_INT(packet->infos.startpos.startPos[i], buf);
+      }
     break;
   case NETRULES:
     GET_INT(packet->infos.netrules.nbWins, buf);

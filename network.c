@@ -201,7 +201,7 @@ do_netrules(Packet packet)
 void
 do_gamerules(Packet packet)
 {
-  int   i, j;
+  int   i;
 
 
   //TODO: clean all this ugly code, and do a safe clean init function.
@@ -230,15 +230,21 @@ do_gamerules(Packet packet)
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
   game2->time                 = packet.infos.gamerules.time;
   
-  //Startpos
+ 
+}
+void
+do_startpos(Packet packet)
+{
+  int i, j;
+ //Startpos
   printf("+ %d players, getting start positions \n", game2->players);
   game2->startPositions = ( int *)malloc(3*game2->players *sizeof(int));
   for(i=0; i<game2->players; ++i)
     {
       j = getPlayer(i);
-      game2->startPositions[3*i+0]=packet.infos.gamerules.startPos[3*j+0];
-      game2->startPositions[3*i+1]=packet.infos.gamerules.startPos[3*j+1];
-      game2->startPositions[3*i+2]=packet.infos.gamerules.startPos[3*j+2];
+      game2->startPositions[3*i+0]=packet.infos.startpos.startPos[3*j+0];
+      game2->startPositions[3*i+1]=packet.infos.startpos.startPos[3*j+1];
+      game2->startPositions[3*i+2]=packet.infos.startpos.startPos[3*j+2];
     }
 }
 
@@ -272,6 +278,9 @@ do_preGameState( Packet packet )
       break;
     case GAMERULES:
       do_gamerules(packet);
+      break;
+    case STARTPOS:
+      do_startpos(packet);
       break;
     case NETRULES:
       do_netrules(packet);

@@ -7,7 +7,7 @@
 
 #define BROADCAST  -1        //Used when chat is not private.
 
-#define PACKETSIZE  96       //Size of packet
+#define PACKETSIZE  56       //Size of packet
 
 //Enums-----------------------------------------------------------------------
 /** Possible errors */
@@ -52,6 +52,7 @@ typedef enum packettype
     SERVERINFO,              //Infos of the server.
     CHAT,                    //Chat public and private.
     GAMERULES,               //Game rules and settings.
+    STARTPOS,                //Start positions of the players ( server decide ).
     NETRULES,                //Net rules: rules that set the server behaviour.
     SCORE,                   //Score at the end of a game.
     SNAPSHOT,                //Snapshot ( quite same as EVENT )
@@ -91,19 +92,21 @@ typedef struct packet {
       int      players;      //how many players
       float    speed;        //game speed
       int      eraseCrashed; //1 if erase Crashed player.
-      int      startPos[MAX_PLAYERS*3]; //startposition of players
       Time     time;         //to synchronize
       int      gamespeed;    //The game speed
       int      grid_size;    //grid size
       int      arena_size;   //arena_size
     } gamerules;             //Type GAMERULES
     struct {
+      int      startPos[MAX_PLAYERS*3]; //startposition of players
+    } startpos;              //Type STARTPOS
+    struct {
       int      nbWins;       //NbWins before getting score
       int      time;         //How many time before stopping game.
     } netrules;
     struct {
-      int     winner;        //Who is the winner
-      int     points[MAX_PLAYERS]; //Points for each player.
+      int      winner;        //Who is the winner
+      int      points[MAX_PLAYERS]; //Points for each player.
     } score;
     struct {
       GameEvent event;       //events

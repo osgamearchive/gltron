@@ -79,6 +79,7 @@ do_lostplayer(int which )
       //and go to waitState.
       if( nbUsers == 0 )
 	{
+	  printf("Nobody left: swith to default setting and state is waitState...\n");
 	  //change to waitState
 	  sState=waitState;
 
@@ -291,7 +292,7 @@ do_chat( int which, Packet packet )
 void
 do_startgame( int which, Packet packet )
 {
-  Packet   rep;
+  Packet   rep, rep2;
   int      i;
   Player   *p;
   AI       *ai;
@@ -357,21 +358,24 @@ do_startgame( int which, Packet packet )
       game2->startPositions[3*i+1]=game->player[i].data->iposy;
       game2->startPositions[3*i+2]=game->player[i].data->dir;
     }
-  
+
   printf("%d players, preparing start post\n", game2->players);
+  rep2.which                        = SERVERID;
+  rep2.type                         = STARTPOS;
   for(i=0; i<game2->players; ++i)
     {
-      rep.infos.gamerules.startPos[3*i+0]=game->player[i].data->iposx;
-      rep.infos.gamerules.startPos[3*i+1]=game->player[i].data->iposy;
-      rep.infos.gamerules.startPos[3*i+2]=game->player[i].data->dir;
+      rep2.infos.startpos.startPos[3*i+0]=game->player[i].data->iposx;
+      rep2.infos.startpos.startPos[3*i+1]=game->player[i].data->iposy;
+      rep2.infos.startpos.startPos[3*i+2]=game->player[i].data->dir;
     }
   for(i=0; i<4; ++i)
     {
       if( slots[i].active == 1 )
 	{
 	  Net_sendpacket(&rep, slots[i].sock);
+	  Net_sendpacket(&rep2, slots[i].sock);
 	}
-    }
+    }  
 
   //Send a change state	  
   sState = gameState;
