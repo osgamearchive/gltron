@@ -98,10 +98,10 @@ void initPause() {
 }
 
 void exitPause() {
-  /* re-enable game sound effects */
-#ifdef SOUND
-  Audio_EnableEngine();
-#endif
+/* sound effects are re-enabled in initGame() */
+//#ifdef SOUND  
+// Audio_EnableEngine(); 
+//#endif
 }
 
 void initPauseGL() {
