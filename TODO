@@ -10,6 +10,7 @@ Bugs:
 - Visual artefact in the lightcycle trail between textured/untextured bow
   (Andreas)
 - Screen garbled in-game after switching resolutions (hofi)
+- sound FX garbled on MacOS (sem,darrell)
 
 Features:
 
@@ -19,7 +20,7 @@ Features:
 - Add 3d sound source for recognizer
 - Add sound for own cycle. Modulate pitch (or volume) after turns
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
-- Rework LOD system a bit.
+- Tune diffuse / specular materials for the lightcycle, trail & recognizers (nicolas, kokido)
 
 Documentation:
 
@@ -31,6 +32,10 @@ Administrative:
 - document tools used. included 'sponsor' message for 3d exploration
 
 Optimizations/Cleanups
+
+- Rework LOD system a bit.
+- look at #if 0,#endif and remove obsolete code
+- remove obsolete bitmap stuff
 - Scale the mesh on load time, to avoid need for GL_NORMALIZE
 - Rewrite trail handling code
 
