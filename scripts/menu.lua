@@ -106,6 +106,16 @@ Menu = {
       read = function() return settings.display_type; end,
       store = function(value) settings.display_type = value; end
    },
+	 Map = {
+			type = MenuC.type.list, caption = "2D Map",
+			labels = { "none", "small", "medium", "huge" },
+			values = { 0, 0.333, 0.5, 0.9 },
+			read = function() return settings.map_ratio_w; end,
+			store = function(value) 
+			  settings.map_ratio_w = value;
+			  settings.map_ratio_h = value;
+	   end
+   },
 
    -- Player
    Player1 = {    
@@ -200,13 +210,6 @@ Menu = {
       read = function() return settings.show_wall; end,
       store = function(value) settings.show_wall = value; end
    },
-   Crash = {
-      type = MenuC.type.list, caption = "Crash texture",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.show_crash_texture; end,
-      store = function(value) settings.show_crash_texture = value; end
-   },
    Skybox = {
       type = MenuC.type.list, caption = "Skybox texture",
       labels = { "off", "on" },
@@ -273,7 +276,6 @@ Menu = {
       store = function(value) settings.show_recognizer = value; end
    },
    ImpactAnimation = {
-
       type = MenuC.type.list, caption = "Impact Animation",
       labels = { "off", "on" },
       values = { 0, 1 },
@@ -392,7 +394,14 @@ Menu = {
       right = nextTrack,
       left = previousTrack,
       action = nextTrack,
-      read = function() _, _, name = strfind(settings.current_track, "song_([^\.]*)"); return name; end
+      read = function()
+        _,_,name = strfind(settings.current_track, "(.*)%..+")
+        if name then
+          return name
+        else
+          return settings.current_track
+        end
+      end
    }
 }
 
@@ -482,7 +491,7 @@ Menu.GameRulesMenu.items = {
    "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
 }
 
-Menu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports" }
+Menu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports", "Map" }
 Menu.PlayerConfigMenu.items = { "Player1", "Player2", "Player3", "Player4" }
 Menu.KeyConfigMenu.items = { 
    "Player1_KeyMenu", "Player2_KeyMenu", "Player3_KeyMenu", "Player4_KeyMenu"
@@ -494,7 +503,7 @@ Menu.Player4_KeyMenu.items = { "Player4_Left", "Player4_Right" }
 
 Menu.VideoMenu.items = { "TextureMenu", "DetailsMenu", "ScreenMenu" }
 Menu.TextureMenu.items = { 
-   "Artpack", "Floor", "Wall", "Crash", "Skybox", 
+   "Artpack", "Floor", "Wall", "Skybox", 
    "Decals", "Mipmaps", "Filtering", "WallScaling"
 }
 Menu.DetailsMenu.items = {
