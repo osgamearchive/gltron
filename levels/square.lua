@@ -33,7 +33,18 @@ geometry = {
 		 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
-			textures = { diffuse = "gltron_floor.png" }
+			textures = { 
+				 diffuse = {
+						file = "gltron_floor.png",
+						-- 0: nearest, 1: linear: 2: linear_mipmap_nearest
+						-- 3: linear_mipmap_linear
+						min_filter = 3,
+						mag_filter = 1,
+						-- 0: clamp, 1: clamp to edge, 2: repeat
+						wrap_s = 2,
+						wrap_t = 2
+				 }
+			}
 		},
 		vertices = {
 			{ pos = { x = 0, y = 0, z = 0 }, uv = { u = 0, v = 0 } },
@@ -52,29 +63,40 @@ geometry = {
 		vertexformat = 5, 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
-			textures = { diffuse = "walls.png" }
+			textures = { 
+				 diffuse = {
+						file = "walls.png",
+						-- 0: nearest, 1: linear: 2: linear_mipmap_nearest
+						-- 3: linear_mipmap_linear
+						min_filter = 3,
+						mag_filter = 1,
+						-- 0: clamp, 1: clamp to edge, 2: repeat
+						wrap_s = 1,
+						wrap_t = 1
+				 }
+			}
 		},
 		vertices = {
 			-- wall
 			{ pos = { x = 0, y = 0, z = 0 }, 				uv = { u = 0, v = 0 } },
 			{ pos = { x = 0, y = 1, z = 0 },				uv = { u = 0.25, v = 0 } },
-			{ pos = { x = 0, y = 1, z = 0.25 },			uv = { u = 0.25, v = 1 } },
-			{ pos = { x = 0, y = 0, z = 0.25 },			uv = { u = 0, v = 1 } },
+			{ pos = { x = 0, y = 1, z = 0.125 },			uv = { u = 0.25, v = 1 } },
+			{ pos = { x = 0, y = 0, z = 0.125 },			uv = { u = 0, v = 1 } },
 			-- wall
 			{ pos = { x = 0, y = 1, z = 0 },				uv = { u = 0.25, v = 0 } },
 			{ pos = { x = 1, y = 1, z = 0 },				uv = { u = 0.5, v = 0 } },
-			{ pos = { x = 1, y = 1, z = 0.25 },			uv = { u = 0.5, v = 1 } },
-			{ pos = { x = 0, y = 1, z = 0.25 },			uv = { u = 0.25, v = 1 } },
+			{ pos = { x = 1, y = 1, z = 0.125 },			uv = { u = 0.5, v = 1 } },
+			{ pos = { x = 0, y = 1, z = 0.125 },			uv = { u = 0.25, v = 1 } },
 			-- wall
 			{ pos = { x = 1, y = 1, z = 0 },				uv = { u = 0.5, v = 0 } },
 			{ pos = { x = 1, y = 0, z = 0 },				uv = { u = 0.75, v = 0 } },
-			{ pos = { x = 1, y = 0, z = 0.25 },			uv = { u = 0.75, v = 1 } },
-			{ pos = { x = 1, y = 1, z = 0.25 },			uv = { u = 0.5, v = 1 } },
+			{ pos = { x = 1, y = 0, z = 0.125 },			uv = { u = 0.75, v = 1 } },
+			{ pos = { x = 1, y = 1, z = 0.125 },			uv = { u = 0.5, v = 1 } },
 			-- quad3
 			{ pos = { x = 1, y = 0, z = 0 },				uv = { u = 0.75, v = 0 } },
 			{ pos = { x = 0, y = 0, z = 0 },				uv = { u = 1, v = 0 } },
-			{ pos = { x = 0, y = 0, z = 0.25 },			uv = { u = 1, v = 1 } },
-			{ pos = { x = 1, y = 0, z = 0.25 },			uv = { u = 0.75, v = 1 } }
+			{ pos = { x = 0, y = 0, z = 0.125 },			uv = { u = 1, v = 1 } },
+			{ pos = { x = 1, y = 0, z = 0.125 },			uv = { u = 0.75, v = 1 } }
 		},
 		indices = { 
 			{ 0, 1, 2 }, { 0, 2, 3 },
