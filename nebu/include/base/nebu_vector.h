@@ -49,5 +49,5 @@ vec2* vec2Normalize(vec2 *pOut, const vec2 *pV);
 float vec2Dot(const vec2 *pV1, const vec2 *pV2);
 
 float vec2Length(const vec2 *pV);
-
+float segment2_Length(const segment2 *s);
 #endif
