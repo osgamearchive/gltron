@@ -2,6 +2,7 @@
   gltron
   Copyright (C) 1999 by Andreas Umbach <marvin@dataway.ch>
 */
+#include "SDL.h"
 
 #include "game/init.h"
 #include "filesystem/path.h"
