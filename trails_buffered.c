@@ -154,7 +154,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   q_setTexCoord2f(q, 1, uv, 0.0);
   q_setVertex3f(q, 1, ex, ey, 0.0);
 
-  uv = getSegmentUV(line);
+  /* uv = getSegmentUV(line); // wrong! */
   q_setColor4fv(q, 2, color);
   q_setTexCoord2f(q, 2, uv, 1.0);
   q_setVertex3f(q, 2, ex, ey, height);
@@ -163,6 +163,11 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   q_setColor4fv(q, 3, color);
   q_setTexCoord2f(q, 3, 0.0, 1.0);
   q_setVertex3f(q, 3, line->sx, line->sy, height);
+
+  /* 
+  printf("uv for last segment: %.3f\n");
+  printf("segment lenght: %.2f\n", (ex - line->sx) + (ey - line->sy));
+  */
 
   /* experimental trail effect */
   checkGLError("before trail");
