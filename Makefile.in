@@ -42,6 +42,7 @@ HFILES = \
 
 
 CFILES = \
+	artpack.c \
 	png_texture.c \
 	pixels.c \
 	switchCallbacks.c \
