@@ -188,7 +188,13 @@ void idleGame(void) {
     /* check for fast finish */
     
     if (game2->settingsCache.fast_finish == 1) {
-      int factor = 4;
+      int factors[4] = { 4, 6, 12, 25 };
+			int threshold[4] = { 0, 300, 600, 800 };
+			int factor = 1;
+			for(i = 0; i < 4; i++) {
+				if(game2->rules.grid_size > threshold[i])
+					factor = factors[i];
+			}
       for (i = 0; i < game->players; i++) {
 	      if (game->player[i].ai->active != AI_COMPUTER &&
 	          game->player[i].data->exp_radius < EXP_RADIUS_MAX) {
