@@ -69,9 +69,13 @@ int itemExists (const char* path) {
 
 #include <unistd.h>
 
-int itemExists (const char* path) {
+#if 0
+
+static int itemExists (const char* path) {
     return (access (path, F_OK) == 0);
 }
+
+#endif /* 0 */
 
 #endif
 

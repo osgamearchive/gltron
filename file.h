@@ -17,7 +17,6 @@ extern "C" {
 extern char* getFullPath(const char *filename);
 #endif
 
-extern int itemExists(const char *path);
 extern int fileExists(const char *path);
 extern void initDirectories();
 
