@@ -5,7 +5,7 @@ void freeTextureData(texture *tex) {
   free(tex);
 }
 
-texture* loadTextureData(char *filename) {
+texture* loadTextureData(const char *filename) {
   texture *tex = NULL;
   char *path;
   char *artpack;
@@ -25,7 +25,7 @@ texture* loadTextureData(char *filename) {
   return tex;
 }
 
-void loadTexture(char *filename, int format) {
+void loadTexture(const char *filename, int format) {
   texture *tex;
   GLint internal;
 

@@ -361,7 +361,7 @@ extern void deleteTextures(gDisplay*);
 
 /* texture loading -> load_texture.c */
 /* uses sgi_texture.c or sdl_texture.c */
-extern void loadTexture(char *filename, int format);
+extern void loadTexture(const char *filename, int format);
 
 /* screenshot.c */
 extern void doBmpScreenShot(gDisplay *display);
@@ -495,13 +495,13 @@ extern void initBitmaps(gDisplay *d);
 extern void deleteBitmaps(gDisplay *d);
 extern fontbmp* fbmpLoadFont(char *filename);
 extern void fbmpUnloadFont(fontbmp *fbmp);
-extern texture* loadTextureData(char *filename);
+extern texture* loadTextureData(const char *filename);
 extern void freeTextureData(texture *tex);
 extern void drawSoftwareText(fonttex *tex, int x, int y, int size, char *text);
 extern void drawSoftwareHighlight(int x, int y, int size, char *text);
 extern fonttex *ftxLoadFont(char *filename);
 extern void ftxUnloadFont(fonttex *ftx);
-extern void loadTexture(char *filename, int format);
+extern void loadTexture(const char *filename, int format);
 
 /* It's not necessary to bind the texture explicitly. */
 /* (and we don't know which texture to bind) */
