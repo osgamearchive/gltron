@@ -1,6 +1,7 @@
 #include "gltron.h"
 
-static void drawbg_splash(Splash *splash );
+static void drawbg_splash( Splash *splash );
+static void drawv_splash(  Splash *splash );
 
 unsigned int splash_textures[1];
 
@@ -30,7 +31,7 @@ new_splash( int width, int height,  char *background, int options )
   glBindTexture(GL_TEXTURE_2D, splash_textures[0]);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-  loadTexture(background, GL_RGB);
+  loadTexture(background, GL_RGBA);
 
   //Create progress things.
   //Finding position of progress bar
@@ -66,9 +67,13 @@ new_splash( int width, int height,  char *background, int options )
 void
 draw_splash( Splash *splash )
 {
+  rasonly(game->screen);
   drawbg_splash( splash );
-  draw_wprogressbar(splash->wprogress);
   draw_wprogressstatus(splash->wstatus);
+  drawv_splash( splash );
+  draw_wprogressbar(splash->wprogress);
+
+
   SystemSwapBuffers();  
 }
 
@@ -88,14 +93,7 @@ static void drawbg_splash(Splash *splash ) {
 
   glColor3f(1.0, 1.0, 1.0);
   glBegin(GL_QUADS);
-  
-/*   glVertex2f(game->screen->vp_w, 0); */
-  
-/*   glTexCoord2f(1.0, .75); */
-/*   glVertex2f(game->screen->vp_w, game->screen->vp_h); */
-  
-/*   glTexCoord2f(0.0, .75); */
-/*   glVertex2f(0, game->screen->vp_h); */
+
   glTexCoord2f(0.0, 0.0);
   glVertex2f(game->screen->vp_w/2-splash->width/2, game->screen->vp_h/2-splash->height/2);
   
@@ -110,7 +108,7 @@ static void drawbg_splash(Splash *splash ) {
   
   glEnd();
 
-  glDisable(GL_TEXTURE_2D);
+  //glDisable(GL_TEXTURE_2D);
 
 }
 
@@ -122,4 +120,12 @@ update_splash(Splash *splash, float prog, char *status)
   update_wprogressbar(splash->wprogress, prog);
   update_wprogressstatus(splash->wstatus, status);
   draw_splash( splash );
+}
+static void
+drawv_splash(  Splash *splash )
+{
+  char str[32];
+  sprintf(str, "Version %s", VERSION);
+  glColor3f(1.0, 0.0, 0.0);
+  drawText(guiFtx, game->screen->vp_w/2, 50 + game->screen->vp_h/2-splash->height/2, 8, str);
 }

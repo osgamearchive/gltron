@@ -35,22 +35,18 @@ draw_wprogressbar(Wprogressbar *wprogress)
 
 
   //Drawing box
-  //finding color
-  rasonly(game->screen);	  
-  glDepthMask(GL_FALSE);
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_BLEND);
+  //rasonly(game->screen);
   glColor3f(1.0, 1.0, 1.0);
 
 
   glBegin(GL_LINES);
-  glVertex2d(wprogress->x-1,wprogress->y-1);	                // Left Side Of Horizontal Line
-  glVertex2d(wprogress->x+wprogress->width+1,wprogress->y-1);	// Right Side Of Horizontal Line
+  glVertex2d(wprogress->x-1,wprogress->y-1);
+  glVertex2d(wprogress->x+wprogress->width+1,wprogress->y-1);
   glEnd();
 
   glBegin(GL_LINES);
-  glVertex2d(wprogress->x+wprogress->width+1,wprogress->y-1);	                // Left Side Of Horizontal Line
-  glVertex2d(wprogress->x+wprogress->width+1,wprogress->y+wprogress->height+1);	// Right Side Of Horizontal Line
+  glVertex2d(wprogress->x+wprogress->width+1,wprogress->y-1);
+  glVertex2d(wprogress->x+wprogress->width+1,wprogress->y+wprogress->height+1);
   glEnd();
 
   glBegin(GL_LINES);
@@ -62,27 +58,6 @@ draw_wprogressbar(Wprogressbar *wprogress)
   glVertex2d(wprogress->x-1, wprogress->y+wprogress->height+1 );
   glVertex2d(wprogress->x-1, wprogress->y-1);
   glEnd();
-
-
-
-
-  glDepthFunc(GL_LESS);
-  glEnable(GL_DEPTH_TEST);
-  glShadeModel(GL_SMOOTH);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-/*   glDepthMask(GL_FALSE); */
-/*   glDisable(GL_DEPTH_TEST);	   */
-  
-/*   glEnable(GL_BLEND); */
-/*   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); */
-
-
-/*   //setColor4fv(game->player[i); */
-/*   glShadeModel(GL_SMOOTH); */
-  
-/*   setColor4fv(colors[0]); */
-/*   light4fv(color); */
-/*   glColor4fv(color); */
 
   s=(float)wprogress->width/100.0;
   //printf("s=%f\n", s);
@@ -98,19 +73,11 @@ draw_wprogressbar(Wprogressbar *wprogress)
 	  glColor4fv(colors[1]);
 	}
       x = (float)wprogress->x+i*s+1;
-      
-      // printf("x=%f\n", x);
-      glVertex2f(x, wprogress->y);	                        // Left Side Of Horizontal Line
-      glVertex2f(x, wprogress->y+wprogress->height);	// Right Side Of Horizontal Line
-      //fprintf(stderr, "drawing progress x: %f to %d\n", wprogress->x+i*s, wprogress->width/2+game->screen->vp_w/2);
-      //fprintf(stderr, "drawing progress y: %d to %d\n", wprogress->width/2 - game->screen->vp_w/2, wprogress->y+wprogress->height);
+ 
+      glVertex2f(x, wprogress->y);
+      glVertex2f(x, wprogress->y+wprogress->height);
       glEnd();
     }
-
-  glDisable(GL_BLEND);
-  
-  //glEnable(GL_DEPTH_TEST);
-  //glDepthMask(GL_TRUE);
 
   glLineWidth(1.0f);
 }
@@ -160,7 +127,8 @@ new_wprogressstatus(int x, int y, int nbchars)
 void
 draw_wprogressstatus(Wprogressstatus  *wstatus)
 {
-  glColor3f(1.0, 1.0, 1.0);
+ 
+  glColor4f(1.0, 1.0, 1.0, 1.0);
   drawText(gameFtx, wstatus->x, wstatus->y, 12, wstatus->status);
 }
 void
