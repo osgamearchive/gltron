@@ -60,13 +60,14 @@ settings.line_spacing = 20
 settings.softwareRendering = 0
 settings.antialias_lines = 1
 settings.bitdepth_32 = 0
+settings.use_stencil = 0
 settings.mouse_warp = 0
 settings.model_backwards = 0
 settings.screenSaver = 0
 
 -- audio
 settings.tracks = { }
-settings.current_track = "song_revenge_of_cats.it.gz"
+settings.current_track = "song_revenge_of_cats.it"
 -- music & fx settings
 settings.playEffects = 1
 settings.playMusic = 1
