@@ -75,13 +75,13 @@ AC_HELP_STRING([--enable-localdata],[Use local data directory @<:@default=no@:>@
 
 dnl snapshot dir setup
 AC_ARG_WITH(snapshot-dir,
-AC_HELP_STRING([--with-snapshot-dir=@<:@path@:>@],[Snapshot directory @<:@default=~/.gltron@:>@]),
+AC_HELP_STRING([--with-snapshot-dir=@<:@path@:>@],[Snapshot directory @<:@default=~@:>@]),
 	CPPFLAGSA="$CPPFLAGSA -DSNAP_DIR=\\\"$withval\\\"",
 	CPPFLAGSA="$CPPFLAGSA -DSNAP_DIR=\\\"~\\\"")
 
 dnl preferences dir setup
 AC_ARG_WITH(preferences-dir,
-AC_HELP_STRING([--with-preferences-dir=@<:@path@:>@],[Preferences directory @<:@default=~/.gltron@:>@]),
+AC_HELP_STRING([--with-preferences-dir=@<:@path@:>@],[Preferences directory @<:@default=~@:>@]),
 	CPPFLAGSA="$CPPFLAGSA -DPREF_DIR=\\\"$withval\\\"",
 	CPPFLAGSA="$CPPFLAGSA -DPREF_DIR=\\\"~\\\"")
 
