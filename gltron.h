@@ -153,6 +153,7 @@ enum {
 
 #define MOUSE_ORIG_X 100
 #define MOUSE_ORIG_Y 100
+
 #define MOUSE_CX 0.003
 #define MOUSE_CY 0.003
 
@@ -537,21 +538,21 @@ extern void ftxRenderString(fonttex *ftx, char *string, int len);
 /* can't get max_ascent, max_descent yet */
 
 #ifdef __NETWORK__
-Slots  slots[MAX_PLAYERS]; //slots of the server.
-int    nbUsers; 
-int    serverstate;
-char   name[255];
-int    isLogged;
-int    sChat;
-char   mesg[255];
-int    me;
+extern Slots  slots[MAX_PLAYERS]; //slots of the server.
+extern int    nbUsers; 
+extern int    serverstate;
+extern char   name[255];
+extern int    isLogged;
+extern int    sChat;
+extern char   mesg[255];
+extern int    me;
 
-netEventList neteventlist;
+extern netEventList neteventlist;
 
-int    packet_type;
-int    timeout;
-int    hasstarted;
-char   server_message[255];
+extern int    packet_type;
+extern int    timeout;
+extern int    hasstarted;
+extern char   server_message[255];
 extern Netscores         netscores;
 
 extern Wtext    *pregametext;
