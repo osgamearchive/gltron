@@ -47,7 +47,7 @@ void loadArt() {
   getArtPath("artpack.ini", buf);
   path = getFullPath(buf);
   if(path != NULL) {
-    scripting_LoadConfig(path);
+    scripting_DoFile(path);
     free(path);
   }
 

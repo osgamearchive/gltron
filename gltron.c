@@ -119,7 +119,9 @@ int main( int argc, char *argv[] ) {
   /* set some sane defaults */
   initDefaultSettings();
 
-#if 0
+  /* load some more defaults from config file */
+  scripting_DoFile("config.lua");
+
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
   {
     char *fname;
@@ -135,14 +137,10 @@ int main( int argc, char *argv[] ) {
     }
 
     /* load settings from config file */
-    scripting_LoadConfig(fname);
+    scripting_DoFile(fname);
 
     free(fname);
   }
-#endif
-
-  /* load settings from config file */
-  scripting_LoadConfig("config.lua");
 
   initColors();
 

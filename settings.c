@@ -135,7 +135,26 @@ void checkSettings() {
 
 
 void saveSettings() {
-#warning "FIXME: implement"
+  char *fname;
+  char *home;
+
+  home = getenv("HOME"); /* find homedir */
+  if(home == NULL) {
+    fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
+    sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
+  } else {
+    fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
+    sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
+  }
+  { 
+    char command[] = "writeto(\"%s\")";
+    char buf[120];
+    sprintf(buf, command, fname);
+    scripting_DoFile("save.lua");
+    scripting_DoString(buf);
+    scripting_DoString("save()");
+  }
+  free(fname);
 }
 
 #if 0

@@ -1,18 +1,19 @@
 #include "lua.h"
+#include "lualib.h"
+
 #include <stdio.h>
 
 static lua_State *L;
 
 void scripting_Init() {
   L = lua_open(0);
+  lua_baselibopen(L);
+  lua_strlibopen(L);
+  lua_iolibopen(L);
 }
 
 void scripting_Quit() {
   lua_close(L);
-}
-
-void scripting_LoadConfig(char *name) {
-  lua_dofile(L, name);
 }
 
 int scripting_GetFloat(char *name, float *f) {
@@ -60,4 +61,12 @@ void scripting_GetFloatArray(char *name, float *f, int n) {
     lua_pop(L, 1);
   }
   lua_pop(L, 1); /* restore stack */
+}
+
+void scripting_DoFile(char *name) {
+  lua_dofile(L, name);
+}
+
+void scripting_DoString(char *command) {
+  lua_dostring(L, command);
 }
