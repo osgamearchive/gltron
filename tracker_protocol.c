@@ -229,7 +229,7 @@ make_ping(int which, char *ipaddress, int port)
       packet.num = i;
       memcpy(udppacket->data, &packet, sizeof(Pingpacket));
       //SDLNet_UDP_Send(udpsock, 0, udppacket);
-      SDLNet_UDP_Send(udpsock, -1, udppacket);
+      SDLNet_UDP_Send(udpsock, 0, udppacket);
     }
   
 }
@@ -241,7 +241,7 @@ reply_ping()
 
   n = SDLNet_UDP_Recv(udpsock, udppacket);
 
-  SDLNet_UDP_Send(udpsock, -1, udppacket);
+  SDLNet_UDP_Send(udpsock, 0, udppacket);
 }
 
 void
