@@ -81,7 +81,14 @@ void getEvents() {
 #endif
       fprintf(stderr, "process : %d %d %d %d %d\n", latest->type, latest->player, 
   	 latest->x, latest->y, latest->timestamp);
-      processEvent(latest);
+      if( latest->player == me && (latest->type == EVENT_TURN_LEFT ||latest->type == EVENT_TURN_RIGHT) )
+	{
+	  //adjust position because of prediction
+	  game->player[0].data->posx+=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsX[ game->player[0].data->dir];
+	  game->player[0].data->posy+=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsY[ game->player[0].data->dir];
+	} else {
+	  processEvent(latest);
+	}
       latest = readEvent();
       if(latest == NULL) return;
       //}

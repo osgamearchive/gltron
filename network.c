@@ -643,8 +643,7 @@ void
 idleTurns(  )
 {
   Predictedturn turn;
-  list *p;
-  GameEvent *latest;
+  GameEvent *e;
 
   turn = turnlist->head;
 
@@ -654,10 +653,16 @@ idleTurns(  )
       if( (game2->time.current - turn->time) >= (slots[me].ping/2) )
 	{
 	  printf("creating turn... at %d\n", game2->time.current);
-	  createTurnEvent(0, turn->dir);
-	  for(p = &(game2->events); p->next != NULL; p = p->next);
-	  latest = p->data;
-	  processEvent(latest);
+	  e = (GameEvent*) malloc(sizeof(GameEvent));
+	  switch(turn->dir) {
+	  case TURN_LEFT: e->type = EVENT_TURN_LEFT; break;
+	  case TURN_RIGHT: e->type = EVENT_TURN_RIGHT; break;
+	  }
+	  e->x = game->player[0].data->iposx;
+	  e->y = game->player[0].data->iposy;
+	  e->player = 0;
+	  e->timestamp = game2->time.current;
+	  processEvent(e);
 	  //Free this turn!
 	  turnlist->head = turn->next;
 	  free(turn);

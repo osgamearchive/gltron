@@ -17,6 +17,7 @@ void idlePause() {
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY && serverstate == gameState )
     {
+      initTurnList();
       switchCallbacks(&gameCallbacks);
     } else {
       sockstat = Net_checksocks();
@@ -137,8 +138,7 @@ void keyboardPause(int key, int unicode, int x, int y) {
 
 void initPause() {
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  fprintf(stderr, "init pause mode\n"); 
-  initTurnList();
+  fprintf(stderr, "init pause mode\n");
   // Mix_SetPostMix(playEngine, NULL);
 }
 
