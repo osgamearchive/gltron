@@ -17,6 +17,9 @@ int c_pushMatrix(lua_State *l);
 int c_popMatrix(lua_State *l);
 int c_drawTextFitIntoRect(lua_State *l);
 int c_color(lua_State *l);
+int c_draw2D(lua_State* l);
+int c_drawHUDSurface(lua_State* l);
+int c_drawHUDMask(lua_State* l);
 
 int c_quitGame(lua_State *L) {
   saveSettings();
@@ -229,4 +232,7 @@ void init_c_interface(void) {
 	scripting_Register("c_popMatrix", c_popMatrix);
 	scripting_Register("c_drawTextFitIntoRect", c_drawTextFitIntoRect);
 	scripting_Register("c_color", c_color);
+	scripting_Register("c_draw2D", c_draw2D);
+	scripting_Register("c_drawHUDSurface", c_drawHUDSurface);
+	scripting_Register("c_drawHUDMask", c_drawHUDMask);
 }
