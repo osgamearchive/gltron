@@ -231,7 +231,7 @@ void drawTraces(Player *p, gDisplay *d) {
       glDisable(GL_BLEND);
       glEnable(GL_TEXTURE_2D);
       glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-      glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
+      glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_DECAL]);
     }
     setColor3fv(p->model->color_alpha);
   }
@@ -344,7 +344,7 @@ void drawTrailBow(Player *p) {
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
+    glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_TRAIL]);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 

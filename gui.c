@@ -33,7 +33,7 @@ void drawGuiBackground() {
 		 game->screen->pixelGui);
   } else {
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, game->screen->texGui);
+    glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_GUI]);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
     glColor3f(1.0, 1.0, 1.0);
@@ -82,7 +82,7 @@ void drawGuiLogo() {
   ftxRenderString(gameFtx, "gl", 2);
   glPopMatrix();
   
-  glBindTexture(GL_TEXTURE_2D, game->screen->texLogo);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_LOGO]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
   glEnable(GL_BLEND);

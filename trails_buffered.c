@@ -32,7 +32,7 @@ void bufferPlayerBow(Player *p, QuadBuffer *qb) {
 
   if(data->speed > 0 && game->settings->show_model == 1) {
     q->type |= QUAD_TEXTURE | QUAD_TEX_MODULATE;
-    q->texture_id = game->screen->texTrail;
+    q->texture_id = game->screen->textures[TEX_TRAIL];
   }
 
   bdist = (game->settings->show_model &&
@@ -74,7 +74,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   Quad *q;
   int tex;
 
-  tex = game->screen->texTrailDecal;
+  tex = game->screen->textures[TEX_DECAL];
 
   data = p->data;
   height = data->trail_height;
