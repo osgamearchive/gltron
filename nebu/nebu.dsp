@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -90,28 +90,75 @@ PostBuild_Cmds=copy Debug\nebu.lib nebu.lib
 # Begin Source File
 
 SOURCE=.\video\console.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=".\filesystem\directory-win32.c"
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\filesystem\file_io.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\filesystem\filesystem.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\filesystem\findpath.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\base\geom.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
 
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
@@ -126,6 +173,8 @@ SOURCE=.\input\input_system.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
 
+# ADD CPP /I "./include" /I "../lua/include"
+
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
 # ADD CPP /I "../lua/include"
@@ -139,6 +188,8 @@ SOURCE=.\base\matrix.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
 
+# ADD CPP /I "./include" /I "../lua/include" /I "./include/base"
+
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
 # ADD CPP /I "./include/base"
@@ -149,16 +200,36 @@ SOURCE=.\base\matrix.c
 # Begin Source File
 
 SOURCE=.\video\pixels.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\video\png_texture.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\base\random.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
 
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
@@ -173,6 +244,8 @@ SOURCE=.\scripting\scripting.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
 
+# ADD CPP /I "./include" /I "../lua/include"
+
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
 # ADD CPP /I "./include/base" /I "./include/scripting" /I "../lua/include"
@@ -183,36 +256,101 @@ SOURCE=.\scripting\scripting.c
 # Begin Source File
 
 SOURCE=.\audio\SoundSystem.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\audio\Source.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\audio\Source3D.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\audio\SourceCopy.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\audio\SourceEngine.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\audio\SourceMusic.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\audio\SourceSample.cpp
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\base\system.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include" /I "./include/base"
 
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
@@ -227,6 +365,8 @@ SOURCE=.\input\system_keynames.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
 
+# ADD CPP /I "./include" /I "../lua/include"
+
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
 # ADD CPP /I "../lua/include"
@@ -239,6 +379,8 @@ SOURCE=.\input\system_keynames.c
 SOURCE=.\base\util.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include" /I "./include/base"
 
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
@@ -253,6 +395,8 @@ SOURCE=.\base\vector.c
 
 !IF  "$(CFG)" == "nebu - Win32 Release"
 
+# ADD CPP /I "./include" /I "../lua/include" /I "./include/base"
+
 !ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
 
 # ADD CPP /I "./include/base"
@@ -263,6 +407,15 @@ SOURCE=.\base\vector.c
 # Begin Source File
 
 SOURCE=.\video\video_system.c
+
+!IF  "$(CFG)" == "nebu - Win32 Release"
+
+# ADD CPP /I "./include" /I "../lua/include"
+
+!ELSEIF  "$(CFG)" == "nebu - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # End Group
 # Begin Group "Header Files"

@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX- /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -90,98 +90,314 @@ PostBuild_Cmds=copy Debug\lua.lib lua.lib
 # Begin Source File
 
 SOURCE=.\src\lapi.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lib\lauxlib.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lib\lbaselib.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lcode.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lib\ldblib.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\ldebug.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\ldo.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lfunc.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lgc.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lib\liolib.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\llex.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lib\lmathlib.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lmem.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lobject.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lparser.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lstate.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lstring.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lib\lstrlib.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\ltable.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\ltests.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\ltm.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lundump.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lvm.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\lzio.c
+
+!IF  "$(CFG)" == "lua - Win32 Release"
+
+# ADD CPP /I "./include"
+
+!ELSEIF  "$(CFG)" == "lua - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # End Group
 # Begin Group "Header Files"

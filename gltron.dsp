@@ -40,9 +40,11 @@ RSC=rc.exe
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D PREF_DIR=\"\" /D SNAP_DIR=\"\" /D DATA_DIR=\"\" /D SEPARATOR='\\' /D VERSION=\"0.70alpha1\" /FD /c
+# SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -52,7 +54,8 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib sdlmain.lib sdl.lib zlib.lib libpng.lib sdl_sound.lib msvcrt.lib /nologo /subsystem:windows /incremental:yes /machine:I386 /nodefaultlib
+# SUBTRACT LINK32 /pdb:none /debug
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -68,7 +71,8 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./src/include" /I "./nebu/include" /D "_WINDOWS" /D PREF_DIR=\"\" /D SNAP_DIR=\"\" /D DATA_DIR=\"\" /D LOCAL_DATA=\"\" /D SEPARATOR='\\' /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /D SEPERATOR='\\' /YX /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /I "./src/include" /I "./nebu/include" /D "_WINDOWS" /D PREF_DIR=\"\" /D SNAP_DIR=\"\" /D DATA_DIR=\"\" /D LOCAL_DATA=\"\" /D SEPARATOR='\\' /D "WIN32" /D "_DEBUG" /D "_MBCS" /D VERSION=\"0.63alpha1\" /D SEPERATOR='\\' /FD /GZ /c
+# SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -78,7 +82,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib SDLmain.lib sdl.lib libpng.lib zlib.lib  sdl_sound.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib SDLmain.lib sdl.lib libpng.lib zlib.lib sdl_sound.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 # Begin Special Build Tool
 SOURCE="$(InputPath)"
@@ -100,6 +104,8 @@ SOURCE=.\src\video\artpack.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -112,6 +118,8 @@ SOURCE=.\src\video\artpack.c
 SOURCE=.\src\game\camera.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -126,6 +134,8 @@ SOURCE=.\src\game\computer.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -139,6 +149,8 @@ SOURCE=.\src\game\credits.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -149,12 +161,23 @@ SOURCE=.\src\game\credits.c
 # Begin Source File
 
 SOURCE=".\src\filesystem\dirsetup-win32.c"
+
+!IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
+!ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\game\engine.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -169,6 +192,8 @@ SOURCE=.\src\game\event.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -181,6 +206,8 @@ SOURCE=.\src\game\event.c
 SOURCE=.\src\video\explosion.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -195,6 +222,8 @@ SOURCE=.\src\video\fonts.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -207,6 +236,8 @@ SOURCE=.\src\video\fonts.c
 SOURCE=.\src\video\fonttex.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -221,6 +252,8 @@ SOURCE=.\src\game\game.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -233,6 +266,8 @@ SOURCE=.\src\game\game.c
 SOURCE=.\src\video\gamegraphics.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -247,6 +282,8 @@ SOURCE=.\src\game\globals.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -257,12 +294,23 @@ SOURCE=.\src\game\globals.c
 # Begin Source File
 
 SOURCE=.\src\gltron.c
+
+!IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
+!ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\video\graphics_fx.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -277,6 +325,8 @@ SOURCE=.\src\video\graphics_hud.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -289,6 +339,8 @@ SOURCE=.\src\video\graphics_hud.c
 SOURCE=.\src\video\graphics_lights.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -303,6 +355,8 @@ SOURCE=.\src\video\graphics_utility.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -315,6 +369,8 @@ SOURCE=.\src\video\graphics_utility.c
 SOURCE=.\src\video\graphics_world.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -329,6 +385,8 @@ SOURCE=.\src\game\gui.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -342,6 +400,8 @@ SOURCE=.\src\game\init.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -354,6 +414,8 @@ SOURCE=.\src\game\init.c
 SOURCE=.\src\game\init_sdl.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -369,6 +431,8 @@ SOURCE=.\src\input\input.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -381,6 +445,8 @@ SOURCE=.\src\input\input.c
 SOURCE=.\src\video\load_texture.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -395,6 +461,8 @@ SOURCE=.\src\video\material.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -407,6 +475,8 @@ SOURCE=.\src\video\material.c
 SOURCE=.\src\game\menu.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -421,6 +491,8 @@ SOURCE=.\src\video\model.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -431,12 +503,23 @@ SOURCE=.\src\video\model.c
 # Begin Source File
 
 SOURCE=.\src\filesystem\path.c
+
+!IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
+!ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\game\pause.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -451,6 +534,8 @@ SOURCE=.\src\video\recognizer.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -463,6 +548,8 @@ SOURCE=.\src\video\recognizer.c
 SOURCE=.\src\video\screenshot.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -477,6 +564,8 @@ SOURCE=.\src\game\scripting_interface.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -489,6 +578,8 @@ SOURCE=.\src\game\scripting_interface.c
 SOURCE=.\src\configuration\settings.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -503,6 +594,8 @@ SOURCE=.\src\video\skybox.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -515,6 +608,8 @@ SOURCE=.\src\video\skybox.c
 SOURCE=.\src\audio\sound.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -529,6 +624,8 @@ SOURCE=.\src\audio\sound_glue.cpp
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -541,6 +638,8 @@ SOURCE=.\src\audio\sound_glue.cpp
 SOURCE=.\src\game\switchCallbacks.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -555,6 +654,8 @@ SOURCE=.\src\video\texture.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -567,6 +668,8 @@ SOURCE=.\src\video\texture.c
 SOURCE=.\src\game\timedemo.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -581,6 +684,8 @@ SOURCE=.\src\video\trail.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -593,6 +698,8 @@ SOURCE=.\src\video\trail.c
 SOURCE=.\src\video\trail_geometry.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -607,6 +714,8 @@ SOURCE=.\src\video\trail_render.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -619,6 +728,8 @@ SOURCE=.\src\video\trail_render.c
 SOURCE=.\src\base\util.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
@@ -633,6 +744,8 @@ SOURCE=.\src\video\video.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
 
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
+
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
 # ADD CPP /I "./lua/include"
@@ -645,6 +758,8 @@ SOURCE=.\src\video\video.c
 SOURCE=.\src\video\visuals_2d.c
 
 !IF  "$(CFG)" == "gltron - Win32 Release"
+
+# ADD CPP /I "./src/include" /I "./nebu/include" /I "./lua/include"
 
 !ELSEIF  "$(CFG)" == "gltron - Win32 Debug"
 
