@@ -312,6 +312,8 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
 
     polycount += pMesh->pnFaces[i];
   }
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 
 }
 

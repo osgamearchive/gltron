@@ -36,6 +36,7 @@ void fill_plain() {
 
   glColor3f(1, 1, 1);
   glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, indices);
+  glDisableClientState( GL_VERTEX_ARRAY );
 }
 
 void fill_textured() {
