@@ -4,10 +4,6 @@
 #include "game/game.h"
 #include "game/ai.h"
 
-#ifndef FLT_MAX
-#define FLT_MAX 10000.0f
-#endif
-
 void ai_getClosestOpponent(int player, int* opponent, float *distance) {
 	int i;
 	vec2 v_player;
@@ -97,9 +93,9 @@ void ai_getDistances(int player, AI_Distances *distances) {
 			wall++;
 		}
 	}
-	for(i = 0; i < 4; i++) {
+	for(i = 0; i < game2->level->nBoundaries; i++) {
 		float t1, t2;
-		segment2* wall = walls + i;
+		segment2* wall = game2->level->boundaries + i;
 		if(segment2_Intersect(&v, &t1, &t2, segments + eFront, wall) &&
 			 t1 > 0 && t1 < *front && t2 >= 0 && t2 <= 1)
 			*front = t1;
