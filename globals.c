@@ -97,6 +97,10 @@ int *quadBufIndex;
 int game_textures = TEX_COUNT + 5; /* 11 + 6 + debug texture */
 int n_textures = 11;
 
+#ifndef GL_VERSION_1_2
+#  define GL_CLAMP_TO_EDGE GL_CLAMP
+#endif
+
 texture_info textures[] = {
   { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR, 64 },
   { 1, "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI, 1 },
