@@ -30,7 +30,9 @@
 #    include <unistd.h>
 #endif
 
+#ifndef PATH_MAX
 #define PATH_MAX 8192
+#endif
 
 #if !defined(WIN32) && !defined(macintosh)
 void goto_installpath(char *argv0)

@@ -77,7 +77,7 @@ void readMaterialLibraryFromFile(char *filename, Mesh *pMesh) {
 		       & (pMaterials[iMaterial].shininess) ) == 1 ) {
 	// nothing
       } else {
-#warning "disabled error message"
+	/* FIXME: "disabled error message" */
 	/* fprintf(stderr, "+++ unparsed material property: %s", buf); */
       }
     }

@@ -42,7 +42,7 @@ void keyboardPause(int key, int x, int y) {
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;
   case SYSTEM_KEY_F4:
-#warning "why is this not calling defaultDisplay() ?"
+    /* FIXME: why is this not calling defaultDisplay() ? */
     setSettingi("display_type", 3);
     changeDisplay();
     break;

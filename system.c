@@ -34,7 +34,7 @@ void SystemInit(int *argc, char *argv[]) {
 
   if(SDL_Init(SDL_INIT_AUDIO) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
-#warning "disable sound system"
+    /* FIXME: disable sound system */
   }
 
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
@@ -166,7 +166,7 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   else 
      SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 0);
   video_initialized = 1;
-#warning "bitdepth value unused"
+  /* FIXME: bitdepth value unused */
 }
 
 void SystemSetGamma(float red, float green, float blue) {

@@ -7,6 +7,7 @@ void Audio_EnableEngine(void);
 void Audio_DisableEngine(void);
 void Audio_Idle(void);
 void Audio_CrashPlayer(int player);
+void Audio_LoadPlayers(void);
 void Audio_Init(void);
 void Audio_Start(void);
 void Audio_Quit(void);

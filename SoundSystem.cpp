@@ -55,7 +55,7 @@ namespace Sound {
   }
 
   void System::Idle(void) {
-#warning "todo: remove dead sound sources"
+    /* FIXME: remove dead sound sources */
   }
 
   extern "C" {
