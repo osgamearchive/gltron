@@ -266,6 +266,7 @@ extern callbacks guiCallbacks;
 extern callbacks pauseCallbacks;
 extern callbacks configureCallbacks;
 extern callbacks promptCallbacks;
+extern callbacks creditsCallbacks;
 
 #define KEY_ACTIONS_N 8
 
