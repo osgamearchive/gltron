@@ -1,6 +1,7 @@
 #include "gltron.h"
 #include "event.h"
 #include "engine.h"
+#include "console.h"
 
 int processEvent(GameEvent* e) {
   int value = 0;
@@ -20,13 +21,11 @@ int processEvent(GameEvent* e) {
     data = game->player[e->player].data;
     data->posx = data->iposx = e->x;
     data->posy = data->iposy = e->y;
-    sprintf(messages, "player %d crashed", e->player + 1);
-    fprintf(stderr, "%s\n", messages);
-    consoleAddLine(messages);
+    displayMessage(TO_CONSOLE | TO_STDERR, "player %d crashed", e->player + 1);
     doCrashPlayer(e);
     break;
   case EVENT_STOP:
-    fprintf(stderr, "game stopped\n");
+    displayMessage(TO_STDERR, "game stopped");
     if(game2->mode == GAME_SINGLE_RECORD) {
       stopRecording();
       game2->mode = GAME_SINGLE;
@@ -36,14 +35,10 @@ int processEvent(GameEvent* e) {
     }
     if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
       game->winner = e->player;
-      sprintf(messages, "winner: %d", game->winner + 1);
-      printf("%s\n", messages);
-      consoleAddLine(messages);
+      displayMessage(TO_CONSOLE | TO_STDOUT, "winner: %d", game->winner + 1);
     } else {
       game->winner = -2;
-      strcpy(messages, "everyone died! no one wins!");
-      printf("%s\n", messages);
-      consoleAddLine(messages);
+      displayMessage(TO_CONSOLE | TO_STDOUT, "everyone died! no one wins!");
     }
     switchCallbacks(&pauseCallbacks);
     /* screenSaverCheck(0); */
