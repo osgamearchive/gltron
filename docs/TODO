@@ -36,7 +36,7 @@ Gameplay enhancements:
 Andreas:
 
 - fast-finish / insta-fininish
-- better bot AI, scripted bot AI
+- scripted bot AI
 - add new starting positions, e.g. 3 against one
 
 Polish [medium priority]:
@@ -48,6 +48,7 @@ Todd:
 
 Andreas:
 
+- add hole in arena wall
 - remove space around single player view
 - fix camera zoom generally (speed / settings)
 - add screen resolution independent font rendering
@@ -72,7 +73,6 @@ Polish [low priority]:
 
 Andreas:
 
-- provide better LOD for the lightcycle
 - glare/lense flare around the bright trail part behind the cycle
 - configurable zoom functionality (e.g. other mouse buttons)
 - better GUI support for mouse / gamepad
