@@ -939,7 +939,7 @@ void drawCam(Player *p, gDisplay *d) {
   glDisable(GL_BLEND);
 
   if(game->settings->show_recognizer) {
-    glClear(GL_DEPTH_BUFFER_BIT);
+    /* glClear(GL_DEPTH_BUFFER_BIT); */
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
 
