@@ -20,7 +20,7 @@ DIST_COMMON = Makefile.in configure.in config.h.in install-sh \
 
 CC = @CC@
 
-CFLAGS = -c @CFLAGS@
+CFLAGS = -c @CFLAGS@ @INCS@
 LIBS = @LIBS@
 
 # fix these later
