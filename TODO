@@ -1,3 +1,6 @@
+fix texturing bug with trail
+allow multiple fonts
+
 move cycle behind posx, posy
 solve cycle turning issue
 

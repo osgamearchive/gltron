@@ -29,91 +29,6 @@ void guiProjection(int x, int y) {
   checkGLError("gui.c guiProj - end");
 }
 
-#define GUI_BLUE 0.3
-void drawGui() {
-  float x, y, w, h;
-  float y1, y2;
-  float a, b1, b2, c1, c2;
-  float alpha;
-
-#define N 20.0
-  checkGLError("gui.c displayGui - before clear");
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  guiProjection(game->screen->vp_w, game->screen->vp_h);
-
-  glBegin(GL_QUADS);
-  c1 = 0.25; c2 = 0.75;
-  glColor3f(c1, c1, GUI_BLUE * c1);
-  glVertex2f(-1, -1);
-  glColor3f(c2, c2, GUI_BLUE * c2);
-  glVertex2f(1, -1);
-  glVertex2f(1, 1);
-  glColor3f(c1, c1, GUI_BLUE * c1);
-  glVertex2f(-1, 1);
-  glEnd();
-
-  for(y1 = -1; y1 < 1; y1 += 2 / N) {
-    y2 = y1 + 2 / N;
-    for(x = -1; x < 1; x += 2 / N) {
-      c1 = (x + 1) / 2;
-      c2 = (x + 2 / N + 1) / 2;
-
-      c1 = c1 / 2 + 0.25;
-      c2 = c2 / 2 + 0.25;
-      /* printf("using color %.2f\n", c); */
-      
-      glBegin(GL_QUADS);
-      a = x + sin(bgs.d) / 10;
-      /* b = x + cos(d) / 10 + 2 / N; */
-      b1 = x + 2 / N;
-      b2 = b1 + cos(bgs.d) / 10;
-      /* printf("corners: (%.2f %.2f) (%.2f %.2f)\n", a, 0.0, b,
-	 (float)yres[current]); */
-      glColor3f(c1, c1, GUI_BLUE * c1);
-      glVertex2f(a, y1);
-      glColor3f(c2, c2, GUI_BLUE * c2);
-      glVertex2f(b1, y1);
-      glVertex2f(b2, y2);
-      glColor3f(c1, c1, GUI_BLUE * c1);
-      glVertex2f(a, y2);
-      glEnd();
-    }
-  }
-
-  x = bgs.posx;
-  y = bgs.posy;
-  w = 1;
-  h = w/4;
-
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, game->screen->texGui);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-  checkGLError("gui.c - displayGui");
-
-  alpha = (sin(bgs.d - M_PI / 2) + 1) / 2;
-  glColor4f(1.0, 1.0, 0.0, alpha);
-  glBegin(GL_QUADS);
-  glTexCoord2f(0.0, 0.0);
-  glVertex2f(x, y);
-  glTexCoord2f(1.0, 0.0);
-  glVertex2f(x + w, y);
-  glTexCoord2f(1.0, 1.0);
-  glVertex2f(x + w, y + h);
-  glTexCoord2f(0.0, 1.0);
-  glVertex2f(x, y + h);
-  glEnd();
-  glDisable(GL_TEXTURE_2D);
-
-  glColor3f(1.0, 0.0, 1.0);
-  drawMenu(game->screen);
-
-  if(game->settings->mouse_warp)
-    mouseWarp();
-}
-
 void drawGuiBackground() {
   checkGLError("gui background start");
 
@@ -169,7 +84,7 @@ void drawGuiLogo() {
 	       pos[1] + glsize * font_shift[1], 0);
   glScalef(glsize, glsize, glsize);
   glColor3f(0.2, 0.4, 0.8);
-  ftxRenderString(ftx, "gl", 2);
+  ftxRenderString(guiFtx, "gl", 2);
   glPopMatrix();
   
   glBindTexture(GL_TEXTURE_2D, game->screen->texLogo);
@@ -199,7 +114,6 @@ void drawGuiLogo() {
 }
   
 void displayGui() {
-  /* drawGui(); */
   drawGuiBackground();
   drawGuiLogo();
   drawMenu(game->screen);
@@ -209,10 +123,13 @@ void displayGui() {
 
 void displayConfigure() {
   char message[] = "Press a key for this action!";
-  drawGui();
+  drawGuiBackground();
+  drawGuiLogo();
+  drawMenu(game->screen);
+
   rasonly(game->screen);
-  glColor3f(0.0, 0.0, 0.0);
-  drawText(game->screen->vp_w / 6, 20,
+  glColor3f(1.0, 1.0, 1.0);
+  drawText(guiFtx, game->screen->vp_w / 6, 20,
 	   game->screen->vp_w / (6.0 / 4.0 * strlen(message)), message);
   SystemSwapBuffers();
 }

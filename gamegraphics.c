@@ -25,7 +25,7 @@ void drawScore(Player *p, gDisplay *d) {
   sprintf(tmp, "%d", p->data->score);
   rasonly(d);
   glColor4f(1.0, 1.0, 0.2, 1.0);
-  drawText(5, 5, 32, tmp);
+  drawText(gameFtx, 5, 5, 32, tmp);
 }
   
 void drawFloor(gDisplay *d) {
@@ -633,7 +633,7 @@ void drawAI(gDisplay *d) {
 
   rasonly(d);
   glColor3f(1.0, 1.0, 1.0);
-  drawText(d->vp_w / 4, 10, d->vp_w / (2 * strlen(ai)), ai);
+  drawText(gameFtx, d->vp_w / 4, 10, d->vp_w / (2 * strlen(ai)), ai);
   /* glRasterPos2i(100, 0); */
 }
 
@@ -668,7 +668,7 @@ void drawPause(gDisplay *display) {
 
   rasonly(game->screen);
   glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
-  drawText(display->vp_w / 6, 20, 
+  drawText(gameFtx, display->vp_w / 6, 20, 
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
 }
 

@@ -149,7 +149,8 @@ extern Game *game;
 extern float camAngle;
 
 /* extern TexFont *txf; */
-extern fonttex *ftx;
+extern fonttex *gameFtx;
+extern fonttex *guiFtx;
 extern int fontID;
 #define MAX_FONTS 17
 
@@ -183,8 +184,8 @@ extern float vp_h[3][4];
 
 /* configure keys stuff */
 
-int *configureKeyEntry;
-Menu *configureKeyMenu;
+extern int *configureKeyEntry;
+extern Menu *configureKeyMenu;
 
 #define KEY_ACTIONS_N 8
 
@@ -312,7 +313,7 @@ extern void updateCallbacks();
 extern void checkGLError(char *where);
 extern void rasonly(gDisplay *d);
 extern void drawFPS(gDisplay *d);
-extern void drawText(int x, int y, int size, char *text);
+extern void drawText(fonttex* ftx, int x, int y, int size, char *text);
 extern int hsv2rgb(float, float, float, float*, float*, float*);
 extern void colorDisc();
 

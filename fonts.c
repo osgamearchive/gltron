@@ -1,19 +1,30 @@
 #include "gltron.h"
 
 void initFonts() {
-  if(ftx != NULL) ftxUnloadFont(ftx);
-  ftx = ftxLoadFont("xenotron.ftx");
+  if(gameFtx != NULL) ftxUnloadFont(gameFtx);
+  if(guiFtx != NULL) ftxUnloadFont(guiFtx);
+  gameFtx = ftxLoadFont("xenotron.ftx");
+  guiFtx = ftxLoadFont("babbage.ftx");
   
-  if(ftx == NULL) {
+  if(gameFtx == NULL) {
     fprintf(stderr, "can't load font xenotron.ftx\n");
     exit(1);
   }
+
+  if(guiFtx == NULL) {
+    fprintf(stderr, "can't load font babbage.ftx\n");
+    exit(1);
+  }
+
   fprintf(stderr, "initFonts end\n");
   // ftxEstablishTexture(ftx, GL_TRUE);
 }
 
 void deleteFonts() {
-  if(ftx != NULL)
-    ftxUnloadFont(ftx);
-  ftx = NULL;
+  if(gameFtx != NULL)
+    ftxUnloadFont(gameFtx);
+  gameFtx = NULL;
+  if(guiFtx != NULL)
+    ftxUnloadFont(guiFtx);
+  guiFtx = NULL;
 }

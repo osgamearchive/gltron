@@ -386,7 +386,7 @@ void drawMenu(gDisplay *d) {
     else glColor4fv(pCurrent->display.fgColor);
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     rasonly(d);
-    drawText(x, y, size,
+    drawText(guiFtx, x, y, size,
 	     ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
     y -= lineheight;
   }

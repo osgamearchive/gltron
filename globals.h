@@ -3,11 +3,15 @@ Game main_game;
 Game *game;
 
 /* TexFont *txf = NULL; */
-fonttex *ftx = NULL;
+fonttex *guiFtx = NULL;
+fonttex *gameFtx = NULL;
 int fontID = 6;
 
 Menu** pMenuList;
 Menu* pRootMenu;
+
+int *configureKeyEntry;
+Menu *configureKeyMenu;
 
 float camAngle = 0;
 
