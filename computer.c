@@ -3,6 +3,8 @@
 
 void initGameAI(int level) {
 
+  game2->rules.ai_level = level;
+
   /* set ai function ptr based on difficulty level setting */
   if (level < 2) {
     ai_function = doComputer;
@@ -67,7 +69,7 @@ void doComputer(int player, int target) {
   }
   data = me->data;
   ai = me->ai;
-  level = getSettingi("ai_level");
+  level = game2->rules.ai_level;
 
   ai->moves++;
   /* avoid to short turns */
@@ -190,7 +192,7 @@ void doComputer2(int player, int target) {
     return;
   }
   ai = me->ai;
-  level = getSettingi("ai_level");
+  level = game2->rules.ai_level;
   data = me->data;
   if(abs(data->iposx - ai->lastx) < min_turn[level] &&
      abs(data->iposy - ai->lasty) < min_turn[level]) {
