@@ -67,12 +67,6 @@ void initTexture(Visual *d) {
       nebu_Video_CheckErrors("texture.c initTextures");
     }
   }
-
-	// load 2d stuff
-	{
-		nebu_Surface* pSurface = nebu_Surface_LoadPNG("speedometer.png");
-		gpHUD = nebu_2d_Create(pSurface, 0);
-	}
 }
 
 void deleteTextures(Visual *d) {

@@ -269,6 +269,4 @@ extern int video_initialized;
 
 extern PlayerVisual *gPlayerVisuals;
 
-extern nebu_2d* gpHUD;
-
 #endif
