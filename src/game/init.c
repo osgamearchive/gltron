@@ -4,6 +4,8 @@
 #include "base/util.h"
 #include "scripting/scripting.h"
 
+#define INI_VERSION 0.705f
+
 void initSubsystems(int argc, const char *argv[]) {
 	initFilesystem(argc, argv);
 
@@ -55,7 +57,7 @@ void initConfiguration(int argc, const char *argv[])
     }
   }
 	
-	if(!isSetting("version") || getSettingf("version") < 0.70f) {
+	if(!isSetting("version") || getSettingf("version") < INI_VERSION) {
 		/* load some more defaults from config file */
 		runScript(PATH_SCRIPTS, "config.lua");
 		runScript(PATH_SCRIPTS, "artpack.lua");
@@ -69,7 +71,7 @@ void initConfiguration(int argc, const char *argv[])
 		printf("[warning] defunct config file found, overriding using defaults\n");
 	}
 		
-	setSettingf("version", 0.70f);
+	setSettingf("version", INI_VERSION);
 
   /* parse any comandline switches overrinding the loaded settings */
   parse_args(argc, argv);
