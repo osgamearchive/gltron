@@ -11,7 +11,12 @@ void idlePause() {
   timediff();
   */
   chaseCamMove();
-
+  if(game->settings->screenSaver && stoptime != 0 &&
+     SystemGetElapsedTime() - stoptime > 2000) {
+    initData();
+    stoptime = 0;
+    switchCallbacks(&gameCallbacks);
+  }
   SystemPostRedisplay();
 }
 
@@ -37,7 +42,7 @@ void keyboardPause(int key, int x, int y) {
     switchCallbacks(&gameCallbacks);
     break;
   case 'q':
-    exit(1);
+    SystemExit();
     break;
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
