@@ -127,6 +127,9 @@
 				RelativePath=".\audio\SourceSample.cpp">
 			</File>
 			<File
+				RelativePath="audio\audio_system.c">
+			</File>
+			<File
 				RelativePath=".\video\console.c">
 			</File>
 			<File
@@ -140,15 +143,6 @@
 			</File>
 			<File
 				RelativePath=".\filesystem\findpath.c">
-			</File>
-			<File
-				RelativePath=".\base\geom.c">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="./include;./include/base;$(NoInherit)"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\input\input_system.c">
