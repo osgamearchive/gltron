@@ -1,10 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#ifdef WIN32
-#define floorf floor
-#endif
-
 #include "game_data.h"
 #include "engine.h"
 #include "event.h"
@@ -53,11 +49,11 @@ enum {
 #define SPEED_CRASHED -1
 #define SPEED_GONE -2
 
-#define TRAIL_HEIGHT 3.5
+#define TRAIL_HEIGHT 3.5f
 
 /* game options */
 #define SPEED_OZ_FREQ 1200
-#define SPEED_OZ_FACTOR 0.09
+#define SPEED_OZ_FACTOR 0.09f
 
 #define TURN_LENGTH 200
 
@@ -87,26 +83,26 @@ extern void initGameAI(int level);
 extern void doComputer(int player, int target);
 extern void doComputer2(int player, int target);
 
-extern void resetScores();
+extern void resetScores(void);
 
 extern void doTurn(GameEvent* e, int direction);
 
 extern List* doMovement(int mode, int dt);
 extern void writePosition(int player);
 
-extern void initGameStructures();
-extern void initClientData();
+extern void initGameStructures(void);
+extern void initClientData(void);
 
-extern void Game_Idle();
-extern void enterGame();
-extern void exitGame();
+extern void Game_Idle(void);
+extern void enterGame(void);
+extern void exitGame(void);
 
 extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
-extern void resetVideoData();
-extern void resetPlayerData();
+extern void resetVideoData(void);
+extern void resetPlayerData(void);
 
-extern void doCameraMovement();
+extern void doCameraMovement(void);
 extern void initCamera(Camera *cam, Data *data, int type);
 
 #endif

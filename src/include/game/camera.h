@@ -33,7 +33,7 @@ enum { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET };
 extern char *cam_names[];
 extern float cam_defaults[][3];
 
-void nextCameraType();
-void doCameraMovement();
+void nextCameraType(void);
+void doCameraMovement(void);
 
 #endif

@@ -86,7 +86,7 @@ struct {
 
 extern int c_resetCamera();
 
-void initTimedemo() {
+void initTimedemo(void) {
 	int i = 0;
 
 	printf("-- initializing timedemo\n");
@@ -122,8 +122,8 @@ void initTimedemo() {
 	for(i = 0; i < game->players; i++) {
 		game->player[i].ai->active = AI_COMPUTER;
 		// set all camera phi values to 0
-		game->player[i].camera->movement[CAM_PHI] = M_PI / 18;
-		game->player[i].camera->movement[CAM_CHI] = M_PI / 3;
+		game->player[i].camera->movement[CAM_PHI] = PI / 18;
+		game->player[i].camera->movement[CAM_CHI] = PI / 3;
 	}
 	
   SystemHidePointer();

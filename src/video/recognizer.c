@@ -1,40 +1,41 @@
 #include "video/video.h"
+#include <math.h>
 
 static float alpha = 0;
 
-const static float rec_scale_factor = 0.25;
+const static float rec_scale_factor = 0.25f;
 
-static float xv[] = { 0.5, 0.3245, 0.6, 0.5, 0.68, - 0.3 };
-static float yv[] = { 0.8, 1.0, 0.0, 0.2, 0.2, 0.0 };
+static float xv[] = { 0.5f, 0.3245f, 0.6f, 0.5f, 0.68f, -0.3f };
+static float yv[] = { 0.8f, 1.0f, 0.0f, 0.2f, 0.2f, 0.0f };
 
-static float x() { return xv[0] * sin(xv[1] * alpha + xv[2]) - xv[3] * sin(xv[4] * alpha + xv[5]); }
-static float y() { return yv[0] * cos(yv[1] * alpha + yv[2]) - yv[3] * sin(yv[4] * alpha + yv[5]); }
+static float x(void) { return xv[0] * sinf(xv[1] * alpha + xv[2]) - xv[3] * sinf(xv[4] * alpha + xv[5]); }
+static float y(void) { return yv[0] * cosf(yv[1] * alpha + yv[2]) - yv[3] * sinf(yv[4] * alpha + yv[5]); }
 
-static float dx() { return xv[1] * xv[0] * cos(xv[1] * alpha + xv[2]) - xv[4] * xv[3] * cos(xv[4] * alpha + xv[5]); }
-static float dy() { return - yv[1] * yv[0] * sin(yv[1] * alpha + yv[2]) - yv[4] * yv[3] * sin(yv[4] * alpha + yv[5]); }
+static float dx(void) { return xv[1] * xv[0] * cosf(xv[1] * alpha + xv[2]) - xv[4] * xv[3] * cosf(xv[4] * alpha + xv[5]); }
+static float dy(void) { return - yv[1] * yv[0] * sinf(yv[1] * alpha + yv[2]) - yv[4] * yv[3] * sinf(yv[4] * alpha + yv[5]); }
 
 float getRecognizerAngle(Point *velocity)
 {
   float dxval = velocity->x;
   float dyval = velocity->y;
   
-  float phi = acos ( dxval / sqrt( dxval * dxval + dyval * dyval ) );
+  float phi = acosf ( dxval / sqrtf( dxval * dxval + dyval * dyval ) );
   if (dyval < 0) {
-    phi = 2 * M_PI - phi;
+    phi = 2 * PI - phi;
   }
-  return (phi + M_PI / 2) * 180 / M_PI;
+  return (phi + PI / 2) * 180 / PI;
 }
   
 void getRecognizerPositionVelocity(Point *p, Point *v) {
   float max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
   float rec_boundry = game2->rules.grid_size - max;
-  p->x = (max + (x() + 1.0) * rec_boundry) / 2.0;
-  p->y = (max + (y() + 1.0) * rec_boundry) / 2.0;
+  p->x = (max + (x() + 1.0f) * rec_boundry) / 2.0f;
+  p->y = (max + (y() + 1.0f) * rec_boundry) / 2.0f;
   v->x = dx() * game2->rules.grid_size / 100.f;
   v->y = dy() * game2->rules.grid_size / 100.f;
 }
 
-void drawRecognizerShadow() {
+void drawRecognizerShadow(void) {
   float dirx;
   Point p, v;
   /* states */
@@ -77,7 +78,7 @@ void drawRecognizerShadow() {
   glPopMatrix();
 }
 
-void drawRecognizer() {
+void drawRecognizer(void) {
   float dirx;
   Point p, v;
 
@@ -131,11 +132,11 @@ void drawRecognizer() {
   glPopMatrix();
 }  
 
-void doRecognizerMovement() {
-  alpha += game2->time.dt / 2000.0;
+void doRecognizerMovement(void) {
+  alpha += game2->time.dt / 2000.0f;
 }
 
-void resetRecognizer() {
+void resetRecognizer(void) {
 	alpha = 0;
 }
 

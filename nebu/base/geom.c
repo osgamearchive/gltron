@@ -3,11 +3,11 @@
 #include <math.h>
 
 float length(float *v) {
-	return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+	return (float)sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
 float length2(float *v) {
-  return sqrt(v[0] * v[0] + v[1] * v[1]);
+  return (float)sqrt(v[0] * v[0] + v[1] * v[1]);
 }
 
 float length3(float *v) {
@@ -78,7 +78,7 @@ void vmul(float *v, float f) {
 /* 4 entries... */
 
 float length4(float *v) {
-	return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2] +
+	return (float)sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2] +
 		    v[3] * v[3]);
 }
 

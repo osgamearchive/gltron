@@ -17,7 +17,7 @@ namespace Sound {
     SourceSample* _source;
     virtual int Mix(Uint8 *data, int len);
     // protected:
-    Uint32 _position;
+    int _position;
   };
 }
 

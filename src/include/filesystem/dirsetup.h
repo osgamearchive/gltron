@@ -4,6 +4,6 @@
 #include "path.h"
 
 void dirSetup(const char *executable);
-const char* getHome();
+const char* getHome(void);
 
 #endif

@@ -20,6 +20,29 @@ static Sound::Source3D *recognizerEngine;
 
 #define TURNLENGTH 250.0f
 
+static void output_decoders(void)
+{
+    const Sound_DecoderInfo **rc = Sound_AvailableDecoders();
+    const Sound_DecoderInfo **i;
+    const char **ext;
+
+    printf("Supported sound formats:\n");
+    if (rc == NULL)
+        printf(" * Apparently, NONE!\n");
+    else
+    {
+        for (i = rc; *i != NULL; i++)
+        {
+            printf(" * %s\n", (*i)->description);
+            for (ext = (*i)->extensions; *ext != NULL; ext++)
+                printf("   File extension \"%s\"\n", *ext);
+            printf("   Written by %s.\n   %s\n\n", (*i)->author, (*i)->url);
+        } /* for */
+    } /* else */
+
+    printf("\n");
+} /* output_decoders */
+
 extern "C" {
 
 
@@ -67,9 +90,9 @@ extern "C" {
 				}
 				if(i == 0) {
 					if(p->data->boost_enabled) {
-						( (Sound::SourceEngine*) p3d )->_speedShift = 1.2;
+						( (Sound::SourceEngine*) p3d )->_speedShift = 1.2f;
 					} else {
-						( (Sound::SourceEngine*) p3d )->_speedShift = 1.0;
+						( (Sound::SourceEngine*) p3d )->_speedShift = 1.0f;
 					}
 					( (Sound::SourceEngine*) p3d )->_pitchShift =
 						p->data->speed / getSettingf("speed");
@@ -128,8 +151,9 @@ extern "C" {
     sound->AddSource(copy);
   }
 
-  void Audio_Init() {
+  void Audio_Init(void) {
     Sound_Init(); // Init SDL_Sound
+	output_decoders();
 
     SDL_AudioSpec* spec = new SDL_AudioSpec;
     spec->freq = 22050;
@@ -162,11 +186,11 @@ extern "C" {
     sound->SetMixFX(game2->settingsCache.playEffects);
   }
 
-  void Audio_Start() {
+  void Audio_Start(void) {
     SDL_PauseAudio(0);
   }
 
-  void Audio_Quit() {
+  void Audio_Quit(void) {
     SDL_PauseAudio(1);
     Sound_Quit();
     SDL_CloseAudio();
@@ -188,11 +212,11 @@ extern "C" {
     sound->AddSource(music);
   }
 
-  void Audio_PlayMusic() {
+  void Audio_PlayMusic(void) {
     music->Start();
   }
 
-  void Audio_StopMusic() {
+  void Audio_StopMusic(void) {
     music->Stop();
   }
 
@@ -203,10 +227,10 @@ extern "C" {
   void Audio_SetFxVolume(float volume) {
     sample_engine->SetVolume(volume);
     sample_crash->SetVolume(volume);
-    if(volume > 0.8)
+    if(volume > 0.8f)
       sample_recognizer->SetVolume(volume);
     else 
-      sample_recognizer->SetVolume(volume * 1.25);
+      sample_recognizer->SetVolume(volume * 1.25f);
   }
 
   void Audio_StartEngine(int iPlayer) {

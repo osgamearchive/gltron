@@ -2,7 +2,7 @@
 
 /* very brief - just the pause mode */
 
-void idlePause() {
+void idlePause(void) {
   Sound_idle();
   game2->time.dt = 0;
   doCameraMovement();
@@ -11,7 +11,7 @@ void idlePause() {
   SystemPostRedisplay();
 }
 
-void displayPause() {
+void displayPause(void) {
   drawGame();
   drawPause(gScreen);
 
@@ -54,7 +54,7 @@ void keyboardPause(int state, int key, int x, int y) {
   }
 }
 
-void initPause() {
+void initPause(void) {
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
 
@@ -75,12 +75,12 @@ void initPause() {
   updateSettingsCache();
 }
 
-void exitPause() {
+void exitPause(void) {
 /* sound effects are re-enabled in enterGame() */
 // Audio_EnableEngine(); 
 }
 
-void initPauseGL() {
+void initPauseGL(void) {
   initGLGame();
 }
 
@@ -104,8 +104,8 @@ void keyboardPrompt(int state, int key, int x, int y) {
   }
 }
 
-void initPrompt() { }
-void exitPrompt() { }
+void initPrompt(void) { }
+void exitPrompt(void) { }
 
 Callbacks promptCallbacks = {
   displayPause, idlePause, keyboardPrompt,

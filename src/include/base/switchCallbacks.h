@@ -11,9 +11,9 @@ extern Callbacks promptCallbacks;
 extern Callbacks creditsCallbacks;
 extern Callbacks timedemoCallbacks;
 
-extern void restoreCallbacks();
+extern void restoreCallbacks(void);
 extern void switchCallbacks(Callbacks* callbacks);
-extern void updateCallbacks();
+extern void updateCallbacks(void);
 
 extern void setCallback(const char *name);
 

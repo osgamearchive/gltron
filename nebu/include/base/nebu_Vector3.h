@@ -43,7 +43,7 @@ class Vector3 {
   }
 
   float Length() const {
-    return sqrt(*this * *this);
+    return (float) sqrt(*this * *this);
   }
 
   float Length2() {

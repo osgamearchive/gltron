@@ -31,14 +31,14 @@ void switchCallbacks(Callbacks *new) {
   current_callback = new;
 }
   
-void updateCallbacks() {
+void updateCallbacks(void) {
   /* called when the window is recreated */
   exitCallback(current_callback);
   SystemRegisterCallbacks(current_callback);
   initCallback(current_callback);
 }
 
-void restoreCallbacks() {
+void restoreCallbacks(void) {
   if(last_callback == NULL) {
     fprintf(stderr, "fatal: no last callback present, exiting\n");
     exit(1); // OK: programmer error, critical

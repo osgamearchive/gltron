@@ -1,6 +1,7 @@
 // include a few datastructures & constants
 
 #include "video/model.h"
+#include "video/video.h"
 
 #include "math.h"
 #include "stdio.h"
@@ -306,16 +307,16 @@ void drawModelExplosion(Mesh *pMesh, float fRadius) {
   int i, j, k;
 #define EXP_VECTORS 10
   float vectors[][3] = {
-    { 0.03, -0.06, -0.07 }, 
-    { 0.04, 0.08, -0.03 }, 
-    { 0.10, -0.04, -0.07 }, 
-    { 0.06, -0.09, -0.10 }, 
-    { -0.03, -0.05, 0.02 }, 
-    { 0.07, 0.08, -0.00 }, 
-    { 0.01, -0.04, 0.10 }, 
-    { -0.01, -0.07, 0.09 }, 
-    { 0.01, -0.01, -0.09 }, 
-    { -0.04, 0.04, 0.02 }
+    { 0.03f, -0.06f, -0.07f }, 
+    { 0.04f, 0.08f, -0.03f }, 
+    { 0.10f, -0.04f, -0.07f }, 
+    { 0.06f, -0.09f, -0.10f }, 
+    { -0.03f, -0.05f, 0.02f }, 
+    { 0.07f, 0.08f, -0.00f }, 
+    { 0.01f, -0.04f, 0.10f }, 
+    { -0.01f, -0.07f, 0.09f }, 
+    { 0.01f, -0.01f, -0.09f }, 
+    { -0.04f, 0.04f, 0.02f }
   };
 
   for(i = 0; i < pMesh->nMaterials; i++) {
@@ -337,7 +338,7 @@ void drawModelExplosion(Mesh *pMesh, float fRadius) {
       glPushMatrix();
       glTranslatef(fRadius * (*(normal + 0) + vectors[j % EXP_VECTORS][0]),
           fRadius * (*(normal + 1) + vectors[j % EXP_VECTORS][1]),
-          fabs(fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) ));
+          fabsf(fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) ));
       glBegin(GL_TRIANGLES);
       for(k = 0; k < 3; k++) {
         normal = pMesh->pNormals + 3 * pMesh->ppIndices[i][3 * j + k];

@@ -28,12 +28,12 @@ namespace Sound {
 
   private:
     Sound_Sample* _sample;
-		Uint32 _sample_buffersize;
+		int _sample_buffersize;
 		
 		Uint8* _buffer;
-    Uint32 _buffersize;
-    Uint32 _read;
-    Uint32 _decoded;
+    int _buffersize;
+    int _read;
+    int _decoded;
 
 		char *_filename;
     SDL_RWops *_rwops;

@@ -21,8 +21,8 @@ FontTex *gameFtx = NULL;
 int fontID = 6;
 
 Mesh* recognizer_quad;
-float rec_outline_color[] = {0.8, 0.0, 0.0};
-float rec_spec_color[] = {0.05, 0.14, 0.05, 0.50};
+float rec_outline_color[] = {0.8f, 0.0, 0.0};
+float rec_spec_color[] = {0.05f, 0.14f, 0.05f, 0.50f};
 
 Mesh* recognizer;
 Mesh* lightcycle[LC_LOD];
@@ -34,7 +34,7 @@ char *lc_lod_names[] = {
 
 float camAngle = 0;
 float cam_phi = 0;
-float cam_chi = 3.14 / 6.0;
+float cam_chi = PI / 6.0f;
 float cam_r_mouse = CAM_CIRCLE_DIST;
 float cam_r_follow = CAM_FOLLOW_DIST;
 float cam_r_circle = CAM_CIRCLE_DIST;
@@ -46,13 +46,13 @@ int colwidth;
 
 int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
-float camAngles[] = { M_PI / 2, 0, 3 * M_PI / 2, M_PI, 2 * M_PI };
+float camAngles[] = { PI / 2, 0, 3 * PI / 2, PI, 2 * PI };
 
 float cam_defaults[][3] =  { 
-  { CAM_CIRCLE_DIST, M_PI / 3, 0 }, /* circle */
-  { CAM_FOLLOW_DIST, M_PI / 4, M_PI / 72 }, /* follow */
-  { CAM_COCKPIT_Z, M_PI / 8, 0 }, /* cockpit */
-  { CAM_CIRCLE_DIST, M_PI / 3, 0 } /* free */
+  { CAM_CIRCLE_DIST, PI / 3, 0 }, /* circle */
+  { CAM_FOLLOW_DIST, PI / 4, PI / 72 }, /* follow */
+  { CAM_COCKPIT_Z, PI / 8, 0 }, /* cockpit */
+  { CAM_CIRCLE_DIST, PI / 3, 0 } /* free */
 };
 
 /* int lasttime; 
@@ -81,11 +81,11 @@ int vp_max[] = { 1, 2, 4, 1 }; /* windows in this display setting */
 
 /* the offset of the view, in virtual units */
 float vp_x[4][4] = { { 0 },    { 1, 1 },  { 1, 16, 1, 16 }, { 10 } };
-float vp_y[4][4] = { { 0 },    { 0.5, 12.5 },   { 1, 1, 12.5, 12.5 }, { 4.5 } } ;
+float vp_y[4][4] = { { 0 },    { 0.5f, 12.5f },   { 1, 1, 12.5f, 12.5f }, { 4.5 } } ;
 
 /* the width/height of the view, in virtual units */
 float vp_w[4][4] = { { 32 },   { 30, 30 }, { 14, 14, 14, 14 }, { 20 } };
-float vp_h[4][4] = { { 24 }, { 11.5, 11.5 }, { 10.5, 10.5, 10.5, 10.5 }, { 15 } };
+float vp_h[4][4] = { { 24 }, { 11.5f, 11.5f }, { 10.5f, 10.5f, 10.5f, 10.5f }, { 15 } };
 
 #ifdef DEPTH_SORT
 int quadBufSize = 100;
@@ -123,10 +123,10 @@ TextureInfo textures[] = {
 
 };
 
-float shadow_color[] = { 0, 0, 0, .8 };
+float shadow_color[] = { 0, 0, 0, .8f };
 
-#define LX 2.0
-#define LY 2.0
+#define LX 2.0f
+#define LY 2.0f
 float shadow_matrix[] = { LX * LY, 0,       0, 0, 
 			  0,       LX * LY, 0, 0, 
 			  -LY,    -LX,      0, 0, 

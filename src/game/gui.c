@@ -20,7 +20,7 @@ void guiProjection(int x, int y) {
   checkGLError("gui.c guiProj - end");
 }
 
-void drawGuiBackground() {
+void drawGuiBackground(void) {
   checkGLError("gui background start");
 
   glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -39,18 +39,18 @@ void drawGuiBackground() {
   glVertex2f(0, 0);
 
   glTexCoord2f(1.0, 0.0);
-  glVertex2f(gScreen->vp_w, 0);
+  glVertex2i(gScreen->vp_w, 0);
 
   glTexCoord2f(1.0, .75);
-  glVertex2f(gScreen->vp_w, gScreen->vp_h);
+  glVertex2i(gScreen->vp_w, gScreen->vp_h);
 
   glTexCoord2f(0.0, .75);
-  glVertex2f(0, gScreen->vp_h);
+  glVertex2i(0, gScreen->vp_h);
 
   glEnd();
 }
 
-void drawGuiLogo() {
+void drawGuiLogo(void) {
   float pos[] = { 512 - 10 - 320, 384 - 80 };
   float size[] = { 320, 80 };
   float glpos = 64;
@@ -60,12 +60,12 @@ void drawGuiLogo() {
   
   rasonly(gScreen);
 
-  pos[0] *= gScreen->vp_w / 512.0;
-  pos[1] *= gScreen->vp_h / 384.0;
-  size[0] *= gScreen->vp_w / 512.0;
-  size[1] *= gScreen->vp_h / 384.0;
-  glpos *= gScreen->vp_w / 512.0;
-  glsize *= gScreen->vp_w / 512.0;
+  pos[0] *= gScreen->vp_w / 512.0f;
+  pos[1] *= gScreen->vp_h / 384.0f;
+  size[0] *= gScreen->vp_w / 512.0f;
+  size[1] *= gScreen->vp_h / 384.0f;
+  glpos *= gScreen->vp_w / 512.0f;
+  glsize *= gScreen->vp_w / 512.0f;
   
   glEnable(GL_TEXTURE_2D);
 
@@ -101,7 +101,7 @@ void drawGuiLogo() {
   checkGLError("gui background end");
 }
   
-void displayGui() {
+void displayGui(void) {
   drawGuiBackground();
   drawGuiLogo();
   drawMenu(gScreen);
@@ -109,7 +109,7 @@ void displayGui() {
   SystemSwapBuffers();  
 }
 
-void displayConfigure() {
+void displayConfigure(void) {
   char message[] = "Press a key for this action!";
   drawGuiBackground();
   drawGuiLogo();
@@ -118,11 +118,11 @@ void displayConfigure() {
   rasonly(gScreen);
   glColor3f(1.0, 1.0, 1.0);
   drawText(guiFtx, gScreen->vp_w / 6, 20,
-	   gScreen->vp_w / (6.0 / 4.0 * strlen(message)), message);
+	   gScreen->vp_w / (6.0f / 4.0f * strlen(message)), message);
   SystemSwapBuffers();
 }
 
-void idleGui() {
+void idleGui(void) {
   Sound_idle();
   scripting_RunGC();
 	SDL_Delay(10);
@@ -209,17 +209,17 @@ void keyboardGui(int state, int key, int x, int y) {
   SystemPostRedisplay();
 }
 
-void initGui() {
+void initGui(void) {
   SystemUnhidePointer();
 
   updateSettingsCache();
 }
 
-void exitGui() {
+void exitGui(void) {
   glShadeModel( GL_SMOOTH );
 }
 
-void initGLGui() {
+void initGLGui(void) {
   glShadeModel(GL_FLAT);
   glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);

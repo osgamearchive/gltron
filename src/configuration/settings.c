@@ -12,7 +12,7 @@
 
 /* this just screams to be replaced by scripting code */
 
-void initDefaultSettings() {
+void initDefaultSettings(void) {
   /* load some more defaults from config file */
 	runScript(PATH_SCRIPTS, "config.lua");
 	runScript(PATH_SCRIPTS, "artpack.lua");
@@ -21,7 +21,7 @@ void initDefaultSettings() {
 
 }
 
-void initMainGameSettings() {
+void initMainGameSettings(void) {
   game2 = &main_game2;
   game = &main_game;
 
@@ -33,7 +33,7 @@ void initMainGameSettings() {
   gInput.mousey = 0;
 }
 
-void checkSettings() {
+void checkSettings(void) {
   /* sanity check: speed, grid_size */
   if(getSettingf("speed") <= 0) {
     fprintf(stderr, "[gltron] sanity check failed: speed = %.2ff\n",
@@ -51,26 +51,29 @@ void checkSettings() {
   }
 }
 
-void saveSettings() {
-  char *path;
-  char *script;
+void saveSettings(void) {
+#ifdef WIN32
+	char *script;
+	script = getPath(PATH_SCRIPTS, "save.lua");
+	scripting_RunFile(script);
+	free(script);
 
-  script = getPath(PATH_SCRIPTS, "save.lua");
-  scripting_RunFile(script);
-  free(script);
-#ifndef WIN32
-  path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
-
-  if(path != NULL) {
-    scripting_RunFormat("writeto(\"%s\")", path);
-    scripting_Run("save()");
+	scripting_RunFormat("writeto(\"%s\")", "gltron.ini");
+	scripting_Run("save()");
 		scripting_Run("writeto()"); // select stdout again
-    free(path);
-  }
 #else
-    scripting_RunFormat("writeto(\"%s\")", "gltron.ini");
-    scripting_Run("save()");
-		scripting_Run("writeto()"); // select stdout again
+	char *script, *path;
+	script = getPath(PATH_SCRIPTS, "save.lua");
+	scripting_RunFile(script);
+	free(script);
+
+	path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
+	if(path != NULL) {
+		scripting_RunFormat("writeto(\"%s\")", path);
+		scripting_Run("save()");
+			scripting_Run("writeto()"); // select stdout again
+		free(path);
+	}
 #endif
 }
 
@@ -108,7 +111,7 @@ void setSettingi(char *name, int i) {
   scripting_SetFloatSetting( name, (float)i );
 }
 
-void updateSettingsCache() {
+void updateSettingsCache(void) {
   /* cache lua settings that don't change during play */
   game2->settingsCache.use_stencil = getSettingi("use_stencil");
   game2->settingsCache.show_scores = getSettingi("show_scores");

@@ -7,8 +7,8 @@ static void writeCamDefaults(Camera *cam, int type) {
 
 #define CLAMP_R_MIN 6
 #define CLAMP_R_MAX 45
-#define CLAMP_CHI_MIN M_PI / 8
-#define CLAMP_CHI_MAX 3 * M_PI / 8
+#define CLAMP_CHI_MIN PI / 8
+#define CLAMP_CHI_MAX 3 * PI / 8
 
 static void clampCam(Camera *cam) {
   if(cam->type.freedom[CAM_FREE_R]) {
@@ -58,7 +58,7 @@ static void initFollowCamera(Camera *cam) {
 static void initCockpitCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_COCKPIT][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_COCKPIT][CAM_CHI];
-  cam->movement[CAM_PHI] = M_PI; // cam_defaults ignored
+  cam->movement[CAM_PHI] = PI; // cam_defaults ignored
 	cam->movement[CAM_PHI_OFFSET] = 0;
 
   cam->type.interpolated_cam = 0;
@@ -143,9 +143,9 @@ void playerCamera(PlayerVisual *pV, Player *p) {
 
   if(cam->type.freedom[CAM_FREE_R]) {
     if(gInput.mouse1 == 1)
-      cam->movement[CAM_R] += (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
+      cam->movement[CAM_R] += (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0f;
     if(gInput.mouse2 == 1)
-      cam->movement[CAM_R] -= (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
+      cam->movement[CAM_R] -= (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0f;
     writeCamDefaults(cam, CAM_R);
   }
 
@@ -183,9 +183,9 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   }
 
   /* position the camera */
-  dest[0] = data->posx + r * cos(phi) * sin(chi);
-  dest[1] = data->posy + r * sin(phi) * sin(chi);
-  dest[2] = r * cos(chi);
+  dest[0] = data->posx + r * cosf(phi) * sinf(chi);
+  dest[1] = data->posy + r * sinf(phi) * sinf(chi);
+  dest[2] = r * cosf(chi);
 
   /* ok, now let's calculate the new camera destination coordinates */
   /* also, perform some camera dependant movement */
@@ -202,12 +202,12 @@ void playerCamera(PlayerVisual *pV, Player *p) {
     tdest[2] = B_HEIGHT;
     break;
   case CAM_TYPE_COCKPIT: /* 1st person */
-    tdest[0] = data->posx + 4.0 * dirsX[ p->data->dir ] + 2.0 * cos(phi);
-    tdest[1] = data->posy + 4.0 * dirsY[ p->data->dir ] + 2.0 * sin(phi);
+    tdest[0] = data->posx + 4.0f * dirsX[ p->data->dir ] + 2.0f * cosf(phi);
+    tdest[1] = data->posy + 4.0f * dirsY[ p->data->dir ] + 2.0f * sinf(phi);
     tdest[2] = CAM_COCKPIT_Z;
-    dest[0] = data->posx + 4.0 * dirsX[ p->data->dir ] + 0.1 * cos(phi);
-    dest[1] = data->posy + 4.0 * dirsY[ p->data->dir ] + 0.1 * sin(phi);
-    dest[2] = CAM_COCKPIT_Z + 0.1;
+    dest[0] = data->posx + 4.0f * dirsX[ p->data->dir ] + 0.1f * cosf(phi);
+    dest[1] = data->posy + 4.0f * dirsY[ p->data->dir ] + 0.1f * sinf(phi);
+    dest[2] = CAM_COCKPIT_Z + 0.1f;
     break;
   case CAM_TYPE_MOUSE: /* mouse camera */
     tdest[0] = data->posx;
@@ -219,7 +219,7 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   memcpy(cam->target, tdest, sizeof(cam->target));
 }
 
-void doCameraMovement() {
+void doCameraMovement(void) {
   int i;
   Player *p;
 	PlayerVisual *pV;
@@ -240,7 +240,7 @@ void doCameraMovement() {
   gInput.mousey = 0;
 }
 
-void nextCameraType() {
+void nextCameraType(void) {
   int i;
   int current_cam_type = getSettingi("camType");
   int new_cam_type = (current_cam_type + 1) % CAM_COUNT;

@@ -7,7 +7,7 @@
 #include "zlib.h"
 
 void loadDefaultMaterial(Material *pMaterial) {
-  float ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+  float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0 };
   float diffuse[] = { 1.0, 1.0, 0.0, 1.0 };
   float specular[] = { 1.0, 1.0, 1.0, 1.0 };
   float shininess = 2;

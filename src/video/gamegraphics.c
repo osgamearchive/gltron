@@ -19,7 +19,7 @@ static int lod_dist[MAX_LOD_LEVEL + 1][LC_LOD + 1] = {
 static float SpokeColor[4] = {1.0, 1.0, 1.0, 1.0};
 static float NoSpokeColor[4] = {0.0, 0.0, 0.0, 1.0};
 
-void drawGame() {
+void drawGame(void) {
   GLint i;
 
   polycount = 0;
@@ -76,7 +76,7 @@ float GetDistance(float *v, float *p, float *d) {
   vcopy(d, tmp);
   vmul(tmp, t);
   vsub(diff, tmp, tmp);
-  return sqrt( scalarprod(tmp, tmp) );
+  return sqrtf( scalarprod(tmp, tmp) );
 }
 
 static float dirangles[] = { 0, -90, -180, 90, 180, -270 };
@@ -114,7 +114,7 @@ void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
     else if((p->data->last_dir == 3 && p->data->dir == 2) ||
 	    (p->data->last_dir == 0 && p->data->dir == 3))
       axis = -1.0;
-    glRotatef(neigung * sin(M_PI * time / TURN_LENGTH),
+    glRotated(neigung * sin(PI * time / TURN_LENGTH),
 	      0.0, axis * neigung_dir, 0.0);
   }
 #undef neigung
@@ -278,7 +278,7 @@ int playerVisible(Player *eye, Player *target) {
   normalize(v2);
   s = scalarprod(v1, v2);
   /* maybe that's not exactly correct, but I didn't notice anything */
-  d = cos((game2->settingsCache.fov / 2) * 2 * M_PI / 360.0);
+  d = cosf((game2->settingsCache.fov / 2) * 2 * PI / 360.0);
   /*
     printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
     v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
@@ -318,7 +318,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   doPerspective(game2->settingsCache.fov, d->vp_w / d->vp_h,
-                game2->settingsCache.znear, game2->rules.grid_size * 6.5);
+                game2->settingsCache.znear, game2->rules.grid_size * 6.5f);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -464,7 +464,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	}
 }
 
-void initGLGame() {
+void initGLGame(void) {
   glShadeModel( GL_SMOOTH );
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);

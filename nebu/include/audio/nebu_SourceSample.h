@@ -15,14 +15,14 @@ namespace Sound {
     virtual int Mix(Uint8 *data, int len);
 
     Uint8* _buffer;
-    Uint32 _buffersize;
+    int _buffersize;
 
   protected:
     virtual void Reset() { _position = 0; }
       
   private:
-    Uint32 _position;
-    Uint32 _decoded;
+    int _position;
+    int _decoded;
   };
 }
 #endif

@@ -6,12 +6,12 @@
 #include "Nebu_input.h"
 #include "Nebu_scripting.h"
 
-void displayGame() {
+void displayGame(void) {
   drawGame();
   SystemSwapBuffers();
 }
 
-int initWindow() {
+int initWindow(void) {
   int win_id;
   int flags;
   unsigned char fullscreen = 0;
@@ -89,7 +89,7 @@ void setupDisplay(Visual *d) {
   SystemReshapeFunc(reshape);
 }
 
-static void loadModels() {
+static void loadModels(void) {
 	char *path;
 	int i;
 	/* load recognizer model */
@@ -127,7 +127,7 @@ static void loadModels() {
 	free(path);
 }
 
-void initVideoData() {
+void initVideoData(void) {
   gScreen = (Visual*) malloc(sizeof(Visual));
   gViewportType = getSettingi("display_type"); 
   
@@ -148,7 +148,7 @@ void initVideoData() {
   changeDisplay(-1);
 }
 
-void initGameScreen() {
+void initGameScreen(void) {
   Visual *d;
   d = gScreen;
   d->w = getSettingi("width");
@@ -158,7 +158,7 @@ void initGameScreen() {
 }
 
 
-void resetVideoData() {
+void resetVideoData(void) {
   /* for each player */
 
   int i;
@@ -195,7 +195,7 @@ void initDisplay(Visual *d, int type, int p, int onScreen) {
   d->onScreen = onScreen;
 }  
 
-static void defaultViewportPositions() {
+static void defaultViewportPositions(void) {
   viewport_content[0] = 0;
   viewport_content[1] = 1;
   viewport_content[2] = 2;
@@ -206,7 +206,7 @@ static void defaultViewportPositions() {
 /*
   autoConfigureDisplay - configure viewports so every human player has one
  */
-static void autoConfigureDisplay() {
+static void autoConfigureDisplay(void) {
   int n_humans = 0;
   int i;
   int vp;
@@ -276,4 +276,4 @@ void updateDisplay(int vpType) {
 
 }
 
-void Video_Idle() { }
+void Video_Idle(void) { }

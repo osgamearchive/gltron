@@ -19,7 +19,7 @@ void drawPause(Visual *display) {
   static float d = 0;
   static float lt = 0;
   float delta;
-  long now;
+  int now;
 
   now = SystemGetElapsedTime();
   delta = now - lt;
@@ -28,8 +28,8 @@ void drawPause(Visual *display) {
   d += delta;
   /* printf("%.5f\n", delta); */
   
-  if (d > 2 * M_PI) { 
-    d -= 2 * M_PI;
+  if (d > 2 * PI) { 
+    d -= 2 * PI;
   }
 
   if ((game->pauseflag & PAUSE_GAME_FINISHED) && game->winner != -1) {
@@ -41,24 +41,24 @@ void drawPause(Visual *display) {
          make the 'Player wins' message oscillate between 
          white and the winning bike's color 
        */
-      glColor3f((player_color[0] + ((sin(d) + 1) / 2) * (1 - player_color[0])),
-                (player_color[1] + ((sin(d) + 1) / 2) * (1 - player_color[1])),
-                (player_color[2] + ((sin(d) + 1) / 2) * (1 - player_color[2]))); 
+      glColor3f((player_color[0] + ((sinf(d) + 1) / 2) * (1 - player_color[0])),
+                (player_color[1] + ((sinf(d) + 1) / 2) * (1 - player_color[1])),
+                (player_color[2] + ((sinf(d) + 1) / 2) * (1 - player_color[2]))); 
 
       message = buf;
       sprintf(message, winner, game->winner + 1);
     } else {
-      glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
+      glColor3d(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
       message = nowinner;
     }
   } else {
-    glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
+    glColor3d(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
     message = pause;
   }
 
   rasonly(gScreen);
   drawText(gameFtx, display->vp_w / 6, 20, 
-	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
+	   display->vp_w / (6.0f / 4.0f * strlen(message)), message);
 }
 
 void drawScore(Player *p, Visual *d) {
@@ -66,7 +66,7 @@ void drawScore(Player *p, Visual *d) {
 
   sprintf(tmp, "%d", p->data->score);
   rasonly(d);
-  glColor4f(1.0, 1.0, 0.2, 1.0);
+  glColor4f(1.0, 1.0, 0.2f, 1.0);
   drawText(gameFtx, 5, 5, 32, tmp);
 }
 
@@ -108,7 +108,7 @@ void drawFPS(Visual *d) {
   }
 
   sprintf(tmp, "average FPS: %d", fps_avg);
-  glColor4f(1.0, 0.4, 0.2, 1.0);
+  glColor4f(1.0, 0.4f, 0.2f, 1.0);
   drawText(gameFtx, d->vp_w - 180, d->vp_h - 20, 10, tmp);
   sprintf(tmp, "minimum FPS: %d", fps_min);
   drawText(gameFtx, d->vp_w - 180, d->vp_h - 35, 10, tmp);
@@ -135,7 +135,7 @@ void drawConsoleLines(char *line, int call) {
 void drawConsole(Visual *d) {
   int lines;
   rasonly(d);
-  glColor3f(1.0, 0.3, 0.3);
+  glColor3f(1.0, 0.3f, 0.3f);
   
   if (game2->settingsCache.softwareRendering) { 
     lines = 1;

@@ -74,7 +74,16 @@ enum {
   TRILINEAR
 };
 
-
+#define PI ((float) M_PI)
+#ifdef WIN32
+#define floorf (float)floor
+#define fabsf (float)fabs
+#define sqrtf (float)sqrt
+#define cosf (float) cos
+#define sinf (float) sin
+#define acosf (float) acos
+#define tanf (float) tan
+#endif
 
 #define B_HEIGHT 0
 #define CYCLE_HEIGHT 8
@@ -90,33 +99,33 @@ enum {
 
 #define CAM_COUNT 4
 #define CAM_CIRCLE_DIST 17
-#define CAM_CIRCLE_Z 8.0
+#define CAM_CIRCLE_Z 8.0f
 
 #define CAM_FOLLOW_DIST 18
-#define CAM_FOLLOW_Z 6.0
-#define CAM_FOLLOW_SPEED 0.05
-#define CAM_FOLLOW_SPEED_FACTOR 1.0 / 82.0
-#define CAM_SPEED 0.000349
+#define CAM_FOLLOW_Z 6.0f
+#define CAM_FOLLOW_SPEED 0.05f
+#define CAM_FOLLOW_SPEED_FACTOR 1.0f / 82.0f
+#define CAM_SPEED 0.000349f
 
 #define CAM_COCKPIT_Z 4 
 
 #define CAM_R_MIN 2.0
 #define CAM_R_MAX 100
-#define CAM_CHI_MIN M_PI / 6
-#define CAM_CHI_MAX M_PI / 2 - M_PI / 6
+#define CAM_CHI_MIN PI / 6
+#define CAM_CHI_MAX PI / 2 - PI / 6
 
-#define CAM_DR 6.4
+#define CAM_DR 6.4f
 
 #define EXP_RADIUS_MAX 30
-#define EXP_RADIUS_DELTA 0.01
+#define EXP_RADIUS_DELTA 0.01f
 
 /* trail definitions */
-#define DECAL_WIDTH 20.0
+#define DECAL_WIDTH 20.0f
 #define BOW_LENGTH 6
 
 #define BOW_DIST3 2
-#define BOW_DIST2 0.85
-#define BOW_DIST1 0.4
+#define BOW_DIST2 0.85f
+#define BOW_DIST1 0.4f
 
 
 extern int gl_error;
@@ -180,8 +189,8 @@ extern unsigned char* scalePixels(const unsigned char *source,
 																	int dw, int dh, int bytes);
 
 /* font stuff ->fonts.c */
-extern void initFonts();
-extern void deleteFonts();
+extern void initFonts(void);
+extern void deleteFonts(void);
 extern void draw( void );
 
 /* FontTex stuff */
@@ -210,14 +219,14 @@ extern void changeDisplay(int view);
 extern void updateDisplay(int vpType); 
 /* vp types defined in data.h */
 
-extern void drawGame();
-extern void displayGame();
-extern void initGLGame();
+extern void drawGame(void);
+extern void displayGame(void);
+extern void initGLGame(void);
 
 extern void shutdownDisplay(Visual *d);
 extern void setupDisplay(Visual *d);
 
-extern void initFonts();
+extern void initFonts(void);
 extern void initTexture(Visual*);
 extern void deleteTextures(Visual*);
 
@@ -234,10 +243,10 @@ extern void doPngScreenShot(Visual *display);
 extern void rasonly(Visual *d);
 
 extern int hsv2rgb(float, float, float, float*, float*, float*);
-extern void colorDisc();
+extern void colorDisc(void);
 
 /* gltron game graphics -> gamegraphics.c */
-extern void rebuildDebugTex();
+extern void rebuildDebugTex(void);
 extern void drawDebugLines(Visual *d);
 extern void drawDebugTex(Visual *d);
 /* extern void drawHelp(Visual *d); */
@@ -256,10 +265,10 @@ extern float getSegmentEndY(Data *data, int type);
 
 extern void drawMenu(Visual *d);
 
-extern void initVideoData();
-extern void initGameScreen();
+extern void initVideoData(void);
+extern void initGameScreen(void);
 
-extern void Video_Idle();
+extern void Video_Idle(void);
 
 extern Visual *gScreen;
 extern int gViewportType;

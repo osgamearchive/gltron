@@ -11,13 +11,13 @@ void draw2D( Visual *d ) {
 		float aspect = (float)d->vp_w / (float)d->vp_h;
 		if(d->vp_w / game2->grid.width < d->vp_h / game2->grid.height) {
 				// black borders top/bottom
-				width = game2->grid.width + 1;
+				width = game2->grid.width + 1.0f;
 				height = width / aspect;
 				border_bottom = (height - game2->grid.height) / 2;
 				border_left = 0;
 		} else {
 				// black borders left/right
-				height = game2->grid.height + 1;
+				height = game2->grid.height + 1.0f;
 				width = height * aspect;
 				border_left = (width - game2->grid.width) / 2;
 				border_bottom = 0;
@@ -49,7 +49,7 @@ void draw2D( Visual *d ) {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glBegin(GL_QUADS);
-			glColor4f(0.7, 0.7, 0.7, 0.3);
+			glColor4f(0.7f, 0.7f, 0.7f, 0.3f);
 			glVertex2f(0, 0);
 			glVertex2f(w, 0);
 			glVertex2f(w, h);

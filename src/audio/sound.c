@@ -16,7 +16,7 @@ static char *game_fx_names[] = {
 #endif
 };
 
-void Sound_loadFX() {
+void Sound_loadFX(void) {
   int i;
   char *path;
 
@@ -34,7 +34,7 @@ void Sound_loadFX() {
   }
 }
 
-void Sound_reloadTrack() {
+void Sound_reloadTrack(void) {
   char *song;
   char *path;
   scripting_GetStringSetting("current_track", &song);
@@ -51,7 +51,7 @@ void Sound_reloadTrack() {
   free(path);
 }
 
-void Sound_shutdown() {
+void Sound_shutdown(void) {
   Audio_Quit();
 }
   
@@ -60,17 +60,17 @@ void Sound_load(char *name) {
   Audio_LoadMusic(name);
 }
 
-void Sound_play() {
+void Sound_play(void) {
   Audio_SetMusicVolume(getSettingf("musicVolume"));
   Audio_PlayMusic();
   return;
 }
 
-void Sound_stop() {
+void Sound_stop(void) {
   Audio_StopMusic();
 }
 
-void Sound_idle() {
+void Sound_idle(void) {
   Audio_Idle();
 }
 
@@ -86,7 +86,7 @@ void Sound_setFxVolume(float volume) {
   Audio_SetFxVolume(volume);
 }
 
-void Sound_initTracks() {
+void Sound_initTracks(void) {
   const char *music_path;
   List *soundList;
   List *p;
@@ -113,7 +113,7 @@ void Sound_initTracks() {
   scripting_Run("setupSoundTrack()");
 }
 
-void Sound_setup() {
+void Sound_setup(void) {
   printf("[sound] initializing sound\n");
 
   Audio_Init();

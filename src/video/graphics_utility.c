@@ -24,7 +24,7 @@ void doPerspective(float fov, float ratio, float znear, float zfar) {
   float top;
   float left;
 
-  top = tan( fov * M_PI / 360.0 ) * znear;
+  top = tanf( fov * PI / 360.0 ) * znear;
   left = - top * ratio;
   glFrustum(left, -left, -top, top, znear, zfar);
 }

@@ -23,7 +23,7 @@ static char art_dir[PATH_MAX];
 static char music_dir[PATH_MAX];
 static char scripts_dir[PATH_MAX];
 
-void initDirectories() {
+void initDirectories(void) {
   if(PREF_DIR[0] != '~')
     sprintf(preferences_dir, PREF_DIR);
   else
@@ -103,6 +103,7 @@ const char* getDirectory( int eLocation ) {
     fprintf(stderr, "invalid path type\n");
     assert(0);
   }
+  return NULL;
 }
 char *getArtPath(const char *artpack, const char *filename ) {
   char *path = malloc( PATH_MAX );

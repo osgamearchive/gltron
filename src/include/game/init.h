@@ -2,17 +2,17 @@
 #define INIT_H
 
 extern void initSubsystems(int argc, const char *argv[]);
-extern void initFilesystem();
-extern void initScripting();
+extern void initFilesystem(void);
+extern void initScripting(void);
 extern void initConfiguration(int argc, const char *argv[]);
-extern void initVideo();
-extern void initAudio();
-extern void initInput();
-extern void initGame();
+extern void initVideo(void);
+extern void initAudio(void);
+extern void initInput(void);
+extern void initGame(void);
 
 /* platform stuff */
 
-extern void videoInit();
-extern void audioInit();
-extern void inputInit();
+extern void videoInit(void);
+extern void audioInit(void);
+extern void inputInit(void);
 #endif

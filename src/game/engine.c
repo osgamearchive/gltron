@@ -1,7 +1,9 @@
 #include "game/game.h"
-// #include "video/video.h"
+#include "video/video.h"
 #include "audio/audio.h"
 #include "Nebu_base.h"
+
+#include <math.h>
 
 int getCol(int x, int y) {
   return x < 1 || x >= game2->rules.grid_size ||
@@ -9,7 +11,7 @@ int getCol(int x, int y) {
 		colmap[ y * colwidth + x ];
 }
 
-void initGameStructures() { /* called only once */
+void initGameStructures(void) { /* called only once */
   int i;
 
   game->winner = -1;
@@ -31,7 +33,7 @@ void initGameStructures() { /* called only once */
   game2->mode = GAME_SINGLE;
 }
 
-void resetPlayerData() {
+void resetPlayerData(void) {
   int i;
   Data *data;
   AI *ai;
@@ -112,7 +114,7 @@ void resetPlayerData() {
 	game->winner = -1;
 }
 
-void initData() {
+void initData(void) {
 	int i;
   
 	/* colmap */
@@ -152,14 +154,14 @@ void initData() {
 	resetPlayerData();
 }
 
-void Time_Idle() {
+void Time_Idle(void) {
 	game2->time.lastFrame = game2->time.current;
 	game2->time.current = SystemGetElapsedTime() - game2->time.offset;
 	game2->time.dt = game2->time.current - game2->time.lastFrame;
 	/* fprintf(stderr, "dt: %d\n", game2->time.dt); */
 }
 
-void resetScores() {
+void resetScores(void) {
 	int i;
 	for(i = 0; i < game->players; i++)
 		game->player[i].data->score = 0;

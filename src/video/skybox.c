@@ -1,10 +1,10 @@
 #include "video/video.h"
 
-void enableSkyboxTexture() {
+void enableSkyboxTexture(void) {
   glEnable(GL_TEXTURE_2D);
 }
 
-void disableSkyboxTexture() {
+void disableSkyboxTexture(void) {
   glDisable(GL_TEXTURE_2D);
 }
 

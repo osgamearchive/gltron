@@ -78,7 +78,7 @@ void drawMenu(Visual *d) {
       int j;
       float t;
       int time = SystemGetElapsedTime() & 4095; 
-      t = sin( time * M_PI / 2048.0 ) / 2.0 + 0.5;
+      t = sinf( time * PI / 2048.0 ) / 2.0f + 0.5f;
 
       scripting_GetFloatArray("menu_item_active1", active1, 4);
       scripting_GetFloatArray("menu_item_active2", active2, 4);

@@ -5,14 +5,14 @@
 
 int video_initialized = 0;
 
-void audioInit() {
+void audioInit(void) {
   if(SDL_Init(SDL_INIT_AUDIO) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL audio: %s\n", SDL_GetError());
     /* FIXME: disable sound system */
   }
 }
 
-void videoInit() {
+void videoInit(void) {
   if(SDL_Init(SDL_INIT_VIDEO) < 0 ) {
     fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
@@ -20,7 +20,7 @@ void videoInit() {
   else video_initialized = 1;
 }
 
-void inputInit() {
+void inputInit(void) {
 	/* keyboard */
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
 

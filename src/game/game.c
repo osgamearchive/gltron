@@ -1,7 +1,7 @@
 #include "game/gltron.h"
 #include "game/timesystem.h"
 
-void GameMode_Idle() {
+void GameMode_Idle(void) {
 	Sound_idle();
 	Time_Idle();
 	if(game2->time.dt == 0)
@@ -12,7 +12,7 @@ void GameMode_Idle() {
 	SystemPostRedisplay();
 }
 
-void enterGame() { /* called when game mode is entered */
+void enterGame(void) { /* called when game mode is entered */
   updateSettingsCache();
 
   SystemHidePointer();
@@ -37,7 +37,7 @@ void enterGame() { /* called when game mode is entered */
   /* fprintf(stderr, "init game\n"); */
 }
 
-void exitGame() {
+void exitGame(void) {
   Audio_DisableEngine();
   /* fprintf(stderr, "exit game\n"); */
 }

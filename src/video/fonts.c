@@ -2,7 +2,7 @@
 #include "filesystem/path.h"
 #include "Nebu_filesystem.h"
 
-void initFonts() {
+void initFonts(void) {
   char *path;
   file_handle file;
   char buf[100];
@@ -48,7 +48,7 @@ void initFonts() {
   }
 }
 
-void deleteFonts() {
+void deleteFonts(void) {
   if(gameFtx != NULL)
     ftxUnloadFont(gameFtx);
   gameFtx = NULL;

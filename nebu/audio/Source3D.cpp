@@ -79,8 +79,8 @@ int fxShift(float shift, Uint8 *target, Uint8 *source, int len) {
 void fxPan(float pan, float vol, Uint8 *buf, int len) {
   int i;
 
-  float left_vol =  - vol * ( -1.0 + pan ) / 2.0;
-  float right_vol = vol * ( 1.0 + pan ) / 2.0;
+  float left_vol =  - vol * ( -1.0f + pan ) / 2.0f;
+  float right_vol = vol * ( 1.0f + pan ) / 2.0f;
 
   for(i = 0; i < len; i += 4) {
     *(Sint16*) (buf + i) = // *= left_vol
@@ -106,7 +106,7 @@ namespace Sound {
     if( (vSourceLocation - vListenerLocation).Length() < EPSILON  ) {
       fPan = 0;
       fVolume = 1.0f;
-      fShift = 1.0;
+      fShift = 1.0f;
       return;
     }
 
@@ -125,7 +125,7 @@ namespace Sound {
       vTargetPlanar.Normalize() * 
       vListenerDirection;
 
-    fPan = 1 - fabs(cosPhi);
+    fPan = 1 - (float)fabs(cosPhi);
 
     if( vTargetPlanar * vListenerLeft < 0 )
       fPan = -fPan;
@@ -134,9 +134,9 @@ namespace Sound {
 
   /* attenuation */
     // float fallOff = vTarget.Length2();
-    float fallOff = pow(vTarget.Length(), 1.8);
+    float fallOff = (float)pow(vTarget.Length(), 1.8f);
     fVolume = (fallOff > VOLSCALE_BASE) ?
-      (VOLSCALE_BASE / fallOff) : (1.0);
+      (VOLSCALE_BASE / fallOff) : (1.0f);
   
     /* done attenuation */
 

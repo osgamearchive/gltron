@@ -1,7 +1,7 @@
 #include "video/video.h"
 #include "game/game.h"
 
-void drawWalls() {
+void drawWalls(void) {
 #undef WALL_H
 #define WALL_H 48
   float t;
@@ -22,7 +22,7 @@ void drawWalls() {
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_BLEND);
-#define T_TOP 1.0
+#define T_TOP 1.0f
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL1]);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(0.0, 0.0, 0.0);

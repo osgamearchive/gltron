@@ -7,8 +7,8 @@ void setupLights(int type) {
 	float gray10[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	float black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	
-	float posWorld0[] = { 1, .8, 0, 0 };
-	float posWorld1[] = { -1, -.8, 0, 0 };
+	float posWorld0[] = { 1, .8f, 0, 0 };
+	float posWorld1[] = { -1, -.8f, 0, 0 };
 
 	float posCycles0[] = { 0, 0, 0, 1 };
 	

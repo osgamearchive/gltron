@@ -18,17 +18,17 @@ enum {
 #include <assert.h>
 #include <stdlib.h>
 
-extern void Sound_loadFX();
-extern void Sound_init();
-extern void Sound_shutdown();
+extern void Sound_loadFX(void);
+extern void Sound_init(void);
+extern void Sound_shutdown(void);
 extern void Sound_load(char *name);
-extern void Sound_play();
-extern void Sound_stop();
-extern void Sound_idle();
+extern void Sound_play(void);
+extern void Sound_stop(void);
+extern void Sound_idle(void);
 extern void Sound_setMusicVolume(float volume);
 extern void Sound_setFxVolume(float volume);
-extern void Sound_reloadTrack();
-extern void Sound_initTracks();
-extern void Sound_setup();
+extern void Sound_reloadTrack(void);
+extern void Sound_initTracks(void);
+extern void Sound_setup(void);
 
 #endif

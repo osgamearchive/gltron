@@ -140,8 +140,8 @@ void matrixPrint(matrix *m) {
 
 matrix* matrixRotationAxis(matrix *pOut, float fAngle, const vec3 *vAxis)
 {
-	float cosa = cos(fAngle);
-	float sina = sin(fAngle);
+	float cosa = (float)cos(fAngle);
+	float sina = (float)sin(fAngle);
 	float x = vAxis->v[0], y = vAxis->v[1], z = vAxis->v[2];
 	float *m = pOut->m;
 	

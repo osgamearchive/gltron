@@ -2,12 +2,12 @@
 #define CONFIGURATION_H
 
 extern void parse_args(int argc, const char *argv[]);
-extern void updateSettingsCache();
-extern void initMainGameSettings();
-extern void initDefaultSettings();
-extern void initColors();
-extern void checkSettings();
-extern void saveSettings();
+extern void updateSettingsCache(void);
+extern void initMainGameSettings(void);
+extern void initDefaultSettings(void);
+extern void initColors(void);
+extern void checkSettings(void);
+extern void saveSettings(void);
 
 #include "settings.h"
 

@@ -5,7 +5,7 @@
 #include "Nebu_scripting.h"
 #include "Nebu_filesystem.h"
 
-void initArtpacks() {
+void initArtpacks(void) {
   const char *art_path;
   List *artList;
   List *p;
@@ -28,7 +28,7 @@ void initArtpacks() {
   scripting_Run("setupArtpacks()");
 }
 
-void loadArt() {
+void loadArt(void) {
   char *path;
   char *artpack;
 
@@ -49,7 +49,7 @@ void loadArt() {
   initFonts();
 }
 
-void reloadArt() {
+void reloadArt(void) {
   printf("[status] reloading art\n");
   deleteTextures(gScreen);
   loadArt();

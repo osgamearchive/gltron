@@ -78,7 +78,7 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					printf("glance left down\n");
-					game->player[i].camera->movement[CAM_PHI_OFFSET] = M_PI / 2;
+					game->player[i].camera->movement[CAM_PHI_OFFSET] = PI / 2.0f;
 				}	else {
 					printf("glance left up\n");
 					game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
@@ -91,7 +91,7 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					printf("glance right down\n");
-					game->player[i].camera->movement[CAM_PHI_OFFSET] = - M_PI / 2;
+					game->player[i].camera->movement[CAM_PHI_OFFSET] = - PI / 2.0f;
 				} else {
 					printf("glance right up\n");
 					game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;

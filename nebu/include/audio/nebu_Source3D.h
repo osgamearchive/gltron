@@ -30,7 +30,7 @@ namespace Sound {
     virtual int Mix(Uint8 *data, int len);
     virtual void GetModifiers(float &fPan, float &fVolume, float &fShift);
     //  protected:
-    Uint32 _position;
+    int _position;
 
   protected:
     Source3D() {

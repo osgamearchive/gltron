@@ -9,7 +9,7 @@
 #include "base/util.h"
 #include "SDL.h"
 
-int main(int argc, const char *argv[] ) {
+int main(int argc, char *argv[] ) {
 	initSubsystems(argc, argv);
 	runScript(PATH_SCRIPTS, "main.lua");
   return 0;

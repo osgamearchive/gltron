@@ -45,12 +45,12 @@ void keyCredits(int state, int k, int x, int y)
 	exit(0);
 }
 
-void idleCredits() {
+void idleCredits(void) {
   scripting_RunGC();
   SystemPostRedisplay();
 }
 
-void drawCredits() {
+void drawCredits(void) {
   int time;
   int x, y;
   int h;
@@ -62,22 +62,22 @@ void drawCredits() {
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   rasonly(gScreen);
-  h = gScreen->vp_h / (24 * 1.5);
+  h = gScreen->vp_h / (24 * 3 / 2);
   for(i = 0; i < time / 250; i++) {
     glColor3fv(colors[i % 2]);
     if(credits[i] == NULL) 
       break;
     x = 10;
-    y = gScreen->vp_h - 1.5 * h * (i + 1);
+    y = gScreen->vp_h - 3 * h * (i + 1) / 2;
     drawText(gameFtx, x, y, h, credits[i]);
   }
 }
-void displayCredits() {
+void displayCredits(void) {
   drawCredits();
   SystemSwapBuffers();
 }
 
-void initCredits() {
+void initCredits(void) {
   coffset = SystemGetElapsedTime();
 }
 

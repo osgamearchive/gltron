@@ -15,7 +15,7 @@ void initSubsystems(int argc, const char *argv[]) {
 	initInput();
 }
 
-void initScripting() {
+void initScripting(void) {
 	scripting_Init();
 
   /* load basic scripting services */
@@ -61,7 +61,7 @@ void initConfiguration(int argc, const char *argv[])
   updateSettingsCache();
 }
 
-void initVideo() {
+void initVideo(void) {
 	videoInit();
 	runScript(PATH_SCRIPTS, "video.lua");
 
@@ -74,7 +74,7 @@ void initVideo() {
   setupDisplay(gScreen);
 }
 
-void initAudio() {
+void initAudio(void) {
 	audioInit();
 	runScript(PATH_SCRIPTS, "audio.lua");
   /* probe for artpacks & songs */
@@ -82,12 +82,12 @@ void initAudio() {
   Sound_setup();
 }
 	
-void initGame() {
+void initGame(void) {
 	/* initialize the rest of the game's datastructures */
 	initGameStructures();
 	resetScores();
 }
 
-void initInput() {
+void initInput(void) {
 	inputInit();
 }

@@ -1,15 +1,15 @@
 #include "video/video.h"
 #include "video/explosion.h" 
 
-#define IMPACT_RADIUS_DELTA 0.025
-#define IMPACT_MAX_RADIUS 25 
+#define IMPACT_RADIUS_DELTA 0.025f
+#define IMPACT_MAX_RADIUS 25.0f 
 
 /* shockwave behavior constants */
-#define SHOCKWAVE_MIN_RADIUS 0.0
-#define SHOCKWAVE_MAX_RADIUS 45.0
-#define SHOCKWAVE_WIDTH 0.2
-#define SHOCKWAVE_SPACING 6.0
-#define SHOCKWAVE_SPEED 1.2 /* speed relative to IMPACT_RADIUS_DELTA */
+#define SHOCKWAVE_MIN_RADIUS 0.0f
+#define SHOCKWAVE_MAX_RADIUS 45.0f
+#define SHOCKWAVE_WIDTH 0.2f
+#define SHOCKWAVE_SPACING 6.0f
+#define SHOCKWAVE_SPEED 1.2f /* speed relative to IMPACT_RADIUS_DELTA */
 #define SHOCKWAVE_SEGMENTS 25
 #define NUM_SHOCKWAVES 3 
 
@@ -18,8 +18,8 @@ static void drawWave(double radius) {
   int i, j;
   double angle;
   double delta_radius = SHOCKWAVE_WIDTH / SHOCKWAVE_SEGMENTS;
-  double delta_angle = (180.0 / SHOCKWAVE_SEGMENTS) * (M_PI/180);
-  double start_angle = 270.0 * (M_PI/180);
+  double delta_angle = (180.0 / SHOCKWAVE_SEGMENTS) * (PI/180);
+  double start_angle = 270.0 * (PI/180);
   
   for (i = 0; i < SHOCKWAVE_SEGMENTS; i++) {
     glBegin(GL_QUAD_STRIP);
@@ -50,7 +50,7 @@ static void drawShockwaves(float radius) {
 
 /* impact spire behavior constants */
 #define SPIRE_MAX_RADIUS 25
-#define SPIRE_WIDTH 0.40
+#define SPIRE_WIDTH 0.40f
 #define NUM_SPIRES 21 
 
 static void drawSpires(float radius) {
@@ -59,27 +59,27 @@ static void drawSpires(float radius) {
   float zunit[3] = {0, 0, 1};
   
   float vectors[NUM_SPIRES][3] = {
-    {  1.00,  0.20,  0.00  },
-    {  0.80,  0.25,  0.00  },
-    {  0.90,  0.50,  0.00  },
-    {  0.70,  0.50,  0.00  },
-    {  0.52,  0.45,  0.00  },
-    {  0.65,  0.75,  0.00  },
-    {  0.42,  0.68,  0.00  },
-    {  0.40,  1.02,  0.00  },
-    {  0.20,  0.90,  0.00  },
-    {  0.08,  0.65,  0.00  },
-    {  0.00,  1.00,  0.00  }, /* vertical spire */
-    { -0.08,  0.65,  0.00  },
-    { -0.20,  0.90,  0.00  },
-    { -0.40,  1.02,  0.00  },
-    { -0.42,  0.68,  0.00  },
-    { -0.65,  0.75,  0.00  },
-    { -0.52,  0.45,  0.00  },
-    { -0.70,  0.50,  0.00  },
-    { -0.90,  0.50,  0.00  },
-    { -0.80,  0.30,  0.00  },
-    { -1.00,  0.20,  0.00  }
+    {  1.00f,  0.20f,  0.00f  },
+    {  0.80f,  0.25f,  0.00f  },
+    {  0.90f,  0.50f,  0.00f  },
+    {  0.70f,  0.50f,  0.00f  },
+    {  0.52f,  0.45f,  0.00f  },
+    {  0.65f,  0.75f,  0.00f  },
+    {  0.42f,  0.68f,  0.00f  },
+    {  0.40f,  1.02f,  0.00f  },
+    {  0.20f,  0.90f,  0.00f  },
+    {  0.08f,  0.65f,  0.00f  },
+    {  0.00f,  1.00f,  0.00f  }, /* vertical spire */
+    { -0.08f,  0.65f,  0.00f  },
+    { -0.20f,  0.90f,  0.00f  },
+    { -0.40f,  1.02f,  0.00f  },
+    { -0.42f,  0.68f,  0.00f  },
+    { -0.65f,  0.75f,  0.00f  },
+    { -0.52f,  0.45f,  0.00f  },
+    { -0.70f,  0.50f,  0.00f  },
+    { -0.90f,  0.50f,  0.00f  },
+    { -0.80f,  0.30f,  0.00f  },
+    { -1.00f,  0.20f,  0.00f  }
   };
 
   glColor3f(1, 1, 1);

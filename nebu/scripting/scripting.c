@@ -34,7 +34,7 @@ int scripting_GetFloatSetting(char *name, float *f) {
 
   if(lua_isnumber(L, -1)) {
     status = 0; /* all's well */
-    *f = lua_tonumber(L, -1);
+    *f = (float)lua_tonumber(L, -1);
   } else
     status = 1;
 
@@ -47,7 +47,7 @@ int scripting_GetIntegerSetting(char *name, int *i) {
   float f;
   int status;
   status = scripting_GetFloatSetting(name, &f);
-  *i = f;
+  *i = (int)f;
   return status;
 }
 
@@ -77,7 +77,7 @@ void scripting_GetFloatArray(char *name, float *f, int n) {
   for(i = 0; i < n; i++) {
     lua_rawgeti(L, -1, i + 1);
     if(lua_isnumber(L, -1)) {
-      *(f + i) = lua_tonumber(L, 2);
+      *(f + i) = (float)lua_tonumber(L, 2);
     } else {
       fprintf(stderr, "element %d is not number!\n", i);
     }

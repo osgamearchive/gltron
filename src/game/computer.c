@@ -1,4 +1,5 @@
 #include "game/game.h"
+#include "video/video.h"
 
 #include <math.h>
 
@@ -36,7 +37,7 @@ static int turn_time[] = {
 };
 
 static float max_moves[] = {
-  .4, 0.5
+  0.4f, 0.5f
 };
 
 static int spiral[] = {
@@ -61,7 +62,7 @@ void doComputer(int player, int target) {
   level = game2->settingsCache.ai_level;
 
   ai->moves++;
-  /* avoid to short turns */
+  /* avoid too short turns */
   if(game2->time.current - ai->lasttime < turn_time[level])
     return;
 
@@ -164,7 +165,7 @@ static int freeway2(const Data* data, int xdir, int ydir, int c) {
 
 #define MIN_FREE 1
 #define MIN_TURN 5
-#define CRIT_F 0.92063
+#define CRIT_F 0.92063f
 
 static int min_turn[] = { 1, 1, 15, 6 };
 

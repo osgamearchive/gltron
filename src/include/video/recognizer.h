@@ -3,10 +3,10 @@
 
 #include "Nebu_base.h"
 
-extern void resetRecognizer();
-extern void doRecognizerMovement();
-extern void drawRecognizer();
-extern void drawRecognizerShadow();
+extern void resetRecognizer(void);
+extern void doRecognizerMovement(void);
+extern void drawRecognizer(void);
+extern void drawRecognizerShadow(void);
 extern void getRecognizerPositionVelocity(Point *p, Point *v);
 
 #endif

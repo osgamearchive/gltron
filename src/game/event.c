@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "video/video.h"
 #include "game/game.h"
 #include "audio/audio.h"
@@ -118,12 +120,12 @@ List* doMovement(int mode, int dt) {
 			// if(i == 0)
 			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
 				
-      fs = 1.0 - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
-				cos(i * M_PI / 4.0 + 
-						(float)(game2->time.current % SPEED_OZ_FREQ) * 
-						2.0 * M_PI / (float)SPEED_OZ_FREQ);
+      fs = 1.0f - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
+				cosf(i * PI / 4.0f + 
+						(game2->time.current % SPEED_OZ_FREQ) * 
+						2.0f * PI / SPEED_OZ_FREQ);
 
-      t = dt / 100.0 * data->speed * fs;
+      t = dt / 100.0f * data->speed * fs;
       while(t > 0) {
 				if(t < 1) {
 					float posx = floorf(data->posx);
@@ -149,9 +151,9 @@ List* doMovement(int mode, int dt) {
       }
     } else { /* already crashed */
       if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
-				data->trail_height -= (float)(dt * TRAIL_HEIGHT) / 1000;
+				data->trail_height -= (dt * TRAIL_HEIGHT) / 1000.0f;
       if(pV->exp_radius < EXP_RADIUS_MAX)
-				pV->exp_radius += (float)dt * EXP_RADIUS_DELTA;
+				pV->exp_radius += dt * EXP_RADIUS_DELTA;
       else if (data->speed == SPEED_CRASHED) {
 				int winner = -1;
 

@@ -118,8 +118,8 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 	float fSegLength;
 	for(i = 0; i < pData->trailOffset; i++) {
 		fSegLength = 
-			fabs( (pData->trails + i)->ex - (pData->trails + i)->sx) +
-			fabs( (pData->trails + i)->ey - (pData->trails + i)->sy);
+			fabsf( (pData->trails + i)->ex - (pData->trails + i)->sx) +
+			fabsf( (pData->trails + i)->ey - (pData->trails + i)->sy);
 		if(i == 0 || cmpdir(pData->trails + i - 1, pData->trails + i)) {
 			storeVertex(pMesh, curVertex, pData->trails + i, 0, 
 									0, pData->trail_height, 
@@ -148,8 +148,8 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 		line.ey = getSegmentEndY( pData, 1 );
 
 		fSegLength = 
-			fabs( line.ex - line.sx) +
-			fabs( line.ey - line.sy);
+			fabsf( line.ex - line.sx) +
+			fabsf( line.ey - line.sy);
 		
 		storeVertex(pMesh, curVertex, &line, 0,
 								0, pData->trail_height, 
@@ -174,8 +174,8 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 		line.ey = getSegmentEndY( pData, 0 );
 
 		fSegLength = 
-			fabs( line.ex - line.sx) +
-			fabs( line.ey - line.sy);
+			fabsf( line.ex - line.sx) +
+			fabsf( line.ey - line.sy);
 
 		storeVertex(pMesh, curVertex, &line, 0,
 								0, pData->trail_height, 
@@ -213,7 +213,7 @@ void bowGeometry(Player *pPlayer, PlayerVisual *pV,
 
 	for(i = 0; i < 10; i++) {
 		float t = i * 1.0f / 10;
-		float fTop = sqrt(1 - t*t);
+		float fTop = sqrtf(1 - t*t);
 		float fFloor = (t < 0.6f) ? 0 : 0.5f * (t - 0.6f);
 		if(fTop < 0.3f) fTop = 0.3f;
 		
