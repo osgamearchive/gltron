@@ -7,6 +7,7 @@ typedef struct {
   int              x;                 //pos of top left corner
   int              y;
   int              current;           //is current line
+  int              cur_char;          //is current char in current line.
   char**           buffer;            //text buffer
 } Wtext;
 

@@ -27,6 +27,7 @@ void keyPregame(int k, int unicode, int x, int y)
       isLogged=0;
       Net_disconnect();
       serverstate=preGameState; //We hope that next time server will be to preGameState
+      free_wtext(pregametext);
       changeCallback(&guiCallbacks);      
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
@@ -164,16 +165,20 @@ void initPregame() {
   //Reinit scores
   netscores.winner = -1;
 
-  pregametext = new_wtext(100, 10, 15, 100);
-  insert_wtext(pregametext, "welcome to gltron server...\nlogged\n", 0);
+  if( pregametext == NULL )
+    {
+      pregametext = new_wtext(30, 10, 10, 100);
+      insert_wtext(pregametext, "connected...\n", 3);
+      insert_wtext(pregametext, server_message, 7);
+    }
 
   printf("entering netpregame\n");
 }
 
 void cleanPregame()
 {
-  free_wtext(pregametext);
-  pregametext=NULL;
+  //free_wtext(pregametext);
+  //pregametext=NULL;
   //fprintf(stderr, "pregame: deconnecting...\n");
   //Net_deconnect();
 }

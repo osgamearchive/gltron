@@ -68,6 +68,8 @@ do_loginrep(Packet packet)
   me = packet.which;
   slots[me].active=1;
   printf("logged ( slot %d )...\n%s\n", me, packet.infos.loginrep.message);
+  //sprintf(server_message, "%s\n", packet.infos.loginrep.message);
+  strcpy(server_message, packet.infos.loginrep.message);
   nbUsers++;
   switchCallbacks(&netPregameCallbacks);
 }
@@ -143,7 +145,8 @@ do_userinfo(Packet packet)
       //printf("%s", mesg);
       if( serverstate == preGameState )
 	{
-	  drawMessage(mesg);
+	  //drawMessage(mesg);	  
+	  insert_wtext(pregametext, mesg, 2);
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);
@@ -163,7 +166,7 @@ do_userinfo(Packet packet)
     {
       sprintf(mesg, "logged...\n");
       printf("logged...\n");
-      drawMessage(mesg);
+      insert_wtext(pregametext, mesg, 2);
     }
     } else {
       slots[which].player=(which==0)?me:which;
@@ -182,11 +185,15 @@ do_chat( Packet packet )
       if( serverstate == gameState )	
 	consoleAddLine(mesg);
 	else
-	  drawChat(mesg);
+	  insert_wtext(pregametext, mesg, 4);
+  
+	  
+	  //drawChat(mesg);
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      drawChat(mesg);
+      insert_wtext(pregametext, mesg, 4);
+      //drawChat(mesg);
     }
 }
 
@@ -210,7 +217,8 @@ do_action(Packet packet)
 
       if( serverstate == preGameState )
 	{
-	  drawMessage(mesg);
+	  insert_wtext(pregametext, mesg, 2);
+	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);

@@ -551,7 +551,7 @@ netEventList neteventlist;
 int    packet_type;
 int    timeout;
 int    hasstarted;
-
+char   server_message[255];
 extern Netscores         netscores;
 
 extern Wtext    *pregametext;
