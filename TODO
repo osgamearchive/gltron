@@ -6,6 +6,8 @@ Bugs:
 - Screen garbled in-game after switching resolutions (hofi)
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM)
+- Make sure trails retract *completely* below floor when player dies.
+  Currently, there are some artifacts from not going far enough (darrell)
 
 Features:
 
