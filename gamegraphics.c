@@ -567,7 +567,6 @@ void drawCycleShadow(Player *p, int lod) {
 }
 
 void drawCycle(Player *p, int lod) {
-#define SPOKE_INTERVAL 50
   Mesh *cycle;
   unsigned int  time;
   cycle = lightcycle[lod];
@@ -601,7 +600,7 @@ void drawCycle(Player *p, int lod) {
   SetMaterialColor(cycle, "Hull", eDiffuse, p->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, p->pColorSpecular); 
 
-  if (time > SPOKE_INTERVAL) {
+  if (time > (120 - (p->data->speed * 10))) {
     if (p->data->spoke_state == 1) {
       p->data->spoke_state = 0;
       SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
