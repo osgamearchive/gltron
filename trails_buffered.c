@@ -229,12 +229,12 @@ void doTrails(Player *p) {
   int *index;
   if(q == NULL) {
     size = getTrailCount() + 12;
-    printf("allocating QuadBuffer, size %d\n", size);
+    // printf("allocating QuadBuffer, size %d\n", size);
     q = createQuadBuffer(size);
   } else {
     size = getTrailCount() + 12;
     if(size > q->size) { 
-      printf("reallocating QuadBuffer, size %d\n", size);
+      // printf("reallocating QuadBuffer, size %d\n", size);
       freeQuadBuffer(q);
       /* we don't want to reallocate immediately, no make it a bit larger */
       q = createQuadBuffer(size + 36); 

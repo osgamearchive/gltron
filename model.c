@@ -122,7 +122,7 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
   
   gzclose(f);
 
-  printf("vertices: %d, normals: %d, faces: %d\n", iVertex, iNormal, iFace);
+  // printf("vertices: %d, normals: %d, faces: %d\n", iVertex, iNormal, iFace);
 
   // count each material
   pMesh->pnFaces = malloc( sizeof(int) * pMesh->nMaterials );
@@ -240,7 +240,7 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
       }
       free(face);
     }
-    printf("vertices: %d, faces: %d\n", nVertices, iFace);
+    // printf("[scenegraph] vertices: %d, faces: %d\n", nVertices, iFace);
 
     free(lookup);
     free(pVertices);

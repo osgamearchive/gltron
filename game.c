@@ -112,7 +112,7 @@ void changeDisplay(int view) {
     updateDisplay(view);
   }
 
-  displayMessage(TO_STDOUT, "set display to %d", view);
+  // displayMessage(TO_STDOUT, "set display to %d", view);
   setSettingi("display_type", view);
 }
 

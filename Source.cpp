@@ -14,7 +14,7 @@ namespace Sound {
   }
 	
   Source::~Source() {
-    fprintf(stderr, "Source destructor called\n");
+    // fprintf(stderr, "Source destructor called\n");
 				
 		SDL_DestroyMutex(_mutex);
 		SDL_DestroySemaphore(_sem);

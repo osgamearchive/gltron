@@ -48,7 +48,7 @@ int initWindow() {
 	goto SKIP;
       }
     }
-    printf("could not create window...exiting\n");
+    printf("[fatal] could not create window...exiting\n");
     exit(1); /* OK: critical, no visual */
   }
 
@@ -77,17 +77,17 @@ void shutdownDisplay(gDisplay *d) {
   deleteTextures(d);
   deleteFonts();
   SystemDestroyWindow(d->win_id);
-  printf("window destroyed\n");
+  // printf("[video] window destroyed\n");
 }
 
 void setupDisplay(gDisplay *d) {
-  fprintf(stderr, "trying to create window\n");
+  // fprintf(stderr, "[video] trying to create window\n");
   d->win_id = initWindow();
-  fprintf(stderr, "window created\n");
+  // fprintf(stderr, "[video] window created\n");
   initRenderer();
-  printRendererInfo();
-  /* printf("win_id is %d\n", d->win_id); */
-  fprintf(stderr, "loading art\n");
+  // printRendererInfo();
+  // printf("win_id is %d\n", d->win_id);
+  // fprintf(stderr, "[status] loading art\n");
   loadArt();
 
   SystemReshapeFunc(reshape);
@@ -144,26 +144,24 @@ int main( int argc, char *argv[] ) {
   /* load some more defaults from config file */
   initDefaultSettings();
 
-#if 1
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
   {
     char *path;
     path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
     if (path != NULL) {
       if (fileExists(path)) {
-        printf("loading settings from %s\n", path);
+        printf("[status] loading settings from %s\n", path);
 	      scripting_RunFile(path);
       } else {
-	      printf("cannot load %s from %s\n", RC_NAME, path);
+	      printf("[error] cannot load %s from %s\n", RC_NAME, path);
       }
       free(path);
     }
     else {
-      printf("can't get valid pref path for %s\n", RC_NAME);
-      assert(0);
+      printf("[fatal] can't get valid pref path for %s\n", RC_NAME);
+      exit(1); // something is seriously wrong
     }
   }
-#endif
 
   /* parse any comandline switches overrinding the loaded settings */
   parse_args(argc, argv);
@@ -186,7 +184,7 @@ int main( int argc, char *argv[] ) {
   Sound_initTracks();
 #endif
 
-  printf("loading menu\n");
+  // printf("[status] loading menu\n");
   { 
     char *path;
     path = getPath(PATH_SCRIPTS, "menu.lua");
@@ -197,7 +195,7 @@ int main( int argc, char *argv[] ) {
     scripting_RunFile(path);
     free(path);
   }
-  printf("menu loaded\n");
+  // printf("[status] menu loaded\n");
 
   setupDisplay(game->screen);
 #ifdef SOUND

@@ -205,7 +205,8 @@ void keyboardGui(int key, int x, int y) {
   case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
   case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
   default: 
-    printf("got key %d\n", key);
+    // printf("got key %d\n", key);
+		break;
   }
   free(pMenuName);
   SystemPostRedisplay();

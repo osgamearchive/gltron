@@ -9,7 +9,7 @@ void initArtpacks() {
   art_path = getDirectory( PATH_ART );
   artList = readDirectoryContents(art_path, NULL);
   if(artList->next == NULL) {
-    fprintf(stderr, "no art files found...exiting\n");
+    fprintf(stderr, "[fatal] no art files found...exiting\n");
     exit(1); /* OK: critical, installation corrupt */
   }
   
@@ -26,7 +26,7 @@ void loadArt() {
   char *artpack;
 
   scripting_GetStringSetting("current_artpack", &artpack);
-  fprintf(stderr, "loading artpack '%s'\n", artpack);
+  fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
   path = getArtPath(artpack, "artpack.lua");
   free(artpack);
 
@@ -40,7 +40,7 @@ void loadArt() {
 }
 
 void reloadArt() {
-  printf("reloading art\n");
+  printf("[status] reloading art\n");
   deleteTextures(game->screen);
   loadArt();
 }

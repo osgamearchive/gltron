@@ -19,7 +19,7 @@ namespace Sound {
   }
 
   SourceMusic::~SourceMusic() { 
-    fprintf(stderr, "SourceMusic destructor called\n");
+    // fprintf(stderr, "SourceMusic destructor called\n");
 #ifndef macintosh
 		SDL_SemWait(_sem);
 #else
@@ -60,7 +60,7 @@ namespace Sound {
 
     _read = 0;
     _decoded = 0;
-    fprintf(stderr, "created sample\n");
+    // fprintf(stderr, "created sample\n");
   }
 
   void SourceMusic::Load(char *filename) {
@@ -127,8 +127,7 @@ namespace Sound {
 		while( _read == _decoded || 
 					 (_read - _decoded + _buffersize) % _buffersize >
 					 _sample_buffersize )	{
-			if(_read == _decoded)
-				printf("_read == _decoded == %d\n", _read);
+			// if(_read == _decoded)	printf("_read == _decoded == %d\n", _read);
 			// fill the buffer
 			int count = Sound_Decode(_sample);
 			// printf("adding %d bytes to buffer\n", count);
@@ -137,7 +136,7 @@ namespace Sound {
 			} else {
 				// wrapping around end of buffer (usually doesn't happen when 
 				// _buffersize is a multiple of _sample_buffersize)
-				printf("wrapping around end of buffer\n");
+				// printf("wrapping around end of buffer\n");
 				memcpy(_buffer + _decoded, _sample->buffer, _buffersize - _decoded);
 				memcpy(_buffer, (Uint8*) _sample->buffer + _buffersize - _decoded,
 							 count - (_buffersize - _decoded));
@@ -155,9 +154,9 @@ namespace Sound {
 				// todo: let playback finish, because there's still data
 				// in the buffer that has to be mixed
 				CleanUp();
-				fprintf(stderr, "end of sample reached!\n");
+				// fprintf(stderr, "end of sample reached!\n");
 				if(_loop) {
-					fprintf(stderr, "looping music\n");
+					// fprintf(stderr, "looping music\n");
 					if(_loop != 255) 
 						_loop--;
 					CreateSample();

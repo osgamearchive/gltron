@@ -12,7 +12,7 @@ namespace Sound {
   }
 
   SourceSample::~SourceSample() {
-    fprintf(stderr, "SourceSample destructor called\n");
+    // fprintf(stderr, "SourceSample destructor called\n");
     if(_buffer)
       delete _buffer;
     // Source::~Source();
@@ -41,7 +41,7 @@ namespace Sound {
 
     Sound_FreeSample(sample);
     
-    fprintf(stderr, "done decoding sample '%s'\n", filename);
+    // fprintf(stderr, "done decoding sample '%s'\n", filename);
     _position = 0;
   }
 
@@ -60,7 +60,7 @@ namespace Sound {
 		   volume);
       len -= _buffersize - _position;
 
-      printf("end of sample reached!\n");
+      // printf("end of sample reached!\n");
       if(_loop) {
 	if(_loop != 255) 
 	  _loop--;

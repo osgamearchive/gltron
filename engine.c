@@ -113,11 +113,13 @@ void initPlayerData() {
   int *startIndex;
   startIndex = malloc( game->players * sizeof(int) );
   randomPermutation(game->players, startIndex);
+	/*
   printf("startindex: ");
   for(i = 0; i < game->players; i++) {
     printf("%d ", startIndex[i]);
   }
   printf("\n");
+	*/
 
   for(i = 0; i < game->players; i++) {
     float startpos[][2] = { 
@@ -137,8 +139,8 @@ void initPlayerData() {
       case 2: ai->active = getSettingi("ai_player3"); break;
       case 3: ai->active = getSettingi("ai_player4"); break;
       default:
-	fprintf(stderr, "player index #%d not caught!\n", i);
-	ai->active = AI_NONE;
+				fprintf(stderr, "[error] player index #%d not caught!\n", i);
+				ai->active = AI_NONE;
       }
     }
     ai->tdiff = 0;

@@ -233,7 +233,7 @@ void doCameraMovement() {
 
 }
 
-void nextCameraType(int console_message) {
+void nextCameraType() {
   int i;
   int current_cam_type = getSettingi("camType");
   int new_cam_type = (current_cam_type + 1) % CAM_COUNT;
@@ -249,19 +249,19 @@ void nextCameraType(int console_message) {
     }
   }
 
-  if (console_message) {
+  if (getSettingi("debug_output")) {
     switch (new_cam_type) {
       case 0 :
-        displayMessage(TO_CONSOLE, "Circling Camera");
+        displayMessage(TO_CONSOLE, "[camera] Circling Camera");
         break;
       case 1 :
-        displayMessage(TO_CONSOLE, "Behind Camera");
+        displayMessage(TO_CONSOLE, "[camera] Behind Camera");
         break;
       case 2 :
-        displayMessage(TO_CONSOLE, "Cockpit Camera");
+        displayMessage(TO_CONSOLE, "[camera] Cockpit Camera");
         break;
       case 3 :
-        displayMessage(TO_CONSOLE, "Mouse Camera");
+        displayMessage(TO_CONSOLE, "[camera] Mouse Camera");
         break;
     }
   }

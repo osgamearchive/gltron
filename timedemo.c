@@ -139,7 +139,8 @@ void exitTimedemo(void) {
 		// displayMessage(TO_STDERR | TO_CONSOLE, "timedemo FPS: %.2f (%d frames in %f seconds)\n", (float) frames / dt * 1000.0f, frames, dt / 1000.0f);
 	}
 	else {
-		displayMessage(TO_STDERR | TO_CONSOLE, "dt: %d, frames: %d\n", dt, frames);
+		// displayMessage(TO_STDERR | TO_CONSOLE, "dt: %d, frames: %d\n", dt, frames);
+		// actually, this would be a good reason to abort with a fatal error
 	}
 
   setSettingf("speed", saveRules.speed);

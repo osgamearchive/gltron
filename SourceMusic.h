@@ -20,7 +20,7 @@ namespace Sound {
       if(_sample != NULL) {
 				CleanUp();
 				CreateSample();
-				fprintf(stderr, "sample resetted\n");
+				// fprintf(stderr, "sample resetted\n");
       };
     };
     void CleanUp(void);

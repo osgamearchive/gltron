@@ -27,13 +27,13 @@ extern "C" {
     sample_engine->Start();
     if (game2->settingsCache.show_recognizer)
       sample_recognizer->Start();
-    printf("turning on engine sound\n");
+    printf("[audio] turning on engine sound\n");
   }
 
   void Audio_DisableEngine(void) {
     sample_engine->Stop();
     sample_recognizer->Stop();
-    printf("turning off engine sound\n");
+    printf("[audio] turning off engine sound\n");
   }
 
   void Audio_Idle(void) { 
@@ -132,12 +132,14 @@ extern "C" {
       sound->SetStatus(Sound::eUninitialized);
     } else {
       sound->SetStatus(Sound::eInitialized);
-			fprintf(stderr, "frequency: %d\n", obtained.freq);
-			fprintf(stderr, "format: %d\n", obtained.format);
-			fprintf(stderr, "channels: %d\n", obtained.channels);
-			fprintf(stderr, "silence: %d\n", obtained.silence);
-			fprintf(stderr, "buffer in samples: %d\n", obtained.samples);
-			fprintf(stderr, "buffer in bytes: %d\n", obtained.size);
+			/*
+			fprintf(stderr, "[sound] frequency: %d\n", obtained.freq);
+			fprintf(stderr, "[sound] format: %d\n", obtained.format);
+			fprintf(stderr, "[sound] channels: %d\n", obtained.channels);
+			fprintf(stderr, "[sound] silence: %d\n", obtained.silence);
+			fprintf(stderr, "[sound] buffer in samples: %d\n", obtained.samples);
+			fprintf(stderr, "[sound] buffer in bytes: %d\n", obtained.size);
+			*/
     }
     sound->SetMixMusic(game2->settingsCache.playMusic);
     sound->SetMixFX(game2->settingsCache.playEffects);

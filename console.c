@@ -19,7 +19,7 @@ void consoleInit() {
 
   position = 0;
   offset = 0;
-  fprintf(stderr, "console initialized\n");
+  // fprintf(stderr, "console initialized\n");
 }
 
 void consoleAddLine(char *text) {

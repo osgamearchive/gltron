@@ -70,6 +70,7 @@ void saveSettings() {
   if(path != NULL) {
     scripting_RunFormat("writeto(\"%s\")", path);
     scripting_Run("save()");
+		scripting_Run("writeto()"); // select stdout again
     free(path);
   }
 }
@@ -105,12 +106,12 @@ float getSettingf(char *name) {
 }
 
 void setSettingf(char *name, float f) {
-  printf("setting '%s' to %.2f\n", name, f);
+  // printf("setting '%s' to %.2f\n", name, f);
   scripting_SetFloatSetting( name, f );
 }
 
 void setSettingi(char *name, int i) {
-  printf("setting '%s' to %d\n", name, i);
+  // printf("setting '%s' to %d\n", name, i);
   scripting_SetFloatSetting( name, (float)i );
 }
 

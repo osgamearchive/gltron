@@ -39,11 +39,11 @@ void Sound_reloadTrack() {
   char *song;
   char *path;
   scripting_GetStringSetting("current_track", &song);
-  fprintf(stderr, "loading song %s\n", song);
+  fprintf(stderr, "[sound] loading song %s\n", song);
   path = getPath( PATH_MUSIC, song );
   free(song);
   if(path == NULL) {
-    fprintf(stderr, "can't find song...exiting\n");
+    fprintf(stderr, "[sound] can't find song...exiting\n");
     exit(1); // FIXME: handle missing song somewhere else
   }
   Sound_load(path);
@@ -96,7 +96,7 @@ void Sound_initTracks() {
   music_path = getDirectory( PATH_MUSIC );
 	soundList = readDirectoryContents(music_path, NULL);
   if(soundList->next == NULL) {
-    fprintf(stderr, "no music files found...exiting\n");
+    fprintf(stderr, "[sound] no music files found...exiting\n");
     exit(1); // FIXME: handle missing songs somewhere else
   }
     
@@ -115,7 +115,7 @@ void Sound_initTracks() {
 }
 
 void Sound_setup() {
-  printf("initializing sound\n");
+  printf("[sound] initializing sound\n");
 
   Audio_Init();
   Sound_loadFX();

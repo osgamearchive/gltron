@@ -39,7 +39,7 @@ void keyGame(int k, int x, int y)
 
   case SYSTEM_KEY_F5: saveSettings(); break;
 
-  case SYSTEM_KEY_F10: nextCameraType(1); break;
+  case SYSTEM_KEY_F10: nextCameraType(); break;
   case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
   case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
 

@@ -23,9 +23,9 @@ void initRenderer() {
 }
 
 void printRendererInfo() {
-  printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
+  printf("[video] OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
 	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
-  printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
+  printf("[video] Extensions available: %s\n", glGetString(GL_EXTENSIONS));
 }
 
 void renderQuad(Quad *q) {

@@ -22,6 +22,7 @@ void draw2D( gDisplay *d ) {
 				border_bottom = 0;
 		}
 
+		/*
 		{
 				static int foo = 0;
 				if(!foo)
@@ -29,6 +30,7 @@ void draw2D( gDisplay *d ) {
 									 width, height, border_left, border_bottom);
 				foo = 1;
 		}
+		*/
 
 		glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
 		glMatrixMode(GL_PROJECTION);

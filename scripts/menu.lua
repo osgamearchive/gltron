@@ -420,11 +420,11 @@ Menu = {
 }
 
 Menu.SetParent = function ( menu )
-										script_print("processing menu '" .. menu .. "'")
+										-- script_print("processing menu '" .. menu .. "'")
 										local _,entry
 										for _,entry in Menu[menu].items do
 											 Menu[entry].parent = menu
-											 script_print("processing item '" .. entry .. "'")
+											 -- script_print("processing item '" .. entry .. "'")
 											 if Menu[entry].type == MenuC.type.menu then
 													Menu.SetParent( entry )
 											 end

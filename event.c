@@ -31,11 +31,11 @@ int processEvent(GameEvent* e) {
     data = game->player[e->player].data;
     data->posx = data->iposx = e->x;
     data->posy = data->iposy = e->y;
-    displayMessage(TO_CONSOLE | TO_STDOUT, "player %d crashed", e->player + 1);
+    displayMessage(TO_CONSOLE, "player %d crashed", e->player + 1);
     doCrashPlayer(e);
     break;
   case EVENT_STOP:
-    displayMessage(TO_STDOUT, "game stopped");
+    // displayMessage(TO_STDOUT, "game stopped");
 #ifdef RECORD
     if(game2->mode == GAME_SINGLE_RECORD) {
       stopRecording();
@@ -47,10 +47,10 @@ int processEvent(GameEvent* e) {
 #endif
     if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
       game->winner = e->player;
-      displayMessage(TO_CONSOLE | TO_STDOUT, "winner: %d", game->winner + 1);
+      displayMessage(TO_CONSOLE, "winner: %d", game->winner + 1);
     } else {
       game->winner = -2;
-      displayMessage(TO_CONSOLE | TO_STDOUT, "everyone died! no one wins!");
+      displayMessage(TO_CONSOLE, "everyone died! no one wins!");
     }
 		SystemExitLoop(RETURN_GAME_END);
     /* screenSaverCheck(0); */
