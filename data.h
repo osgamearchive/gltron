@@ -306,4 +306,10 @@ typedef struct settings_float {
   float *value;
 } settings_float;
 
+
+typedef struct settings_v {
+  char name[32];
+  void (*value)(char*, FILE*);
+} settings_v;
+
 #endif
