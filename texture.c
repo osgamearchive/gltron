@@ -5,7 +5,7 @@ void initTexture(gDisplay *d) {
   char texname[120];
 
   int i, j;
-  update_splash(splash, 0.14, "init texture");
+  update_splash(splash, 0.16, "init texture");
   if(game->settings->use_mipmaps) {
     if(game->settings->mipmap_filter == TRILINEAR)
       min_filter = GL_LINEAR_MIPMAP_LINEAR;
@@ -28,7 +28,7 @@ void initTexture(gDisplay *d) {
 	sprintf(texname, "%s%d%s", textures[i].name, j, TEX_SUFFIX);
       }
       loadTexture(texname, textures[i].type);
-      update_splash(splash, 0.15+i/1000, texname);
+      update_splash(splash, 0.16+i/1000, texname);
 
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);

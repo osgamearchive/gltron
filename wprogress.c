@@ -20,6 +20,7 @@ new_wprogressbar(int x, int y, int width, int height)
   wprogress->width=width;
   wprogress->height=height;
   wprogress->prog=0.0;
+  wprogress->last=0.0;
 
   return wprogress;
 }
@@ -117,14 +118,17 @@ draw_wprogressbar(Wprogressbar *wprogress)
 void
 update_wprogressbar(Wprogressbar *wprogress, float prog)
 {
-  int time;
+  int time=0;
 
+  wprogress->last=wprogress->prog;
   wprogress->prog = prog;
-  printf("loading time %d\n", time);
   //time to wait
   time = (wprogress->prog-wprogress->last)*1000;
+  printf("loading time %d progress %f-%f\n", time, wprogress->prog, wprogress->last);
   if( time > 100 )
     time = 100;
+  if( time < 0 )
+    time = 0;
   SDL_Delay(time);
 }
 
