@@ -32,6 +32,6 @@ int nebu_rand(void)
 /* Bonus function, returns a random number in [0..1) */
 float nebu_randf(void)
 {
-	return (double)nebu_rand()/PERIOD;
+	return (float)nebu_rand()/PERIOD;
 }
 
