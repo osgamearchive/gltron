@@ -131,18 +131,21 @@ void initDirectories() {
   sprintf(data_dir, ":data");
   sprintf(art_dir, ":art");
   sprintf(scripts_dir, ":scripts");
+  sprintf(music_dir, ":music");
   #else
   sprintf(data_dir, "data");
   sprintf(art_dir, "art");
   sprintf(scripts_dir, "scripts");
+  sprintf(music_dir, "music");
   #endif
 
 #else
   sprintf(data_dir, "%s%c%s", DATA_DIR, SEPERATOR, "data");
   sprintf(art_dir, "%s%c%s", DATA_DIR, SEPERATOR, "art");
   sprintf(scripts_dir, "%s%c%s", DATA_DIR, SEPERATOR, "scripts");
+  sprintf(music_dir, "%s%c%s", DATA_DIR, SEPERATOR, "music");
 #endif
-  sprintf(music_dir, "%s%c" "music", data_dir, SEPERATOR);
+
 
 
   printf("directories:\n"
