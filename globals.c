@@ -6,6 +6,8 @@ Game *game;
 Game2 main_game2;
 Game2 *game2;
 
+int lua_profile = 0;
+
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 list* soundList;
 /* which ai function to call for the current ai level */
@@ -136,3 +138,4 @@ float shadow_matrix[] = { LX * LY, 0,       0, 0,
 			  0,       0,       0, LX * LY };
 #undef LX
 #undef LY
+
