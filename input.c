@@ -65,13 +65,13 @@ void keyGame(int k, int x, int y)
     for( i = 0; i < game->players; i++) {
       if(PLAYER_IS_ACTIVE(&game->player[i])) {
 	int key;
-	scripting_RunFormat("return keys[%d].left", i + 1);
+	scripting_RunFormat("return settings.keys[%d].left", i + 1);
 	scripting_GetIntegerResult( &key );
 	if(key == k) {
 	  createEvent(i, EVENT_TURN_LEFT);
 	  return;
 	}
-	scripting_RunFormat("return keys[%d].right", i + 1);
+	scripting_RunFormat("return settings.keys[%d].right", i + 1);
 	scripting_GetIntegerResult( &key );
 	if(key == k) {
 	  createEvent(i, EVENT_TURN_RIGHT);
@@ -124,9 +124,11 @@ void parse_args(int argc, char *argv[]) {
 	case '6':
 	  setSettingi("width", 1024);
 	  setSettingi("height", 768);
+	  break;
 	case '7': 
 	  setSettingi("width", 1280);
 	  setSettingi("height", 1024);
+	  break;
 	case 's':
 	  setSettingi("playMusic", 0);
 	  setSettingi("playEffects", 0);
