@@ -128,7 +128,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS(strstr)
+AC_CHECK_FUNCS(strstr mkstemp)
 
 CPPFLAGS="$CPPFLAGS $CPPFLAGSA"
 
@@ -141,6 +141,7 @@ AC_OUTPUT(Makefile \
 	data/Makefile \
 	data/music/Makefile \
 	sounds/Makefile \
+	scripts/Makefile \
 	lua/Makefile \
 	lua/src/Makefile \
 	lua/src/lib/Makefile \
