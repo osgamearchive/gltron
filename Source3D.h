@@ -6,6 +6,11 @@
 #include "SourceSample.h"
 #include "Vector3.h"
 
+#define USOUND 50
+#define EPSILON 0.1f	 
+#define SOUND_VOL_THRESHOLD 0.01
+#define VOLSCALE_BASE 1000
+
 namespace Sound {
   class Source3D : public Source { 
   public:
@@ -23,8 +28,17 @@ namespace Sound {
     SourceSample* _source;
 
     virtual void Mix(Uint8 *data, int len);
+    virtual void GetModifiers(float &fPan, float &fVolume, float &fShift);
     //  protected:
     Uint32 _position;
+
+  protected:
+    Source3D() {
+      _location = Vector3(0,0,0);
+      _velocity = Vector3(0,0,0);
+
+      _position = 0;
+    };
   };
 }
 
