@@ -102,6 +102,7 @@ void nebu_2d_Draw(const nebu_2d *p2d) {
 
 	glBindTexture(GL_TEXTURE_2D, p2d->tex_id);
 	glEnable(GL_TEXTURE_2D);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glColor3f(1,1,1);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indices);
