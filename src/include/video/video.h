@@ -25,7 +25,7 @@ typedef struct {
 	float pColorSpecular[4];
 	float pColorAlpha[4];
 
-  unsigned int turn_time; /* for cycle animation */
+  // unsigned int turn_time; /* for cycle animation */
   unsigned int spoke_time; /* for cycle wheel animation */
   int spoke_state; /* showing spoke or not */
 
@@ -183,8 +183,6 @@ extern void initFonts();
 extern void deleteFonts();
 extern void draw( void );
 
-extern void doCameraMovement();
-extern void initCamera(Camera *cam, Data *data, int type);
 /* FontTex stuff */
 extern texture* loadTextureData(const char *filename);
 extern void freeTextureData(texture *tex);
