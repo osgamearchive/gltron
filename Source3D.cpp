@@ -136,7 +136,7 @@ namespace Sound {
 	if(_position > _source->_buffersize)
 	  _position -= _source->_buffersize;
 
-	fprintf(stderr, "mixed %s\n", GetName());
+	//fprintf(stderr, "mixed %s\n", GetName());
 	return 1; // mixed something
       }
     }

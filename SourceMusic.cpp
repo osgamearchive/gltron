@@ -113,7 +113,7 @@ namespace Sound {
 	}
       }
     }
-    fprintf(stderr, "mixed %s\n", GetName());
+    //fprintf(stderr, "mixed %s\n", GetName());
     return 1;
   }
 }

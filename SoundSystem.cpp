@@ -31,7 +31,7 @@ namespace Sound {
 	    if( s->Mix(data, len) )
 	      sources_mixed++;
 	  }
-	fprintf(stderr, "done mixing %d sources\n", sources_mixed);
+	//fprintf(stderr, "done mixing %d sources\n", sources_mixed);
       } else {
 	// check if source is removable
 	if(s->IsRemovable()) {
