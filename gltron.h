@@ -80,7 +80,7 @@ typedef png_texture texture;
 #include "texture.h"
 
 #ifdef __NETWORK__
-#include "protocole.h"
+#include "protocol.h"
 #include <SDL/SDL_net.h>
 #endif
 
