@@ -3,6 +3,7 @@ After you checked out from CVS, do
 ./system_sdl
 ./sound_sdl
 autoconf
+./configure
 
 and after that:
 
