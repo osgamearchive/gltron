@@ -142,10 +142,12 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
 
 /* end of macintosh code */
 
-#else
+#else /* unix code */
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 list* readDirectoryContents(const char *dirname, char *prefix) {
   DIR *dir;
@@ -179,5 +181,13 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
 
 }
 
-#endif
+void makeDirectory(const char *name) {
+  int result;
+  if(access(name, R_OK)) {
+    result = mkdir(name, 0x1ff);
+    if(result)
+      printf("cannot create dir '%s': %s\n", name, strerror(errno));
+  }
+}
 
+#endif /* unix code */

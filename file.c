@@ -155,6 +155,9 @@ void initDirectories() {
 	 preferences_dir, snapshots_dir, 
 	 data_dir, art_dir, scripts_dir, 
 	 music_dir);
+
+  makeDirectory(preferences_dir);
+  makeDirectory(snapshots_dir);
 }
 
 char* getPath( int eLocation, const char *filename) {
