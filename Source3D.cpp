@@ -36,8 +36,10 @@ void fxPan(float pan, float vol, Uint8 *buf, int len) {
   float right_vol = vol * ( 1.0 + pan ) / 2.0;
 
   for(i = 0; i < len; i += 4) {
-    *(Sint16*) (buf + i) *= left_vol;
-    *(Sint16*) (buf + i + 2) *= right_vol;
+    *(Sint16*) (buf + i) = // *= left_vol
+      (Sint16) (left_vol * *(Sint16*) (buf + i) );
+    *(Sint16*) (buf + i + 2) = // *= right_vol
+      (Sint16) (right_vol * *(Sint16*) (buf + i + 2) );
   }
 }
       
