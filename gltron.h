@@ -42,7 +42,6 @@
 
 #ifdef macintosh
 #include <string.h>
-#include <console.h>
 #undef SEPERATOR
 #define SEPERATOR ':'
 #undef RC_NAME
@@ -374,8 +373,8 @@ extern void initFonts();
 
 /* texture initializing -> texture.c */
 
-extern void initTexture();
-extern void deleteTextures();
+extern void initTexture(gDisplay*);
+extern void deleteTextures(gDisplay*);
 
 /* texture loading -> load_texture.c */
 /* uses sgi_texture.c or sdl_texture.c */
