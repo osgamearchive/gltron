@@ -1,15 +1,16 @@
 bugs:
-(5 / 2) transparent trails are drawn in the wrong order (artefacts) 
-(2) transparent trails are pretty broken
+(3 / 2) transparent trails are drawn in the wrong order (artefacts) 
 (5 / 5) key definitions are not saved to .gltronrc
 (2) demo playpack is broken after interrupt (Escape) 
 (6) switching resolution still leaks a little memory
-(2) text overlays are not transparent
 possible bugs:
 (0) more memory leaks
 (0) failing malloc's arent caught, might lock up application/system
 (0) some attributes are not saved to .gltronrc
 todo: 
+(0) check consistency of glEnable(GL_BLEND);
+(0) add joystick code
+(0) add mouse look camera
 (0) don't show resolutions that can't be accelerated (how can I know?)
 (0) fix ugly console message passing
 (0) fix software rendering font texture
