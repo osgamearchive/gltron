@@ -6,23 +6,14 @@
 
 void initSubsystems(int argc, const char *argv[]) {
 	initFilesystem(argc, argv);
-	initScripting();
+
+	scripting_Init();
 	init_c_interface();
+	initScripting();
+
 	initConfiguration(argc, argv);
 	
-	//fixme: move this code somewhere else
-	{
-		char *path = getPath(PATH_LEVEL, "tri.lua");
-		if(path) {
-			scripting_RunFile(path);
-			free(path);
-		}
-		else
-		{
-			printf("[fatal] can't get valid path for level\n");
-			exit(1); // fatal
-		}
-	}
+	loadLevel();
 
 	initGame();
 	initVideo();
@@ -31,11 +22,12 @@ void initSubsystems(int argc, const char *argv[]) {
 }
 
 void initScripting(void) {
-	scripting_Init();
-
   /* load basic scripting services */
 	runScript(PATH_SCRIPTS, "basics.lua");
 	runScript(PATH_SCRIPTS, "joystick.lua");
+	runScript(PATH_SCRIPTS, "path.lua");
+
+	runScript(PATH_SCRIPTS, "video.lua");
 }
 
 void initConfiguration(int argc, const char *argv[])
@@ -84,6 +76,9 @@ void initConfiguration(int argc, const char *argv[])
 
   /* sanity check some settings */
   checkSettings();
+
+	scripting_Run("setupArtpacks()");
+	scripting_Run("setupLevels()");
 	
   /* intialize the settings cache, remember to do that everytime you
      change something */
@@ -92,7 +87,6 @@ void initConfiguration(int argc, const char *argv[])
 
 void initVideo(void) {
 	videoInit();
-	runScript(PATH_SCRIPTS, "video.lua");
 
 	initVideoData();
 
@@ -102,12 +96,6 @@ void initVideo(void) {
 	runScript(PATH_SCRIPTS, "menu.lua");
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
   setupDisplay(gScreen);
-
-#if 1
-	gWorld = video_CreateLevel();
-	if(gWorld->scalable)
-		video_ScaleLevel(gWorld, 600.0f);
-#endif
 }
 
 void initAudio(void) {
