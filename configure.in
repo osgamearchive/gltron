@@ -71,12 +71,13 @@ AC_CHECK_LIB(m, main,, AC_MSG_ERROR(libm is needed))
 AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
 AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(OpenGL is needed))
 dnl AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU should come with OpenGL))
-AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
+dnl AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
 
 AC_CHECK_LIB(SDL, main, 
 ${LN_S} -f system_sdl.c system.c ; \
 ${LN_S} -f system_sdl.h system.h ; \
-LIBS="$LIBS -lSDL" ; \
+LIBS="$LIBS `sdl-config --libs`" ; \
+CFLAGS="$CFLAGS `sdl-config --cflags`" ; \
 HAVE_SDL=1,
 AC_CHECK_LIB(glut, main, 
 ${LN_S} -f system_glut.c system.c ; \
@@ -85,7 +86,7 @@ LIBS="$LIBS -lglut", \
 AC_MSG_ERROR(Neither SDL or glut is installed!)))
 
 if test "x$use_sound" = xyes; then
-	SOUND_FILE="sound.c"
+	SOUND_FILE="sound.c sound3d.c"
 	AC_SUBST(SOUND_FILE)
 	AC_CHECK_LIB(SDL_mixer, main,
 	${LN_S} -f sound_sdl.c sound.c ; \

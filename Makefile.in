@@ -38,7 +38,8 @@ HFILES = \
 	renderer_gl.h \
 	system.h \
 	sound.h \
-	system_net.h 
+	sound3d.h \
+	# system_net.h 
 
 
 CFILES = \
@@ -123,7 +124,7 @@ todo:
 	perl todo2html.pl < TODO > TODO.html
 
 etags:
-	etags $(CFILES) $(HFILES)
+	etags $(CFILES) $(HFILES) $(SOUND_CFILES)
 
 distclean: clean
 	rm -f config.cache config.status configure Makefile \
