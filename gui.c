@@ -206,27 +206,29 @@ void readServer(int key, int unicode, int x, int y)
     {
       strcpy(game->settings->server, "");
     }
-  nbreads++;
   switch(key)
     {
     case 13://return
-      nbreads=0;   
+    case SDLK_ESCAPE:
+      nbreads=0;
       restoreCallbacks();
       break;
-    case 113://shift
       
+    case SDLK_BACKSPACE://backspace
+      if( nbreads > 0 )
+	{
+	  nbreads--;
+	  game->settings->server[nbreads]='\0';
+	}
       break;
     default:
-      if( (key > 'A' && key < 'z') || ( key >'0' && key < '9' ) )
+      if( unicode < 0x80 && unicode > 0 )
 	{
-	  sprintf(game->settings->server, "%s%c", game->settings->server, key);
-	} else {
-	  fprintf(stderr, "bad key: %c", key);
-	  nbreads=0;
-	  restoreCallbacks();
-	}      
-      break;
-    }
+	  sprintf(game->settings->server, "%s%c", game->settings->server, unicode);
+	  nbreads++;
+	}
+  break;
+}
   initMenuCaptions();
 #ifdef SOUND
   playMenuFX(fx_action);
