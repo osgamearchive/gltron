@@ -20,6 +20,8 @@ void getSound3dData(int i_player, int i_object,
   float cos2phi;
   float dist2;
   float scalar;
+
+  float temp;
   
   player = &(game->player[ i_player ]);
   object = &(game->player[ i_object ]);
@@ -44,13 +46,17 @@ void getSound3dData(int i_player, int i_object,
 
   scalar = lc.x * ( po.x - pp.x ) + lc.y * ( po.y - pp.y );
   
-  cos2phi = scalar * scalar / 
-    ( ( lc.x * lc.x + lc.y * lc.y ) * 
+  temp = ( lc.x * lc.x + lc.y * lc.y ) * 
       ( ( po.x - pp.x ) * ( po.x - pp.x ) + 
-	( po.y - pp.y ) * ( po.y - pp.y ) ) );
-  *pan = sqrt( 1 - cos2phi );
-  if( lc.x * ( po.y - pp.y ) - lc.y * (po.x - pp.x) > 0 )
-    *pan = - *pan;
+	( po.y - pp.y ) * ( po.y - pp.y ) );
+  if(temp != 0) {
+    cos2phi = scalar * scalar / temp;
+    *pan = sqrt( 1 - cos2phi );
+    if( lc.x * ( po.y - pp.y ) - lc.y * (po.x - pp.x) > 0 )
+      *pan = - *pan;
+  } else {
+    *pan = 0;
+  }
 
   dist2 = ( po.x - pp.x ) * ( po.x - pp.x ) +
     ( po.y - pp.y ) * ( po.y - pp.y );
@@ -171,21 +177,35 @@ Uint8* getSoundSource(int type, int player, int object, int len, int *delivered)
   
   buf = soundBuffer;
   pos = sourceBuf[ player * MAX_PLAYERS + object ];
-
   rest = chunk->alen - pos;
+  // fprintf(stderr, "pos is %d, rest is %d, len is %d\n", pos, rest, len);
+
+
   if(rest < len) {
+    // fprintf(stderr, "rest < len\n");
     if(loop == 1) {
+      // fprintf(stderr, "before memcpy\n");
       memcpy(buf, chunk->abuf + pos, rest);
+      // fprintf(stderr, "before memcpy2\n");
       memcpy(buf + rest, chunk->abuf, len - rest);
+      // fprintf(stderr, "after memcpy\n");
       *delivered = len;
     } else {
+      // fprintf(stderr, "no loop\n");
       memcpy(buf, chunk->abuf + pos, rest);
       *delivered = rest;
     } 
   } else {
     memcpy(buf, chunk->abuf + pos, len);
+    // int i;
+    // fprintf(stderr, "rest > len\n");
+    // for(i = 0; i < len; i++) {
+    // *(buf + i) = *(chunk->abuf + pos + i);
+    // fprintf(stderr, "%d\n", i);
     *delivered = len;
   }
+  // fprintf(stderr, "after memcpy\n");
+
   return buf;
 }
 
@@ -230,4 +250,5 @@ void mixEngineSound(int player_i, Uint8* buf, int len) {
 	}
     }
   }
+  // fprintf(stderr, "finished mixing\n");
 }
