@@ -332,3 +332,4 @@ void doTurn(Data *data, int time) {
   data->posx = data->iposx + data->t * dirsX[data->dir];
   data->posy = data->iposy + data->t * dirsY[data->dir];
 }
+
