@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifndef PATH_MAX
+#define PATH_MAX 255
+#endif
+
 #define SCREENSHOT_PREFIX "gltron"
 #define SCREENSHOT_PNG_BITDEPTH 8
 #define SCREENSHOT_BYTES_PER_PIXEL 3
