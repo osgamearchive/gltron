@@ -1,10 +1,16 @@
-show_gl_logo = 1
-play_fx = 1
+-- sound
+playEffects = 1
 playMusic = 1
-grid_size = 720
+
+-- settings
+show_gl_logo = 1
 windowMode = 1
 
+-- game
+grid_size = 720
+
 -- This stuff is commented out, will add later
+
 -- iset show_help 0
 -- iset show_fps 1
 -- iset show_wall 1

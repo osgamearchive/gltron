@@ -390,9 +390,9 @@ extern void parse_args(int argc, char *argv[]);
 
 /* settings -> settings.c */
 
-extern void loadIniFile(char *name);
-extern void initMainGameSettings(char *path);
+extern void initMainGameSettings();
 extern void initDefaultSettings();
+extern void checkSettings();
 extern void saveSettings();
 
 /* menu -> menu.c */

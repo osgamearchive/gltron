@@ -47,8 +47,7 @@ void loadArt() {
   getArtPath("artpack.ini", buf);
   path = getFullPath(buf);
   if(path != NULL) {
-#warning "FIXME: load ini file"
-    /* loadIniFile(path); */
+    scripting_LoadConfig(path);
     free(path);
   }
 

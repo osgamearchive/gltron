@@ -107,24 +107,50 @@ int main( int argc, char *argv[] ) {
 #endif
 
   /* initialize artpack list before loading settings! */
+  /* creates a list of directories found in art/ */
   initArtpacks();
 
+  /* initialize lua */
   scripting_Init();
-  initMainGameSettings("");
-  scripting_LoadConfig("config.lua");
 
-#if 0      
-  path = getFullPath("settings.txt");
-  if(path != NULL)
-    initMainGameSettings(path); /* reads defaults from ~/.gltronrc */
-  else {
-    printf("fatal: could not settings.txt, exiting...\n");
-    exit(1);
+  /* initialize some global variables */
+  initMainGameSettings();
+
+  /* set some sane defaults */
+  initDefaultSettings();
+
+#if 0
+  /* go for .gltronrc (or whatever is defined in RC_NAME) */
+  {
+    char *fname;
+    char *home;
+
+    home = getenv("HOME"); /* find homedir */
+    if(home == NULL) {
+      fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
+      sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
+    } else {
+      fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
+      sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
+    }
+
+    /* load settings from config file */
+    scripting_LoadConfig(fname);
+
+    free(fname);
   }
 #endif
 
+  /* load settings from config file */
+  scripting_LoadConfig("config.lua");
+
+  /* parse any comandline switches overrinding the loaded settings */
   parse_args(argc, argv);
 
+  /* sanity check some settings */
+  checkSettings();
+
+  /* initialize the rest of the game's datastructures */
   consoleInit();
   initGameStructures();
   resetScores();
@@ -182,6 +208,8 @@ int main( int argc, char *argv[] ) {
   free(path);
 
   setupDisplay(game->screen);
+
+  /* switch callbacks twice to establish stack */
   switchCallbacks(&guiCallbacks);
   switchCallbacks(&guiCallbacks);
 

@@ -84,8 +84,7 @@ void initDefaultSettings() {
   setSettingf("current_speed", default_speeds[ getSettingi("game_speed") ]);
 }
 
-void initMainGameSettings(char *filename) {
-
+void initMainGameSettings() {
   game2 = &main_game2;
   game = &main_game;
 
@@ -96,30 +95,9 @@ void initMainGameSettings(char *filename) {
   game2->input.mousex = 0;
   game2->input.mousey = 0;
   game2->network.status = 0;
+}
 
-  /* initialize defaults, then load modifications from file */
-  initDefaultSettings();
-
-  /* go for .gltronrc (or whatever is defined in RC_NAME) */
-
-#if 0
-  {
-    char *fname;
-    char *home;
-
-    home = getenv("HOME"); /* find homedir */
-    if(home == NULL) {
-      fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
-      sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
-    } else {
-      fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
-      sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
-    }
-
-    free(fname);
-  }
-#endif
-
+void checkSettings() {
   /* sanity check: speed, grid_size */
   if(getSettingf("current_speed") <= 0) {
     fprintf(stderr, "[gltron] sanity check failed: speed = %.2ff\n",
