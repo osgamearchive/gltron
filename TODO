@@ -4,6 +4,7 @@ Bugs:
 
 - Make install doesn't work (Andreas) (in progress)
 - Screen garbled in-game after switching resolutions (hofi)
+- tweak LOD values so the lightcycle stays detailed within camera clamp range
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM)
 - Make sure trails retract *completely* below floor when player dies.
@@ -11,6 +12,7 @@ Bugs:
 
 Features:
 
+- fix camera zoom generally (speed / settings)
 - upon game start, default to split screen mode when there are multiple human
   players
 - glClearColor() doesn't match artpack. Move glClearColor to settings and
@@ -38,8 +40,12 @@ Optimizations/Cleanups
 - remove obsolete bitmap stuff
 - Scale the mesh on load time, to avoid need for GL_NORMALIZE
 - Rewrite trail handling code
-- The recognizer shadow draws multiple polygons over itself, and is slow,
-  make it use a stencil instead
+- The recognizer shadow suffers from z-buffer artefacts (Andreas)
+  solutions: try to optain 24bit visual, don't zclear and change frustum for
+  the recognizer, render recognizer shadow to texture, and project it onto
+  floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
+  decide 1G
+
 
 Old TODO list, clean up when time available (priority):
 
