@@ -94,8 +94,8 @@ Quad *quadBuf;
 int *quadBufIndex;
 #endif
 
-int game_textures = 18; /* 11 + 6 + debug texture */
-int n_textures = 12;
+int game_textures = TEX_COUNT + 5; /* 11 + 6 + debug texture */
+int n_textures = 11;
 
 texture_info textures[] = {
   { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR, 64 },
@@ -110,8 +110,6 @@ texture_info textures[] = {
     GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL3, 1 },
   { 1, "gltron_wall_4", GL_DONT_CARE, 
     GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL4, 1 },
-  { 1, "gltron_crash", GL_RGBA, 
-    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_CRASH, 1 },
   { 1, "gltron_trail", GL_RGBA, 
     GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_TRAIL, 1 },
   { 1, "gltron_traildecal", GL_RGBA, 

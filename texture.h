@@ -19,12 +19,13 @@ enum {
   TEX_WALL2,
   TEX_WALL3,
   TEX_WALL4,
-  TEX_CRASH,
   TEX_IMPACT,
   TEX_TRAIL,
   TEX_DECAL,
   TEX_DEBUG,
-  TEX_SKYBOX
+  TEX_SKYBOX,
+	/* insert all texture tokens before TEX_COUNT */
+	TEX_COUNT
 };
 
 #endif
