@@ -5,42 +5,43 @@
 callbacks *last_callback = NULL;
 callbacks *current_callback = NULL;
 
+void exitCallback(callbacks *cb) {
+  if(cb != NULL)
+    (cb->exit)(); /* give them the chance to quit */
+}
+
+void initCallback(callbacks *cb) {
+  (cb->init)();
+  (cb->initGL)();
+}
+
+
 void switchCallbacks(callbacks *new) {
+  exitCallback(last_callback);
+  SystemRegisterCallbacks(new);
+  initCallback(new);
+
   last_callback = current_callback;
   current_callback = new;
-
-  if(last_callback != NULL)
-    (last_callback->exit)(); /* give them the chance to quit */
-
-  SystemRegisterCallbacks(new);
-
-  /* lasttime = SystemGetElapsedTime(); */
-
- /* printf("callbacks registred\n"); */
-  (new->init)();
-  (new->initGL)();
-  /* printf("callback init's completed\n"); */
 }
   
 void updateCallbacks() {
   /* called when the window is recreated */
+  exitCallback(current_callback);
   SystemRegisterCallbacks(current_callback);
-
-  (current_callback->initGL)();
+  initCallback(current_callback);
 }
 
 void restoreCallbacks() {
   if(last_callback == NULL) {
-    fprintf(stderr, "no last callback present, exiting\n");
+    fprintf(stderr, "fatal: no last callback present, exiting\n");
     exit(1);
   }
+
+  exitCallback(last_callback);
   current_callback = last_callback;
-
   SystemRegisterCallbacks(current_callback);
-  
-  /* lasttime = SystemGetElapsedTime(); */
-
-  fprintf(stderr, "restoring callbacks\n");
+  initCallback(current_callback);
 }
 
 void chooseCallback(char *name) {
