@@ -16,5 +16,7 @@ extern void stopSound();
 extern void soundIdle();
 extern void setMusicVolume(float volume);
 extern void setFxVolume(float volume);
-
+extern void reloadTrack();
+extern void initSoundTracks();
+extern void setupSound();
 #endif
