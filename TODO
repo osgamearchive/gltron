@@ -1,35 +1,36 @@
 bugs:
-(3 / 2) transparent trails are drawn in the wrong order (artefacts) 
-(5 / 5) key definitions are not saved to .gltronrc
+(3) key definitions are not saved to .gltronrc
 (2) demo playpack is broken after interrupt (Escape) 
 (6) switching resolution still leaks a little memory
+(2) fix lighting problem
 possible bugs:
 (0) more memory leaks
 (0) failing malloc's arent caught, might lock up application/system
 (0) some attributes are not saved to .gltronrc
 todo: 
+(2) implement one of the two top-down views and arrange HUD
+(2) size HUD according to screen resolution
+(2) add menu items for view (1,2,4-players)
+(2) add menu items for camera control (circle/behind/1st/mouse)
+(0) investigate mipmapping artefacts under win32
+(0) check USB keyboards. can't they record multiple key presses?
+(0) change color values to something less yogurt-like
 (0) check consistency of glEnable(GL_BLEND);
 (0) add joystick code
-(0) add mouse look camera
 (0) don't show resolutions that can't be accelerated (how can I know?)
 (0) fix ugly console message passing
-(0) fix software rendering font texture
 (1) implement networking
 (0) fix bitmap bug to allow even faster software rendering
-(0) implement one of the two top-down views and arrange HUD
 (0) write software mouse cursor for 3dfx cards
-(0) confine warp mouse to window when running fullscreen
 (0) move cycle behind posx, posy
 (0) add more & better sound effects
 (0) generate lightcycle floor shadow
-(0) add more special effects (mirrors etc.)
+(0) add more special effects (reflections etc.)
 (0) check various TODOs in the code
 (0) win32: sdl should dynamically load 3dfx opengl for Voodoo 1&2
 (0) make score display configurable
-(0) size HUD according to screen resolution
 (0) add slightly funny console messages (Robot ate Andi's tail)
-(0) work around non-unix missing readdir() stuff (playlist?)
 at release time:
-(0) decide with floor texture to use
+(0) decide which floor texture to use
 (0) create RPM files for various linux distributions
 (0) proper documentation
