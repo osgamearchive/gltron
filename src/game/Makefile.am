@@ -9,4 +9,4 @@ libgame_a_SOURCES = \
 AM_CFLAGS = \
 	-I$(top_srcdir)/nebu/include \
 	-I$(top_srcdir)/src/include \
-	-I$(top_srcdir)/lua/include
+	-I$(top_srcdir)/lua5/include

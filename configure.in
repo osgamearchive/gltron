@@ -148,10 +148,9 @@ CPPFLAGS="$CPPFLAGS $CPPFLAGSA"
 
 AC_OUTPUT([Makefile \
 	lib3ds/Makefile \
-	lua/Makefile \
-	lua/include/Makefile \
-	lua/src/Makefile \
-	lua/src/lib/Makefile \
+	lua5/Makefile \
+	lua5/include/Makefile \
+	lua5/lib/Makefile \
 	nebu/Makefile \
 	nebu/include/Makefile \
 	nebu/include/audio/Makefile \
