@@ -113,10 +113,10 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\Release/gltron.tlb"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"
+				Name="VCPostBuildEventTool"
 				CommandLine="copy Release\gltron.exe bin\gltron.exe"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
