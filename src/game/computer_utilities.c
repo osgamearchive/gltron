@@ -26,7 +26,9 @@ void ai_getClosestOpponent(int player, int* opponent, float *distance) {
 
 			getPositionFromIndex(v_opponent.v + 0, v_opponent.v + 1, i);
 			vec2Sub(&diff, &v_player, &v_opponent);
-			d = vec2Length(&diff);
+			// use manhattan distance instead of euclidean distance
+			d = fabs(diff.v[0]) + fabs(diff.v[1]);
+			// d = vec2Length(&diff);
 			if(d < *distance) {
 				*opponent = i;
 				*distance = d;
@@ -221,8 +223,14 @@ void ai_getConfig(int player, int target,
 
 void ai_left(int player, AI_Distances *distances) {
 	// printf("trying left turn...");
-	if(distances->left > 20) {
-		AI *ai = game->player[player].ai;
+	AI *ai = game->player[player].ai;
+	Data *data = game->player[player].data;
+	int level = game2->settingsCache.ai_level;
+
+	float save_distance = 
+		(ai_params.minTurnTime[level] * data->speed / 1000.0f) + 20;
+	
+	if(distances->left > save_distance) {
 		createEvent(player, EVENT_TURN_LEFT);
 		ai->tdiff++;
 		ai->lasttime = game2->time.current;
@@ -234,8 +242,14 @@ void ai_left(int player, AI_Distances *distances) {
 
 void ai_right(int player, AI_Distances *distances) {
 	// printf("trying right turn...");
-	if(distances->right > 20) {
-		AI *ai = game->player[player].ai;
+	AI *ai = game->player[player].ai;
+	Data *data = game->player[player].data;
+	int level = game2->settingsCache.ai_level;
+
+	float save_distance = 
+		(ai_params.minTurnTime[level] * data->speed / 1000.0f) + 20;
+	
+	if(distances->right > save_distance) {
 		createEvent(player, EVENT_TURN_RIGHT);
 		ai->tdiff--;
 		ai->lasttime = game2->time.current;

@@ -10,26 +10,17 @@
 #define SAVE_SPEED_DIFF 1.0f
 #define HOPELESS_T 0.80f
 
-// time to pass between turns, in milliseconds
-static int minTurnTime[] = {
-  600, 400, 200, 100
-};
-
-static float maxSegLength[] = {
-	0.6, 0.3, 0.3, 0.3
-};
-
-static float critical[] = {
-	0.2, 0.08037, 0.08037, 0.08037
-};
-
-// turns until a spiral is detected
-static int spiral[] = {
-  10, 10, 10, 10
-};
-
-static int rlDelta[] = {
-	0, 10, 20, 30
+AI_Parameters ai_params = {
+	// minTurnTime, time to pass between turns, in milliseconds
+	{ 600, 400, 200, 100 },
+	// maxSegLength 
+	{ 0.6, 0.3, 0.3, 0.3 },
+	// critical
+	{ 0.2, 0.08037, 0.08037, 0.08037 },
+	// spiral, turns until a spiral is detected
+	{ 10, 10, 10, 10 },
+	// rlDelta
+	{	0, 10, 20, 30 }
 };
 
 // play as if nothing concerned us
@@ -53,7 +44,7 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 	data->boost_enabled = 0;
 
   /* avoid too short turns */
-  if(game2->time.current - ai->lasttime < minTurnTime[level])
+  if(game2->time.current - ai->lasttime < ai_params.minTurnTime[level])
     return;
 
 	// ai_getDistances(player, &front, &left, &right, &backleft);
@@ -62,9 +53,9 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 		 turning once in a while
 	 */
 
-  if(distances->front > critical[level] * game2->rules.grid_size &&
+  if(distances->front > ai_params.critical[level] * game2->rules.grid_size &&
 		 segment2_Length(data->trails + data->trailOffset) <
-		 maxSegLength[level] * game2->rules.grid_size)
+		 ai_params.maxSegLength[level] * game2->rules.grid_size)
 		return;
 		
 	// printf("%.2f, %.2f, %.2f\n", distances->front, 
@@ -73,18 +64,19 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 	if(distances->front > distances->right && 
 		 distances->front > distances->left) { 
 		return; /* no way out */
-	} else if(distances->left > rlDelta[level] &&
-						abs(distances->right - distances->left) < rlDelta[level] &&
+	} else if(distances->left > ai_params.rlDelta[level] &&
+						abs(distances->right - distances->left) < 
+						ai_params.rlDelta[level] &&
 						distances->backleft > distances->left) {
 		createEvent(player, EVENT_TURN_LEFT);
 		ai->tdiff++;
 	} else if(distances->right > distances->left && 
-						ai->tdiff > -spiral[level] ) {
+						ai->tdiff > - ai_params.spiral[level] ) {
 		createEvent(player, EVENT_TURN_RIGHT);
 		ai->tdiff--;
 		// printf("turn right\n");
 	} else if(distances->right < distances->left && 
-						ai->tdiff < spiral[level] ) {
+						ai->tdiff < ai_params.spiral[level] ) {
 		createEvent(player, EVENT_TURN_LEFT);
 		ai->tdiff++;
 		// printf("turn left\n");
@@ -162,13 +154,14 @@ void doComputer(int player, int target) {
 
 	ai_getDistances(player, &distances);
 	ai_getClosestOpponent(player, &opponent, &d);
-	if(opponent == -1 || d > OPP_MAX_DIST || distances.front < d) {
+	if(opponent == -1 || d > OPP_MAX_DIST || distances.front < d ||
+		 game->player[opponent].ai == NULL ||
+		 game->player[opponent].ai->active == 1) { 
+		// only fight humans
 		// printf("inactive, closest opponent: %d, distance %.2f, front %.2f\n", 
 		//	 opponent, d, distances.front);
 		doComputerSimple(player, target, &distances);
 	} else {
-		// printf("active, closest opponent: %d, distance %.2f, front %.2f\n", 
-		//	 opponent, d, distances.front);
 		doComputerActive(player, opponent, &distances);
 	}
 }
