@@ -56,6 +56,9 @@ enum {
   CHGESPEED,                //Change game_speed
   CHGESIZE,                 //Change arena_size
   CHGEERASE,                //Change erased trail when crashed 1 if yes.
+  ADDAIPLAYER,              //Ask to add ai players
+  AIPLAYER,                 //server say there is a new aiplayer.
+  AILEVEL,                  //ai level.
   PING,                     //to ping a player
   HASSTARTED                //Game already started!
 };
@@ -132,7 +135,8 @@ typedef struct packet {
     struct {
       Sint16   eraseCrashed; //1 if erase Crashed player.
       Sint16   gamespeed;    //The game speed
-      Sint16   arena_size;   //arena_size      
+      Sint16   arena_size;   //arena_size    
+      Sint16   ai_level;     //ai level  
     } gameset;
     struct {
       Sint16   winner;        //Who is the winner

@@ -65,7 +65,7 @@ int processEvent(GameEvent* e) {
 #ifdef __NETWORK__
     if( game2->mode == GAME_NETWORK_PLAY )
       {
-	sprintf(messages, "winner: %s",  slots[getWhich(game->winner)].name);
+	sprintf(messages, "winner: %s",( slots[getWhich(game->winner)].active==1)? slots[getWhich(game->winner)].name: "Computer");
       } else { 
 #endif
 	sprintf(messages, "winner: %d", game->winner + 1);

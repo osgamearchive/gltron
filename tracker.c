@@ -356,13 +356,25 @@ keyTracker(int k, int unicode, int x, int y)
 void
 drawit( WlistPtr list, int x, int y, int line, int col )
 {
-  int h = serverlist->height/serverlist->nblines;
+  int h = list->height/serverlist->nblines;
   int s = h-15;
 
-  glColor3f(serverlist->colDefs[col].color[0], serverlist->colDefs[col].color[1], serverlist->colDefs[col].color[2] );
+  //glColor3f(list->colDefs[col].color[0], list->colDefs[col].color[1], list->colDefs[col].color[2] );
+  glColor3f(.8, .4, .4);
+  glBegin(GL_LINES);
+  glVertex2d(x,                                            y-h/2);
+  glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y+h/2);
+  glEnd();
+  glBegin(GL_LINES);
+  glVertex2d(x,                                            y+h/2);
+  glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y-h/2);
+  glEnd();
+
+
   //fprintf(stderr, "line %d col %d\n", line, col);
   //fprintf(stderr, "%s\n", serverlist->lines[line][col]);
-  drawText(netFtx, x, y-h/2+7, s, serverlist->lines[line][col]);
+  //drawText(netFtx, x, y-h/2+7, s, serverlist->lines[line][col]);
+  
 }
 
 char *
@@ -449,6 +461,13 @@ initTracker()
 {
   float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { .4, 0.9, .4 }};
   ColDef *colDefs;
+
+
+
+  glShadeModel(GL_FLAT);
+  glDisable(GL_BLEND);
+  glDisable(GL_LIGHTING);
+  glDisable(GL_DEPTH_TEST);
 
   if( serverlist != NULL )
     return;

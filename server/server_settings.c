@@ -10,17 +10,17 @@ void initDefaultSettings() {
   game->pauseflag = 0;
 
   game->settings->erase_crashed = 1;
-  game->settings->fast_finish = 1;
+  game->settings->fast_finish   = 0;
   game->settings->current_speed = 7.0;
-  game->settings->game_speed = 2; /* fast */
+  game->settings->game_speed    = 2; /* fast */
   /* game->settings->grid_size MUST be divisible by 8 */
-  game->settings->arena_size = 3;
-  game->settings->grid_size = 600;
+  game->settings->arena_size    = 3;
+  game->settings->grid_size     = 600;
 
-  game->settings->ai_player1 = 0;
-  game->settings->ai_player2 = 1;
-  game->settings->ai_player3 = 1;
-  game->settings->ai_player4 = 1;
+  game->settings->ai_player1    = 0;
+  game->settings->ai_player2    = 1;
+  game->settings->ai_player3    = 1;
+  game->settings->ai_player4    = 1;
 
   game->settings->ai_level = 1;
   

@@ -258,6 +258,7 @@ rebuildindex_wlist(Wlist *wlist)
   int sorted=0;
   int tmp;
 
+  /** use bubblesort ( tri à bulle ) */
   //while(!sorted) { sorted = 1; for(i = 0; i < n - 1; i++) if(data[i] > data[i + 1]) { swap(i, i+1); sorted = 0; } }
   while( ! sorted )
     {
@@ -282,6 +283,7 @@ rebuildindex_wlist(Wlist *wlist)
     }
 }
 
+/** init so sort works fast and correctly. */
 void
 initindex_wlist(Wlist *wlist)
 {
@@ -323,6 +325,8 @@ scroll_wlist(Wlist *wlist, int dir)
     wlist->focus(wlist, wlist->index[wlist->current]);
   printf("current %d\n",wlist->current); 
 }
+
+//return the pointed data id.
 int
 getcurrent_wlist( Wlist *wlist )
 {

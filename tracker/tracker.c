@@ -4,12 +4,12 @@
 
 
 static void handle_connection();
-static void handle_slot(int which);
-static void do_lostconnection(int which);
-static void do_server_login(  int which, Trackerpacket *packet );
-static void do_client_login(  int which );
-static void do_server_infos(  int which, Trackerpacket *packet );
-static void do_notknowninfo(  int which );
+static void handle_slot(       int which );
+static void do_lostconnection( int which );
+static void do_server_login(   int which, Trackerpacket *packet );
+static void do_client_login(   int which );
+static void do_server_infos(   int which, Trackerpacket *packet );
+static void do_notknowninfo(   int which );
 
 void
 initNetwork()

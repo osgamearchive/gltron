@@ -91,7 +91,7 @@ void
 do_lostplayer(int which )
 {
   Packet rep;
-  int    i;
+  int    i, j;
   
 
   if( slots[which].active == 1 )
@@ -102,11 +102,17 @@ do_lostplayer(int which )
       printf("%s part.\n", slots[which].name);
       //TODO: it still a bug here,
       //What to do if player 1 for example leave
+      j=0;
+      for(i=0; i < MAX_PLAYERS; ++i)
+	{
+	  if( slots[i].active == 1 )
+	    j++;
+	}
 
 
       //TODO: if there is no1 left, init game to default #done
       //and go to waitState.
-      if( nbUsers == 0 )
+      if( j == 0 )
 	{
 	  printf("Nobody left: swith to default setting and state is waitState...\n");
 	  //change to waitState
@@ -124,6 +130,11 @@ do_lostplayer(int which )
 	  lastping    = 0;
 	  slowest     = 0;
 	  starting    = 0;
+	  nbUsers     = 0;
+	  for(i=0;i<MAX_PLAYERS; ++i)
+	    {
+	      slots[i].active=0;
+	    }
 	} else {
 	  
 	  //TODO: If it was the game master, change that #done
@@ -338,9 +349,10 @@ do_login( int which, Packet packet )
   //Send init GameSet
   rep.which = SERVERID;
   rep.type  = GAMESET;
-  rep.infos.gameset.eraseCrashed =   game->settings->erase_crashed;
+  rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
   rep.infos.gameset.gamespeed    = game->settings->game_speed;
   rep.infos.gameset.arena_size   = game->settings->arena_size;
+  rep.infos.gameset.ai_level     = game->settings->ai_level;
   printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
@@ -484,7 +496,7 @@ do_startgame( int which, Packet packet )
   
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if( slots[i].active == 1 )
+      if( slots[i].active >= 1 )
 	{
 	  //find the new player ident
 	  slots[i].player = find_freeplayer();
@@ -502,7 +514,18 @@ do_startgame( int which, Packet packet )
     {
       j = getWhich(i);
       
-      game->player[i].ai->active = ( (j != -1) && (slots[j].active==1) ) ? 0 : 2;
+      if( j == -1 )
+	{
+	  game->player[i].ai->active = 2;
+	} else {
+	  if(slots[j].active==1)
+	    {
+	      game->player[i].ai->active = 0;
+	    } else {
+	      game->player[i].ai->active = 1;	      
+	    }
+	}
+      //game->player[i].ai->active = ( (j != -1) && (slots[j].active==1) ) ? 0 : 2;
       printf("activating player %d on slot %d : %d\n", i, getWhich(i), game->player[i].ai->active);
     }
 
@@ -711,6 +734,7 @@ do_chgespeed(int which, Packet packet)
   rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
   rep.infos.gameset.gamespeed    = game->settings->game_speed;
   rep.infos.gameset.arena_size   = game->settings->arena_size;
+  rep.infos.gameset.ai_level     = game->settings->ai_level;
   printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
@@ -743,6 +767,7 @@ do_chgesize(int which, Packet packet)
   rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
   rep.infos.gameset.gamespeed    = game->settings->game_speed;
   rep.infos.gameset.arena_size   = game->settings->arena_size;
+  rep.infos.gameset.ai_level     = game->settings->ai_level;
   printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
@@ -775,6 +800,7 @@ do_chgeerase(int which, Packet packet)
   rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
   rep.infos.gameset.gamespeed    = game->settings->game_speed;
   rep.infos.gameset.arena_size   = game->settings->arena_size;
+  rep.infos.gameset.ai_level     = game->settings->ai_level;
   printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
@@ -782,6 +808,89 @@ do_chgeerase(int which, Packet packet)
       if( slots[i].active == 1 )
 	Net_sendpacket(&rep, slots[i].sock);
 }
+
+void
+do_addaiplayer( int which, Packet packet)
+{
+  Packet rep;
+  int    i, j;
+
+  if( ! slots[which].isMaster )
+    return;
+
+  if( sState != preGameState )
+    return;
+
+  if( packet.infos.action.which < 1 &&
+      packet.infos.action.which > 3 )
+    return;
+
+  nbUsers += packet.infos.action.which;
+  if( nbUsers > MAX_PLAYERS )
+    {
+      packet.infos.action.which -= nbUsers - MAX_PLAYERS;
+      nbUsers = MAX_PLAYERS;
+    }
+
+  printf("nbusers %d ( %d )\n", nbUsers, packet.infos.action.which );
+
+  for(j=0; j < packet.infos.action.which; ++j )
+    {
+      //Looking for a free slot
+      for(i=0; i < MAX_PLAYERS; ++i)
+	{
+	  if( slots[i].active == 0 )
+	    break;
+	}
+
+      //create slot
+      slots[i].active = 2;
+      slots[i].sock = NULL;
+    }
+  //slots[i].player = find_freeplayer();
+  
+  rep.which = SERVERID;
+  rep.type  = ACTION;
+  rep.infos.action.type   = AIPLAYER;
+  rep.infos.action.which  = packet.infos.action.which;
+
+  for(i=0; i < MAX_PLAYERS; ++i )
+    {
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);	
+    }
+
+}
+
+
+
+void
+do_ailevel( int which, Packet packet )
+{
+  int    i;
+  Packet rep;
+
+  if( packet.infos.action.which < 0 || packet.infos.action.which > 3 )
+    return;
+
+  game->settings->ai_level=packet.infos.action.which;
+
+  //Send new NetRules to users...
+  rep.which = SERVERID;
+  rep.type  = GAMESET;
+  rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
+  rep.infos.gameset.gamespeed    = game->settings->game_speed;
+  rep.infos.gameset.arena_size   = game->settings->arena_size;
+  rep.infos.gameset.ai_level     = game->settings->ai_level;
+  printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
+	 packet.infos.gameset.eraseCrashed,
+	 packet.infos.gameset.arena_size);
+  for(i=0; i<MAX_PLAYERS; ++i)
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);
+
+}
+
 
 void
 do_pingrep( int which, Packet packet )
@@ -834,6 +943,12 @@ do_action( int which, Packet packet )
       break;
     case CHGEERASE:
       do_chgeerase(which, packet);
+      break;
+    case ADDAIPLAYER:
+      do_addaiplayer(which, packet);
+      break;
+    case AILEVEL:
+      do_ailevel(which, packet);
       break;
     case PING:
       //it's a ping reply
@@ -967,7 +1082,7 @@ handle_connection()
   //Looking for a free slot
   for(which=0; which < MAX_PLAYERS; ++which)
     {
-      if( ! slots[which].sock )
+      if( ! slots[which].active )
 	break;
     }
   
@@ -1267,14 +1382,14 @@ do_timeout( )
       //memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
       for(i=0;i<MAX_PLAYERS;++i)
 	{
-	  rep.infos.score.points[i] = ( slots[i].active==1 ) ? netscores.points[i]:0;
+	  rep.infos.score.points[i] = ( slots[i].active>=1 ) ? netscores.points[i]:0;
 	  if( slots[i].active==1 )
 	    printf("%s (slot %d) has %hd points\n", slots[i].name, i, rep.infos.score.points[i]);
 	}
 
       for(i=0; i<MAX_PLAYERS; ++i)
 	{
-	  if( slots[i].active )
+	  if( slots[i].active == 1 )
 	    {
 	      Net_sendpacket(&rep, slots[i].sock);
 	    }
@@ -1301,7 +1416,7 @@ do_timeout( )
       rep.infos.serverinfo.serverstate=preGameState;
       for(i=0; i<4; ++i)
 	{
-	  if( slots[i].active )
+	  if( slots[i].active == 1 )
 	    {
 	      Net_sendpacket(&rep, slots[i].sock);
 	    }
@@ -1345,7 +1460,7 @@ do_wingame( int winner)
       //memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
       for(i=0;i<MAX_PLAYERS;++i)
 	{
-	  rep.infos.score.points[i] = ( slots[i].active==1 ) ? netscores.points[i]:0;
+	  rep.infos.score.points[i] = ( slots[i].active>=1 ) ? netscores.points[i]:0;
 	  if( slots[i].active==1 )
 	    printf("%s (slot %d) has %hd points\n", slots[i].name, i, rep.infos.score.points[i]);
 	}
@@ -1353,7 +1468,7 @@ do_wingame( int winner)
 
       for(i=0; i<MAX_PLAYERS; ++i)
 	{
-	  if( slots[i].active )
+	  if( slots[i].active == 1 )
 	    {
 	      Net_sendpacket(&rep, slots[i].sock);
 	    }
@@ -1381,7 +1496,7 @@ do_wingame( int winner)
   rep.infos.serverinfo.serverstate=preGameState;
   for(i=0; i<4; ++i)
     {
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	{
 	  Net_sendpacket(&rep, slots[i].sock);
 	}

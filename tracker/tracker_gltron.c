@@ -26,7 +26,7 @@ int main( int argc, char *argv[] ) {
     //parse network
     handle_tracker();
     check_serveractivity();
-    SDL_Delay(1);
+    SDL_Delay(10);
   }
 
   stop_tracker();

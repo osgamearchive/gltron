@@ -1,9 +1,9 @@
 #include "gltron.h"
 
-static Uint32 ping = 0;
-static Uint32 savedtime = 0; 
+static Uint32 ping[5]       = {0, 0, 0, 0, 0};
+static Uint32 savedtime     = 0; 
 static int    observerstate = 0;
-static int    nbpings = 1;
+//static int    nbpings = 1;
 
 enum
   {
@@ -174,8 +174,8 @@ do_serverinfo(Packet packet)
 /* 	      Net_sendpacket(&rep, Net_getmainsock()); */
 /* 	    } // I used that for synchronization. */
       //ping       = 0;
-	  ping = slots[me].ping;
-	  nbpings = 1;
+	  ping[0] = slots[me].ping;
+	  //nbpings = 1;
 	  savedtime  = 0;
 	  game2->time.current=0;
 	  
@@ -219,11 +219,11 @@ do_userinfo(Packet packet)
     {
       slots[me].player=0;
       if( slots[which].active == 1 )
-    {
-      sprintf(mesg, "logged...\n");
-      printf("logged...\n");
-      insert_wtext(pregametext, mesg, 65);
-    }
+	{
+	  sprintf(mesg, "logged...\n");
+	  printf("logged...\n");
+	  insert_wtext(pregametext, mesg, 65);
+	}
     } else {
       slots[which].player=(which==0)?me:which;
     }
@@ -257,6 +257,27 @@ do_chat( Packet packet )
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       insert_wtext(pregametext, mesg, 75);
       //drawChat(mesg);
+    }
+}
+
+void
+do_aiplayer(Packet packet)
+{
+  int i, j;
+
+   for(j=0; j < packet.infos.action.which; ++j )
+    {
+      //Looking for a free slot
+      for(i=0; i < MAX_PLAYERS; ++i)
+	{
+	  if( slots[i].active == 0 )
+	    break;
+	}
+
+      //create slot
+      slots[i].active = 2;
+      slots[i].sock = NULL;
+      slots[i].player=i;
     }
 }
 
@@ -327,6 +348,9 @@ do_action(Packet packet)
       packet.which=me;
       Net_sendpacket(&packet, Net_getmainsock());
       break;
+    case AIPLAYER:
+      do_aiplayer(packet);
+      break;
     }
 }
 
@@ -354,10 +378,10 @@ do_gamerules(Packet packet)
     }
   printf("getting games rules...\n");
   //TODO: clean all this ugly code, and do a safe clean init function.
-  game->settings->ai_player1  = ( slots[getWhich(0)].active == 1 ) ? 0 : 2;
-  game->settings->ai_player2  = ( slots[getWhich(1)].active == 1 ) ? 0 : 2;
-  game->settings->ai_player3  = ( slots[getWhich(2)].active == 1 ) ? 0 : 2;
-  game->settings->ai_player4  = ( slots[getWhich(3)].active == 1 ) ? 0 : 2;
+  game->settings->ai_player1  = ( slots[getWhich(0)].active >= 1 ) ? 0 : 2;
+  game->settings->ai_player2  = ( slots[getWhich(1)].active >= 1 ) ? 0 : 2;
+  game->settings->ai_player3  = ( slots[getWhich(2)].active >= 1 ) ? 0 : 2;
+  game->settings->ai_player4  = ( slots[getWhich(3)].active >= 1 ) ? 0 : 2;
 
   
   initNetEventList( neteventlist );
@@ -366,7 +390,7 @@ do_gamerules(Packet packet)
   /** before doing initData check for active players */
   for(i=0; i<MAX_PLAYERS;  ++i)
     {
-      game->player[i].ai->active = ( slots[getWhich(i)].active==1 ) ? 0 : 2;
+      game->player[i].ai->active = ( slots[getWhich(i)].active>=1 ) ? 0 : 2;
       printf("activating player %d on slot %d : %d\n", i, getWhich(i), game->player[i].ai->active);
     }
 
@@ -381,7 +405,9 @@ do_gamerules(Packet packet)
   game->settings->game_speed  = packet.infos.gamerules.gamespeed;
   game->settings->grid_size   = packet.infos.gamerules.grid_size;
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
-  initData();
+  
+
+    initData();
   game2->time                 = packet.infos.gamerules.time;
   printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
   printf("initData with game speed = %d and so speed is %f\n", game->settings->game_speed, game->settings->current_speed );
@@ -399,7 +425,7 @@ do_startpos(Packet packet)
     {
       j = getPlayer(i);
       printf("get startpos server %d <-> client %d\n", i, j);
-      if( j!= -1 && slots[j].active == 1 )
+      if( j!= -1 && slots[j].active >= 1 )
 	{
 	  game2->startPositions[3*i+0]=packet.infos.startpos.startPos[3*j+0];
 	  game2->startPositions[3*i+1]=packet.infos.startpos.startPos[3*j+1];
@@ -450,6 +476,7 @@ do_gameset( Packet packet )
   game2->rules.eraseCrashed   = packet.infos.gameset.eraseCrashed;
   game->settings->erase_crashed   = packet.infos.gameset.eraseCrashed;
   game->settings->arena_size  = packet.infos.gameset.arena_size;
+  game->settings->ai_level    = packet.infos.gameset.ai_level;
 }
 
 void
@@ -616,7 +643,7 @@ handleUDP()
 int
 getping()
 {
-  return ping/nbpings;
+  return ping[0]*.5+(ping[1]+ping[2]+ping[3]+ping[4])*.5*.25;
 }
 
 void
@@ -629,8 +656,12 @@ makeping(int time)
     } else {
       /* ping += SystemGetElapsedTime() - savedtime; */
 /*       ++nbpings; */
-      ping = SystemGetElapsedTime() - savedtime;
-      nbpings=1;
+      ping[4]=ping[3];
+      ping[3]=ping[2];
+      ping[2]=ping[1];
+      ping[1]=ping[0];
+      ping[0] = SystemGetElapsedTime() - savedtime;
+      //nbpings=1;
       savedtime=0;
     }
 }
@@ -682,7 +713,7 @@ idleTurns(  )
       if( turn == NULL )	
 	  return;
 
-      if( (game2->time.current - turn->time) >= ((short)ping/(2*nbpings)) )
+      if( (game2->time.current - turn->time) >= (getping()/2) )
 	{
 	  turn->statut = PREDICTED;
 	  printf("creating turn... at %d\n", game2->time.current);

@@ -2,6 +2,7 @@
 
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
+static char *ai_list[] = { "dumb", "normal", "strong", "the MCP", NULL };
 
 static int coffset;
 
@@ -164,8 +165,43 @@ handlecommand(char *command, char *params)
 	    }
 	}
       break;
+    case 'a': //Ask server to add AI player
+      if( serverstate == preGameState && isConnected  )
+	{
+
+	  if( slots[me].isMaster )
+	    {
+	      printf("asking for ai player\n");
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=ADDAIPLAYER;
+	      str = strtok(params, " ");
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
+    case 'l':
+      if( serverstate == preGameState && isConnected  )
+	{
+	  if( slots[me].isMaster )
+	    {
+	      printf("changing ai level\n");
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=AILEVEL;
+	      str = strtok(params, " ");
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
     case 'h': //print help
-      insert_wtext(pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\n\n", 0);
+      insert_wtext(pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\na : add ai player ( nb ai player )\nl : change ai level ( 0 to 3)\n\n", 0);
       break;
     default:
       insert_wtext(pregametext, "unknown command\ntype /h for help\n", 0);
@@ -356,7 +392,10 @@ void drawPregame() {
 	    glColor3fv(colors[1]);
 	  
 	} else {
-	  drawText(gameFtx, x, y, h, "Empty");
+	  if( slots[i].active == 2 )
+	      drawText(gameFtx, x, y, h, "Computer");
+	    else
+	      drawText(gameFtx, x, y, h, "Empty");
 	}
     }
 
@@ -390,6 +429,9 @@ void drawPregame() {
   drawText(gameFtx, x, y, h, str);
   sprintf(str, "arena size: %s", arena_list[game->settings->arena_size]);
   y = game->screen->vp_h - 1.5 * h * 22; 
+  drawText(gameFtx, x, y, h, str);
+  sprintf(str, "AI level: %s", ai_list[game->settings->ai_level]);
+  y = game->screen->vp_h - 1.5 * h * 23; 
   drawText(gameFtx, x, y, h, str);
 
   

@@ -15,7 +15,8 @@ todo:
 (x) add other players scores in-game.
 (x) see how enhance in-game ping.
 (x) making cycle crash when leaving, otherwise it can have zombies in the next round.
-
+(x) check in-game ping to feet best for predictions
+(x) adding AI players
 
 bugs:
 (x) the client lags( fps descending 1xx to 4x ) sometimes

@@ -53,12 +53,12 @@ void drawScores() {
   y = game->screen->vp_h - 1.5 * h * (j + 1);
   for(i=0; i<MAX_PLAYERS;++i)
     {
-      if( slots[i].active == 1 )
+      if( slots[i].active >= 1 )
 	{
 	  if( i == netscores.winner  )
 	    glColor3fv(colors[1]);
 	  
-	  sprintf(str, "%s        :  %hd\n", slots[i].name, netscores.points[i]);
+	  sprintf(str, "%s        :  %hd\n", (slots[i].active==1)?slots[i].name:"Computer", netscores.points[i]);
 	  drawText(gameFtx, x, y, h, str);
 	  
 	  y = game->screen->vp_h - 1.5 * h * (j+i + 2);

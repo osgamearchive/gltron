@@ -1108,7 +1108,7 @@ void drawPause(gDisplay *display) {
 #ifdef __NETWORK__
     if( game2->mode == GAME_NETWORK_PLAY )
       {
-	sprintf(message, "%s Wins", slots[getWhich(game->winner)].name);
+	sprintf(message, "%s Wins", (slots[getWhich(game->winner)].active==1)?slots[getWhich(game->winner)].name:"Computer");
       } else {
 #endif
     sprintf(message, winner, game->winner + 1);

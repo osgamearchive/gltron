@@ -371,6 +371,7 @@ Net_preparepacket(Packet* packet, char *buf)
     ADD_INT16(packet->infos.gameset.eraseCrashed);
     ADD_INT16(packet->infos.gameset.gamespeed);
     ADD_INT16(packet->infos.gameset.arena_size);
+    ADD_INT16(packet->infos.gameset.ai_level);
     break;
   case SCORE:
     ADD_INT16(packet->infos.score.winner);
@@ -556,6 +557,7 @@ Net_handlepacket(Packet* packet, char *buf)
     GET_INT16(packet->infos.gameset.eraseCrashed, buf);
     GET_INT16(packet->infos.gameset.gamespeed, buf);
     GET_INT16(packet->infos.gameset.arena_size, buf);
+    GET_INT16(packet->infos.gameset.ai_level, buf);
     break;
   case SCORE:
     GET_INT16(packet->infos.score.winner, buf);
@@ -616,7 +618,7 @@ get_packetsize( int type )
     return 4 * sizeof(Sint16);
     break;
   case GAMESET:
-    return 5 * sizeof(Sint16);
+    return 6 * sizeof(Sint16);
     break;
   case SCORE:
     return 3 * sizeof(Sint16) + MAX_PLAYERS * sizeof(Sint16);
