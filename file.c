@@ -69,7 +69,6 @@ static int itemExists (const char* path) {
 
 char* getFullPath(char *filename) {
   char *path;
-  FILE *fp = NULL;
 
   int i;
   for(i = 0; i < n_dirs; i++) {
