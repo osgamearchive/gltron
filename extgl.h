@@ -171,8 +171,12 @@ WGL_NV_render_texture_rectangle
 #define __glext_h_
 #include <GL/gl.h>
 
-#ifndef _WIN32
-#include <GL/glx.h>
+#if defined(_WIN32)
+
+#elif defined(__APPLE__)
+#	include <OpenGL/glext.h>
+#else
+#	include <GL/glx.h>
 #endif /* _WIN32 */
 
 #include <string.h>

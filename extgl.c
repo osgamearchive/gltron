@@ -38,9 +38,15 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 
-#ifndef _WIN32
-#include <GL/glx.h>
-#endif /* _WIN32 */
+// -dw- this already included in extgl.h
+//#ifndef _WIN32
+//#include <GL/glx.h>
+//#endif /* _WIN32 */
+
+#ifdef __APPLE__
+#	include "SDL.h"
+#	define USE_SDL_GL_GETPROCADDRESS
+#endif
 
 /* function variables */
 
@@ -898,6 +904,13 @@ void *extgl_GetProcAddress(char *name)
     if (t == NULL)
     {
         extgl_error = 1;  
+    }
+    return t;
+#elif defined(USE_SDL_GL_GETPROCADDRESS)
+    void *t = SDL_GL_GetProcAddress(name);
+    if (t == NULL)
+    {
+        extgl_error = 1;
     }
     return t;
 #else
