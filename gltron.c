@@ -28,6 +28,9 @@ int initWindow() {
   }
 
   flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH;
+  if(game->settings->bitdepth_32)
+    flags |= SYSTEM_32_BIT;
+
   SystemInitDisplayMode(flags, fullscreen);
 
   win_id = SystemCreateWindow("gltron");
