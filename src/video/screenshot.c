@@ -78,6 +78,7 @@ static int writePixmapToPng(screenshot_info_t *screenshot, char *fname) {
   png_destroy_write_struct(&png_ptr, &info_ptr); 
   
   free(row_ptrs);
+  fclose(fp);
   return 0;
 }
 
