@@ -44,14 +44,14 @@ void drawGame() {
     if(p->display->onScreen == 1) {
       d = p->display;
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
-      drawCam(p, d);
+			drawCam(p, d);
       glDisable(GL_DEPTH_TEST);
       glDepthMask(GL_FALSE);
       if (game2->settingsCache.show_scores)
-	drawScore(p, d);
+				drawScore(p, d);
       if (game2->settingsCache.show_ai_status)
-	if(p->ai->active == AI_COMPUTER)
-	  drawAI(d);
+				if(p->ai->active == AI_COMPUTER)
+					drawAI(d);
     }
     glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
@@ -223,35 +223,6 @@ float GetDistance(float *v, float *p, float *d) {
   return sqrt( scalarprod(tmp, tmp) );
 }
 
-void drawCrash(float radius) {
-#define CRASH_W 32
-#define CRASH_H 16
-  glDisable(GL_DEPTH_TEST);
-  glDepthMask(GL_FALSE);
-  glColor4f(1.0, 1.0, 1.0, (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX);
-  /* printf("exp_r: %.2f\n", (EXP_RADIUS_MAX - radius) / EXP_RADIUS_MAX); */
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_CRASH]);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  glEnable(GL_BLEND);
-  glBegin(GL_QUADS);
-  glTexCoord2f(0.0, 0.0);
-  glVertex3f(- CRASH_W / 2, 0.0, 0.0);
-  glTexCoord2f(1.0, 0.0);
-  glVertex3f(CRASH_W / 2, 0.0, 0.0);
-  glTexCoord2f(1.0, 1.0);
-  glVertex3f(CRASH_W / 2, 0.0, CRASH_H);
-  glTexCoord2f(0.0, 1.0);
-  glVertex3f(- CRASH_W / 2, 0.0, CRASH_H);
-  glEnd();
-
-  polycount += 2;
-
-  glDisable(GL_TEXTURE_2D);
-  glEnable(GL_DEPTH_TEST);
-  glDepthMask(GL_TRUE);
-}
-
 static float dirangles[] = { 0, -90, -180, 90, 180, -270 };
 
 float getDirAngle(int time, Player *p) {
@@ -389,15 +360,6 @@ void drawCycle(Player *p, int lod, int drawTurn) {
   
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
-
-  if (game2->settingsCache.show_crash_texture) {
-    if (p->data->exp_radius > 0 && p->data->exp_radius < EXP_RADIUS_MAX) {
-      glPushMatrix();
-      glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
-      drawCrash(p->data->exp_radius);
-      glPopMatrix();
-    }
-  }
 
   if (p->data->exp_radius == 0 && game2->settingsCache.turn_cycle == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
@@ -805,6 +767,24 @@ void drawCam(Player *p, gDisplay *d) {
     }
   }
 
+	/* 2d hack */
+	if(game2->settingsCache.map_ratio_w > 0)
+	{
+		gDisplay d2d;
+		memcpy(&d2d, d, sizeof(gDisplay));
+		d2d.vp_w *= game2->settingsCache.map_ratio_w;
+		d2d.vp_h *= game2->settingsCache.map_ratio_h;
+
+		d2d.vp_x += 20;
+		d2d.vp_y += 20;
+		
+		glDepthMask(GL_FALSE);
+		glDisable(GL_DEPTH_TEST);
+		draw2D(&d2d);
+		glDepthMask(GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
+	}
+	
   /*if(getSettingi("show_recognizer")) {
 #if DEPTH_CLEAR
     glClear(GL_DEPTH_BUFFER_BIT);
