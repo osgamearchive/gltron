@@ -5,9 +5,6 @@ TODO list
 
 Bugs [high priority]:
 
-- make sure all shadow stuff gets drawn with stencil on (if stencil 
-  configured). make sure color is the same!
-
 Features [high priority]:
 
 - fallback instead of app exiting on corrupt mp3 files
@@ -27,6 +24,9 @@ Documentation & Packaging:
 - compile decent ChangeLog
 - document tools used. included 'sponsor' message for 3d exploration [ Andreas ]
 
+Bugs [medium priority]:
+
+- Recognizer makes sound even when it's turned off
 
 Features [medium priority]
 
