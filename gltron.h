@@ -21,7 +21,6 @@ extern "C" {
 	/* basic io wrapper */
 #include "file_io.h"
 
-#define SEPERATOR '/'
 #define RC_NAME ".gltronrc"
 
 #ifndef M_PI
@@ -32,30 +31,20 @@ extern "C" {
 #ifdef WIN32
 #include <windows.h>
 
-#undef SEPERATOR
-#define SEPERATOR '\\'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
 
 #endif /* WIN32 */
 
-	/* FreeBSD additions by Andrey Zakhatov <andy@icc.surw.chel.su>  */
-
-#ifdef __FreeBSD__
-#include <floatingpoint.h>
-#endif
-
 /* MacOS port maintained by Darrell Walisser <walisser@mac.com> */
 
-#ifdef macintosh 
+#ifdef macintosh  /* os9/classic */
 #include <string.h>
-#undef SEPERATOR
-#define SEPERATOR ':'
 #undef RC_NAME
 #define RC_NAME "gltronPrefs.txt"
 #endif 
 
-#ifdef __APPLE__
+#ifdef __APPLE__ /* osx */
 #undef RC_NAME
 #define RC_NAME "gltronPrefs.txt"
 #endif
@@ -427,8 +416,9 @@ extern "C" {
 	extern list* readDirectoryContents(const char *dirname, char *prefix);
 
 	/* findpath.c, GPL'd code */
-	extern void goto_installpath(char *executable);
+	extern void goto_installpath(const char *executable);
 
+	void dirSetup(const char *executable);
 	/* callback stuff -> switchCallbacks.c */
 
 #include "switchCallbacks.h"
@@ -518,11 +508,6 @@ extern "C" {
 	/* extern void ftxGetStringWidth(fontTex *ftx, */
 	/*                               char *string, int len, int *width); */
 	/* can't get max_ascent, max_descent yet */
-
-	/* macFuncs.c macintosh-specific (Mac OS 9/Classic) functions */
-#ifdef macintosh
-	void setupHomeEnvironment();
-#endif
 
 	/* menu sound enumerations */
 	enum {
