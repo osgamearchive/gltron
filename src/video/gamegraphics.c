@@ -56,11 +56,7 @@ void drawGame(void) {
 			drawCam(p, pV);
 			
 			/* hud stuff for every player */
-      if (gSettingsCache.show_scores)
-				drawScore(p, d);
-      if (gSettingsCache.show_ai_status)
-				if(p->ai->active == AI_COMPUTER)
-					drawAI(d);
+			drawHUD(p, pV);
     }
   }
 
