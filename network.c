@@ -163,7 +163,8 @@ do_serverinfo(Packet packet)
 /* 		  ping/2, so 2*ping/2=ping                           */
 /* 	      Net_sendpacket(&rep, Net_getmainsock()); */
 /* 	    } // I used that for synchronization. */
-	  ping       = 0;
+      //ping       = 0;
+	  ping = slots[me].ping;
 	  savedtime  = 0;
 	  
 	  switchCallbacks(&pauseCallbacks);
@@ -608,7 +609,7 @@ makeping(int time)
   if( savedtime == 0 )
     {
       savedtime = SystemGetElapsedTime();
-      ping = 0;
+      //ping = 0;
     } else {
       ping = SystemGetElapsedTime() - savedtime;
       savedtime=0;
@@ -649,8 +650,8 @@ idleTurns(  )
 
   if( turn != NULL )
     {
-      //turn are ordered
-      if( (game2->time.current - turn->time) >= (slots[me].ping/2) )
+      //turns are ordered
+      if( (game2->time.current - turn->time) >= (ping/2) )
 	{
 	  printf("creating turn... at %d\n", game2->time.current);
 	  e = (GameEvent*) malloc(sizeof(GameEvent));

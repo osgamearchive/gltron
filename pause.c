@@ -17,18 +17,21 @@ void idlePause() {
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY && serverstate == gameState )
     {
-      initTurnList();
-      switchCallbacks(&gameCallbacks);
+	  initTurnList();
+	  switchCallbacks(&gameCallbacks);
     } else {
-      sockstat = Net_checksocks();
-      if( game2->mode == GAME_NETWORK_PLAY && isConnected && sockstat != socksnotready )
+      if( game2->mode == GAME_NETWORK_PLAY && isConnected )
 	{
-	  if( sockstat & tcpsockready )
-	    handleServer();
+	  sockstat = Net_checksocks();
+	  if( sockstat != socksnotready ) 
+	    {
+	      if( sockstat & tcpsockready )
+		handleServer();
 #ifdef USEUDP
-	  if( sockstat & udpsockready )
-	    printf("getting udp\n");
+	      if( sockstat & udpsockready )
+		printf("getting udp\n");
 #endif
+	    }
 	}
     }
 #endif
