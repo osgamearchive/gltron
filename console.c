@@ -38,7 +38,7 @@ void consoleAddLine(char *text) {
    if(position >= 99){
       for(i=0;i<CONSOLE_DEPTH;i++){
 	 strcpy(buffer[x], buffer[i]);
-	 buffer[i]='\0';
+	 buffer[i][0] = '\0';
 	 ++x;
       }
       position -= 4;
