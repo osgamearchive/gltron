@@ -27,6 +27,7 @@ Menu = {
    GameSettingsMenu = { type = MenuC.type.menu, caption = "Play Settings" },
    PlayerConfigMenu = { type = MenuC.type.menu, caption = "Configure Players" },
    KeyConfigMenu = { type = MenuC.type.menu, caption = "Configure Keys" },
+   JoyConfigMenu = { type = MenuC.type.menu, caption = "Configure Joystick" },
    Player1_KeyMenu = { type = MenuC.type.menu, caption = "Player 1" },
    Player2_KeyMenu = { type = MenuC.type.menu, caption = "Player 2" },
    Player3_KeyMenu = { type = MenuC.type.menu, caption = "Player 3" },
@@ -182,6 +183,14 @@ Menu = {
    Player4_Right = { 
       type = MenuC.type.key, caption = "Player 4 Right",
       player = 4, event = "right"
+   },
+
+   -- Joystick
+   Joy_Threshold = {
+      type = MenuC.type.slider, caption = "Threshold",
+      right = JoyThresholdUp,
+      left = JoyThresholdDown,
+      read = function() return format("%.0f%%", settings.joy_threshold * 100); end
    },
 
    -- TODO: fill in the rest of the items
@@ -489,7 +498,7 @@ Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "Quit" }
 
 Menu.GameMenu.items = { 
    "StartGame", "ResetScores", "GameRulesMenu", 
-   "GameSettingsMenu", "PlayerConfigMenu", "KeyConfigMenu"
+   "GameSettingsMenu", "PlayerConfigMenu", "KeyConfigMenu", "JoyConfigMenu"
 }
 
 Menu.GameRulesMenu.items = { 
@@ -501,6 +510,7 @@ Menu.PlayerConfigMenu.items = { "Player1", "Player2", "Player3", "Player4" }
 Menu.KeyConfigMenu.items = { 
    "Player1_KeyMenu", "Player2_KeyMenu", "Player3_KeyMenu", "Player4_KeyMenu"
 }
+Menu.JoyConfigMenu.items = { "Joy_Threshold" }
 Menu.Player1_KeyMenu.items = { "Player1_Left", "Player1_Right" }
 Menu.Player2_KeyMenu.items = { "Player2_Left", "Player2_Right" }
 Menu.Player3_KeyMenu.items = { "Player3_Left", "Player3_Right" }
