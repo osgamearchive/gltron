@@ -138,10 +138,10 @@ void rebuildDebugTex() {
   int color;
   unsigned char *source;
   /* printf("rebuilding texture: %d -> ", SystemGetElapsedTime()); */
-  for(y = 0; y < getSettingi("grid_size"); y++) {
-    ty = (float) y * DEBUG_TEX_H / getSettingi("grid_size");
-    for(x = 0; x < getSettingi("grid_size"); x++) {
-      tx = (float) x * DEBUG_TEX_W / getSettingi("grid_size");
+  for(y = 0; y < game2->rules.grid_size; y++) {
+    ty = (float) y * DEBUG_TEX_H / game2->rules.grid_size;
+    for(x = 0; x < game2->rules.grid_size; x++) {
+      tx = (float) x * DEBUG_TEX_W / game2->rules.grid_size;
       color = colmap [ y * colwidth + x];
       if(color != 0 || ((int)tx != px && (int)ty != py)) {
 	px = (int) tx; 
@@ -166,7 +166,7 @@ void drawDebugLines(gDisplay *d) {
 
   rasonly(d);
   glTranslatef(10, 400, 0);
-  size = getSettingi("grid_size");
+  size = game2->rules.grid_size;
 
   scale = MAP_SIZE / size;
 
@@ -268,12 +268,12 @@ void drawDebugTex(gDisplay *d) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glColor4f(.0, 1.0, .0, 1.0);
     glRasterPos2i(x, y);
-    glBitmap(colwidth * 8 , getSettingi("grid_size"), 0, 0, 0, 0, colmap);
+    glBitmap(colwidth * 8 , game2->rules.grid_size, 0, 0, 0, 0, colmap);
     glBegin(GL_LINE_LOOP);
     glVertex2i(x - 1, y - 1);
     glVertex2i(x + colwidth * 8, y - 1);
-    glVertex2i(x + colwidth * 8, y + getSettingi("grid_size"));
-    glVertex2i(x - 1, y + getSettingi("grid_size"));
+    glVertex2i(x + colwidth * 8, y + game2->rules.grid_size);
+    glVertex2i(x - 1, y + game2->rules.grid_size);
     glEnd();
     polycount += 4;
   */
@@ -386,10 +386,10 @@ void drawFloor(gDisplay *d, Camera *cam) {
     /* try subdividing things... */
 
     glColor4f(1.0, 1.0, 1.0, 1.0);
-    l = getSettingi("grid_size") / 4;
+    l = game2->rules.grid_size / 4;
     t = l / 12;
-    for(j = 0; j < getSettingi("grid_size"); j += l)
-      for(k = 0; k < getSettingi("grid_size"); k += l) {
+    for(j = 0; j < game2->rules.grid_size; j += l)
+      for(k = 0; k < game2->rules.grid_size; k += l) {
 	glBegin(GL_QUADS);
 	glTexCoord2i(0, 0);
 	glVertex2i(j, k);
@@ -404,7 +404,11 @@ void drawFloor(gDisplay *d, Camera *cam) {
       }
     glDisable(GL_TEXTURE_2D);
   } else {
-    float fogcolor[] = { 28 / 255.0f, 26 / 255.0f, 100 / 255.0f, .0 };
+    float fogcolor[4];
+    int line_spacing;
+
+    scripting_GetFloatArray("clear_color", fogcolor, 4);
+    line_spacing = getSettingi("line_spacing");
 
     glColor3f(1.0, 1.0, 1.0);
 
@@ -416,12 +420,12 @@ void drawFloor(gDisplay *d, Camera *cam) {
     glEnable(GL_FOG);
    
     glBegin(GL_LINES);
-    for(i = 0; i < getSettingi("grid_size"); i += getSettingi("line_spacing")) {
-      for(j = 0; j < getSettingi("grid_size"); j += getSettingi("line_spacing")) {
+    for(i = 0; i < game2->rules.grid_size; i += line_spacing) {
+      for(j = 0; j < game2->rules.grid_size; j += line_spacing) {
 	glVertex3i(i, j, 0);
-	glVertex3i(i + getSettingi("line_spacing"), j, 0);
+	glVertex3i(i + line_spacing, j, 0);
 	glVertex3i(i, j, 0);
-	glVertex3i(i, j + getSettingi("line_spacing"), 0);
+	glVertex3i(i, j + line_spacing, 0);
       }
     }
     glEnd();
@@ -430,14 +434,14 @@ void drawFloor(gDisplay *d, Camera *cam) {
 
     /*
     glBegin(GL_LINES);
-    for(j = 0; j <= getSettingi("grid_size");
-	j += getSettingi("line_spacing")) {
+    for(j = 0; j <= game2->rules.grid_size;
+	j += line_spacing) {
 	glVertex3i(0, j, 0);
-	glVertex3i(getSettingi("grid_size"), j, 0);
+	glVertex3i(game2->rules.grid_size, j, 0);
 	polycount++;
 
 	glVertex3i(j, 0, 0);
-	glVertex3i(j, getSettingi("grid_size"), 0);
+	glVertex3i(j, game2->rules.grid_size, 0);
 	polycount++;
 
     }
@@ -764,7 +768,7 @@ void drawWalls(gDisplay *d) {
   float t;
   float h;
 
-  t = getSettingi("grid_size") / 240.0;
+  t = game2->rules.grid_size / 240.0;
   if(getSettingi("stretch_textures")) {
     h = t * WALL_H;
     t = 1.0;
@@ -785,34 +789,34 @@ void drawWalls(gDisplay *d) {
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(0.0, 0.0, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(0.0, 0.0, h);
-  glTexCoord2f(0.0, T_TOP); glVertex3f(getSettingi("grid_size"), 0.0, h);
-  glTexCoord2f(0.0, 0.0); glVertex3f(getSettingi("grid_size"), 0.0, 0.0);
+  glTexCoord2f(0.0, T_TOP); glVertex3f(game2->rules.grid_size, 0.0, h);
+  glTexCoord2f(0.0, 0.0); glVertex3f(game2->rules.grid_size, 0.0, 0.0);
   glEnd();
   
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL2]);
   glBegin(GL_QUADS);
-  glTexCoord2f(t, 0.0); glVertex3f(getSettingi("grid_size"), 0.0, 0.0);
-  glTexCoord2f(t, T_TOP); glVertex3f(getSettingi("grid_size"), 0.0, h);
+  glTexCoord2f(t, 0.0); glVertex3f(game2->rules.grid_size, 0.0, 0.0);
+  glTexCoord2f(t, T_TOP); glVertex3f(game2->rules.grid_size, 0.0, h);
   glTexCoord2f(0.0, T_TOP); 
-  glVertex3f(getSettingi("grid_size"), getSettingi("grid_size"), h);
+  glVertex3f(game2->rules.grid_size, game2->rules.grid_size, h);
   glTexCoord2f(0.0, 0.0); 
-  glVertex3f(getSettingi("grid_size"), getSettingi("grid_size"), 0.0);
+  glVertex3f(game2->rules.grid_size, game2->rules.grid_size, 0.0);
   glEnd();
   
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL3]);
   glBegin (GL_QUADS);
   glTexCoord2f(t, 0.0); 
-  glVertex3f(getSettingi("grid_size"), getSettingi("grid_size"), 0.0);
+  glVertex3f(game2->rules.grid_size, game2->rules.grid_size, 0.0);
   glTexCoord2f(t, T_TOP); 
-  glVertex3f(getSettingi("grid_size"), getSettingi("grid_size"), h);
-  glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, getSettingi("grid_size"), h);
-  glTexCoord2f(0.0, 0.0); glVertex3f(0.0, getSettingi("grid_size"), 0.0);
+  glVertex3f(game2->rules.grid_size, game2->rules.grid_size, h);
+  glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, game2->rules.grid_size, h);
+  glTexCoord2f(0.0, 0.0); glVertex3f(0.0, game2->rules.grid_size, 0.0);
   glEnd();
   
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL4]);
   glBegin(GL_QUADS);
-  glTexCoord2f(t, 0.0); glVertex3f(0.0, getSettingi("grid_size"), 0.0);
-  glTexCoord2f(t, T_TOP); glVertex3f(0.0, getSettingi("grid_size"), h);
+  glTexCoord2f(t, 0.0); glVertex3f(0.0, game2->rules.grid_size, 0.0);
+  glTexCoord2f(t, T_TOP); glVertex3f(0.0, game2->rules.grid_size, h);
   glTexCoord2f(0.0, T_TOP); glVertex3f(0.0, 0.0, h);
   glTexCoord2f(0.0, 0.0); glVertex3f(0.0, 0.0, 0.0); 
 #undef T_TOP
@@ -867,7 +871,7 @@ void drawCam(Player *p, gDisplay *d) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   doPerspective(getSettingf("fov"), d->vp_w / d->vp_h,
-		getSettingf("znear"), getSettingi("grid_size") * 6.5);
+		getSettingf("znear"), game2->rules.grid_size * 6.5);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -984,7 +988,7 @@ void drawCam(Player *p, gDisplay *d) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     doPerspective(getSettingi("fov"), d->vp_w / d->vp_h,
-		  getSettingi("znear") * 2, getSettingi("grid_size") * 6.5);
+		  getSettingi("znear") * 2, game2->rules.grid_size * 6.5);
 
     glMatrixMode(GL_MODELVIEW);
 #endif
