@@ -74,9 +74,9 @@ void storeVertex(TrailMesh *pMesh, int offset,
 }
 
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset) {
-	unsigned short ppBase[2][4] = {
-		{ 0, 2, 3, 1 },
-		{ 0, 1, 3, 2 }
+	unsigned short ppBase[2][6] = {
+		{ 0, 2, 1, 2, 3, 1 },
+		{ 0, 1, 2, 1, 3, 2 }
 	};
 	int i;
 	int winding;
@@ -89,7 +89,7 @@ void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset) {
 		winding = (pMesh->pVertices[vertexOffset].v[0] < 
 							 pMesh->pVertices[vertexOffset + 2].v[0]) ? 1 : 0;
 	
-	for(i = 0; i < 4; i++) {
+	for(i = 0; i < 6; i++) {
 		pMesh->pIndices[i + indexOffset] = ppBase[winding][i] + vertexOffset;
 	}
 }
@@ -124,7 +124,7 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
-		curIndex += 4;
+		curIndex += 6;
 
 		fTotalLength += fSegLength;
 
@@ -151,7 +151,7 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
-		curIndex += 4;
+		curIndex += 6;
 
 		fTotalLength += fSegLength;
 
@@ -175,7 +175,7 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
-		curIndex += 4;
+		curIndex += 6;
 	}
 
 	pMesh->iUsed = curIndex;
@@ -196,7 +196,7 @@ void bowGeometry(Player *pPlayer, TrailMesh *pMesh) {
 	storeColor(pMesh, 2, pPlayer, COLOR_CYCLE);
 
 	storeIndices(pMesh, 0, 0);
-	pMesh->iUsed = 4;
+	pMesh->iUsed = 6;
 }
 	
 	

@@ -36,7 +36,7 @@ void trailRender(Player *pPlayer, TrailMesh *pMesh, int texture) {
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
 	// glCullFace(GL_BACK);
-	glDrawElements(GL_QUADS, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
+	glDrawElements(GL_TRIANGLES, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
 
 #if 0
 	{ 
@@ -47,7 +47,8 @@ void trailRender(Player *pPlayer, TrailMesh *pMesh, int texture) {
 	}
 
 	glCullFace(GL_FRONT);
-	glDrawElements(GL_QUADS, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
+	glDrawElements(GL_TRIANGLES, pMesh->iUsed, 
+								 GL_UNSIGNED_SHORT, pMesh->pIndices);
 #endif
 
 	glDisableClientState(GL_VERTEX_ARRAY);
