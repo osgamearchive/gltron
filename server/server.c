@@ -66,7 +66,7 @@ do_lostplayer(int which )
   int    i;
   
 
-  if( slots[which].active )
+  if( slots[which].active == 1 )
     {
       slots[which].active=0;
       nbUsers--;
@@ -83,7 +83,7 @@ do_lostplayer(int which )
 
       for(i=0; i< 4; ++i)
 	{
-	  if( slots[i].active )
+	  if( slots[i].active == 1 )
 	    {	 
 	      Net_sendpacket(&rep, slots[i].sock);
 	    }
@@ -174,7 +174,7 @@ do_login( int which, Packet packet )
   //Send all others login
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	{
 	  rep.which  = SERVERID;
 	  rep.type   = USERINFO;
@@ -201,7 +201,7 @@ do_login( int which, Packet packet )
 
   for(i=0;i<4;++i)
     {
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	{
 	  Net_sendpacket(&rep2, slots[i].sock);
 	  Net_sendpacket(&rep, slots[i].sock);
@@ -236,7 +236,7 @@ do_chat( int which, Packet packet )
     {
       for(i=0; i<4; ++i)
 	{
-	if( slots[i].active )
+	if( slots[i].active == 1 )
 	  {
 	    Net_sendpacket(&rep, slots[i].sock);
 	  }
@@ -266,7 +266,7 @@ do_startgame( int which, Packet packet )
     {
     p = (game->player + i);
     ai = p->ai;
-    ai->active = ( slots[i].active ) ? 0 : 2;
+    ai->active = ( slots[i].active == 1 ) ? 0 : 2;
     ai->tdiff = 0;
     ai->moves = 0;
     ai->danger = 0;
@@ -310,7 +310,7 @@ do_startgame( int which, Packet packet )
     }
   for(i=0; i<4; ++i)
     {
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	{
 	  Net_sendpacket(&rep, slots[i].sock);
 	}
@@ -550,6 +550,6 @@ SendEvents(GameEvent *e)
   rep.infos.event.event = *e;
 
   for( i=0; i <4; ++i)
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	Net_sendpacket(&rep, slots[i].sock);
 }
