@@ -1,6 +1,7 @@
-SUBDIRS = filesystem base audio video input game
+SUBDIRS = filesystem base configuration audio video input game
 
-bin_PROGRAMS = gltron lua_test
+# bin_PROGRAMS = gltron lua_test
+bin_PROGRAMS = gltron
 
 lua_test_SOURCES = test.c
 lua_test_LDADD = \
@@ -39,7 +40,6 @@ libGLtron_a_SOURCES =
 libGLtron_a_LIBADD = \
 	base/libbase.a \
 	filesystem/libfilesystem.a \
-	scripting/libscripting.a \
 	audio/libaudio.a \
 	video/libvideo.a \
 	input/libinput.a \
