@@ -263,11 +263,6 @@ extern unsigned char debugcolors[6][4];
 extern float shadow_color[4];
 extern float shadow_matrix[16];
 
-/* configure keys stuff */
-
-extern int *configureKeyEntry;
-extern Menu *configureKeyMenu;
-
 extern callbacks gameCallbacks;
 extern callbacks guiCallbacks;
 /* extern callbacks chooseModelCallbacks; */
@@ -275,16 +270,6 @@ extern callbacks pauseCallbacks;
 extern callbacks configureCallbacks;
 extern callbacks promptCallbacks;
 extern callbacks creditsCallbacks;
-
-#define KEY_ACTIONS_N 8
-
-typedef struct {
-  int player;
-  int turn;
-  int key;
-} keyAction;
-
-extern keyAction key_actions[];
 
 /* function prototypes */
 /* TODO: sort these */
