@@ -14,6 +14,7 @@ static int    timetostart   = 0;
 static int    timeserver    = 0;
 static int    nbSynch       = 0;
 static Uint32 base;
+static Uint32 now;
 
 static int  getping();
 static void makeping();
@@ -142,6 +143,9 @@ do_lostplayer(int which )
 	  netruletime   = 0;
 	  initDefaultSettings();
 
+	  //init Synch
+	  nbSynch = 0;
+	  clear_synch();
 
 	  //Change game mode... nothing to do with game things...
 	  game2->mode = GAME_NETWORK_RECORD;
@@ -890,7 +894,6 @@ do_synch( int which, Packet packet )
   Packet rep;
   int    i;
   int    users = 0;
-  Uint32 now;
 
   for(i = 0; i < MAX_PLAYERS; ++i ) 
     {
@@ -901,10 +904,10 @@ do_synch( int which, Packet packet )
   if ( nbSynch / users >= 5 )
     {
 
-      game2->time.current   = (int)now;
-      game2->time.lastFrame = (int)now;
-      game2->time.current   = (int)now;
-      game2->time.offset    = SystemGetElapsedTime();
+      game2->time.current   = now;
+      game2->time.lastFrame = now;
+      game2->time.current   = now;
+      game2->time.offset    = base;
       printf("######################## TIME %d #####################\n", game2->time.current);
       sState = gameState;
       rep.which=SERVERID;
@@ -968,6 +971,7 @@ do_synch( int which, Packet packet )
       rep.infos.synch.t1               = 0;
       rep.infos.synch.t2               = ~0;
       nbSynch++;
+      base = SDL_GetTicks();
       Net_sendpacket(&rep, slots[which].sock);
     }
 

@@ -28,10 +28,6 @@ void idlePause() {
 	    {
 	      if( sockstat & tcpsockready )
 		handleServer();
-#ifdef USEUDP
-	      if( sockstat & udpsockready )
-		printf("getting udp\n");
-#endif
 	    }
 	}
     }

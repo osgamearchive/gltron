@@ -64,11 +64,10 @@ void keyGame(int k, int unicode, int x, int y)
 	      }
 	    //changeCallback(&guiCallbacks, &guiCallbacks);
 	    //changeCallback(&netPregameCallbacks, &netPregameCallbacks);
-	  }/* else {
-	      #endif
-	      switchCallbacks(&pauseCallbacks);
-	      switchCallbacks(&guiCallbacks);
-	      #ifdef __NETWORK__*/
+	  } else {
+	    switchCallbacks(&pauseCallbacks);
+	    switchCallbacks(&guiCallbacks);
+	  }
       } else {
 #endif
 	switchCallbacks(&pauseCallbacks);

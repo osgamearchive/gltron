@@ -24,7 +24,8 @@ int processEvent(GameEvent* e) {
       data->turn = TURN_LEFT;
       doTurn(data, e->timestamp);
 #ifdef __NETWORK__
-      correctTurn(e);
+      if( getWhich(e->player) != me )
+	correctTurn(e);
 #endif
     }
     break;
@@ -36,7 +37,8 @@ int processEvent(GameEvent* e) {
       data->turn = TURN_RIGHT;
       doTurn(data, e->timestamp);
 #ifdef __NETWORK__
-      correctTurn(e);
+      if( getWhich(e->player) != me )
+	correctTurn(e);
 #endif
     }
     break;
@@ -52,7 +54,8 @@ int processEvent(GameEvent* e) {
 	  initTurnList();
       } else {
 #endif
-    sprintf(messages, "player %d crashed", e->player + 1);
+	
+	sprintf(messages, "player %d crashed", e->player + 1);
 #ifdef __NETWORK__
       }
 #endif
@@ -74,6 +77,7 @@ int processEvent(GameEvent* e) {
     if( game2->mode == GAME_NETWORK_PLAY )
       {
 	sprintf(messages, "winner: %s",( slots[getWhich(game->winner)].active==1)? slots[getWhich(game->winner)].name: "Computer");
+	nbSynch = 0;
       } else { 
 #endif
 	sprintf(messages, "winner: %d", game->winner + 1);

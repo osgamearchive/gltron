@@ -19,6 +19,7 @@ static Uint32 savedtime     = 0;
 static int    observerstate = 0;
 static Uint32 now;
 static Uint32 base;
+int    nbSynch;
 
 //Enums----------------------------------------------------------------------------------------
 enum
@@ -44,8 +45,22 @@ typedef struct TurnList {
 TurnList *turnlist;
 
 
+typedef struct {
+  float   lag;
+  int     phase;
+} Synch;
+
+static Synch synch;
+
+
 //Prototypes------------------------------------------------------------------------------------
 void free_turn(Predictedturn turn);
+
+void
+clear_synch() {
+  synch.lag   = 0;
+  synch.phase = 0;
+}
 
 
 //----------------------------------------------------------------------------------------------
@@ -225,7 +240,10 @@ do_serverinfo(Packet packet)
 	  ping[0] = slots[me].ping;
 	  savedtime  = 0;
 	  game2->time.current   = now;
-	  printf("######################## << TIME %d >> #####################\n", game2->time.current);
+	  game2->time.offset    = base;
+	  nbSynch = 0;
+	  clear_synch();
+	  printf("######################## << TIME %d ( %d ) >> #####################\n", game2->time.current, now);
 	  //game2->time.current=0;
 
 #ifdef DEBUG	  
@@ -598,26 +616,11 @@ do_event(Packet packet)
 }
 
 
-typedef struct {
-  float   lag;
-  int     phase;
-} Synch;
-
-static Synch synch;
-
-static void
-clear_synch() {
-  synch.lag   = 0;
-  synch.phase = 0;
-}
-
-int nbSynch;
 void
 do_synch( Packet packet )
 {
   Packet rep;
   char   str[3];
-  Sint32 now;
   
   rep.which                        = me;
   rep.type                         = SYNCH;
@@ -648,13 +651,19 @@ do_synch( Packet packet )
     now  += (Sint32)packet.infos.synch.t2;
     printf("----------->>>>>>>>>>>> now %d\n", now);
     sprintf(str, "%d\n", 5 - nbSynch );
-    if( nbSynch == 5 )
+    if( nbSynch == 4 )
       nbSynch = 0;
     else
       nbSynch++;
 
     clear_synch();
-    insert_wtext(pregame.pregametext, str, 3);
+    if( serverstate == preGameState )
+      { 
+	insert_wtext(pregame.pregametext, str, 3);
+      } else if ( game2->mode == GAME_NETWORK_PLAY )
+	{
+	  consoleAddLine(str);
+	}
     break;
   default:
     printf(">>>>>>>>>>> synch error");
@@ -789,6 +798,9 @@ do_gameState( Packet packet )
       break;
     case CHAT:
       do_chat(packet);
+      break;
+    case SYNCH:
+      do_synch(packet);
       break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the gameState\n", packet.type);
@@ -1054,8 +1066,8 @@ correctTurn( GameEvent *e )
  
 	  
   cur = game->player[e->player].data->trail;
-  cur->sx = game->player[e->player].data->iposx;
-  cur->sy = game->player[e->player].data->iposy;
+  cur->sx = old->ex ;
+  cur->sy = old->ey;
 
 
   printf("new pos is: %f, %f\n",  
