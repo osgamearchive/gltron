@@ -15,17 +15,52 @@ void
 handlecommand(char *command, char *params)
 {
   Packet   packet;
+  char     *str;
+  int      i;
 
   //check commands here.
   switch( command[0] )
     {
     case 's'://start
+      if( serverstate == preGameState && isConnected )
+	{
+	  if( slots[me].isMaster )
+	    {
+	      printf("\nAsk to start the game\n");
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=STARTGAME;
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to start the game, u must be Game Master\n");
+	    }
+	}
+      break;
+    case 'w':
       if( serverstate == preGameState && isConnected  )
 	{
-	  printf("\nAsk to start the game\n");
+	  //Whisper
 	  packet.which=me;
-	  packet.type=ACTION;
-	  packet.infos.action.type=STARTGAME;
+	  packet.type=CHAT;
+
+	  //Find dest
+	  str = strtok(params, " ");
+	  printf("wipser to %s\n", str);
+	  packet.infos.chat.which=BROADCAST;
+	  for(i=0; i < MAX_PLAYERS; ++i)
+	    {
+	      if( ! strcasecmp(slots[i].name, str) )
+		{
+		  packet.infos.chat.which=i;
+		}
+	    }
+	  if( packet.infos.chat.which==BROADCAST )
+	    {
+	      fprintf(stderr, "User %s doesn't exist.\n", str);
+	      return;
+	    }
+	  str = strtok(NULL, " ");
+	  strcpy(packet.infos.chat.mesg, str);
 	  Net_sendpacket(&packet, Net_getmainsock());	  
 	}
       break;
