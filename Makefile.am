@@ -14,7 +14,7 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	light.c software.c trail.c trails_buffered.c quad.c quadbuf.c \
 	input.c settings.c texture.c load_texture.c fonttex.c \
 	fonts.c menu.c findpath.c file.c directory.c \
-	screenshot.c geom.c model.cpp material.cpp \
+	screenshot.c geom.c model.c material.c \
 	system.c globals.c record.c camera.c recognizer.c \
 	console.c renderer_gl.c callbacks.h camera.h data.h \
 	geom.h file.h gltron.h light.h menu.h model.h png_texture.h \
