@@ -237,6 +237,7 @@ idleTracker()
 {
   int sockstat = socksnotready;
   int i;
+  float pingf;
   short *ping=malloc(sizeof(short));
   //char str[255];
 
@@ -255,8 +256,10 @@ idleTracker()
 	      printf("new ping is %d ( %d )\n", servers[i].ping, servers[i].packets);
 	      
 	      //sprintf(str, "%d", servers[i].ping/servers[i].packets);
-	      *ping = (short) (servers[i].ping/servers[i].packets);
-	      printf("ping is %d\n", *ping);
+	      pingf = servers[i].ping/servers[i].packets;
+	      //*ping = (int)(pingf);
+	      (*ping)=(int)(pingf)*1;
+	      printf("ping is %d ( %f )\n", *ping, pingf);
 	      setCell_wlist ( serverlist, (char *)ping, sizeof(short), i, 3 );
 	      rebuildindex_wlist(serverlist);
 	    }
@@ -380,8 +383,11 @@ char *
 intToStr( WlistPtr list, int line, int col )
 {
   char *str = malloc(255);
+  int  val;
 
-  sprintf(str, "%d", (int)*(list->lines[line][col]));
+  val = *(list->lines[line][col]);
+
+  sprintf(str, "%d", val);
   return str;
 }
 
@@ -405,28 +411,14 @@ focus(WlistPtr list, int line)
 int
 sortit( WlistPtr list, int line, int next )
 {
- /*  int a = (int )*(list->lines[line][list->sortcol]); */
-/*   int b = (int )*(list->lines[next][list->sortcol]); */
-/*   printf(" comparing %d (%d) and %d (%d)\n", a,line,b,next); */
-/*   int  a = (int ) *(getCell_wlist( list, line, list->sortcol)); */
-/*   if( list == NULL ) */
-/*     { */
-/*       fprintf(stderr, "list is NULL !!!! \n"); */
-/*       return -1; */
-/*     } */
-  //return 0;
- /*   */
-/*   int  b = (int ) *(getCell_wlist( list, next, list->sortcol)); */
-/*   printf("getting line %d, next %d... a: %d; b: %d\n", line, next,a, b ); */
+  int *a;
+  int *b;
 
-  int a = (int)*(list->lines[line][list->sortcol]);
-  int b = (int)*(list->lines[next][list->sortcol]);
-  //printf(" comparing %d (%d) and %d (%d)\n", (int)*list->lines[line][list->sortcol],line,(int)*list->lines[next][list->sortcol],next);
-  //return ((int)*list->lines[line][list->sortcol] > (int)*list->lines[next][list->sortcol]);
-  //return a > b;
-  printf(" comparing %d (%d) and %d (%d)\n", a,line,b,next);
-  return (a > b);
-  //return ((int)*list->lines[line][list->sortcol] > (int)*list->lines[next][list->sortcol]);
+  a = (int *)(list->lines[line][list->sortcol]);
+  b = (int *)(list->lines[next][list->sortcol]);
+
+  printf(" comparing %d (%d) and %d (%d) %d\n", *a,line, *b,next, (*a > *b));
+  return (*a > *b);
 }
 
 void

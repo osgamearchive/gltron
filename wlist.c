@@ -188,7 +188,7 @@ void
 setCell_wlist    ( Wlist *wlist, char *data, int len, int line, int col )
 {
   char **theLine;
-  int test = (int)*data;
+  int test = (int)*((int *)data);
 
   theLine = wlist->lines[line];
 
