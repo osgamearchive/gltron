@@ -53,14 +53,14 @@ void ai_getDistances(int player, AI_Distances *distances) {
 		vec2_Copy(&segments[i].vStart, &vPos);
 	}
 
-	segments[eFront].vDirection.v[0] = dirsX[data->dir];
-	segments[eFront].vDirection.v[1] = dirsY[data->dir];
-	segments[eLeft].vDirection.v[0] = dirsX[dirLeft];
-	segments[eLeft].vDirection.v[1] = dirsY[dirLeft];
-	segments[eRight].vDirection.v[0] = dirsX[dirRight];
-	segments[eRight].vDirection.v[1] = dirsY[dirRight];
-	segments[eBackleft].vDirection.v[0] = dirsX[dirLeft] - dirsX[data->dir];
-	segments[eBackleft].vDirection.v[1] = dirsY[dirLeft] - dirsY[data->dir];
+	segments[eFront].vDirection.v[0] = (float) dirsX[data->dir];
+	segments[eFront].vDirection.v[1] = (float) dirsY[data->dir];
+	segments[eLeft].vDirection.v[0] = (float) dirsX[dirLeft];
+	segments[eLeft].vDirection.v[1] = (float) dirsY[dirLeft];
+	segments[eRight].vDirection.v[0] = (float) dirsX[dirRight];
+	segments[eRight].vDirection.v[1] = (float) dirsY[dirRight];
+	segments[eBackleft].vDirection.v[0] = (float) dirsX[dirLeft] - dirsX[data->dir];
+	segments[eBackleft].vDirection.v[1] = (float) dirsY[dirLeft] - dirsY[data->dir];
 	vec2_Normalize(&segments[eBackleft].vDirection,
 								&segments[eBackleft].vDirection);
 	*front = FLT_MAX;
@@ -124,8 +124,8 @@ void ai_getDistances(int player, AI_Distances *distances) {
 		ai->left.vDirection.v[1] = *left * dirsY[dirLeft];
 		ai->right.vDirection.v[0] = *right * dirsX[dirRight];
 		ai->right.vDirection.v[1] = *right * dirsY[dirRight];
-		ai->backleft.vDirection.v[0] = dirsX[dirLeft] - dirsX[data->dir];
-		ai->backleft.vDirection.v[1] = dirsY[dirLeft] - dirsY[data->dir];
+		ai->backleft.vDirection.v[0] = (float) (dirsX[dirLeft] - dirsX[data->dir]);
+		ai->backleft.vDirection.v[1] = (float) (dirsY[dirLeft] - dirsY[data->dir]);
 		vec2_Normalize(&ai->backleft.vDirection,
 									&ai->backleft.vDirection);
 		vec2_Scale(&ai->backleft.vDirection, 

@@ -36,38 +36,38 @@ void clearScreen() {
 }
 
 void drawGame(void) {
-  GLint i;
+	GLint i;
 
-  polycount = 0;
+	polycount = 0;
 
 	clearScreen();
 
-  glShadeModel( GL_SMOOTH );
-  glDepthMask(GL_TRUE);
-  glEnable(GL_DEPTH_TEST);
+	glShadeModel( GL_SMOOTH );
+	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
 
-  for(i = 0; i < vp_max[gViewportType]; i++) {
+	for(i = 0; i < vp_max[gViewportType]; i++) {
 		Player *p = game->player + viewport_content[i];
 		PlayerVisual *pV = gPlayerVisuals + viewport_content[i];
 		Visual *d = & pV->display;
-	
-    if(d->onScreen == 1) {
-      glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
+
+		if(d->onScreen == 1) {
+			glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
 			drawCam(p, pV);
-			
+
 			/* hud stuff for every player */
 			drawHUD(p, pV);
-    }
-  }
+		}
+	}
 
 	/* hud stuff - full screen */
-  if (gSettingsCache.show_fps)
-    drawFPS(gScreen);
+	if (gSettingsCache.show_fps)
+		drawFPS(gScreen);
 
 	if(gSettingsCache.show_console)
 		drawConsole(gScreen);
 
-  /* printf("%d polys\n", polycount); */
+	/* printf("%d polys\n", polycount); */
 }
 
 /* 
@@ -530,8 +530,8 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	{
 		Visual d2d;
 		memcpy(&d2d, d, sizeof(Visual));
-		d2d.vp_w *= gSettingsCache.map_ratio_w;
-		d2d.vp_h *= gSettingsCache.map_ratio_h;
+		d2d.vp_w = (int) (d2d.vp_w * gSettingsCache.map_ratio_w);
+		d2d.vp_h = (int) (d2d.vp_h * gSettingsCache.map_ratio_h);
 
 		d2d.vp_x += 20;
 		d2d.vp_y += 20;

@@ -52,8 +52,9 @@ void idleCredits(void) {
 
 void drawCredits(void) {
   int time;
-  int x, y;
-  int h;
+  float x = 10.0f;
+  float y;
+  float h = gScreen->vp_h / 36.0f;
   int i;
   float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 } };
   time = nebu_Time_GetElapsed() - coffset;
@@ -62,13 +63,11 @@ void drawCredits(void) {
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   rasonly(gScreen);
-  h = gScreen->vp_h / (24 * 3 / 2);
   for(i = 0; i < time / 250; i++) {
     glColor3fv(colors[i % 2]);
     if(credits[i] == NULL) 
       break;
-    x = 10;
-    y = gScreen->vp_h - 3 * h * (i + 1) / 2;
+    y = gScreen->vp_h - 3.0f * h * (i + 1) / 2;
     drawText(gameFtx, x, y, h, credits[i]);
   }
 }

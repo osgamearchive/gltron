@@ -243,13 +243,13 @@ void playerCamera(PlayerVisual *pV, Player *p) {
 
       dx=px-tx;
       dy=py-ty;
-      d=1.3*sqrt(dx*dx+dy*dy); /* Find distance between old viewpoint and scaled cycle pos */
+      d=1.3f * sqrtf(dx*dx+dy*dy); /* Find distance between old viewpoint and scaled cycle pos */
       px=dest[0] =  tx + CAM_CIRCLE_DIST * dx/d; /* Set viewpoint a fixed distance from */
       py=dest[1] =  ty + CAM_CIRCLE_DIST * dy/d; /* scaled pos, preserving angle */
 
       dx=(tx-x)*(tx-x); /* find distance between scaled and actual */
       dy=(ty-y)*(ty-y); /* cycle positions... */
-      d=sqrt(dx*dx+dy*dy)/8;
+      d=sqrtf(dx*dx+dy*dy)/8.0f;
       dest[2] = CAM_CIRCLE_Z-(d*CAM_CIRCLE_Z)/24; /* ...and lift camera when close to cycle */
 
       tdest[0] = x;

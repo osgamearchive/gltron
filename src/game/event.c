@@ -186,10 +186,10 @@ int applyWallAcceleration(int player, int dt) {
 		vec2_Copy(&segments[i].vStart, &vPos);
 	}
 
-	segments[eLeft].vDirection.v[0] = dirsX[dirLeft];
-	segments[eLeft].vDirection.v[1] = dirsY[dirLeft];
-	segments[eRight].vDirection.v[0] = dirsX[dirRight];
-	segments[eRight].vDirection.v[1] = dirsY[dirRight];
+	segments[eLeft].vDirection.v[0] = (float) dirsX[dirLeft];
+	segments[eLeft].vDirection.v[1] = (float) dirsY[dirLeft];
+	segments[eRight].vDirection.v[0] = (float) dirsX[dirRight];
+	segments[eRight].vDirection.v[1] = (float) dirsY[dirRight];
 
 	left = FLT_MAX;
 	right = FLT_MAX;
@@ -302,7 +302,8 @@ nebu_List* doMovement(int mode, int dt) {
 				data->speed = SPEED_GONE;
 				game->running--;
 				if(game->running <= 1) { /* all dead, find survivor */
-					int i, maxSpeed = SPEED_GONE;
+					int i;
+					float maxSpeed = SPEED_GONE;
 					/* create winner event */
 					for(i = 0; i < game->players; i++) {
 						if(game->player[i].data->speed >= maxSpeed) {
@@ -311,7 +312,7 @@ nebu_List* doMovement(int mode, int dt) {
 						}
 					}
 					if(mode) {
-            createEvent(winner, EVENT_STOP);
+						createEvent(winner, EVENT_STOP);
 						/* a stop event is the last event that happens */
 						return l;
 					}

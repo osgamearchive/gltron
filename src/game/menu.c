@@ -117,8 +117,8 @@ void drawMenu(Visual *d) {
 
 	scripting_CopyStringResult(line_label, sizeof(line_label));
 
-	drawText(guiFtx, x, y, size, line_label);
-	drawText(guiFtx, x + max_label * size, y, size, line_data);
+	drawText(guiFtx, (float)x, (float)y, (float)size, line_label);
+	drawText(guiFtx, (float)x + max_label * size, (float)y, (float)size, line_data);
       }
 
     /*
