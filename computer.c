@@ -11,23 +11,12 @@ void initGameAI(int level) {
   }
 }
 
-int freeway(Data *data, int dir) {
-  int i;
-  int wd = 20;
-
-  for(i = 1; i < wd; i++)
-    if(getCol((int)data->posx + dirsX[dir] * i, 
-	      (int)data->posy + dirsY[dir] * i)) 
-      break;
-  return i;
-}
-
-void getDistPoint(int dir, int d, int *x, int *y) {
+static void getDistPoint(int dir, int d, int *x, int *y) {
   *x += dirsX[dir] * d;
   *y += dirsY[dir] * d;
 }
 
-void setPos(Data *data, int *x, int *y) {
+static void setPos(const Data *data, int *x, int *y) {
   *x = (int)data->posx;
   *y = (int)data->posy;
 }
@@ -150,7 +139,7 @@ void doComputer(int player, int target) {
 #define DIR_FRONT 4
 #define DIR_BACK 8
 
-void getXYdir(int dir, int *x, int *y) {
+static void getXYdir(int dir, int *x, int *y) {
   int tx = 0, ty = 0;
   if(dir & DIR_FRONT) { tx = *x; ty = *y; }
   if(dir & DIR_BACK) { tx = -*x; ty = -*y; }
@@ -159,7 +148,7 @@ void getXYdir(int dir, int *x, int *y) {
   *x = tx; *y = ty;
 }
 
-int freeway2(Data* data, int xdir, int ydir, int c) {
+static int freeway2(const Data* data, int xdir, int ydir, int c) {
   if(xdir == 0 && ydir == 0) {
     fprintf(stderr, "bug: xdir == ydir == 0\n");
     return 0;
@@ -257,10 +246,5 @@ void doComputer2(int player, int target) {
     ai->lastx = data->iposx;
     ai->lasty = data->iposy;
   }
-  
 }
-
-
-
-
 
