@@ -55,5 +55,7 @@ float box2_Width(const box2* pBox);
 float box2_Height(const box2* pBox);
 float box2_Diameter(const box2* pBox);
 void box2_Center(vec2 *pOut, const box2* pBox);
+void box2_Init(box2 *pBox);
+void box2_Extend(box2 *pBox, const vec2 *pV);
 
 #endif

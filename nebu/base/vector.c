@@ -1,6 +1,8 @@
 #include "base/nebu_vector.h"
+#include "base/nebu_math.h"
 
 #include <math.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -341,3 +343,18 @@ void box2_Center(vec2 *pOut, const box2* pBox)
 	vec2_Scale(pOut, pOut, 0.5f);
 }
 
+void box2_Init(box2 *pBox)
+{
+	pBox->vMin.v[0] = FLT_MAX;
+	pBox->vMin.v[1] = FLT_MAX;
+	pBox->vMax.v[0] = FLT_MIN;
+	pBox->vMax.v[1] = FLT_MIN;
+}
+
+void box2_Extend(box2 *pBox, const vec2 *pV)
+{
+	if(pBox->vMin.v[0] > pV->v[0]) pBox->vMin.v[0] = pV->v[0];
+	if(pBox->vMin.v[1] > pV->v[1]) pBox->vMin.v[1] = pV->v[1];
+	if(pBox->vMax.v[0] < pV->v[0]) pBox->vMax.v[0] = pV->v[0];
+	if(pBox->vMax.v[1] < pV->v[1]) pBox->vMax.v[1] = pV->v[1];
+}
