@@ -4,6 +4,7 @@
 #include "Nebu_base.h"
 
 #include <math.h>
+#include <assert.h>
 
 void getPositionFromIndex(float *x, float *y, int player) {
 	getPositionFromData(x, y, game->player[player].data);
@@ -19,17 +20,26 @@ void getPositionFromData(float *x, float *y, Data *data) {
 }
 
 void initGameLevel(void) {
+	if(game2->level)
+		game_FreeLevel(game2->level);
 	game2->level = game_CreateLevel();
 
 	if(game2->level->scalable)
-		game_ScaleLevel(game2->level, 600.0f);
+		game_ScaleLevel(game2->level, getSettingf("grid_size"));
 }
 void initGameStructures(void) { /* called only once */
   int i;
 
+	/* make sure this function hasn't been called before */
+	assert(game2 == NULL);
+
   /* initialize some global variables */
   game2 = &main_game2;
+	memset(game2, 0, sizeof(Game2));
+	
   game = &main_game;
+	memset(game, 0, sizeof(Game));
+
   game->pauseflag = PAUSE_NO_GAME;
 
   game->winner = -1;
@@ -47,7 +57,6 @@ void initGameStructures(void) { /* called only once */
 		p->camera = (Camera*) malloc(sizeof(Camera));
    }
 
-  game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
 }
 
@@ -59,7 +68,7 @@ void resetPlayerData(void) {
 
   int *startIndex;
   startIndex = malloc( game->players * sizeof(int) );
-  randomPermutation(game->players, startIndex);
+  nebu_RandomPermutation(game->players, startIndex);
 
   for(i = 0; i < game->players; i++) {
 		float x, y;
@@ -82,10 +91,12 @@ void resetPlayerData(void) {
 		/* arrange players in circle around center */
 
 		/* randomize position on the grid */
-		x = game2->level->spawnPoints[ startIndex[i] ].v[0];
-		y = game2->level->spawnPoints[ startIndex[i] ].v[1];
+		x = game2->level->spawnPoints[ startIndex[i] ].v.v[0];
+		y = game2->level->spawnPoints[ startIndex[i] ].v.v[1];
 		/* randomize starting direction */
-		data->dir = trand() & 3;
+		data->dir = game2->level->spawnPoints[ startIndex[i] ].dir;
+		if(data->dir == -1) 
+			data->dir = nebu_rand() & 3;
 		/* data->dir = startdir[i]; */
 		data->last_dir = data->dir;
 
@@ -125,7 +136,7 @@ void resetPlayerData(void) {
 	game->winner = -1;
 }
 
-void initData(void) {
+void game_ResetData(void) {
 	/* lasttime = SystemGetElapsedTime(); */
 	game->pauseflag = PAUSE_GAME_RUNNING;
 
@@ -142,7 +153,6 @@ void initData(void) {
 	game2->events.next = NULL;
 	/* TODO: free any old events that might have gotten left */
 
-  resetVideoData();
 	resetPlayerData();
 }
 
