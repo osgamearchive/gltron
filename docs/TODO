@@ -25,7 +25,7 @@ Bugs [medium priority]:
 
 Todd:
 
-- fix spoke animation
+- fix spoke animation [FIXED]
 - fix gap between the top of the front fender and the wheel on the 
     lightcycle-high model
 
@@ -48,7 +48,8 @@ Polish [medium priority]:
 
 Todd:
 
-- add extra faces for spokes instead of using existing rim triangles. (todd)
+- change spoke speed when boost is applied
+- add extra faces for spokes instead of using existing rim triangles.
 
 Andreas:
 
