@@ -66,6 +66,11 @@ void initPause() {
    * Game should be totally silent in pause mode. (Nice when 
    * the boss is walking by, phone call, etc...)
    */
+
+  /* set pause flag to suspended */
+  if (game->pauseflag != PAUSE_GAME_FINISHED) {
+    game->pauseflag = PAUSE_GAME_SUSPENDED;
+  }
   
   updateSettingsCache();
 }
