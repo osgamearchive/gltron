@@ -27,7 +27,7 @@ void loadArt() {
 
   scripting_GetStringSetting("current_artpack", &artpack);
   fprintf(stderr, "loading artpack '%s'\n", artpack);
-  path = getArtPath(artpack, "artpack.ini");
+  path = getArtPath(artpack, "artpack.lua");
   free(artpack);
 
   if(path != NULL) {
