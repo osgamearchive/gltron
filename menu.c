@@ -36,6 +36,11 @@ void changeAction(char *name) {
     playMenuFX(fx_highlight);
   } else if(strstr(name, "artpack") == name) {
     reloadArt();
+  } else if(strstr(name, "mouse_warp") == name) {
+    if(game->settings->mouse_warp == 1)
+      SystemGrabInput();
+    else
+      if(game->settings->windowMode == 1) SystemUngrabInput();
   }
 
   if(strstr(name, "song") == name) {

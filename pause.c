@@ -24,8 +24,6 @@ void displayPause() {
   drawGame();
   drawPause(game->screen);
 
-  if(game->settings->mouse_warp)
-    mouseWarp();
   SystemSwapBuffers();
 }
 
