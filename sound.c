@@ -40,12 +40,13 @@ void loadFX() {
 void reloadTrack() {
   char *song;
   char *path;
-  scripting_GetString("current_track", &song);
+  scripting_GetStringSetting("current_track", &song);
   fprintf(stderr, "loading song %s\n", song);
   path = getPath( PATH_MUSIC, song );
   free(song);
   if(path == NULL) {
     fprintf(stderr, "can't find song...exiting\n");
+    exit(1);
   }
   loadSound(path);
   playSound();

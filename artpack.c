@@ -25,7 +25,7 @@ void loadArt() {
   char *path;
   char *artpack;
 
-  scripting_GetString("current_artpack", &artpack);
+  scripting_GetStringSetting("current_artpack", &artpack);
   fprintf(stderr, "loading artpack '%s'\n", artpack);
   path = getArtPath(artpack, "artpack.ini");
   free(artpack);

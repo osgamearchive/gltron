@@ -10,7 +10,7 @@ texture* loadTextureData(const char *filename) {
   char *path;
   char *artpack;
   
-  scripting_GetString("current_artpack", &artpack);
+  scripting_GetStringSetting("current_artpack", &artpack);
   path = getArtPath(artpack, filename);
   free(artpack);
   if(path != NULL) {
