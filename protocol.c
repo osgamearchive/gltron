@@ -398,10 +398,9 @@ Net_preparepacket(Packet* packet, char *buf)
       }
     break;
   case SYNCH:
-    ADD_INT32(packet->infos.synch.t1);
-    ADD_INT32(packet->infos.synch.t2);
-    printf("--------------------------\n");
-    printf("packet->infos.synch.t1 = %d\npacket->infos.synch.t2 = %d\n", (Sint16)packet->infos.synch.t1, (Sint16)packet->infos.synch.t2); 
+    ADD_INT16(packet->infos.synch.type);
+    ADD_INT32(packet->infos.synch.data.u.s);
+    ADD_INT32(packet->infos.synch.data.u.c);
     break;
   case ACTION:
     ADD_INT16(packet->infos.action.type);
@@ -589,10 +588,9 @@ Net_handlepacket(Packet* packet, char *buf)
       }  
     break;
   case SYNCH:
-    GET_INT32(packet->infos.synch.t1, buf);
-    GET_INT32(packet->infos.synch.t2, buf);
-    printf("--------------------------\n");
-    printf("packet->infos.synch.t1 = %d\npacket->infos.synch.t2 = %d\n", (Sint16)packet->infos.synch.t1, (Sint16)packet->infos.synch.t2); 
+    GET_INT16(packet->infos.synch.type, buf);
+    GET_INT32(packet->infos.synch.data.u.s, buf);
+    GET_INT32(packet->infos.synch.data.u.c, buf);
     break;
   case ACTION:
     GET_INT16(packet->infos.action.type, buf);
@@ -645,7 +643,7 @@ get_packetsize( int type )
     return (2 + MAX_PLAYERS)* sizeof(Sint16);
     break;
   case SYNCH:
-    return 2 * sizeof(Sint16) + 2 * sizeof(Sint32);
+    return 3 * sizeof(Sint16) + 2 * sizeof(Sint32);
     break;
   case ACTION:
     return 4 * sizeof(Sint16);

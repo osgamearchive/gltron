@@ -157,8 +157,17 @@ typedef struct packet {
       Sint16    which;       //To which if necessary.
     } action;
     struct {
-      Sint32    t1;         //Current Time
-      Sint32    t2;         //Old time
+      Sint16    type;
+      union {
+	struct {
+	  Uint32 s;
+	  Uint32 c;
+	} u;
+	struct {
+	  Sint32 s;
+	  Sint32 c;
+	} s;
+      }         data;
     } synch;
   } infos;
 } Packet;

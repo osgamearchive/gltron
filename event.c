@@ -77,7 +77,6 @@ int processEvent(GameEvent* e) {
     if( game2->mode == GAME_NETWORK_PLAY )
       {
 	sprintf(messages, "winner: %s",( slots[getWhich(game->winner)].active==1)? slots[getWhich(game->winner)].name: "Computer");
-	nbSynch = 0;
       } else { 
 #endif
 	sprintf(messages, "winner: %d", game->winner + 1);

@@ -232,7 +232,6 @@ typedef struct Player {
    4) add a default to initMainGameSettings() in settings.c
    5) make a menu entry in menu.txt
 */
-
 enum {
   BILINEAR = 0,
   TRILINEAR = 1

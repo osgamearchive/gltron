@@ -146,12 +146,12 @@ void idleGame( void ) {
 
   if( updateTime() == 0  ) return;
   
-  if( game2->mode == GAME_NETWORK_RECORD )
-    {
-      do_ping_users();
-      if( do_starting() )
-	return;
-    }
+/*   if( game2->mode == GAME_NETWORK_RECORD ) */
+/*     { */
+/*       do_ping_users(); */
+/*       if( do_starting() ) */
+/* 	return; */
+/*     } */
   //handle_server();
   //if( game2->mode == GAME_SINGLE && netruletime > 0 )
   if( netruletime > 0 && hasstarted==1 )

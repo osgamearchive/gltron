@@ -7,6 +7,7 @@ AM_INIT_AUTOMAKE(gltron, 0.61am)
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CPP
+AC_EXEEXT
 
 dnl CFLAGS set-up
 CFLAGS=""
