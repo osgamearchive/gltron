@@ -7,7 +7,7 @@ version = 71,
 
 scalable = 1,
 
--- collsision detection takes place against these lines
+-- collision detection takes place against these lines
 boundary = {
 	{ { x = 0, y = 0 }, { x = 1, y = 0 } },
 	{ { x = 1, y = 0 }, { x = 1, y = 1 } },
@@ -28,22 +28,18 @@ spawn = {
 geometry = {
 	-- floor geometry is used to generate reflections, etc.
 	floor = {
-		-- uv = 4, normal = 2, positon = 1
+		-- uv = 4, normal = 2, position = 1
 		vertexformat = 5, 
 		 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
-			textures = { diffuse = "floor.png" }
+			textures = { diffuse = "gltron_floor.png" }
 		},
 		vertices = {
-			{ pos = { x = 0, y = 0, z = 0 },
-				uv = { u = 0, v = 0 } },
-			{ pos = { x = 1, y = 0, z = 0 },
-				uv = { u = 1, v = 0 } },
-			{ pos = { x = 1, y = 1, z = 0 },
-				uv = { u = 1, v = 1 } },
-			{ pos = { x = 0, y = 1, z = 0 },
-				uv = { u = 0, v = 1 } }
+			{ pos = { x = 0, y = 0, z = 0 }, uv = { u = 0, v = 0 } },
+			{ pos = { x = 1, y = 0, z = 0 }, uv = { u = 40, v = 0 } },
+			{ pos = { x = 1, y = 1, z = 0 }, uv = { u = 40, v = 40 } },
+			{ pos = { x = 0, y = 1, z = 0 }, uv = { u = 0, v = 40 } }
 		},
 		indices = { 
 			{ 0, 1, 2 },
@@ -52,7 +48,7 @@ geometry = {
 	},
 
 	arena = {
-		-- uv = 4, normal = 2, positon = 1
+		-- uv = 4, normal = 2, position = 1
 		vertexformat = 5, 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
@@ -60,41 +56,25 @@ geometry = {
 		},
 		vertices = {
 			-- wall
-			{ pos = { x = 1, y = 0, z = 0 },
-				uv = { u = 0, v = 0 } },
-			{ pos = { x = 0, y = 0, z = 0 },
-				uv = { u = 0.25, v = 0 } },
-			{ pos = { x = 0, y = 0, z = 0.25 },
-				uv = { u = 0.25, v = 1 } },
-			{ pos = { x = 1, y = 0, z = 0.25 },
-				uv = { u = 0, v = 1 } },
+			{ pos = { x = 0, y = 0, z = 0 }, 				uv = { u = 0, v = 0 } },
+			{ pos = { x = 0, y = 1, z = 0 },				uv = { u = 0.25, v = 0 } },
+			{ pos = { x = 0, y = 1, z = 0.25 },			uv = { u = 0.25, v = 1 } },
+			{ pos = { x = 0, y = 0, z = 0.25 },			uv = { u = 0, v = 1 } },
 			-- wall
-			{ pos = { x = 1, y = 1, z = 0 },
-				uv = { u = 0.25, v = 0 } },
-			{ pos = { x = 1, y = 0, z = 0 },
-				uv = { u = 0.5, v = 0 } },
-			{ pos = { x = 1, y = 0, z = 0.25 },
-				uv = { u = 0.5, v = 1 } },
-			{ pos = { x = 1, y = 1, z = 0.25 },
-				uv = { u = 0.25, v = 1 } },
+			{ pos = { x = 0, y = 1, z = 0 },				uv = { u = 0.25, v = 0 } },
+			{ pos = { x = 1, y = 1, z = 0 },				uv = { u = 0.5, v = 0 } },
+			{ pos = { x = 1, y = 1, z = 0.25 },			uv = { u = 0.5, v = 1 } },
+			{ pos = { x = 0, y = 1, z = 0.25 },			uv = { u = 0.25, v = 1 } },
 			-- wall
-			{ pos = { x = 0, y = 1, z = 0 },
-				uv = { u = 0.5, v = 0 } },
-			{ pos = { x = 1, y = 1, z = 0 },
-				uv = { u = 0.75, v = 0 } },
-			{ pos = { x = 1, y = 1, z = 0.25 },
-				uv = { u = 0.75, v = 1 } },
-			{ pos = { x = 0, y = 1, z = 0.25 },
-				uv = { u = 0.5, v = 1 } },
+			{ pos = { x = 1, y = 1, z = 0 },				uv = { u = 0.5, v = 0 } },
+			{ pos = { x = 1, y = 0, z = 0 },				uv = { u = 0.75, v = 0 } },
+			{ pos = { x = 1, y = 0, z = 0.25 },			uv = { u = 0.75, v = 1 } },
+			{ pos = { x = 1, y = 1, z = 0.25 },			uv = { u = 0.5, v = 1 } },
 			-- quad3
-			{ pos = { x = 0, y = 0, z = 0 },
-				uv = { u = 0.75, v = 0 } },
-			{ pos = { x = 0, y = 1, z = 0 },
-				uv = { u = 1, v = 0 } },
-			{ pos = { x = 0, y = 1, z = 0.25 },
-				uv = { u = 1, v = 1 } },
-			{ pos = { x = 0, y = 0, z = 0.25 },
-				uv = { u = 0.75, v = 1 } }
+			{ pos = { x = 1, y = 0, z = 0 },				uv = { u = 0.75, v = 0 } },
+			{ pos = { x = 0, y = 0, z = 0 },				uv = { u = 1, v = 0 } },
+			{ pos = { x = 0, y = 0, z = 0.25 },			uv = { u = 1, v = 1 } },
+			{ pos = { x = 1, y = 0, z = 0.25 },			uv = { u = 0.75, v = 1 } }
 		},
 		indices = { 
 			{ 0, 1, 2 }, { 0, 2, 3 },
