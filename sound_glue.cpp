@@ -127,9 +127,10 @@ extern "C" {
 
     if(SDL_OpenAudio( spec, NULL ) != 0) {
       fprintf(stderr, "[error] %s\n", SDL_GetError());
-      exit(1); // FIXME: shutdown sound system instead
+      sound->SetStatus(Sound::eUninitialized);
+    } else {
+      sound->SetStatus(Sound::eInitialized);
     }
-
     sound->SetMixMusic(game2->settingsCache.playMusic);
     sound->SetMixFX(game2->settingsCache.playEffects);
   }

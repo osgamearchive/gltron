@@ -131,7 +131,7 @@ void displayConfigure() {
 
 void idleGui() {
 #ifdef SOUND
-  soundIdle();
+  Sound_idle();
 #endif
 
   scripting_RunGC();

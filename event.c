@@ -168,7 +168,7 @@ void idleGame(void) {
 
 
 #ifdef SOUND
-  soundIdle();
+  Sound_idle();
 #endif
 
   if(updateTime() == 0) return;

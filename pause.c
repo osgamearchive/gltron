@@ -4,7 +4,7 @@
 
 void idlePause() {
 #ifdef SOUND
-  soundIdle();
+  Sound_idle();
 #endif
   game2->time.dt = 0;
   doCameraMovement();

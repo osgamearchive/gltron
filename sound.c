@@ -17,7 +17,7 @@ static char *game_fx_names[] = {
 #endif
 };
 
-void loadFX() {
+void Sound_loadFX() {
   int i;
   char *path;
 
@@ -35,7 +35,7 @@ void loadFX() {
   }
 }
 
-void reloadTrack() {
+void Sound_reloadTrack() {
   char *song;
   char *path;
   scripting_GetStringSetting("current_track", &song);
@@ -46,48 +46,48 @@ void reloadTrack() {
     fprintf(stderr, "can't find song...exiting\n");
     exit(1); // FIXME: handle missing song somewhere else
   }
-  loadSound(path);
-  playSound();
+  Sound_load(path);
+  Sound_play();
 
   free(path);
 }
 
-void shutdownSound() {
+void Sound_shutdown() {
   Audio_Quit();
 }
   
 
-void loadSound(char *name) {
+void Sound_load(char *name) {
   Audio_LoadMusic(name);
 }
 
-void playSound() {
+void Sound_play() {
   Audio_SetMusicVolume(getSettingf("musicVolume"));
   Audio_PlayMusic();
   return;
 }
 
-void stopSound() {
+void Sound_stop() {
   Audio_StopMusic();
 }
 
-void soundIdle() {
+void Sound_idle() {
   Audio_Idle();
 }
 
-void setMusicVolume(float volume) {
+void Sound_setMusicVolume(float volume) {
   if(volume > 1) volume = 1;
   if(volume < 0) volume = 0;
   Audio_SetMusicVolume(volume);
 }
 
-void setFxVolume(float volume) {
+void Sound_setFxVolume(float volume) {
   if(volume > 1) volume = 1;
   if(volume < 0) volume = 0;
   Audio_SetFxVolume(volume);
 }
 
-void initSoundTracks() {
+void Sound_initTracks() {
   const char *music_path;
   list *soundList;
   list *p;
@@ -108,14 +108,14 @@ void initSoundTracks() {
   scripting_Run("setupSoundTrack()");
 }
 
-void setupSound() {
+void Sound_setup() {
   printf("initializing sound\n");
 
   Audio_Init();
-  loadFX();
+  Sound_loadFX();
   Audio_LoadPlayers();
-  setFxVolume(getSettingf("fxVolume"));
-  reloadTrack();
-  setMusicVolume(getSettingf("musicVolume"));
+  Sound_setFxVolume(getSettingf("fxVolume"));
+  Sound_reloadTrack();
+  Sound_setMusicVolume(getSettingf("musicVolume"));
   Audio_Start();
 }

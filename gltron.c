@@ -180,7 +180,7 @@ int main( int argc, char *argv[] ) {
   /* probe for artpacks & songs */
   initArtpacks();
 #ifdef SOUND
-  initSoundTracks();
+  Sound_initTracks();
 #endif
 
   printf("loading menu\n");
@@ -198,7 +198,7 @@ int main( int argc, char *argv[] ) {
 
   setupDisplay(game->screen);
 #ifdef SOUND
-  setupSound();
+  Sound_setup();
 #endif
 
   /* switch callbacks twice to establish stack */

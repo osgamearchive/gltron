@@ -52,8 +52,8 @@ int c_update_settings_cache(lua_State *L) {
 
 int c_update_audio_volume(lua_State *L) { 
 #ifdef SOUND
- setMusicVolume(getSettingf("musicVolume"));
- setFxVolume(getSettingf("fxVolume"));
+ Sound_setMusicVolume(getSettingf("musicVolume"));
+ Sound_setFxVolume(getSettingf("fxVolume"));
 #endif
  return 0;
 }
@@ -68,7 +68,7 @@ int c_startGame(lua_State *L) {
 
 int c_reloadTrack(lua_State *L) {
 #ifdef SOUND
-  reloadTrack();
+  Sound_reloadTrack();
 #endif
   return 0;
 }
