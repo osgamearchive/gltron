@@ -16,7 +16,7 @@ void initClientData() {
     cam = game->player[i].camera;
     data = game->player[i].data;
 
-    camType = (game->player[i].ai->active == AI_COMPUTER) ? 0 : getSettingi("camType");
+    camType = (game->player[i].ai->active == AI_COMPUTER) ? CAM_CIRCLE : game2->settingsCache.camType;
     initCamera(cam, data, camType);
 
     {
