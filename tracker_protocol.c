@@ -276,7 +276,7 @@ reply_ping()
   if( packet->num == 2 )
     return;
   packet->num = 2;
-  printf("ping from %s:%hd\n", SDLNet_ResolveIP(&udppacket->address), ntohs(udppacket->address.port));
+  printf("ping from %s:%hd\n", SDLNet_ResolveIP(&udppacket->address), SDLNet_Read32(&(udppacket->address.port)));
 
   SDLNet_UDP_Bind(udpsock, 1, &udppacket->address);
   SDLNet_UDP_Send(udpsock, 1, udppacket);
