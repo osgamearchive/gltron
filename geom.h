@@ -11,6 +11,7 @@ float scalarprod(float *v1, float *v2);
 void vsub(float *v1, float *v2, float *out);
 void vadd(float *v1, float *v2, float *out);
 void vcopy(float *v1, float *out);
+void vmul(float *v, float f);
 
 float length4(float *v);
 void normalize4(float *v);

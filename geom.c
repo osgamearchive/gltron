@@ -47,6 +47,12 @@ void vcopy(float *v1, float *out) {
 	out[2] = v1[2];
 }
 
+void vmul(float *v, float f) {
+	v[0] *= f;
+	v[1] *= f;
+	v[2] *= f;
+}
+
 /* 4 entries... */
 
 float length4(float *v) {
@@ -72,6 +78,7 @@ void vsub4(float *v1, float *v2, float *out) {
 	out[0] = v1[0] - v2[0];
 	out[1] = v1[1] - v2[1];
 	out[2] = v1[2] - v2[2];
+	out[3] = v1[3] - v2[3];
 }
 
 void vadd4(float *v1, float *v2, float *out) {
