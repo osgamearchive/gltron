@@ -1,7 +1,7 @@
 noinst_LIBRARIES=libgame.a
 
 libgame_a_SOURCES = \
-	artpack.c camera.c computer.c credits.c \
+	camera.c computer.c credits.c \
 	engine.c event.c game.c globals.c gui.c \
 	init.c init_sdl.c menu.c pause.c \
 	timedemo.c switchCallbacks.c scripting_interface.c

@@ -1,7 +1,7 @@
 noinst_LIBRARIES=libvideo.a
 
 libvideo_a_SOURCES = \
-	explosion.c fonts.c fonttex.c gamegraphics.c \
+	artpack.c explosion.c fonts.c fonttex.c gamegraphics.c \
 	graphics_fx.c graphics_hud.c graphics_lights.c \
 	graphics_utility.c graphics_world.c \
 	load_texture.c material.c model.c recognizer.c \
