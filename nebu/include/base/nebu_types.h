@@ -10,4 +10,8 @@ typedef struct {
   /* float timeScale; */
 } SystemTime;
 
+typedef struct {
+	float x, y, width, height;
+} nebu_Rect;
+
 #endif
