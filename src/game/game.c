@@ -8,6 +8,7 @@ void GameMode_Idle(void) {
 		return;
 	Game_Idle();
 	Video_Idle();
+	Input_Idle();
 	Scripting_Idle();
 	SystemPostRedisplay();
 }
