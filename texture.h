@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 typedef struct {
+  int count;
   char name[48];
   int type;
   int wrap_s;
@@ -20,7 +21,8 @@ enum {
   TEX_CRASH,
   TEX_TRAIL,
   TEX_DECAL,
-  TEX_DEBUG
+  TEX_DEBUG,
+  TEX_SKYBOX
 };
 
 #endif
