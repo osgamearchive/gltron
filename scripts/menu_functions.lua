@@ -51,8 +51,13 @@ MenuAction[ MenuC.type.action ] = function ( menu )
 end
 
 GetMenuValue[ MenuC.type.slider ] = function ( menu )
-   if Menu[menu].stringValue then return Menu[menu].stringValue() end
    return Menu[menu].read()
+end
+
+MenuAction[ MenuC.type.slider ] = function( menu )
+   if Menu[menu].action then
+      Menu[menu].action()
+   end
 end
 
 GetMenuValue[ MenuC.type.key ] = function ( menu )
