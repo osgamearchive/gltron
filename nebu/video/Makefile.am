@@ -5,4 +5,5 @@ libvideo_a_SOURCES= \
 	video_system.c camera.c
 
 AM_CFLAGS= \
-	-I$(top_srcdir)/nebu/include
+	-I$(top_srcdir)/nebu/include \
+	-I$(top_srcdir)
