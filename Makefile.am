@@ -7,13 +7,14 @@ SUBDIRS = lua data art sounds scripts music
 bin_PROGRAMS = gltron
 
 CFLAGS=@CFLAGS@ -I$(srcdir)/lua/src -I$(srcdir)/lua/include
+CPPFLAGS=@CPPFLAGS@ -I$(srcdir)/lua/src -I$(srcdir)/lua/include
 
 gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	pause.c computer.c engine.c event.c game.c gltron.c gamegraphics.c \
 	light.c trail.c trails_buffered.c quad.c quadbuf.c \
 	input.c settings.c texture.c load_texture.c fonttex.c \
 	fonts.c menu.c findpath.c file.c directory.c file_io.c \
-	screenshot.c geom.c model.c material.c \
+	screenshot.c geom.c model.c material.c explosion.c explosion.h \
 	system.c globals.c camera.c recognizer.c \
 	console.c renderer_gl.c callbacks.h camera.h data.h \
 	geom.h file.h gltron.h light.h menu.h model.h png_texture.h \
