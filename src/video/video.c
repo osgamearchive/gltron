@@ -196,14 +196,14 @@ void video_ResetData(void) {
 }
 
 void initDisplay(Visual *d, int type, int p, int onScreen) {
-  int field;
-  field = gScreen->vp_w / 32;
+  int field_x = gScreen->vp_w / 32;
+	int field_y = gScreen->vp_h / 24;
   d->h = gScreen->h;
   d->w = gScreen->w;
-  d->vp_x = gScreen->vp_x + vp_x[type][p] * field;
-  d->vp_y = gScreen->vp_y + vp_y[type][p] * field;
-  d->vp_w = vp_w[type][p] * field;
-  d->vp_h = vp_h[type][p] * field;
+  d->vp_x = gScreen->vp_x + vp_x[type][p] * field_x;
+  d->vp_y = gScreen->vp_y + vp_y[type][p] * field_y;
+  d->vp_w = vp_w[type][p] * field_x;
+  d->vp_h = vp_h[type][p] * field_y;
   d->onScreen = onScreen;
 }  
 
