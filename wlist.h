@@ -1,3 +1,15 @@
+/** 
+ *          File       :  wlist.h
+ *
+ *          Contains   :  list widget, management of lists.
+ *
+ *          Version    :  1.0 ( 03/08/2001 )
+ *
+ *          Author     :  Nicolas Deniaud ( nicolas.deniaud@wanadoo.fr )
+ *
+ *          Part of gltron's project: http://www.gltron.org/
+ */
+
 #ifndef __WLIST_H__
 #define __WLIST_H__
 

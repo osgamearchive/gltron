@@ -1,3 +1,14 @@
+/** 
+ *          File       :  wtypes.h
+ *
+ *          Contains   :  Definitions of types used by widgets
+ *
+ *          Version    :  1.0 ( 03/08/2001 )
+ *
+ *          Author     :  Nicolas Deniaud ( nicolas.deniaud@wanadoo.fr )
+ *
+ *          Part of gltron's project: http://www.gltron.org/
+ */
 #ifndef __WTYPES_H__
 #define __WTYPES_H__
 

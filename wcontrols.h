@@ -21,6 +21,10 @@
 #include "wtext.h"
 #endif
 
+#ifndef __WSTATICTEXT_H__
+#include "wstatictext.h"
+#endif
+
 #ifndef __WPROGRESS_H__
 #include "wprogress.h"
 #endif
