@@ -158,7 +158,7 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
 
   dir = opendir(dirname);
   if(dir == NULL) {
-    fprintf(stderr, "warning: cannot find music directory\n");
+    fprintf(stderr, "warning: cannot open directory '%s'\n", dirname);
     return l;
   }
   while((entry = readdir(dir)) != NULL) {
