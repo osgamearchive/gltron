@@ -93,6 +93,7 @@ extern "C" {
 #include "graphics_hud.h"
 #include "graphics_lights.h"
 #include "graphics_world.h"
+#include "trail_geometry.h"
 
 	/* resource management */
 #include "texture.h"
