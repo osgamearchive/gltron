@@ -185,8 +185,15 @@ int SystemCreateWindow(char *name) {
 }
 
 void SystemDestroyWindow(int id) {
-  /* don't quit the video subsystem, SDL fails unloading GL drivers */
-  /* SDL_QuitSubSystem(SDL_INIT_VIDEO); */
+  /* quit the video subsytem
+	 * otherwise SDL can't create a new context on win32, if the stencil
+	 * bits change 
+	 */
+	/* there used to be some problems (memory leaks, unprober driver unloading)
+	 * caused by this, but I can't remember what they where
+	 */
+		 
+  SDL_QuitSubSystem(SDL_INIT_VIDEO);
   video_initialized = 0;
 }
 
