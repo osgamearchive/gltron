@@ -14,7 +14,8 @@ typedef struct {
 #define MOUSE_CX 0.003f
 #define MOUSE_CY 0.003f
 
-extern void keyGame(int state, int key, int x, int y);
+void keyGame(int state, int key, int x, int y);
+void Input_Idle();
 
 extern int joy_threshold;
 extern Input gInput;

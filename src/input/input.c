@@ -200,3 +200,7 @@ void parse_args(int argc, const char *argv[]) {
     }
   }
 }
+
+void Input_Idle(void) {
+	SystemSetJoyThreshold( getSettingf("joy_threshold") );
+}
