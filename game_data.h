@@ -71,7 +71,6 @@ typedef struct AI {
   int lastx, lasty;
 } AI;
 
-
 typedef struct Player {
   Data *data;
   gDisplay *display;
