@@ -122,5 +122,4 @@ update_splash(Splash *splash, float prog, char *status)
   update_wprogressbar(splash->wprogress, prog);
   update_wprogressstatus(splash->wstatus, status);
   draw_splash( splash );
-  SDL_Delay(1000);
 }

@@ -84,7 +84,7 @@ draw_wprogressbar(Wprogressbar *wprogress)
 /*   glColor4fv(color); */
 
   s=(float)wprogress->width/100.0;
-  printf("s=%f\n", s);
+  //printf("s=%f\n", s);
   glLineWidth(s);
 
   for(i=0;i<100; ++i)
@@ -98,7 +98,7 @@ draw_wprogressbar(Wprogressbar *wprogress)
 	}
       x = (float)wprogress->x+i*s+1;
       
-      printf("x=%f\n", x);
+      // printf("x=%f\n", x);
       glVertex2f(x, wprogress->y);	                        // Left Side Of Horizontal Line
       glVertex2f(x, wprogress->y+wprogress->height);	// Right Side Of Horizontal Line
       //fprintf(stderr, "drawing progress x: %f to %d\n", wprogress->x+i*s, wprogress->width/2+game->screen->vp_w/2);
@@ -106,10 +106,10 @@ draw_wprogressbar(Wprogressbar *wprogress)
       glEnd();
     }
 
- /*  glDisable(GL_BLEND); */
+  glDisable(GL_BLEND);
   
-/*   glEnable(GL_DEPTH_TEST); */
-/*   glDepthMask(GL_TRUE); */
+  //glEnable(GL_DEPTH_TEST);
+  //glDepthMask(GL_TRUE);
 
   glLineWidth(1.0f);
 }
@@ -117,7 +117,12 @@ draw_wprogressbar(Wprogressbar *wprogress)
 void
 update_wprogressbar(Wprogressbar *wprogress, float prog)
 {
+  int time;
+
   wprogress->prog = prog;
+  //time to wait
+  time = (wprogress->prog-wprogress->last)*100;
+  SDL_Delay(time);
 }
 
 
@@ -148,7 +153,6 @@ new_wprogressstatus(int x, int y, int nbchars)
 void
 draw_wprogressstatus(Wprogressstatus  *wstatus)
 {
-
   glColor3f(1.0, 1.0, 1.0);
   drawText(gameFtx, wstatus->x, wstatus->y, 12, wstatus->status);
 }

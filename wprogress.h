@@ -6,8 +6,9 @@ typedef struct
 {  
   int       x;         //position of the progress bar
   int       y;
-  int       width;      //size of the progress bar
+  int       width;     //size of the progress bar
   int       height;
+  float     last;      //last prog
   float     prog;      //actual progression in percent
 } Wprogressbar;
 

@@ -41,6 +41,8 @@ void initGameStructures() { /* called only once */
   d->wall = 1;
   d->onScreen = -1;
   d->textures = (unsigned int*) malloc(game_textures * sizeof(unsigned int));
+  
+
 
   //Setup display here
   setupDisplay(game->screen);

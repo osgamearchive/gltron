@@ -125,6 +125,7 @@ int main( int argc, char *argv[] ) {
 
 
 
+
   /* initialize artpack list before loading settings! */
   initArtpacks();
 
@@ -136,6 +137,8 @@ int main( int argc, char *argv[] ) {
     exit(1);
   }
  
+  parse_args(argc, argv);
+
   initGameStructures();
   //setupDisplay(game->screen);
 
@@ -147,7 +150,6 @@ int main( int argc, char *argv[] ) {
 #endif
 
 
-  parse_args(argc, argv);
 
   /* sound */
   path = getMusicPath(MUSIC_DIR);
