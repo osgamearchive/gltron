@@ -146,12 +146,17 @@ void idleGui() {
 #ifdef SOUND
   soundIdle();
 #endif
+
+  scripting_RunGC();
   SystemPostRedisplay(); /* animate menu */
 }
 
 void keyboardConfigure(int key, int x, int y) {
+#if 0
   *configureKeyEntry = key;
   initMenuCaption(configureKeyMenu);
+#endif
+
 #ifdef SOUND
 #if 0
   playMenuFX(fx_action);
@@ -164,6 +169,38 @@ void keyboardConfigure(int key, int x, int y) {
    SystemSwapBuffers();
   restoreCallbacks();
 }
+
+void keyboardGui(int key, int x, int y) {
+  char *pMenuName;
+  scripting_Run("return Menu.current");
+  scripting_GetStringResult(&pMenuName);
+
+  switch(key) {
+  case 27:
+    if(strcmp(pMenuName, "RootMenu")) {
+      scripting_Run("Menu.GotoParent()");
+    } else {
+      /* exit */
+      SystemQuit();
+    }
+    break;
+  case ' ':
+    scripting_Run("Menu.Action()");
+    break;
+  case SYSTEM_KEY_UP:
+    scripting_Run("Menu.Previous()");
+    break;
+  case SYSTEM_KEY_DOWN:
+    scripting_Run("Menu.Next()");
+    break;
+  default: 
+    printf("got key %d\n", key);
+  }
+  free(pMenuName);
+  SystemPostRedisplay();
+}
+
+#if 0
 
 void keyboardGui(int key, int x, int y) {
   int i;
@@ -222,13 +259,16 @@ void keyboardGui(int key, int x, int y) {
   }
   SystemPostRedisplay();
 }
+#endif /* 0 */
 
 void initGui() {
   menutime = SystemGetElapsedTime();
+#if 0
   if(pCurrent == NULL) {
     pCurrent = *pMenuList; /* erstes Menu ist RootMenu - Default pCurrent */
     pCurrent->iHighlight = 0;
   }
+#endif
 }
 
 void exitGui() {
@@ -254,8 +294,10 @@ void guiMouse(int buttons, int state, int x, int y) {
 #ifdef SOUND
     if(getSettingi("playEffects"))
       playMenuFX(fx_action);
-#endif	
+#endif
+#if 0	
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
+#endif
     SystemPostRedisplay();
   }
 }
@@ -289,13 +331,14 @@ void guiMouseMotion(int mx, int my) {
 
   my = d->vp_h - my;
 
+#if 0
   /* new stuff: calculate menu dimensions */
   for(i = 0; i < pCurrent->nEntries; i++) {
     int len;
     len =  strlen(((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
     if(len > maxw)
       maxw = len;
-}
+  }
   /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
 
   hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float)maxw );
@@ -322,6 +365,7 @@ void guiMouseMotion(int mx, int my) {
  		
     y -= lineheight;
   }
+#endif
 }
 
 callbacks configureCallbacks = {
@@ -333,3 +377,7 @@ callbacks guiCallbacks = {
   displayGui, idleGui, keyboardGui, initGui, exitGui, initGLGui, 
   guiMouse, guiMouseMotion
 };
+
+
+
+
