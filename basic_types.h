@@ -14,7 +14,7 @@ typedef struct Point {
 } Point;
   
 typedef struct line {
-  int sx, sy, ex, ey;
+  float sx, sy, ex, ey;
 } Line;
 
 typedef struct {
