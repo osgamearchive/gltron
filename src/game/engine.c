@@ -11,13 +11,16 @@ void getPositionFromIndex(float *x, float *y, int player) {
 
 void getPositionFromData(float *x, float *y, Data *data) {
 	vec2 v;
-	vec2Add(&v,
+	vec2_Add(&v,
 					&data->trails[data->trailOffset].vStart,
 					&data->trails[data->trailOffset].vDirection);
 	*x = v.v[0];
 	*y = v.v[1];
 }
 
+void initGameLevel(void) {
+	game2->level = game_CreateLevel("square.lua");
+}
 void initGameStructures(void) { /* called only once */
   int i;
 
@@ -128,10 +131,6 @@ void initData(void) {
 
 	game2->rules.speed = getSettingf("speed");
 	game2->rules.eraseCrashed = getSettingi("erase_crashed");
-	game2->rules.grid_size = getSettingi("grid_size");
-
-	game2->grid.width = game2->rules.grid_size;
-	game2->grid.height = game2->rules.grid_size;
 
 	/* time management */
 	game2->time.lastFrame = 0;
@@ -200,6 +199,7 @@ void doTurn(GameEvent *e, int direction) {
 }
 
 void initWalls(void) {
+#ifndef NEW_LEVEL
 	float raw[4][4] = {
 		{ 0.0f, 0.0f, 1.0f,  0.0f },
 		{ 1.0f, 0.0f, 0.0f, 1.0f },
@@ -218,4 +218,5 @@ void initWalls(void) {
 		walls[j].vDirection.v[0] = raw[j][2] * width;
 		walls[j].vDirection.v[1] = raw[j][3] * height;
 	}
+#endif
 }
