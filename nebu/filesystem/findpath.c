@@ -27,7 +27,9 @@
 #include <stdio.h>
 #include <string.h>
 #ifndef macintosh
+#ifndef WIN32
 #    include <unistd.h>
+#endif
 #endif
 
 #ifndef PATH_MAX
