@@ -40,6 +40,8 @@ Features:
 - merge software mouse cursor from networkign branch
 - add more special effects (reflections etc.)
 - add slightly funny console messages (Robot ate Andi's tail)
+- rewrite save.lua, so .gltronrc is a bit more readable (and settings are
+  grouped)
 
 Settings:
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
