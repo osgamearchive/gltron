@@ -10,49 +10,7 @@ static char* subdir = "data";
 /* the following code doesn't compile under non-POSIX systems (they
    don't have dirent.h), so we do lots of special casing */
 
-#ifdef WIN32
-
-list *getSongList() {
-  char *path;
-  FILE *f;
-  char buf[100];
-  list *l, *p;
-
-  path = getFullPath("music.list");
-  if(path == NULL) {
-    fprintf(stderr, "can't locate music.list, aborting\n");
-    exit(2);
-  }
-  if((f = fopen(path, "r")) == NULL) {
-    fprintf(stderr, "can't open music.list, aborting\n");
-    exit(2);
-  }
-    
-  free(path);
-
-  l = (list*) malloc(sizeof(list));
-  p = l;
-  p->next = NULL;
-
-  while(fgets(buf, sizeof(buf), f)) {
-    char *name;
-    name = malloc(strlen(buf));
-    buf[ strlen(buf) - 1 ] = 0;
-    memcpy(name, buf, strlen(buf) + 1);
-    fprintf(stderr, "adding song '%s'\n", name);
-    p->data = name;
-    p->next = (list*) malloc(sizeof(list));
-    p = p->next;
-    p->next = NULL;
-  }
-  return l;
-}
-
-char *getMusicPath(char *name) {
-  return getFullPath(name);
-}
-
-#elif defined macintosh
+#ifdef macintosh
 
 /* macintosh code by Darrell Walisser */
 

@@ -102,14 +102,9 @@ int main( int argc, char *argv[] ) {
   initArtpacks();
 
   /* sound */
-#ifndef WIN32
   path = getMusicPath(MUSIC_DIR);
   game->settings->soundList = 
     readDirectoryContents(path, SONG_PREFIX);
-#else
-  path = getMusicPath(MUSIC_DIR);
-  game->settings->soundList = getSongList();
-#endif
   
   game->settings->soundIndex = -1;
 
