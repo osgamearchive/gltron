@@ -25,7 +25,8 @@ Documentation & Packaging:
 
 Bugs [medium priority]:
 
-- Recognizer makes sound even when it's turned off
+- Recognizer makes sound even when game is paused
+- Menu Music on/off isn't effective immediately
 
 Features [medium priority]
 
