@@ -11,7 +11,7 @@ namespace Sound {
       _source = source;
 
       _speedShift = 1.0f;
-      _pitchShift = 0.0f;
+      _pitchShift = 1.0f;
     };
 
     virtual void GetModifiers(float &fPan, float &fVolume, float &fShift);
