@@ -112,9 +112,9 @@ Menu = {
 			values = { 0, 0.333, 0.5, 0.9 },
 			read = function() return settings.map_ratio_w; end,
 			store = function(value) 
-			  settings.map_ratio_w = value;
-			  settings.map_ratio_h = value;
-	   end
+								 settings.map_ratio_w = value;
+								 settings.map_ratio_h = value;
+							end
    },
 
    -- Player
@@ -154,7 +154,7 @@ Menu = {
    Player1_Left = { 
       type = MenuC.type.key, caption = "Player 1 Left",
       player = 1, event = "left"
-  },
+	 },
    Player1_Right = { 
       type = MenuC.type.key, caption = "Player 1 Right",
       player = 1, event = "right"
@@ -362,6 +362,11 @@ Menu = {
       store = function(value) settings.windowMode = value; c_video_restart(); end
    },
 
+	 TimeDemo = {
+			type = MenuC.type.action, caption = "Time Demo",
+			action = function() c_timedemo(); end
+	 },
+
    -- Audio
    Music = {
       type = MenuC.type.list, caption = "Music",
@@ -395,89 +400,89 @@ Menu = {
       left = previousTrack,
       action = nextTrack,
       read = function()
-        _,_,name = strfind(settings.current_track, "(.*)%..+")
-        if name then
-          return name
-        else
-          return settings.current_track
-        end
-      end
+								_,_,name = strfind(settings.current_track, "(.*)%..+")
+								if name then
+									 return name
+								else
+									 return settings.current_track
+								end
+						 end
    }
 }
 
 Menu.SetParent = function ( menu )
-   script_print("processing menu '" .. menu .. "'")
-   local _,entry
-   for _,entry in Menu[menu].items do
-      Menu[entry].parent = menu
-      script_print("processing item '" .. entry .. "'")
-      if Menu[entry].type == MenuC.type.menu then
-	 Menu.SetParent( entry )
-      end
-   end
-end
+										script_print("processing menu '" .. menu .. "'")
+										local _,entry
+										for _,entry in Menu[menu].items do
+											 Menu[entry].parent = menu
+											 script_print("processing item '" .. entry .. "'")
+											 if Menu[entry].type == MenuC.type.menu then
+													Menu.SetParent( entry )
+											 end
+										end
+								 end
 
 Menu.SetNames = function ()
-   local name,v
-   for name,v in Menu do
-      if type(v) == "table" then
-	 v.name = name
-      end
-   end
-end
+									 local name,v
+									 for name,v in Menu do
+											if type(v) == "table" then
+												 v.name = name
+											end
+									 end
+								end
 
 Menu.GotoParent = function ()
-   Menu.current = Menu[Menu.current].parent
-   Menu.active = 1
-end
+										 Menu.current = Menu[Menu.current].parent
+										 Menu.active = 1
+									end
 
 Menu.Action = function ()
-   local menu = Menu[Menu.current].items[Menu.active]
-   local type = Menu[ menu  ].type
-   script_print("calling action of '" .. menu .. "', type " .. type )
-   MenuAction[ type ]( menu )
-end
+								 local menu = Menu[Menu.current].items[Menu.active]
+								 local type = Menu[ menu  ].type
+								 script_print("calling action of '" .. menu .. "', type " .. type )
+								 MenuAction[ type ]( menu )
+							end
 
 Menu.Left = function ()
-   local menu = Menu[Menu.current].items[Menu.active]
-   local type = Menu[ menu  ].type
-   if type == MenuC.type.slider then
-      script_print("calling left of '" .. menu .. "'")
-      Menu[ menu ].left()
-   else
-      -- script_print("calling action of '" .. menu .. "', type " .. type )
-      -- MenuAction[ type ]( menu )      
-   end
-end
+							 local menu = Menu[Menu.current].items[Menu.active]
+							 local type = Menu[ menu  ].type
+							 if type == MenuC.type.slider then
+									script_print("calling left of '" .. menu .. "'")
+									Menu[ menu ].left()
+							 else
+									-- script_print("calling action of '" .. menu .. "', type " .. type )
+									-- MenuAction[ type ]( menu )      
+							 end
+						end
 
 Menu.Right = function ()
-   local menu = Menu[Menu.current].items[Menu.active]
-   local type = Menu[ menu  ].type
-   if type == MenuC.type.slider then
-      script_print("calling right of '" .. menu .. "'")
-      Menu[ menu ].right()
-   else
-      -- script_print("calling action of '" .. menu .. "', type " .. type )
-      -- MenuAction[ type ]( menu )
-   end
-end
+								local menu = Menu[Menu.current].items[Menu.active]
+								local type = Menu[ menu  ].type
+								if type == MenuC.type.slider then
+									 script_print("calling right of '" .. menu .. "'")
+									 Menu[ menu ].right()
+								else
+									 -- script_print("calling action of '" .. menu .. "', type " .. type )
+									 -- MenuAction[ type ]( menu )
+								end
+						 end
 
 
 Menu.Next = function ()
-   if Menu.active < getn(Menu[Menu.current].items) then
-      Menu.active = Menu.active + 1
-   else
-      Menu.active = 1
-   end
-end
+							 if Menu.active < getn(Menu[Menu.current].items) then
+									Menu.active = Menu.active + 1
+							 else
+									Menu.active = 1
+							 end
+						end
 
 Menu.Previous = function ()
-   if Menu.active > 1 then 
-      Menu.active = Menu.active - 1
-   else
-      Menu.active = getn(Menu[Menu.current].items)
-   end
-end
+									 if Menu.active > 1 then 
+											Menu.active = Menu.active - 1
+									 else
+											Menu.active = getn(Menu[Menu.current].items)
+									 end
+								end
 
 -- Menu entries
 Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "Quit" }
@@ -501,7 +506,11 @@ Menu.Player2_KeyMenu.items = { "Player2_Left", "Player2_Right" }
 Menu.Player3_KeyMenu.items = { "Player3_Left", "Player3_Right" }
 Menu.Player4_KeyMenu.items = { "Player4_Left", "Player4_Right" }
 
-Menu.VideoMenu.items = { "TextureMenu", "DetailsMenu", "ScreenMenu" }
+Menu.VideoMenu.items = { 
+	 "TextureMenu", "DetailsMenu", 
+	 "ScreenMenu", "TimeDemo" 
+}
+
 Menu.TextureMenu.items = { 
    "Artpack", "Floor", "Wall", "Skybox", 
    "Decals", "Mipmaps", "Filtering", "WallScaling"

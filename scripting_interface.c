@@ -100,6 +100,11 @@ int c_getKeyName(lua_State *L) {
   return 1;
 }
 
+int c_timedemo(lua_State *L) {
+	switchCallbacks(&timedemoCallbacks);
+	return 0;
+}
+
 void init_c_interface(lua_State *L) {
   lua_register(L, "c_quitGame", c_quitGame);
   lua_register(L, "c_resetGame", c_resetGame);
@@ -114,6 +119,7 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_restoreDefaults", c_restoreDefaults);
   lua_register(L, "c_configureKeyboard", c_configureKeyboard);
   lua_register(L, "c_getKeyName", c_getKeyName);
+	lua_register(L, "c_timedemo", c_timedemo);
 }
 
 
