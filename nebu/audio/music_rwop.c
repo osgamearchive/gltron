@@ -13,8 +13,8 @@ static int bs_close();
 										
 SDL_RWops* bs_RWFromFile(const char *file) {
   bs_RWop = SDL_AllocRW();
-  bs_RWop.read = bs_read;
-  bs_RWop.seek = NULL;
-  bs_RWop.write = NULL;
-  bs_RWop.close = bs_close;
+  bs_RWop->read = bs_read;
+  bs_RWop->seek = NULL;
+  bs_RWop->write = NULL;
+  bs_RWop->close = bs_close;
 }
