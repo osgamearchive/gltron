@@ -19,4 +19,5 @@ enum {
 };
 
 nebu_Surface* nebu_Surface_LoadPNG(const char *filename);
+void nebu_Surface_Free(nebu_Surface* pSurface);
 #endif

@@ -1,6 +1,12 @@
 #include "base/nebu_surface.h"
 #include "base/nebu_png_texture.h"
 
+void nebu_Surface_Free(nebu_Surface* pSurface)
+{
+	free(pSurface->data);
+	free(pSurface);
+}
+
 nebu_Surface* nebu_Surface_LoadPNG(const char *filename)
 {
 	nebu_Surface *pSurface;
