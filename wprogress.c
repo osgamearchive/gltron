@@ -120,8 +120,11 @@ update_wprogressbar(Wprogressbar *wprogress, float prog)
   int time;
 
   wprogress->prog = prog;
+  printf("loading time %d\n", time);
   //time to wait
-  time = (wprogress->prog-wprogress->last)*100;
+  time = (wprogress->prog-wprogress->last)*1000;
+  if( time > 100 )
+    time = 100;
   SDL_Delay(time);
 }
 
