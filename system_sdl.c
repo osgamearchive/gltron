@@ -134,16 +134,18 @@ void SystemInitDisplayMode(int f, unsigned char full) {
       fprintf(stderr, "can't initialize Video: %s\n", SDL_GetError());
       exit(2);
     }
+  } else {
+    fprintf(stderr, "WARNING: can't init video; it's already running\n");
   }
   if(flags & SYSTEM_DOUBLE)
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
   if(flags & SYSTEM_DEPTH)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
+  video_initialized = 1;
 }
 
 int SystemCreateWindow(char *name) {
   int f = SDL_OPENGL;
-
   if(fullscreen & SYSTEM_FULLSCREEN)
     f |= SDL_FULLSCREEN;
   if( (screen = SDL_SetVideoMode( width, height, 0, f )) == NULL ) {
