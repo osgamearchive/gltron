@@ -39,10 +39,11 @@ typedef struct SettingsCache {
 } SettingsCache;
 
 
-extern int isSettingf(const char *name);
+extern int isSetting(const char *name);
 extern float getSettingf(const char *name);
 extern int getSettingi(const char *name);
-extern int isSettingi(const char *name);
+extern float getVideoSettingf(const char *name);
+extern int getVideoSettingi(const char *name);
 
 extern void setSettingf(const char *name, float f);
 extern void setSettingi(const char *name, int i);
