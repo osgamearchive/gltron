@@ -2,7 +2,15 @@
 #include "game/game.h"
 
 void drawWalls(void) {
-#ifndef NEW_LEVEL_DRAW
+#ifdef NEW_LEVEL_DRAW
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glColor3f(1,0,0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glVertexPointer(3, GL_FLOAT, 0, gWorld->arena->pVertices);
+	glDrawElements(GL_TRIANGLES, 3 * gWorld->arena->nTriangles, GL_UNSIGNED_INT, gWorld->arena->pTriangles);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisableClientState(GL_VERTEX_ARRAY);
+#else
 
 #define WALL_HEIGHT 48
   float t;

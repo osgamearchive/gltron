@@ -341,7 +341,13 @@ void drawPlanarShadows(Player *p) {
 }
 
 void drawFloor() {
-#ifndef NEW_LEVEL_DRAW
+#ifdef NEW_LEVEL_DRAW
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glColor3f(1,1,0);
+	glVertexPointer(3, GL_FLOAT, 0, gWorld->floor->pVertices);
+	glDrawElements(GL_TRIANGLES, 3 * gWorld->floor->nTriangles, GL_UNSIGNED_INT, gWorld->floor->pTriangles);
+	glDisableClientState(GL_VERTEX_ARRAY);
+#else
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
   
