@@ -142,8 +142,15 @@ void idleGui() {
 void keyboardConfigure(int key, int x, int y) {
   *configureKeyEntry = key;
   initMenuCaption(configureKeyMenu);
-  /* todo: update menu caption */
-
+#ifdef SOUND
+   playMenuFX(fx_action);
+#endif
+   drawGuiBackground();
+   if(!game->settings->softwareRendering)
+     drawGuiLogo();
+   drawMenu(game->screen);
+   rasonly(game->screen);
+   SystemSwapBuffers();
   restoreCallbacks();
 }
 
