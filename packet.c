@@ -1,8 +1,6 @@
 #include "gltron.h"
 
-void *pos;
-#define ADD_STRING(x) memcpy(pos, x, sizeof(x)); pos += sizeof(x)
-#define ADD_INT(x) SDLNet_Write32(x, pos); pos += 4
+
 
 int SendPacket( Packet* packet, TCPsocket sock ) {
   void *buf;
@@ -11,6 +9,7 @@ int SendPacket( Packet* packet, TCPsocket sock ) {
   buf = malloc(sizeof(packet));
   pos = buf;
   ADD_INT(packet->type);
+  ADD_INT(packet->which);
   switch(packet->type) {
   case LOGIN:
     ADD_STRING(packet->infos.login.version);

@@ -52,7 +52,12 @@ void keyboardPause(int key, int unicode, int x, int y) {
   case 27:
 #ifdef __NETWORK__
     if( isConnected )
-      Net_disconnect();
+      {
+	isConnected = 0;
+	isLogged = 0;
+	serverstate=preGameState; //We hope that next time server will be to preGameState
+	Net_disconnect();
+      }
 #endif
     switchCallbacks(&guiCallbacks);
     break;
@@ -67,13 +72,16 @@ void keyboardPause(int key, int unicode, int x, int y) {
 	packet.infos.action.type=STARTGAME;
 	Net_sendpacket(&packet,  Net_getmainsock());
       } else {
-	printf("\nOnly game master can start the game...\n");
+	if( ! isConnected )
+	  {
+	    printf("\nOnly game master can start the game...\n");
 #endif	
-	if(game->pauseflag & PAUSE_GAME_FINISHED)
-	  initData();
-	/* lasttime = SystemGetElapsedTime(); */
-	switchCallbacks(&gameCallbacks);
+	    if(game->pauseflag & PAUSE_GAME_FINISHED)
+	      initData();
+	    /* lasttime = SystemGetElapsedTime(); */
+	    switchCallbacks(&gameCallbacks);
 #ifdef __NETWORK__
+	  }
       }
 #endif   
     break;

@@ -3,7 +3,11 @@
 int processEvent(GameEvent* e) {
   int value = 0;
   Data *data;
+
+#ifdef __NETWORK__
   printf("proccess event ( current time %d )\n", game2->time.current);
+#endif
+
   if(game2->mode == GAME_SINGLE_RECORD) {
     writeEvent(e);
   }
@@ -30,7 +34,16 @@ int processEvent(GameEvent* e) {
     data = game->player[e->player].data;
     data->posx = data->iposx = e->x;
     data->posy = data->iposy = e->y;
+#ifdef __NETWORK__
+    if( isConnected && serverstate==gameState )
+      {
+	sprintf(messages, "%s crashed", slots[getWhich(e->player)].name);
+      } else {
+#endif
     sprintf(messages, "player %d crashed", e->player + 1);
+#ifdef __NETWORK__
+      }
+#endif
     fprintf(stderr, "%s\n", messages);
     consoleAddLine(messages);
     crashPlayer(e->player);
