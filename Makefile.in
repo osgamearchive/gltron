@@ -81,6 +81,7 @@ CFILES = \
 	globals.c \
 	record.c \
 	camera.c \
+	recognizer.c \
 	console.c \
 	renderer_gl.c \
 	@NETWORK_FILES@
