@@ -102,7 +102,6 @@ Net_disconnect( )
       tcpsock = NULL;
     }
   isConnected = 0;
-  isLogged = 0;
 }
 
 

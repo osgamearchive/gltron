@@ -136,8 +136,6 @@ do_login( int which, Packet packet )
   //TODO Search for the game master...
 
   //Accept the connection
-  nbUsers++;
-
   rep.which  = which;
   rep.type   = LOGINREP;
   rep.infos.loginrep.accept = 1;
@@ -148,7 +146,9 @@ do_login( int which, Packet packet )
 
   //Changing server state...
   sState = preGameState;
-  
+
+  nbUsers++;
+
   //Send server infos...
   rep.which   = SERVERID;
   rep.type    = SERVERINFO;
@@ -251,8 +251,9 @@ do_startgame( int which, Packet packet )
 {
   Packet   rep;
   int      i;
-  Player *p;
-  AI     *ai;
+  Player   *p;
+  AI       *ai;
+  Data     *data;
 
   printf("+ do_startgame\n");
   printf("Starting the game\n");
@@ -262,7 +263,10 @@ do_startgame( int which, Packet packet )
   //initData();
   //Send game rules...
 
-  for(i=0; i< MAX_PLAYERS; ++i)
+  initData();
+
+  game2->players                   = nbUsers;
+  for(i=0; i< game2->players; ++i)
     {
     p = (game->player + i);
     ai = p->ai;
@@ -275,10 +279,17 @@ do_startgame( int which, Packet packet )
     }
 
   //resetScores();
-  game2->players                   = nbUsers;
-  game->players=game2->players;
-  initData();
 
+
+  for(i=game2->players; i < game->players; i++) {
+    data = game->player[i].data;
+    data->speed = SPEED_GONE;
+    data->trail_height = 0;
+    data->exp_radius = EXP_RADIUS_MAX;
+  }
+  game->running=game2->players;
+
+  //game->players=game2->players;
 
 
   

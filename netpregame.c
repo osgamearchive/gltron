@@ -54,7 +54,7 @@ void drawPregame() {
   int h;
   int i, len;
   char str[255];
-  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.1, 0.1, 0.5} };
+  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.1, 0.1, 0.5} , { 0.0, 0.5, 1.0 }};
   time = SDL_GetTicks() - coffset;
   
   //glClearColor(.0, .0, .0, .0);
@@ -93,9 +93,15 @@ void drawPregame() {
   for(i=0; i<MAX_PLAYERS; ++i)
     {
       y = game->screen->vp_h - 1.5 * h * (i + 6);
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	{
-	    drawText(gameFtx, x, y, h, slots[i].name);
+	  if( slots[i].isMaster )
+	    glColor3fv(colors[3]);
+	    
+	  drawText(gameFtx, x, y, h, slots[i].name);
+	  if( slots[i].isMaster )
+	    glColor3fv(colors[1]);
+	  
 	} else {
 	  drawText(gameFtx, x, y, h, "Empty");
 	}

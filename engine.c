@@ -202,8 +202,14 @@ int applyGameInfo() {
     fprintf(stderr, "more players in demo than allowed\n");
     return 1;
   }
+  game->running;
 
+  //game->players=game2->players;
   for(i = 0; i < game2->players; i++) {
+
+
+
+
     data = game->player[i].data;
     printf("old init position Player %d  x: %d y: %d direction: %d\n", i, data->iposx,
 	    data->iposy,
@@ -216,6 +222,7 @@ int applyGameInfo() {
     data->t = 0;
     data->dir = game2->startPositions[3 * i + 2];
     data->last_dir = data->dir;
+    data->speed = game->settings->current_speed;
 
     data->trail = data->trails;
 

@@ -178,9 +178,9 @@ do_gamerules(Packet packet)
   game->settings->ai_player4= ( slots[3].active ) ? 0 : 2;
   
   initNetEventList( neteventlist );
-  game2->players              = packet.infos.gamerules.players;
-  game->players=game2->players;
   initData();
+  game2->players              = packet.infos.gamerules.players;
+  //game->players=game2->players;
   game2->rules.speed          = packet.infos.gamerules.speed;
   game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
   game->settings->game_speed  = packet.infos.gamerules.gamespeed;
