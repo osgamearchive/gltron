@@ -5,6 +5,8 @@ typedef struct { float v[2]; } vec2;
 typedef struct { float v[3]; } vec3;
 typedef struct { float v[4]; } vec4;
 
+typedef struct { vec2 vStart, vDirection; } segment2;
+
 vec4* vec4Add(vec4 *pOut, const vec4 *pV1, const vec4 *pV2);
 vec4* vec4Sub(vec4 *pOut, const vec4 *pV1, const vec4 *pV2);
 
@@ -34,5 +36,18 @@ vec2* vec2Copy(vec2 *pOut, const vec2 *pV);
 
 unsigned int uintFromVec3(vec3 *pV);
 // vec4* vec4Transform(vec4* pOut, const vec4* pV, const matrix16 *pM);
+
+vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
+												 const segment2 *s1, const segment2 *s2);
+
+vec2* vec2_Orhogonal(vec2 *pOut, const vec2 *pV);
+
+vec2* vec2Add(vec2 *pOut, const vec2 *pV1, const vec2 *pV2);
+vec2* vec2Sub(vec2 *pOut, const vec2 *pV1, const vec2 *pV2);
+vec2* vec2Scale(vec2 *pOut, const vec2 *pV, float fScale);
+vec2* vec2Normalize(vec2 *pOut, const vec2 *pV);
+float vec2Dot(const vec2 *pV1, const vec2 *pV2);
+
+float vec2Length(const vec2 *pV);
 
 #endif

@@ -150,3 +150,96 @@ vec2* vec2Copy(vec2 *pOut, const vec2 *pV) {
 	return pOut;
 }
 
+vec2* vec2_Orthogonal(vec2 *pOut, const vec2 *pV) {
+	pOut->v[0] = pV->v[1];
+	pOut->v[1] = - pV->v[0];
+	return pOut;
+}
+
+vec2* vec2Add(vec2 *pOut, const vec2 *pV1, const vec2 *pV2) {
+	pOut->v[0] = pV1->v[0] + pV2->v[0];
+	pOut->v[1] = pV1->v[1] + pV2->v[1];
+	return pOut; 
+}
+
+vec2* vec2Sub(vec2 *pOut, const vec2 *pV1, const vec2 *pV2) { 
+	pOut->v[0] = pV1->v[0] - pV2->v[0];
+	pOut->v[1] = pV1->v[1] - pV2->v[1];
+	return pOut; 
+}
+
+vec2* vec2Scale(vec2 *pOut, const vec2 *pV, float fScale) { 
+	pOut->v[0] = pV->v[0] * fScale;
+	pOut->v[1] = pV->v[1] * fScale;
+	return pOut; 
+}
+
+vec2* vec2Normalize(vec2 *pOut, const vec2 *pV) {
+	return vec2Scale(pOut, pV, 1 / vec2Length(pV));
+}
+
+float vec2Dot(const vec2 *pV1, const vec2 *pV2) {
+	return pV1->v[0] * pV2->v[0] + pV1->v[1] * pV2->v[1];
+}
+
+float vec2Length(const vec2 *pV) {
+	float fLength2 = (pV->v[0] * pV->v[0] + pV->v[1] * pV->v[1]);
+	float l = sqrt(fLength2);
+	printf("%.2f, %.2f, %.2f\n", fLength2, (float) sqrt(fLength2), l);
+	return l;
+}
+
+vec2* segment2_IntersectParallel(vec2 *pOut, float *t1, float *t2,
+												 const segment2 *s1, const segment2 *s2) {
+	return NULL;
+}
+
+vec2* segment2_IntersectNonParallel(vec2 *pOut, float *t1, float *t2,
+												 const segment2 *s1, const segment2 *s2) {
+	vec3 v1, v2;
+	vec3 tmp1, tmp2;
+	vec3 vIntersection;
+	
+	tmp1.v[0] = s1->vStart.v[0];
+	tmp1.v[1] = s1->vStart.v[1];
+	tmp1.v[2] = 1;
+	tmp2.v[0] = s1->vStart.v[0] + s1->vDirection.v[0];
+	tmp2.v[1] = s1->vStart.v[1] + s1->vDirection.v[1];
+	tmp2.v[2] = 1;
+	vec3Cross(&v1, &tmp1, &tmp2);
+
+	tmp1.v[0] = s2->vStart.v[0];
+	tmp1.v[1] = s2->vStart.v[1];
+	tmp1.v[2] = 1;
+	tmp2.v[0] = s2->vStart.v[0] + s2->vDirection.v[0];
+	tmp2.v[1] = s2->vStart.v[1] + s2->vDirection.v[1];
+	tmp2.v[2] = 1;
+	vec3Cross(&v2, &tmp1, &tmp2);
+	vec3Cross(&vIntersection, &v1, &v2);
+	pOut->v[0] = vIntersection.v[0] / vIntersection.v[2];
+	pOut->v[1] = vIntersection.v[1] / vIntersection.v[2];
+	
+	// TODO compute t1, t2
+	if(fabs(s1->vDirection.v[0]) > fabs(s1->vDirection.v[1]))
+		*t1 = (pOut->v[0] - s1->vStart.v[0]) / s1->vDirection.v[0];
+	else
+		*t1 = (pOut->v[1] - s1->vStart.v[1]) / s1->vDirection.v[1];
+	if(fabs(s2->vDirection.v[0]) > fabs(s2->vDirection.v[1]))
+		*t2 = (pOut->v[0] - s2->vStart.v[0]) / s2->vDirection.v[0];
+	else
+		*t2 = (pOut->v[1] - s2->vStart.v[1]) / s2->vDirection.v[1];
+	
+	return pOut;
+}
+
+vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
+												 const segment2 *s1, const segment2 *s2) {
+	// check if s1, s2 are parallel
+	vec2 tmp;
+	if( vec2Dot(&s1->vDirection, 
+							vec2_Orthogonal(&tmp, & s2->vDirection) ) == 0)
+		return segment2_IntersectParallel(pOut, t1, t2, s1, s2);
+	else
+		return segment2_IntersectNonParallel(pOut, t1, t2, s1, s2);	
+}
+
