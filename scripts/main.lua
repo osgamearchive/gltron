@@ -46,10 +46,10 @@ next_callback[ RETURN_QUIT ] = nil
 
 while 1 do
 	 SetCallback(callback)
-	 write(format("[lua] setting callback '%s'\n", callback))
+	 -- write(format("[lua] setting callback '%s'\n", callback))
 	 
 	 status = SystemMainLoop()
-	 write(format("[lua] system returned (%d)\n", status))
+	 -- write(format("[lua] system returned (%d)\n", status))
 	 
 	 if(next_callback[ status ]) then
 			if(next_callback[ status ] == "last") then

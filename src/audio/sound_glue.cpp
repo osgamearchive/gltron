@@ -32,13 +32,13 @@ extern "C" {
     sample_engine->Start();
     if (game2->settingsCache.show_recognizer)
       sample_recognizer->Start();
-    printf("[audio] turning on engine sound\n");
+    // printf("[audio] turning on engine sound\n");
   }
 
   void Audio_DisableEngine(void) {
     sample_engine->Stop();
     sample_recognizer->Stop();
-    printf("[audio] turning off engine sound\n");
+    // printf("[audio] turning off engine sound\n");
   }
 
   void Audio_Idle(void) { 
