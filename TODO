@@ -56,7 +56,9 @@ Bugs [low priority]:
 
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
+- fix crash texture so it draws in front of player trails 
 
+  
 Features [low priority]:
 
 - support other controllers (i.e. joysticks)
