@@ -2,6 +2,7 @@
 #include "event.h"
 #include "engine.h"
 #include "console.h"
+#include "recognizer.h"
 
 int processEvent(GameEvent* e) {
   int value = 0;
