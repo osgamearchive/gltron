@@ -125,7 +125,6 @@ tracker_infos(Trackerpacket *packet)
       setCell_wlist ( serverlist, (char *)servers[which].description, strlen(servers[which].description)+1, i, 1 );
       setCell_wlist ( serverlist, (char *)&servers[which].nbplayers, sizeof(int), i, 2 );
       setCell_wlist ( serverlist, (char *)&servers[which].ping, sizeof(int), i, 3 );
-
     }
 }
 
@@ -263,6 +262,7 @@ idleTracker()
 	      //*ping = (int)(pingf);
 	      //(*ping)=(int)(pingf)*1;
 	      printf("ping is %d\n", ping);
+	      /*********************************************************v****/
 	      setCell_wlist ( serverlist, (char *)&ping, sizeof(int), i, 3 );
 	      rebuildindex_wlist(serverlist);
 	    }
@@ -375,14 +375,15 @@ addressToStr( WlistPtr list, int line, int col )
   if( ipaddress == NULL )
     {
       strcpy(str, "N/A");
-    }
+    } else {
 
-  sprintf(str, "%d.%d.%d.%d",
-	 (ntohl(ipaddress->host) & 0xff000000) >> 24,
-	  (ntohl(ipaddress->host) & 0x00ff0000) >> 16,
-	 (ntohl(ipaddress->host) & 0x0000ff00) >> 8,
-	 ntohl(ipaddress->host) & 0x000000ff
- );
+      sprintf(str, "%d.%d.%d.%d",
+	      (ntohl(ipaddress->host) & 0xff000000) >> 24,
+	      (ntohl(ipaddress->host) & 0x00ff0000) >> 16,
+	      (ntohl(ipaddress->host) & 0x0000ff00) >> 8,
+	      ntohl(ipaddress->host) & 0x000000ff
+	      );
+    }
   return str;
 }
 
@@ -396,11 +397,12 @@ intToStr( WlistPtr list, int line, int col )
   if( val == NULL )
     {
       strcpy(str, "N/A");
+    } else {
+
+      //val = (int)(*(list->lines[line][col]));
+
+      sprintf(str, "%d", *val);
     }
-
-  //val = (int)(*(list->lines[line][col]));
-
-  sprintf(str, "%d", *val);
   return str;
 }
 
@@ -413,9 +415,9 @@ charToStr(WlistPtr list, int line, int col )
   if(  list->lines[line][col] == NULL )
     {
       strcpy(str, "N/A");
+    } else {
+      sprintf(str, "%s", list->lines[line][col]);
     }
-
-  sprintf(str, "%s", list->lines[line][col]);
   return str;
 }
 
@@ -423,6 +425,7 @@ void
 focus(WlistPtr list, int line)
 {
   current = line;
+  printf("focus on server %d\n", line);
 }
 
 
@@ -435,6 +438,8 @@ sortit( WlistPtr list, int line, int next )
   a = (int *)(list->lines[line][list->sortcol]);
   b = (int *)(list->lines[next][list->sortcol]);
 
+  if( a == NULL || b == NULL )
+    return 0;
   printf(" comparing %d (%d) and %d (%d) %d\n", *a,line, *b,next, (*a > *b));
   return (*a > *b);
 }
@@ -450,14 +455,15 @@ initTracker()
 
   colDefs = new_colDefs( 4 );
 
-  set_colDef( colDefs, 0, "Address", 10, colors[1], NULL, addressToStr, NULL); 
-  set_colDef( colDefs, 1, "Description", 10, colors[1], NULL, charToStr, NULL); 
-  set_colDef( colDefs, 2, "Players", 10, colors[1], NULL, intToStr, NULL); 
+  set_colDef( colDefs, 0, "Address", 30, colors[1], NULL, addressToStr, NULL); 
+  set_colDef( colDefs, 1, "Description", 40, colors[1], NULL, charToStr, NULL); 
+  set_colDef( colDefs, 2, "Players", 20, colors[1], NULL, intToStr, NULL); 
   set_colDef( colDefs, 3, "Ping", 10, colors[3], NULL, intToStr, sortit); 
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-250,
 			 10, 4, colDefs, 3, focus);
   trackeruse=1;
+  current=-1;
 }
 
 void

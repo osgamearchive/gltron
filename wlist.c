@@ -91,7 +91,7 @@ void
 draw_wlist( Wlist *wlist )
 {
   int h = wlist->height/wlist->nblines;
-  int c = wlist->width/wlist->nbcols;
+  //int c = wlist->width/wlist->nbcols;
   int x, y, s, i, j;
 
 
@@ -129,28 +129,34 @@ draw_wlist( Wlist *wlist )
   y = wlist->y+wlist->height-h/2;
   s = h-10;
 
+  x = wlist->x;
   for( i = 0; i < wlist->nbcols; ++i )
     {
-      x = wlist->x+i*c+10;
+      //x = (wlist->x+i*c+10);
+      if( i != 0  )
+	x += wlist->width*wlist->colDefs[i-1].colsize/100;
       glColor3f(1.0,1.0,1.0);
       glBegin(GL_LINES);
-      glVertex2d(x-10,  y-h/2 );
-      glVertex2d(x-10,  y+h/2 );
+      glVertex2d(x,  (y-h/2) );
+      glVertex2d(x,  (y+h/2) );
       glEnd();
-      drawText(netFtx, x, y-h/2+4, s, wlist->colDefs[i].title);
+      drawText(netFtx, x+10, y-h/2+4, s, wlist->colDefs[i].title);
     }
 
   s-=5;
   //draw Lines
-  for(i=wlist->scroll; i < wlist->scroll+wlist->nblines; ++i )
+  for(i=wlist->scroll; i < wlist->scroll+wlist->nblines-1; ++i )
     {
-      y = wlist->y+wlist->height-(i+1)*h-h/2;
+      y = wlist->y+wlist->height-(i-wlist->scroll+1)*h-h/2;
       if( wlist->lines[i] != NULL )
 	{
+	  x = wlist->x;
 	  //draw columns
 	  for( j=0; j < wlist->nbcols; ++j)
 	    {
-	      x=wlist->x+j*c+10;
+	      //x=wlist->x+j*c+10;	      
+	      if( j != 0 )
+		x += wlist->width*wlist->colDefs[j-1].colsize/100;
 	      if( wlist->colDefs[j].callbacks.drawit != NULL )
 		wlist->colDefs[j].callbacks.drawit(wlist, x, y, wlist->index[i], j);
 
@@ -160,30 +166,33 @@ draw_wlist( Wlist *wlist )
 		  //draw hilight
 		  glColor3f(.1, .1, 0.4);
 		  glBegin(GL_QUADS);	  
-		  glVertex3f(x-9, y+h/2-1, 0.0f);     //top left
+		  glVertex3f(x+1, y+h/2-1, 0.0f);     //top left
 		  if( j == wlist->nbcols-1 )
 		    {
-		      glVertex3f(x+c-11, y+h/2-1, 0.0f);  //top right
-		      glVertex3f(x+c-11, y-h/2+1, 0.0f);  //Bottom right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2-1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y-h/2+1, 0.0f);   //Bottom right
 		    } else {
-		      glVertex3f(x+c-9, y+h/2-1, 0.0f);   //top right
-		      glVertex3f(x+c-9, y-h/2+1, 0.0f);   //Bottom right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2-1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y-h/2+1, 0.0f);   //Bottom right
 		    }
-		  glVertex3f(x-9, y-h/2+1, 0.0f);         //Bottom left
+		  glVertex3f(x+1, y-h/2+1, 0.0f);         //Bottom left
 		  glEnd();
 		  glColor3f(.9, .9, 0.6);
 		} else 
 		  glColor3f(wlist->colDefs[j].color[0], wlist->colDefs[j].color[1], wlist->colDefs[j].color[2] );
 
 	      if( wlist->colDefs[j].callbacks.tostr != NULL )
-		drawText(netFtx, x, y-h/2+7, s, wlist->colDefs[j].callbacks.tostr(wlist,wlist->index[i], j));
+		drawText(netFtx, x+10, y-h/2+7, s, wlist->colDefs[j].callbacks.tostr(wlist,wlist->index[i], j));
 
 	    }
-	  glColor3f(1.0, 1.0, 1.0);
-	  glBegin(GL_LINES);
-	  glVertex2d(wlist->x,  y-h/2 );
-	  glVertex2d(wlist->x+wlist->width,  y-h/2 );
-	  glEnd();
+	  if( i < wlist->scroll+wlist->nblines-2 )
+	    {
+	      glColor3f(1.0, 1.0, 1.0);
+	      glBegin(GL_LINES);
+	      glVertex2d(wlist->x,  y-h/2 );
+	      glVertex2d(wlist->x+wlist->width,  y-h/2 );
+	      glEnd();
+	    }
 	}
     }
 }
@@ -295,18 +304,24 @@ scroll_wlist(Wlist *wlist, int dir)
       else if( wlist->current != 0 )
 	wlist->current--;
       if( wlist->current < wlist->scroll )
-	wlist->scroll--;
+	{
+	  fprintf(stderr, "auto scroll up\n");
+	  wlist->scroll--;
+	}
       break;
     case LIST_SCROLL_DOWN:
       if( wlist->current != wlist->rlines-1 )
 	wlist->current++;
-      if( wlist->current > wlist->scroll+wlist->nblines )
-	wlist->scroll++;
+      if( wlist->current >= (wlist->scroll+wlist->nblines-1) )
+	{
+	  fprintf(stderr, "auto scroll down\n");
+	  wlist->scroll++;
+	}
       break;
     }
   if( wlist->focus != NULL )
     wlist->focus(wlist, wlist->index[wlist->current]);
-  printf("current %d\n",wlist->index[wlist->current]); 
+  printf("current %d\n",wlist->current); 
 }
 int
 getcurrent_wlist( Wlist *wlist )
