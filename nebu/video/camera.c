@@ -4,6 +4,7 @@
 #include "base/nebu_matrix.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 static void doLookAt(const float *cam, const float *target, const float *up) {
   matrix m;
@@ -65,7 +66,7 @@ void nebu_Camera_Roll(nebu_Camera *pCamera, float d) {
 	matrix m;
 	vec3_Sub(&v, &pCamera->vLookAt, &pCamera->vEye);
 	vec3_Normalize(&v, &v);
-	matrixRotationAxis(&m, d * 2 * M_PI / 360.0, &v);
+	matrixRotationAxis(&m, d * 2 * (float)M_PI / 360.0f, &v);
 	vec3_Transform(&pCamera->vUp, &pCamera->vUp, &m);
 }
 
@@ -89,7 +90,7 @@ void nebu_Camera_RotateAroundTarget(nebu_Camera *pCamera,
 	} else {
 		// rotate eye point around up vector through lookAt point
 		vec3 v = vDiff;
-		float fAngle = dx * 2 * M_PI / 360.0;
+		float fAngle = dx * 2 * (float)M_PI / 360.0f;
 		matrix matRotation;
 		matrixRotationAxis(&matRotation, fAngle, &vUp);
 		vec3_Transform(&v, &vDiff, &matRotation);
@@ -102,7 +103,7 @@ void nebu_Camera_RotateAroundTarget(nebu_Camera *pCamera,
 	} else {
 		// rotate eye point around up vector through lookAt point
 		vec3 v = vDiff;
-		float fAngle = dy * 2 * M_PI / 360.0;
+		float fAngle = dy * 2 * (float)M_PI / 360.0f;
 		matrix matRotation;
 		matrixRotationAxis(&matRotation, fAngle, &vRight);
 		vec3_Transform(&v, &vDiff, &matRotation);
@@ -141,5 +142,30 @@ void nebu_Camera_Print(const nebu_Camera *pCamera) {
 	printf("Up: ");
 	vec3_Print(&pCamera->vUp);
 	printf("\n");
+}
+
+nebu_Camera* nebu_Camera_Create(void)
+{
+	nebu_Camera *pCamera = NULL;
+	
+	pCamera = (nebu_Camera*) malloc(sizeof(nebu_Camera));
+	if(!pCamera) return NULL;
+
+	{
+		vec3 vEye = { { 0, 0, 0 } };
+		vec3 vUp = { { 0, 1, 0 } };
+		vec3 vLookAt = { { 0, 0, -1 } };
+		pCamera->vEye = vEye;
+		pCamera->vUp = vUp;
+		pCamera->vLookAt = vLookAt;
+	}
+	return pCamera;
+}
+
+void nebu_Camera_SetupEyeUpLookAt(nebu_Camera *pCamera, vec3 *pEye, vec3 *pUp, vec3 *pLookAt)
+{
+	pCamera->vEye = *pEye;
+	pCamera->vUp = *pUp;
+	pCamera->vLookAt = *pLookAt;
 }
 

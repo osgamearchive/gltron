@@ -127,6 +127,9 @@
 					RelativePath=".\video\2d.c">
 				</File>
 				<File
+					RelativePath=".\video\camera.c">
+				</File>
+				<File
 					RelativePath=".\video\console.c">
 				</File>
 				<File
@@ -140,6 +143,9 @@
 				</File>
 				<File
 					RelativePath=".\video\pixels.c">
+				</File>
+				<File
+					RelativePath=".\video\scene.c">
 				</File>
 				<File
 					RelativePath=".\video\video_system.c">
@@ -340,6 +346,9 @@
 					RelativePath=".\include\video\nebu_2d.h">
 				</File>
 				<File
+					RelativePath=".\include\video\nebu_camera.h">
+				</File>
+				<File
 					RelativePath=".\include\video\nebu_font.h">
 				</File>
 				<File
@@ -361,6 +370,9 @@
 					RelativePath=".\include\video\nebu_renderer_gl.h">
 				</File>
 				<File
+					RelativePath=".\include\video\nebu_scene.h">
+				</File>
+				<File
 					RelativePath=".\include\Nebu_video.h">
 				</File>
 				<File
@@ -377,20 +389,20 @@
 					RelativePath=".\include\filesystem\nebu_file_io.h">
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h">
+					RelativePath=".\include\Nebu_filesystem.h">
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h">
+					RelativePath=".\include\filesystem\nebu_filesystem.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="scripting"
 				Filter="">
 				<File
-					RelativePath=".\include\Nebu_scripting.h">
+					RelativePath=".\include\scripting\nebu_scripting.h">
 				</File>
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h">
+					RelativePath=".\include\Nebu_scripting.h">
 				</File>
 			</Filter>
 		</Filter>
