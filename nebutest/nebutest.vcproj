@@ -83,9 +83,10 @@ echo done copying
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib sdl.lib sdlmain.lib nebu.lib ..\lua\Release\lua.lib"
+				AdditionalDependencies="msvcrt.lib opengl32.lib sdl.lib sdlmain.lib lib3ds.lib glew32.lib ..\lua\Release\lua.lib"
 				OutputFile="$(OutDir)/nebutest.exe"
 				LinkIncremental="1"
+				IgnoreAllDefaultLibraries="TRUE"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
