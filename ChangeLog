@@ -1,12 +1,14 @@
 0.62 to 0.70
 
-- booster
-- wall acceleration
+- New AI that actively tries to cut you off
+- Two new Gameplay modes:
+  Booster (where you can accelerate using a limited 'Turbo' supply), and
+  Wall Acceleration (where you speed up if you get close to an enemy cycles
+  trai)
 - better handling of .ini file (versioning & protection against partly
   written files)
 - simplified GUI
-- new bot AI
-
+- various other bugfixes
 
 0.61 to 0.62
 - better & faster shadows
