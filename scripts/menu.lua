@@ -358,7 +358,7 @@ Menu = {
       labels = { "off", "on" },
       read = function() return settings.playMusic; end,
       values = { 0, 1 },
-      store = function(value) settings.playMusic = value; end
+      store = function(value) settings.playMusic = value; c_update_settings_cache() ; end
    },
    FX = {
       type = MenuC.type.list, caption = "Sound FX",
