@@ -17,17 +17,12 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
 
-dnl Check for glut first and make symlinks, then check for
-dnl SDL and make required symlinks
-
 AC_CHECK_LIB(m, main,, AC_MSG_ERROR(libm is needed))
 AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
 AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(OpenGL is needed))
 AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU should come with OpenGL))
 AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
 
-dnl Tim Peeler <tim@iss.dccc.edu> 2000-10-24 changed to automate linking and
-dnl use fallback glut method
 AC_CHECK_LIB(SDL, main, 
 ${LN_S} -f system_sdl.c system.c ; \
 ${LN_S} -f system_sdl.h system.h ; \
@@ -39,25 +34,23 @@ ${LN_S} -f system_glut.h system.h ; \
 LIBS="$LIBS -lglut", \
 AC_MSG_ERROR(Neither SDL or glut is installed!)))
 
-dnl Tim Peeler <tim@iss.dccc.edu> 2000-10-24 changed to automate linking and
-dnl use fallback mikmod method
-AC_CHECK_LIB(SDL_mixer, main,
-${LN_S} -f sound_sdl.c sound.c ; \
-${LN_S} -f sound_sdl.h sound.h ; \
-CFLAGS="$CFLAGS -DSOUND"; \
-LIBS="$LIBS -lSDL_mixer", 
-AC_CHECK_LIB(mikmod, main,
-${LN_S} -f sound_libmikmod.c sound.c ; \
-${LN_S} -f sound_libmikmod.h sound.h ; \
-CFLAGS="$CFLAGS -DSOUND"; \
-LIBS="$LIBS -lmikmod",
-AC_MSG_ERROR(Neither SDL_mixer nor libmikmod is installed!)))
+if test "x$use_sound" = 1; then
+	AC_CHECK_LIB(SDL_mixer, main,
+	${LN_S} -f sound_sdl.c sound.c ; \
+	${LN_S} -f sound_sdl.h sound.h ; \
+	CFLAGS="$CFLAGS -DSOUND"; \
+	LIBS="$LIBS -lSDL_mixer", 
+	AC_CHECK_LIB(mikmod, main,
+	${LN_S} -f sound_libmikmod.c sound.c ; \
+	${LN_S} -f sound_libmikmod.h sound.h ; \
+	CFLAGS="$CFLAGS -DSOUND"; \
+	LIBS="$LIBS -lmikmod",
+	AC_MSG_ERROR(Neither SDL_mixer nor libmikmod is installed!)))
+fi
 
-dnl AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
 AC_CHECK_LIB(z, main,, AC_MSG_ERROR(libz is needed))
 AC_CHECK_LIB(png, main,, AC_MSG_ERROR(libpng is needed))
 
-dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
 
@@ -142,5 +135,9 @@ AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
 	NETWORK_FILES="network.c system_net.c"
 	AC_SUBST(NETWORK_FILES)
 fi
+
+AC_ARG_ENABLE(sound,
+[ --disable-sound              Dont compile in sound [default=off]],
+   use_sound=$enableval, use_sound=1)
 
 AC_OUTPUT(Makefile)
