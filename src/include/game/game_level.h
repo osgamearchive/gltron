@@ -14,5 +14,6 @@ typedef struct {
 
 void game_FreeLevel(game_level *l);
 game_level* game_CreateLevel(const char *name);
+void game_ScaleLevel(game_level *l, float fSize);
 
 #endif
