@@ -55,6 +55,7 @@ namespace Sound {
     _sample = Sound_NewSample(_rwops, NULL,
 															_system->GetAudioInfo(),
 															_sample_buffersize );
+	fprintf(stdout,"\n\n");
     if(_sample == NULL) {
       fprintf(stderr, "[error] failed loading sample: %s\n", 
 							Sound_GetError());
@@ -147,7 +148,7 @@ namespace Sound {
 			_decoded = (_decoded + count) % _buffersize;
 
 			// check for end of sample, loop
-			if(_sample->flags & ~SOUND_SAMPLEFLAG_CANSEEK) {
+			if(_sample->flags & SOUND_SAMPLEFLAG_ERROR) {
 				// some error has occured, maybe end of sample reached
 #ifndef macintosh
 				SDL_SemWait(_sem);
