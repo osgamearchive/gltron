@@ -1,15 +1,31 @@
 #include "gltron.h"
 
-static Uint32 ping[5]       = {0, 0, 0, 0, 0};
-static Uint32 savedtime     = 0; 
-static int    observerstate = 0;
-//static int    nbpings = 1;
+/**********************************************************************************************
+ *                                                                                            *
+ *  This file is part of gltron project.                                                      *
+ *                                                                                            *
+ *  Main network layer.                                                                       *
+ *                                                                                            *
+ *  Author : Nicolas Deniaud ( nicolas.deniaud@wanadoo.fr )                                   *
+ *                                                                                            *
+ *********************************************************************************************/
 
+//Consts---------------------------------------------------------------------------------------
+static const int chatcolor[4] = {4, 2, 5, 0};
+
+//Globals--------------------------------------------------------------------------------------
+static Uint32 ping[5]       = {0, 0, 0, 0, 0};
+static Uint32 savedtime     = 0;
+static int    observerstate = 0;
+
+//Enums----------------------------------------------------------------------------------------
 enum
   {
     ASKED,         //the turn has been asked to the server
     PREDICTED      //the client has made the turn ( perdiction )    
   };
+
+//Typedefs-------------------------------------------------------------------------------------
 typedef struct Predictedturn *Predictedturn;
 typedef struct Predictedturn {
   int            dir;     //dir turn asked
@@ -25,18 +41,28 @@ typedef struct TurnList {
 
 TurnList *turnlist;
 
+
+//Prototypes------------------------------------------------------------------------------------
 void free_turn(Predictedturn turn);
 
+
+//----------------------------------------------------------------------------------------------
+
+/**
+ *  Make and send the login packet.
+ *  name is the nickname that want to be used in-game.
+ */
 void
 login(char *name)
 {
   int           i=0;
   Packet        packet;
   
-  
   makeping(i);
  
-  for(i=0;i<4;++i)
+  //Prepare slots for all players 'cause if login is successfull, we'll get
+  //all informations about connected users from the server
+  for(i=0; i<MAX_PLAYERS; ++i)
     {
       slots[i].active  = 0;
       slots[i].packet  = HEADER;    
@@ -46,7 +72,7 @@ login(char *name)
 
   packet_type = HEADER;
 
-  if( Net_getmainsock()!=NULL  )
+  if( Net_getmainsock()!= NULL  )
     {
       //Sending welcome to the server.
       //TODO: put gltron version here...
@@ -54,14 +80,23 @@ login(char *name)
       packet.type=LOGIN;
       strcpy(packet.infos.login.version, VERSION);
       strcpy(packet.infos.login.nick, name);
+#ifdef DEBUG
       printf("+ send login\n");
+#endif
       Net_sendpacket(&packet, Net_getmainsock());
+#ifdef DEBUG
       printf("- send login\n");
+#endif
     }
+
+  //Create the net event list
   neteventlist = createNetEventList();
   hasstarted = 0;
 }
 
+/**
+ *  if the connection is lost, we clean the connection and go back to the main menu.
+ */
 void
 connectionLost()
 {
@@ -75,12 +110,19 @@ connectionLost()
   //switchCallbacks(&guiCallbacks);
 }
 
+/**
+ *  Handle the login response
+ */
 void
 do_loginrep(Packet packet)
 {
    makeping(game2->time.current);
+#ifdef DEBUG
    printf("+ login_rep -> ping is %d\n", getping());
-  if( packet.infos.loginrep.accept != 1 )
+#endif
+
+   
+   if( packet.infos.loginrep.accept != 1 ) //If login is refused
     {
       printf("login refused : %s.\n",packet.infos.loginrep.message);
       Net_disconnect();
@@ -89,26 +131,30 @@ do_loginrep(Packet packet)
       changeCallback(&trackerscreenCallbacks, &guiCallbacks);
       return;
     }
+
   isLogged=1;
   me = packet.which;
   slots[me].active=1;
+#ifdef DEBUG
   printf("logged ( slot %d )...\n%s\n", me, packet.infos.loginrep.message);
-  //sprintf(server_message, "%s\n", packet.infos.loginrep.message);
+#endif
+
   strcpy(server_message, packet.infos.loginrep.message);
   updateUsersListData();
   nbUsers++;
   switchCallbacks(&netPregameCallbacks);
-  //changeCallback(&netPregameCallbacks, &trackerscreenCallbacks);
 }
 
-
+/**
+ *  Handle server infos
+ */
 void
 do_serverinfo(Packet packet)
 {
-  int lastserverstate = serverstate;
-  //Packet rep;
-  Data *data;
+  int    lastserverstate = serverstate;
+  Data  *data;
 
+  //We get current number of players connected
   nbUsers = packet.infos.serverinfo.players;
 
   //check if we changed state
@@ -131,10 +177,15 @@ do_serverinfo(Packet packet)
 	    }
 	  break;
 	case gameState:
-	  //game->players = game2->players;
+	  //The game as started, we 'd be an observer
 	  game2->players=nbUsers;
+
 	  applyGameInfo();
+
+#ifdef DEBUG
 	  printf("time is %d\n", game2->time.current);
+#endif
+
 	  if( ! hasstarted )
 	    {
 	      hasstarted = 1;
@@ -164,25 +215,15 @@ do_serverinfo(Packet packet)
 	      data->trail_height = 0;
 	      data->exp_radius = EXP_RADIUS_MAX;
 	    }
+
 	  game2->mode = GAME_NETWORK_PLAY;
-/* 	  if( slots[me].isMaster == 1 ) */
-/* 	    { */
-/* 	      printf("->  send confirmation... %d\n", ping); */
-/* 	      rep.which=me; */
-/* 	      rep.type=ACTION; */
-/* 	      rep.infos.action.type=CONFSTART; */
-/* 	      rep.infos.action.which=ping; */
-/* 	       time server get ping is ping/2 and it needs to get */
-/* 		  ping/2, so 2*ping/2=ping                           */
-/* 	      Net_sendpacket(&rep, Net_getmainsock()); */
-/* 	    } // I used that for synchronization. */
-      //ping       = 0;
 	  ping[0] = slots[me].ping;
-	  //nbpings = 1;
 	  savedtime  = 0;
 	  game2->time.current=0;
-	  
+
+#ifdef DEBUG	  
 	  printf("starting game at%d\n", SystemGetElapsedTime());
+#endif
 	  
 	  switchCallbacks(&pauseCallbacks);
 	  break;
@@ -190,6 +231,9 @@ do_serverinfo(Packet packet)
     }
 }
 
+/**
+ *  Handle users info
+ */
 void
 do_userinfo(Packet packet)
 {
@@ -199,13 +243,13 @@ do_userinfo(Packet packet)
 
   if( slots[which].active == -1 )
     {
+#ifdef DEBUG
       printf("%s join\n", packet.infos.userinfo.nick);
+#endif
       sprintf(mesg, "%s join\n", packet.infos.userinfo.nick);
-      //printf("%s", mesg);
       if( serverstate == preGameState )
-	{
-	  //drawMessage(mesg);	  
-	  insert_wtext(pregame.pregametext, mesg, 8);
+	{ 
+	  insert_wtext(pregame.pregametext, mesg, 8); 
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);
@@ -224,8 +268,10 @@ do_userinfo(Packet packet)
       if( slots[which].active == 1 )
 	{
 	  sprintf(mesg, "logged...\n");
+#ifdef DEBUG
 	  printf("logged...\n");
-	  insert_wtext(pregame.pregametext, mesg, 3);
+#endif
+	  insert_wtext(pregame.pregametext, mesg, 3); 
 	}
 
       //if we are the master activate controls
@@ -248,7 +294,9 @@ do_userinfo(Packet packet)
 }
 
 
-static int chatcolor[4] = {4, 2, 5, 0};
+/**
+ *  Handle a chat packet
+ */
 void
 do_chat( Packet packet )
 {
@@ -258,26 +306,31 @@ do_chat( Packet packet )
     {
       if( packet.which == me )
       {
+#ifdef DEBUG
 	printf("> %s\n", packet.infos.chat.mesg);
+#endif
 	sprintf(mesg, "> %s\n", packet.infos.chat.mesg);	  
       } else {
+#ifdef DEBUG
 	printf("%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
+#endif
 	sprintf(mesg, "%s > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       }
       if( serverstate == gameState )	
 	consoleAddLine(mesg);
-      else
+      else {
 	insert_wtext(pregame.pregametext, mesg, chatcolor[packet.which]);
-	  
-	  //drawChat(mesg);
+      }
     } else {
       printf("[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
       sprintf(mesg, "[ %s ] > %s\n", slots[packet.which].name, packet.infos.chat.mesg);
-      insert_wtext(pregame.pregametext, mesg, 75);
-      //drawChat(mesg);
+      insert_wtext(pregame.pregametext, mesg, 75);  
     }
 }
 
+/**
+ *  Server says that an AI player will play with us, just add it to our slots
+ */
 void
 do_aiplayer(Packet packet)
 {
@@ -299,6 +352,9 @@ do_aiplayer(Packet packet)
     }
 }
 
+/**
+ *  Handle an action
+ */
 void
 do_action(Packet packet)
 {
@@ -316,13 +372,14 @@ do_action(Packet packet)
       slots[packet.infos.action.which].active=0;
       //slots[packet.infos.action.which].player=-1;
       sprintf(mesg, "%s part\n", slots[packet.infos.action.which].name);
+#ifdef DEBUG
       printf("%s", mesg);
+#endif
 
       if( serverstate == preGameState )
 	{
-	  insert_wtext(pregame.pregametext, mesg, 56);
+	  insert_wtext(pregame.pregametext, mesg, 56);   
 	  updateUsersListData();
-	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);
@@ -342,13 +399,14 @@ do_action(Packet packet)
 	    }
 	}
       sprintf(mesg, "%s is new Game Master\n", slots[packet.infos.action.which].name);
+#ifdef DEBUG
       printf("%s", mesg);
+#endif
 
       if( serverstate == preGameState )
 	{
-	  insert_wtext(pregame.pregametext, mesg, 67);
+	  insert_wtext(pregame.pregametext, mesg, 67);  
 	  updateUsersListData();
-	  //drawMessage(mesg);
 	} else if ( serverstate == gameState )
 	  {
 	    consoleAddLine(mesg);
@@ -364,7 +422,7 @@ do_action(Packet packet)
 /* 	switchCallbacks(&netWaitCallbacks); */
       observerstate = 1;
       break;
-    case PING:
+    case PING: //Only in pregame
       //Need to reply to ping
       packet.which=me;
       Net_sendpacket(&packet, Net_getmainsock());
@@ -376,6 +434,9 @@ do_action(Packet packet)
     }
 }
 
+/**
+ *  Handle net rules. That is specific net rules.
+ */
 void
 do_netrules(Packet packet)
 {
@@ -385,14 +446,16 @@ do_netrules(Packet packet)
   packet.type      = NETRULES;
   netrulenbwins    = packet.infos.netrules.nbWins;
   netruletime      = packet.infos.netrules.time;
+#ifdef DEBUG
   printf("Net rules : %d %d\n", packet.infos.netrules.nbWins, packet.infos.netrules.time);
+#endif
   
   //Set Here the controls
   if( netruletime != 0 )    
     gametype = 1;
   else 
     gametype = 0;
-      select_wpopmenu(pregame.gameType, gametype );
+  select_wpopmenu(pregame.gameType, gametype );
     
   switch( gametype )
     {
@@ -405,17 +468,25 @@ do_netrules(Packet packet)
     }
 }
 
+/**
+ *  Handle game rules. And init game datas and struct.
+ */
 void
 do_gamerules(Packet packet)
 {
   int   i;
 
+#ifdef DEBUG
   if( slots[me].isMaster == 1 )
     {
       makeping(game2->time.current);
-      printf("ping answer is%d\n", getping());
+      printf("ping answer is %d\n", getping());
     }
+
   printf("getting games rules...\n");
+#endif
+
+
   //TODO: clean all this ugly code, and do a safe clean init function.
   game->settings->ai_player1  = ( slots[getWhich(0)].active >= 1 ) ? 0 : 2;
   game->settings->ai_player2  = ( slots[getWhich(1)].active >= 1 ) ? 0 : 2;
@@ -430,17 +501,14 @@ do_gamerules(Packet packet)
   for(i=0; i<MAX_PLAYERS;  ++i)
     {
       game->player[i].ai->active = ( slots[getWhich(i)].active>=1 ) ? 0 : 2;
+#ifdef DEBUG
       printf("activating player %d on slot %d : %d\n", i, getWhich(i), game->player[i].ai->active);
+#endif
     }
 
 
-  //game->players=game2->players;
-  //game2->rules.speed          = packet.infos.gamerules.speed;
   game->settings->current_speed = packet.infos.gamerules.speed;
-
   game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
-  
-  //game->settings->eraseCrashed = packet.infos.gamerules.eraseCrashed;
   game->settings->game_speed  = packet.infos.gamerules.gamespeed;
   game->settings->grid_size   = packet.infos.gamerules.grid_size;
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
@@ -453,37 +521,56 @@ do_gamerules(Packet packet)
 
   initData();
   game2->time                 = packet.infos.gamerules.time;
+
+#ifdef DEBUG
   printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
   printf("initData with game speed = %d and so speed is %f\n", game->settings->game_speed, game->settings->current_speed );
+#endif
 }
 
+/**
+ *  Handle start pos ( server says us where we start )
+ */
 void
 do_startpos(Packet packet)
 {
   int  i, j;
 
  //Startpos
+#ifdef DEBUG
   printf("+ %d players, getting start positions \n", game2->players);
-  game2->startPositions = ( int *)malloc(3*MAX_PLAYERS *sizeof(int));
+#endif
+
+  game2->startPositions = ( int * )malloc( 3 * MAX_PLAYERS * sizeof( int ) );
+
   for(i=0; i<MAX_PLAYERS; ++i)
     {
       j = getPlayer(i);
+#ifdef DEBUG
       printf("get startpos server %d <-> client %d\n", i, j);
+#endif
       if( j!= -1 && slots[j].active >= 1 )
 	{
 	  game2->startPositions[3*i+0]=packet.infos.startpos.startPos[3*j+0];
 	  game2->startPositions[3*i+1]=packet.infos.startpos.startPos[3*j+1];
 	  game2->startPositions[3*i+2]=packet.infos.startpos.startPos[3*j+2];
+#ifdef DEBUG
 	  printf("\n\npos %d %d %d for player %d\n\n\n", game2->startPositions[3*i+0],
 		 game2->startPositions[3*i+1],
 		 game2->startPositions[3*i+2], i);
+#endif
 	}
     }
 }
 
+
+/**
+ *  Handle a packet Event
+ */
 void
 do_event(Packet packet)
 {
+#ifdef DEBUG
   if( packet.infos.event.event.player == me )
     {
       if( packet.infos.event.event.type != EVENT_CRASH &&  packet.infos.event.event.type != EVENT_STOP)
@@ -491,12 +578,93 @@ do_event(Packet packet)
 	  makeping(game2->time.current);
 	}
     }
+#endif
+
+  //Add to poll
   addNetEvent(&packet.infos.event.event);
+
+#ifdef DEBUG
   fprintf(stderr, "get event: %d %d %d %d %d ( current time %d )\n", packet.infos.event.event.type,
 	  packet.infos.event.event.player, packet.infos.event.event.x,
 	  packet.infos.event.event.y, packet.infos.event.event.timestamp, game2->time.current);
+#endif
 }
 
+
+int    synchCount    = 0;
+int    nbSynch       = 0;
+
+typedef struct {
+  int lag;
+  int phase;
+} Synch;
+
+static Synch synch;
+
+static void
+clear_synch() {
+  synch.lag   = 0;
+  synch.phase = 0;
+}
+void
+do_synch( Packet packet )
+{
+  Packet rep;
+  char   str[2];
+  int    now;
+
+  if ( nbSynch  >= 5 )
+    {
+      game2->time.current = SystemGetElapsedTime();
+      rep.infos.synch.t1 = packet.infos.synch.t1;
+      rep.infos.synch.t2 = game2->time.current;      
+      return;
+    }
+  
+  if( synchCount  >= 3 )
+    {
+      sprintf(str, "%d", 5 - nbSynch );
+      insert_wtext(pregame.pregametext, str, 3);
+      clear_synch();
+      nbSynch++;
+      
+    } else {
+      switch( synch.phase ) {
+      case 0:
+	game2->time.current = SystemGetElapsedTime();
+	rep.infos.synch.t1  = packet.infos.synch.t1;
+	rep.infos.synch.t2  = game2->time.current ;
+	break;
+      case 1:
+	now =  SystemGetElapsedTime() - game2->time.current;
+	synch.lag = ( now - packet.infos.synch.t2 ) / 2.0;
+	game2->time.current -= synch.lag;
+	now +=  synch.lag;
+	rep.infos.synch.t1  = ( now - packet.infos.synch.t1 ) / 2.0;
+	rep.infos.synch.t2  = now;
+	break;
+      case 2:
+	game2->time.current -= packet.infos.synch.t1;
+	break;
+      default:
+	printf("synch error");
+	break;
+      }
+      synch.phase++;
+      
+      //Start Synch
+      rep.which                        = me;
+      rep.type                         = SYNCH;
+     
+      
+      Net_sendpacket(&rep, Net_getmainsock());
+      synchCount++;
+    }
+}
+
+/**
+ *  Handle scores : it means game is finished too.
+ */
 void
 do_score(Packet packet)
 {
@@ -510,23 +678,32 @@ do_score(Packet packet)
   serverstate = gameState;
 }
 
+/**
+ *  Prepare game rules to show in pregame the settings that server has.
+ */
 void
 do_gameset( Packet packet )
 {
+#ifdef DEBUG
   printf("getting gameset : %d %d %d\n", packet.infos.gameset.gamespeed,
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
-  game->settings->game_speed  = packet.infos.gameset.gamespeed;
-  game2->rules.eraseCrashed   = packet.infos.gameset.eraseCrashed;
-  game->settings->erase_crashed   = packet.infos.gameset.eraseCrashed;
-  game->settings->arena_size  = packet.infos.gameset.arena_size;
-  game->settings->ai_level    = packet.infos.gameset.ai_level;
+#endif
+
+  game->settings->game_speed       = packet.infos.gameset.gamespeed;
+  game2->rules.eraseCrashed        = packet.infos.gameset.eraseCrashed;
+  game->settings->erase_crashed    = packet.infos.gameset.eraseCrashed;
+  game->settings->arena_size       = packet.infos.gameset.arena_size;
+  game->settings->ai_level         = packet.infos.gameset.ai_level;
   select_wpopmenu(pregame.speed, game->settings->game_speed );
   select_wpopmenu(pregame.size,  game->settings->arena_size );
   select_wpopmenu(pregame.level, game->settings->ai_level );
   set_wcheckbox(pregame.erase,   game2->rules.eraseCrashed );
 }
 
+/**
+ *  get a ping packet. Only in pregame.
+ */
 void
 do_playersping( Packet packet )
 {
@@ -576,6 +753,9 @@ do_preGameState( Packet packet )
     case PLAYERSPING:
       do_playersping(packet);
       break;
+    case SYNCH:
+      do_synch(packet);
+      break;
     case ACTION:
       do_action(packet);
       break;
@@ -615,79 +795,43 @@ do_gameState( Packet packet )
     }
 }
 
-
+/**
+ *  Handle datas from server
+ */
 void
 handleServer()
 {
   Packet packet;
   
-  //makeping(0);
   //Get the packet...
   if( Net_receivepacket(&packet, Net_getmainsock(), me, packet_type, slots) != 0 )
     {
-      //Connection perdu
       connectionLost();
       return;
     }
   if( packet_type == HEADER )
     {
       packet_type = slots[me].packet;
-      printf("recieve a header at %d\n", game2->time.current);
-      //makeping(1);
-      //printf("## handleserver took %d ms\n", getping());
       return;
     }
   
   packet_type = slots[me].packet;
 
+#ifdef DEBUG
   printf("recieve a packet. Type: %d. Serverstate: %d.\n", packet.type, serverstate);
-  switch( serverstate )
-    {
-    case preGameState:
-      do_preGameState(packet);
-      break;
-    case gameState:
-      do_gameState(packet);
-      break;
-    default:
-      fprintf(stderr, "Unknown server state %d\n", serverstate);
-    }  
-  //makeping(1);
-  //printf("## handleserver took %d ms\n", getping());
-}  
-
-#ifdef USEUDP
-void
-handleUDP()
-{
-  Packet **packets;
-  Packet packet;
-
-  packets = ( Packet ** ) malloc(sizeof(Packet *));
-
-  //Get the packet...
-  if( Net_receiveudppacket(packets, Net_getudpsock()) != 0 )
-    {
-      //Connection perdu
-      connectionLost();
-      return;
-    }
-  packet = *(packets[0]);
-
-  printf("recieve a udp packet. Type: %d. Serverstate: %d.\n", packet.type, serverstate);
-  switch( serverstate )
-    {
-    case preGameState:
-      do_preGameState(packet);
-      break;
-    case gameState:
-      do_gameState(packet);
-      break;
-    default:
-      fprintf(stderr, "Unknown server state %d\n", serverstate);
-    }  
-}
 #endif
+  switch( serverstate )
+    {
+    case preGameState:
+      do_preGameState(packet);
+      break;
+    case gameState:
+      do_gameState(packet);
+      break;
+    default:
+      fprintf(stderr, "Unknown server state %d\n", serverstate);
+    } 
+}  
 
 int
 getping()
@@ -701,16 +845,12 @@ makeping(int time)
   if( savedtime == 0 )
     {
       savedtime = SystemGetElapsedTime();
-      //ping = 0;
     } else {
-      /* ping += SystemGetElapsedTime() - savedtime; */
-/*       ++nbpings; */
       ping[4]=ping[3];
       ping[3]=ping[2];
       ping[2]=ping[1];
       ping[1]=ping[0];
       ping[0] = SystemGetElapsedTime() - savedtime;
-      //nbpings=1;
       savedtime=0;
     }
 }
@@ -754,7 +894,9 @@ idleTurns(  )
     {
       //find first turn to predict
       while( turn != NULL  ) {
+#ifdef DEBUG
 	printf("turn status is %s ( %d / %d )\n", (turn->statut == PREDICTED)? "PREDICTED" : "ASKED", game2->time.current - turn->time, getping());
+#endif
 	if( turn->statut == ASKED )
 	  break;
 	turn=turn->next;
@@ -765,10 +907,12 @@ idleTurns(  )
       if( (game2->time.current - turn->time) >= (getping()/2) )
 	{
 	  turn->statut = PREDICTED;
+#ifdef DEBUG
 	  printf("creating turn... at %d\n", game2->time.current);
 	  printf("predicted pos is: %f, %f\n", 
 		     game->player[0].data->posx,
 		     game->player[0].data->posy);
+#endif
 	  e = (GameEvent*) malloc(sizeof(GameEvent));
 	  switch(turn->dir) {
 	  case TURN_LEFT: e->type = EVENT_TURN_LEFT; break;
@@ -793,15 +937,20 @@ undoTurn(int x, int y, int time)
   int              nbPredictedTurn;
   int              i;
 
+#ifdef DEBUG
   printf("undoTurn pos x=%d, y=%d at time=%d\n", x, y, time);
   printf("current pos x=%d, y=%d at time=%d\n", game->player[0].data->iposx, game->player[0].data->iposy, game2->time.current);
+#endif
 
   turn = turnlist->head;
   if( turn == NULL )
     return 0;
 
   nbPredictedTurn = get_size_predictedturn();
+
+#ifdef DEBUG
   printf("nbPredictedTurn %d\n", nbPredictedTurn);
+#endif
 
   //turn are ordered so it's 
 
@@ -834,12 +983,18 @@ undoTurn(int x, int y, int time)
 	  //cur = game->player[0].data->trail-i--;
 	  cur = old+1;
 
+#ifdef DEBUG
 	  printf("diff time is %d old->sx %d old->sy %d\n", next->time-aux->time,
 		 old->sx, old->sy);
 	  printf("change old->ex %d old->ey %d to", old->ex, old->ey);
+#endif
+
 	  old->ex=(next->time-aux->time)*game->player[0].data->speed*dirsX[ aux->rdir ]/100+old->sx;
 	  old->ey=(next->time-aux->time)*game->player[0].data->speed*dirsY[ aux->rdir ]/100+old->sy;
+
+#ifdef DEBUG
 	  printf(" old->ex %d old->ey %d\n", old->ex, old->ey);
+#endif
 	  cur->sx=old->ex;
 	  cur->sy=old->ey;
 	  aux=next;
@@ -850,7 +1005,9 @@ undoTurn(int x, int y, int time)
   //Changing position of cycle
   ping=getping();
 
+#ifdef DEBUG
   printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",time+ping/2, time, (time+ping/2), (ping/2)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
+#endif
 
   game->player[0].data->posx=(ping/2)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+cur->sx;
   
@@ -859,13 +1016,52 @@ undoTurn(int x, int y, int time)
   game->player[0].data->iposx=game->player[0].data->posx;
   game->player[0].data->iposy=game->player[0].data->posy;
 
+#ifdef DEBUG
   printf("new pos is: %f, %f\n",  
 	 game->player[0].data->posx,
 	 game->player[0].data->posy);
+#endif
 
   //Free this turn!
   free_turn(turn);
   return 1;
+}
+
+void
+correctTurn( GameEvent *e )
+{
+  int lag = game2->time.current - e->timestamp;
+  float chge;
+  line             *old, *cur;
+
+  printf("current pos x=%d, y=%d at time=%d\n", game->player[e->player].data->iposx, game->player[e->player].data->iposy, game2->time.current);
+
+  printf("player %d, lag = %d\n", e->player, lag);
+
+  chge = lag * game->player[e->player].data->speed / 100;
+  
+  game->player[e->player].data->posx += chge * ( dirsX[ game->player[e->player].data->dir] - dirsX[ game->player[e->player].data->last_dir] );
+  
+  game->player[e->player].data->posy += chge * ( dirsY[ game->player[e->player].data->dir] - dirsY[ game->player[e->player].data->last_dir] );
+	       
+  game->player[e->player].data->iposx = game->player[e->player].data->posx;
+  game->player[e->player].data->iposy = game->player[e->player].data->posy;
+
+  old = game->player[e->player].data->trail-1;
+  old->ex = ( dirsY[ game->player[e->player].data->dir] ) ? game->player[e->player].data->iposx : old->ex  ;
+  old->ey = ( dirsX[ game->player[e->player].data->dir] ) ? game->player[e->player].data->iposy : old->ey  ;
+ 
+	  
+  cur = game->player[e->player].data->trail;
+  cur->sx = game->player[e->player].data->iposx;
+  cur->sy = game->player[e->player].data->iposy;
+
+
+  printf("new pos is: %f, %f\n",  
+	 game->player[e->player].data->posx,
+	 game->player[e->player].data->posy);
+
+
 }
 
 void
@@ -949,7 +1145,9 @@ get_size_predictedturn()
 
   while( turn )
     {
+#ifdef DEBUG
       printf("turn status is %s\n", (turn->statut == PREDICTED)? "PREDICTED" : "ASKED");
+#endif
       if( turn->statut == PREDICTED )
 	size++; 
       turn=turn->next;

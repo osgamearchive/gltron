@@ -568,9 +568,19 @@ extern int    timeout;
 extern int    hasstarted;
 extern char   server_message[255];
 extern Netscores         netscores;
+extern int nbSynch;
+extern int synchCount;
+
 
 /* extern Wtext    *pregametext; */
 /* extern Wintext  *inpregametext; */
+
+//Define controls of screen
+typedef struct TrackerControls {
+  WrootControl *trackerControls;
+  Wlist        *serverlist;
+  Wstatictext  *servertext;
+} TrackerControls;
 
 
 typedef struct PregameControls {
@@ -586,16 +596,8 @@ typedef struct PregameControls {
   Wpopmenu     *level;
   Wbutton      *start;
 } PregameControls;
-/* static Wlist        *userslist = NULL; */
-/* static WrootControl *pregameControls = NULL; */
-/* static Wpopmenu     *gameType   = NULL; */
-/* static Wpopmenu     *gameRule   = NULL; */
 
-/* static Wpopmenu     *speed      = NULL; */
-/* static Wpopmenu     *size       = NULL; */
-/* static Wpopmenu     *level      = NULL; */
-
-
+extern TrackerControls tracker;
 extern PregameControls pregame;
 
 extern void  handleServer      ( void );
@@ -616,6 +618,7 @@ extern void  freeTurnList      ( void );
 extern void  doPredictedTurn   ( int, int );
 extern int   get_size_predictedturn();
 extern int   undoTurn          ( int, int, int );
+extern void  correctTurn       ( GameEvent *e );
 extern int   tracker_connect();
 extern int   trackeruse;
 extern void setconnection(char *server, char *port);

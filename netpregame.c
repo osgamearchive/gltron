@@ -237,10 +237,12 @@ handlecommand(char *command, char *params)
 	}
       break;
     case 'h': //print help
-      insert_wtext(pregame.pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\na : add ai player ( nb ai player )\nl : change ai level ( 0 to 3)\n\n", 0);
+      insert_wtext(pregame.pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\na : add ai player ( nb ai player )\nl : change ai level ( 0 to 3)\n\n", 0);     
+      //      set_wscrollbar(pregame.scrolltext, pregame.pregametext->rLines);
       break;
     default:
-      insert_wtext(pregame.pregametext, "unknown command\ntype /h for help\n", 0);
+      insert_wtext(pregame.pregametext, "unknown command\ntype /h for help\n", 0);   
+      //      set_wscrollbar(pregame.scrolltext, pregame.pregametext->rLines);
       break;
     }
 }
@@ -260,8 +262,10 @@ keyboardreadingreturn(char *buff)
     {
       if( strlen(command) == 1 )
 	handlecommand(command, params);
-      else
-	insert_wtext(pregame.pregametext, "unknown command\ntype /h for help\n", 0);
+      else {
+	insert_wtext(pregame.pregametext, "unknown command\ntype /h for help\n", 0);   
+	//	set_wscrollbar(pregame.scrolltext, pregame.pregametext->rLines);
+      }
 
       //strcpy(buff, "");
       //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
@@ -750,6 +754,11 @@ void changeLevel( Wpopmenu *wpopmenu )
 
 }
 
+/* void scrollText( Wscrollbar *wscrollbar) */
+/* { */
+
+/* } */
+
 void eraseAction( Wcheckbox *wcheckbox )
 {
   Packet packet;
@@ -829,9 +838,17 @@ void initPregame() {
   height    = 74*game->screen->vp_h /100;
   
   pregame.pregametext = new_wtext(width, height, top_left_x, top_left_y, 20);
-  insert_wtext(pregame.pregametext, "connected...\n", 3);
-  insert_wtext(pregame.pregametext, server_message, 7);
   newControl(pregame.pregameControls, (Wptr)pregame.pregametext, WoutputText);
+
+  //The scroll bar
+  //  pregame.scrolltext = new_wscrollbar(top_left_x + width-20, top_left_y - height + 40, 10, height - 30, 0, 20, scrollText);
+  //  newControl(pregame.pregameControls, (Wptr)pregame.scrolltext, WscrollBar);
+
+
+  insert_wtext(pregame.pregametext, "connected...\n", 3);   
+  //  set_wscrollbar(pregame.scrolltext, pregame.pregametext->rLines);
+  insert_wtext(pregame.pregametext, server_message, 7);   
+  //  set_wscrollbar(pregame.scrolltext, pregame.pregametext->rLines);
 
   //make position relative to screen size in percent
   top_left_x = 3*game->screen->vp_w /100 ;

@@ -118,10 +118,12 @@ getNetEvent()
   cell = neteventlist->head;
   neteventlist->head = cell->next;
   *e= cell->event;
+#ifdef DEBUG
   printf("current pos is %d %d %d time is %d\n", game->player[e->player].data->iposx,
 	 game->player[e->player].data->iposy,
 	 game->player[e->player].data->dir,
 	 game2->time.current);
+#endif
   free(cell);
   return e;
 }

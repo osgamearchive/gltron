@@ -12,10 +12,29 @@ static int    starting      = 0;
 static Uint32 starttime     = 0;
 static int    timetostart   = 0;
 static int    timeserver    = 0;
-
+static int    synchCount    = 0;
+static int    nbSynch       = 0;
 
 static int  getping();
 static void makeping();
+
+typedef struct {
+  int lag;
+  int phase;
+} Synch;
+
+static Synch synch[MAX_PLAYERS];
+
+static void
+clear_synch() {
+  int i;
+
+  for(i=0; i< MAX_PLAYERS; ++i)
+    {
+      synch[i].lag   = 0;
+      synch[i].phase = 0;
+    }
+}
 
 void
 start_server()
@@ -579,52 +598,26 @@ do_startgame( int which, Packet packet )
 	  Net_sendpacket(&rep, slots[i].sock);
 	  Net_sendpacket(&rep2, slots[i].sock);
 	}
-    }  
-  slowest=0;
-  //find slowest ping
+    }
+
+  //Start Synch
+  clear_synch();
+  game2->time.current = SDL_GetTicks();
+  rep.which                        = SERVERID;
+  rep.type                         = SYNCH;
+  rep.infos.synch.t1               = 0;
+  rep.infos.synch.t2               = ~0L;
+
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if (slots[i].active == 1)
+      if( slots[i].active == 1 )
 	{
-	  //printf("get i=%d %d < %d\n", i, SDLNet_Read16(&slots[i].ping), slowest );
-	  if( slots[i].ping > slowest ){
-	    slowest = slots[i].ping;
-	  }
+	  Net_sendpacket(&rep, slots[i].sock);
 	}
     }
-  
-  
-  printf("slowest ping : %d\n", slowest);
-  starting=1;
-  timetostart=-slowest/2;
-  starttime = SystemGetElapsedTime();
+  synchCount = 1;
+  nbSynch    = 1;
 
-  //Send a change state	  
-/*   sState = gameState; */
-/*   rep.which=SERVERID; */
-/*   rep.type =SERVERINFO; */
-/*   rep.infos.serverinfo.serverstate = sState; */
-/*   rep.infos.serverinfo.players     = nbUsers; // may be game2->players? */
- 
-/*   for(i=0; i<MAX_PLAYERS; ++i) */
-/*     { */
-/*       if( slots[i].active == 1 ) */
-/* 	{ */
-/* 	  if( slots[i].isMaster == 1 ) */
-/* 	    makeping(); */
-/* 	  Net_sendpacket(&rep, slots[i].sock); */
-/* 	} */
-/*     } */
-  /**
-  if( ! hasstarted )
-    hasstarted = 1;
-  game2->events.next = NULL;
-  game2->mode = GAME_SINGLE;
-  printf("starting game with %d players\n", game->players); 
-  printf("- do_startgame\n");
-  printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
-	 game->player[0].data->iposy, game->player[0].data->dir);
-  **/
 }
 
 void
@@ -889,6 +882,85 @@ do_ailevel( int which, Packet packet )
 
 }
 
+void
+do_synch( int which, Packet packet )
+{
+  Packet rep;
+  int    i;
+
+  if ( nbSynch / nbUsers >= 5 )
+    {
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  if( slots[i].active == 1 )
+	    {
+	      Net_sendpacket(&rep, slots[i].sock);
+	    }
+	}
+      sState = gameState;
+      rep.which=SERVERID;
+      rep.type =SERVERINFO;
+      rep.infos.serverinfo.serverstate = sState;
+      rep.infos.serverinfo.players     = nbUsers;
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  if( (slots[i].active == 1) )
+	    {
+	      slots[i].hasstarted=1;
+	      //send him signal to start
+	      Net_sendpacket(&rep, slots[i].sock);
+	    } 
+	}
+      game2->time.offset    = SystemGetElapsedTime();
+      
+      if( ! hasstarted )
+	{
+	  timeout           = SystemGetElapsedTime();
+	  hasstarted = 1;
+	}
+      
+      game2->events.next = NULL;
+      game2->mode = GAME_SINGLE;
+      return;
+    }
+  
+  if( synchCount / nbUsers >= 3 )
+    {
+      clear_synch();
+      game2->time.current = SDL_GetTicks();
+      rep.which                        = SERVERID;
+      rep.type                         = SYNCH;
+      rep.infos.synch.t1               = 0;
+      rep.infos.synch.t2               = ~0L;
+      synchCount = 1;
+      nbSynch++;
+      
+    } else {
+      switch( synch[ packet.which ].phase ) {
+      case 0:
+	synch[packet.which].lag = ( ( SystemGetElapsedTime() -  game2->time.current ) - packet.infos.synch.t1 ) / 2;	
+	rep.infos.synch.t2               = packet.infos.synch.t2;
+	break;
+      case 1:
+	synch[packet.which].lag += packet.infos.synch.t1;
+	rep.infos.synch.t2               = ( ( SystemGetElapsedTime() -  game2->time.current ) - packet.infos.synch.t1 ) / 2 ;
+	break;
+      default:
+	printf("synch error");
+	break;
+      }
+      synch[ packet.which ].phase++;
+      //Start Synch
+      rep.which                        = SERVERID;
+      rep.type                         = SYNCH;
+      rep.infos.synch.t1               = SystemGetElapsedTime() - game2->time.current + synch[packet.which].lag;
+     
+      
+      Net_sendpacket(&rep, slots[which].sock);
+      synchCount++;
+    }
+}
+
 
 void
 do_pingrep( int which, Packet packet )
@@ -990,6 +1062,9 @@ do_preGameState( int which, Packet packet )
       break;
     case ACTION:
       do_action(which, packet);
+      break;
+    case SYNCH:
+      do_synch(which, packet);
       break;
     default:
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);

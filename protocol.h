@@ -81,6 +81,7 @@ typedef enum packettype
     SNAPSHOT,                //Snapshot ( quite same as EVENT )
     EVENT,                   //Event
     PLAYERSPING,             //ping of players
+    SYNCH,                   //make syncnronisation
     ACTION                   //This is a simple action.
   } PacketType;
 
@@ -155,6 +156,10 @@ typedef struct packet {
       Sint16    type;        //Which action?
       Sint16    which;       //To which if necessary.
     } action;
+    struct {
+      Sint32    t1;         //Current Time
+      Sint32    t2;         //Old time
+    } synch;
   } infos;
 } Packet;
 

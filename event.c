@@ -5,8 +5,10 @@ int processEvent(GameEvent* e) {
   Data *data;
 
 #ifdef __NETWORK__
+#ifdef DEBUG
   if( game2->mode == GAME_NETWORK_PLAY )
     printf("process event ( current time %d )\n", game2->time.current);
+#endif
 
 
   if(game2->mode == GAME_NETWORK_RECORD) {
@@ -21,6 +23,9 @@ int processEvent(GameEvent* e) {
       data->iposy = e->y;
       data->turn = TURN_LEFT;
       doTurn(data, e->timestamp);
+#ifdef __NETWORK__
+      correctTurn(e);
+#endif
     }
     break;
   case EVENT_TURN_RIGHT:
@@ -30,6 +35,9 @@ int processEvent(GameEvent* e) {
       data->iposy = e->y;
       data->turn = TURN_RIGHT;
       doTurn(data, e->timestamp);
+#ifdef __NETWORK__
+      correctTurn(e);
+#endif
     }
     break;
   case EVENT_CRASH: 
@@ -192,10 +200,6 @@ void idleGame( void ) {
 	{
 	  if( sockstat & tcpsockready )
 	    handleServer();
-#ifdef USEUDP
-	  if( sockstat & udpsockready )
-	    printf("getting udp\n");
-#endif
 	}
     }
 #endif

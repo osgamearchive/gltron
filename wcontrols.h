@@ -45,6 +45,7 @@
 #include "wlist.h"
 #endif
 
+
 /** Controls */
 typedef struct ControlRecord Wcontrol;
 typedef Wcontrol* WcontrolRef;
@@ -121,7 +122,7 @@ enum {
  *  Scrollbar
  */
 enum {
-  Wscrollbar     =  60          //a scroll bar ( not yet implemented )
+  WscrollBar     =  60          //a scroll bar ( not yet implemented )
 };
 
 /*

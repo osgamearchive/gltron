@@ -63,7 +63,8 @@ newControl( WrootControl  *root, Wptr control, int type )
     case Wlistbox:
       wcontrol->controlRect = getRect_wlist((Wlist*)wcontrol->control);
       break;
-    case Wscrollbar:	  
+    case WscrollBar:	  
+      //wcontrol->controlRect = getRect_wscrollbar((Wscrollbar*)wcontrol->control);
       break;
     case WpopupMenu:
       wcontrol->controlRect = getRect_wpopmenu((Wpopmenu*)wcontrol->control);
@@ -126,7 +127,8 @@ updateRectsControls( WrootControl *root )
 	case Wlistbox:
 	  wcontrol->controlRect = getRect_wlist((Wlist*)wcontrol->control);
 	  break;
-	case Wscrollbar:	  
+	case WscrollBar:
+	  //	  wcontrol->controlRect = getRect_wscrollbar((Wscrollbar*)wcontrol->control);
 	  break;
 	case WpopupMenu:
 	  wcontrol->controlRect = getRect_wpopmenu((Wpopmenu*)wcontrol->control);
@@ -252,7 +254,8 @@ updateControls( WrootControl  *root )
 		case Wlistbox:
 		  draw_wlist((Wlist *)wcontrol->control);
 		  break;
-		case Wscrollbar:	  
+		case WscrollBar:
+		  //		  draw_wscrollbar((Wscrollbar *)wcontrol->control, wcontrol->enable);
 		  break;
 		case WpopupMenu:
 		  draw_wpopmenu((Wpopmenu*)wcontrol->control, wcontrol->enable);
@@ -286,7 +289,8 @@ updateControls( WrootControl  *root )
 	    case Wlistbox:
 	      draw_wlist((Wlist *)wcontrol->control);
 	      break;
-	    case Wscrollbar:	  
+	    case WscrollBar:
+	      //	      draw_wscrollbar((Wscrollbar *)wcontrol->control, wcontrol->enable);	  
 	      break;
 	    case WpopupMenu:
 	      draw_wpopmenu((Wpopmenu*)wcontrol->control, wcontrol->enable);
@@ -335,7 +339,7 @@ updateControls( WrootControl  *root )
 	case Wlistbox:
 	  root->activeFocus = mouseFocus_wlist((Wlist *)wcontrol->control, pt );
 	  break;
-	case Wscrollbar:	  
+	case WscrollBar:	  
 	  break;
 	case WpopupMenu:
 	  //draw_wpopmenu((Wpopmenu*)wcontrol->control);
@@ -413,7 +417,7 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 	      break;
 	    case Wlistbox:
 	      break;
-	    case Wscrollbar:	  
+	    case WscrollBar:	  
 	      break;
 	    case WpopupMenu:
 	      mouse_wpopmenu((Wpopmenu*)oldcontrol->control, buttons, !SDL_PRESSED, dblClick, mousexy);
@@ -447,7 +451,7 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
     case Wlistbox:
       mouse_wlist((Wlist *)wcontrol->control, buttons, state, dblClick, mousexy);
       break;
-    case Wscrollbar:	  
+    case WscrollBar:	  
       break;
     case WpopupMenu:
       mouse_wpopmenu((Wpopmenu*)wcontrol->control, buttons, state, dblClick, mousexy);
@@ -488,7 +492,7 @@ mouseFocusControls( WrootControl  *root, Wpoint mousexy, WcontrolRef wcontrol )
     case Wlistbox:
       //mouseMotion_wlist((Wlist *)wcontrol->control, mousexy);
       break;
-    case Wscrollbar:	  
+    case WscrollBar:	  
       break;
     case WpopupMenu:
       mouseMotion_wpopmenu((Wpopmenu *)wcontrol->control, mousexy );
@@ -592,7 +596,7 @@ keyControls(WrootControl  *root, int key, int unicode )
     case Wlistbox:
       key_wlist((Wlist *)wcontrol->control, key);
       break;
-    case Wscrollbar:	  
+    case WscrollBar:	  
       break;
     case WpopupMenu:
       //draw_wpopmenu((Wpopmenu*)wcontrol->control);
@@ -646,7 +650,8 @@ freeRootControl( WrootControl *root)
 	case Wlistbox:
 	  free_wlist((Wlist *)wcontrol->control);
 	  break;
-	case Wscrollbar:	  
+	case WscrollBar:
+	  //	  free_wscrollbar((Wscrollbar *)wcontrol->control);	  
 	  break;
 	case WpopupMenu:
 	  free_wpopmenu((Wpopmenu*)wcontrol->control);

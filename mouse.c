@@ -1,7 +1,7 @@
 #include "gltron.h"
 
-static int x;
-static int y;
+static int x=0;
+static int y=0;
 
 /* x=game->screen->vp_w/2; */
 /* y=game->screen->vp_h/2; */

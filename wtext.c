@@ -20,6 +20,7 @@ new_wtext(int width, int height, int posx, int posy, int nblines)
   printf("nbchars = %d\n", wtext->nbchars);
   wtext->x           = posx;//-2*game->screen->vp_w / (50 * 1.5);
   wtext->y           = posy;
+  wtext->rLines      = 0;
 
   wtext->current     = 0;
   wtext->cur_char    = 0;
@@ -52,6 +53,7 @@ scroll_wtext(Wtext *wtext, int size)
     {
       wtext->buffer[i][0]='\0';
     }
+  wtext->rLines+=size;
 }
 
 void
@@ -68,6 +70,7 @@ insert_wtext(Wtext *wtext, char *text, int color_code)
   //wtext->buffer[wtext->current][i++]=color_code;
 
   i = wtext->cur_char;
+  wtext->rLines++;
 
   //Copy text in lines
   while( i < wtext->nbchars && text[j] != 0 )
@@ -88,6 +91,7 @@ insert_wtext(Wtext *wtext, char *text, int color_code)
 	      scroll_wtext(wtext, 1);
 	    } else {
 	      wtext->current++;
+	      wtext->rLines++;
 	    }
 	  j++;
 	  i=0;
@@ -104,6 +108,7 @@ insert_wtext(Wtext *wtext, char *text, int color_code)
 		  scroll_wtext(wtext, 1);
 		} else { 
 		  wtext->current++;
+		  wtext->rLines++;
 		}
 	      i=0;
 	      /* wtext->buffer[wtext->current][i++]=3; */

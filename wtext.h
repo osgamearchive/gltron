@@ -7,6 +7,7 @@ typedef struct {
   int              x;                 //pos of top left corner in pix
   int              y;
   int              nblines;           //number of lines
+  int              rLines;            //number of total lines
   int              nbchars;           //number of chars by line
   int              current;           //is current line
   int              cur_char;          //is current char in current line.

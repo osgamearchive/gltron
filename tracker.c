@@ -1,9 +1,6 @@
 #include "gltron.h"
 
 static Trackerslots servers[MAX_SLOTS];
-static Wlist       *serverlist = NULL;
-static WrootControl *trackerControls = NULL;
-static Wstatictext *servertext = NULL;
 static int nbservers = 0;
 
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
@@ -97,17 +94,18 @@ tracker_infos(Trackerpacket *packet)
   
   make_ping(which, servers, host, PINGPORT);
   nbservers++;
-  i = addRow_wlist  ( serverlist, 1 );
+  i = addRow_wlist  ( tracker.serverlist, 1 );
+  //  set_wscrollbar(tracker.listscroll, nbservers);
   if( i >= 0 )
     {
       printf("--> setting line %d\n", i);
-      setCell_wlist ( serverlist, (char *)&servers[which].ipaddress, sizeof(IPaddress), i, 0 );
-      setCell_wlist ( serverlist, (char *)servers[which].description, strlen(servers[which].description)+1, i, 1 );
-      setCell_wlist ( serverlist, (char *)&servers[which].nbplayers, sizeof(int), i, 2 );
-      setCell_wlist ( serverlist, (char *)&servers[which].ping, sizeof(int), i, 3 );
+      setCell_wlist ( tracker.serverlist, (char *)&servers[which].ipaddress, sizeof(IPaddress), i, 0 );
+      setCell_wlist ( tracker.serverlist, (char *)servers[which].description, strlen(servers[which].description)+1, i, 1 );
+      setCell_wlist ( tracker.serverlist, (char *)&servers[which].nbplayers, sizeof(int), i, 2 );
+      setCell_wlist ( tracker.serverlist, (char *)&servers[which].ping, sizeof(int), i, 3 );
     }
   sprintf(str, "%d gltron server%c.", nbservers, (nbservers > 1 )? 's':' ');
-  set_wstatictext(servertext, str);
+  set_wstatictext(tracker.servertext, str);
   
 }
 
@@ -147,7 +145,7 @@ displayTrackerScreen()
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  updateControls(trackerControls);
+  updateControls(tracker.trackerControls);
   drawMouse();
   SystemSwapBuffers();
 }
@@ -182,8 +180,8 @@ idleTracker()
 	      //(*ping)=(int)(pingf)*1;
 	      printf("ping is %d\n", ping);
 	      /*********************************************************v****/
-	      setCell_wlist ( serverlist, (char *)&ping, sizeof(int), i, 3 );
-	      rebuildindex_wlist(serverlist);
+	      setCell_wlist ( tracker.serverlist, (char *)&ping, sizeof(int), i, 3 );
+	      rebuildindex_wlist(tracker.serverlist);
 	    }
 	}	  
     }
@@ -210,9 +208,11 @@ keyTracker(int k, int unicode, int x, int y)
     case SYSTEM_KEY_F12: doScreenShot(); break;
     case SDLK_ESCAPE:
       tracker_close();
-      freeRootControl(trackerControls);
-      trackerControls=NULL;
-      serverlist=NULL;
+      freeRootControl(tracker.trackerControls);
+      tracker.trackerControls=NULL;
+      tracker.serverlist=NULL;
+      tracker.servertext=NULL;
+      //      tracker.listscroll=NULL;
       nbservers=0;
       //restoreCallbacks();
       trackeruse=0;
@@ -221,7 +221,7 @@ keyTracker(int k, int unicode, int x, int y)
       break;
 
     default:
-      keyControls(trackerControls, k, unicode);
+      keyControls(tracker.trackerControls, k, unicode);
       break;
     }
 }
@@ -230,7 +230,7 @@ keyTracker(int k, int unicode, int x, int y)
 void
 drawit( WlistPtr list, int x, int y, int line, int col )
 {
-  int h = list->height/serverlist->nblines;
+  int h = list->height/list->nblines;
   //int s = h-15;
 
 
@@ -418,9 +418,11 @@ action(WlistPtr list)
       isLogged=0;
       printf("server %s port %s\n", server, port);
       tracker_close();
-      freeRootControl(trackerControls);
-      trackerControls=NULL;
-      serverlist=NULL;      
+      freeRootControl(tracker.trackerControls);
+      tracker.trackerControls=NULL;
+      tracker.serverlist=NULL;
+      tracker.servertext=NULL;
+      //      tracker.listscroll=NULL;
       changeCallback(&netConnectCallbacks, &trackerCallbacks);
 }
 
@@ -489,6 +491,11 @@ buttonMouseFocus( Wbutton *wbutton )
 }
 
 
+/* void */
+/* scrollList(Wscrollbar *wscrollbar) */
+/* { */
+
+/* } */
 
 void
 initTracker()
@@ -510,14 +517,15 @@ initTracker()
   glDisable(GL_DEPTH_TEST);
   trackeruse=1;
 
-  if(  trackerControls != NULL )
+  if(  tracker.trackerControls != NULL )
     return;
 
-  if(  serverlist != NULL )
+  if(  tracker.serverlist != NULL )
     return;
 
-  trackerControls = newRootControl();
+  tracker.trackerControls = newRootControl();
 
+  //The server list
   colDefs = new_colDefs( 4 );
 
   set_colDef( colDefs, 0, "Address", 30, colors[1], drawit, addressToStr, NULL); 
@@ -525,29 +533,35 @@ initTracker()
   set_colDef( colDefs, 2, "Players", 20, colors[1], drawit, intToStr_wlist, NULL); 
   set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr_wlist, sortint_wlist); 
 
-  serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-100,
+  tracker.serverlist = new_wlist(10, 60,game->screen->vp_w-30, game->screen->vp_h-100,
 			 16, 4, colDefs, 3, cWlistDefaultOptions, NULL, action, mousefocus );
  
-  newControl(trackerControls, (Wptr)serverlist, Wlistbox);
+  newControl(tracker.trackerControls, (Wptr)tracker.serverlist, Wlistbox);
 
+  //A scrollbar to scroll in the list
+  //  tracker.listscroll = new_wscrollbar(game->screen->vp_w-15, 70, 10, game->screen->vp_h-140, 0, 15, scrollList);
+  //  newControl(tracker.trackerControls, (Wptr)tracker.listscroll, WscrollBar);
+
+
+  //A static text showing number of servers
   x = game->screen->vp_w/2 - 1.5 * 12 *( game->screen->vp_w / (50 * 1.5) );
   y = 1.5 * h;
-  servertext = new_wstatictext( x, y, 1.5 * 24 *( game->screen->vp_w / (50 * 1.5)), h+2, "Loading servers list ...", h, netFont, colors[1]);
+  tracker.servertext = new_wstatictext( x, y, 1.5 * 24 *( game->screen->vp_w / (50 * 1.5)), h+2, "Loading servers list ...", h, netFont, colors[1]);
 
-  newControl(trackerControls, (Wptr)servertext, WstaticText);
+  newControl(tracker.trackerControls, (Wptr)tracker.servertext, WstaticText);
 
   //a button for testing
-  newControl(trackerControls, (Wptr)new_wbutton(game->screen->vp_w/2-40, 40, 80, 15, "Refresh", NULL, buttonaction, NULL, buttonMouseFocus), WcontrolButton);
+  newControl(tracker.trackerControls, (Wptr)new_wbutton(game->screen->vp_w/2-40, 40, 80, 15, "Refresh", NULL, buttonaction, NULL, buttonMouseFocus), WcontrolButton);
 
   //title
   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h;
-  newControl(trackerControls, (Wptr)new_wstatictext( x, y, 1.5 * 14 *( game->screen->vp_w / (50 * 1.5)), h+5, "GLTRON SERVERS", h+3, gameFont, colors[0]), WstaticText);
+  newControl(tracker.trackerControls, (Wptr)new_wstatictext( x, y, 1.5 * 14 *( game->screen->vp_w / (50 * 1.5)), h+5, "GLTRON SERVERS", h+3, gameFont, colors[0]), WstaticText);
 
 
 
 
-  setCurrentControl( trackerControls, (Wptr)serverlist );
+  setCurrentControl( tracker.trackerControls, (Wptr)tracker.serverlist );
 
 }
 
@@ -557,7 +571,7 @@ mouseTracker(int buttons, int state, int x, int y)
   Wpoint pt;
   pt.v=y;
   pt.h=x;
-  clickControls(trackerControls, buttons, state, pt);
+  clickControls(tracker.trackerControls, buttons, state, pt);
 }
 
 void
@@ -574,7 +588,7 @@ mousemotionTracker( int mx, int my )
   pt.v=my;
 
   setMouse( mx, my );
-  mouseControls( trackerControls, pt );
+  mouseControls( tracker.trackerControls, pt );
 
 }
 

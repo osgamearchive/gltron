@@ -57,29 +57,30 @@ int menutime;
 
 /* Networks stuff */
 #ifdef __NETWORK__
-Slots  slots[4]; //slots of the server.
+Slots         slots[MAX_PLAYERS]; //slots of the server.
 
-int    nbUsers = 0; 
-int    serverstate = preGameState;
-char   name[255];
-int    sChat       = 0;
-char   mesg[255] = "";
-int    me;
-int    isLogged;
-netEventList neteventlist = NULL;
+int           nbUsers = 0; 
+int           serverstate = preGameState;
+char          name[255];
+int           sChat       = 0;
+char          mesg[255] = "";
+int           me;
+int           isLogged;
+netEventList  neteventlist = NULL;
 
-int    packet_type = HEADER;
-Netscores         netscores;
+int           packet_type = HEADER;
+Netscores     netscores;
 
-int    timeout=0;
-int    hasstarted=0;
+int           timeout=0;
+int           hasstarted=0;
 
-Wtext    *pregametext = NULL;
-Wintext  *inpregametext = NULL;
-char   server_message[255] = "";
-int trackeruse = 0;
+Wtext        *pregametext = NULL;
+Wintext      *inpregametext = NULL;
+char          server_message[255] = "";
+int           trackeruse = 0;
 
 PregameControls pregame;
+TrackerControls tracker;
 #endif
 
 Splash   *splash = NULL;

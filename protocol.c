@@ -397,6 +397,10 @@ Net_preparepacket(Packet* packet, char *buf)
 	ADD_INT16(packet->infos.playersping.ping[i]);
       }
     break;
+  case SYNCH:
+    ADD_INT32(packet->infos.synch.t1);
+    ADD_INT32(packet->infos.synch.t2);
+    break;
   case ACTION:
     ADD_INT16(packet->infos.action.type);
     ADD_INT16(packet->infos.action.which);   
@@ -582,6 +586,10 @@ Net_handlepacket(Packet* packet, char *buf)
 	GET_INT16(packet->infos.playersping.ping[i], buf);
       }  
     break;
+  case SYNCH:
+    GET_INT32(packet->infos.synch.t1, buf);
+    GET_INT32(packet->infos.synch.t2, buf);
+    break;
   case ACTION:
     GET_INT16(packet->infos.action.type, buf);
     GET_INT16(packet->infos.action.which, buf);   
@@ -631,6 +639,9 @@ get_packetsize( int type )
     break;
   case PLAYERSPING:
     return (2 + MAX_PLAYERS)* sizeof(Sint16);
+    break;
+  case SYNCH:
+    return 2 * sizeof(Sint16) + 2 * sizeof(Uint32);
     break;
   case ACTION:
     return 4 * sizeof(Sint16);

@@ -168,7 +168,9 @@ void keyGame(int k, int unicode, int x, int y)
 	      } else {
 		packet.which=me;
 		packet.type=ACTION;
+#ifdef DEBUG
 		printf("sending a turn ( current time is %d )\n", game2->time.current);
+#endif
 		if( key_actions[i].turn == TURN_LEFT )
 		  packet.infos.action.type=TURNLEFT;
 		else

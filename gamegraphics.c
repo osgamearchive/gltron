@@ -88,6 +88,7 @@ void rasonly(gDisplay *d) {
 
 //void drawText(fonttex* ftx, int x, int y, int size, char *text) {
 void drawText(fonttex* ftx, float x, float y, int size, char *text) {
+  
   if(game->settings->softwareRendering) {
     drawSoftwareText(ftx, x, y, size, text);
   } else {
