@@ -9,6 +9,7 @@ int main( int argc, char *argv[] ) {
   if(argc != 2) {
     //   fprintf(stderr, "usage: server <port-number>\n");
     //exit(1);
+    //use default 23460
   } else {
     server_port = strtol(argv[1], (char**) NULL, 10);
   }

@@ -12,7 +12,8 @@ int processEvent(GameEvent* e) {
   */
 
   //if(game2->mode == GAME_PLAY) {
-    writeEvent(e);
+  printf("parsing player %d ( speed %f ) \n", e->player, game->player[e->player].data->speed);
+  writeEvent(e);
     //}
   switch(e->type) {
   case EVENT_TURN_LEFT:
@@ -100,6 +101,7 @@ list* doMovement(int mode, int dt) {
   list *l = NULL;
   GameEvent *e;
 
+
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
     if(data->speed > 0) { /* still alive */
@@ -123,6 +125,7 @@ list* doMovement(int mode, int dt) {
 	  e->x = data->iposx;
 	  e->y = data->iposy;
 	  e->timestamp = game2->time.current;
+	  printf("adding event : players %d crashed\n", i);
 	  addList(&l, e);
 	  break;
 	} else {
@@ -261,6 +264,8 @@ void idleGame( void ) {
 void createTurnEvent(int player, int direction) {
   GameEvent *e;
   list *p;
+  
+  //printf("create a turn %d dir -> %d\n", player, direction);
 
   for(p = &(game2->events); p->next != NULL; p = p->next);
   e = (GameEvent*) malloc(sizeof(GameEvent));

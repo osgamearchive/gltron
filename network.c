@@ -12,6 +12,7 @@ login(char *name)
     {
       slots[i].active=0;
       slots[i].packet=HEADER;    
+      slots[i].player = -1;    
     }
 
   packet_type = HEADER;
@@ -39,6 +40,8 @@ connectionLost()
   isLogged=0;
   Net_disconnect();
   serverstate=preGameState; //We hope that next time server will be to preGameState
+  
+
   switchCallbacks(&guiCallbacks);
 }
 
@@ -100,7 +103,7 @@ do_userinfo(Packet packet)
     {
       printf("%s join\n", packet.infos.userinfo.nick);
       sprintf(mesg, "%s join\n", packet.infos.userinfo.nick);
-      printf("%s", mesg);
+      //printf("%s", mesg);
       if( serverstate == preGameState )
 	{
 	  drawMessage(mesg);
@@ -161,8 +164,10 @@ do_action(Packet packet)
       break;
     case PART:
       slots[packet.infos.action.which].active=0;
+      //slots[packet.infos.action.which].player=-1;
       sprintf(mesg, "%s part\n", slots[packet.infos.action.which].name);
       printf("%s", mesg);
+
       if( serverstate == preGameState )
 	{
 	  drawMessage(mesg);
@@ -206,12 +211,12 @@ do_gamerules(Packet packet)
 {
   int   i;
 
-
+  printf("getting games rules...\n");
   //TODO: clean all this ugly code, and do a safe clean init function.
-  game->settings->ai_player1= ( slots[0].active ) ? 0 : 2;
-  game->settings->ai_player2= ( slots[1].active ) ? 0 : 2;
-  game->settings->ai_player3= ( slots[2].active ) ? 0 : 2;
-  game->settings->ai_player4= ( slots[3].active ) ? 0 : 2;
+  game->settings->ai_player1  = ( slots[getWhich(0)].active == 1 ) ? 0 : 2;
+  game->settings->ai_player2  = ( slots[getWhich(1)].active == 1 ) ? 0 : 2;
+  game->settings->ai_player3  = ( slots[getWhich(2)].active == 1 ) ? 0 : 2;
+  game->settings->ai_player4  = ( slots[getWhich(3)].active == 1 ) ? 0 : 2;
 
   
   initNetEventList( neteventlist );
@@ -220,7 +225,8 @@ do_gamerules(Packet packet)
   /** before doing initData check for active players */
   for(i=0; i<MAX_PLAYERS;  ++i)
     {
-      game->player[i].ai->active = ( slots[i].active ) ? 0 : 2;
+      game->player[i].ai->active = ( slots[getWhich(i)].active==1 ) ? 0 : 2;
+      printf("activating player %d on slot %d : %d\n", i, getWhich(i), game->player[i].ai->active);
     }
 
   initData();
@@ -238,16 +244,24 @@ do_gamerules(Packet packet)
 void
 do_startpos(Packet packet)
 {
-  int i, j;
+  int  i, j;
+
  //Startpos
   printf("+ %d players, getting start positions \n", game2->players);
-  game2->startPositions = ( int *)malloc(3*game2->players *sizeof(int));
-  for(i=0; i<game2->players; ++i)
+  game2->startPositions = ( int *)malloc(3*MAX_PLAYERS *sizeof(int));
+  for(i=0; i<MAX_PLAYERS; ++i)
     {
       j = getPlayer(i);
-      game2->startPositions[3*i+0]=packet.infos.startpos.startPos[3*j+0];
-      game2->startPositions[3*i+1]=packet.infos.startpos.startPos[3*j+1];
-      game2->startPositions[3*i+2]=packet.infos.startpos.startPos[3*j+2];
+      printf("get startpos server %d <-> client %d\n", i, j);
+      if( j!= -1 && slots[j].active == 1 )
+	{
+	  game2->startPositions[3*i+0]=packet.infos.startpos.startPos[3*j+0];
+	  game2->startPositions[3*i+1]=packet.infos.startpos.startPos[3*j+1];
+	  game2->startPositions[3*i+2]=packet.infos.startpos.startPos[3*j+2];
+	  printf("\n\npos %d %d %d\n\n\n", game2->startPositions[3*i+0],
+		 game2->startPositions[3*i+1],
+		 game2->startPositions[3*i+2]);
+	}
     }
 }
 
@@ -332,6 +346,7 @@ handleServer()
     {
       //Connection perdu
       connectionLost();
+      return;
     }
   if( packet_type == HEADER )
     {

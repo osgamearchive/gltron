@@ -12,6 +12,7 @@ start_server()
       slots[i].active = 0;   //slots is inactive
       slots[i].sock   = 0;   //So no sock..
       slots[i].packet = HEADER;
+      slots[i].player = -1;  //means no player found
     }
 
   //Alocate the sock
@@ -75,6 +76,9 @@ do_lostplayer(int which )
       nbUsers--;
 
       printf("%s part.\n", slots[which].name);
+      //TODO: it still a bug here,
+      //What to do if player 1 for example leave
+
 
       //TODO: if there is no1 left, init game to default #done
       //and go to waitState.
@@ -294,50 +298,89 @@ void
 do_startgame( int which, Packet packet )
 {
   Packet   rep, rep2;
-  int      i;
+  int      i, j;
   Player   *p;
   AI       *ai;
   Data     *data;
 
+  //TODO: clean this part of code. Really UGLY...
+
+
   printf("+ do_startgame\n");
   printf("Starting the game\n");
+
+  //TODO: change player so the game can continue if players has left...
+  //for each player, rearange player ident
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      slots[i].player=-1;
+    }
+  
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      if( slots[i].active == 1 )
+	{
+	  //find the new player ident
+	  slots[i].player = find_freeplayer();
+	  printf("new player %d -> %d\n", i, slots[i].player);
+	} else {
+	  slots[i].player = -1;
+	}
+    }
 
   //TODO : change all things about init data ( andi will do )
 
   //initData();
   //Send game rules...
 
-  initData();
   game->pauseflag = 0;
 
-  game2->players                   = nbUsers;
+  /**
   for(i=0; i< game2->players; ++i)
     {
     p = (game->player + i);
     ai = p->ai;
-    ai->active = ( slots[i].active == 1 ) ? 0 : 2;
+    ai->active = ( slots[getWhich(i)].active == 1 ) ? 0 : 2;
     ai->tdiff = 0;
     ai->moves = 0;
     ai->danger = 0;
     ai->lastx = 0;
     ai->lasty = 0;
+    data = game->player[i].data;
+    data->speed = game->settings->current_speed;
+    }
+  for( i=game2->players; i < MAX_PLAYERS;  ++i)
+    {
+      p = (game->player + i);
+      ai = p->ai;
+      ai->active = 0;
+      printf("deactiving player %d\n", i);
+      data = game->player[i].data;
+      data->speed = SPEED_GONE;
+      data->trail_height = 0;
+      data->exp_radius = EXP_RADIUS_MAX;
+    }
+  */
+
+  /** before doing initData check for active players */
+  for(i=0; i<MAX_PLAYERS;  ++i)
+    {
+      j = getWhich(i);
+      
+      game->player[i].ai->active = ( (j != -1) && (slots[j].active==1) ) ? 0 : 2;
+      printf("activating player %d on slot %d : %d\n", i, getWhich(i), game->player[i].ai->active);
     }
 
+  game->players = nbUsers;
+  initData();
+
+  //game2->players                   = nbUsers;
   //resetScores();
 
 
-  for(i=game2->players; i < game->players; i++) {
-    data = game->player[i].data;
-    data->speed = SPEED_GONE;
-    data->trail_height = 0;
-    data->exp_radius = EXP_RADIUS_MAX;
-  }
   game->running=game2->players;
 
   //game->players=game2->players;
-
-
-  
 
   rep.which                        = SERVERID;
   rep.type                         = GAMERULES;
@@ -350,29 +393,54 @@ do_startgame( int which, Packet packet )
   rep.infos.gamerules.time         = game2->time;
   //Startpos
   printf("%d players, getting start post\n", game2->players);
-  if( game2->startPositions != NULL )
-    free(game2->startPositions);
-  game2->startPositions = ( int *)malloc(3*game2->players *sizeof(int));
+  //if( game2->startPositions != NULL )
+  //  free(game2->startPositions);
+  //game2->startPositions = ( int *)malloc(3* MAX_PLAYERS *sizeof(int));
+
+  //Here we need to do the equivalent player
+  //server work with slots[which].player but send which and get which.
+  /**
   for(i=0; i<game2->players; ++i)
     {
       game2->startPositions[3*i+0]=game->player[i].data->iposx;
       game2->startPositions[3*i+1]=game->player[i].data->iposy;
       game2->startPositions[3*i+2]=game->player[i].data->dir;
+      printf("\n\npos player %d %d %d %d\n\n\n", i,
+	     game2->startPositions[3*i+0],
+	     game2->startPositions[3*i+1],
+	     game2->startPositions[3*i+2]);
     }
-
+  */
   printf("%d players, preparing start post\n", game2->players);
   rep2.which                        = SERVERID;
   rep2.type                         = STARTPOS;
   for(i=0; i<game2->players; ++i)
     {
-      rep2.infos.startpos.startPos[3*i+0]=game->player[i].data->iposx;
-      rep2.infos.startpos.startPos[3*i+1]=game->player[i].data->iposy;
-      rep2.infos.startpos.startPos[3*i+2]=game->player[i].data->dir;
+	  /**
+	  rep2.infos.startpos.startPos[3*i+0]=game->player[i].data->iposx;
+	  rep2.infos.startpos.startPos[3*i+1]=game->player[i].data->iposy;
+	  rep2.infos.startpos.startPos[3*i+2]=game->player[i].data->dir;
+	  */
+	  j=getWhich(i);
+	  printf("\nget startpos client ( sent ) %d <-> server %d\n", j, i);
+	  /**
+	  rep2.infos.startpos.startPos[3*j+0]=game2->startPositions[3*i+0];
+	  rep2.infos.startpos.startPos[3*j+1]=game2->startPositions[3*i+1];
+	  rep2.infos.startpos.startPos[3*j+2]=game2->startPositions[3*i+2];
+	  */
+	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx;
+	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy;
+	  rep2.infos.startpos.startPos[3*j+2]=game->player[i].data->dir;
+	  
+	  printf("\n\npos %d %d %d\n\n\n", rep2.infos.startpos.startPos[3*j+0],
+		 rep2.infos.startpos.startPos[3*j+1],
+		 rep2.infos.startpos.startPos[3*j+2]);
     }
-  for(i=0; i<4; ++i)
+  for(i=0; i<MAX_PLAYERS; ++i)
     {
       if( slots[i].active == 1 )
 	{
+	  printf("sending game rules and startpos to %d\n", i);
 	  Net_sendpacket(&rep, slots[i].sock);
 	  Net_sendpacket(&rep2, slots[i].sock);
 	}
@@ -385,19 +453,22 @@ do_startgame( int which, Packet packet )
   rep.infos.serverinfo.serverstate = sState;
   rep.infos.serverinfo.players     = nbUsers; // may be game2->players?
  
-  for(i=0; i<4; ++i)
+  for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if( slots[i].active )
+      if( slots[i].active == 1 )
 	{
-	Net_sendpacket(&rep, slots[i].sock);
+	  Net_sendpacket(&rep, slots[i].sock);
 	}
     }
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
+  //game->players = game2->players;
   //game2->players = nbUsers;
   //game->players=game2->players;
   printf("starting game with %d players\n", game->players); 
   printf("- do_startgame\n");
+  printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
+	 game->player[0].data->iposy, game->player[0].data->dir);
 }
 
 void
@@ -407,12 +478,12 @@ do_action( int which, Packet packet )
   switch( packet.infos.action.type )
     {
     case TURNRIGHT:
-      printf("get turn left from %d\n", which);
-      createTurnEvent(which, TURN_RIGHT);
+      printf("get turn left from %d -> %d\n", which, getPlayer(which));
+      createTurnEvent(getPlayer(which), TURN_RIGHT);
       break;
     case TURNLEFT:
-      printf("get turn left from %d\n", which);
-      createTurnEvent(which, TURN_LEFT);
+      printf("get turn left from %d -> %d\n", which, getPlayer(which));
+      createTurnEvent(getPlayer(which), TURN_LEFT);
       break;
     case STARTGAME:
       do_startgame(which, packet);
@@ -562,6 +633,10 @@ handle_connection()
       slots[which].active = -1;
       slots[which].packet = HEADER;
 
+      //Find a free player
+      slots[which].player = find_freeplayer();
+      printf("player %d is know by server has player %d\n", which, slots[which].player);
+
       Net_addsocket( slots[which].sock );
       printf("New Connection on slot %d\n", which);
       switch( which )
@@ -609,15 +684,65 @@ handle_server()
 void
 SendEvents(GameEvent *e)
 {
-  int        i;
+  int        i, real;
   Packet     rep;
 
   rep.which = SERVERID;
   rep.type  = EVENT;
+  real      = e->player; 
+
+  //Real bad coding, hum nico, u should do better 'cause dangerous!!!
+  e->player = getWhich(e->player); //doing the equivalence
   rep.infos.event.event = *e;
 
-
-  for( i=0; i <4; ++i)
+  for( i=0; i <MAX_PLAYERS; ++i)
       if( slots[i].active == 1 )
 	Net_sendpacket(&rep, slots[i].sock);
+  e->player = real;
+}
+
+
+int
+getPlayer(int which)
+{
+  return slots[which].player;
+}
+
+int
+find_freeplayer()
+{
+  int i,j;
+  
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      //look if player i is free
+      for(j=0; j<MAX_PLAYERS; ++j)
+	{
+	  if( slots[j].player == i )
+	    break;
+	}
+      if( j == MAX_PLAYERS )
+	{
+	  //player i is free we use it!
+	  break;
+	}
+    }
+  return i;
+}
+
+
+int
+getWhich(int player)
+{
+  int i;
+  for(i=0; i<MAX_PLAYERS;++i)
+    {
+      if( slots[i].player == player )
+	{
+	  printf("getWich %d -> %d\n", player, i);
+	  return i;
+	}
+    }
+  printf("\n\n\n\n############# Which NOT FOUND #############\n\n\n");
+  return -1;
 }

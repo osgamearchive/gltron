@@ -134,6 +134,11 @@ extern void stop_server();
 extern void handle_server();
 extern void SendEvents(GameEvent *e);
 
+
+extern int getPlayer          ( int );
+extern int getWhich           ( int );
+extern int find_freeplayer     ( void );
+
 extern TCPsocket         servsock;
 extern SDLNet_SocketSet  socketset;
 extern int               nbUsers;

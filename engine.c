@@ -202,7 +202,7 @@ int applyGameInfo() {
     fprintf(stderr, "more players in demo than allowed\n");
     return 1;
   }
-  game->running = game2->players;
+  //game->running = game2->players;
 
   //game->players=game2->players;
   for(i = 0; i < game2->players; i++) {
@@ -236,7 +236,7 @@ int applyGameInfo() {
 
   }
 
-  for(; i < game->players; i++) {
+  for(; i < MAX_PLAYERS; i++) {
     data = game->player[i].data;
     data->speed = SPEED_GONE;
     data->trail_height = 0;

@@ -21,3 +21,6 @@ int             getWhich           ( int );
 
 /** Inits */
 void            initNetEventList    ( netEventList );
+
+/** search */
+int             find_freeplayer     ( void );

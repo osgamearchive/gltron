@@ -271,7 +271,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
       return cantsendpacket;
     }
 
-  buff = malloc(PACKETSIZE);  //Allocate mac packet size...
+  buff = malloc(PACKETSIZE);  //Allocate max packet size...
 
   //printf("packet size %d ( float is %d )\n", sizeof(Packet), sizeof(float));
 
@@ -282,6 +282,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
     {
       free(buff);
       buff=NULL;
+      printf("error while sending a header!!\n");
       return connectionclosed;
     }
 
@@ -405,7 +406,7 @@ get_packetsize( int type )
     return 4 + 4 + 32 + 4;
     break;
   case GAMERULES:
-    return 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 +  4; 
+    return 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4 + 4; 
     break;
   case STARTPOS:
     return 4 + 4 + MAX_PLAYERS * 4 *  3;
@@ -463,7 +464,7 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
 
 
       rLen = SDLNet_TCP_Recv(sock, (void *) buff, len);
-      
+      printf("got packet %d, readbytes was %d ( %d )\n", slots[which].packet, rLen, len);
       if( rLen < len )
 	{
 	  free(buff);

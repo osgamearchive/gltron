@@ -1,9 +1,32 @@
 #include "gltron.h"
 
+
 int
 getPlayer(int which)
 {
   return slots[which].player;
+}
+
+int
+find_freeplayer()
+{
+  int i,j;
+  
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      //look if player i is free
+      for(j=0; j<MAX_PLAYERS; ++j)
+	{
+	  if( slots[j].player == i )
+	    break;
+	}
+      if( j == MAX_PLAYERS )
+	{
+	  //player i is free we use it!
+	  break;
+	}
+    }
+  return i;
 }
 
 cnetEventList
@@ -50,6 +73,8 @@ getWhich(int player)
     }
   return player;
 }
+
+
 netEventList
 createNetEventList( void )
 {
