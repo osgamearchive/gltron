@@ -79,7 +79,7 @@ extern "C" {
 	Point p, v;
 	getRecognizerPositionVelocity(&p, &v);
 	// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
-	recognizerEngine->_location = Vector3(p.x, p.y, 20.0f);
+	recognizerEngine->_location = Vector3(p.x, p.y, 10.0f);
 	recognizerEngine->_velocity = Vector3(v.x, v.y, 0);
       }
     }
@@ -164,7 +164,10 @@ extern "C" {
   void Audio_SetFxVolume(float volume) {
     sample_engine->SetVolume(volume);
     sample_crash->SetVolume(volume);
-    sample_recognizer->SetVolume(volume);
+    if(volume > 0.8)
+      sample_recognizer->SetVolume(volume);
+    else 
+      sample_recognizer->SetVolume(volume * 1.25);
   }
 
   void Audio_StartEngine(int iPlayer) {
