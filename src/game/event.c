@@ -14,7 +14,6 @@
 
 int processEvent(GameEvent* e) {
   int value = 0;
-  Data *data;
 
 #ifdef RECORD
   if(game2->mode == GAME_SINGLE_RECORD) {
@@ -29,9 +28,6 @@ int processEvent(GameEvent* e) {
     doTurn(e, TURN_RIGHT);
     break;
   case EVENT_CRASH: 
-    data = game->player[e->player].data;
-    data->posx = e->x;
-    data->posy = e->y;
     displayMessage(TO_CONSOLE, "player %d crashed", e->player + 1);
     doCrashPlayer(e);
     break;
@@ -94,10 +90,8 @@ int crashTestPlayers(int i, const segment2 *movement) {
 							 t1, t2); 
 #endif
 				if(t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
-					data->posx = v.v[0];
-					data->posy = v.v[1];
-					current->vDirection.v[0] = data->posx - current->vStart.v[0];
-					current->vDirection.v[1] = data->posy - current->vStart.v[1];
+					current->vDirection.v[0] = v.v[0] - current->vStart.v[0];
+					current->vDirection.v[1] = v.v[1] - current->vStart.v[1];
 					createEvent(i, EVENT_CRASH);
 					crash = 1;
 					break;
@@ -122,10 +116,8 @@ int crashTestWalls(int i, const segment2 *movement) {
 	for(j = 0; j < 4; j++) {
 		if(segment2_Intersect(&v, &t1, &t2, current, walls + j)) {
 			if(t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) {
-				data->posx = v.v[0];
-				data->posy = v.v[1];
-				current->vDirection.v[0] = data->posx - current->vStart.v[0];
-				current->vDirection.v[1] = data->posy - current->vStart.v[1];
+				current->vDirection.v[0] = v.v[0] - current->vStart.v[0];
+				current->vDirection.v[1] = v.v[1] - current->vStart.v[1];
 				createEvent(i, EVENT_CRASH);
 				crash = 1;
 				break;
@@ -135,6 +127,36 @@ int crashTestWalls(int i, const segment2 *movement) {
 	return crash;
 }
 
+void applyBooster(int player, int dt) {
+	Data *data = game->player[player].data;
+	if(data->booster > 0 && data->boost_enabled) {
+		float boost = getSettingf("booster_use") * dt / 1000.0f;
+		if(boost > data->booster) {
+			boost = data->booster;
+			data->boost_enabled = 0;
+		}
+		data->speed += boost;
+		data->booster -= boost;
+	}
+	if(data->speed > game2->rules.speed && !data->boost_enabled) {
+		float decrease = getSettingf("booster_decrease") * dt / 1000.0f;
+		data->speed -= decrease;
+		if(data->speed < game2->rules.speed)
+			data->speed = game2->rules.speed;
+	}
+	if(!data->boost_enabled) { 
+		float booster_max = getSettingf("booster_max");
+		if(data->booster < booster_max) {
+			data->booster += getSettingf("booster_regenerate") * dt / 1000.0f;
+			if(data->booster > booster_max)
+				data->booster = booster_max;
+		}
+	}
+}
+
+void applyWallAcceleration(int player, int dt) {
+	// find distance to enemy walls left & right
+}
 
 /*! \fn static list* doMovement(int mode, int dt)
   do physics, create CRASH and STOP events
@@ -152,29 +174,9 @@ List* doMovement(int mode, int dt) {
 			float t;
 
 			// speed boost:
-			if(data->booster > 0 && data->boost_enabled) {
-				float boost = getSettingf("booster_use") * dt / 1000.0f;
-				if(boost > data->booster) {
-					boost = data->booster;
-					data->boost_enabled = 0;
-				}
-				data->speed += boost;
-				data->booster -= boost;
-			}
-			if(data->speed > game2->rules.speed && !data->boost_enabled) {
-				float decrease = getSettingf("booster_decrease") * dt / 1000.0f;
-				data->speed -= decrease;
-				if(data->speed < game2->rules.speed)
-					data->speed = game2->rules.speed;
-			}
-			if(!data->boost_enabled) { 
-				float booster_max = getSettingf("booster_max");
-				if(data->booster < booster_max) {
-					data->booster += getSettingf("booster_regenerate") * dt / 1000.0f;
-					if(data->booster > booster_max)
-						data->booster = booster_max;
-				}
-			}
+			applyBooster(i, dt);
+			applyWallAcceleration(i, dt);
+
 			// if(i == 0)
 			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
 				
@@ -189,16 +191,16 @@ List* doMovement(int mode, int dt) {
 				segment2 *current = data->trails + data->trailOffset;
 				segment2 movement;
 				int crash = 0;
+				float x, y;
 				
-				movement.vStart.v[0] = data->posx;
-				movement.vStart.v[1] = data->posy;
+				getPositionFromData(&x, &y, data);
+				movement.vStart.v[0] = x;
+				movement.vStart.v[1] = y;
 				movement.vDirection.v[0] = t * dirsX[data->dir];
 				movement.vDirection.v[1] = t * dirsY[data->dir];
 				
 				current->vDirection.v[0] += t * dirsX[data->dir];
 				current->vDirection.v[1] += t * dirsY[data->dir];
-				data->posx += t * dirsX[data->dir];
-				data->posy += t * dirsY[data->dir];
 
 				crash = crash || crashTestPlayers(i, &movement);
 				crash = crash || crashTestWalls(i, &movement);
@@ -352,8 +354,7 @@ void createEvent(int player, event_type_e eventType) {
   p->next = (List*) malloc(sizeof(List));
   p->next->next = NULL;
   e->type = eventType;
-  e->x = game->player[player].data->posx;
-  e->y = game->player[player].data->posy;
+	getPositionFromIndex(&e->x, &e->y, player);
   e->player = player;
   e->timestamp = game2->time.current;
 }
