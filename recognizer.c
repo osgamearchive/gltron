@@ -33,7 +33,7 @@ void getRecognizerPositionVelocity(Point *p, Point *v) {
   v->x = dx() * game2->rules.grid_size / 100.f;
   v->y = dy() * game2->rules.grid_size / 100.f;
 }
-  
+
 void drawRecognizerShadow() {
   float dirx;
   Point p, v;
@@ -135,7 +135,9 @@ void doRecognizerMovement() {
   alpha += game2->time.dt / 2000.0;
 }
 
-
+void resetRecognizer() {
+	alpha = 0;
+}
 
 
 
