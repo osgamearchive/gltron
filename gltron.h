@@ -6,6 +6,10 @@
 #ifndef GLTRON_H
 #define GLTRON_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -470,6 +474,7 @@ int testfrustum(float *x, float *y, float *p, float *a, float *b);
 /* recognizer stuff */
 extern void recognizerMovement();
 extern void drawRecognizers(int flag);
+extern void getRecognizerPositionVelocity(Point *p, Point *v);
 
 /* demo stuff */
 /* record.c */
@@ -535,6 +540,9 @@ enum {
 	fx_action,
 	fx_highlight
 };
-#endif
 
+#ifdef __cplusplus
+}
+#endif /* extern C */
 
+#endif /* GLTRON_H */
