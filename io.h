@@ -1,3 +1,5 @@
+#ifndef IO_H
+#define IO_H
 /* this is a small wrapper around the basic file io functions,
    ie open, close, read, gets */
 
@@ -15,3 +17,4 @@ int file_close(file_handle file);
 int file_read(file_handle file, void* data, unsigned int size);
 char* file_gets(file_handle file, char* data, unsigned int size);
 
+#endif
