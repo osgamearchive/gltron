@@ -354,7 +354,7 @@ void initDefaultSettings() {
   game->settings->softwareRendering = 0;
   game->settings->bitdepth_32 = 0;
 
-  game->settings->display_type = 0;
+  game->settings->display_type = 3;
   game->settings->playMusic = 1;
   game->settings->playEffects = 1;
 
