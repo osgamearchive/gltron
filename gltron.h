@@ -320,6 +320,7 @@ extern float* getVf(char *szName);
 /* file handling -> file.c */
 
 extern char* getFullPath(char* filename);
+extern list* readDirectoryContents(char *dirname, char *prefix);
 
 /* callback stuff -> switchCallbacks.c */
 
@@ -355,6 +356,15 @@ extern void drawWalls(gDisplay *d);
 
 extern void drawCam(Player *p, gDisplay *d);
 
+/* demo stuff */
+/* record.c */
+extern int readDemoInfo();
+extern int writeDemoInfo();
+
+/* engine.c */
+extern int applyGameInfo();
+
+
 /* pixel stuff */
 extern unsigned char* loadPixels(char *filename, gDisplay *d);
 extern unsigned char* scalePixels(unsigned char *source, int sw, int sh,
@@ -374,11 +384,14 @@ extern void camMove();
 extern void movePlayers();
 
 /* fonttex stuff */
-extern void initBitmaps(gDisplay *d) ;
+extern void initBitmaps(gDisplay *d);
+extern void deleteBitmaps(gDisplay *d);
 extern fontbmp* fbmpLoadFont(char *filename);
+extern void fbmpUnloadFont(fontbmp *fbmp);
 extern texture* loadTextureData(char *filename);
+extern void freeTextureData(texture *tex);
 extern void drawSoftwareText(fonttex *tex, int x, int y, int size, char *text);
-
+extern void drawSoftwareHighlight(int x, int y, int size, char *text);
 extern fonttex *ftxLoadFont(char *filename);
 extern void ftxUnloadFont(fonttex *ftx);
 extern void loadTexture(char *filename, int format);
