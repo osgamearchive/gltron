@@ -8,12 +8,10 @@ enum {
   TURN_RIGHT = 1
 };
 
-int getCol(int x, int y) {
-  if(x < 0 || x >= game2->rules.grid_size -1 ||
-     y < 0 || y >= game2->rules.grid_size -1 ||
-     colmap[ y * colwidth + x ] != 0)
-    return 1;
-  else return 0;
+inline int getCol(int x, int y) {
+  return x < 0 || x >= game2->rules.grid_size -1 ||
+         y < 0 || y >= game2->rules.grid_size -1 ||
+         colmap[ y * colwidth + x ];
 }
 
 void initGameStructures() { /* called only once */
