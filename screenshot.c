@@ -12,7 +12,7 @@ void doScreenShot() {
   char buf[100];
 
 #ifndef macintosh  
-  sprintf(buf, "gltron-0.60-%d.png", screenshots);
+  sprintf(buf, "gltron-0.61-%d.png", screenshots);
   screenShot(buf, game->screen);
   screenshots++;
 
@@ -22,7 +22,7 @@ void doScreenShot() {
 void doBmpScreenShot() {
   char buf[100];
 
-  sprintf(buf, "gltron-0.60-%d.bmp", screenshots);
+  sprintf(buf, "gltron-0.61-%d.bmp", screenshots);
   bmpScreenShot(buf, game->screen);
   screenshots++;
 }
