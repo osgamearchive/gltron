@@ -138,6 +138,8 @@ namespace Sound {
 			if(_sample->flags) {
 				// some error has occured, maybe end of sample reached
 				SDL_SemWait(_sem);
+				// todo: let playback finish, because there's still data
+				// in the buffer that has to be mixed
 				CleanUp();
 				fprintf(stderr, "end of sample reached!\n");
 				if(_loop) {
@@ -146,8 +148,6 @@ namespace Sound {
 						_loop--;
 					CreateSample();
 				} else {
-					// todo: let playback finish, because there's still data
-					// in the buffer that has to be mixed
 					_isPlaying = 0;
 					// todo: notify sound system (maybe load another song?)
 				}
