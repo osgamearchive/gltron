@@ -2,7 +2,6 @@ TODO list
 
 Bugs:
 
-- The recognizer shadow draws over the wall (LIM)
 - The recognizer draws over the bike when it shouldn't (LIM)
 - Make install doesn't work (Andreas)
 - Screen garbled in-game after switching resolutions (hofi)
@@ -37,6 +36,8 @@ Optimizations/Cleanups
 - remove obsolete bitmap stuff
 - Scale the mesh on load time, to avoid need for GL_NORMALIZE
 - Rewrite trail handling code
+- The recognizer shadow draws multiple polygons over itself, and is slow,
+  make it use a stencil instead
 
 Old TODO list, clean up when time available (priority):
 
