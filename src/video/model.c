@@ -319,15 +319,14 @@ void drawModelExplosion(Mesh *pMesh, float fRadius) {
   };
 
   for(i = 0; i < pMesh->nMaterials; i++) {
-    glMaterialfv(GL_FRONT, GL_AMBIENT,
-		 pMesh->pMaterials[i].ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,
-		 pMesh->pMaterials[i].diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,
+        pMesh->pMaterials[i].ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,
+        pMesh->pMaterials[i].diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR,
-		 pMesh->pMaterials[i].specular);
+        pMesh->pMaterials[i].specular);
     glMaterialf(GL_FRONT, GL_SHININESS,
-		pMesh->pMaterials[i].shininess);
- 
+        pMesh->pMaterials[i].shininess);
 
     for(j = 0; j < pMesh->pnFaces[i]; j++) {
 
@@ -337,15 +336,15 @@ void drawModelExplosion(Mesh *pMesh, float fRadius) {
 
       glPushMatrix();
       glTranslatef(fRadius * (*(normal + 0) + vectors[j % EXP_VECTORS][0]),
-		   fRadius * (*(normal + 1) + vectors[j % EXP_VECTORS][1]),
-		   fabs(fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) ));
+          fRadius * (*(normal + 1) + vectors[j % EXP_VECTORS][1]),
+          fabs(fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) ));
       glBegin(GL_TRIANGLES);
       for(k = 0; k < 3; k++) {
-	normal = pMesh->pNormals + 3 * pMesh->ppIndices[i][3 * j + k];
-	vertex = pMesh->pVertices + 3 * pMesh->ppIndices[i][3 * j + k];
+        normal = pMesh->pNormals + 3 * pMesh->ppIndices[i][3 * j + k];
+        vertex = pMesh->pVertices + 3 * pMesh->ppIndices[i][3 * j + k];
 
-	glNormal3fv(normal);
-	glVertex3fv(vertex);
+        glNormal3fv(normal);
+        glVertex3fv(vertex);
       }
       glEnd();
       glPopMatrix();

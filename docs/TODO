@@ -26,6 +26,7 @@ Bugs [medium priority]:
 Todd:
 
 - fix spoke animation [FIXED]
+- fix problem with explosion debris turning red [FIXED]
 - fix gap between the top of the front fender and the wheel on the 
     lightcycle-high model
 
