@@ -40,20 +40,10 @@ void computeBoundingBox(game_level *l)
 	}
 }
 
-game_level* game_CreateLevel(const char *name) {
+game_level* game_CreateLevel(void) {
 	int i;
 	game_level* l;
 
-	// fixme: load level 'name' from file
-	char *path = getPath(PATH_LEVEL, name);
-	if(path) {
-		scripting_RunFile(path);
-		free(path);
-	}
-	else
-	{
-		return NULL;
-	}
 	l = malloc( sizeof(game_level) );
 	scripting_GetGlobal("level", NULL);
 	// get scalability flag

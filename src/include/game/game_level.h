@@ -13,7 +13,7 @@ typedef struct {
 } game_level;
 
 void game_FreeLevel(game_level *l);
-game_level* game_CreateLevel(const char *name);
+game_level* game_CreateLevel();
 void game_ScaleLevel(game_level *l, float fSize);
 
 #endif

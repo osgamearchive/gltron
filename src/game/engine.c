@@ -19,7 +19,7 @@ void getPositionFromData(float *x, float *y, Data *data) {
 }
 
 void initGameLevel(void) {
-	game2->level = game_CreateLevel("square.lua");
+	game2->level = game_CreateLevel();
 
 	if(game2->level->scalable)
 		game_ScaleLevel(game2->level, 600.0f);
