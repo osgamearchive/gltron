@@ -199,7 +199,8 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  if (spoke_time > 90 - (p->data->speed * 10) && !game->pauseflag) {
+  if (spoke_time > 70 - (p->data->speed * 10) 
+      && game->pauseflag == PAUSE_GAME_RUNNING) {
     if (pV->spoke_state == 1) {
       pV->spoke_state = 0;
       SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
@@ -365,7 +366,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 		if (lod >= 0) {
 			int drawTurn = 1;
 			if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
-					p != &game->player[i])
+	 			p != &game->player[i])
 				drawTurn = 0;
 			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
 		}
