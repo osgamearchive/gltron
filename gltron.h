@@ -391,7 +391,7 @@ extern void drawCam(Player *p, gDisplay *d);
 /* trail.c */
 extern void drawTrails(Player *p, Player *p_eye, gDisplay *d);
 extern void drawTrailBow(Player *p);
-extern void drawTrailLines(Data *d);
+extern void drawTrailLines(Player *p);
 extern void drawTrailShadows(Data *d);
 extern void drawTrailQuadBow(Player *p, int *q);
 extern void drawTrailsWithQuadBuf(Player *p_eye);
