@@ -36,11 +36,11 @@ void keyGame(int state, int k, int x, int y)
 			/* case 'q': SystemExit(); return; */
 		case 27:
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
-			SystemExitLoop(RETURN_GAME_ESCAPE);
+			nebu_System_ExitLoop(RETURN_GAME_ESCAPE);
 			return;
 		case ' ':
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
-			SystemExitLoop(RETURN_GAME_PAUSE);
+			nebu_System_ExitLoop(RETURN_GAME_PAUSE);
 			return;
 		case SYSTEM_KEY_F1: changeDisplay(0); return;
 		case SYSTEM_KEY_F2: changeDisplay(1); return;
@@ -53,8 +53,8 @@ void keyGame(int state, int k, int x, int y)
 		case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); return;
 		case SYSTEM_KEY_F12: doPngScreenShot(gScreen); return;
 
-		case SYSTEM_KEY_UP: console_Seek(-1); return;
-		case SYSTEM_KEY_DOWN: console_Seek(1); return;
+		case SYSTEM_KEY_F6: console_Seek(-1); return;
+		case SYSTEM_KEY_F7: console_Seek(1); return;
     /* toggle lighting
   case SYSTEM_KEY_F6: 
       setSettingi("light_cycles", !game->settings->light_cycles);

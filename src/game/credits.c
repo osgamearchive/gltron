@@ -33,8 +33,8 @@ char *credits[] = {
 void mouseCredits (int buttons, int state, int x, int y)
 {
 	if ( state == SYSTEM_MOUSEPRESSED ) {
-		SystemExit();
-		SystemExitLoop(RETURN_QUIT);
+		nebu_System_Exit();
+		nebu_System_ExitLoop(RETURN_QUIT);
 	}
 }
 
@@ -42,14 +42,14 @@ void keyCredits(int state, int k, int x, int y)
 {
 	if(state == SYSTEM_KEYSTATE_UP)
 		return;
-  SystemExit();
-	SystemExitLoop(RETURN_QUIT);
+	nebu_System_Exit();
+	nebu_System_ExitLoop(RETURN_QUIT);
 }
 
 void idleCredits(void) {
 	scripting_RunGC();
 	nebu_Time_FrameDelay(50);
-	SystemPostRedisplay();
+	nebu_System_PostRedisplay();
 }
 
 void drawCredits(void) {

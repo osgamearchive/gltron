@@ -8,7 +8,7 @@ void idlePause(void) {
 	doCameraMovement();
 	scripting_RunGC();
 	nebu_Time_FrameDelay(10);
-	SystemPostRedisplay();
+	nebu_System_PostRedisplay();
 }
 
 void keyboardPause(int state, int key, int x, int y) {
@@ -17,7 +17,7 @@ void keyboardPause(int state, int key, int x, int y) {
 
   switch(key) {
   case 27:
-		SystemExitLoop(RETURN_PAUSE_ESCAPE);
+		nebu_System_ExitLoop(RETURN_PAUSE_ESCAPE);
     break;
   case SYSTEM_KEY_F1: changeDisplay(0); break;
   case SYSTEM_KEY_F2: changeDisplay(1); break;
@@ -35,7 +35,7 @@ void keyboardPause(int state, int key, int x, int y) {
   case SYSTEM_KEY_DOWN: console_Seek(1); break;
 
   case SYSTEM_KEY_TAB: 
-	// SystemExitLoop(RETURN_MENU_PROMPT);
+	// nebu_System_ExitLoop(RETURN_MENU_PROMPT);
 		break;
 
 	default:
@@ -46,7 +46,7 @@ void keyboardPause(int state, int key, int x, int y) {
 	else
 	{
 		game->pauseflag = PAUSE_GAME_RUNNING;
-	    SystemExitLoop(RETURN_GAME_UNPAUSE);
+	    nebu_System_ExitLoop(RETURN_GAME_UNPAUSE);
 	}
     /* lasttime = SystemGetElapsedTime(); */
     break;
@@ -84,7 +84,7 @@ void keyboardPrompt(int state, int key, int x, int y) {
   switch(key) {
   case 27:
   case SYSTEM_KEY_TAB:
-		SystemExitLoop(RETURN_PAUSE_ESCAPE);
+		nebu_System_ExitLoop(RETURN_PAUSE_ESCAPE);
     break;
   case SYSTEM_KEY_RETURN:
     /* promptEvaluate(); */

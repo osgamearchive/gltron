@@ -22,104 +22,104 @@ int c_drawHUDSurface(lua_State* l);
 int c_drawHUDMask(lua_State* l);
 
 int c_quitGame(lua_State *L) {
-  saveSettings();
-	SystemExitLoop(RETURN_CREDITS);
-  return 0;
+	saveSettings();
+	nebu_System_ExitLoop(RETURN_CREDITS);
+	return 0;
 }
 
 int c_resetGame(lua_State *L) {
-  game_ResetData();
+	game_ResetData();
 	video_ResetData();
-  return 0;
+	return 0;
 }
 
 int c_resetScores(lua_State *L) {
-  resetScores();
-  return 0;
+	resetScores();
+	return 0;
 }
 
 int c_resetCamera(lua_State *L) {
-  int i;
-  int camType;
-  Camera *cam;
-  Data *data;
+	int i;
+	int camType;
+	Camera *cam;
+	Data *data;
 
-  for(i = 0; i < game->players; i++) {
-    cam = game->player[i].camera;
-    data = game->player[i].data;
+	for(i = 0; i < game->players; i++) {
+		cam = game->player[i].camera;
+		data = game->player[i].data;
 
-    camType = (game->player[i].ai->active == AI_COMPUTER) ? 
-      0 : getSettingi("camType");
-    initCamera(cam, data, camType);
-  }
-  return 0;
+		camType = (game->player[i].ai->active == AI_COMPUTER) ? 
+			0 : getSettingi("camType");
+		initCamera(cam, data, camType);
+	}
+	return 0;
 }
 
 int c_video_restart(lua_State *L) {
-  initGameScreen();
-  shutdownDisplay( gScreen );
-  setupDisplay( gScreen );
-  updateCallbacks();
-  changeDisplay(-1);
-  return 0;
+	initGameScreen();
+	shutdownDisplay( gScreen );
+	setupDisplay( gScreen );
+	updateCallbacks();
+	changeDisplay(-1);
+	return 0;
 }
 
 int c_update_settings_cache(lua_State *L) {
-  updateSettingsCache();
-  return 0;
+	updateSettingsCache();
+	return 0;
 }
 
 int c_update_audio_volume(lua_State *L) { 
- Sound_setMusicVolume(getSettingf("musicVolume"));
- Sound_setFxVolume(getSettingf("fxVolume"));
- return 0;
+	Sound_setMusicVolume(getSettingf("musicVolume"));
+	Sound_setFxVolume(getSettingf("fxVolume"));
+	return 0;
 }
 
 int c_startGame(lua_State *L) { 
-  game2->mode = GAME_SINGLE;
+	game2->mode = GAME_SINGLE;
 	game_ResetData();
 	video_ResetData();
-  changeDisplay(-1);
-	SystemExitLoop(RETURN_GAME_LAUNCH);
-  return 0;
+	changeDisplay(-1);
+	nebu_System_ExitLoop(RETURN_GAME_LAUNCH);
+	return 0;
 }
 
 int c_reloadTrack(lua_State *L) {
-  Sound_reloadTrack();
-  return 0;
+	Sound_reloadTrack();
+	return 0;
 }
 
 int c_reloadArtpack(lua_State *L) {
-  reloadArt();
-  return 0;
+	reloadArt();
+	return 0;
 }
 
 int c_reloadLevel(lua_State *L) {
-  loadLevel();
+	loadLevel();
 	reloadArt();
 	initGameLevel();
 	game_ResetData();
 	video_ResetData(); // already called by reloadArt()
-  return 0;
+	return 0;
 }
   
 int c_configureKeyboard(lua_State *L) {
-	SystemExitLoop(RETURN_GUI_PROMPT);
-  return 0;
+	nebu_System_ExitLoop(RETURN_GUI_PROMPT);
+	return 0;
 }
 
 int c_getKeyName(lua_State *L) {
-  int top = lua_gettop(L);
-  if(lua_isnumber(L, top)) {
-    lua_pushstring(L, SystemGetKeyName( (int) lua_tonumber(L, top) ));
-  } else {
-    lua_pushstring(L, "error");
-  }
-  return 1;
+	int top = lua_gettop(L);
+	if(lua_isnumber(L, top)) {
+		lua_pushstring(L, SystemGetKeyName( (int) lua_tonumber(L, top) ));
+	} else {
+		lua_pushstring(L, "error");
+	}
+	return 1;
 }
 
 int c_timedemo(lua_State *L) {
-	SystemExitLoop(RETURN_TIMEDEMO);
+	nebu_System_ExitLoop(RETURN_TIMEDEMO);
 	return 0;
 }
 
@@ -138,10 +138,9 @@ int c_SetCallback(lua_State *L) {
 	return 0;
 }
 
-int c_SystemMainLoop(lua_State *L) {
-	int value = SystemMainLoop();
+int c_mainLoop(lua_State *L) {
+	int value = nebu_System_MainLoop();
 	lua_pushnumber(L, value);
-
 	return 1;
 }
 
@@ -156,11 +155,11 @@ int c_loadDirectory(lua_State *L) {
 	if(top != 1) {
 		// wrong number of arguments
 		lua_error(L, "wrong number of arguments for function "
-							"c_loadDirectory: should be 1\n");
+			"c_loadDirectory: should be 1\n");
 	}
 	if(!lua_isnumber(L, -1)) {
 		lua_error(L, "number  expected for arg1 to function "
-							"c_loadDirecotry");
+			"c_loadDirecotry");
 	}
 	dir = (int) lua_tonumber(L, -1);
 
@@ -221,7 +220,7 @@ void init_c_interface(void) {
 	scripting_Register("c_getKeyName", c_getKeyName);
 	scripting_Register("c_timedemo", c_timedemo);
 	scripting_Register("c_loadDirectory", c_loadDirectory);
-	scripting_Register("SystemMainLoop", c_SystemMainLoop);
+	scripting_Register("c_mainLoop", c_mainLoop);
 	scripting_Register("SetCallback", c_SetCallback);
 	scripting_Register("c_setArtPath", c_setArtPath);
 

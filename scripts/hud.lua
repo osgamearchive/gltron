@@ -33,7 +33,7 @@ function getConfig(aspect)
 			best = i
 		end
 	end
-	-- write(format("aspect: %f, config: %d (%f)\n", aspect, best, HUDConfig[best].aspect))
+	write(format("aspect: %f, config: %d (%f)\n", aspect, best, HUDConfig[best].aspect))
 	return HUDConfig[best]
 end
 

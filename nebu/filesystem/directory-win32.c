@@ -24,17 +24,39 @@ int isHiddenFile(WIN32_FIND_DATA *search)
 	}
 }
 
+void pushFile(WIN32_FIND_DATA* pSearch, nebu_List **pL)
+{
+	char *filename;
+	int len;
+	nebu_List *l = *pL;
+
+#ifdef _DEBUG
+	if(strstr(pSearch->cFileName, "Makefile"))
+		return;
+	if(strstr(pSearch->cFileName, "CVS"))
+		return;
+#endif
+
+	len = strlen(pSearch->cFileName) + 1;
+	filename = malloc(len);
+	memcpy(filename, pSearch->cFileName, len);
+	l->data = filename;
+	l->next = malloc(sizeof(nebu_List));
+	l->next->next = NULL;
+	*pL = l->next;
+}
+
 /* FIXME: This is really broken. */
 nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 	WIN32_FIND_DATA search;
 	HANDLE hSearch;
 	nebu_List *l, *p;
-	char *filename, *searchStr;
-	int   len, prefixLen = 0;
+	char *searchStr;
+	int  prefixLen = 0;
 
-	p = malloc(sizeof(nebu_List));
-	p->next= NULL;
-	l = p;
+	l = malloc(sizeof(nebu_List));
+	l->next= NULL;
+	p = l;
 
 	if(prefix != NULL)
 	{
@@ -49,7 +71,6 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 	}
 	strcat(searchStr, "*");
 
-
 	hSearch = FindFirstFile(searchStr, &search);
 	if(hSearch == INVALID_HANDLE_VALUE)
 	{
@@ -59,27 +80,14 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 	}
 	else if(!isHiddenFile(&search))
 	{
-		len = strlen(search.cFileName) + 1;
-		filename = malloc(len);
-		memcpy(filename, search.cFileName, len);
-		p->data = filename;
-		p->next = malloc(sizeof(nebu_List));
-		p = p->next;
-		p->next = NULL;
-
+		pushFile(&search, &p);
 	}
 
 	while( FindNextFile(hSearch, &search) )
 	{
 		if(!isHiddenFile(&search))
 		{
-			len = strlen(search.cFileName) + 1;
-			filename = malloc(len);
-			memcpy(filename, search.cFileName, len);
-			p->data = filename;
-			p->next = malloc(sizeof(nebu_List));
-			p = p->next;
-			p->next = NULL;
+			pushFile(&search, &p);
 		}
 	}
 
@@ -88,7 +96,6 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 		fprintf(stderr, "[directory] Error: something bad happened\n");
 	}
 	
-
 	FindClose(hSearch);
 	free(searchStr);
 

@@ -2,15 +2,23 @@
 
 #include "SDL.h"
 #include <stdio.h>
+#include <string.h>
 
 Callbacks *current = 0;
+Callbacks default_callbacks;
+
 static int return_code = -1;
 static int redisplay = 0;
 static int idle = 1;
 static int fps_last = 0;
 static int fps_dt = 1;
 
-void SystemExit() {
+void nebu_Init(void) {
+	memset(&default_callbacks, 0, sizeof(Callbacks));
+	current = &default_callbacks;
+}
+
+void nebu_System_Exit() {
 	fprintf(stderr, "[system] shutting down SDL now\n");
 	SDL_Quit();
 	fprintf(stderr, "[system] scheduling application exit\n");
@@ -46,7 +54,7 @@ void nebu_Time_FrameDelay(unsigned int delay)
 	// nebu_Time_SetCurrentFrameTime( nebu_Time_GetElapsed() );
 }
 
-int SystemMainLoop() {
+int nebu_System_MainLoop() {
 	SDL_Event event;
 
 	return_code = -1;
@@ -61,11 +69,11 @@ int SystemMainLoop() {
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEMOTION:
-				SystemHandleInput(&event);
+				nebu_Intern_HandleInput(&event);
 			break;
 			case SDL_QUIT:
-				SystemExit();
-				SystemExitLoop(0);
+				nebu_System_Exit(); // shut down
+				nebu_System_ExitLoop(0); // exit mainloop
 			break;
 			default:
 				/* ignore event */
@@ -90,11 +98,11 @@ void nebu_System_SetCallbacks(Callbacks *cb) {
 		current->init();
 }
 
-void SystemExitLoop(int value) {
+void nebu_System_ExitLoop(int value) {
 	return_code = value;
 }
 
-void SystemPostRedisplay() {
+void nebu_System_PostRedisplay() {
   redisplay = 1;
 }
 

@@ -12,13 +12,13 @@
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
 typedef enum eGameType {
-  GAME_SINGLE = 1
+	GAME_SINGLE = 1
 #ifdef RECORD
-  ,
-  GAME_SINGLE_RECORD = 2,
-  GAME_PLAY = 4,
-  GAME_PLAY_NETWORK = 8,
-  GAME_NETWORK_RECORD
+	,
+	GAME_SINGLE_RECORD = 2,
+	GAME_PLAY = 4,
+	GAME_PLAY_NETWORK = 8,
+	GAME_NETWORK_RECORD
 #endif
 } eGameType;
 
@@ -29,29 +29,29 @@ typedef enum eGameType {
 */
 
 typedef struct RuleSet {
-  int eraseCrashed;
-  float speed;
+	int eraseCrashed;
+	float speed;
 } RuleSet;
 
 typedef struct Game2 {
-  game_level *level;
-  float level_scale;
-  RuleSet rules;
-  int mode;
-  int players;
-  int *startPositions;
-  SystemTime time;
-  nebu_List events;
-  FILE *record;
-  FILE *play;
-  // Input input;
+	game_level *level;
+	float level_scale;
+	RuleSet rules;
+	int mode;
+	int players;
+	int *startPositions;
+	SystemTime time;
+	nebu_List events;
+	FILE *record;
+	FILE *play;
+	// Input input;
 } Game2;
 
 typedef struct Data {
-  int dir;
+	int dir;
 
-  int score;
-  float speed; /* set to -1 when dead */
+	int score;
+	float speed; /* set to -1 when dead */
 	float booster;
 	int boost_enabled;
 	float trail_height;
@@ -59,30 +59,30 @@ typedef struct Data {
 	int last_dir;
 	unsigned int turn_time; /* for cycle animation */
  
-  segment2 *trails;
+	segment2 *trails;
 	int trailOffset;
 } Data;
 
 typedef struct AI {
-  int active;
-  int tdiff;
-  long lasttime;
+	int active;
+	int tdiff;
+	long lasttime;
 	segment2 left, right, front, backleft;
 } AI;
 
 typedef struct Player {
 	Camera *camera;
-  Data *data;
-  AI *ai;
+	Data *data;
+	AI *ai;
 } Player;
 
 typedef struct Game {
-  Player *player;
-  int players; /* number of players - currently limited to 4 somewhere */
-  int winner; /* who won this round */
-  int pauseflag; /* if the game is finished: the PAUSE_GAME_FINISHED flag
-		    is set */
-  int running; /* the amount of players that are still alive */
+	Player *player;
+	int players; //!< number of players - currently limited to 4 somewhere
+	int winner; //!< who won this round
+	int pauseflag; 
+	//!< if the game is finished: the PAUSE_GAME_FINISHED flag is set
+	int running; //!< the number of players that are still alive
 } Game;
 
 #endif

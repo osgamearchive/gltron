@@ -266,31 +266,33 @@ Menu = {
       read = function() return format("%.0f%%", settings.joy_threshold * 100); end
    },
 
-   -- TODO: fill in the rest of the items
+	-- TODO: fill in the rest of the items
 
-   -- Video
-   Level = {
-      type = MenuC.type.slider, caption = "Level",
-      right = nextLevel,
-      left = previousLevel,
-      action = nextLevel,
-      read = function()
-								_,_,name = strfind(settings.current_level, "(.*)%..+")
-								if name then
-									 return name
-								else
-									 return settings.current_track
-								end
-						 end
-   },
+	-- Video
+	Level = {
+		type = MenuC.type.slider, caption = "Level",
+		init = function() tmp.current_level = settings.current_level; end,
+		right = nextLevel,
+		left = previousLevel,
+		action = nextLevel,
+		read = function()
+			_,_,name = strfind(tmp.current_level, "(.*)%..+")
+			if name then
+				return name
+			else
+				return tmp.current_level
+			end
+		end
+	},
 
-   Artpack = {
-      type = MenuC.type.slider, caption = "Artpack",
-      right = nextArtpack,
-      left = previousArtpack,
-      action = nextArtpack,
-      read = function() return settings.current_artpack; end
-   },
+	Artpack = {
+		type = MenuC.type.slider, caption = "Artpack",
+		init = function() tmp.current_artpack = settings.current_artpack; end,
+		right = nextArtpack,
+		left = previousArtpack,
+		action = nextArtpack,
+		read = function() return tmp.current_artpack; end
+	},
 	 -- Details
    Filtering = {
       type = MenuC.type.list, caption = "Mipmap filter",
@@ -371,41 +373,96 @@ Menu = {
    },
 
    -- Screen
-   _320x240 = {
-      type = MenuC.type.action, caption = "320 x 240",
-      action =  function() settings.width = 320; settings.height = 240; c_video_restart(); end
-   },
-   _512x384 = {
-      type = MenuC.type.action, caption = "512 x 384",
-      action =  function() settings.width = 512; settings.height = 384; c_video_restart(); end
-   },
-   _640x480 = {
-      type = MenuC.type.action, caption = "640 x 480",
-      action =  function() settings.width = 640; settings.height = 480; c_video_restart(); end
-   },
-   _800x600 = {
-      type = MenuC.type.action, caption = "800 x 600",
-      action =  function() settings.width = 800; settings.height = 600; c_video_restart(); end
-   },
-   _1024x768 = {
-      type = MenuC.type.action, caption = "1024 x 768",
-      action =  function() settings.width = 1024; settings.height = 768; c_video_restart(); end
-   },
-   _1280x1024 = {
-      type = MenuC.type.action, caption = "1280 x 1024",
-      action =  function() settings.width = 1280; settings.height = 1024; c_video_restart(); end
-   },
-   _1600x1200 = {
-      type = MenuC.type.action, caption = "1600 x 1200",
-      action =  function() settings.width = 1600; settings.height = 1200; c_video_restart(); end
-   },
-   WindowMode = {
-      type = MenuC.type.list, caption = "Windowed",
-      labels = { "off", "on" },
-      values = { 0, 1 },
-      read = function() return settings.windowMode; end,
-      store = function(value) settings.windowMode = value; c_video_restart(); end
-   },
+	Resolution = {
+		type = MenuC.type.list, caption = "Resolution",
+		init = function(menu)
+			write("[resolution] running init\n")
+			-- check if matching resolution is found
+			tmp.resolution = 0
+			local i
+			local n = getn(Menu[menu].widths)
+			for i = 1,n do
+				if (settings.width == Menu[menu].widths[i]) and (settings.height == Menu[menu].heights[i]) then
+					tmp.resolution = i
+				end
+			end
+			if(tmp.resolution == 0) then
+				Menu[menu].widths[n] = settings.width
+				Menu[menu].heights[n] = settings.height
+				-- Menu[menu].labels[n] = format(Menu[menu].labels[n], settings.width, settings.height)
+				tmp.resolution = n
+			end
+			write(format("[resolution] resolution: %d\n", tmp.resolution))
+		end,	
+			
+		labels = {
+			"320 x 240", "512 x 384", "640 x 400",
+			"640 x 480", "800 x 600", "1024 x 768",
+			"1280 x 960", "1280 x 1024", "1400 x 1050",
+			"1600 x 1024", "1600 x 1200", "1680 x 1050",
+			"1920 x 1200", "custom" -- "custom(%d, %d)"
+			},
+		values = {
+			1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+		},
+		widths = {
+			320, 512, 640, 640, 800, 1024,
+			1280, 1280, 1400, 1600, 1600, 1680,
+			1920, 0
+		},
+		heights = {
+			240, 384, 400, 480, 600, 768,
+			960, 1024, 1050, 1024, 1200, 1050,
+			1200, 0
+		},
+		read = function() return tmp.resolution; end,
+		store = function(value) tmp.resolution = value; end
+	},	
+
+	Apply = {
+		type = MenuC.type.action, caption = "Apply Changes",
+		action = function()
+			local restart = 0
+			local reload_art = 0
+			local reload_level = 0
+			
+			if settings.windowMode ~= tmp.windowMode then restart = 1; end
+			if settings.width ~= Menu.Resolution.widths[tmp.resolution] then restart = 1; end
+			if settings.height ~= Menu.Resolution.heights[tmp.resolution] then restart = 1; end
+			settings.width = Menu.Resolution.widths[tmp.resolution]
+			settings.height = Menu.Resolution.heights[tmp.resolution]
+			settings.windowMode = tmp.windowMode
+			
+			if settings.current_level ~= tmp.current_level then reload_level = 1; end
+			settings.current_level = tmp.current_level
+			
+			if settings.current_artpack ~= tmp.current_artpack then reload_art = 1; end
+			settings.current_artpack = tmp.current_artpack
+			
+			if restart == 1 then
+				c_video_restart()
+			else 
+				if reload_art == 1 then
+					c_setArtPath()
+					c_reloadArtpack()
+				end
+				if reload_level == 1 then
+					c_reloadLevel()
+				end
+			end
+		end
+	},
+		
+	WindowMode = {
+		type = MenuC.type.list, caption = "Windowed",
+		init = function()
+			tmp.windowMode = settings.windowMode
+		end,
+		labels = { "off", "on" },
+		values = { 0, 1 },
+		read = function() return tmp.windowMode; end,
+		store = function(value) tmp.windowMode = value; end
+	},
 
 	 TimeDemo = {
 			type = MenuC.type.action, caption = "Time Demo",
@@ -461,85 +518,6 @@ Menu = {
       store = function(value) settings.loopMusic = value; end
    },
 }
-
-Menu.SetParent = function ( menu )
-										-- script_print("processing menu '" .. menu .. "'")
-										local _,entry
-										for _,entry in Menu[menu].items do
-											 if Menu[entry] == nil then
-													script_print("menu '" .. entry .. "' does not exist")
-											 else 
-													Menu[entry].parent = menu
-													-- script_print("processing item '" .. entry .. "'")
-													if Menu[entry].type == MenuC.type.menu then
-														 Menu.SetParent( entry )
-													end
-											 end
-										end
-								 end
-
-Menu.SetNames = function ()
-									 local name,v
-									 for name,v in Menu do
-											if type(v) == "table" then
-												 v.name = name
-											end
-									 end
-								end
-
-Menu.GotoParent = function ()
-										 Menu.current = Menu[Menu.current].parent
-										 Menu.active = 1
-									end
-
-Menu.Action = function ()
-								 local menu = Menu[Menu.current].items[Menu.active]
-								 local type = Menu[ menu  ].type
-								 script_print("calling action of '" .. menu .. "', type " .. type )
-								 MenuAction[ type ]( menu )
-							end
-
-Menu.Left = function ()
-							 local menu = Menu[Menu.current].items[Menu.active]
-							 local type = Menu[ menu  ].type
-							 if type == MenuC.type.slider then
-									script_print("calling left of '" .. menu .. "'")
-									Menu[ menu ].left()
-							 else
-									-- script_print("calling action of '" .. menu .. "', type " .. type )
-									-- MenuAction[ type ]( menu )      
-							 end
-						end
-
-Menu.Right = function ()
-								local menu = Menu[Menu.current].items[Menu.active]
-								local type = Menu[ menu  ].type
-								if type == MenuC.type.slider then
-									 script_print("calling right of '" .. menu .. "'")
-									 Menu[ menu ].right()
-								else
-									 -- script_print("calling action of '" .. menu .. "', type " .. type )
-									 -- MenuAction[ type ]( menu )
-								end
-						 end
-
-
-Menu.Next = function ()
-							 if Menu.active < getn(Menu[Menu.current].items) then
-									Menu.active = Menu.active + 1
-							 else
-									Menu.active = 1
-							 end
-						end
-
-Menu.Previous = function ()
-									 if Menu.active > 1 then 
-											Menu.active = Menu.active - 1
-									 else
-											Menu.active = getn(Menu[Menu.current].items)
-									 end
-								end
-
 -- Menu entries
 Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "Quit" }
 
@@ -580,8 +558,10 @@ Menu.Player4_KeyMenu.items = {
 }
 
 Menu.VideoMenu.items = {
-	 "Level", "Artpack", "DetailsMenu", 
-	 "ScreenMenu" --, "TimeDemo" 
+	 "Level", "Artpack", 
+	 "Resolution", "WindowMode", "Apply",
+	 "DetailsMenu"
+	 --, "TimeDemo" 
 }
 
 Menu.DetailsMenu.items = {
@@ -589,18 +569,7 @@ Menu.DetailsMenu.items = {
     -- "Lightcycles",
     "Recognizer", "Lod", "FPS_Counter", "AI_Status", "Scores"
 }
-Menu.ScreenMenu.items = {
-   "_320x240", "_512x384", "_640x480", "_800x600", "_1024x768", "_1280x1024",
-   "_1600x1200", "WindowMode"
-}
 
 Menu.AudioMenu.items = { 
 	 "Music", "FX", "Music_Volume", "FX_Volume", "Song", "LoopMusic"
 }
-
--- initialization code
-Menu.SetNames()
-Menu.SetParent( "RootMenu" )
-
-
-

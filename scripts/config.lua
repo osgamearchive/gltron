@@ -1,4 +1,5 @@
 -- global tables
+tmp = {}
 
 settings = { }
 artpacks = { }
@@ -59,6 +60,7 @@ settings.show_scores = 1
 -- screen options
 settings.width = 800
 settings.height = 600
+settings.resolution = 5 -- 800x600
 settings.windowMode = 1
 
 -- other settings (not available via menu)

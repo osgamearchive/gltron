@@ -31,7 +31,7 @@ void GameMode_Idle(void) {
 	Input_Idle();
 	Scripting_Idle();
 	nebu_Time_FrameDelay(5);
-	SystemPostRedisplay();
+	nebu_System_PostRedisplay();
 }
 
 void enterGame(void) { /* called when game mode is entered */

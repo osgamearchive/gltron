@@ -62,7 +62,7 @@ void idleTimedemo(void) {
 	doCameraMovement();
 	doRecognizerMovement();
 	scripting_RunGC();
-	SystemPostRedisplay();
+	nebu_System_PostRedisplay();
 	frames++;
 	game2->time.lastFrame += 20;
 }
@@ -72,7 +72,7 @@ void keyTimedemo(int state, int key, int x, int y) {
 		return;
 
 	if(key == 27)
-		SystemExitLoop(RETURN_TIMEDEMO_ABORT);
+		nebu_System_ExitLoop(RETURN_TIMEDEMO_ABORT);
 }
 
 struct svaeRules {

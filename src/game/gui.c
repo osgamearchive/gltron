@@ -132,7 +132,7 @@ void idleGui(void) {
 	Video_Idle();
 	Input_Idle();
 	nebu_Time_FrameDelay(50);
-	SystemPostRedisplay(); /* animate menu */
+	nebu_System_PostRedisplay(); /* animate menu */
 }
 
 void keyboardConfigure(int state, int key, int x, int y) {
@@ -155,7 +155,7 @@ void keyboardConfigure(int state, int key, int x, int y) {
 													"[ configure_event ] = %d", key);
 			}
 		}
-		SystemExitLoop(RETURN_PROMPT_ESCAPE);
+		nebu_System_ExitLoop(RETURN_PROMPT_ESCAPE);
 	}
 }
 
@@ -172,11 +172,11 @@ void keyboardGui(int state, int key, int x, int y) {
   case 27:
     if(strcmp(pMenuName, "RootMenu")) {
 			// not in the root menu -> go up one menu
-      scripting_Run("Menu.GotoParent()");
+      scripting_Run("MenuFunctions.GotoParent()");
     } else {
 			// is a game already in process? then resume
 			if(game->pauseflag != PAUSE_NO_GAME)
-				SystemExitLoop(RETURN_GUI_ESCAPE);
+				nebu_System_ExitLoop(RETURN_GUI_ESCAPE);
     }
     break;
   case ' ': 
@@ -201,27 +201,27 @@ void keyboardGui(int state, int key, int x, int y) {
 	case SYSTEM_JOY_BUTTON_7 + SYSTEM_JOY_OFFSET:
 	case SYSTEM_JOY_BUTTON_8 + SYSTEM_JOY_OFFSET:
 	case SYSTEM_JOY_BUTTON_9 + SYSTEM_JOY_OFFSET:
-    scripting_Run("Menu.Action()");
+    scripting_Run("MenuFunctions.Action()");
     break;
   case SYSTEM_KEY_UP:
 	case SYSTEM_JOY_UP:
 	case SYSTEM_JOY_UP + SYSTEM_JOY_OFFSET:
-    scripting_Run("Menu.Previous()");
+    scripting_Run("MenuFunctions.Previous()");
     break;
   case SYSTEM_KEY_DOWN:
 	case SYSTEM_JOY_DOWN:
 	case SYSTEM_JOY_DOWN + SYSTEM_JOY_OFFSET:
-    scripting_Run("Menu.Next()");
+    scripting_Run("MenuFunctions.Next()");
     break;
   case SYSTEM_KEY_RIGHT:
 	case SYSTEM_JOY_RIGHT:
 		case SYSTEM_JOY_RIGHT + SYSTEM_JOY_OFFSET:
-    scripting_Run("Menu.Right()");
+    scripting_Run("MenuFunctions.Right()");
     break;
   case SYSTEM_KEY_LEFT:
 	case SYSTEM_JOY_LEFT:
 		case SYSTEM_JOY_LEFT + SYSTEM_JOY_OFFSET:
-    scripting_Run("Menu.Left()");
+    scripting_Run("MenuFunctions.Left()");
     break;
   case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
   case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;

@@ -51,7 +51,7 @@ int processEvent(GameEvent* e) {
       game->winner = -2;
       displayMessage(TO_CONSOLE, "everyone died! no one wins!");
     }
-		SystemExitLoop(RETURN_GAME_END);
+		nebu_System_ExitLoop(RETURN_GAME_END);
     game->pauseflag = PAUSE_GAME_FINISHED;
     value = 1;
     break;

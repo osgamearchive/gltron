@@ -1,15 +1,8 @@
 GetMenuValue = {}
 MenuAction = {}
-
-GetMenuValue[ MenuC.type.menu ] = function ( menu )
-   -- return "(menu)"
-   return ""
-end
-
-MenuAction[ MenuC.type.menu ] = function ( menu )
-   Menu.current = menu 
-   Menu.active = 1
-end
+MenuLeft = {} 
+MenuRight = {}
+MenuFunctions = {}
 
 GetMenuValue[ MenuC.type.list ] = function ( menu )
    local value
@@ -24,42 +17,39 @@ GetMenuValue[ MenuC.type.list ] = function ( menu )
    return "unknown (" .. value .. ")"
 end
 
-MenuAction[ MenuC.type.list ] = function ( menu )
-   local value
-   if Menu[menu].read then 
-      value = Menu[menu].read()
-   else
-      value = "undef"
-   end
-
-   local nValues = getn(Menu[menu].values)
-   local i
-   for i=1,nValues do
-      if Menu[menu].values[i] == value then
-	 if i < nValues then
-	    value = Menu[menu].values[i + 1]
-	 else
-	    value = Menu[menu].values[1]
-	 end
-	 return Menu[menu].store( value ) 
-      end
-   end
-   return Menu[menu].store( Menu[menu].values[1] )
-end
-
-MenuAction[ MenuC.type.action ] = function ( menu )
-   Menu[menu].action()
+GetMenuValue[ MenuC.type.key ] = function ( menu )
+   local player = Menu[menu].player
+   local event = Menu[menu].event
+   return c_getKeyName( settings.keys[ player ][ event ] )
 end
 
 GetMenuValue[ MenuC.type.slider ] = function ( menu )
    return Menu[menu].read()
 end
 
-MenuAction[ MenuC.type.slider ] = function( menu )
+MenuAction[ MenuC.type.menu ] = function ( menu )
+	Menu.current = menu 
+	Menu.active = 1
+	-- write(format("setting %s (%d items) as active menu\n", menu, getn(Menu[menu].items) ))
+	local i
+	for i = 1,getn(Menu[menu].items) do
+		-- write(format("checking %s for init-function\n", Menu[menu].items[i]))
+		if Menu[ Menu[menu].items[i] ].init then
+			Menu[ Menu[menu].items[i] ].init(Menu[menu].items[i])
+		end
+	end
+end
+
+MenuAction[ MenuC.type.list ] = function ( menu )
+	MenuRight[ MenuC.type.list ](menu)
+end
+
+MenuAction[ MenuC.type.action ] = function( menu )
    if Menu[menu].action then
       Menu[menu].action()
    end
 end
+MenuAction[ MenuC.type.slider ] = MenuAction [ MenuC.type.action ]
 
 MenuAction[ MenuC.type.key ] = function ( menu )
    local player = Menu[menu].player
@@ -69,23 +59,138 @@ MenuAction[ MenuC.type.key ] = function ( menu )
    c_configureKeyboard()
 end
 
-GetMenuValue[ MenuC.type.key ] = function ( menu )
-   local player = Menu[menu].player
-   local event = Menu[menu].event
-   return c_getKeyName( settings.keys[ player ][ event ] )
+function menuListCycle(menu, offset)
+
+	local nValues = getn(Menu[menu].values)
+	local i
+	local index
+	local value = Menu[menu].read()
+
+	for i=1,nValues do
+		if Menu[menu].values[i] == value then
+			if (i + offset <= nValues) and (i + offset >= 1) then
+				index = i + offset
+			else
+				if offset < 1 then
+					index = nValues
+				else
+					index = 1
+				end
+			end
+			Menu[menu].store(Menu[menu].values[index]) 
+			return
+		end
+	end
+	-- Menu[menu].store( Menu[menu].values[1] )
 end
 
-GetMenuValue[ MenuC.type.action ] = function ( menu )
-   -- return "(action)"
-   return ""
+MenuLeft[ MenuC.type.slider ] = function( menu )
+	if Menu[menu].left then
+		Menu[menu].left()
+	end
+end
+
+MenuLeft[ MenuC.type.list ] = function( menu )
+	menuListCycle(menu, -1)
+end
+
+MenuRight[ MenuC.type.slider ] = function( menu )
+	if Menu[menu].right then
+		Menu[menu].right()
+	end
+end
+
+MenuRight[ MenuC.type.list ] = function( menu )
+	menuListCycle(menu, 1)
 end
 
 GetMenuValueWidth = function ( menu )
-   return strlen( GetMenuValue[ Menu[menu].type ]( menu ) )
+	if GetMenuValue[ Menu[menu].type ] then
+		return strlen( GetMenuValue[ Menu[menu].type ]( menu ) )
+	else
+		return 0
+	end
 end
 
 GetMenuValueString = function ( menu )
    -- write(format("GetMenuValueString: '%s'\n", menu));
-   return GetMenuValue[ Menu[menu].type ]( menu )
+	if GetMenuValue[ Menu[menu].type ] then
+		return GetMenuValue[ Menu[menu].type ]( menu )
+	else
+		return ""
+	end
 end
 
+MenuFunctions.SetParent = function ( menu )
+	-- script_print("processing menu '" .. menu .. "'")
+	local _,entry
+	for _,entry in Menu[menu].items do
+		if Menu[entry] == nil then
+			script_print("menu '" .. entry .. "' does not exist")
+		else 
+			Menu[entry].parent = menu
+			-- script_print("processing item '" .. entry .. "'")
+			if Menu[entry].type == MenuC.type.menu then
+				MenuFunctions.SetParent( entry )
+			end
+		end
+	end
+end
+
+MenuFunctions.SetNames = function ()
+	local name,v
+	for name,v in Menu do
+		if type(v) == "table" then
+			v.name = name
+		end
+	end
+end
+
+MenuFunctions.GotoParent = function ()
+	Menu.current = Menu[Menu.current].parent
+	Menu.active = 1
+end
+
+MenuFunctions.Action = function ()
+	local menu = Menu[Menu.current].items[Menu.active]
+	local type = Menu[ menu  ].type
+	script_print("calling action of '" .. menu .. "', type " .. type )
+	MenuAction[ type ]( menu )
+end
+
+MenuFunctions.Left = function ()
+	local menu = Menu[Menu.current].items[Menu.active]
+	local type = Menu[ menu  ].type
+	if MenuLeft[ type ] then
+		MenuLeft[ type ](menu)
+	end
+end
+
+MenuFunctions.Right = function ()
+	local menu = Menu[Menu.current].items[Menu.active]
+	local type = Menu[ menu  ].type
+	if MenuRight[ type ] then
+		MenuRight[ type ](menu)
+	end
+end
+
+
+MenuFunctions.Next = function ()
+	if Menu.active < getn(Menu[Menu.current].items) then
+		Menu.active = Menu.active + 1
+	else
+		Menu.active = 1
+	end
+end
+
+MenuFunctions.Previous = function ()
+	if Menu.active > 1 then 
+		Menu.active = Menu.active - 1
+	else
+		Menu.active = getn(Menu[Menu.current].items)
+	end
+end
+
+-- initialization code
+MenuFunctions.SetNames()
+MenuFunctions.SetParent( "RootMenu" )

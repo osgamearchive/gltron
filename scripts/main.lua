@@ -18,7 +18,7 @@ RETURN_PAUSE_ESCAPE = 13
 -- enable below to run in timedemo-only mode
 if(nil) then
 	SetCallback("timedemo")
-	SystemMainLoop()
+	c_mainLoop()
 	exit()
 end
 

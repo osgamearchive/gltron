@@ -7,11 +7,11 @@
 #include <assert.h>
 
 static SDL_Surface *screen;
-static int width, height;
-static int flags;
-static int fullscreen;
+static int width = 0;
+static int height = 0;
+static int flags = 0;
 static int video_initialized = 0;
-static int window_id;
+static int window_id = 0;
 
 void nebu_Video_Init(void) {
   if(SDL_Init(SDL_INIT_VIDEO) < 0 ) {
@@ -21,17 +21,16 @@ void nebu_Video_Init(void) {
 		video_initialized = 1;
 }
 
-void SystemInitWindow(int x, int y, int w, int h) {
+void nebu_Video_SetWindowMode(int x, int y, int w, int h) {
   fprintf(stderr, "ignoring (%d,%d) initial window position - feature not implemented\n", x, y);
   width = w;
   height = h;
 }
 
-void SystemInitDisplayMode(int f, unsigned char full) {
+void nebu_Video_SetDisplayMode(int f) {
   int bitdepth, zdepth;
 
   flags = f;
-  fullscreen = full;
   if(!video_initialized) {
     if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
       fprintf(stderr, "[system] can't initialize Video: %s\n", SDL_GetError());
@@ -62,14 +61,17 @@ void SystemSetGamma(float red, float green, float blue) {
   SDL_SetGamma(red, green, blue);
 }
 
-int SystemCreateWindow(char *name) {
-  int f = SDL_OPENGL;
-  if(fullscreen & SYSTEM_FULLSCREEN)
-    f |= SDL_FULLSCREEN;
-  if( (screen = SDL_SetVideoMode( width, height, 0, f )) == NULL ) {
+int nebu_Video_Create(char *name) {
+  assert (window_id == 0);  // only single window allowed for now
+  assert (width != 0 && height != 0);
+
+  if( (screen = SDL_SetVideoMode( width, height, 0, 
+	  ((flags & SYSTEM_FULLSCREEN) ? SDL_FULLSCREEN : 0) | SDL_OPENGL)) == NULL ) {
     fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
   }
+  window_id = 1;
+
   SDL_WM_SetCaption(name, NULL);
   glewInit();
   if(!GLEW_ARB_multitexture)
@@ -81,14 +83,13 @@ int SystemCreateWindow(char *name) {
   fprintf(stderr, "GL renderer: %s\n", glGetString(GL_RENDERER));
   fprintf(stderr, "GL version: %s\n", glGetString(GL_VERSION));
 
-  SDL_WM_SetCaption("GLtron", "");
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
   nebu_System_SwapBuffers();
-  return 0;
+  return window_id;
 }
 
-void SystemDestroyWindow(int id) {
+void nebu_Video_Destroy(int id) {
   /* quit the video subsytem
 	 * otherwise SDL can't create a new context on win32, if the stencil
 	 * bits change 
@@ -97,10 +98,11 @@ void SystemDestroyWindow(int id) {
 	 * caused by this, but I can't remember what they where
 	 */
   if(id == window_id)
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	  SDL_QuitSubSystem(SDL_INIT_VIDEO);
   else
 	  assert(0);
   video_initialized = 0;
+  window_id = 0;
 }
 
 void SystemReshapeFunc(void(*reshape)(int w, int h)) {

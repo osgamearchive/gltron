@@ -25,10 +25,7 @@ function nextArtpack()
 	else
 		current_artpack_index = 1
 	end
-	settings.current_artpack = artpacks[ current_artpack_index ]
-	
-	c_setArtPath()
-	c_reloadArtpack()
+	tmp.current_artpack = artpacks[ current_artpack_index ]
 end
 
 function previousArtpack()
@@ -37,48 +34,43 @@ function previousArtpack()
 	else
 		current_artpack_index = getn(artpacks) 
 	end
-	settings.current_artpack = artpacks[ current_artpack_index ]
-	
-	c_setArtPath()
-	c_reloadArtpack()
+	tmp.current_artpack = artpacks[ current_artpack_index ]
 end
 
 -- copy-paste from setup/next/previous Artpack
 function setupLevels()
-	 levels = c_loadDirectory(ePath.LEVEL);
-   local i,name
-	 for i,name in levels do
+	levels = c_loadDirectory(ePath.LEVEL);
+	local i,name
+		for i,name in levels do
 			write("found level: ", name)
 			write("\n")
-	 end
-   for i,name in levels do
-      if name == settings.current_level then
-				 current_level_index = i
-				 return
-      end
-   end
-   settings.current_level = levels[1]
-   current_level_index = 1
+		end
+	for i,name in levels do
+		if name == settings.current_level then
+					current_level_index = i
+					return
+		end
+	end
+	settings.current_level = levels[1]
+	current_level_index = 1
 end
 
 function nextLevel()
-   if current_level_index < getn(levels) then
-      current_level_index = current_level_index + 1
-   else
-      current_level_index = 1
-   end
-   settings.current_level = levels[ current_level_index ]
-   c_reloadLevel()
+	if current_level_index < getn(levels) then
+		current_level_index = current_level_index + 1
+	else
+		current_level_index = 1
+	end
+	tmp.current_level = levels[ current_level_index ]
 end
 
 function previousLevel()
-   if current_level_index > 1 then
-      current_level_index = current_level_index - 1
-   else
-      current_level_index = getn(levels) 
-   end
-   settings.current_level = levels[ current_level_index ]
-   c_reloadLevel()
+	if current_level_index > 1 then
+		current_level_index = current_level_index - 1
+	else
+		current_level_index = getn(levels) 
+	end
+	tmp.current_level = levels[ current_level_index ]
 end
 
 

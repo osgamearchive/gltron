@@ -10,7 +10,7 @@ static float joystick_threshold = 0;
 
 void nebu_Input_Init(void) {
 	/* keyboard */
-  SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
+	SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
   
 	/* joystick */
 	if(SDL_Init(SDL_INIT_JOYSTICK) >= 0) {
@@ -35,31 +35,29 @@ void nebu_Input_Init(void) {
 }
 
 void SystemGrabInput() {
-  SDL_WM_GrabInput(SDL_GRAB_ON);
+	SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 
 void SystemUngrabInput() {
-  SDL_WM_GrabInput(SDL_GRAB_OFF);
+	SDL_WM_GrabInput(SDL_GRAB_OFF);
 }
 
 void SystemHidePointer() {
-  SDL_ShowCursor(SDL_DISABLE);
+	SDL_ShowCursor(SDL_DISABLE);
 }
 
 void SystemUnhidePointer() {
-  SDL_ShowCursor(SDL_ENABLE);
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 void SystemMouse(int buttons, int state, int x, int y) {
-  if(current)
-    if(current->mouse != NULL)
-      current->mouse(buttons, state, x, y);
+	if(current && current->mouse)
+		current->mouse(buttons, state, x, y);
 }
 
 void SystemMouseMotion(int x, int y) {
-  if(current)
-    if(current->mouseMotion != NULL)
-      current->mouseMotion(x, y);
+	if(current && current->mouseMotion)
+		current->mouseMotion(x, y);
 }
 
 extern char* SystemGetKeyName(int key) {
@@ -76,10 +74,10 @@ extern char* SystemGetKeyName(int key) {
 	}
 }  
 
-void SystemHandleInput(SDL_Event *event) {
-  char *keyname;
-  int key, state;
-  // int skip_axis_event = 0;
+void nebu_Intern_HandleInput(SDL_Event *event) {
+	char *keyname;
+	int key, state;
+	// int skip_axis_event = 0;
 	static int joy_axis_state[2] = { 0, 0 };
 	static int joy_lastaxis[2] = { 0, 0 };
 
@@ -103,10 +101,12 @@ void SystemHandleInput(SDL_Event *event) {
 			break;
 		}
 		/* check: is that translation necessary? */
-		if(key) 
-			current->keyboard(state, key, 0, 0);
+		if(key)
+			if(current && current->keyboard)
+				current->keyboard(state, key, 0, 0);
 		else
-			current->keyboard(state, event->key.keysym.sym, 0, 0);
+			if(current && current->keyboard)
+				current->keyboard(state, event->key.keysym.sym, 0, 0);
 		break;
 	case SDL_JOYAXISMOTION:
 		if( abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
@@ -121,7 +121,8 @@ void SystemHandleInput(SDL_Event *event) {
 				if(joy_lastaxis[event->jaxis.which] & (1 << event->jaxis.axis)) {
 					key++;
 				}
-				current->keyboard(SYSTEM_KEYSTATE_UP, key, 0, 0);
+				if(current && current->keyboard)
+					current->keyboard(SYSTEM_KEYSTATE_UP, key, 0, 0);
 			} else {
 				// do nothing
 			}
@@ -139,7 +140,8 @@ void SystemHandleInput(SDL_Event *event) {
 				} else {
 					joy_lastaxis[event->jaxis.which] &= ~(1 << event->jaxis.axis);
 				}
-				current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
+				if(current && current->keyboard)
+					current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
 			} else {
 				// do nothing
 			}
@@ -159,7 +161,8 @@ void SystemHandleInput(SDL_Event *event) {
 			key += 2;
 		if(event->jaxis.value > 0)
 			key++;
-		current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
+		if(current && current->keyboard)
+			current->keyboard(SYSTEM_KEYSTATE_DOWN, key, 0, 0);
 		break;
 #endif
 	case SDL_JOYBUTTONDOWN:
@@ -171,12 +174,13 @@ void SystemHandleInput(SDL_Event *event) {
 		
 		key = SYSTEM_JOY_BUTTON_0 + event->jbutton.button +
 			SYSTEM_JOY_OFFSET * event->jbutton.which;
-		current->keyboard(state, key, 0, 0);
+		if(current && current->keyboard)
+			current->keyboard(state, key, 0, 0);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
 		SystemMouse(event->button.button, event->button.state, 
-								event->button.x, event->button.y);
+			event->button.x, event->button.y);
 		break;
 	case SDL_MOUSEMOTION:
 		SystemMouseMotion(event->motion.x, event->motion.y);
