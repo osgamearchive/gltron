@@ -186,7 +186,6 @@ float vec2Dot(const vec2 *pV1, const vec2 *pV2) {
 float vec2Length(const vec2 *pV) {
 	float fLength2 = (pV->v[0] * pV->v[0] + pV->v[1] * pV->v[1]);
 	float l = sqrt(fLength2);
-	printf("%.2f, %.2f, %.2f\n", fLength2, (float) sqrt(fLength2), l);
 	return l;
 }
 
@@ -318,3 +317,6 @@ vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
 	return pOut;
 }
 
+float segment2_Length(segment2 *s) {
+	return vec2Length(&s->vDirection);
+}
