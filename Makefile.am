@@ -22,9 +22,9 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	floor.c floor.h skybox.c skybox.h engine.h event.h \
 	visuals_2d.c \
 	scripting.c scripting.h scripting_interface.c console.h settings.h \
-	util.c util.h extgl.c vector.c matrix.c vector.h matrix.h \
+	util.c util.h vector.c matrix.c vector.h matrix.h \
 	basic_types.h game_data.h client_data.h recognizer.h file_io.h \
-	extgl.h 
+	# extgl.h extgl.c 
 
 
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/liblualib.a -lm
