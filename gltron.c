@@ -169,6 +169,8 @@ int main( int argc, char *argv[] ) {
 #ifdef SOUND
   printf("initializing sound\n");
   initSound();
+  setMusicVolume(game->settings->musicVolume);
+  setFxVolume(game->settings->fxVolume);
   path = getFullPath("gltron.it");
   if(path == 0 || loadSound(path)) 
     printf("error trying to load sound\n");
