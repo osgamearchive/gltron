@@ -1,7 +1,7 @@
 #include "gltron.h"
 #include "explosion.h" 
 
-#define EXPLOSION_SPEED 0.50
+#define EXPLOSION_SPEED 0.80
 #define EXPLOSION_MAX_RADIUS 25 
 
 /* shockwave behavior constants */
@@ -9,7 +9,7 @@
 #define SHOCKWAVE_MAX_RADIUS 45.0
 #define SHOCKWAVE_WIDTH 0.2
 #define SHOCKWAVE_SPACING 6.0
-#define SHOCKWAVE_SPEED 1.2 
+#define SHOCKWAVE_SPEED 1.2 /* speed relative to explosion */
 #define SHOCKWAVE_SEGMENTS 25
 #define NUM_SHOCKWAVES 3 
 
@@ -90,7 +90,7 @@ static void drawSpires(float radius) {
   glShadeModel(GL_SMOOTH);
      
   glBlendFunc(GL_ONE, GL_ONE);
-  
+
   glBegin(GL_TRIANGLES);
   
   for (i=0; i < NUM_SPIRES; i++) {
