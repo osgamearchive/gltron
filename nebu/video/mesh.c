@@ -46,8 +46,10 @@ void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 	glDisableClientState(GL_NORMAL_ARRAY);
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
-		glClientActiveTextureARB(GL_TEXTURE0_ARB + i);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		if(pMesh->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
+			glClientActiveTextureARB(GL_TEXTURE0_ARB + i);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		}
 	}
 	glClientActiveTextureARB(GL_TEXTURE0_ARB);
 }
