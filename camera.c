@@ -101,6 +101,17 @@ void chaseCamMove() {
 	cam->cam[2] = H + 0.5;
 #undef H
 	break;
+      case 3: /* mouse camera */
+	cam->target[0] = data->posx + dirsX[data->dir];
+	cam->target[1] = data->posy + dirsY[data->dir];
+	cam->target[2] = B_HEIGHT;
+
+	cam->cam[0] = data->posx + 
+	  cam_r * cos(cam_phi) * sin(cam_chi);
+	cam->cam[1] = data->posy + 
+	  cam_r * sin(cam_phi) * sin(cam_chi);
+	cam->cam[2] = cam_r * cos(cam_chi);
+	break;
       }
     }
   }
@@ -110,4 +121,5 @@ void camMove() {
   camAngle += CAM_SPEED * game2->time.dt / 100;
   while(camAngle > 360) camAngle -= 360;
 }
+
 

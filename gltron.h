@@ -30,7 +30,6 @@
 
 #endif /* WIN32 */
 
-
 /* FreeBSD additions by Andrey Zakhatov <andy@icc.surw.chel.su>  */
 
 #ifdef __FreeBSD__
@@ -62,11 +61,14 @@ typedef png_texture texture;
 #include "model.h"
 #include "data.h"
 #include "menu.h"
+#include "quad.h"
 
 #include "system.h"
 #include "geom.h"
 #include "light.h"
 
+/* rendering stuff */
+#include "renderer_gl.h"
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -101,7 +103,7 @@ enum {
 #define CYCLE_HEIGHT 8
 #define WALL_H 12
 
-#define CAM_COUNT 3
+#define CAM_COUNT 4
 #define CAM_CIRCLE_DIST 15
 #define CAM_CIRCLE_Z 8.0
 #define CAM_FOLLOW_DIST 12
@@ -109,6 +111,16 @@ enum {
 #define CAM_FOLLOW_SPEED 0.05
 #define CAM_FOLLOW_SPEED_FACTOR 1.0 / 82.0
 #define CAM_SPEED 2.0
+
+#define CAM_R_MIN 2.0
+#define CAM_R_MAX 100
+#define CAM_CHI_MIN M_PI / 6
+#define CAM_CHI_MAX M_PI / 2 - M_PI / 6
+
+#define MOUSE_ORIG_X 100
+#define MOUSE_ORIG_Y 100
+#define MOUSE_CX 0.003
+#define MOUSE_CY 0.003
 
 #define TURN_LENGTH 200
 
@@ -144,6 +156,15 @@ extern Game2 main_game2;
 extern Game2 *game2;
 
 extern float camAngle;
+extern float cam_phi;
+extern float cam_chi;
+extern float cam_r;
+
+#ifdef DEPTH_SORT
+extern int quadBufSize;
+extern Quad* quadBuf;
+extern int* quadBufIndex;
+#endif
 
 /* extern TexFont *txf; */
 extern fonttex *gameFtx;
@@ -228,6 +249,8 @@ extern void stopPlaying();
 
 /* engine.c */
 
+extern void addList(list **l, void *data);
+extern int updateTime();
 extern int getCol(int x, int y);
 extern void turn(Data* data, int direction);
 extern void idleGame();
@@ -256,7 +279,10 @@ extern int processEvent(GameEvent *e);
 extern void initClientData();
 extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 extern void changeDisplay();
-void initModel(Player *p, int p_num);
+extern void initModel(Player *p, int p_num);
+
+extern void gameMouseMotion(int x, int y);
+extern void gameMouse(int buttons, int state, int x, int y);
 
 extern void mouseWarp();
 extern void initData();
@@ -323,7 +349,7 @@ extern float* getVf(char *szName);
 
 /* file handling -> file.c */
 
-extern char* getFullPath(char* filename);
+extern char* getFullPath(char *filename);
 extern list* readDirectoryContents(char *dirname, char *prefix);
 extern char* getMusicPath(char *dirname);
 
@@ -353,13 +379,22 @@ extern void drawScore(Player *p, gDisplay *d);
 extern void drawAI(gDisplay *d);
 extern void drawPause(gDisplay *d);
 /* extern void drawHelp(gDisplay *d); */
-
 extern void drawFloor(gDisplay *d);
-extern void drawTraces(Player *, gDisplay *d);
 extern void drawPlayers(Player *);
 extern void drawWalls(gDisplay *d);
-
 extern void drawCam(Player *p, gDisplay *d);
+
+/* trail.c */
+extern void drawTrails(Player *p, Player *p_eye, gDisplay *d);
+extern void drawTrailBow(Player *p);
+extern void drawTrailLines(Data *d);
+extern void drawTrailShadows(Data *d);
+extern void drawTrailQuadBow(Player *p, int *q);
+extern void drawTrailsWithQuadBuf(Player *p_eye);
+extern void checkQuad2D(char *flags, int q, int n);
+
+/* clip.c */
+int testfrustum(float *x, float *y, float *p, float *a, float *b);
 
 /* demo stuff */
 /* record.c */
