@@ -100,6 +100,7 @@ static void autoConfigureDisplay() {
 
 void changeDisplay(int view) {
 
+  /* passing -1 to changeDisplay tells it to use the view from settings */
   if (view == -1) {
     view = getSettingi("display_type");
   }
