@@ -216,6 +216,8 @@ typedef struct Player {
   float pColorAlpha[4];
 } Player;
 
+#define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
+
 /* if you want to add something and make it permanent (via
    .gltronrc) then
    1) add it to Settings in data.h
