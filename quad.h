@@ -13,6 +13,7 @@
 
 typedef struct Vertex {
   float v[3];
+  // float n[3];
   float color[4];
   float uv[2];
 } Vertex;
@@ -23,11 +24,37 @@ typedef struct Quad {
   int texture_id;
 } Quad;
 
+typedef struct Tris {
+  Vertex vertex[3]; 
+  int type;
+  int texture_id;
+} Tris;
+
 typedef struct QuadBuffer {
   Quad *quads;
   int size;
   int current;
 } QuadBuffer;
+
+typedef struct QuadBufInfo {
+  QuadBuffer *qbuf;
+  int *qIndex;
+  int size;
+  int *qFlags;
+} QuadBufInfo;
+
+typedef struct TrisBuffer {
+  Tris *quads;
+  int size;
+  int current;
+} TrisBuffer;
+
+typedef struct TrisBufInfo {
+  TrisBuffer *qbuf;
+  int *qIndex;
+  int size;
+  int *qFlags;
+} TrisBufInfo;
 
 enum { 
   QUAD_COLOR = 1,
