@@ -556,9 +556,9 @@ void drawCycleShadow(Player *p, int lod) {
   glColor3f(0, 0, 0);
 
   /* lightcycle local transformation */
-  glScalef(10, 10, 10);
+  /* glScalef(10, 10, 10); */
   glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-  glRotatef(90, 0, 0, 1);
+  /* glRotatef(90, 0, 0, 1); */
 
   if(p->data->exp_radius == 0) {
     glEnable(GL_CULL_FACE);
@@ -610,9 +610,9 @@ void drawCycle(Player *p, int lod) {
   if(p->data->exp_radius == 0) {
     glEnable(GL_NORMALIZE);
 
-    glScalef(10, 10, 10);
+    /* glScalef(10, 10, 10); */
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-    glRotatef(90, 0, 0, 1);
+    /* glRotatef(90, 0, 0, 1); */
 
     glEnable(GL_CULL_FACE);
     drawModel(cycle);
@@ -627,11 +627,11 @@ void drawCycle(Player *p, int lod) {
 #if 0
     setMaterialAlphas(cycle, alpha);
 #endif
-    glScalef(10, 10, 10);
+    /* glScalef(10, 10, 10); */
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-    glRotatef(90, 0, 0, 1);
+    /* glRotatef(90, 0, 0, 1); */
 
-    drawModelExplosion(cycle, p->data->exp_radius / 10);
+    drawModelExplosion(cycle, p->data->exp_radius);
   }
   glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
