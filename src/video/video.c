@@ -23,12 +23,9 @@ int initWindow(void) {
     fullscreen = SYSTEM_FULLSCREEN;
   }
 
-  flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH;
+  flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH | SYSTEM_STENCIL; 
   if(getSettingi("bitdepth_32"))
     flags |= SYSTEM_32_BIT;
-
-  if(getSettingi("use_stencil"))
-    flags |= SYSTEM_STENCIL;
 
   SystemInitDisplayMode(flags, fullscreen);
 
