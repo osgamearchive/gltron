@@ -303,8 +303,8 @@ vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
 												 const segment2 *s1, const segment2 *s2) {
 	// check if s1, s2 are parallel
 	vec2 tmp;
-	if( vec2Dot(&s1->vDirection, 
-							vec2_Orthogonal(&tmp, & s2->vDirection) ) < 0.1) {
+	if( fabs(vec2Dot(&s1->vDirection, 
+							vec2_Orthogonal(&tmp, & s2->vDirection) )) < 0.1) {
 		// printf("[vector] lines are parallel\n");
 		pOut = segment2_IntersectParallel(pOut, t1, t2, s1, s2);
 		if(!pOut) {
