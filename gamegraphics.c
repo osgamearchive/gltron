@@ -774,6 +774,7 @@ void drawWalls(gDisplay *d) {
   */
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
+  glEnable(GL_BLEND);
 #define T_TOP 1.0
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_WALL1]);
   glBegin(GL_QUADS);
@@ -813,6 +814,7 @@ void drawWalls(gDisplay *d) {
   glEnd();
   polycount += 8;
 
+  glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
   glDisable(GL_CULL_FACE);
 }
@@ -921,6 +923,9 @@ void drawCam(Player *p, gDisplay *d) {
   glDepthMask(GL_FALSE);
 #endif
 
+  glEnable(GL_CULL_FACE);
+  drawRecognizers(1);
+  glDisable(GL_CULL_FACE);
   if(game->settings->show_wall == 1)
     drawWalls(d);
 
@@ -974,9 +979,9 @@ void drawCam(Player *p, gDisplay *d) {
     glMatrixMode(GL_MODELVIEW);
 #endif
 
-    glEnable(GL_CULL_FACE);
+    /*glEnable(GL_CULL_FACE);
     drawRecognizers(1);
-    glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);*/
   }
 }
 
