@@ -209,6 +209,7 @@ int updateTime() {
   game2->time.lastFrame = game2->time.current;
   game2->time.current = SystemGetElapsedTime() - game2->time.offset;
   game2->time.dt = game2->time.current - game2->time.lastFrame;
+  /* fprintf(stderr, "dt: %d\n", game2->time.dt); */
   return game2->time.dt;
 }
 
