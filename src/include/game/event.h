@@ -16,7 +16,7 @@ typedef struct GameEvent {
   unsigned int timestamp;
 } GameEvent;
 
-extern void createEvent(int player, event_type_e eventType);
-extern int processEvent(GameEvent *e);
+void createEvent(int player, event_type_e eventType);
+int processEvent(GameEvent *e);
 
 #endif /* EVENT_H */

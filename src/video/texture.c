@@ -2,6 +2,7 @@
 #include "base/nebu_surface.h"
 #include "video/nebu_2d.h"
 #include "video/nebu_video_system.h"
+#include "configuration/settings.h"
 
 void initTexture(Visual *d) {
   GLint min_filter;

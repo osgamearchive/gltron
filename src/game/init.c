@@ -2,10 +2,22 @@
 #include "filesystem/dirsetup.h"
 #include "game/init.h"
 #include "game/gltron.h"
+#include "game/game.h"
+#include "input/input.h"
 #include "base/util.h"
 #include "scripting/scripting.h"
 #include "base/nebu_system.h"
+#include "audio/audio.h"
 #include "audio/nebu_audio_system.h"
+#include "configuration/settings.h"
+#include "configuration/configuration.h"
+#include "video/nebu_video_system.h"
+#include "filesystem/nebu_filesystem.h"
+#include "scripting/nebu_scripting.h"
+#include "input/nebu_input_system.h"
+#include "video/video.h"
+
+#include <assert.h>
 
 #define INI_VERSION 0.7110f
 

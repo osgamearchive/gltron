@@ -1,5 +1,7 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "game/camera.h"
+#include "configuration/settings.h"
 #include "video/trail_geometry.h"
 #include "video/nebu_video_system.h"
 #include "base/nebu_math.h"

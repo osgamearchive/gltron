@@ -1,8 +1,18 @@
 #include "game/gltron.h"
+#include "game/game.h"
+#include "game/game_data.h"
+#include "game/camera.h"
+#include "game/engine.h"
+#include "video/video.h"
+#include "configuration/settings.h"
+#include "configuration/configuration.h"
+
+#include "configuration/settings.h"
 #include "base/switchCallbacks.h"
 #include "scripting/nebu_scripting.h"
 #include "filesystem/path.h"
 #include "filesystem/nebu_filesystem.h"
+#include "input/nebu_input_system.h"
 
 #include "audio/audio.h"
 
@@ -111,7 +121,7 @@ int c_configureKeyboard(lua_State *L) {
 int c_getKeyName(lua_State *L) {
 	int top = lua_gettop(L);
 	if(lua_isnumber(L, top)) {
-		lua_pushstring(L, SystemGetKeyName( (int) lua_tonumber(L, top) ));
+		lua_pushstring(L, nebu_Input_GetKeyname( (int) lua_tonumber(L, top) ));
 	} else {
 		lua_pushstring(L, "error");
 	}

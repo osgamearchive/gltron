@@ -1,5 +1,17 @@
 #include "game/gltron.h"
+#include "game/camera.h"
+#include "game/event.h"
+#include "game/game.h"
+#include "video/video.h"
+#include "game/engine.h"
 #include "video/recognizer.h"
+#include "video/nebu_console.h"
+#include "configuration/settings.h"
+#include "configuration/configuration.h"
+#include "scripting/nebu_scripting.h"
+#include "input/nebu_input_system.h"
+#include "audio/audio.h"
+#include "base/nebu_random.h"
 
 static int startTime = 0;
 static int frames = 0;
@@ -107,12 +119,9 @@ void initTimedemo(void) {
 
 	for(i = 0; i < game->players; i++) {
 		game->player[i].ai->active = AI_COMPUTER;
-		// set all camera phi values to 0
-		game->player[i].camera->movement[CAM_PHI] = PI / 18;
-		game->player[i].camera->movement[CAM_CHI] = PI / 3;
 	}
 
-	SystemHidePointer();
+	nebu_Input_HidePointer();
 	nebu_Input_Mouse_WarpToOrigin();
 	game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
 }

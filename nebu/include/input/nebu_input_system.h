@@ -81,13 +81,15 @@ enum {
 
 void nebu_Input_Init(void);
 void nebu_Input_Mouse_GetDelta(int *dx, int *dy);
-void nebu_Input_Mouse_WarpToOrigin();
-void nebu_Input_Grab();
-void nebu_Input_Ungrab();
+void nebu_Input_Mouse_WarpToOrigin(void);
+void nebu_Input_Grab(void);
+void nebu_Input_HidePointer(void);
+void nebu_Input_UnhidePointer(void);
+void nebu_Input_Ungrab(void);
 
 int nebu_Input_GetKeyState(int key);
 
-char* SystemGetKeyName(int key);
+const char* nebu_Input_GetKeyname(int key);
 
 void SystemMouse(int buttons, int state, int x, int y);
 void SystemMouseMotion(int x, int y);

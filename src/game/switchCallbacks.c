@@ -1,6 +1,9 @@
 #include "base/switchCallbacks.h"
+#include "base/nebu_callbacks.h"
+#include "base/nebu_system.h"
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 Callbacks *last_callback = NULL;
 Callbacks *current_callback = NULL;

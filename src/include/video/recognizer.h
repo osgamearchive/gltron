@@ -1,7 +1,7 @@
 #ifndef RECOGNIZER_H
 #define RECOGNIZER_H
 
-#include "Nebu_base.h"
+#include "base/nebu_vector.h"
 
 extern void resetRecognizer(void);
 extern void doRecognizerMovement(void);

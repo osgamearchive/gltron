@@ -1,4 +1,21 @@
+#include "game/camera.h"
+#include "game/engine.h"
+#include "game/event.h"
+#include "game/game.h"
+#include "game/game_data.h"
 #include "game/gltron.h"
+
+#include "configuration/configuration.h"
+
+#include "video/video.h"
+
+#include "audio/sound_glue.h"
+#include "audio/audio.h"
+
+#include "scripting/nebu_scripting.h"
+#include "input/nebu_input_system.h"
+#include "base/nebu_callbacks.h"
+#include "video/nebu_console.h"
 
 /* very brief - just the pause mode */
 
@@ -62,7 +79,7 @@ void keyboardPause(int state, int key, int x, int y) {
 }
 
 void initPause(void) {
-	SystemHidePointer();
+	nebu_Input_HidePointer();
 	nebu_Input_Mouse_WarpToOrigin();
 
 	/* disable game sound effects */

@@ -1,7 +1,7 @@
 #ifndef VIDEO_LEVEL_H
 #define VIDEO_LEVEL_H
 
-#include "base/nebu_vector.h"
+// typedef struct nebu_Mesh nebu_Mesh;
 #include "video/nebu_mesh.h"
 
 typedef struct video_level_shader {

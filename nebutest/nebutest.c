@@ -2,13 +2,12 @@
 #include "video/nebu_mesh_3ds.h"
 #include "video/nebu_scene.h"
 #include "video/nebu_camera.h"
+#include "video/nebu_renderer_gl.h"
+#include "base/nebu_math.h"
 #include "base/nebu_system.h"
 #include "base/nebu_vector.h"
 #include "base/nebu_math.h"
 #include "input/nebu_input_system.h"
-
-#include <math.h>
-#include "GL/glew.h"
 
 extern void display(void);
 extern void idle(void);

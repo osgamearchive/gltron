@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 
+#include "base/nebu_math.h"
 #include "video/nebu_mesh.h"
 #include "Nebu_video.h"
 

@@ -1,14 +1,13 @@
 #ifndef GAME_H
 #define GAME_H
 
+typedef struct Game Game;
+typedef struct Game2 Game2;
+typedef struct GameEvent GameEvent;
+typedef struct Data Data;
+typedef struct SettingsCache SettingsCache;
+
 #define NEW_LEVEL
-
-#include "game_data.h"
-#include "game_level.h"
-#include "engine.h"
-#include "event.h"
-
-#include "Nebu_base.h"
 
 /* use enums, not magic */
 enum {
@@ -89,32 +88,30 @@ extern int default_arena_sizes[];
 
 void loadLevel(void);
 
-extern void initGameAI(int level);
-extern void doComputer(int player, int target);
+void initGameAI(int level);
+void doComputer(int player, int target);
 
-extern void resetScores(void);
+void resetScores(void);
 
-extern void doTurn(GameEvent* e, int direction);
+void doTurn(GameEvent* e, int direction);
 
-extern void doMovement(int dt);
-extern void writePosition(int player);
+void doMovement(int dt);
+void writePosition(int player);
 
-extern void initGameStructures(void);
-extern void initGameLevel(void);
-extern void initClientData(void);
+void initGameStructures(void);
+void initGameLevel(void);
+void initClientData(void);
 
-extern void Game_Idle(void);
-extern void enterGame(void);
-extern void exitGame(void);
+void Game_Idle(void);
+void enterGame(void);
+void exitGame(void);
 
-extern void gameMouse(int buttons, int state, int x, int y);
-extern void video_ResetData(void);
-extern void resetPlayerData(void);
+void gameMouse(int buttons, int state, int x, int y);
+void video_ResetData(void);
+void resetPlayerData(void);
 
-extern void initCamera(Camera *cam, Data *data, int type);
+void initWalls(void);
 
-extern void initWalls(void);
-
-extern void getPositionFromIndex(float *x, float *y, int player);
-extern void getPositionFromData(float *x, float *y, Data *data);
+void getPositionFromIndex(float *x, float *y, int player);
+void getPositionFromData(float *x, float *y, Data *data);
 #endif

@@ -4,10 +4,28 @@
 #include "input/input.h"
 #include "video/nebu_console.h"
 #include "base/nebu_math.h"
+#include "game/camera.h"
+#include "configuration/settings.h"
+#include "input/nebu_input_system.h"
+
+typedef enum eCamFreedom { 
+	CAM_FREE_R = 0,
+	CAM_FREE_PHI,
+	CAM_FREE_CHI 
+} eCamFreedom;
+
+float cam_defaults[][3] =  { 
+  { CAM_CIRCLE_DIST, PI / 3, 0 }, /* circle */
+  { CAM_FOLLOW_DIST, PI / 4, PI / 72 }, /* follow */
+  { CAM_COCKPIT_Z, PI / 8, 0 }, /* cockpit */
+  { CAM_CIRCLE_DIST, PI / 3, 0 } /* free */
+};
+
 
 static void writeCamDefaults(Camera *cam, int type) {
 	cam_defaults[cam->type.type][type] = cam->movement[type];
 }
+
 
 #define CLAMP_R_MIN 6
 #define CLAMP_R_MAX 45

@@ -1,8 +1,11 @@
 #ifndef TRAIL_GEOMETRY_H
 #define TRAIL_GEOMETRY_H
 
-#include "video.h"
-#include "game/game.h"
+#include "base/nebu_vector.h"
+
+typedef struct segment2 segments2;
+typedef struct Player Player;
+typedef struct PlayerVisual PlayerVisual;
 
 typedef struct TrailMesh {
 	vec3* pVertices; // each vertex consists of three floats
@@ -28,4 +31,5 @@ void trailRender(TrailMesh *pMesh);
 void trailStatesNormal(Player *pPlayer, int texture);
 void trailStatesShadowed(void);
 void trailStatesRestore(void);
+
 #endif

@@ -1,7 +1,8 @@
 #include "video/video.h"
 #include "video/graphics_lights.h"
 
-void setupLights(int type) {
+void setupLights(eLightEnvironment eType)
+{
 	float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// float gray22[] = { 0.22f, 0.22f, 0.22f, 1.0f };
 	float gray66[] = { 0.66f, 0.66f, 0.66f, 1.0f };
@@ -24,7 +25,7 @@ void setupLights(int type) {
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
 
-	switch(type) {
+	switch(eType) {
 	case eWorld:
 		glMatrixMode(GL_MODELVIEW);
 		// glPushMatrix();

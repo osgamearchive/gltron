@@ -1,10 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define MAX_VERTICES 30000
 #define MAX_FACES 20000
 #define MAX_NORMALS 30000
@@ -12,11 +8,8 @@ extern "C" {
 
 #define BUF_SIZE 120
 
-#define NO_SDL_GLEXT
 #include "video/nebu_renderer_gl.h"
-
-#include "Nebu_base.h"
-#include "Nebu_filesystem.h"
+#include "base/nebu_vector.h"
 
 typedef struct gltron_Mesh_Material {
   float ambient[4];
@@ -48,9 +41,9 @@ typedef enum gltron_MeshType {
   QUAD_MESH
 } gltron_MeshType;
     
-extern gltron_Mesh* gltron_Mesh_LoadFromFile(const char* filename, gltron_MeshType type);
-extern void gltron_Mesh_Draw(gltron_Mesh* pMesh, gltron_MeshType type);
-extern void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius);
+gltron_Mesh* gltron_Mesh_LoadFromFile(const char* filename, gltron_MeshType type);
+void gltron_Mesh_Draw(gltron_Mesh* pMesh, gltron_MeshType type);
+void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius);
 
 typedef enum ColorType {
   eAmbient = 0,
@@ -58,10 +51,10 @@ typedef enum ColorType {
   eSpecular
 } ColorType;
 
-extern void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name, 
-																				 ColorType eType, float pColor[4]);
+void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name, 
+	 ColorType eType, float pColor[4]);
 
-extern void gltron_Mesh_ComputeBBox(gltron_Mesh* pMesh);
+void gltron_Mesh_ComputeBBox(gltron_Mesh* pMesh);
 
 extern int polycount;
 

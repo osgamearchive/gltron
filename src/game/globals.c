@@ -1,6 +1,8 @@
 #include "game/game.h"
 #include "video/video.h"
 #include "input/input.h"
+#include "base/nebu_math.h"
+#include "configuration/settings.h"
 
 /* globals */
 Game main_game;
@@ -50,13 +52,6 @@ int colwidth;
 int dirsX[] = { 0, -1, 0, 1 };
 int dirsY[] = { -1, 0, 1, 0 };
 float camAngles[] = { PI / 2, 0, 3 * PI / 2, PI, 2 * PI };
-
-float cam_defaults[][3] =  { 
-  { CAM_CIRCLE_DIST, PI / 3, 0 }, /* circle */
-  { CAM_FOLLOW_DIST, PI / 4, PI / 72 }, /* follow */
-  { CAM_COCKPIT_Z, PI / 8, 0 }, /* cockpit */
-  { CAM_CIRCLE_DIST, PI / 3, 0 } /* free */
-};
 
 /* int lasttime; 
    double dt; */

@@ -1,6 +1,19 @@
 #include "filesystem/path.h"
 #include "game/gltron.h"
 #include "game/timesystem.h"
+#include "base/nebu_callbacks.h"
+#include "game/game.h"
+#include "game/camera.h"
+#include "game/engine.h"
+#include "input/input.h"
+#include "input/nebu_input_system.h"
+#include "video/video.h"
+#include "audio/audio.h"
+#include "video/nebu_video_system.h"
+#include "scripting/nebu_scripting.h"
+#include "audio/sound_glue.h"
+#include "configuration/settings.h"
+#include "configuration/configuration.h"
 
 void loadLevel(void) {
 	char *path, *level;
@@ -37,7 +50,7 @@ void GameMode_Idle(void) {
 void enterGame(void) { /* called when game mode is entered */
   updateSettingsCache();
 
-  SystemHidePointer();
+  nebu_Input_HidePointer();
   nebu_Input_Mouse_WarpToOrigin();
   game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
   Audio_EnableEngine();

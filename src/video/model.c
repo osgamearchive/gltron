@@ -3,7 +3,7 @@
 #include "video/model.h"
 #include "video/video.h"
 
-#include "math.h"
+#include "base/nebu_math.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "zlib.h"

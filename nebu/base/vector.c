@@ -1,7 +1,6 @@
 #include "base/nebu_vector.h"
 #include "base/nebu_math.h"
 
-#include <math.h>
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>

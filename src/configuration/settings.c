@@ -3,8 +3,12 @@
 #include <string.h>
 #include <assert.h>
 
+#include "configuration/settings.h"
+#include "configuration/configuration.h"
+
+#include "scripting/nebu_scripting.h"
 #include "base/util.h"
-#include "game/gltron.h"
+#include "game/game.h"
 #include "filesystem/path.h"
 
 #define BUFSIZE 100

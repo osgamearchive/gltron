@@ -37,19 +37,19 @@ void nebu_Input_Init(void) {
 	}
 }
 
-void nebu_Input_Grab() {
+void nebu_Input_Grab(void) {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 
-void nebu_Input_Ungrab() {
+void nebu_Input_Ungrab(void) {
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 }
 
-void SystemHidePointer() {
+void nebu_Input_HidePointer(void) {
 	SDL_ShowCursor(SDL_DISABLE);
 }
 
-void SystemUnhidePointer() {
+void nebu_Input_UnhidePointer(void) {
 	SDL_ShowCursor(SDL_ENABLE);
 }
 
@@ -103,7 +103,7 @@ void SystemMouseMotion(int x, int y) {
 		current->mouseMotion(x, y);
 }
 
-extern char* SystemGetKeyName(int key) {
+const char* nebu_Input_GetKeyname(int key) {
 	if(key < SYSTEM_CUSTOM_KEYS)
 		return SDL_GetKeyName(key);
 	else {

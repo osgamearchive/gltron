@@ -30,14 +30,4 @@
 #define RC_NAME "gltronPrefs.txt"
 #endif
 
-/* the engine */
-#include "Nebu.h"
-
-/* subsystems */
-#include "game/game.h"
-#include "configuration/configuration.h"
-#include "video/video.h"
-#include "audio/audio.h"
-#include "input/input.h"
-
 #endif /* GLTRON_H */

@@ -1,10 +1,6 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include "basic_types.h"
-#include "game_data.h"
-#include "client_data.h"
-
 /* general data structures */
   
 enum {

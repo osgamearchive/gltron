@@ -1,8 +1,10 @@
-#include <math.h>
-#include <float.h>
-
+#include "base/nebu_math.h"
 #include "game/game.h"
+#include "game/game_data.h"
 #include "game/ai.h"
+#include "configuration/settings.h"
+#include "game/game_level.h"
+#include "game/event.h"
 
 void ai_getClosestOpponent(int player, int* opponent, float *distance) {
 	int i;

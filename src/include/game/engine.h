@@ -1,11 +1,11 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "event.h"
+typedef struct GameEvent GameEvent;
 
-extern void doLeftTurn(GameEvent *e);
-extern void doRightTurn(GameEvent *e);
-extern void doCrashPlayer(GameEvent *e);
-extern void game_ResetData(void);
+void doLeftTurn(GameEvent *e);
+void doRightTurn(GameEvent *e);
+void doCrashPlayer(GameEvent *e);
+void game_ResetData(void);
 
 #endif

@@ -1,5 +1,8 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "game/camera.h"
+#include "game/event.h"
+#include "configuration/settings.h"
 
 #include "base/nebu_math.h"
 
@@ -139,7 +142,7 @@ void keyGame(int state, int k, int x, int y)
 	}
 	if(state == SYSTEM_KEYSTATE_DOWN) {
 		displayMessage(TO_STDERR, "key '%s' (%d) is not bound", 
-									 SystemGetKeyName(k), k);
+									 nebu_Input_GetKeyname(k), k);
 	}
 }
 

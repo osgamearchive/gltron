@@ -1,11 +1,13 @@
 #ifndef GRAPHICS_FX_H
 #define GRAPHICS_FX_H
 
-#include "video.h"
-#include "game/game.h"
+typedef struct PlayerVisual PlayerVisual;
+typedef struct Camera Camera;
+typedef struct Player Player;
+struct Visual;
 
-extern void drawImpact(PlayerVisual *pV);
-extern void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV, 
-										 Visual *d, float dim);
+void drawImpact(PlayerVisual *pV);
+void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV, 
+	Visual *d, float dim);
 
 #endif

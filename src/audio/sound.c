@@ -1,6 +1,10 @@
 #include "game/gltron.h"
 #include "filesystem/path.h"
 #include "Nebu_filesystem.h"
+#include "audio/audio.h"
+#include "scripting/nebu_scripting.h"
+#include "audio/sound_glue.h"
+#include "configuration/settings.h"
 
 #define NUM_GAME_FX 3
 

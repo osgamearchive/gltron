@@ -46,15 +46,15 @@ extern TextureInfo textures[];
 
 /* artpack stuff */
 
-extern void initArtpacks(void);
-extern void loadArt(void);
-extern void reloadArt(void);
+void initArtpacks(void);
+void loadArt(void);
+void reloadArt(void);
 
 enum {
 	NEAREST = 0,
-  LINEAR,
+	LINEAR,
 	MIPMAP,
-  TRILINEAR
+	TRILINEAR
 };
 
 #define B_HEIGHT 0

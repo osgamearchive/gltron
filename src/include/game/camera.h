@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+typedef struct Data Data;
+
 typedef struct CameraType {
 	int interpolated_cam;
 	int interpolated_target;
@@ -16,12 +18,6 @@ typedef struct Camera {
 	CameraType type;
 } Camera;
 
-typedef enum eCamFreedom { 
-	CAM_FREE_R = 0,
-	CAM_FREE_PHI,
-	CAM_FREE_CHI 
-} eCamFreedom;
-
 typedef enum eCamType { 
 	CAM_CIRCLE = 0,
 	CAM_FOLLOW,
@@ -31,9 +27,7 @@ typedef enum eCamType {
 
 enum { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET };
 
-extern char *cam_names[];
-extern float cam_defaults[][3];
-
+void initCamera(Camera *cam, Data *data, int type);
 void nextCameraType(void);
 void doCameraMovement(void);
 

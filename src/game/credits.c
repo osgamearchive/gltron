@@ -1,5 +1,12 @@
 #include "game/gltron.h"
+#include "game/game.h"
+#include "video/video.h"
 #include "video/graphics_utility.h"
+#include "video/nebu_video_system.h"
+#include "video/nebu_renderer_gl.h"
+#include "base/nebu_callbacks.h"
+#include "scripting/nebu_scripting.h"
+#include "input/nebu_input_system.h"
 
 static int coffset;
 

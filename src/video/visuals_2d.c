@@ -1,5 +1,7 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "configuration/settings.h"
+#include "game/game_level.h"
 
 #include "base/nebu_math.h"
 

@@ -1,5 +1,6 @@
 #include "video/video.h"
 #include "filesystem/path.h"
+#include "filesystem/nebu_filesystem.h"
 
 #include "Nebu_scripting.h"
 

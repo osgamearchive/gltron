@@ -10,8 +10,6 @@
 #define SYSTEM_ALPHA 64
 #define SYSTEM_RGBA (SYSTEM_RGB | SYSTEM_ALPHA)
 
-extern void SystemHidePointer();
-extern void SystemUnhidePointer();
 extern void SystemReshapeFunc(void(*reshape)(int, int));
 extern void SystemSetGamma(float r, float g, float b);
 

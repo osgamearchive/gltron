@@ -1,7 +1,7 @@
 #ifndef SWITCHCALLBACKS_H
 #define SWITCHCALLBACKS_H
 
-#include "Nebu_base.h"
+#include "base/nebu_callbacks.h"
 
 extern Callbacks gameCallbacks;
 extern Callbacks guiCallbacks;
@@ -11,10 +11,10 @@ extern Callbacks promptCallbacks;
 extern Callbacks creditsCallbacks;
 extern Callbacks timedemoCallbacks;
 
-extern void restoreCallbacks(void);
-extern void switchCallbacks(Callbacks* callbacks);
-extern void updateCallbacks(void);
+void restoreCallbacks(void);
+void switchCallbacks(Callbacks* callbacks);
+void updateCallbacks(void);
 
-extern void setCallback(const char *name);
+void setCallback(const char *name);
 
 #endif

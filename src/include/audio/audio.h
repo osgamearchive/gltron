@@ -1,8 +1,6 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include "sound_glue.h"
-
 #define SONG_PREFIX "song_"
 
 /* menu sound enumerations */
@@ -11,24 +9,17 @@ enum {
 	fx_highlight
 };
 
-#include "SDL.h"
-#include "SDL_sound.h"
-
-#include <zlib.h>
-#include <assert.h>
-#include <stdlib.h>
-
-extern void Sound_loadFX(void);
-extern void Sound_init(void);
-extern void Sound_shutdown(void);
-extern void Sound_load(char *name);
-extern void Sound_play(void);
-extern void Sound_stop(void);
-extern void Sound_idle(void);
-extern void Sound_setMusicVolume(float volume);
-extern void Sound_setFxVolume(float volume);
-extern void Sound_reloadTrack(void);
-extern void Sound_initTracks(void);
-extern void Sound_setup(void);
+void Sound_loadFX(void);
+void Sound_init(void);
+void Sound_shutdown(void);
+void Sound_load(char *name);
+void Sound_play(void);
+void Sound_stop(void);
+void Sound_idle(void);
+void Sound_setMusicVolume(float volume);
+void Sound_setFxVolume(float volume);
+void Sound_reloadTrack(void);
+void Sound_initTracks(void);
+void Sound_setup(void);
 
 #endif

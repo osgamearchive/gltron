@@ -1,6 +1,5 @@
 #ifndef INPUT_H
 #define INPUT_H
-#include "input/nebu_input_system.h"
 
 typedef struct Input {
   int mouse1;

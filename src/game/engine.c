@@ -3,8 +3,14 @@
 #include "audio/audio.h"
 #include "scripting/nebu_scripting.h"
 #include "Nebu_base.h"
+#include "game/camera.h"
+#include "game/game_level.h"
+#include "configuration/settings.h"
+#include "game/event.h"
+#include "audio/audio.h"
+#include "audio/sound_glue.h"
 
-#include <math.h>
+#include "base/nebu_math.h"
 #include <assert.h>
 
 void getPositionFromIndex(float *x, float *y, int player) {

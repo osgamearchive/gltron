@@ -1,14 +1,18 @@
-#include <math.h>
-#include <float.h>
+#include "base/nebu_math.h"
 
 #include "video/video.h"
 #include "video/recognizer.h"
 #include "game/game.h"
+#include "game/game_level.h"
 #include "audio/audio.h"
 #include "Nebu_scripting.h"
 #include "Nebu_base.h"
 #include "Nebu_input.h"
 #include "video/nebu_console.h"
+#include "configuration/settings.h"
+#include "game/event.h"
+#include "game/camera.h"
+#include "game/engine.h"
 
 /*! \fn int processEvent(GameEvent* e)
   handle events, e.g.

@@ -4,9 +4,7 @@
 #include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
 #include "filesystem/path.h"
-
-#include <lua.h>
-#include <lualib.h>
+#include "configuration/settings.h"
 
 void getPauseString(char *buf, float* color);
 

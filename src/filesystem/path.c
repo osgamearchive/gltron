@@ -75,7 +75,7 @@ void initDirectories(void) {
   makeDirectory(snapshots_dir);
 }
 
-char* getPath( int eLocation, const char *filename) {
+char* getPath( ePathLocation eLocation, const char *filename) {
   char *path = getPossiblePath( eLocation, filename );
   if( nebu_FS_Test(path) )
     return path;
@@ -89,13 +89,13 @@ char* getPath( int eLocation, const char *filename) {
   return NULL;
 }
 
-char* getPossiblePath( int eLocation, const char *filename ) {
+char* getPossiblePath( ePathLocation eLocation, const char *filename ) {
   char *path = malloc( PATH_MAX );
   sprintf(path, "%s%c%s", getDirectory( eLocation ), SEPARATOR, filename);
   return path;
 }
 
-const char* getDirectory( int eLocation ) {
+const char* getDirectory( ePathLocation eLocation ) {
   switch( eLocation ) {
   case PATH_PREFERENCES: return preferences_dir; break;
   case PATH_SNAPSHOTS: return snapshots_dir; break;

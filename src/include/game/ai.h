@@ -1,6 +1,8 @@
 #ifndef GAME_AI_H
 #define GAME_AI_H
 
+#include "base/nebu_vector.h"
+
 typedef struct AI_Configuration {
 	int location;
 	segment2 player;

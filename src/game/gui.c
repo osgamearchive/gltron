@@ -1,10 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
+#include "audio/audio.h"
 #include "video/graphics_utility.h"
-#include "game/gltron.h"
+#include "video/video.h"
+#include "game/game.h"
+#include "game/game_data.h"
 #include "input/input.h"
+#include "video/nebu_renderer_gl.h"
+#include "configuration/configuration.h"
+#include "configuration/settings.h"
+#include "video/nebu_video_system.h"
+#include "input/nebu_input_system.h"
+
+#include "scripting/nebu_scripting.h"
 
 /* FIXME: "ignored playMenuFX" */
 void playMenuFX(int foo) { }
@@ -151,7 +157,7 @@ void keyboardGui(int state, int key, int x, int y) {
 }
 
 void initGui(void) {
-  SystemUnhidePointer();
+  nebu_Input_UnhidePointer();
 
   updateSettingsCache();
 }

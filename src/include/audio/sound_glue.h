@@ -28,4 +28,4 @@ void Audio_StopEngine(int player);
 }
 #endif
 
-#endif
+#endif // defined SOUND_GLUE_H

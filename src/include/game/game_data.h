@@ -1,13 +1,17 @@
 #ifndef GAME_DATA_H
 #define GAME_DATA_H
 
-#include "Nebu_base.h"
-#include "Nebu_filesystem.h"
+#include <stdio.h>
 
-#include "configuration/configuration.h"
-#include "game/camera.h"
-#include "game/game_level.h"
+#include "base/nebu_vector.h"
+#include "base/nebu_util.h"
+#include "base/nebu_system.h"
+#include "base/nebu_types.h"
 
+typedef struct Camera Camera;
+typedef struct Player Player;
+typedef struct Data Data;
+typedef struct game_level game_level;
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
