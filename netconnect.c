@@ -29,6 +29,7 @@ void idleConnect() {
 	  restoreCallbacks();	  
 	}
       Net_allocsocks();
+      Net_addsocket(Net_getmainsock());
       login(game->settings->nickname);
     }
 }

@@ -30,7 +30,8 @@ handlecommand(char *command, char *params)
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=STARTGAME;
-	      Net_sendpacket(&packet, Net_getmainsock());	  
+	      Net_sendpacket(&packet, Net_getmainsock());	      
+	      makeping(game2->time.current);
 	    } else {
 	      fprintf(stderr,"\nYour are not allowed to start the game, u must be Game Master\n");
 	    }

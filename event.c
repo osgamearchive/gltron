@@ -179,9 +179,10 @@ void idleGame( void ) {
 
 
 #ifdef __NETWORK__
-  if( isConnected && Net_checksocks() )
+  if( game2->mode == GAME_NETWORK_PLAY && isConnected && Net_checksocks() )
     {
       handleServer();
+      if( slots[me].packet != HEADER ) return;
     }
 #endif
   switch(game2->mode) {

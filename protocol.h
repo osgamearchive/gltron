@@ -36,6 +36,7 @@ enum {
   TURNRIGHT,                //Ask to turn right
   TURNLEFT,                 //Ask to turn left
   STARTGAME,                //Ask to start game
+  CONFSTART,                //Game Master confirm start of the game
   PART,                     //Someone left
   JOIN,                     //Someone join
   CHGEGAMEMASTER,           //One server say that game master has changed

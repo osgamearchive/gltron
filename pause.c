@@ -14,7 +14,7 @@ void idlePause() {
     {
       switchCallbacks(&gameCallbacks);
     } else {
-      if( isConnected && Net_checksocks() )
+      if( game2->mode == GAME_NETWORK_PLAY &&isConnected && Net_checksocks() )
 	{
 	  handleServer();
 	}

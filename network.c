@@ -70,6 +70,8 @@ void
 do_serverinfo(Packet packet)
 {
   int lastserverstate = serverstate;
+  Packet rep;
+
   nbUsers = packet.infos.serverinfo.players;
 
   //check if we changed state
@@ -82,7 +84,7 @@ do_serverinfo(Packet packet)
 	  if( lastserverstate == gameState )
 	    {
 	      if( netscores.winner == -1 )
-		{
+		{		  
 		  switchCallbacks(&pauseCallbacks);
 		}  else { //Game is finished
 		  switchCallbacks(&scoresCallbacks);
@@ -97,6 +99,15 @@ do_serverinfo(Packet packet)
 	  printf("time is %d\n", game2->time.current);
 	  game2->mode = GAME_NETWORK_PLAY;
 	  ping = 0;
+	  if( slots[me].isMaster == 1 )
+	    {
+	      printf("send confirmation... %d\n", ping);
+	      rep.which=me;
+	      rep.type=ACTION;
+	      rep.infos.action.type=CONFSTART;
+	      rep.infos.action.which=150;
+	      Net_sendpacket(&rep, Net_getmainsock());
+	    } // I used that for synchronization.
 	  switchCallbacks(&pauseCallbacks);
 	  break;
 	}
@@ -230,6 +241,7 @@ do_gamerules(Packet packet)
 {
   int   i;
 
+  makeping(game2->time.current);
   printf("getting games rules...\n");
   //TODO: clean all this ugly code, and do a safe clean init function.
   game->settings->ai_player1  = ( slots[getWhich(0)].active == 1 ) ? 0 : 2;
@@ -259,10 +271,10 @@ do_gamerules(Packet packet)
   game->settings->game_speed  = packet.infos.gamerules.gamespeed;
   game->settings->grid_size   = packet.infos.gamerules.grid_size;
   game->settings->arena_size  = packet.infos.gamerules.arena_size;
-  printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
-  printf("initData with game speed = %d and so speed is %f\n", game->settings->game_speed, game->settings->current_speed );
   initData();
   game2->time                 = packet.infos.gamerules.time;
+  printf("Get Server time: current is %d, offset is %d\n",game2->time.current, game2->time.offset);
+  printf("initData with game speed = %d and so speed is %f\n", game->settings->game_speed, game->settings->current_speed );
 }
 
 void
@@ -392,6 +404,7 @@ handleServer()
   if( packet_type == HEADER )
     {
       packet_type = slots[me].packet;
+      printf("recieve a header at %d\n", game2->time.current);
       return;
     }
   
@@ -421,11 +434,12 @@ getping()
 void
 makeping(int time)
 {
+  printf("time...");
   if( savedtime == 0 )
     {
-      savedtime = time;
+      savedtime = SystemGetElapsedTime();
     } else {
-      ping = savedtime - time;
+      ping = savedtime - SystemGetElapsedTime();
       savedtime=0;
     }
 }

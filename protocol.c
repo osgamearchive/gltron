@@ -1,7 +1,7 @@
 #ifdef __NETWORK__
 //this is the client
 #include "gltron.h"
-static int nbsocks = 2;
+static int nbsocks = 1;
 #else
 //this is the server
 #include "server_gltron.h"
@@ -126,7 +126,6 @@ Net_allocsocks( )
     {
       return cantallocsockset;
     }
-  SDLNet_TCP_AddSocket(socketset, tcpsock);
   return 0;
 }
 
@@ -148,7 +147,7 @@ Net_delsocket(TCPsocket sock)
 int
 Net_readysock( TCPsocket sock )
 {
-   if( SDLNet_SocketReady(sock) )
+   if( sock != NULL && SDLNet_SocketReady(sock) )
     {
       return 1;
     }
@@ -271,6 +270,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
 
   if( packet == NULL )
     {
+      printf("packet is NULL\n");
       return cantsendpacket;
     }
 
@@ -280,7 +280,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
 
   //First : we send the header
   SDLNet_Write16(packet->type, buff);
-  printf("sending header: %d\n", packet->type);
+  printf("sending header: %d at %d\n", packet->type, game2->time.current);
   if( ( SDLNet_TCP_Send(sock, buff, sizeof(Sint16))) < sizeof(Sint16) )
     {
       free(buff);
@@ -444,7 +444,7 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
     {
       return cantgetpacket;
     }
-  printf("getting packet for %d, type %d\n", which, slots[which].packet);
+  printf("getting packet for %d, type %d at %d\n", which, slots[which].packet, game2->time.current);
   if( type == HEADER )
     {
       buff =  malloc(sizeof(Sint16));
