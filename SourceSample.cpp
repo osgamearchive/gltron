@@ -27,6 +27,12 @@ namespace Sound {
     Sound_Sample *sample = Sound_NewSample(rwops, NULL,
 					   _system->GetAudioInfo(),
 					   _buffersize );
+    if(sample == NULL) {
+      printf("failed loading sample from '%s': %s\n", filename, 
+	     Sound_GetError());
+      exit(1);
+    }
+    
     Sound_DecodeAll(sample);
 
     _buffersize = sample->buffer_size;
