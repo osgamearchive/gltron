@@ -36,7 +36,7 @@ void keyGame(int k, int x, int y)
   int i;
 
   switch (k) {
-  case 'q': exit(0); break; /* panic button */
+  case 'q': SystemExit(); break; /* panic button */
   case 27: switchCallbacks(&guiCallbacks); break;
   case ' ': switchCallbacks(&pauseCallbacks); break;
 
@@ -95,6 +95,7 @@ void parse_args(int argc, char *argv[]) {
 	  /* case 'v': game->settings->screenSaver = 1; break; */
 	case 'i': game->settings->windowMode = 1; break;
 	case 'M': game->settings->mouse_warp = 1; break;
+	case 'o': game->settings->softwareRendering = 1; break;
 	case '1': /* default is -2 */
 	  game->settings->width = 320;
 	  game->settings->height = 240;
@@ -117,7 +118,7 @@ void parse_args(int argc, char *argv[]) {
 	  break;
 	case 'h':
 	default:
-	  printf("Usage: %s [-FftwbghcCsk1234]\n\n", argv[0]);
+	  printf("Usage: %s [-FftwbghcCsk1234simo]\n\n", argv[0]);
 	  printf("Options:\n\n");
 	  printf("-k\terase crashed players (like in the movie)\n");
 	  printf("-f\tfast finish after human has crashed\n");
@@ -139,6 +140,8 @@ void parse_args(int argc, char *argv[]) {
 	  /* printf("-v\tStart in demo/screensaver mode\n"); */
 	  printf("-i\tforce startup in a window\n");
 	  printf("-M\tcapture mouse (useful for Voodoo1/2 owners)\n");
+	  printf("-O\toptimize for software rendering (SLOWER on "
+		 "3D cards!)\n");
 	  printf("-h\tthis help\n");
 	  exit(1);
 	}

@@ -8,8 +8,13 @@ static int flags;
 static unsigned char fullscreen;
 static callbacks *current = 0;
 
+void SystemExit() {
+  exit(0);
+}
+
 void SystemInit(int *argc, char **argv) {
   glutInit(argc, argv);
+  /* atexit(SystemExit()); */
 }
 
 void SystemPostRedisplay() {

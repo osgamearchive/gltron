@@ -7,22 +7,20 @@ typedef struct {
   char **glyphs;
 } bitmapFont;
 
-static texture *bitmapTex;
 static list *bitmapFonts;
 
 void initBitmapFonts() { /* must be called before usage of bitmap fonts */
-  /*
-  bitmapTex = loadTextureData( imcomplete );
-  */
+  bitmapFonts = (list*) malloc(sizeof(list));
+  bitmapFonts->next = NULL;
 }
-bitmapFont* makeBitmapFont(int size) {
-  /*
-  tex = loadTextureData(
-  */
+
+bitmapFont* makeBitmapFont(fonttex *tex, int size) {
+#define CHARWIDTH 16
+  
   return 0;
 }
 
-bitmapFont* getBitmapFont(int size) {
+bitmapFont* getBitmapFont(fonttex *tex, int size) {
   list *p;
 
   for(p = bitmapFonts; p->next != NULL; p = p->next) {
@@ -31,16 +29,16 @@ bitmapFont* getBitmapFont(int size) {
   }
   p->next = (list*) malloc(sizeof(list));
   p->next->next = NULL;
-  p->data = makeBitmapFont(size);
+  p->data = makeBitmapFont(tex, size);
   return (bitmapFont*) p->data;
 }
   
-void drawSoftwareText(int x, int y, int size, char *text) {
+void drawSoftwareText(fonttex *tex, int x, int y, int size, char *text) {
   bitmapFont *font;
   int pos = 0;
   char c;
 
-  font = getBitmapFont(size);
+  font = getBitmapFont(tex, size);
 
   while(*(text + pos) != 0) {
     glRasterPos2i(x + pos * size, y);
@@ -52,9 +50,3 @@ void drawSoftwareText(int x, int y, int size, char *text) {
     pos++;
   }
 }
-
-
-
-
-
-

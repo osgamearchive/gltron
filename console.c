@@ -25,7 +25,7 @@ void consoleAddLine(char *text) {
     i++;
   }
   buffer[position][i] = '\0';
-  fprintf(stderr, "added %s to console\n", buffer[position]);
+  /* fprintf(stderr, "added \"%s\" to console\n", buffer[position]); */
   position++;
 }
 

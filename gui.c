@@ -173,7 +173,7 @@ void keyboardGui(int key, int x, int y) {
   case SYSTEM_KEY_RIGHT:
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_RIGHT);
     break;
-  case 'q': exit(0); break;
+  case 'q': SystemExit(); break;
   case SYSTEM_KEY_DOWN:
 #ifdef SOUND
     if(game->settings->playEffects)

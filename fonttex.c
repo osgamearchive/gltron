@@ -9,12 +9,45 @@ void getLine(char *buf, int size, FILE *f) {
   } while( buf[0] == '\n' || buf[0] == '#');
 }
 
+fontbmp* fbmpLoadFont(char *filename) {
+  char *path;
+  FILE *file;
+  char buf[100];
+  int len;
+  fontbmp *fbmp;
+  
+  path = getFullPath(filename);
+  if(path == NULL) {
+    fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
+    return NULL;
+  }
+  file = fopen(path, "r");
+  free(path);
+
+  fbmp = (fontbmp*) malloc(sizeof(fontbmp));
+  /* bitmap texture width, character width */
+  getLine(buf, sizeof(buf), file);
+  sscanf(buf, "%d %d ", &(fbmp->texwidth), &(fbmp->width));
+  /* lowest character, highest character */
+  getLine(buf, sizeof(buf), file);
+  sscanf(buf, "%d %d ", &(fbmp->lower), &(fbmp->upper));
+  /* bitmap filename */
+  getLine(buf, sizeof(buf), file);
+  len = strlen(buf) + 1;
+  fbmp->bitmapname = (char*) malloc(len);
+  memcpy(fbmp->bitmapname, buf, len);
+
+  fclose(file);
+  return fbmp;
+}
+
 fonttex *ftxLoadFont(char *filename) {
   char *path;
   FILE *file;
   char buf[100];
-  char texname[100];
+
   int i;
+  int len;
   fonttex *ftx;
   
   path = getFullPath(filename);
@@ -27,25 +60,34 @@ fonttex *ftxLoadFont(char *filename) {
 
   /* TODO(5): check for EOF errors in the following code */
   
+  /* nTextures, texture width, char width */
   ftx = (fonttex*) malloc(sizeof(fonttex));
   getLine(buf, sizeof(buf), file);
   sscanf(buf, "%d %d %d ", &(ftx->nTextures), &(ftx->texwidth), &(ftx->width));
+  /* lowest character, highest character */
   getLine(buf, sizeof(buf), file);
   sscanf(buf, "%d %d ", &(ftx->lower), &(ftx->upper));
+  /* font name */
   getLine(buf, sizeof(buf), file);
-  ftx->fontname = malloc(strlen(buf) + 1);
-  memcpy(ftx->fontname, buf, strlen(buf) + 1);
+  len = strlen(buf) + 1;
+  ftx->fontname = malloc(len);
+  memcpy(ftx->fontname, buf, len);
 
+  /* prepare space for texture IDs  */
   ftx->texID = (unsigned int*) malloc(ftx->nTextures * sizeof(unsigned int));
   glGenTextures(ftx->nTextures, ftx->texID);
 
+  /* the individual textures */
   for(i = 0; i < ftx->nTextures; i++) {
+    char *texname;
     getLine(buf, sizeof(buf), file);
-
-    /* no spaces in texture filesnames */
-    sscanf(buf, "%s ", texname);
+    len = strlen(buf) + 1;
+    if(buf[len - 2] == '\n') buf[len - 2] = 0;
+    texname = (char*)malloc(len);
+    memcpy(texname, buf, len); 
     glBindTexture(GL_TEXTURE_2D, ftx->texID[i]);
     loadTexture(texname, GL_RGBA);
+    free(texname);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -54,6 +96,7 @@ fonttex *ftxLoadFont(char *filename) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   }
+
   fclose(file);
   return ftx;
 }
@@ -114,4 +157,6 @@ w);
   }
   /* checkGLError("fonttex.c ftxRenderString\n"); */
 }
+
+
 

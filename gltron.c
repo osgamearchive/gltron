@@ -20,7 +20,7 @@ void drawGame() {
 
   polycount = 0;
 
-  glDepthMask(GL_TRUE);
+
   glEnable(GL_DEPTH_TEST);
 
   glClearColor(.0, .0, .0, .0);
@@ -39,6 +39,8 @@ void drawGame() {
 	if(p->ai->active == 1)
 	  drawAI(d);
     }
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
   }
 
   if(game->settings->show_2d > 0) {

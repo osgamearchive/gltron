@@ -29,7 +29,7 @@ void SystemInit(int *argc, char *argv[]) {
     fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
     exit(1);
   }
-  atexit(SystemExit);
+  /* atexit(SystemExit); */
   SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
 #ifdef NETWORK
   SystemNetInit();

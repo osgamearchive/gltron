@@ -20,7 +20,7 @@ void rasonly(gDisplay *d) {
 
 void drawText(fonttex* ftx, int x, int y, int size, char *text) {
   if(game->settings->softwareRendering) {
-    drawSoftwareText(x, y, size, text);
+    drawSoftwareText(ftx, x, y, size, text);
   } else {
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);

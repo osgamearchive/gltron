@@ -11,6 +11,16 @@
 
 #include <GL/gl.h>
 
+typedef struct fontbmp {
+  int texwidth; /* texture width */
+  int width; /* character width */
+
+  int lower; /* lowest ascii character (normally: 32) */
+  int upper; /* highest ascii character (normally: 126) */
+
+  char *bitmapname;
+} fontbmp;
+
 typedef struct fonttex {
   // sgi_texture **textures;
   int nTextures;
@@ -24,6 +34,9 @@ typedef struct fonttex {
   unsigned int *texID;
 
   char *fontname;
+  char *bitmapname;
+  int bitmapTexwidth;
+  int bitmapWidth; /* character width */
 } fonttex;
 
 extern fonttex *ftxLoadFont(char *filename);

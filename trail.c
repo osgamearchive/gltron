@@ -27,74 +27,6 @@ void drawTraces(Player *p, gDisplay *d) {
   height = data->trail_height;
 
   if(height < 0) return;
-  
-  /* draw lines on top of trails */
-
-  line = &(data->trails[0]);
-  glBegin(GL_LINES);
-  glColor3f(1.0, 1.0, 1.0);
-  while(line != data->trail) { /* the current line is not drawn */
-    tlength = (line->ex - line->sx + line->ey - line->sy);
-    if(tlength < 0) tlength = -tlength;
-    
-    if(line->sy == line->ey) normal = normal1;
-    else normal = normal2;
-    glNormal3fv(normal);
-    glVertex3f(line->sx, line->sy, height);
-    glVertex3f(line->ex, line->ey, height);
-    line++;
-    polycount++;
-  }
-  glVertex3f(line->sx, line->sy, height);
-  sx = line->sx;
-  sy = line->sy;
-  px = data->posx;
-  py = data->posy;
-  tlength = px - sx + py - sy;
-  if(tlength < 0) tlength = -tlength;
-  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
-  glEnd();
-
-  /* draw trail shadow */
-#define SHADOWH 0.5
-
-  line = &(data->trails[0]);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glColor4f(0.2, 0.2, 0.2, 0.8);
-  glBegin(GL_QUADS);
-
-  line = &(data->trails[0]);
-  while(line != data->trail) { /* the current line is not drawn */
-    tlength = (line->ex - line->sx + line->ey - line->sy);
-    if(tlength < 0) tlength = -tlength;
-    
-    glNormal3f(0.0, 0.0, 1.0);
-    glVertex3f(line->sx, line->sy, SHADOWH);
-    glVertex3f(line->sx + height, line->sy + height, SHADOWH);
-    glVertex3f(line->ex + height, line->ey + height, SHADOWH);
-    glVertex3f(line->ex, line->ey, SHADOWH);
-    line++;
-    polycount++;
-  }
-  sx = line->sx;
-  sy = line->sy;
-  px = data->posx;
-  py = data->posy;
-  tlength = px - sx + py - sy;
-  if(tlength < 0) tlength = -tlength;
-  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
-  glVertex3f(line->sx, line->sy, SHADOWH);
-  glVertex3f(line->sx + height, line->sy + height, SHADOWH);
-  glVertex3f(px + height, 
-	     py + height,
-	     SHADOWH);
-  glVertex3f(px, py, SHADOWH);
-  
-  glEnd();
-
   /* draw trail now */
 
   if(game->settings->alpha_trails) {
@@ -141,7 +73,7 @@ void drawTraces(Player *p, gDisplay *d) {
   px = data->posx;
   py = data->posy;
 
-  if(sx == px) normal = normal1;
+  if(sy == py) normal = normal1;
   else normal = normal2;
   glNormal3fv(normal);
     
@@ -231,6 +163,83 @@ void drawTraces(Player *p, gDisplay *d) {
 
   polycount += 4;
 
+  glShadeModel( game->screen->shademodel );
+  glDisable(GL_TEXTURE_2D);
+
+  glPolygonOffset(-2.0, -1.0);  
+  glEnable(GL_POLYGON_OFFSET_LINE);
+  /* draw lines on top of trails */
+
+  line = &(data->trails[0]);
+  glBegin(GL_LINES);
+  glColor3f(1.0, 1.0, 1.0);
+  while(line != data->trail) { /* the current line is not drawn */
+    tlength = (line->ex - line->sx + line->ey - line->sy);
+    if(tlength < 0) tlength = -tlength;
+    
+    if(line->sy == line->ey) normal = normal1;
+    else normal = normal2;
+    glNormal3fv(normal);
+    glVertex3f(line->sx, line->sy, height);
+    glVertex3f(line->ex, line->ey, height);
+    line++;
+    polycount++;
+  }
+  glVertex3f(line->sx, line->sy, height);
+  sx = line->sx;
+  sy = line->sy;
+  px = data->posx;
+  py = data->posy;
+  tlength = px - sx + py - sy;
+  if(tlength < 0) tlength = -tlength;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+  glEnd();
+
+  glDisable(GL_POLYGON_OFFSET_LINE);
+  glEnable(GL_POLYGON_OFFSET_FILL);
+
+  /* draw trail shadow */
+#define SHADOWH 0.0
+
+  line = &(data->trails[0]);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glColor4f(0.2, 0.2, 0.2, 0.8);
+  glBegin(GL_QUADS);
+
+  line = &(data->trails[0]);
+  while(line != data->trail) { /* the current line is not drawn */
+    tlength = (line->ex - line->sx + line->ey - line->sy);
+    if(tlength < 0) tlength = -tlength;
+    
+    glNormal3f(0.0, 0.0, 1.0);
+    glVertex3f(line->sx, line->sy, SHADOWH);
+    glVertex3f(line->sx + height, line->sy + height, SHADOWH);
+    glVertex3f(line->ex + height, line->ey + height, SHADOWH);
+    glVertex3f(line->ex, line->ey, SHADOWH);
+    line++;
+    polycount++;
+  }
+  sx = line->sx;
+  sy = line->sy;
+  px = data->posx;
+  py = data->posy;
+  tlength = px - sx + py - sy;
+  if(tlength < 0) tlength = -tlength;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+  glVertex3f(line->sx, line->sy, SHADOWH);
+  glVertex3f(line->sx + height, line->sy + height, SHADOWH);
+  glVertex3f(px + height, 
+	     py + height,
+	     SHADOWH);
+  glVertex3f(px, py, SHADOWH);
+  
+  glEnd();
+
+#undef SHADOWH
+
 #undef BOW_DIST1
 #undef BOW_DIST2
 #undef TEX_SPLIT
@@ -238,27 +247,9 @@ void drawTraces(Player *p, gDisplay *d) {
 #undef DECAL_WIDTH
 #undef BOW_LENGTH
 
-  glShadeModel( game->screen->shademodel );
-  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_POLYGON_OFFSET_FILL);
 
-  checkGLError("after trail");
 
-    /* draw this line if in behind camera mode */
-
-  if(game->settings->camType == 1) {
-    /*       glLineWidth(3); */
-    /* glBegin(GL_LINES); */
-    glBegin(GL_QUADS);
-#define LINE_D 0.05
-    glColor3fv(p->model->color_alpha);
-    glVertex2f(sx - LINE_D, sy - LINE_D);
-    glVertex2f(sx + LINE_D, sy + LINE_D);
-    glVertex2f(px + LINE_D, py + LINE_D);
-    glVertex2f(px - LINE_D, py - LINE_D);
-    glEnd();
-    /* glLineWidth(1); */
-    polycount += 2;
-  }
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDepthMask(GL_TRUE);
 }
