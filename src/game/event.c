@@ -244,8 +244,8 @@ int applyWallAcceleration(int player, int dt) {
 	}
 
 	{
-		float accell_limit = getSettingf("wall_accel_limit");
-		if(left < accell_limit || right < accell_limit) {
+		float accell_max = getSettingf("wall_accel_max");
+		if(left < accell_max || right < accell_max) {
 			float boost = getSettingf("wall_accel_use") * dt / 1000.0f;
 			data->speed += boost;
 			return 1;
