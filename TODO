@@ -1,9 +1,6 @@
 prerelease things:
 (2) do drop shadows
 (3) save key definitions to .gltronrc
-(3) decide on packaging (installer?)
-(1) art pack support
-(2) modified bot-AI
 
 soon after:
 (1) panning for the camera
@@ -33,9 +30,8 @@ todo:
 (0) fix ugly console message passing
 (1) implement networking
 (0) fix bitmap bug to allow even faster software rendering
-(0) write software mouse cursor for 3dfx cards
+(0) write software mouse cursor
 (0) move cycle behind posx, posy
-(0) add more & better sound effects
 (0) generate lightcycle floor shadow
 (0) add more special effects (reflections etc.)
 (0) check various TODOs in the code
@@ -44,6 +40,4 @@ todo:
 (0) add slightly funny console messages (Robot ate Andi's tail)
 (0) investigate halo
 at release time:
-(0) decide which floor texture to use
-(0) create RPM files for various linux distributions
 (0) proper documentation
