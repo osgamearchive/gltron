@@ -222,7 +222,7 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
 	    pMesh->ppIndices[ material ][ iFaceSize * face[ material ] + j ] = 
 	      lookup[ vertex ][ normal ];
 	  }
-	  face[ material ] += 1;
+	  face[ material ] = face[ material] + 1;
 	}
 	break;
       case QUAD_MESH:
@@ -234,7 +234,7 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
 	    pMesh->ppIndices[ material ][ iFaceSize * face[ material ] + j ] = 
 	      lookup[ vertex ][ normal ];
 	  }
-	  face[ material ] += 1;
+	  face[ material ] = face[ material] + 1;
 	}
 	break;
       }
