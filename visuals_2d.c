@@ -75,8 +75,9 @@ void draw2D( gDisplay *d ) {
 				Line* trail;
 				
 				// fixme: check if trails vanish
-				if(p->data->speed < 0)
-						continue;
+        if (p->data->trail_height <= 0) {
+          continue;
+        }
 				
 				glColor3fv( p->pColorAlpha );
 				glPointSize(2);
