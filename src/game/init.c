@@ -12,7 +12,7 @@ void initSubsystems(int argc, const char *argv[]) {
 	
 	//fixme: move this code somewhere else
 	{
-		char *path = getPath(PATH_LEVEL, "square.lua");
+		char *path = getPath(PATH_LEVEL, "tri.lua");
 		if(path) {
 			scripting_RunFile(path);
 			free(path);
@@ -99,14 +99,15 @@ void initVideo(void) {
 	consoleInit();
 	initArtpacks();
 
+	runScript(PATH_SCRIPTS, "menu.lua");
+	runScript(PATH_SCRIPTS, "menu_functions.lua");
+  setupDisplay(gScreen);
+
 #if 1
 	gWorld = video_CreateLevel();
 	if(gWorld->scalable)
 		video_ScaleLevel(gWorld, 600.0f);
 #endif
-	runScript(PATH_SCRIPTS, "menu.lua");
-	runScript(PATH_SCRIPTS, "menu_functions.lua");
-  setupDisplay(gScreen);
 }
 
 void initAudio(void) {
