@@ -1,4 +1,4 @@
-#include "fonttex.h"
+#include "gltron.h"
 
 #define FTX_ERR "[fonttex error]: "
 extern char *getFullPath(char*);
@@ -7,6 +7,11 @@ void getLine(char *buf, int size, FILE *f) {
   do {
     fgets(buf, size, f);
   } while( buf[0] == '\n' || buf[0] == '#');
+}
+
+void fbmpUnloadFont(fontbmp *fbmp) {
+  freeTextureData(fbmp->tex);
+  free(fbmp);
 }
 
 fontbmp* fbmpLoadFont(char *filename) {

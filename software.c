@@ -8,12 +8,20 @@ typedef struct {
   unsigned char **glyphs;
 } bitmapFont;
 
-static list *bitmapFonts;
+static list *bitmapFonts = NULL;
+
+void deleteBitmaps(gDisplay *d) {
+  /* keep bitmapFonts around */
+  fbmpUnloadFont(d->bitfont);
+  free(d->pixelGui);
+}
 
 void initBitmaps(gDisplay *d) { 
   /* must be called before usage of bitmap stuff */
-  bitmapFonts = (list*) malloc(sizeof(list));
-  bitmapFonts->next = NULL;
+  if(bitmapFonts == NULL) {
+      bitmapFonts = (list*) malloc(sizeof(list));
+      bitmapFonts->next = NULL;
+  }
   d->bitfont = fbmpLoadFont("test.fbmp");
   d->pixelGui = loadPixels("gltron_bitmap.png", d);
 }
