@@ -25,7 +25,7 @@ void clearScreen() {
   glClearColor(gSettingsCache.clear_color[0], 
                gSettingsCache.clear_color[1], 
                gSettingsCache.clear_color[2],
-               gSettingsCache.clear_color[3]);
+               0);
 
   if(gSettingsCache.use_stencil) {
     glClearStencil(0);
@@ -341,27 +341,24 @@ void drawPlanarShadows(Player *p) {
 	glDisable(GL_BLEND);
 }
 
-void drawFloor() {
-}
-
 void drawWorld(Player *p, PlayerVisual *pV) {
 	int i;
 
 	setupLights(eWorld);
 
-  if (gSettingsCache.show_recognizer &&
-      p->data->speed != SPEED_GONE) {
-    drawRecognizer();
-  }
+	if (gSettingsCache.show_recognizer &&
+		p->data->speed != SPEED_GONE) {
+		drawRecognizer();
+	}
 
-  if (gSettingsCache.show_wall == 1) {
+	if (gSettingsCache.show_wall == 1) {
 		glColor3f(1,1,1);
-    drawWalls();
-  }
+		drawWalls();
+	}
 
 	setupLights(eCycles);
 
-  drawPlayers(p, pV);
+	drawPlayers(p, pV);
 
 	setupLights(eWorld);
 
@@ -379,9 +376,9 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 				int iOffset = 0;
 				mesh.iUsed = 0;
 				trailGeometry(game->player + i, gPlayerVisuals + i,
-											&mesh, &vOffset, &iOffset);
+					&mesh, &vOffset, &iOffset);
 				bowGeometry(game->player + i, gPlayerVisuals + i,
-										&mesh, &vOffset, &iOffset);
+					&mesh, &vOffset, &iOffset);
 				trailStatesNormal(game->player + i, gScreen->textures[TEX_DECAL]);
 				trailRender(&mesh);
 				trailStatesRestore();
@@ -394,19 +391,19 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 		free(mesh.pIndices);
 	}
 
-  for(i = 0; i < game->players; i++)
-    if (game->player[i].data->trail_height > 0 )
+	for(i = 0; i < game->players; i++)
+		if (game->player[i].data->trail_height > 0 )
 			drawTrailLines(game->player + i, gPlayerVisuals + i);
 }
 
 static float getReflectivity() {
-  float reflectivity = getSettingf("reflection");
-  if(reflectivity < 0)
-    reflectivity = getVideoSettingf("reflection");
+	float reflectivity = getSettingf("reflection");
+	if(reflectivity < 0)
+		reflectivity = getVideoSettingf("reflection");
 
-  // need stencil for reflections
-  if(gSettingsCache.use_stencil == 0)
-	  reflectivity = 0;
+	// need stencil for reflections
+	if(gSettingsCache.use_stencil == 0)
+		reflectivity = 0;
 	return reflectivity;
 }
 
@@ -434,13 +431,14 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	glDisable(GL_LIGHTING); // initial config at frame start
 	glDisable(GL_BLEND); // initial config at frame start
 
+	// disable writes to alpha
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+
 	/* skybox */
 	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
 
-	if (gSettingsCache.show_skybox) {
-		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
-	}
+	drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
 
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
@@ -448,41 +446,79 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
 	/* floor */ 
 	if(reflectivity == 0) {
+		// draw floor to fb and stencil (set to 1),
+		// using alpha-blending
+		// TODO: draw floor alpha to fb
 		video_Shader_Setup(& gWorld->floor_shader);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glEnable(GL_STENCIL_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		nebu_Mesh_DrawGeometry( gWorld->floor );
+		glDisable(GL_BLEND);
 		glDisable(GL_STENCIL_TEST);
 		video_Shader_Cleanup(& gWorld->floor_shader);
 	} else {
 		/* reflections */
 		/* first draw reflector to stencil */
-		// glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-		glDepthMask(GL_FALSE);
+		/* and reflector alpha to fb */
 
+		video_Shader_Setup(& gWorld->floor_shader);
+
+		// store only reflector alpha in framebuffer
+		glDepthMask(GL_FALSE);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilFunc(GL_ALWAYS, 1, 255);
 		glEnable(GL_STENCIL_TEST);
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+		// glEnable(GL_ALPHA_TEST);
+		// glAlphaFunc(GL_GREATER, 0.1f);
 
-		glColor3f(0,0,0);
 		nebu_Mesh_DrawGeometry( gWorld->floor );
-		// glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		
+		// glDisable(GL_ALPHA_TEST);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		glDepthMask(GL_TRUE);
-
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-		glStencilFunc(GL_LESS, 0, 255);
-		/* then draw world reflected, where stencil is set */
-		isRenderingReflection = 1;
+		glStencilFunc(GL_EQUAL, 1, 255);
+
+		video_Shader_Cleanup(& gWorld->floor_shader);
+		
+		/* then draw world & skybox reflected, where stencil is set */
+		/* protect the alpha buffer */
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+
+		isRenderingReflection = 1; // hack: reverse lighting
 		glPushMatrix();
 		glScalef(1,1,-1);
-		glCullFace(GL_FRONT);
+		glCullFace(GL_FRONT); // reverse culling
+		// clip skybox & world to floor plane
+		glEnable(GL_CLIP_PLANE0);
+		{
+			double plane[] = { 0, 0, 1, 0 };
+			glClipPlane(GL_CLIP_PLANE0, plane);
+		}
+
+		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
 		drawWorld(p, pV);
+
+		glDisable(GL_CLIP_PLANE0);
 		glCullFace(GL_BACK);
 		glPopMatrix();
-		isRenderingReflection = 0;
+		isRenderingReflection = 0; // hack: normal lighting
 
+		/* then blend the skybox into the scene, where stencil is set */
+		/* modulate with the destination alpha */
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
+		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
+		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		
 		/* then blend reflector into the scene */
+		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -497,6 +533,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
 		glDisable(GL_STENCIL_TEST);
 		glDisable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
 	}
 	/* floor done */
 
