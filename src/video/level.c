@@ -1,19 +1,62 @@
 #include <stdlib.h>
+#include <stdio.h>
 
+#include "SDL_opengl.h"
+
+#include "filesystem/path.h"
 #include "video/nebu_mesh.h"
 #include "video/video_level.h"
+#include "video/video.h"
 
-#include "nebu_Scripting.h"
+#include "Nebu_scripting.h"
 
 nebu_Mesh* loadMesh(void);
 
 void video_FreeLevel(video_level *l) {
+	nebu_Mesh_Free(l->floor);
+	nebu_Mesh_Free(l->arena);
+	glDeleteTextures(1, & l->floor_shader.diffuse_texture_id);
+	glDeleteTextures(1, & l->arena_shader.diffuse_texture_id);
+	free(l);
 }
 
 void video_ScaleLevel(video_level *l, float fSize)
 {
 	nebu_Mesh_Scale(l->floor, fSize);
 	nebu_Mesh_Scale(l->arena, fSize);
+}
+
+void video_Shader_Setup(video_level_shader* shader) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+}
+
+void video_Shader_Cleanup(video_level_shader* shader) {
+	glDisable(GL_TEXTURE_2D);
+}
+
+void loadShader(video_level_shader *shader) {
+	scripting_GetValue("shading");
+	scripting_GetValue("lit");
+	scripting_GetIntegerResult(& shader->lit);
+	scripting_GetValue("textures");
+	scripting_GetValue("diffuse");
+	
+	// FIXME: use a general load texture method, and handle stuff
+	// like filtering, wrap/clamp, etc.
+	{
+		char *filename;
+		scripting_GetStringResult(& filename);
+
+		glGenTextures(1, & shader->diffuse_texture_id);
+		glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
+		printf("binding texture %d\n", shader->diffuse_texture_id);
+		loadTexture(filename, GL_RGBA);
+		free(filename);
+	}
+	scripting_PopTable(); // textures
+	scripting_PopTable(); // shader
 }
 
 video_level* video_CreateLevel(void) {
@@ -31,12 +74,14 @@ video_level* video_CreateLevel(void) {
 	// get floor & arena meshes
 	scripting_GetValue("floor");
 	l->floor = loadMesh();
-	scripting_PopTable();
+	loadShader(& l->floor_shader);
+	scripting_PopTable(); // floor
 	
 	scripting_GetValue("arena");
 	l->arena = loadMesh();
-	scripting_PopTable();
-
+	loadShader(& l->arena_shader);
+	scripting_PopTable(); // arena
+		
 	scripting_PopTable(); // geometry
 
 	scripting_PopTable(); // level;
