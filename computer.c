@@ -56,7 +56,7 @@ void doComputer(int player, int target) {
   AI *ai;
   Data *data;
   Player *me, *him;
-  int i, j, level, x, y, rdist, ldist;
+  int i, j, level, x, y, rdist = 0, ldist = 0;
 
   me = &(game->player[ player ]);
   him = &(game->player[ target ]);
