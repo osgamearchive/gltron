@@ -6,6 +6,7 @@
 #include "game/camera.h"
 #include "video/fonttex.h"
 #include "video/model.h"
+#include "video/video_level.h"
 
 #include "Nebu_video.h"
 
@@ -158,6 +159,8 @@ extern float rec_outline_color[3];
 extern float rec_spec_color[4];
 
 extern Mesh *lightcycle[];
+
+extern video_level *gWorld;
 
 /* extern TexFont *txf; */
 extern FontTex *gameFtx;

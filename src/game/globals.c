@@ -8,6 +8,7 @@ Game *game;
 Game2 main_game2;
 Game2 *game2;
 Visual *gScreen;
+video_level *gWorld;
 int gViewportType;
 PlayerVisual *gPlayerVisuals;
 Input gInput;
