@@ -56,6 +56,31 @@ Menu = {
    },
 
    -- Game Rules
+	 GameType = {
+			type = MenuC.type.list, caption = "Game type",
+			labels = { "classic", "booster", "wall accell.", "both" },
+			values = { 0, 1, 2, 3 },
+			read = 
+				 function()
+						value = 0;
+						if(settings.booster_on == 1) then value = value + 1; end;
+						if(settings.wall_accel_on == 1) then value = value + 2; end;
+						return value;
+					end,
+			store = 
+				 function (value)
+						if(value >= 2) 
+						then settings.wall_accel_on = 1;
+						else settings.wall_accel_on = 0;
+						end;
+						if(value == 1 or value == 3) 
+						then settings.booster_on = 1; 
+						else settings.booster_on = 0;
+						end;
+						script_print("booster: " .. settings.booster_on);
+						script_print("wall accel: " .. settings.wall_accel_on);
+				 end
+	 },
    GameSpeed = { 
       type = MenuC.type.list, caption = "Game speed",
       labels = { "boring", "normal", "fast", "crazy" },
@@ -500,7 +525,7 @@ Menu.GameMenu.items = {
 }
 
 Menu.GameRulesMenu.items = { 
-   "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
+   "GameType", "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
 }
 
 Menu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports", "Map" }
