@@ -42,21 +42,9 @@ void idleTimedemo(void) {
 		}
 		game2->events.next = NULL;
 
-		l = doMovement(1, t); /* this can generate new events */
-		if(l != NULL) {
-			for(p = l; p->next != NULL; p = p->next) {
-				if(processEvent((GameEvent*) p->data));
-			}
-
-		}
-		/* free list  */
-		p = l;
-		while(p != NULL) {
-			l = p;
-			p = p->next;
-			free(l);
-		}
-	}
+		doMovement(1, t);
+                // TODO: process events
+        }
 	
 	game2->time.dt = 20;
 	doCameraMovement();

@@ -255,13 +255,12 @@ int applyWallAcceleration(int player, int dt) {
 	}
 }
 
-/*! \fn static list* doMovement(int mode, int dt)
+/*! \fn static void doMovement(int mode, int dt)
   do physics, create CRASH and STOP events
 */
 
-nebu_List* doMovement(int mode, int dt) {
+void doMovement(int mode, int dt) {
   int i;
-  nebu_List *l = NULL;
 
   for(i = 0; i < game->players; i++) {
 		Data *data = game->player[i].data;
@@ -320,9 +319,28 @@ nebu_List* doMovement(int mode, int dt) {
 				current->vDirection.v[0] += t * dirsX[data->dir];
 				current->vDirection.v[1] += t * dirsY[data->dir];
 				
-				if(!data->wall_buster_enabled)
+				if(!data->wall_buster_enabled) {
 					crash = crash || crashTestPlayers(i, &movement);
-				crash = crash || crashTestWalls(i, &movement);
+					if(crash) {
+						printf("player %d crashed into other players \n", i);
+						printf("%f %f %f %f\n",
+							movement.vStart.v[0],
+							movement.vStart.v[1],
+							movement.vDirection.v[0],
+							movement.vDirection.v[1]);
+					}
+				}
+				if(!crash) {
+					crash = crash || crashTestWalls(i, &movement);
+					if(crash) {
+						printf("player %d crashed into the walls\n", i);
+						printf("%f %f %f %f\n",
+							movement.vStart.v[0],
+							movement.vStart.v[1],
+							movement.vDirection.v[0],
+							movement.vDirection.v[1]);
+					}
+				}
 			}
     } else { /* already crashed */
       if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
@@ -347,13 +365,12 @@ nebu_List* doMovement(int mode, int dt) {
 					if(mode) {
 						createEvent(winner, EVENT_STOP);
 						/* a stop event is the last event that happens */
-						return l;
+						return;
 					}
 				}
       }
     }      
   }
-  return l;
 }
  
 /*! \fn void idleGame( void )
@@ -422,20 +439,8 @@ void Game_Idle(void) {
 			}
 			game2->events.next = NULL;
 
-			l = doMovement(1, t); /* this can generate new events */
-			if(l != NULL) {
-				for(p = l; p->next != NULL; p = p->next) {
-					if(processEvent((GameEvent*) p->data));
-				}
+			doMovement(1, t); /* this can generate new events */
 
-			}
-			/* free list  */
-			p = l;
-			while(p != NULL) {
-				l = p;
-				p = p->next;
-				free(l);
-			}
 			dt -= PHYSICS_RATE;
 		}
 		break;

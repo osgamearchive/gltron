@@ -96,7 +96,7 @@ extern void resetScores(void);
 
 extern void doTurn(GameEvent* e, int direction);
 
-extern nebu_List* doMovement(int mode, int dt);
+extern void doMovement(int mode, int dt);
 extern void writePosition(int player);
 
 extern void initGameStructures(void);
