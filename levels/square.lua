@@ -27,14 +27,17 @@ spawn = {
 
 geometry = {
   -- floor geometry is used to generate reflections, etc.
-	floor = { 
-		type = "quads",
+	floor = {
+		-- triangles = 0, quads = 1
+		type = 1,
+		-- uv = 4, normal = 2, positon = 1
+		vertexformat = 7, 
+		 
 		shading = {
 			lit = 0, -- no lighting, only diffuse texture is applied
 			textures = { diffuse = "floor.png" }
-		}
+		},
 		vertices = {
-			{ -- quad0
 			{ pos = { x = 0, y = 0, z = 0 },
 				uv = { u = 0, v = 0 } },
 			{ pos = { x = 1, y = 0, z = 0 },
@@ -43,8 +46,8 @@ geometry = {
 				uv = { u = 1, v = 1 } },
 			{ pos = { x = 0, y = 1, z = 0 },
 				uv = { u = 0, v = 1 } }
-			}
-		}
+		},
+		indices = { 0, 1, 2, 3 }
   },
 
 	arena = {
