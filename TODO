@@ -11,6 +11,8 @@ Bugs:
 
 Features:
 
+- upon game start, default to split screen mode when there are multiple human
+  players
 - glClearColor() doesn't match artpack. Move glClearColor to settings and
   include in artpack.ini
 - Save current artpack / Clear up artpack system, Select default artpack 
