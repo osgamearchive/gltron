@@ -128,7 +128,7 @@ int crashTestWalls(int i, const segment2 *movement) {
 	return crash;
 }
 
-void applyBooster(int player, int dt) {
+int applyBooster(int player, int dt) {
 	Data *data = game->player[player].data;
 	if(data->booster > 0 && data->boost_enabled) {
 		float boost = getSettingf("booster_use") * dt / 1000.0f;
@@ -138,24 +138,30 @@ void applyBooster(int player, int dt) {
 		}
 		data->speed += boost;
 		data->booster -= boost;
+		return 1;
 	}
-	if(data->speed > game2->rules.speed && !data->boost_enabled) {
-		float decrease = getSettingf("booster_decrease") * dt / 1000.0f;
-		data->speed -= decrease;
-		if(data->speed < game2->rules.speed)
-			data->speed = game2->rules.speed;
-	}
-	if(!data->boost_enabled) { 
+	else {
 		float booster_max = getSettingf("booster_max");
 		if(data->booster < booster_max) {
 			data->booster += getSettingf("booster_regenerate") * dt / 1000.0f;
 			if(data->booster > booster_max)
 				data->booster = booster_max;
 		}
+		return 0;
 	}
 }
 
-void applyWallAcceleration(int player, int dt) {
+void applyDecceleration(int player, int dt, float factor) {
+	Data *data = game->player[player].data;
+	if(data->speed > game2->rules.speed) {
+		float decrease = factor * dt / 1000.0f;
+		data->speed -= decrease;
+		if(data->speed < game2->rules.speed)
+			data->speed = game2->rules.speed;
+	}
+}
+
+int applyWallAcceleration(int player, int dt) {
 	// find distance to enemy walls left & right
 	enum { eLeft, eRight, eMax };
 	segment2 segments[eMax];
@@ -213,13 +219,10 @@ void applyWallAcceleration(int player, int dt) {
 		if(left < accell_limit || right < accell_limit) {
 			float boost = getSettingf("wall_accel_use") * dt / 1000.0f;
 			data->speed += boost;
-		} else if(data->speed > game2->rules.speed) {
-			float decrease = getSettingf("wall_accel_decrease") * dt / 1000.0f;
-			data->speed -= decrease;
-			if(data->speed < game2->rules.speed)
-				data->speed = game2->rules.speed;
+			return 1;
+		} else {
+			return 0;
 		}
-
 	}
 }
 
@@ -239,8 +242,25 @@ List* doMovement(int mode, int dt) {
 			float t;
 
 			// speed boost:
-			// applyBooster(i, dt);
-			applyWallAcceleration(i, dt);
+			float deccel = 0;
+			if(getSettingf("wall_accel_on") == 1) {
+				if(!applyWallAcceleration(i, dt)) {
+					deccel = getSettingf("wall_accel_decrease");
+				}
+				else {
+					deccel = 0;
+				}
+			}
+			if(getSettingf("booster_on") == 1) {
+				if(!applyBooster(i, dt) && deccel != 0) {
+					float d = getSettingf("booster_decrease");
+					deccel = d > deccel ? d : deccel;
+				} else {
+					deccel = 0;
+				}
+			}
+			if(deccel > 0)
+				applyDecceleration(i, dt, deccel);
 
 			// if(i == 0)
 			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
