@@ -69,7 +69,8 @@ void drawText(fonttex* ftx, int x, int y, int size, char *text) {
   if(game->settings->softwareRendering) {
     drawSoftwareText(ftx, x, y, size, text);
   } else {
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
 
     glPushMatrix();
@@ -80,8 +81,7 @@ void drawText(fonttex* ftx, int x, int y, int size, char *text) {
   
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
-
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_BLEND);
     polycount += 2 * strlen(text); /* quads are two triangles */
   }
 }
@@ -727,9 +727,10 @@ void drawCam(Player *p, gDisplay *d) {
   glEnable(GL_COLOR_MATERIAL);
   glShadeModel(GL_SMOOTH);
   initTrailLights(0);
+  drawPlayers(p);
   for(i = 0; i < game->players; i++)
     drawTraces(&(game->player[i]), d);
-  drawPlayers(p);
+
 
   /* transparent stuff */
   for(i = 0; i < game->players; i++)
