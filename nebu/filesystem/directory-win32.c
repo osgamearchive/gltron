@@ -17,7 +17,8 @@ int isHiddenFile(WIN32_FIND_DATA *search)
 	if(search->cFileName[0] == '.')
 	{
 		return 1;
-	}else 
+	}
+	else 
 	{
 		return search->dwFileAttributes & FILE_ATTRIBUTE_HIDDEN;
 	}
@@ -55,7 +56,8 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 		free(l);
 		free(searchStr);
 		return NULL;
-	}else if(!isHiddenFile(&search))
+	}
+	else if(!isHiddenFile(&search))
 	{
 		len = strlen(search.cFileName) + 1;
 		filename = malloc(len);
@@ -95,7 +97,7 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 }
 
 void makeDirectory(const char *name) {
-	;
+	fprintf(stderr, "failed to create dir %s - feature not supported\n", name);
 }
 
 #endif

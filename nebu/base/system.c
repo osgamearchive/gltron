@@ -9,10 +9,10 @@ static int redisplay = 0;
 static int idle = 1;
 
 void SystemExit() {
-  fprintf(stderr, "[system] shutting down SDL now\n");
-  SDL_Quit();
-  fprintf(stderr, "[system] schedulting application exit\n");
-	
+	fprintf(stderr, "[system] shutting down SDL now\n");
+	SDL_Quit();
+	fprintf(stderr, "[system] scheduling application exit\n");
+
 	/* TODO: ugly, please fix */
 	redisplay = 0;
 	idle = 0;

@@ -101,7 +101,7 @@ void initVideo(void) {
 
 	runScript(PATH_SCRIPTS, "menu.lua");
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
-  setupDisplay(gScreen);
+	setupDisplay(gScreen);
 }
 
 void initAudio(void) {
