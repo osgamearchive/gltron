@@ -4,6 +4,8 @@ TODO list
 [name] plans to fix it (contact for updates/patches)
 
 Bugs [high priority]:
+- make sure starting positions are really randomized right now, to prevent
+  unfair advantage for player 0
 
 Features [high priority]:
 
@@ -48,13 +50,13 @@ Bugs [low priority]:
 
 Features [low priority]:
 
+- support other controllers (i.e. joysticks)
 - add (merge) software mouse cursor (from networking branch)
 - add more special effects (reflections etc.)
 - create default graphics settings to choose from: low/medium/high
 - explosion is missing alpha blending right now
 - Proper HUD for scores / ai info, etc.
 - uv-coordinates for the model, add texture coordinate support to obj loader
-- support other controllers (i.e. joysticks)
 - quake-like drop down console
 - add slightly funny console messages (Robot ate Andi's tail)
 - peek left/right when in 1st person camera mode
