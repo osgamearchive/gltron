@@ -6,9 +6,9 @@ static float arena[] = { 1.0, 1.2, 1, 0.0 };
 static int max_lod = 2;
 
 static int lod_dist[][4] = { 
-  { 25, 50, 150, 0 },
-  { 5, 30, 150, 0 },
-  { 1, 5, 100, 0 }
+  { 25, 50, 250, 0 },
+  { 5, 30, 200, 0 },
+  { 1, 5, 150, 0 }
 };
 
 /* spoke color */
@@ -400,9 +400,10 @@ GLuint buildFloorDispList(GLuint floor_list) {
     glColor4f(1.0, 1.0, 1.0, 1.0);
     l = game2->rules.grid_size / 4;
     t = l / 12;
+    
+    glBegin(GL_QUADS);
     for (j = 0; j < game2->rules.grid_size; j += l) {
       for (k = 0; k < game2->rules.grid_size; k += l) {
-        glBegin(GL_QUADS);
         glTexCoord2i(0, 0);
         glVertex2i(j, k);
         glTexCoord2i(t, 0);
@@ -411,10 +412,11 @@ GLuint buildFloorDispList(GLuint floor_list) {
         glVertex2i(j + l, k + l);
         glTexCoord2i(0, t);
         glVertex2i(j, k + l);
-        glEnd();
         polycount += 2;
       }
     }
+    glEnd();
+    
     glDisable(GL_TEXTURE_2D);
   } else {
     int i, j;
@@ -498,7 +500,7 @@ float getDirAngle(int time, Player *p) {
 
 void doCycleTurnRotation(Player *p) {
   int neigung_dir;
-  int time = 0;
+  unsigned int time = 0;
   float dirAngle;
 
   neigung_dir = -1.0;
