@@ -21,7 +21,7 @@ typedef struct line {
 typedef struct Model {
   Mesh **mesh; /* models (lod) */
   int lod; /* number of models */
-  int *lod_dist;
+  // int *lod_dist;
   
   float color_alpha[4]; /* alpha trail */
   float color_trail[4]; /* solid edges of trail */
@@ -110,6 +110,7 @@ typedef struct Settings {
   int show_glow;
   int show_ai_status;
   int show_model;
+  int lod;
   int show_crash_texture;
   int model_backwards;
   int turn_cycle; /* smooth turning */

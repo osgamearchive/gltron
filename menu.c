@@ -133,8 +133,8 @@ void menuAction(Menu *activated) {
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", "custom" };
 static char *player_list[] = { "human", "computer", "none" };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme" };
-
-static char **clists[] = { speed_list, player_list, arena_list };
+static char *lod_list[] = { "normal", "lower", "ugly" };
+static char **clists[] = { speed_list, player_list, arena_list, lod_list };
 
 void initMenuCaption(Menu *m) {
   int *piValue;

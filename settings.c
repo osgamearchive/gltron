@@ -77,6 +77,7 @@ void initSettingData(char *filename) {
   si[30].value = &(game->settings->game_speed);
   si[31].value = &(game->settings->arena_size);
   si[32].value = &(game->settings->alpha_trails);
+  si[33].value = &(game->settings->lod);
 
   sf[0].value = &(game->settings->speed);
 }
@@ -116,6 +117,7 @@ void initMainGameSettings(char *filename) {
   game->settings->show_floor_texture = 1;
   game->settings->show_crash_texture = 1;
   game->settings->show_model = 1;
+  game->settings->lod = 0;
   game->settings->turn_cycle = 1;
   game->settings->line_spacing = 20;
   game->settings->erase_crashed = 0;

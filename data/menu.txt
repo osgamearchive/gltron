@@ -159,8 +159,8 @@ Sound Effects - %s
 xsub
 Video
 
-# Options Submenu (9 entries)
-9
+# Options Submenu (10 entries)
+10
 xsub
 Display Options
 
@@ -188,6 +188,9 @@ Halos              - %s
 0
 sti_show_model
 Show Lightcycles   - %s
+0
+stl_3_2_lod
+LOD setting:       - %s
 0
 sti_show_crash_texture
 Show crash texture - %s

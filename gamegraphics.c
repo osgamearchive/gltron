@@ -375,6 +375,13 @@ void drawCycle(Player *p, int lod) {
   glPopMatrix();
 }
 
+static int lod_dist[][4] = { 
+  { 25, 50, 150, 0 },
+  { 5, 30, 150, 0 },
+  { 1, 5, 100, 0 }
+};
+static int max_lod = 2;
+ 
 int playerVisible(Player *eye, Player *target) {
   float v1[3];
   float v2[3];
@@ -382,6 +389,7 @@ int playerVisible(Player *eye, Player *target) {
   float s;
   float d;
   int i;
+  int lod;
 
   vsub(eye->camera->target, eye->camera->cam, v1);
   normalize(v1);
@@ -401,11 +409,12 @@ int playerVisible(Player *eye, Player *target) {
   if(s < d)
     return -1;
   else {
+    lod = (game->settings->lod > max_lod) ? max_lod : game->settings->lod;
     /* calculate lod */
     vsub(eye->camera->cam, tmp, v1);
     d = length(v1);
     for(i = 0; i < target->model->lod; i++) {
-      if(d < target->model->lod_dist[i])
+      if(d < lod_dist[lod][i])
 	return i;
     }
     return -1;

@@ -88,7 +88,7 @@ static char *lod_names[] = {
   "lightcycle med.obj",
   "lightcycle low.obj"
 };
-static int lod_dist[] = { 25, 50, 150 };
+// static int lod_dist[] = { 25, 50, 150 };
 
 void initModel(Player *p, int p_num) {
   int i, j;
@@ -96,10 +96,10 @@ void initModel(Player *p, int p_num) {
 
   p->model->lod = lod_n;
   p->model->mesh = (Mesh**) malloc(lod_n * sizeof(Mesh*));
-  p->model->lod_dist = (int*) malloc(lod_n * sizeof(int));
+  // p->model->lod_dist = (int*) malloc(lod_n * sizeof(int));
 
   for(i = 0; i < lod_n; i++) {
-    p->model->lod_dist[i] = lod_dist[i];
+    // p->model->lod_dist[i] = lod_dist[i];
     // load player mesh, currently only one type
     path = getFullPath(lod_names[i]);
     // path = getFullPath("tron-med.obj");
