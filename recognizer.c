@@ -1,6 +1,7 @@
 #include "gltron.h"
 
 static float alpha = 0;
+const static float rec_scale_factor = 0.25;
 
 static float xv[] = { 0.5, 0.3245, 0.6, 0.5, 0.68, - 0.3 };
 static float yv[] = { 0.8, 1.0, 0.0, 0.2, 0.2, 0.0 };
@@ -21,7 +22,7 @@ void getRecognizerPositionVelocity(Point *p, Point *v) {
 void drawRecognizers(int flag) {
   float phi, rx, ry;
   float max = 0;
-
+  
   phi = acos ( dx() / sqrt( dx() * dx() + dy() * dy() ) );
   if( dy() < 0 )
     phi = 2 * M_PI - phi;
@@ -34,14 +35,17 @@ void drawRecognizers(int flag) {
       max = recognizer->BBox.v[i];
 #endif
 
-  max = 1;
+  /* 
+   * TODO: precompute and store max since it doesn't change from frame to frame 
+   */
+  max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
 
   rx = ( max + ( x() + 1.0 ) * (game2->rules.grid_size - max) ) / 2.0;
   ry = ( max + ( y() + 1.0 ) * (game2->rules.grid_size - max) ) / 2.0;
-  glTranslatef( rx, ry, RECOGNIZER_HEIGHT );
-  glRotatef( (phi + M_PI / 2) * 180 / M_PI, 0, 0, 1); /* up */
+  glTranslatef( rx, ry, RECOGNIZER_HEIGHT);
+  glRotatef((phi + M_PI / 2) * 180 / M_PI, 0, 0, 1); /* up */
 
-  glScalef(0.25, 0.25, 0.25);
+  glScalef(rec_scale_factor, rec_scale_factor, rec_scale_factor);
 
   if (flag) {
     glDisable(GL_LIGHT0);
