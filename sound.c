@@ -102,8 +102,14 @@ void Sound_initTracks() {
     
   i = 1;
   for(p = soundList; p->next != NULL; p = p->next) {
-    scripting_RunFormat("tracks[%d] = \"%s\"", i, (char*) p->data);
-    i++;
+    
+    // bugfix: filter track list to readable files (and without directories)
+    char *path = getPossiblePath( PATH_MUSIC, (char*)p->data );
+  	if( path != NULL && fileExists( path ) ) {
+    	scripting_RunFormat("tracks[%d] = \"%s\"", i, (char*) p->data);
+        i++;
+    	free( path );
+    }
   }
   scripting_Run("setupSoundTrack()");
 }
