@@ -15,15 +15,13 @@ void drawWalls(void) {
 
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
-  /*
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  */
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #define T_TOP 1.0f
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL1]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(0.0, 0.0, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(0.0, 0.0, h);
@@ -32,6 +30,7 @@ void drawWalls(void) {
   glEnd();
   
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL2]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(game2->rules.grid_size, 0.0, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(game2->rules.grid_size, 0.0, h);
@@ -42,6 +41,7 @@ void drawWalls(void) {
   glEnd();
   
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL3]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBegin (GL_QUADS);
   glTexCoord2f(t, 0.0); 
   glVertex3f(game2->rules.grid_size, game2->rules.grid_size, 0.0);
@@ -52,6 +52,7 @@ void drawWalls(void) {
   glEnd();
   
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_WALL4]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBegin(GL_QUADS);
   glTexCoord2f(t, 0.0); glVertex3f(0.0, game2->rules.grid_size, 0.0);
   glTexCoord2f(t, T_TOP); glVertex3f(0.0, game2->rules.grid_size, h);
@@ -81,11 +82,12 @@ int drawFloorTextured(int grid_size, GLuint texture) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, texture);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	/* there are some strange clipping artefacts on some renderers */
 	/* try subdividing things... */
 
-	glColor4f(1.0, 1.0, 1.0, .5); // for reflections
+	glColor4f(1.0, 1.0, 1.0, .8); // for reflections
 	l = grid_size / 4;
 	t = l / 12;
     
