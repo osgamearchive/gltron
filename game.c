@@ -16,6 +16,7 @@ void initClientData() {
      to initialize camera */
 
   int i, j;
+  int camType;
   Camera *cam;
   Data *data;
   Model *model;
@@ -27,19 +28,9 @@ void initClientData() {
 
     for(j = 0; j < model->lod; j++)
       setMaterialAlphas(model->mesh[j], 1.0);
-
-    cam->camType = game->settings->camType;
-    cam->target[0] = data->posx;
-    cam->target[1] = data->posy;
-    cam->target[2] = 0;
-
-    cam->cam[0] = data->posx + CAM_CIRCLE_DIST;
-    cam->cam[1] = data->posy;
-    cam->cam[2] = CAM_CIRCLE_Z;
+    camType = (game->player[i].ai->active == 1) ? 0 : game->settings->camType;
+    initCamera(cam, data, camType);
   }
-
-  cam_chi = M_PI / 3;
-  cam_phi = 0;
 }
 
 void initDisplay(gDisplay *d, int type, int p, int onScreen) {
@@ -67,10 +58,13 @@ void changeDisplay() {
 }
 
 void playEngine(void *data, Uint8 *stream, int len) {
+#ifdef SOUND
   mixEngineSound(0, stream, len);
+#endif
 }
 
 void initGame() { /* called when game mode is entered */
+  SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
   Mix_SetPostMix(playEngine, NULL);
@@ -149,21 +143,31 @@ void cycleDisplay(int p) {
 }
 
 void gameMouseMotion(int x, int y) {
-  if(game->settings->camType == CAM_TYPE_MOUSE) 
-    if(x != MOUSE_ORIG_X || y != MOUSE_ORIG_Y) {
-      /* fprintf(stderr, "Mouse: dx: %d\tdy: %d\n", 
+  if(x != MOUSE_ORIG_X || y != MOUSE_ORIG_Y) {
+    game2->input.mousex += x - MOUSE_ORIG_X;
+    game2->input.mousey += y - MOUSE_ORIG_Y;
+    /* fprintf(stderr, "Mouse: dx: %d\tdy: %d\n", 
        x - MOUSE_ORIG_Y, y - MOUSE_ORIG_Y); */
-      cam_phi += - (x - MOUSE_ORIG_X) * MOUSE_CX;
-      cam_chi += (y - MOUSE_ORIG_Y) * MOUSE_CY;
-      if(cam_chi < CAM_CHI_MIN) cam_chi = CAM_CHI_MIN;
-      if(cam_chi > CAM_CHI_MAX) cam_chi = CAM_CHI_MAX;
-      SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-    }
+    /* 
+       cam_phi += - (x - MOUSE_ORIG_X) * MOUSE_CX;
+       cam_chi += (y - MOUSE_ORIG_Y) * MOUSE_CY;
+       if(cam_chi < CAM_CHI_MIN) cam_chi = CAM_CHI_MIN;
+       if(cam_chi > CAM_CHI_MAX) cam_chi = CAM_CHI_MAX;
+    */
+    SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
+  }
 }
 
-#define CAM_DR 1.0
-
 void gameMouse(int buttons, int state, int x, int y) {
+  if(state == SYSTEM_MOUSEPRESSED) {
+    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) game2->input.mouse1 = 1;
+    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) game2->input.mouse2 = 1;
+  } else if(state == SYSTEM_MOUSERELEASED) {
+    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) game2->input.mouse1 = 0;
+    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) game2->input.mouse2 = 0;
+  }
+
+  /*
   if(game->settings->camType == CAM_TYPE_MOUSE) 
     if(state == SYSTEM_MOUSEPRESSED) {
       if(buttons == SYSTEM_MOUSEBUTTON_LEFT) {
@@ -174,5 +178,6 @@ void gameMouse(int buttons, int state, int x, int y) {
 	if(cam_r > CAM_R_MAX) cam_r = CAM_R_MAX;
       }
     }
+  */
   /* fprintf(stderr, "new cam_r: %.2f\n", cam_r); */
 }
