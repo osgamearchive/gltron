@@ -7,7 +7,7 @@ void initTexture(Visual *d) {
   int i, j;
 
   switch(getSettingi("mipmap_filter")) {
-	case POINT:
+	case NEAREST:
 		min_filter = GL_NEAREST;
 		break;
 	case LINEAR:

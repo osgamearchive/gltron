@@ -67,7 +67,7 @@ extern void reloadArt(void);
 // #include <GL/glext.h>
 
 enum {
-	POINT = 0,
+	NEAREST = 0,
   LINEAR,
 	MIPMAP,
   TRILINEAR
