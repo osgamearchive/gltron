@@ -24,7 +24,7 @@ void drawGame() {
   glClearColor(28.0f / 255.0f, 26.0 / 255.0f, 100.0 / 255.0f, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  for(i = 0; i < vp_max[ game->settings->display_type]; i++) {
+  for(i = 0; i < vp_max[game->viewportType]; i++) {
     p = &(game->player[ game->settings->content[i] ]);
     if(p->display->onScreen == 1) {
       d = p->display;

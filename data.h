@@ -306,8 +306,15 @@ typedef struct Settings {
   int arena_size; /* index */
 } Settings;
 
+typedef enum ViewportType {
+    VP_SINGLE = 0,
+    VP_SPLIT = 1,
+    VP_FOURWAY = 2
+} ViewportType;
+
 typedef struct Game {
   gDisplay *screen;
+  ViewportType viewportType;
   Settings *settings;
   Player *player;
   int players; /* number of players - currently limited to 4 somewhere */

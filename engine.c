@@ -31,6 +31,7 @@ void initGameStructures() { /* called only once */
 
   game->winner = -1;
   game->screen = (gDisplay*) malloc(sizeof(gDisplay));
+  game->viewportType = game->settings->display_type; 
   d = game->screen;
   d->h = game->settings->height; d->w = game->settings->width;
   d->vp_x = 0; d->vp_y = 0;

@@ -45,13 +45,77 @@ void initDisplay(gDisplay *d, int type, int p, int onScreen) {
   d->onScreen = onScreen;
 }  
 
-void changeDisplay() {
+static void defaultViewportPositions() {
+  game->settings->content[0] = 0;
+  game->settings->content[1] = 1;
+  game->settings->content[2] = 2;
+  game->settings->content[3] = 3;
+}
+
+
+/*
+  autoConfigureDisplay
+      config viewports so every human player has one
+ */
+static void autoConfigureDisplay() {
+  int n_humans = 0;
   int i;
-  for(i = 0; i < game->players; i++)
+  ViewportType vp;
+
+  defaultViewportPositions();
+
+  /* loop thru players and find the humans */
+  for (i=0; i < game->players; i++) {
+    if (game->player[i].ai->active == 0) {
+      game->settings->content[n_humans] = i;
+      n_humans++;
+    }    
+  }
+ 
+  switch(n_humans) {
+    case 0 :
+      /*
+         Not sure what the default should be for
+         a game without human players. For now 
+         just show a single viewport.
+       */
+      /* fall thru */
+    case 1 :
+      vp = VP_SINGLE;
+      break;
+    case 2 :
+      vp = VP_SPLIT;
+      break;
+    default :
+      defaultViewportPositions();
+      vp = VP_FOURWAY;
+  }  
+
+  updateDisplay(vp);
+}
+
+void changeDisplay() {
+  if (game->settings->display_type == 3) {
+     autoConfigureDisplay(); 
+  } else {
+    defaultViewportPositions(); 
+    updateDisplay(game->settings->display_type);
+  }
+}
+
+void updateDisplay(ViewportType newVP) {
+  int i;
+
+  game->viewportType = newVP;
+
+  for (i = 0; i < game->players; i++) {
     game->player[i].display->onScreen = 0;
-  for(i = 0; i < vp_max[game->settings->display_type]; i++)
+  }
+  for (i = 0; i < vp_max[newVP]; i++) {
        initDisplay(game->player[ game->settings->content[i] ].display, 
-		   game->settings->display_type, i, 1);
+		   newVP, i, 1);
+  }
+
 }
 
 void initGame() { /* called when game mode is entered */
@@ -73,11 +137,8 @@ void exitGame() {
 void defaultDisplay(int n) {
   printf("set display to %d\n", n);
   game->settings->display_type = n;
-  game->settings->content[0] = 0;
-  game->settings->content[1] = 1;
-  game->settings->content[2] = 2;
-  game->settings->content[3] = 3;
-  changeDisplay();
+  defaultViewportPositions();
+  updateDisplay(n);
 }
 
 void initGameScreen() {

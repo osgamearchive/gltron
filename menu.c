@@ -13,7 +13,7 @@ static char *shadow_lod_list[] = { "high", "normal", "low", NULL };
 static char *ai_list[] = { "dumb", "normal", "strong", "the MCP himself", NULL };
 static char *filter_list[] = { "bilinear", "trilinear", NULL };
 static char *camera_list[] = { "circling", "behind", "cockpit", "mouse", NULL };
-static char *viewports_list[] = { "single", "split", "4 player", NULL };
+static char *viewports_list[] = { "single", "split", "4 player", "auto", NULL };
 
 static char **clists[] = { speed_list, player_list, arena_list, lod_list,
 			   ai_list, filter_list, camera_list, viewports_list,
@@ -143,6 +143,7 @@ void menuAction(Menu *activated, int type) {
     case 'r': 
       initData();
       game2->mode = GAME_SINGLE;
+      changeDisplay();
       switchCallbacks(&pauseCallbacks);
       break;
     case 'a': /* this menu code is turning uglier and uglier */

@@ -343,6 +343,7 @@ extern int processEvent(GameEvent *e);
 extern void initClientData();
 extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
 extern void changeDisplay();
+extern void updateDisplay(ViewportType VPtype); /* vp types defined in data.h */
 extern void initModelLights(int light);
 
 extern void gameMouseMotion(int x, int y);
