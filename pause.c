@@ -80,12 +80,14 @@ void keyboardPause(int key, int x, int y) {
 }
 
 void initPause() {
+  SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   fprintf(stderr, "init pause mode\n");
   // Mix_SetPostMix(playEngine, NULL);
 }
 
 void exitPause() {
+  SystemUnhidePointer();
   // Mix_SetPostMix(NULL, NULL);
 }
 

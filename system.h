@@ -68,4 +68,6 @@ extern void SystemMouse(int buttons, int state, int x, int y);
 extern void SystemMouseMotion(int x, int y);
 
 extern int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels);
+
+extern void SystemQuit();
 #endif

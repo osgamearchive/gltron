@@ -117,6 +117,8 @@ void SystemMainLoop() {
 		    event.button.x, event.button.y);
       } else if(event.type == SDL_MOUSEMOTION) {
 	SystemMouseMotion(event.motion.x, event.motion.y);
+      } else if(event.type == SDL_QUIT) {
+        SystemQuit ();
       }
     }
     if(redisplay) {
@@ -218,4 +220,9 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
   SDL_SaveBMP(temp, filename);
   SDL_FreeSurface(temp);
   return 0;
+}
+
+void SystemQuit() {
+      saveSettings(); 
+      switchCallbacks(&creditsCallbacks);
 }

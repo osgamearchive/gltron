@@ -22,7 +22,6 @@ int initWindow() {
 
   SystemInitWindow(0, 0, game->settings->width, game->settings->height);
 
-  SystemHidePointer();
   if(game->settings->windowMode == 0) {
     fullscreen = SYSTEM_FULLSCREEN;
   }

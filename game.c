@@ -64,6 +64,7 @@ void playEngine(void *data, Uint8 *stream, int len) {
 }
 
 void initGame() { /* called when game mode is entered */
+  SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
@@ -72,6 +73,7 @@ void initGame() { /* called when game mode is entered */
 }
 
 void exitGame() {
+  SystemUnhidePointer();
 #ifdef SOUND
   Mix_SetPostMix(NULL, NULL);
 #endif
