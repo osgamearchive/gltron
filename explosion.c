@@ -50,7 +50,7 @@ void drawShockwaves(float *radius) {
 /* impact spire behavior constants */
 #define SPIRE_SPEED 0.60
 #define SPIRE_MAX_RADIUS 25
-#define SPIRE_WIDTH 0.50
+#define SPIRE_WIDTH 0.40
 #define NUM_SPIRES 21 
 
 void drawSpires(float *spire_radius) {
