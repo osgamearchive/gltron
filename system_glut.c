@@ -37,6 +37,14 @@ void SystemWarpPointer(int x, int y) {
   glutWarpPointer(x, y);
 }
 
+void SystemHidePointer() {
+  glutSetCursor(GLUT_CURSOR_NONE);
+}
+
+void SystemUnhidePointer() {
+  glutSetCursor(GLUT_CURSOR_INHERIT);
+}
+
 void SystemMainLoop() {
   glutMainLoop();
 }

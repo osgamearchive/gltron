@@ -454,9 +454,13 @@ void drawMenu(gDisplay *d) {
   glEnable(GL_BLEND);
 
   for(i = 0; i < pCurrent->nEntries; i++) {
-    if(i == pCurrent->iHighlight)
+    if(i == pCurrent->iHighlight) {
       glColor4fv(pCurrent->display.hlColor);
-    else glColor4fv(pCurrent->display.fgColor);
+
+      if(game->settings->softwareRendering)
+	drawSoftwareHighlight(x, y, size, ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
+    } else 
+      glColor4fv(pCurrent->display.fgColor);
 
     rasonly(d);
     drawText(guiFtx, x, y, size,

@@ -17,8 +17,8 @@ GLTRON_INSTALLDIR = /usr/bin
 GLTRON_HOME = /usr/share/games/gltron
 
 CFILES = \
-	sgi_texture.c \
 	png_texture.c \
+	pixels.c \
 	switchCallbacks.c \
 	gui.c \
 	pause.c \

@@ -34,8 +34,10 @@ fontbmp* fbmpLoadFont(char *filename) {
   /* bitmap filename */
   getLine(buf, sizeof(buf), file);
   len = strlen(buf) + 1;
-  fbmp->bitmapname = (char*) malloc(len);
-  memcpy(fbmp->bitmapname, buf, len);
+  if(buf[len - 2] == '\n') buf[len - 2] = 0;
+  /* fbmp->bitmapName = (char*) malloc(len);
+     memcpy(fbmp->bitmapName, buf, len); */
+  fbmp->tex = loadTextureData(buf);
 
   fclose(file);
   return fbmp;
@@ -70,6 +72,7 @@ fonttex *ftxLoadFont(char *filename) {
   /* font name */
   getLine(buf, sizeof(buf), file);
   len = strlen(buf) + 1;
+
   ftx->fontname = malloc(len);
   memcpy(ftx->fontname, buf, len);
 

@@ -95,7 +95,7 @@ void parse_args(int argc, char *argv[]) {
 	  /* case 'v': game->settings->screenSaver = 1; break; */
 	case 'i': game->settings->windowMode = 1; break;
 	case 'M': game->settings->mouse_warp = 1; break;
-	case 'o': game->settings->softwareRendering = 1; break;
+	case 'O': game->settings->softwareRendering = 1; break;
 	case '1': /* default is -2 */
 	  game->settings->width = 320;
 	  game->settings->height = 240;

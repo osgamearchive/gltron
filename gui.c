@@ -27,10 +27,10 @@ void drawGuiBackground() {
 
   if(game->settings->softwareRendering) {
     glRasterPos2i(0, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glDrawPixels(game->screen->vp_w, game->screen->vp_h,
 		 GL_RGB, GL_UNSIGNED_BYTE,
 		 game->screen->pixelGui);
-
   } else {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, game->screen->texGui);

@@ -40,6 +40,8 @@ extern void SystemPostRedisplay();
 extern int SystemGetElapsedTime();
 extern void SystemSwapBuffers();
 extern void SystemWarpPointer(int x, int y);
+extern void SystemHidePointer();
+extern void SystemUnhidePointer();
 extern void SystemMainLoop();
 extern void SystemRegisterCallbacks(callbacks* cb);
 

@@ -212,16 +212,27 @@ void drawDebugTex(gDisplay *d) {
 }
 
 void drawConsoleLines(char *line, int call) {
+#define CONSOLE_SIZE 15
+#define CONSOLE_X_OFF 20
+  int size = CONSOLE_SIZE;
+  int length;
   /* fprintf(stdout, "%s\n", line); */
+  length = strlen(line);
+  while(length * size > game->screen->vp_w / 2 - CONSOLE_X_OFF)
+    size--;
+    
   if(*line != 0) 
-    drawText(gameFtx, 20, game->screen->vp_h - 20 * (call + 1),
-	     15, line);
+    drawText(gameFtx, CONSOLE_X_OFF, game->screen->vp_h - 20 * (call + 1),
+	     size, line);
 }
 
 void drawConsole(gDisplay *d) {
+  int lines = 5;
   rasonly(d);
   glColor3f(1.0, 0.3, 0.3);
-  consoleDisplay(drawConsoleLines, 5);
+  if(game->screen->vp_h < 600) lines = 3;
+  if(game->settings->softwareRendering) lines = 1;
+  consoleDisplay(drawConsoleLines, lines);
 }
   
 void drawFPS(gDisplay *d) {
@@ -428,6 +439,8 @@ void drawCycle(Player *p, int lod) {
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
 
+
+
   if(p->data->exp_radius == 0)
     drawModel(cycle, MODEL_USE_MATERIAL, 0);
   else if(p->data->exp_radius < EXP_RADIUS_MAX) {
@@ -441,9 +454,7 @@ void drawCycle(Player *p, int lod) {
     }
     drawExplosion(cycle, p->data->exp_radius, MODEL_USE_MATERIAL, 0);
   }
-
-  if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
-
+  glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
   glDisable(GL_CULL_FACE);
   glPopMatrix();
@@ -735,12 +746,7 @@ void drawPause(gDisplay *display) {
 
 
 void initGLGame() {
-
   glShadeModel( game->screen->shademodel );
-
-  if(game->settings->show_alpha) 
-    glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }

@@ -14,28 +14,19 @@
 #define RC_NAME ".gltronrc"
 #define CURRENT_DIR "."
 
-/* #define SGI_TEX */
-/* #define SDL_TEX */
-
-#define PNG_TEX
-
+#ifndef M_PI
+#define M_PI 3.141592654
+#endif
 /* win32 additions by Jean-Bruno Richard <jean-bruno.richard@mg2.com> */
 
 #ifdef WIN32
-
 #include <windows.h>
 #define SOUND
-#define M_PI 3.141592654
+
 #undef SEPERATOR
 #define SEPERATOR '\\'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
-
-#undef SDL_TEX
-#undef SGI_TEX
-#undef PNG_TEX
-
-#define PNG_TEX
 
 #endif /* WIN32 */
 
@@ -51,7 +42,6 @@
 #ifdef macintosh
 #include <string.h>
 #include <console.h>
-#define M_PI 3.141592654
 #undef SEPERATOR
 #define SEPERATOR ':'
 #undef RC_NAME
@@ -69,29 +59,15 @@ typedef png_texture texture;
 #define SIN(X)	sin( (X) * M_PI/180.0 )
 
 /* data structures */
+#include "model.h"
 #include "data.h"
+#include "menu.h"
+
+#include "system.h"
+#include "geom.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-
-#include "system.h"
-
-/* use texfont for rendering fonts as textured quads */
-/* todo: get rid of that (it's not free) */
-
-/* #include "TexFont.h" */
-#include "fonttex.h"
-
-/* menu stuff */
-
-#include "menu.h"
-
-#include "console.h"
-/* TODO(3): incorporate model stuff */
-/* model stuff */
-#include "model.h"
-
-#include "geom.h"
 
 /* do Sound */
 #ifdef SOUND
@@ -207,6 +183,13 @@ extern unsigned char debugcolors[6][4];
 extern int *configureKeyEntry;
 extern Menu *configureKeyMenu;
 
+extern callbacks gameCallbacks;
+extern callbacks guiCallbacks;
+/* extern callbacks chooseModelCallbacks; */
+extern callbacks pauseCallbacks;
+extern callbacks configureCallbacks;
+extern callbacks promptCallbacks;
+
 #define KEY_ACTIONS_N 8
 
 typedef struct {
@@ -216,17 +199,16 @@ typedef struct {
 } keyAction;
 
 extern keyAction key_actions[];
-/*
-#define HELP_LINES 18
-#define HELP_FONT GLUT_BITMAP_9_BY_15
-#define HELP_DY 20
-
-extern char *help[];
-*/
 
 /* function prototypes */
-
 /* TODO: sort these */
+
+/* console */
+void consoleInit();
+void consoleAddLine(char *text);
+void consoleDisplay(void(*func)(char *line, int call), int height);
+void consoleScrollForward(int range);
+void consoleScrollBackward(int range);
 
 /* record.c */
 
@@ -240,22 +222,14 @@ extern void stopPlaying();
 /* engine.c */
 
 extern int getCol(int x, int y);
-
 extern void turn(Data* data, int direction);
-
 extern void idleGame();
-
 extern void initGame();
 extern void exitGame();
-
 extern void initGameStructures();
-
 extern void initGameScreen();
-
-
 extern void defaultDisplay(int n);
 extern void cycleDisplay(int p);
-
 extern void doTrail(line *t, int value);
 extern void fixTrails();
 extern void clearTrails(Data *data);
@@ -377,30 +351,44 @@ extern void drawWalls(gDisplay *d);
 
 extern void drawCam(Player *p, gDisplay *d);
 
-
-
+/* pixel stuff */
+extern unsigned char* loadPixels(char *filename, gDisplay *d);
+extern unsigned char* scalePixels(unsigned char *source, int sw, int sh,
+				  int x, int y, int w, int h,
+				  int dw, int dh, int bytes);
 
 /* font stuff ->fonts.c */
 extern void initFonts();
 extern void deleteFonts();
-
 extern void resetScores();
-
 
 extern void draw( void );
 
-
 extern void chaseCamMove();
-/* extern void timediff(); */
 extern void camMove();
 
 extern void movePlayers();
 
-extern callbacks gameCallbacks;
-extern callbacks guiCallbacks;
-/* extern callbacks chooseModelCallbacks; */
-extern callbacks pauseCallbacks;
-extern callbacks configureCallbacks;
-extern callbacks promptCallbacks;
+/* fonttex stuff */
+extern void initBitmaps(gDisplay *d) ;
+extern fontbmp* fbmpLoadFont(char *filename);
+extern texture* loadTextureData(char *filename);
+extern void drawSoftwareText(fonttex *tex, int x, int y, int size, char *text);
+
+extern fonttex *ftxLoadFont(char *filename);
+extern void ftxUnloadFont(fonttex *ftx);
+extern void loadTexture(char *filename, int format);
+
+/* It's not necessary to bind the texture explicitly. */
+/* (and we don't know which texture to bind) */
+
+/* ftxRenderString will take care of that */
+/* extern void ftxBindFontTexture(fontTex *ftx); */
+
+extern void ftxRenderString(fonttex *ftx, char *string, int len);
+
+/* extern void ftxGetStringWidth(fontTex *ftx, */
+/*                               char *string, int len, int *width); */
+/* can't get max_ascent, max_descent yet */
 
 #endif

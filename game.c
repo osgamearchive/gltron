@@ -56,6 +56,7 @@ void changeDisplay() {
 }
 
 void initGame() { /* called when game mode is entered */
+  SystemHidePointer();
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
 #ifdef SOUND
   /* playEngine(); */
@@ -63,6 +64,7 @@ void initGame() { /* called when game mode is entered */
 }
 
 void exitGame() {
+  SystemUnhidePointer();
 #ifdef SOUND
   stopEngine();
 #endif

@@ -1,10 +1,9 @@
 #ifndef DATA_H
 #define DATA_H
 
-/* data structures */
+#include "gltron.h"
 
-#include <stdio.h>
-#include "model.h"
+/* data structures */
 
 typedef struct list list;
 struct list {
@@ -101,6 +100,34 @@ typedef struct line {
   int sx, sy, ex, ey;
 } line;
 
+typedef struct fontbmp {
+  int texwidth; /* texture width */
+  int width; /* character width */
+
+  int lower; /* lowest ascii character (normally: 32) */
+  int upper; /* highest ascii character (normally: 126) */
+
+  texture *tex;
+} fontbmp;
+
+typedef struct fonttex {
+  // sgi_texture **textures;
+  int nTextures;
+  
+  int texwidth; /* texture width */
+  int width; /* character width */
+
+  int lower; /* lowest ascii character (normally: 32) */
+  int upper; /* highest ascii character (normally: 126) */
+
+  unsigned int *texID;
+
+  char *fontname;
+  char *bitmapname;
+  int bitmapTexwidth;
+  int bitmapWidth; /* character width */
+} fonttex;
+
 typedef struct Model {
   Mesh **mesh; /* models (lod) */
   int lod; /* number of models */
@@ -155,6 +182,7 @@ typedef struct gDisplay {
   int wall;
   int onScreen;
 
+  /* texture ID */
   unsigned int texFloor; 
   unsigned int texWall_1;
   unsigned int texWall_2;
@@ -166,7 +194,10 @@ typedef struct gDisplay {
   unsigned int texTrail;
   unsigned int texTrailDecal;
   unsigned int texDebug;
+  /* software rendering stuff */
   unsigned char *pixelGui;
+  fontbmp *bitfont;
+  
 } gDisplay;
 
 typedef struct Player {

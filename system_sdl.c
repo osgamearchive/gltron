@@ -53,6 +53,14 @@ void SystemWarpPointer(int x, int y) {
   SDL_WarpMouse(x, y);
 }
 
+void SystemHidePointer() {
+  SDL_ShowCursor(0);
+}
+
+void SystemUnhidePointer() {
+  SDL_ShowCursor(1);
+}
+
 void SystemMouse(int buttons, int state, int x, int y) {
   if(current)
     if(current->mouse != NULL)
@@ -90,7 +98,7 @@ void SystemMainLoop() {
 	  current->keyboard(event.key.keysym.sym, 0, 0);
       } else if(event.type == SDL_MOUSEBUTTONDOWN ||
 		event.type == SDL_MOUSEBUTTONUP) {
-	SystemMouse(event.button.button, event.type, 
+	SystemMouse(event.button.button, event.button.state, 
 		    event.button.x, event.button.y);
       } else if(event.type == SDL_MOUSEMOTION) {
 	SystemMouseMotion(event.motion.x, event.motion.y);

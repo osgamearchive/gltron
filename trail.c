@@ -32,11 +32,15 @@ void drawTraces(Player *p, gDisplay *d) {
   if(game->settings->alpha_trails) {
     glColor4fv(p->model->color_alpha);
     glDepthMask(GL_FALSE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   } else {
-    glEnable(GL_TEXTURE_2D);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-    glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
-
+    if(game->settings->softwareRendering == 0) {
+      glDisable(GL_BLEND);
+      glEnable(GL_TEXTURE_2D);
+      glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+      glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
+    }
     glColor3fv(p->model->color_alpha);
   }
 
@@ -54,11 +58,13 @@ void drawTraces(Player *p, gDisplay *d) {
     glNormal3fv(normal);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(line->sx, line->sy, 0.0);
+
     glTexCoord2f(0.0, 1.0);
     glVertex3f(line->sx, line->sy, height);
 
     glTexCoord2f(tlength / DECAL_WIDTH, 1.0);
     glVertex3f(line->ex, line->ey, height);
+
     glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
     glVertex3f(line->ex, line->ey, 0.0);
 
@@ -132,6 +138,7 @@ void drawTraces(Player *p, gDisplay *d) {
   glEnd();
   if(data->speed > 0 && game->settings->show_model == 1) {
     glEnable(GL_TEXTURE_2D);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -164,6 +171,7 @@ void drawTraces(Player *p, gDisplay *d) {
   polycount += 4;
 
   glShadeModel( game->screen->shademodel );
+  glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
 
   glPolygonOffset(-2.0, -1.0);  
@@ -198,45 +206,47 @@ void drawTraces(Player *p, gDisplay *d) {
   glEnd();
 
   glDisable(GL_POLYGON_OFFSET_LINE);
-  glEnable(GL_POLYGON_OFFSET_FILL);
+
 
   /* draw trail shadow */
 #define SHADOWH 0.0
+  if(game->settings->softwareRendering == 0) {
+    glEnable(GL_POLYGON_OFFSET_FILL);
 
-  line = &(data->trails[0]);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glColor4f(0.2, 0.2, 0.2, 0.8);
-  glBegin(GL_QUADS);
+    line = &(data->trails[0]);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.2, 0.2, 0.2, 0.8);
+    glBegin(GL_QUADS);
 
-  line = &(data->trails[0]);
-  while(line != data->trail) { /* the current line is not drawn */
-    tlength = (line->ex - line->sx + line->ey - line->sy);
-    if(tlength < 0) tlength = -tlength;
+    line = &(data->trails[0]);
+    while(line != data->trail) { /* the current line is not drawn */
+      tlength = (line->ex - line->sx + line->ey - line->sy);
+      if(tlength < 0) tlength = -tlength;
     
-    glNormal3f(0.0, 0.0, 1.0);
+      glNormal3f(0.0, 0.0, 1.0);
+      glVertex3f(line->sx, line->sy, SHADOWH);
+      glVertex3f(line->sx + height, line->sy + height, SHADOWH);
+      glVertex3f(line->ex + height, line->ey + height, SHADOWH);
+      glVertex3f(line->ex, line->ey, SHADOWH);
+      line++;
+      polycount++;
+    }
+    sx = line->sx;
+    sy = line->sy;
+    px = data->posx;
+    py = data->posy;
+    tlength = px - sx + py - sy;
+    if(tlength < 0) tlength = -tlength;
+    blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
     glVertex3f(line->sx, line->sy, SHADOWH);
     glVertex3f(line->sx + height, line->sy + height, SHADOWH);
-    glVertex3f(line->ex + height, line->ey + height, SHADOWH);
-    glVertex3f(line->ex, line->ey, SHADOWH);
-    line++;
-    polycount++;
-  }
-  sx = line->sx;
-  sy = line->sy;
-  px = data->posx;
-  py = data->posy;
-  tlength = px - sx + py - sy;
-  if(tlength < 0) tlength = -tlength;
-  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
-  glVertex3f(line->sx, line->sy, SHADOWH);
-  glVertex3f(line->sx + height, line->sy + height, SHADOWH);
-  glVertex3f(px + height, 
-	     py + height,
-	     SHADOWH);
-  glVertex3f(px, py, SHADOWH);
+    glVertex3f(px + height, 
+	       py + height,
+	       SHADOWH);
+    glVertex3f(px, py, SHADOWH);
   
-  glEnd();
+    glEnd();
 
 #undef SHADOWH
 
@@ -247,9 +257,9 @@ void drawTraces(Player *p, gDisplay *d) {
 #undef DECAL_WIDTH
 #undef BOW_LENGTH
 
-  glDisable(GL_POLYGON_OFFSET_FILL);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+  }
 
 
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glDepthMask(GL_TRUE);
 }

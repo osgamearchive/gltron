@@ -115,7 +115,7 @@ void setupDisplay(gDisplay *d) {
   initFonts();
   printf("loading textures...\n");
   initTexture(game->screen);
-
+  initBitmaps(game->screen);
   SystemReshapeFunc(reshape);
 }
 
@@ -179,14 +179,3 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, NULL, NULL
 };
-
-
-
-
-
-
-
-
-
-
-
