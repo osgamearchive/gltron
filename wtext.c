@@ -10,8 +10,8 @@ new_wtext(int width, int height, int posx, int posy)
 
   wtext->width       = width;
   wtext->height      = height;
-  wtext->x           = posx;
-  wtext->y           = posy;
+  wtext->x           = posx*game->screen->vp_w / (50 * 1.5);
+  wtext->y           = posy*game->screen->vp_h / (24 * 1.5);
 
   wtext->current     = 0;
   wtext->cur_char    = 0;

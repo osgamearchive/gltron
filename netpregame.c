@@ -112,7 +112,7 @@ void drawPregame() {
 	  if( slots[i].isMaster )
 	    glColor3fv(colors[3]);
 	    
-	  sprintf(str, "%s ( %d )\n", slots[i].name, slots[i].ping);
+	  sprintf(str, "%s (%d)\n", slots[i].name, slots[i].ping);
 	  drawText(gameFtx, x, y, h, str);
 	  if( slots[i].isMaster )
 	    glColor3fv(colors[1]);
@@ -211,7 +211,7 @@ void initPregame() {
 
   if( pregametext == NULL )
     {
-      pregametext = new_wtext(28, 17, -5, 110);
+      pregametext = new_wtext(28, 17, -1, 8);
       insert_wtext(pregametext, "connected...\n", 3);
       insert_wtext(pregametext, server_message, 7);
     }
