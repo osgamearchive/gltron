@@ -1,5 +1,21 @@
-0.61 to current
-*** incomplete ***
+0.61 to 0.62
+- better & faster shadows
+- red outlines on the recognizer
+
+- better 3D sound effects
+- sound effects for player's lightcycle
+- sound effects for recognizer flying overhead
+- support for 'switching songs' (add your own music)
+- mp3 support
+- ogg/vorbis support (only linux version)
+
+- better camera zoom functions
+
+- integrated scripting language
+- more & more intuitive configuration options
+- many stability & performance enhancements
+- distribution friendly build process 
+
 
 0.59 to 0.61
 - fixed lightcycle-hits-lightcycle lockup bug
