@@ -23,7 +23,7 @@ void readMaterialLibraryFromFile(char *filename, Mesh *pMesh) {
   char *path;
   gzFile f;
 
-  path = getFullPath(filename);
+  path = getPath(PATH_DATA, filename);
   if(path == NULL) {
     fprintf(stderr, "** could not optain path to file '%s'\n", filename);
     return;

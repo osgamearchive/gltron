@@ -102,7 +102,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    }
 }
 
-list* readDirectoryContents(char *dirname, char *prefix) {
+list* readDirectoryContents(const char *dirname, char *prefix) {
 
   list *l;
   OSErr err;
@@ -161,7 +161,7 @@ char *getMusicPath(char *name) {
 #include <sys/types.h>
 #include <dirent.h>
 
-list* readDirectoryContents(char *dirname, char *prefix) {
+list* readDirectoryContents(const char *dirname, char *prefix) {
   DIR *dir;
   struct dirent *entry;
   list *l, *p;

@@ -26,26 +26,13 @@ void initArtpacks() {
   artpack_list[i] = NULL;
 }
 
-void getArtPath(char *name, char *fullname) {
-  char *path;
-  char fallback[] = "default";
-  sprintf(fullname, "%s%c%s", game->screen->artpack.path, SEPERATOR, name);
-  if((path = getFullPath(fullname)) == NULL) {
-    sprintf(fullname, "%s%c%s", fallback, SEPERATOR, name);
-  } else {
-    free(path);
-    return;
-  }
-}
-
 void loadArt() {
-  char buf[120];
   char *path;
+  char *artpack;
 
-  game->screen->artpack.path = artpack_list[artpack_index];
+  artpack = artpack_list[artpack_index];
 
-  getArtPath("artpack.ini", buf);
-  path = getFullPath(buf);
+  path = getArtPath(artpack, "artpack.ini");
   if(path != NULL) {
     scripting_DoFile(path);
     free(path);

@@ -6,17 +6,16 @@ void freeTextureData(texture *tex) {
 }
 
 texture* loadTextureData(char *filename) {
-  texture *tex;
-  char fullname[120];
+  texture *tex = NULL;
   char *path;
+  char *artpack;
+  
+  artpack = artpack_list[artpack_index];
 
-  getArtPath(filename, fullname);
-  path = getFullPath(fullname);
-  if(path != NULL)
+  path = getArtPath(artpack, filename);
+  if(path != NULL) {
     tex = LOAD_TEX(path);
-  else {
-    fprintf(stderr, "fatal: could not load %s, exiting...\n", filename);
-    exit(1);
+    free(path);
   }
 
   if(tex == NULL) {    

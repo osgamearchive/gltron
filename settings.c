@@ -133,63 +133,26 @@ void checkSettings() {
   }
 }
 
-
 void saveSettings() {
-  char *fname;
-  char *home;
+  char *path;
+  char *script;
 
-  home = getenv("HOME"); /* find homedir */
-  if(home == NULL) {
-    fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
-    sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
-  } else {
-    fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
-    sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
-  }
-  { 
+  script = getPath(PATH_SCRIPTS, "save.lua");
+  scripting_DoFile(script);
+  free(script);
+
+  path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
+  if(path != NULL) {
     char command[] = "writeto(\"%s\")";
-    char buf[120];
-    sprintf(buf, command, fname);
-    scripting_DoFile("save.lua");
+    char buf[260];
+    sprintf(buf, command, path);
+
+
     scripting_DoString(buf);
     scripting_DoString("save()");
+    free(path);
   }
-  free(fname);
 }
-
-#if 0
-void saveSettings() {
-  char *fname;
-  char *home;
-  int i;
-  FILE* f;
-
-  home = getenv("HOME"); /* find homedir */
-  if(home == NULL) {
-    fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
-    sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
-  } else {
-    fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
-    sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
-  }
-  f = fopen(fname, "w");
-  if(f == NULL) {
-    printf("can't open %s ", fname);
-    perror("for writing");
-    return; /* can't write rc */
-  }
-  for(i = 0; i < si_count; i++)
-    fprintf(f, "iset %s %d\n", si[i].name, *(si[i].value));
-  for(i = 0; i < sf_count; i++)
-    fprintf(f, "fset %s %.2f\n", sf[i].name, *(sf[i].value));
-  for(i = 0; i < sv_count; i++) {
-    (sv[i].value)(NULL, f);
-  }
-  printf("written settings to %s\n", fname);
-  free(fname);
-  fclose(f);
-}
-#endif
 
 int getSettingi(char *name) {
   int value;
@@ -199,6 +162,8 @@ int getSettingi(char *name) {
     assert(0);
     return 0;
   }
+
+  lua_profile++;
   return value;
 }
 
@@ -210,6 +175,8 @@ float getSettingf(char *name) {
     assert(0);
     return 0;
   }
+
+  lua_profile++;
   return value;
 }
 

@@ -49,7 +49,7 @@ void changeAction(char *name) {
 	c++;
       }      
       if(c == getSettingi("soundIndex")) {
-	path = getFullPath(MUSIC_DIR);
+	path = getPath(PATH_MUSIC, MUSIC_DIR);
 	tmp = (char*)malloc(strlen(path) + 1 + /* seperator */
 		     strlen((char*) p->data) + 1);
 	sprintf(tmp, "%s%c%s", path, SEPERATOR, 

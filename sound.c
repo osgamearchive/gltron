@@ -25,7 +25,7 @@ void loadFX() {
 
 
   for(i = 0; i < NUM_GAME_FX; i++) {
-    path = getFullPath(game_fx_names[i]);
+    path = getPath(PATH_DATA, game_fx_names[i]);
     if(path) {
       Audio_LoadSample(path, i);
       free(path);

@@ -18,7 +18,6 @@ extern "C" {
 
 #define SEPERATOR '/'
 #define RC_NAME ".gltronrc"
-#define CURRENT_DIR "."
 
 #ifndef M_PI
 #define M_PI 3.141592654
@@ -32,7 +31,6 @@ extern "C" {
 #define SEPERATOR '\\'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
-#define CURRENT_EQ_DATA_DIR 
 
 #endif /* WIN32 */
 
@@ -50,9 +48,6 @@ extern "C" {
 #define SEPERATOR ':'
 #undef RC_NAME
 #define RC_NAME "gltron.ini"
-#define CURRENT_EQ_DATA_DIR 
-#undef CURRENT_DIR
-#define CURRENT_DIR ""
 #endif 
 
 #ifdef __APPLE__
@@ -100,7 +95,6 @@ extern texture_info textures[];
 
 /* artpack stuff */
 
-extern void getArtPath(char *texname, char *fullpath);
 extern void initArtpacks(void);
 extern void loadArt(void);
 extern void reloadArt(void);
@@ -204,6 +198,7 @@ extern Game2 *game2;
 extern int viewport_content[4];
 extern list* soundList;
 extern void (*ai_function)(int,int);
+extern int lua_profile;
 
 extern float camAngle;
 extern float cam_phi;
@@ -409,8 +404,7 @@ extern float* getVf(char *szName);
 
 /* file handling -> file.c */
 
-extern char* getFullPath(char *filename);
-extern list* readDirectoryContents(char *dirname, char *prefix);
+extern list* readDirectoryContents(const char *dirname, char *prefix);
 extern char* getMusicPath(char *dirname);
 
 /* findpath.c, GPL'd code */

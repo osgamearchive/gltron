@@ -1,7 +1,6 @@
 #include "gltron.h"
 
 #define FTX_ERR "[fonttex error]: "
-extern char *getFullPath(char*);
 
 void getLine(char *buf, int size, FILE *f) {
   do {
@@ -21,7 +20,7 @@ fontbmp* fbmpLoadFont(char *filename) {
   int len;
   fontbmp *fbmp;
   
-  path = getFullPath(filename);
+  path = getPath(PATH_DATA, filename);
   if(path == NULL) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
     return NULL;
@@ -57,7 +56,7 @@ fonttex *ftxLoadFont(char *filename) {
   int len;
   fonttex *ftx;
   
-  path = getFullPath(filename);
+  path = getPath(PATH_DATA, filename);
   if(path == NULL) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
     return NULL;

@@ -86,7 +86,6 @@ void setupDisplay(gDisplay *d) {
 
 
 int main( int argc, char *argv[] ) {
-  char *path;
   list *l;
 #ifdef SOUND
   int c;
@@ -97,14 +96,15 @@ int main( int argc, char *argv[] ) {
 #endif
 
 #if defined (macintosh)
-    setupHomeEnvironment ();
+  setupHomeEnvironment ();
 #endif
 
   SystemInit(&argc, argv);
 
-#ifndef CURRENT_EQ_DATA_DIR
+#ifndef LOCAL_DATA
   goto_installpath(argv[0]);
 #endif
+  initDirectories();
 
   /* initialize artpack list before loading settings! */
   /* creates a list of directories found in art/ */
@@ -120,26 +120,28 @@ int main( int argc, char *argv[] ) {
   initDefaultSettings();
 
   /* load some more defaults from config file */
-  scripting_DoFile("config.lua");
+  { 
+    char *path;
+    path = getPath(PATH_SCRIPTS, "config.lua");
+    scripting_DoFile(path);
+    free(path);
+  }
 
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
   {
-    char *fname;
-    char *home;
-
-    home = getenv("HOME"); /* find homedir */
-    if(home == NULL) {
-      fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
-      sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
-    } else {
-      fname = malloc(strlen(home) + strlen(RC_NAME) + 2);
-      sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
+    char *path;
+    path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
+    if(path != NULL) {
+      if(fileExists(path)) 
+	scripting_DoFile(path);
+      else
+	printf("cannot load %s from %s\n", RC_NAME, path);
+      free(path);
     }
-
-    /* load settings from config file */
-    scripting_DoFile(fname);
-
-    free(fname);
+    else {
+      printf("can't get valid pref path for %s\n", RC_NAME);
+      assert(0);
+    }
   }
 
   initColors();
@@ -156,64 +158,65 @@ int main( int argc, char *argv[] ) {
   resetScores();
 
   /* sound */
-  path = getMusicPath(MUSIC_DIR);
-  soundList = 
-    readDirectoryContents(path, SONG_PREFIX);
-  
-  setSettingi("soundIndex", -1);
+  {
+    const char *music_path;
+    music_path = getDirectory( PATH_MUSIC );
+    soundList = 
+      readDirectoryContents(music_path, SONG_PREFIX);
+  }
+    setSettingi("soundIndex", -1);
 
-  l = soundList;
+    l = soundList;
 
 #ifdef SOUND
-  printf("initializing sound\n");
-  initSound();
-  setFxVolume(getSettingf("fxVolume"));
+    printf("initializing sound\n");
+    initSound();
+    setFxVolume(getSettingf("fxVolume"));
 
-  if(l->next != NULL) {
-    char *tmp;
-    tmp = (char*)malloc(strlen(path) + 1 + /* seperator */
-		 strlen((char*) l->data) + 1);
-    sprintf(tmp, "%s%c%s", path, SEPERATOR, 
-	    (char*) l->data);
-    fprintf(stderr, "loading song %s\n", tmp);
-    loadSound(tmp);
-    free(tmp);
-    setSettingi("soundIndex", 0);
-  }
+    if(l->next != NULL) {
+      char *path;
+      path = getPath( PATH_MUSIC, l->data );
+      fprintf(stderr, "loading song %s\n", path);
+      loadSound(path);
+      free(path);
+      setSettingi("soundIndex", 0);
+    }
 
-  c = 0;
-  while(l->next != NULL) {
-    l = l->next;
-    c++;
-  }
-  setSettingi("soundSongCount", c);
+    c = 0;
+    while(l->next != NULL) {
+      l = l->next;
+      c++;
+    }
+    setSettingi("soundSongCount", c);
 
-  if(getSettingi("playMusic"))
-    playSound();
-  fprintf(stderr, "setting music volume to %.3f\n",
-	  getSettingf("musicVolume"));
-  setMusicVolume(getSettingf("musicVolume"));
-  free(path);
+    if(getSettingi("playMusic"))
+      playSound();
+    fprintf(stderr, "setting music volume to %.3f\n",
+	    getSettingf("musicVolume"));
+    setMusicVolume(getSettingf("musicVolume"));
 #endif
 
-  printf("loading menu\n");
-  path = getFullPath("menu.txt");
-  if(path != NULL)
-    pMenuList = loadMenuFile(path);
-  else {
-    printf("fatal: could not load menu.txt, exiting...\n");
-    exit(1);
-  }
-  printf("menu loaded\n");
-  free(path);
+    {
+      char *path;
+      printf("loading menu\n");
+      path = getPath(PATH_DATA, "menu.txt");
+      if(path != NULL)
+	pMenuList = loadMenuFile(path);
+      else {
+	printf("fatal: could not load menu.txt, exiting...\n");
+	exit(1);
+      }
+      printf("menu loaded\n");
+      free(path);
+    }
 
-  setupDisplay(game->screen);
+    setupDisplay(game->screen);
 
   /* switch callbacks twice to establish stack */
-  switchCallbacks(&guiCallbacks);
-  switchCallbacks(&guiCallbacks);
+    switchCallbacks(&guiCallbacks);
+    switchCallbacks(&guiCallbacks);
 
-  SystemMainLoop();
+    SystemMainLoop();
 
   return 0;
 }
@@ -221,4 +224,12 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion
 };
+
+
+
+
+
+
+
+
 

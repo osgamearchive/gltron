@@ -12,7 +12,7 @@ void initFonts() {
   if(gameFtx != NULL) ftxUnloadFont(gameFtx);
   if(guiFtx != NULL) ftxUnloadFont(guiFtx);
 
-  path = getFullPath("fonts.txt");
+  path = getPath(PATH_DATA, "fonts.txt");
   if(path != NULL) {
     f = fopen(path, "r");
     while(fgets(buf, sizeof(buf), f) != NULL) {
