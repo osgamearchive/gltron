@@ -202,6 +202,7 @@ void keyboardGui(int key, int x, int y) {
 	case SYSTEM_JOY_LEFT:
 		case SYSTEM_JOY_LEFT + SYSTEM_JOY_OFFSET:
     scripting_Run("Menu.Left()");
+    break;
   case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
   case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
   default: 
