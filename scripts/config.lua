@@ -81,7 +81,7 @@ settings.turn_cycle = 1
 settings.line_spacing = 20
 settings.softwareRendering = 0
 settings.antialias_lines = 1
-settings.bitdepth_32 = 0
+settings.bitdepth_32 = 1
 settings.use_stencil = 1
 settings.mouse_warp = 0
 settings.model_backwards = 0
@@ -99,7 +99,10 @@ settings.playMusic = 1
 settings.fxVolume = 0.2
 settings.musicVolume = 0.5
 
--- keys
+-- input
+
+settings.invert_mouse_x = 0
+settings.invert_mouse_y = 0
 
 settings.keys = { 
    { -- player 1
