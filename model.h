@@ -45,7 +45,6 @@ extern Mesh* readTriMeshFromFile(const char* filename);
 extern Mesh* readQuadMeshFromFile(const char* filename);
 extern void drawQuadModel(Mesh* pMesh);
 extern void drawModel(Mesh* pMesh);
-extern void drawWireframeModel(Mesh* pMesh);
 extern void drawModelExplosion(Mesh *pMesh, float fRadius);
 
 typedef enum {
