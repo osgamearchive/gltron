@@ -610,8 +610,8 @@ initTracker()
   set_colDef( colDefs, 2, "Players", 20, colors[1], drawit, intToStr, NULL); 
   set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr, sortit); 
 
-  serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-250,
-			 10, 4, colDefs, 3, focus, action, mousefocus );
+  serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-100,
+			 16, 4, colDefs, 3, focus, action, mousefocus );
  
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
 
