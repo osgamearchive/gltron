@@ -1,7 +1,7 @@
 noinst_LIBRARIES=libaudio.a
 
 libaudio_a_SOURCES = \
-	audio.c sound.c sound_glue.cpp
+	sound.c sound_glue.cpp
 
 AM_CFLAGS = \
 	-I$(top_srcdir)/lua/include \
