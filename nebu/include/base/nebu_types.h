@@ -8,14 +8,6 @@ struct List {
 };
 
 typedef struct {
-  float x, y;
-} Point;
-  
-typedef struct {
-  float sx, sy, ex, ey;
-} Line;
-
-typedef struct {
   unsigned int current;
   unsigned int lastFrame;
   unsigned int offset; /* from SystemGetElapsedTime() */
