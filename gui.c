@@ -194,6 +194,11 @@ void keyboardGui(int key, int x, int y) {
   case SYSTEM_KEY_DOWN:
     scripting_Run("Menu.Next()");
     break;
+  case SYSTEM_KEY_RIGHT:
+    scripting_Run("Menu.Right()");
+    break;
+  case SYSTEM_KEY_LEFT:
+    scripting_Run("Menu.Left()");
   default: 
     printf("got key %d\n", key);
   }
