@@ -167,8 +167,7 @@ void initPlayerData() {
     if(ai->active != AI_NONE) {
       data->speed = getSettingf("speed");
       data->trail_height = TRAIL_HEIGHT;
-      data->shockwave_radius = 0.0;
-      data->spire_radius = 0.0;
+      data->impact_radius = 0.0;
       data->exp_radius = 0;
     } else {
       data->speed = SPEED_GONE;

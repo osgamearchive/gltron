@@ -1,12 +1,15 @@
 #include "gltron.h"
 #include "explosion.h" 
 
+#define EXPLOSION_SPEED 0.50
+#define EXPLOSION_MAX_RADIUS 25 
+
 /* shockwave behavior constants */
 #define SHOCKWAVE_MIN_RADIUS 0.0
 #define SHOCKWAVE_MAX_RADIUS 45.0
 #define SHOCKWAVE_WIDTH 0.2
 #define SHOCKWAVE_SPACING 6.0
-#define SHOCKWAVE_SPEED 0.50 
+#define SHOCKWAVE_SPEED 1.2 
 #define SHOCKWAVE_SEGMENTS 25
 #define NUM_SHOCKWAVES 3 
 
@@ -32,30 +35,26 @@ static void drawWave(double radius) {
   }
 }
 
-void drawShockwaves(float *radius) {
-  float rad = *radius;
+static void drawShockwaves(float radius) {
   int waves;
   
   glColor3f(1,0,0);
 
   for(waves = 0; waves < NUM_SHOCKWAVES; waves++) {
-    if (rad > SHOCKWAVE_MIN_RADIUS && rad < SHOCKWAVE_MAX_RADIUS) {
-      drawWave(rad);
+    if (radius > SHOCKWAVE_MIN_RADIUS && radius < SHOCKWAVE_MAX_RADIUS) {
+      drawWave(radius);
     }
-    rad -= SHOCKWAVE_SPACING;
+    radius -= SHOCKWAVE_SPACING;
   }
-  *radius += SHOCKWAVE_SPEED;
 }
 
 /* impact spire behavior constants */
-#define SPIRE_SPEED 0.60
 #define SPIRE_MAX_RADIUS 25
 #define SPIRE_WIDTH 0.40
 #define NUM_SPIRES 21 
 
-void drawSpires(float *spire_radius) {
+static void drawSpires(float radius) {
   int i;
-  float sp_rad = *spire_radius;  
   float left[3], right[3];
   float zunit[3] = {0, 0, 1};
   
@@ -83,9 +82,6 @@ void drawSpires(float *spire_radius) {
     { -1.00,  0.20,  0.00  }
   };
 
-  if (sp_rad > SPIRE_MAX_RADIUS)
-    return;
-
   glColor3f(1, 1, 1);
   glVertex3f(0, 0, 0);
  
@@ -106,28 +102,21 @@ void drawSpires(float *spire_radius) {
 
     glColor4f(1,1,1,0.0);
     glVertex3fv(right);
-    glVertex3f(sp_rad * vectors[i][0], sp_rad * vectors[i][1], 0.0);
+    glVertex3f(radius * vectors[i][0], radius * vectors[i][1], 0.0);
     glVertex3fv(left);
   } 
   
   glEnd();
-  
-  *spire_radius += SPIRE_SPEED;
 }
 
 #define GLOW_START_OPACITY 1.2f
 #define GLOW_INTENSITY 1.0f
-#define GLOW_MAX_RADIUS 25 
 
-void drawImpactGlow(float glow_radius) {
+static void drawImpactGlow(float glow_radius) {
 
   float opacity;
   
-  if (glow_radius > GLOW_MAX_RADIUS) {
-    return;
-  }
-
-  opacity = GLOW_START_OPACITY - (glow_radius / GLOW_MAX_RADIUS);
+  opacity = GLOW_START_OPACITY - (glow_radius / EXPLOSION_MAX_RADIUS);
   
   glPushMatrix();
   glScalef(glow_radius, glow_radius, 1.0f);
@@ -144,7 +133,21 @@ void drawImpactGlow(float glow_radius) {
   glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
   glEnd();
   glDepthMask(1);
-  glPopMatrix();
   glDisable(GL_TEXTURE_2D);
+  glPopMatrix();
+}
+
+void drawExplosion(float *radius) {
+
+  float shockwave_radius = (*radius * SHOCKWAVE_SPEED);
+
+  drawShockwaves(shockwave_radius);
+
+  if (*radius < EXPLOSION_MAX_RADIUS) {
+    drawImpactGlow(*radius);
+    drawSpires(*radius);
+  }
+  
+  *radius += EXPLOSION_SPEED;
 }
 

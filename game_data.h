@@ -54,8 +54,7 @@ typedef struct Data {
   float trail_height; /* countdown to zero when dead */
 
   /* explosion stuff */
-  float shockwave_radius;
-  float spire_radius;
+  float impact_radius;
   float exp_radius; /* explosion of the cycle model */
  
   Line *trails;
