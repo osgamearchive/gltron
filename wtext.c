@@ -182,6 +182,8 @@ new_wintext ( int width, int height, int posx, int posy, int nbchars, int maxcha
   wintext->offset      = SystemGetElapsedTime();
 
   wintext->cur_char    = 0;
+  wintext->wstart      = 0;  
+  wintext->wend        = 0;//wintext->maxchars;
 
   wintext->buffer      = ( char * ) malloc( wintext->maxchars + 2 );
 
@@ -201,7 +203,8 @@ free_wintext(Wintext *wintext)
 void
 key_wintext(Wintext *wintext, int charcode, int unicode)
 {
-  if( wintext->cur_char > wintext->maxchars )
+  int i;
+  if( strlen(wintext->buffer) >= wintext->maxchars )
     return;
 
   /* if( unicode < 0x80 && unicode > 0 ) */
@@ -224,17 +227,63 @@ key_wintext(Wintext *wintext, int charcode, int unicode)
 	  break;
         case SDLK_RIGHT:
 	  printf("going right");
-	  //wintext->cur_char++;
+	  if( wintext->cur_char == strlen(wintext->buffer) )
+	    return;
+	  wintext->cur_char++;
+	  if( ( wintext->cur_char < wintext->wstart ) &&(  wintext->wstart > 0))
+	    {
+	      wintext->wstart++;
+	      wintext->wend++;
+	    }
 	  break;
         case SDLK_LEFT:
 	  printf("going left");
-	  //wintext->cur_char--;
+	  if(wintext->cur_char == 0 )
+	    return;
+	  wintext->cur_char--;
+	  if( ( wintext->cur_char > wintext->wend ) &&(  wintext->wend < strlen(wintext->buffer)))
+	    {
+	      wintext->wstart--;
+	      wintext->wend--;
+	    }
 	  break;
 	default:
 	  if( unicode < 0x80 && unicode > 0 ) 
-	    { 
-	      wintext->buffer[wintext->cur_char++]=(char)unicode;
-	      wintext->buffer[wintext->cur_char]='\0';
+	    {
+	      printf(" wend:%d == len:%d ?\n", wintext->wend, strlen(wintext->buffer));
+	      if( wintext->wend == strlen(wintext->buffer) && strlen(wintext->buffer) >= wintext->nbchars  )
+		{		
+		  wintext->wstart++;
+		}
+	      printf(" len:%d == nbchars:%d !\n", strlen(wintext->buffer), wintext->nbchars);
+	      
+	      if( wintext->wend == strlen(wintext->buffer))
+		{	
+		  wintext->wend++;
+		}/*  else { */
+/* 		  if( strlen(wintext->buffer) == strlen(wintext->buffer) ) */
+/* 		    { */
+/* 		      wintext->wend        = wintext->wstart+wintext->maxchars; */
+/* 		    } */
+/* 		} */
+	      printf("start %d, end:%d, curchar:%d\n", wintext->wstart, wintext->wend,wintext->cur_char );
+	      if( strlen(wintext->buffer) == wintext->cur_char)
+		{
+		  wintext->buffer[wintext->cur_char++]=(char)unicode;
+		  wintext->buffer[wintext->cur_char]='\0';
+		} else {
+		  wintext->buffer[strlen(wintext->buffer)+1]='\0';
+		  for(i=strlen(wintext->buffer); i >= wintext->cur_char ; i--)
+		    {
+		    wintext->buffer[i]=wintext->buffer[i-1];
+		    }
+		  wintext->buffer[wintext->cur_char++]=(char)unicode;
+		  if( wintext->wstart > 0 && wintext->wend < wintext->nbchars)
+		    wintext->wstart--;
+		  if( wintext->wend < wintext->nbchars )
+		    wintext->wend++;
+		  
+		}
 	    }
 	  break;
 	}
@@ -247,7 +296,7 @@ draw_wintext(Wintext *wintext)
   int   h;
   int   y;
   int   x;
-  int   start, end;
+  int   len;
   char *tmp;
 
 
@@ -261,26 +310,36 @@ draw_wintext(Wintext *wintext)
   y = wintext->y;
 
   //moving window into the buffer
-  tmp = (char *) malloc(wintext->nbchars+2);
+  tmp = (char *) malloc(wintext->nbchars+1);
+  if(tmp==NULL)
+    return;
   strcpy(tmp, "");
-  if( wintext->cur_char <= wintext->nbchars )
-    {
-      start=0;
-      end=strlen(wintext->buffer);
-    } else {
-      //start=wintext->cur_char-wintext->nbchars;
-      start=strlen(wintext->buffer)-wintext->nbchars;
-      end=wintext->nbchars;
-    }
+  /* if( wintext->cur_char <= wintext->nbchars ) */
+/*     { */
+/*       start=0; */
+/*       end=strlen(wintext->buffer); */
+/*     } else { */
+/*       //start=wintext->cur_char-wintext->nbchars; */
+/*       start=strlen(wintext->buffer)-wintext->nbchars; */
+/*       end=wintext->nbchars; */
+/*     } */
   
-  //printf("start %d end %d\n", start, end);
-  strncpy(tmp, &wintext->buffer[start], end);
-  tmp[end]='\0';
-  //printf("drawing %s\n", wintext->buffer);
+    // printf("start %d end %d\n", wintext->wstart, wintext->wend);
+    len = +wintext->wend-wintext->wstart;
+    /* if( len > wintext->nbchars) */
+/*       { */
+/* 	len = wintext->nbchars; */
+/* 	error */
+
+/*       } */
+    
+  strncpy(tmp, &wintext->buffer[wintext->wstart], len);
+  tmp[len]='\0';
+  //printf("drawing %s\n", tmp);
   drawText(gameFtx, x, y, h, tmp);   
 
   wintext->time = SystemGetElapsedTime() - wintext->offset;
-  if( wintext->time % 1000 > 200 )
+  if( wintext->time % 1000 > 500 )
     {
       //no line
       //do nothing
@@ -288,14 +347,20 @@ draw_wintext(Wintext *wintext)
       //a line
       glLineWidth(2.0f);
       glBegin(GL_LINES);
-      x+= end*h;
+      len=(wintext->cur_char-wintext->wstart);
+      if( len < 0 )
+	len =0;
+      if( len > wintext->nbchars )
+	len = wintext->nbchars;
+      x+= len*h - 1;
       glVertex2d(x,y);	// Left Side Of Horizontal Line
       glVertex2d(x,y+h);	// Right Side Of Horizontal Line
       glEnd();	
 
 
     }
-
+  free(tmp);
+  tmp=NULL;
 }
 
 char *
@@ -313,4 +378,6 @@ clear_wintext(Wintext *wintext)
 {
   strcpy(wintext->buffer, "");
   wintext->cur_char    = 0;
+  wintext->wstart      = 0;
+  wintext->wend        = 0;
 }

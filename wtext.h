@@ -23,6 +23,8 @@ typedef struct {
   int              maxchars;          //max chars that can be red
   int              time;              //time
   int              offset;
+  int              wstart;            //used to scroll
+  int              wend;              
   char*            buffer;            //text buffer  
 } Wintext;
 

@@ -8,7 +8,7 @@ static int coffset;
 static char message[255] ="pregame";
 static char chat[1024]   = "";
 
-#define MAX_CHARS 32
+#define MAX_CHARS 31
 
 void
 handlecommand(char *command, char *params)
@@ -164,7 +164,7 @@ handlecommand(char *command, char *params)
       insert_wtext(pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\n\n", 0);
       break;
     default:
-      insert_wtext(pregametext, "unknown command\ntype /h for hep\n", 0);
+      insert_wtext(pregametext, "unknown command\ntype /h for help\n", 0);
       break;
     }
 }
@@ -181,8 +181,12 @@ keyboardreadingreturn(char *buff)
   sscanf(buff, "/%[A-Za-z] %[A-Za-z0-9 ]", command, params);
   if( strlen(command) > 0 )
     {
-      handlecommand(command, params);
-      strcpy(buff, "");
+      if( strlen(command) == 1 )
+	handlecommand(command, params);
+      else
+	insert_wtext(pregametext, "unknown command\ntype /h for help\n", 0);
+
+      //strcpy(buff, "");
       //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
     } else {
       fprintf(stderr, "\nsend chat: %s\n", buff);
@@ -192,7 +196,7 @@ keyboardreadingreturn(char *buff)
       strcpy(packet.infos.chat.mesg, buff);
       Net_sendpacket(&packet, Net_getmainsock());
     }
-  strcpy(buff, "");
+  //strcpy(buff, "");
 }
 
 
