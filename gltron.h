@@ -192,8 +192,6 @@ extern int artpack_index;
 
 extern int gl_error;
 
-extern char messages[80];
-
 extern settings_int *si;
 extern int si_count;
 extern settings_float *sf;
