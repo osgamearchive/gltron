@@ -120,7 +120,8 @@ list* doMovement(int mode, int dt) {
 	  addList(&l, e);
 	  break;
 	} else {
-	  writePosition(i);
+	  if( game2->mode != GAME_NETWORK_PLAY )
+	    writePosition(i);
 	}
       }
       data->posx = data->iposx + data->t * dirsX[data->dir];
