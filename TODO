@@ -6,7 +6,8 @@ TODO list
 Bugs:
 
 - Changing song leaks memory
-- App crashes on corrupt mp3 files
+- App exits on corrupt mp3 files
+- App crashes if SDL_sound is present, but doesn't support ogg/vorbis
 - Menu system got broken with new scripts. Still missing: Configuring Keys
 - readDirectoryContents() doesn't use the correct path
 - tweak LOD values so the lightcycle stays detailed within camera
@@ -15,9 +16,6 @@ Bugs:
   the menu (Andreas)
 - Screen garbled in-game after switching resolutions (hofi) (Note: works fine
   for me, anyone else experiencing problems? Andreas)
-- the transparent part of the bow of the trail prevents other trails 
-  from drawing in the same pixels (LIM) (Note: proper back-to-front drawing
-  should take care of this, but I won't fix this, Andreas)
 - fix pointer not showing up when game was started but not initially unpaused,
   but user went back to menu. (LIM) (software cursor time?)
 - fix mouse not being released when going from fullscreen to windowed in some
@@ -54,8 +52,6 @@ Settings:
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
   [ nicolas, kokido ]
 - Add trail & cycle shadow color to setting / artpack.ini [ Andreas ]
-- Save current artpack / Clear up artpack system,
-  Select default artpack [ Andreas ]
 
 Documentation:
 
