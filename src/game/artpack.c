@@ -1,5 +1,7 @@
 #include "video/video.h"
 #include "filesystem/path.h"
+#include "base/util.h"
+
 #include "Nebu_scripting.h"
 #include "Nebu_filesystem.h"
 
@@ -28,11 +30,7 @@ void loadArt() {
   char *path;
   char *artpack;
 
-	path = getArtPath("default", "artpack.lua");
-  if(path != NULL) {
-    scripting_RunFile(path);
-    free(path);
-  }
+	runScript(PATH_SCRIPTS, "artpack.lua"); // load default art settings
 
   scripting_GetStringSetting("current_artpack", &artpack);
   fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
