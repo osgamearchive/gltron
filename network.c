@@ -71,6 +71,7 @@ doLoginNetEvent(int accepted, int which, int len, int time)
   for(i=0; i<nbUsers; ++i)
     {
       which = Recv_who(slots);
+      //slots[which].player=(which==0)?me:which;
     }
   return noErr;
 }
