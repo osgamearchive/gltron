@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "video/nebu_mesh.h"
+#include "Nebu_video.h"
 
 static void normalize(float *v)
 {
@@ -14,6 +15,20 @@ static void normalize(float *v)
 		v[1] /= fLength;
 		v[2] /= fLength;
 	}
+}
+
+void nebu_Mesh_Render(nebu_Mesh *pMesh)
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, pMesh->pVertices);
+	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD) {
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, pMesh->pTexCoords);
+	}
+	glDrawElements(GL_TRIANGLES, 3 * pMesh->nTriangles, GL_UNSIGNED_INT, pMesh->pTriangles);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void nebu_Mesh_ComputeTriangleNormal(nebu_Mesh *pMesh, int triangle, float* normal)
@@ -73,6 +88,17 @@ void nebu_Mesh_Scale(nebu_Mesh *pMesh, float fScale)
 	}
 }
 
+void nebu_Mesh_Free(nebu_Mesh *pMesh)
+{
+	free(pMesh->pTriangles);
+	if(pMesh->vertexformat & NEBU_MESH_POSITION)
+		free(pMesh->pVertices);
+	if(pMesh->vertexformat & NEBU_MESH_NORMAL)
+		free(pMesh->pNormals);
+	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD)
+		free(pMesh->pTexCoords);
+	free(pMesh);
+}
 nebu_Mesh* nebu_Mesh_Create(int flags, int nVertices, int nTriangles)
 {
 	// TODO: add error checking
@@ -90,6 +116,8 @@ nebu_Mesh* nebu_Mesh_Create(int flags, int nVertices, int nTriangles)
 		pMesh->pNormals = (float*) malloc(3 * sizeof(float) * nVertices);
 	else
 		pMesh->pNormals = NULL;
+
+	pMesh->pTexCoords = NULL;
 
 	pMesh->pTriangles = (int*) malloc(3 * sizeof(int) * nTriangles);
 	return pMesh;
