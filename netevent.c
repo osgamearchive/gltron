@@ -67,7 +67,7 @@ getWhich(int player)
     {
       if( slots[i].player == player )
 	{
-	  printf("getWich %d -> %d\n", player, i);
+	  //printf("getWich %d -> %d\n", player, i);
 	  return i;
 	}
     }
@@ -111,9 +111,12 @@ getNetEvent()
   e=( GameEvent *) malloc(sizeof(GameEvent));
 
   cell = neteventlist->head;
-
   neteventlist->head = cell->next;
   *e= cell->event;
+  printf("current pos is %d %d %d time is %d\n", game->player[e->player].data->iposx,
+	 game->player[e->player].data->iposy,
+	 game->player[e->player].data->dir,
+	 game2->time.current);
   free(cell);
   return e;
 }

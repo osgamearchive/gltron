@@ -24,7 +24,7 @@ int main( int argc, char *argv[] ) {
   //starting the server
   start_server();
   
-  //while(game->pauseflag == 0) {
+
   while(1) {
     idleGame();
     SDL_Delay(10);

@@ -1,5 +1,12 @@
 #include "server_gltron.h"
 
+static Uint32 ping = 0;
+static Uint32 savedtime = 0; 
+
+
+static int  getping();
+static void makeping();
+
 void
 start_server()
 {
@@ -53,6 +60,7 @@ initNetwork()
 
   game2->mode = GAME_NETWORK_RECORD;
   sState = waitState;
+  nbUsers  = 0;
 }
 
 void
@@ -305,6 +313,7 @@ do_login( int which, Packet packet )
   rep.infos.netrules.time   = netruletime;
   printf("Net rules : %d %d\n", netrulenbwins,  netruletime);
   Net_sendpacket(&rep, slots[which].sock);
+
 }
 
 void
@@ -437,14 +446,45 @@ do_startgame( int which, Packet packet )
     {
       if( slots[i].active == 1 )
 	{
+	  if( slots[i].isMaster == 1 )
+	    makeping();
 	  Net_sendpacket(&rep, slots[i].sock);
 	}
     }
+  /**
   if( ! hasstarted )
     hasstarted = 1;
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
   printf("starting game with %d players\n", game->players); 
+  printf("- do_startgame\n");
+  printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
+	 game->player[0].data->iposy, game->player[0].data->dir);
+  **/
+}
+
+void
+do_startconfirm(int which, Packet packet)
+{
+  int time=packet.infos.action.which/2;
+
+  makeping();
+  printf("+ ping start -> confirm = %d at %d\n", getping(), game2->time.current);
+
+  if( slots[which ].isMaster != 1 )
+    return;
+
+
+
+  game2->time.lastFrame = time;
+  game2->time.current   = time;
+  game2->time.offset    = SystemGetElapsedTime();
+
+  if( ! hasstarted )
+    hasstarted = 1;
+  game2->events.next = NULL;
+  game2->mode = GAME_SINGLE;
+  printf("starting game with %d players at %d\n", game->players, game2->time.current); 
   printf("- do_startgame\n");
   printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
 	 game->player[0].data->iposy, game->player[0].data->dir);
@@ -492,6 +532,9 @@ do_action( int which, Packet packet )
     case STARTGAME:
       do_startgame(which, packet);
       break;
+    case CONFSTART:
+      do_startconfirm(which, packet);
+      break;
     case CHGENBWINS:
       do_chgenbwins(which, packet);
       break;
@@ -522,6 +565,7 @@ void
 do_preGameState( int which, Packet packet )
 {
   printf("+ do_preGameState\n");
+  //makeping(0);
   switch( packet.type )
     {
     case LOGIN:
@@ -537,6 +581,8 @@ do_preGameState( int which, Packet packet )
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
       break;
     }
+  //makeping(1);
+  //printf("## do_preGameState took %d ms\n", getping()); 
   printf("- do_preGameState\n");
 }
 
@@ -544,6 +590,7 @@ void
 do_gameState( int which, Packet packet )
 {
   printf("+ do_gameState\n");
+  //makeping(0);
   switch( packet.type )
     {
     case LOGIN:
@@ -556,6 +603,8 @@ do_gameState( int which, Packet packet )
       fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
       break;
     }
+  //makeping(1);
+  //printf("## do_gameState took %d ms\n", getping()); 
   printf("- do_gameState\n");
 }
 
@@ -665,25 +714,27 @@ handle_connection()
 }
 
 
-
 void
 handle_server()
 {
-  int i;
+  int   i;
 
   if( Net_checksocks() )
   {
     printf("has a connection...\n");
     handle_connection();
   }
- 
+
   //look what is said!
   for(i=0;i<MAX_PLAYERS;++i)
     {
       if( Net_readysock(slots[i].sock) )
 	{
 	  //i said something, handle...
+	  //makeping();
 	  handle_client(i);
+	  //makeping();
+	  //printf("## handle_client took %d ms\n", getping());
 	}
     }
 }
@@ -693,6 +744,7 @@ SendEvents(GameEvent *e)
 {
   int        i, real;
   Packet     rep;
+
 
   rep.which = SERVERID;
   rep.type  = EVENT;
@@ -746,7 +798,7 @@ getWhich(int player)
     {
       if( slots[i].player == player )
 	{
-	  printf("getWich %d -> %d\n", player, i);
+	  fprintf(stderr, "getWich %d -> %d\n", player, i);
 	  return i;
 	}
     }
@@ -827,5 +879,25 @@ do_wingame( int winner)
 	{
 	  Net_sendpacket(&rep, slots[i].sock);
 	}
+    }
+}
+
+
+static int
+getping()
+{
+  return ping;
+}
+
+static void
+makeping()
+{
+  if( savedtime == 0 )
+    {
+      savedtime = SystemGetElapsedTime();
+      ping=0;
+    } else {
+      ping = SystemGetElapsedTime() - savedtime;
+      savedtime=0;
     }
 }

@@ -6,7 +6,7 @@ int processEvent(GameEvent* e) {
 
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY )
-    printf("proccess event ( current time %d )\n", game2->time.current);
+    printf("process event ( current time %d )\n", game2->time.current);
 #endif
 
   if(game2->mode == GAME_NETWORK_RECORD) {
@@ -162,7 +162,6 @@ list* doMovement(int mode, int dt) {
   return l;
 }
 
- 
 void idleGame( void ) {
   list *l;
   list *p;
@@ -175,16 +174,14 @@ void idleGame( void ) {
 #endif
   //fprintf(stderr, "game time: %.3f\nmode:%d\n", game2->time.current / 1000.0, game2->mode); 
 
-  if(updateTime() == 0) return;
 
 
 #ifdef __NETWORK__
   if( game2->mode == GAME_NETWORK_PLAY && isConnected && Net_checksocks() )
-    {
-      handleServer();
-      if( slots[me].packet != HEADER ) return;
-    }
+    handleServer();
 #endif
+
+  if(updateTime() == 0) return;
   switch(game2->mode) {
   case GAME_NETWORK_RECORD:
 #ifdef NETWORK

@@ -1,14 +1,17 @@
 #include "gltron.h"
 
-static int ping = 0;
-static int savedtime = 0; 
+static Uint32 ping = 0;
+static Uint32 savedtime = 0; 
 
 void
 login(char *name)
 {
   int           i;
   Packet        packet;
-
+  
+  
+  makeping(i);
+ 
   for(i=0;i<4;++i)
     {
       slots[i].active=0;
@@ -49,6 +52,8 @@ connectionLost()
 void
 do_loginrep(Packet packet)
 {
+   makeping(game2->time.current);
+   printf("+ login_rep -> ping is %d\n", getping());
   if( packet.infos.loginrep.accept != 1 )
     {
       printf("login refused : %s.\n",packet.infos.loginrep.message);
@@ -98,16 +103,19 @@ do_serverinfo(Packet packet)
 	  applyGameInfo();
 	  printf("time is %d\n", game2->time.current);
 	  game2->mode = GAME_NETWORK_PLAY;
-	  ping = 0;
 	  if( slots[me].isMaster == 1 )
 	    {
-	      printf("send confirmation... %d\n", ping);
+	      printf("->  send confirmation... %d\n", ping);
 	      rep.which=me;
 	      rep.type=ACTION;
 	      rep.infos.action.type=CONFSTART;
-	      rep.infos.action.which=150;
+	      rep.infos.action.which=ping;
+	      /** time server get ping is ping/2 and it needs to get
+		  ping/2, so 2*ping/2=ping                          */
 	      Net_sendpacket(&rep, Net_getmainsock());
 	    } // I used that for synchronization.
+	  ping = 0;
+	  
 	  switchCallbacks(&pauseCallbacks);
 	  break;
 	}
@@ -241,7 +249,11 @@ do_gamerules(Packet packet)
 {
   int   i;
 
-  makeping(game2->time.current);
+  if( slots[me].isMaster == 1 )
+    {
+      makeping(game2->time.current);
+      printf("ping answer is%d\n", getping());
+    }
   printf("getting games rules...\n");
   //TODO: clean all this ugly code, and do a safe clean init function.
   game->settings->ai_player1  = ( slots[getWhich(0)].active == 1 ) ? 0 : 2;
@@ -394,6 +406,7 @@ handleServer()
 {
   Packet packet;
   
+  //makeping(0);
   //Get the packet...
   if( Net_receivepacket(&packet, Net_getmainsock(), me, packet_type) != 0 )
     {
@@ -405,6 +418,8 @@ handleServer()
     {
       packet_type = slots[me].packet;
       printf("recieve a header at %d\n", game2->time.current);
+      //makeping(1);
+      //printf("## handleserver took %d ms\n", getping());
       return;
     }
   
@@ -421,7 +436,9 @@ handleServer()
       break;
     default:
       fprintf(stderr, "Unknown server state %d\n", serverstate);
-    }
+    }  
+  //makeping(1);
+  //printf("## handleserver took %d ms\n", getping());
 }  
 
 
@@ -434,12 +451,12 @@ getping()
 void
 makeping(int time)
 {
-  printf("time...");
   if( savedtime == 0 )
     {
       savedtime = SystemGetElapsedTime();
+      ping = 0;
     } else {
-      ping = savedtime - SystemGetElapsedTime();
+      ping = SystemGetElapsedTime() - savedtime;
       savedtime=0;
     }
 }

@@ -139,15 +139,12 @@ void idleGame( void ) {
   int dt;
   int t;
 
+  
   handle_server();
-  //if((updateTime() == 0) && ( game2->mode != GAME_NETWORK_RECORD )) return;
-  if(updateTime() == 0) return;
+  if(updateTime() == 0 && game2->mode == GAME_SINGLE ) return;
+
   switch(game2->mode) {
-  case GAME_NETWORK_RECORD:
-    break;
-    /* fall through */
   case GAME_SINGLE:
-  case GAME_SINGLE_RECORD:
     /* check for fast finish */
     if(game->settings->fast_finish == 1) {
       int factor = 4;
@@ -205,19 +202,10 @@ void idleGame( void ) {
       }
       dt -= PHYSICS_RATE;
     }
-    break;
-  case GAME_PLAY_NETWORK:
-    //handle_server();
-    /* fall through to GAME_PLAY */
-  case GAME_PLAY:
-    getEvents();
-    l = doMovement(0, game2->time.dt); /* this won't generate new events */
-    if(l != NULL) {
-      fprintf(stderr, "something is seriously wrong - ignoring events\n");
-    }
+  case GAME_NETWORK_RECORD:
+    handle_server();
     break;
   }
-  /* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
 }
 
 /* create an event and put it into the global event queue */
@@ -226,8 +214,6 @@ void createTurnEvent(int player, int direction) {
   GameEvent *e;
   list *p;
   
-  //printf("create a turn %d dir -> %d\n", player, direction);
-
   for(p = &(game2->events); p->next != NULL; p = p->next);
   e = (GameEvent*) malloc(sizeof(GameEvent));
   p->data = e;

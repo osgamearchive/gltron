@@ -26,12 +26,13 @@ handlecommand(char *command, char *params)
 	{
 	  if( slots[me].isMaster )
 	    {
-	      printf("\nAsk to start the game\n");
+	      printf("\nAsk to start the game\n");	      
+	      makeping(game2->time.current);
+	      printf("ping ask when start game is%d\n", getping());
 	      packet.which=me;
 	      packet.type=ACTION;
 	      packet.infos.action.type=STARTGAME;
-	      Net_sendpacket(&packet, Net_getmainsock());	      
-	      makeping(game2->time.current);
+	      Net_sendpacket(&packet, Net_getmainsock());
 	    } else {
 	      fprintf(stderr,"\nYour are not allowed to start the game, u must be Game Master\n");
 	    }

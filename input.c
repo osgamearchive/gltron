@@ -62,7 +62,7 @@ void keyGame(int k, int unicode, int x, int y)
 #ifdef __NETWORK__
     if( game2->mode == GAME_NETWORK_PLAY && ! isConnected )
 #endif
-      switchCallbacks(&pauseCallbacks);
+	switchCallbacks(&pauseCallbacks);
     break;
 
   case SYSTEM_KEY_F1: defaultDisplay(0); break;

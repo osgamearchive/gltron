@@ -14,7 +14,7 @@ void idlePause() {
     {
       switchCallbacks(&gameCallbacks);
     } else {
-      if( game2->mode == GAME_NETWORK_PLAY &&isConnected && Net_checksocks() )
+      if( game2->mode == GAME_NETWORK_PLAY && isConnected && Net_checksocks() )
 	{
 	  handleServer();
 	}
@@ -66,6 +66,7 @@ void keyboardPause(int key, int unicode, int x, int y) {
     //restart game
     if( game2->mode == GAME_NETWORK_PLAY && (serverstate == preGameState) && (isConnected && slots[me].isMaster == 1)  )
       {
+	makeping(0);
 	printf("\nAsk to start the game\n");
 	packet.which=me;
 	packet.type=ACTION;
