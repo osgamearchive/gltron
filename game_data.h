@@ -39,9 +39,9 @@ typedef struct Game2 {
 } Game2;
 
 typedef struct Data {
-  int iposx, iposy;
+  // int iposx, iposy;
   float posx, posy;
-  float t;
+	// float t;
   
   int dir; int last_dir;
 

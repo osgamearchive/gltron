@@ -22,15 +22,15 @@ int processEvent(GameEvent* e) {
 #endif
   switch(e->type) {
   case EVENT_TURN_LEFT:
-    doLeftTurn(e);
+    doTurn(e, TURN_LEFT);
     break;
   case EVENT_TURN_RIGHT:
-    doRightTurn(e);
+    doTurn(e, TURN_RIGHT);
     break;
   case EVENT_CRASH: 
     data = game->player[e->player].data;
-    data->posx = data->iposx = e->x;
-    data->posy = data->iposy = e->y;
+    data->posx = e->x;
+    data->posy = e->y;
     displayMessage(TO_CONSOLE, "player %d crashed", e->player + 1);
     doCrashPlayer(e);
     break;
@@ -69,35 +69,43 @@ int processEvent(GameEvent* e) {
 
 list* doMovement(int mode, int dt) {
   int i;
-  float fs;
   Data *data;
   list *l = NULL;
 
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
     if(data->speed > 0) { /* still alive */
-
-#define FREQ 1200
-#define FACTOR 0.09
-      fs = 1.0 - FACTOR + FACTOR * 
+			float fs;
+			float t;
+      fs = 1.0 - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
 				cos(i * M_PI / 4.0 + 
-						(float)(game2->time.current % FREQ) * 2.0 * M_PI / (float)FREQ);
-#undef FREQ
-#undef FACTOR
+						(float)(game2->time.current % SPEED_OZ_FREQ) * 
+						2.0 * M_PI / (float)SPEED_OZ_FREQ);
 
-      data->t += dt / 100.0 * data->speed * fs;
-      while(data->t >= 1) {
-				moveStep(data);
-				data->t--;
-				if(getCol(data->iposx, data->iposy) && mode) {
+      t = dt / 100.0 * data->speed * fs;
+      while(t > 0) {
+				if(t < 1) {
+					float posx = floorf(data->posx);
+					float posy = floorf(data->posy);
+					data->posx += t * dirsX[data->dir];
+					data->posy += t * dirsY[data->dir];
+					t = 0;
+					// don't write to the same pixel again
+					if(posx == floorf(data->posx) &&
+						 posy == floorf(data->posy))
+						 break;
+				}	else {
+					 data->posx += 1.0f * dirsX[data->dir];
+					 data->posy += 1.0f * dirsY[data->dir];
+					 t -= 1.0f;
+				}
+				if(getCol( floorf(data->posx), floorf(data->posy)) && mode) {
 					createEvent(i, EVENT_CRASH);
 					break;
 				} else {
 					writePosition(i);
 				}
       }
-      data->posx = data->iposx + data->t * dirsX[data->dir];
-      data->posy = data->iposy + data->t * dirsY[data->dir];
     } else { /* already crashed */
       if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
 				data->trail_height -= (float)(dt * TRAIL_HEIGHT) / 1000;
@@ -305,8 +313,8 @@ void createEvent(int player, event_type_e eventType) {
   p->next = (list*) malloc(sizeof(list));
   p->next->next = NULL;
   e->type = eventType;
-  e->x = game->player[player].data->iposx;
-  e->y = game->player[player].data->iposy;
+  e->x = game->player[player].data->posx;
+  e->y = game->player[player].data->posy;
   e->player = player;
   e->timestamp = game2->time.current;
 }

@@ -139,13 +139,18 @@ static void getXYdir(int dir, int *x, int *y) {
 }
 
 static int freeway2(const Data* data, int xdir, int ydir, int c) {
+	int x, y;
+	x = floorf(data->posx);
+	y = floorf(data->posy);
+	
   if(xdir == 0 && ydir == 0) {
     fprintf(stderr, "bug: xdir == ydir == 0\n");
     return 0;
   }
 
-  while(getCol(data->iposx + xdir * c, 
-							 data->iposy + ydir * c) == 0) c++;
+	
+  while(getCol(x + xdir * c, 
+							 y + ydir * c) == 0) c++;
   return c;
 }
 
@@ -171,7 +176,8 @@ void doComputer2(int player, int target) {
   AI *ai;
   int level;
   int front, rear_right, left, right;
-  int x, y;
+  int dx, dy;
+	int x, y;
   float critical;
 
   me = &(game->player[ player ]);
@@ -182,32 +188,34 @@ void doComputer2(int player, int target) {
   ai = me->ai;
   level = game2->settingsCache.ai_level;
   data = me->data;
-  if(abs(data->iposx - ai->lastx) < min_turn[level] &&
-     abs(data->iposy - ai->lasty) < min_turn[level]) {
+	x = floorf(data->posx);
+	y = floorf(data->posy);
+  if(abs(x - ai->lastx) < min_turn[level] &&
+     abs(y - ai->lasty) < min_turn[level]) {
     /* fprintf(stderr, "too early\n"); */
     return;
   }
 
   critical = (1 - CRIT_F) * game2->rules.grid_size;
-  x = dirsX[ data->dir ];
-  y = dirsY[ data->dir ];
-  getXYdir(DIR_FRONT, &x, &y);
-  front = freeway2(data, x, y, MIN_FREE);
+  dx = dirsX[ data->dir ];
+  dy = dirsY[ data->dir ];
+  getXYdir(DIR_FRONT, &dx, &dy);
+  front = freeway2(data, dx, dy, MIN_FREE);
 
-  x = dirsX[ data->dir ];
-  y = dirsY[ data->dir ];
-  getXYdir(DIR_BACK | DIR_RIGHT, &x, &y);
-  rear_right = freeway2(data, x, y, MIN_FREE);
+  dx = dirsX[ data->dir ];
+  dy = dirsY[ data->dir ];
+  getXYdir(DIR_BACK | DIR_RIGHT, &dx, &dy);
+  rear_right = freeway2(data, dx, dy, MIN_FREE);
 
-  x = dirsX[ data->dir ];
-  y = dirsY[ data->dir ];
-  getXYdir(DIR_RIGHT, &x, &y);
-  right = freeway2(data, x, y, MIN_FREE);
+  dx = dirsX[ data->dir ];
+  dy = dirsY[ data->dir ];
+  getXYdir(DIR_RIGHT, &dx, &dy);
+  right = freeway2(data, dx, dy, MIN_FREE);
 
-  x = dirsX[ data->dir ];
-  y = dirsY[ data->dir ];
-  getXYdir(DIR_LEFT, &x, &y);
-  left = freeway2(data, x, y, MIN_FREE);
+  dx = dirsX[ data->dir ];
+  dy = dirsY[ data->dir ];
+  getXYdir(DIR_LEFT, &dx, &dy);
+  left = freeway2(data, dx, dy, MIN_FREE);
 
   /*
     fprintf(stderr, "-------------------------\n");
@@ -225,8 +233,8 @@ void doComputer2(int player, int target) {
       /* turn left */
       createEvent(player, EVENT_TURN_LEFT);
     }
-    ai->lastx = data->iposx;
-    ai->lasty = data->iposy;
+    ai->lastx = x;
+    ai->lasty = y;
   }
 }
 

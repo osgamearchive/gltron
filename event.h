@@ -11,8 +11,8 @@ typedef enum {
 typedef struct GameEvent {
   int type; /* what */
   int player; /* who */
-  int x; /* where */
-  int y;
+  float x; /* where */
+  float y;
   unsigned int timestamp;
 } GameEvent;
 

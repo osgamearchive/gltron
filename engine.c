@@ -3,12 +3,6 @@
 #include "event.h"
 #include "util.h"
 
-enum {
-  TURN_LEFT = 3,
-  TURN_RIGHT = 1
-};
-
-
 int getCol(int x, int y) {
   return x < 1 || x >= game2->rules.grid_size ||
          y < 1 || y >= game2->rules.grid_size ||
@@ -153,16 +147,13 @@ void initPlayerData() {
     /* arrange players in circle around center */
 
     /* randomize position on the grid */
-    data->iposx = startpos[ startIndex[i] ][0] * getSettingi("grid_size");
-    data->iposy = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
-    if(i == 0) data->iposy -= 1;
+    data->posx = startpos[ startIndex[i] ][0] * getSettingi("grid_size");
+    data->posy = startpos[ startIndex[i] ][1] * getSettingi("grid_size");
+    if(i == 0) data->posy -= 1;
     /* randomize starting direction */
     data->dir = trand() & 3;
     /* data->dir = startdir[i]; */
     data->last_dir = data->dir;
-    data->posx = data->iposx;
-    data->posy = data->iposy;
-    data->t = 0;
     data->turn_time = -TURN_LENGTH;
 
     /* if player is playing... */
@@ -181,11 +172,11 @@ void initPlayerData() {
     // data->trail = data->trails;
 		data->trailOffset = 0;
 
-    data->trails[ data->trailOffset ].sx = data->iposx;
-    data->trails[ data->trailOffset ].ex = data->iposx;
+    data->trails[ data->trailOffset ].sx = floorf(data->posx);
+    data->trails[ data->trailOffset ].sy = floorf(data->posy);
 		
-    data->trails[ data->trailOffset ].sy = data->iposy;
-    data->trails[ data->trailOffset ].ey = data->iposy;
+    data->trails[ data->trailOffset ].ex = floorf(data->posx);
+    data->trails[ data->trailOffset ].ey = floorf(data->posy);
   }
 
   free(startIndex);
@@ -261,11 +252,6 @@ void resetScores() {
     game->player[i].data->score = 0;
 }
 
-void moveStep(Data* data) {
-  data->iposx += dirsX[data->dir];
-  data->iposy += dirsY[data->dir];
-}
-
 void clearTrail(int player) {
   int i;
 
@@ -295,41 +281,31 @@ void doCrashPlayer(GameEvent *e) {
 void writePosition(int player) {
   int x, y;
 
-  x = game->player[player].data->iposx;
-  y = game->player[player].data->iposy;
+  x = floorf(game->player[player].data->posx);
+  y = floorf(game->player[player].data->posy);
 
   /* collision detection */
   colmap[ y * colwidth + x ] = player + 1;
 }
 
 void newTrail(Data* data) {
-  data->trails[data->trailOffset].ex = data->iposx;
-  data->trails[data->trailOffset].ey = data->iposy;
+  data->trails[data->trailOffset].ex = data->posx;
+  data->trails[data->trailOffset].ey = data->posy;
 
 	data->trailOffset++;
 	
-  data->trails[data->trailOffset].sx = data->iposx;
-  data->trails[data->trailOffset].sy = data->iposy;
+  data->trails[data->trailOffset].sx = data->posx;
+  data->trails[data->trailOffset].sy = data->posy;
 
-  data->trails[data->trailOffset].ex = data->iposx;
-  data->trails[data->trailOffset].ey = data->iposy;
+  data->trails[data->trailOffset].ex = data->posx;
+  data->trails[data->trailOffset].ey = data->posy;
 }
       
-static void doTurn(GameEvent *e, int direction) {
+void doTurn(GameEvent *e, int direction) {
   Data *data = game->player[e->player].data;
 
   newTrail(data);
   data->last_dir = data->dir;
   data->dir = (data->dir + direction) % 4;
   data->turn_time = game2->time.current;
-  data->posx = e->x + data->t * dirsX[data->dir];
-  data->posy = e->y + data->t * dirsY[data->dir];
-}
-
-void doRightTurn(GameEvent *e) {
-  doTurn(e, TURN_RIGHT);
-}
-
-void doLeftTurn(GameEvent *e) {
-  doTurn(e, TURN_LEFT);
 }
