@@ -15,7 +15,7 @@ static TCPsocket              tcpsock   = NULL;
 int isConnected = 0;
 
 
-static void *pos;
+static char *pos;
 
 #define ADD_STRING(x)     memcpy(pos, x, sizeof(x)); pos += sizeof(x)
 #define GET_STRING(x, y)  memcpy(x, y, sizeof(x));   y   += sizeof(x)
@@ -176,7 +176,7 @@ Net_getmainsock( )
 
 
 int
-Net_preparepacket(Packet* packet, void *buf)
+Net_preparepacket(Packet* packet, char *buf)
 {
   int i;
 
@@ -276,7 +276,7 @@ Net_preparepacket(Packet* packet, void *buf)
 int
 Net_sendpacket( Packet  *packet , TCPsocket sock )
 {
-  void *buff;
+  char *buff;
   int  len;
 
   if( packet == NULL )
@@ -320,7 +320,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
 
 /** Important: get things in the same order as they 've been send! */
 void
-Net_handlepacket(Packet* packet, void *buf)
+Net_handlepacket(Packet* packet, char *buf)
 {
   int i;
 
@@ -466,7 +466,7 @@ int
 Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
 {
   int   rLen, len;
-  void *buff;
+  char *buff;
 
   if( packet == NULL )
     {

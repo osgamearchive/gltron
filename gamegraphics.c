@@ -86,7 +86,8 @@ void rasonly(gDisplay *d) {
   glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
 }
 
-void drawText(fonttex* ftx, int x, int y, int size, char *text) {
+//void drawText(fonttex* ftx, int x, int y, int size, char *text) {
+void drawText(fonttex* ftx, float x, float y, int size, char *text) {
   if(game->settings->softwareRendering) {
     drawSoftwareText(ftx, x, y, size, text);
   } else {
@@ -355,7 +356,7 @@ drawPlayersName(gDisplay *d)
 {
   Data *data;
   int   i;
-  int   x, y;
+  float x, y;
   int   j, k, l;
   int   len;
   float color[4];
@@ -387,7 +388,7 @@ drawPlayersName(gDisplay *d)
 	  
 	  v[0]=data->posx;
 	  v[1]=data->posy;
-	  v[2]=0.0;
+	  v[2]=10.0;
 	  v[3]=1.0;
 	  for(k=0; k<4; ++k)
 	    {
@@ -417,7 +418,7 @@ drawPlayersName(gDisplay *d)
 	  size=3*game->screen->vp_w/100;
 	  len=strlen(slots[j].name);
 	  x-=size*len/2;
-	  y+=30;
+	  //y+=30;
 	  j=getWhich(i);
 	  //world coord are data->posx, data->posy, 0
 

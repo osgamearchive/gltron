@@ -227,7 +227,7 @@ void initPregame() {
       insert_wtext(pregametext, "connected...\n", 3);
       insert_wtext(pregametext, server_message, 7);
     }
-
+  resetScores();
   printf("entering netpregame\n");
 }
 

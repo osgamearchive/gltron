@@ -443,7 +443,8 @@ extern void goto_installpath(char *executable);
 extern void checkGLError(char *where);
 extern void rasonly(gDisplay *d);
 
-extern void drawText(fonttex* ftx, int x, int y, int size, char *text);
+//extern void drawText(fonttex* ftx, int x, int y, int size, char *text);
+extern void drawText(fonttex* ftx, float x, float y, int size, char *text);
 extern int hsv2rgb(float, float, float, float*, float*, float*);
 extern void colorDisc();
 
