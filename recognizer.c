@@ -136,7 +136,7 @@ void drawRecognizer() {
   glPopMatrix();
 }  
 
-void recognizerMovement() {
+void doRecognizerMovement() {
   alpha += game2->time.dt / 2000.0;
 }
 
