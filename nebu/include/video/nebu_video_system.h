@@ -1,12 +1,14 @@
 #ifndef NEBU_VIDEO_SYSTEM_H
 #define NEBU_VIDEO_SYSTEM_H
 
-#define SYSTEM_RGBA 1
+#define SYSTEM_RGB 1
 #define SYSTEM_DOUBLE 2
 #define SYSTEM_DEPTH 4
 #define SYSTEM_FULLSCREEN 8
 #define SYSTEM_32_BIT 16
 #define SYSTEM_STENCIL 32
+#define SYSTEM_ALPHA 64
+#define SYSTEM_RGBA (SYSTEM_RGB | SYSTEM_ALPHA)
 
 extern void SystemHidePointer();
 extern void SystemUnhidePointer();
