@@ -180,7 +180,7 @@ void drawDebugLines(gDisplay *d) {
   for(i = 0; i < game->players; i++) {
     p = &(game->player[i]);
     data = p->data;
-    if(data->speed > 0) {
+    if(PLAYER_IS_ACTIVE(p)) {
       glBegin(GL_LINES);
       glColor3fv(p->pColorAlpha);
       line = &(data->trails[0]);
@@ -953,7 +953,7 @@ void drawCam(Player *p, gDisplay *d) {
 
   if(game->settings->show_glow == 1)
     for(i = 0; i < game->players; i++)
-      if ((p != &(game->player[i])) && (game->player[i].data->speed > 0))
+      if ((p != &(game->player[i])) && PLAYER_IS_ACTIVE(&game->player[i]))
 	drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
 
   glDisable(GL_BLEND);
