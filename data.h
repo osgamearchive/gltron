@@ -74,11 +74,16 @@ typedef struct Input {
   int mousey;
 } Input;
 
+typedef struct DisplayList {
+  GLuint list_start;
+  GLuint floor_list;
+  GLuint skybox_list;
+} DisplayList;
+
 /* 
  * SettingsCache - A Structure for storing lua settings during play to 
  * avoid the overhead of fetching from lua repeatedly. Values should be 
- * considered read only and const as they are never written back out to 
- * lua.
+ * considered and const as they are never written back out to lua.
  */
 typedef struct SettingsCache {
   int show_scores;
@@ -114,6 +119,7 @@ typedef struct Game2 {
   Grid grid;
   RuleSet rules;
   SettingsCache settingsCache;
+  DisplayList displayLists;
   int mode;
   int players;
   int *startPositions;

@@ -419,10 +419,10 @@ extern void drawScore(Player *p, gDisplay *d);
 extern void drawAI(gDisplay *d);
 extern void drawPause(gDisplay *d);
 /* extern void drawHelp(gDisplay *d); */
-extern void drawFloor();
 extern void drawPlayers(Player *);
 extern void drawWalls(gDisplay *d);
 extern void drawCam(Player *p, gDisplay *d);
+extern GLuint buildFloorDispList(GLuint list_start);
 
 /* trail.c */
 /* extern void drawTrails(Player *p, Player *p_eye, gDisplay *d); */

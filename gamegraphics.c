@@ -379,9 +379,12 @@ float GetDistance(float *v, float *p, float *d) {
   return sqrt( scalarprod(tmp, tmp) );
 }
 
-void drawFloor() {
-  int i, j, k, l, t;
-
+GLuint buildFloorDispList(GLuint floor_list) {
+  int j, k, l, t;
+  
+  /* init floor display list */
+  glNewList(floor_list, GL_COMPILE);
+  
   if (game2->settingsCache.show_floor_texture) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -397,20 +400,21 @@ void drawFloor() {
     for (j = 0; j < game2->rules.grid_size; j += l) {
       for (k = 0; k < game2->rules.grid_size; k += l) {
         glBegin(GL_QUADS);
-	      glTexCoord2i(0, 0);
-	      glVertex2i(j, k);
-	      glTexCoord2i(t, 0);
-	      glVertex2i(j + l, k);
-	      glTexCoord2i(t, t);
-	      glVertex2i(j + l, k + l);
-	      glTexCoord2i(0, t);
-	      glVertex2i(j, k + l);
-	      glEnd();
-	      polycount += 2;
+        glTexCoord2i(0, 0);
+        glVertex2i(j, k);
+        glTexCoord2i(t, 0);
+        glVertex2i(j + l, k);
+        glTexCoord2i(t, t);
+        glVertex2i(j + l, k + l);
+        glTexCoord2i(0, t);
+        glVertex2i(j, k + l);
+        glEnd();
+        polycount += 2;
       }
     }
     glDisable(GL_TEXTURE_2D);
   } else {
+    int i, j;
     int line_spacing = game2->settingsCache.line_spacing;
 
     glColor3f(1.0, 1.0, 1.0);
@@ -419,22 +423,25 @@ void drawFloor() {
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogi(GL_FOG_START, 100);
     glFogi(GL_FOG_END, 350);
-    
+  
     glEnable(GL_FOG);
    
     glBegin(GL_LINES);
     for (i = 0; i < game2->rules.grid_size; i += line_spacing) {
       for (j = 0; j < game2->rules.grid_size; j += line_spacing) {
-	      glVertex3i(i, j, 0);
-	      glVertex3i(i + line_spacing, j, 0);
-	      glVertex3i(i, j, 0);
-	      glVertex3i(i, j + line_spacing, 0);
+        glVertex3i(i, j, 0);
+        glVertex3i(i + line_spacing, j, 0);
+        glVertex3i(i, j, 0);
+        glVertex3i(i, j + line_spacing, 0);
       }
     }
     glEnd();
 
     glDisable(GL_FOG);
   }
+  glEndList();
+
+  return floor_list;
 }
 
 void drawCrash(float radius) {
@@ -854,7 +861,7 @@ void doLookAt(float *cam, float *target, float *up) {
 void drawCam(Player *p, gDisplay *d) {
   int i;
   float up[3] = { 0, 0, 1 };
-
+  
   glColor3f(0.0, 1.0, 0.0);
 
   glMatrixMode(GL_PROJECTION);
@@ -875,14 +882,16 @@ void drawCam(Player *p, gDisplay *d) {
   glDisable(GL_DEPTH_TEST);
 
 
-  /* skybox, floor */
+  /* skybox */
   if (game2->settingsCache.show_skybox) {
-    skybox();
+    glCallList(game2->displayLists.skybox_list);
   }
 
   /* fixme: clear z-buffer handling */
   /* glDepthMask(GL_TRUE); */
-  drawFloor();
+  
+  /* floor */
+  glCallList(game2->displayLists.floor_list);
   /* glDepthMask(GL_FALSE); */
 
   /* shadows on the floor: cycle, recognizer, trails */

@@ -237,7 +237,22 @@ void initData() {
   game2->settingsCache.playEffects = getSettingi("playEffects");
   game2->settingsCache.playMusic = getSettingi("playMusic");
   scripting_GetFloatArray("clear_color", game2->settingsCache.clear_color, 4);
+
+  /* create setup display lists */
+  if(game2->displayLists.list_start) {
+    glDeleteLists(game2->displayLists.list_start, 2);
+  }
+  game2->displayLists.list_start = glGenLists(2);
   
+  /* build display lists */
+  game2->displayLists.floor_list = 
+          buildFloorDispList(game2->displayLists.list_start);
+  
+  if (getSettingi("show_skybox")) {
+    game2->displayLists.skybox_list = 
+            buildSkyboxDispList(game2->displayLists.list_start+1);
+  }
+
   /* time management */
   game2->time.lastFrame = 0;
   game2->time.current = 0;
