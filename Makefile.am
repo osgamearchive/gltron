@@ -31,6 +31,7 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	graphics_hud.c graphics_hud.h \
 	graphics_fx.c graphics_fx.h \
 	graphics_utility.c graphics_utility.h \
+	trail_geometry.c trail_geometry.h \
 	# extgl.h extgl.c 
 
 
