@@ -16,6 +16,18 @@ SNDLIBS =  -lSDL_mixer
 GLTRON_INSTALLDIR = /usr/bin
 GLTRON_HOME = /usr/share/games/gltron
 
+HFILES = \
+	data.h \
+	gltron.h \
+	png_texture.h \
+	fonttex.h \
+	menu.h \
+	geom.h \
+	model.h \
+	system.h \
+	sound.h
+
+
 CFILES = \
 	png_texture.c \
 	pixels.c \
@@ -80,3 +92,9 @@ install: $(INSTALL_FILES)
 
 clean: 
 	rm -f *\.o gltron core
+
+todo:
+	perl todo2html.pl < TODO > TODO.html
+
+etags:
+	etags $(CFILES) $(HFILES)
