@@ -341,32 +341,9 @@ void drawPlanarShadows(Player *p) {
 }
 
 void drawFloor() {
-#ifdef NEW_LEVEL_DRAW
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glColor3f(1,1,0);
-	glVertexPointer(3, GL_FLOAT, 0, gWorld->floor->pVertices);
-	glDrawElements(GL_TRIANGLES, 3 * gWorld->floor->nTriangles, GL_UNSIGNED_INT, gWorld->floor->pTriangles);
-	glDisableClientState(GL_VERTEX_ARRAY);
-#else
-  /* fixme: clear z-buffer handling */
-  /* glDepthMask(GL_TRUE); */
-  
-  /* floor */
-  if (gSettingsCache.show_floor_texture) {
-    drawFloorTextured(game2->rules.grid_size,
-                      gScreen->textures[TEX_FLOOR]);
-  } else {
-    /* should this be an artpack setting? */
-    float line_color[] = {1.0, 1.0, 1.0};
-    
-    drawFloorGrid(game2->rules.grid_size,
-                  gSettingsCache.line_spacing,
-                  line_color,
-                  gSettingsCache.clear_color);
-  }
-  
-  /* glDepthMask(GL_FALSE); */
-#endif
+	video_Shader_Setup(& gWorld->floor_shader);
+	nebu_Mesh_Render( gWorld->floor );
+	video_Shader_Cleanup(& gWorld->floor_shader);
 }
 
 void drawWorld(Player *p, PlayerVisual *pV) {
@@ -467,7 +444,9 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	
   glDepthMask(GL_FALSE);
   glDisable(GL_DEPTH_TEST);
+
 	drawPlanarShadows(p);
+
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 
