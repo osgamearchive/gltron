@@ -1,15 +1,15 @@
 #include "gltron.h"
 #include "explosion.h" 
 
-#define EXPLOSION_SPEED 0.80
-#define EXPLOSION_MAX_RADIUS 25 
+#define IMPACT_RADIUS_DELTA 0.025
+#define IMPACT_MAX_RADIUS 25 
 
 /* shockwave behavior constants */
 #define SHOCKWAVE_MIN_RADIUS 0.0
 #define SHOCKWAVE_MAX_RADIUS 45.0
 #define SHOCKWAVE_WIDTH 0.2
 #define SHOCKWAVE_SPACING 6.0
-#define SHOCKWAVE_SPEED 1.2 /* speed relative to explosion */
+#define SHOCKWAVE_SPEED 1.2 /* speed relative to IMPACT_RADIUS_DELTA */
 #define SHOCKWAVE_SEGMENTS 25
 #define NUM_SHOCKWAVES 3 
 
@@ -116,7 +116,7 @@ static void drawImpactGlow(float glow_radius) {
 
   float opacity;
   
-  opacity = GLOW_START_OPACITY - (glow_radius / EXPLOSION_MAX_RADIUS);
+  opacity = GLOW_START_OPACITY - (glow_radius / IMPACT_MAX_RADIUS);
   
   glPushMatrix();
   glScalef(glow_radius, glow_radius, 1.0f);
@@ -143,11 +143,11 @@ void drawExplosion(float *radius) {
 
   drawShockwaves(shockwave_radius);
 
-  if (*radius < EXPLOSION_MAX_RADIUS) {
+  if (*radius < IMPACT_MAX_RADIUS) {
     drawImpactGlow(*radius);
     drawSpires(*radius);
   }
   
-  *radius += EXPLOSION_SPEED;
+  *radius += game2->time.dt * IMPACT_RADIUS_DELTA;
 }
 
