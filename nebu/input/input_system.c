@@ -106,7 +106,7 @@ void SystemHandleInput(SDL_Event *event) {
 		} else {
 			// axis set, only generate event if it wasn't set before
 			if(! (joy_axis_state[event->jaxis.which] & (1 << event->jaxis.axis)) ) {
-				joy_axis_state[event->jaxis.which] |= (1 < event->jaxis.axis);
+				joy_axis_state[event->jaxis.which] |= (1 << event->jaxis.axis);
 				key = SYSTEM_JOY_LEFT + event->jaxis.which * SYSTEM_JOY_OFFSET;
 				if(event->jaxis.axis == 1) {
 					key += 2;
