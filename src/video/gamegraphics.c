@@ -150,7 +150,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_GREATER, 1, 1);
     glEnable(GL_BLEND);
-    glColor4fv(shadow_color);
+    glColor4fv(gCurrentShadowColor);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   } else {
     glColor3f(0, 0, 0);
@@ -405,11 +405,7 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 			drawTrailLines(game->player + i, gPlayerVisuals + i);
 }
 
-void drawCam(Player *p, PlayerVisual* pV) {
-	int i;
-	float up[3] = { 0, 0, 1 };
-	Visual *d = & pV->display;
-	
+static float getReflectivity() {
   float reflectivity = getSettingf("reflection");
   if(reflectivity < 0)
     reflectivity = getVideoSettingf("reflection");
@@ -417,6 +413,18 @@ void drawCam(Player *p, PlayerVisual* pV) {
   // need stencil for reflections
   if(gSettingsCache.use_stencil == 0)
 	  reflectivity = 0;
+	return reflectivity;
+}
+
+void drawCam(Player *p, PlayerVisual* pV) {
+	int i;
+	float up[3] = { 0, 0, 1 };
+	Visual *d = & pV->display;
+	
+	float reflectivity = getReflectivity();
+	// compute shadow color based on glocal constant & reflectivity
+	for(i = 0; i < 4; i++) 
+		gCurrentShadowColor[i] = gShadowColor[i] * (1 - reflectivity);
 
   glColor3f(0.0, 1.0, 0.0);
 	
@@ -496,7 +504,8 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glDisable(GL_DEPTH_TEST);
 
 	glDisable(GL_LIGHTING);
-	drawPlanarShadows(p);
+	if(reflectivity != 1) // for perfect mirrors, don't bother
+		drawPlanarShadows(p);
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);

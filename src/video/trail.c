@@ -180,7 +180,7 @@ void drawTrailShadow(Player* p, PlayerVisual *pV) {
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_GREATER, 1, 1);
     glEnable(GL_BLEND);
-    glColor4fv(shadow_color);
+    glColor4fv(gCurrentShadowColor);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   } else {
     glColor3f(0, 0, 0);

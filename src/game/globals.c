@@ -118,7 +118,8 @@ TextureInfo textures[] = {
 
 };
 
-float shadow_color[] = { 0, 0, 0, .8f };
+float gShadowColor[] = { 0, 0, 0, .8f };
+float gCurrentShadowColor[] = { 0, 0, 0, .8f };
 
 #define LX 2.0f
 #define LY 2.0f
