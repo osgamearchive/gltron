@@ -8,6 +8,13 @@
 #include "lua.h"
 #include "lualib.h"
 
+// some functions defined elsewhere: graphics_hud.c
+int c_drawRectangle(lua_State *l);
+int c_drawCircle(lua_State *l);
+int c_translate(lua_State *l);
+int c_pushMatrix(lua_State *l);
+int c_popMatrix(lua_State *l);
+
 int c_quitGame(lua_State *L) {
   saveSettings();
 	SystemExitLoop(RETURN_CREDITS);
@@ -182,4 +189,10 @@ void init_c_interface(void) {
 	scripting_Register("c_loadDirectory", c_loadDirectory);
 	scripting_Register("SystemMainLoop", c_SystemMainLoop);
 	scripting_Register("SetCallback", c_SetCallback);
+
+	scripting_Register("c_drawCircle", c_drawCircle);
+	scripting_Register("c_drawRectangle", c_drawRectangle);
+	scripting_Register("c_translate", c_translate);
+	scripting_Register("c_pushMatrix", c_pushMatrix);
+	scripting_Register("c_popMatrix", c_popMatrix);
 }
