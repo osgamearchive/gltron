@@ -53,25 +53,24 @@ void loadTexture(const char *filename, int format) {
 					glTexImage2D(GL_TEXTURE_2D, level, format, 
 											 tex->width, tex->height,
 											 0, internal, GL_UNSIGNED_BYTE, tex->data);
-					/* printf("uploading level %d, %dx%d texture\n", 
-						 level, tex->width, tex->height); */
-					if(level == 0 && !getSettingi("use_mipmaps")) { 
-						level++;
-						break;
-					}
+#ifdef PRINTF_VERBOSE
+					printf("uploading level %d, %dx%d texture\n", 
+						 level, tex->width, tex->height);
+#endif
 					level++;
 			}
       newtex = mipmap_png_texture(tex, 1, 0, 0);
       freeTextureData(tex);
       tex = newtex;
 		}
-		if(level == 0 || getSettingi("use_mipmaps")) {
-			glTexImage2D(GL_TEXTURE_2D, level, format, 
-									 tex->width, tex->height,
-									 0, internal, GL_UNSIGNED_BYTE, tex->data);
-			/* printf("uploading level %d, %dx%d texture\n", 
-				 level, tex->width, tex->height); */
-		}
+		/* upload 1x1 mip level */
+		glTexImage2D(GL_TEXTURE_2D, level, format, 
+								 tex->width, tex->height,
+								 0, internal, GL_UNSIGNED_BYTE, tex->data);
+#ifdef PRINTF_VERBOSE
+		printf("uploading level %d, %dx%d texture\n", 
+					 level, tex->width, tex->height);
+#endif
 		freeTextureData(tex);
 	}
 }
