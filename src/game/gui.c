@@ -133,8 +133,9 @@ void idleGui(void) {
 
 void keyboardConfigure(int state, int key, int x, int y) {
 	if(state == SYSTEM_KEYSTATE_DOWN) {
-		scripting_RunFormat("settings.keys[ configure_player ][ configure_event ]"
-												"= %d", key);
+		if(key != 27) /* don't allow escape */
+			scripting_RunFormat("settings.keys[ configure_player ]"
+													"[ configure_event ] = %d", key);
 		SystemExitLoop(RETURN_PROMPT_ESCAPE);
 	}
 }
