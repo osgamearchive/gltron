@@ -1,4 +1,6 @@
 #include "base/switchCallbacks.h"
+#include <string.h>
+#include <stdlib.h>
 
 Callbacks *last_callback = NULL;
 Callbacks *current_callback = NULL;

@@ -1,6 +1,7 @@
 #include "audio/nebu_SourceSample.h"
 
 #include <assert.h>
+#include <string.h>
 
 namespace Sound {
   SourceSample::SourceSample(System *system) { 

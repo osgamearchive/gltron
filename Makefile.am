@@ -2,7 +2,11 @@ SUBDIRS = lua nebu src art data music scripts
 
 bin_PROGRAMS = gltron
 
-gltron_SOURCES = src/gltron.c
+gltron_SOURCES = @top_srcdir@/src/gltron.c
+
+gltron.c:
+	-rm -f gltron.c
+	ln -s @top_srcdir@/src/gltron.c gltron.c
 
 gltron_LDADD = \
 	src/game/libgame.a \
@@ -21,17 +25,17 @@ gltron_LDADD = \
 	lua/src/liblua.a \
 	lua/src/lib/liblualib.a
 
-# gltron_LDFLAGS = -static
+#gltron_LDFLAGS = -static
 
 AM_CFLAGS = \
-	-Isrc/include \
-	-Ilua/include \
-	-Inebu/include
+	-I@top_srcdir@/src/include \
+	-I@top_srcdir@/lua/include \
+	-I@top_srcdir@/nebu/include
 
 AM_CXXFLAGS = \
-	-Isrc/include \
-	-Ilua/include \
-	-Inebu/include
+	-I@top_srcdir@/src/include \
+	-I@top_srcdir@/lua/include \
+	-I@top_srcdir@/nebu/include
 
 tags:
 	etags `find -name '*.c' -or -name '*.cpp' -or -name '*.h' -or -name '*.lua'`

@@ -1,6 +1,7 @@
 #include "game/init.h"
 
 #include "SDL.h"
+#include <stdlib.h>
 
 int video_initialized = 0;
 

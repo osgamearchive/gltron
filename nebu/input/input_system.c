@@ -4,6 +4,7 @@
 #include "scripting/nebu_scripting.h"
 
 #include "SDL.h"
+#include <stdlib.h>
 
 static float joystick_threshold = 0;
 

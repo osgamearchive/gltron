@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 vec4* vec4Add(vec4 *pOut, const vec4 *pV1, const vec4 *pV2) {
   pOut->v[0] = pV1->v[0] + pV2->v[0];

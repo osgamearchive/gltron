@@ -1,6 +1,7 @@
 #include "audio/nebu_Source3D.h"
 
 #include <assert.h>
+#include <string.h>
 
 Uint8 tmp[65536];
 
