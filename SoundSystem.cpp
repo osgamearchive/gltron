@@ -9,8 +9,10 @@ namespace Sound {
     _info.rate = spec->freq;
     _info.channels = spec->channels;
     
-    _mix_music = 1;
+    _mix_music = 1; // TODO: add 'master' volume for music and fx
     _mix_fx = 1;
+
+    _status = 0; // sound system is not initialized
   }
 
   void System::Callback(Uint8* data, int len) {
@@ -31,7 +33,7 @@ namespace Sound {
 	    if( s->Mix(data, len) )
 	      sources_mixed++;
 	  }
-	//fprintf(stderr, "done mixing %d sources\n", sources_mixed);
+	// fprintf(stderr, "done mixing %d sources\n", sources_mixed);
       } else {
 	// check if source is removable
 	if(s->IsRemovable()) {

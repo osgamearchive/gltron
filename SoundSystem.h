@@ -18,8 +18,11 @@ namespace Sound {
     Vector3 _up;
   };
 
+  enum { eUninitialized, eInitialized };
+
   class System {
   public:
+
     System(SDL_AudioSpec *spec); 
     typedef void(*Audio_Callback)(void *userdata, Uint8* data, int len);
     Audio_Callback GetCallback() { return c_callback; };
@@ -30,6 +33,7 @@ namespace Sound {
     Listener& GetListener() { return _listener; };
     void SetMixMusic(int value) { _mix_music = value; };
     void SetMixFX(int value) { _mix_fx = value; };
+    void SetStatus(int eStatus) { _status = eStatus; };
 
   protected:
     SDL_AudioSpec *_spec;
@@ -38,15 +42,9 @@ namespace Sound {
     list _sources;
     int _mix_music;
     int _mix_fx;
+    int _status;
   };
 
 }
 
 #endif
-
-
-
-
-
-
-
