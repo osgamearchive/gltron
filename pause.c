@@ -48,9 +48,14 @@ void keyboardPause(int key, int unicode, int x, int y) {
 
   switch(key) {
   case 27:
+#ifdef __NETWORK__
+    if( isConnected )
+      Net_disconnect();
+#endif
     switchCallbacks(&guiCallbacks);
     break;
   case ' ':
+#ifdef __NETWORK__
     //restart game
     if( serverstate == preGameState && isConnected && slots[me].isMaster  )
 	{
@@ -61,7 +66,7 @@ void keyboardPause(int key, int unicode, int x, int y) {
 	  Net_sendpacket(&packet,  Net_getmainsock());
 	  return;
 	}
-    
+#endif   
 
     if(game->pauseflag & PAUSE_GAME_FINISHED)
       initData();

@@ -14,12 +14,16 @@ void mousePregame (int buttons, int state, int x, int y)
 
 void keyPregame(int k, int unicode, int x, int y)
 {
-  if( k == 13 )
+  switch( k )
     {
+    case 13:
       switchCallbacks(&keyboardreadingCallbacks);
-    } else {
+      break;
+    case SDLK_ESCAPE:
       Net_disconnect();
       switchCallbacks(&guiCallbacks);
+      break;
+      
     }
 }
 

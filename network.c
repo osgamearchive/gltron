@@ -33,6 +33,7 @@ connectionLost()
 {
   fprintf(stderr, "connection lost\n");
   isConnected=0;
+  isLogged=0;
   Net_disconnect();
   switchCallbacks(&guiCallbacks);
 }
@@ -176,9 +177,10 @@ do_gamerules(Packet packet)
   game->settings->ai_player3= ( slots[2].active ) ? 0 : 2;
   game->settings->ai_player4= ( slots[3].active ) ? 0 : 2;
   
-  initData();
-  
+  initNetEventList( neteventlist );
   game2->players              = packet.infos.gamerules.players;
+  game->players=game2->players;
+  initData();
   game2->rules.speed          = packet.infos.gamerules.speed;
   game2->rules.eraseCrashed   = packet.infos.gamerules.eraseCrashed;
   game->settings->game_speed  = packet.infos.gamerules.gamespeed;
@@ -201,6 +203,9 @@ void
 do_event(Packet packet)
 {
   addNetEvent(&packet.infos.event.event);
+  fprintf(stderr, "get event: %d %d %d %d %d\n", packet.infos.event.event.type,
+	  packet.infos.event.event.player, packet.infos.event.event.x,
+	  packet.infos.event.event.y, packet.infos.event.event.timestamp);
 }
 
 

@@ -259,7 +259,7 @@ do_startgame( int which, Packet packet )
 
   //TODO : change all things about init data ( andi will do )
 
-  initData();
+  //initData();
   //Send game rules...
 
   for(i=0; i< MAX_PLAYERS; ++i)
@@ -275,8 +275,9 @@ do_startgame( int which, Packet packet )
     }
 
   //resetScores();
-  initData();
   game2->players                   = nbUsers;
+  game->players=game2->players;
+  initData();
 
 
 
@@ -293,6 +294,8 @@ do_startgame( int which, Packet packet )
   rep.infos.gamerules.time         = game2->time;
   //Startpos
   printf("%d players, getting start post\n", game2->players);
+  if( game2->startPositions != NULL )
+    free(game2->startPositions);
   game2->startPositions = ( int *)malloc(3*game2->players *sizeof(int));
   for(i=0; i<game2->players; ++i)
     {

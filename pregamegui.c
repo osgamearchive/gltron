@@ -7,6 +7,7 @@ void
 initkeyreading()
 {
   nbreads=0;
+  strcpy(buff, "");
   printf("Entering keyboardreadingCallbacks...\n");
 }
 
@@ -104,7 +105,10 @@ void keyreading(int k, int unicode, int x, int y)
 	  break;
 	default:
 	  if( unicode < 0x80 && unicode > 0 )
-	    buff[nbreads++]=(char)unicode;
+	    {
+	      buff[nbreads++]=(char)unicode;
+	      buff[nbreads]='\0';
+	    }
 	  //else
 	  //  buff[nbreads++]=k;
 	  //call a function after key is pressed ( example: trigger. )

@@ -40,10 +40,20 @@ void keyGame(int k, int unicode, int x, int y)
   switch (k) {
     /* case 'q': SystemExit(); break; */
   case 27:
+#ifdef __NETWORK__
+    if( isConnected )
+      Net_disconnect();
+
+#endif
     switchCallbacks(&pauseCallbacks);
     switchCallbacks(&guiCallbacks);
     break;
-  case ' ': switchCallbacks(&pauseCallbacks); break;
+  case ' ':
+#ifdef __NETWORK__
+    if( ! isConnected )
+#endif
+      switchCallbacks(&pauseCallbacks);
+    break;
 
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;

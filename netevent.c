@@ -15,6 +15,27 @@ createNetEventCell( GameEvent *e )
   return cell;
 }
 
+void
+initNetEventList(netEventList nsl )
+{
+  cnetEventList cell, next;
+
+  //nsl must be allocate before...
+  if( nsl == NULL )
+    return;
+
+  cell = nsl->head;
+
+  if( cell == NULL )
+    {
+      return;
+    }
+  while( cell )
+    { next = cell->next; free(cell); cell=next;printf("freeing cell...\n"); }
+  nsl->head=NULL;
+}
+
+
 int
 getWhich(int player)
 {
