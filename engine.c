@@ -448,8 +448,10 @@ void clearTrail(int player) {
 void crashPlayer(int player) {
   int j;
 
+#ifdef SOUND
   if(game->settings->playEffects)
     playGameFX(fx_crash);
+#endif
 
   for(j = 0; j < game->players; j++) 
     if(j != player && game->player[j].data->speed > 0)
