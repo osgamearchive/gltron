@@ -51,9 +51,9 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
   vec3 *pVertices = malloc( sizeof(vec3) * MAX_VERTICES );
   vec3 *pNormals = malloc( sizeof(vec3) * MAX_NORMALS );
 
-  quadFace *pqFaces;
-  face *pFaces;
-  int iFaceSize;
+  quadFace *pqFaces = NULL;
+  face *pFaces = NULL;
+  int iFaceSize = 0;
 
   Mesh *pMesh = malloc( sizeof(Mesh) );
   int iGroup = 0;
@@ -74,6 +74,9 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
     pqFaces = malloc( sizeof(quadFace) * MAX_FACES );
     iFaceSize = 4;
     break;
+  default:
+    fprintf(stderr, "[fatal]: illegal mesh type\n");
+    exit(1);
   }
 
   if((f = gzopen(filename, "r")) == 0) {
@@ -257,8 +260,8 @@ Mesh* readMeshFromFile(const char *filename, MeshType iType) {
 
 void drawModel(Mesh *pMesh, MeshType iType) {
   int i;
-  int iFaceSize;
-  GLenum primitive;
+  int iFaceSize = 0;
+  GLenum primitive = GL_TRIANGLES;
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_NORMAL_ARRAY);
@@ -274,6 +277,9 @@ void drawModel(Mesh *pMesh, MeshType iType) {
     primitive = GL_QUADS;
     iFaceSize = 4;
     break;
+  default:
+    fprintf(stderr, "[fatal]: illegal mesh type\n");
+    exit(1);
   }
 
   for(i = 0; i < pMesh->nMaterials; i++) {
