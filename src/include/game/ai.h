@@ -1,3 +1,6 @@
+#ifndef GAME_AI_H
+#define GAME_AI_H
+
 typedef struct {
 	int location;
 	segment2 player;
@@ -27,3 +30,5 @@ void ai_aggressive(int player, int opponent, int location,
 									 AI_Distances *distances);
 void ai_evasive(int player, int opponent, int location,
 								AI_Distances *distances);
+
+#endif
