@@ -29,6 +29,7 @@
 
 #define PATH_MAX 8192
 
+#ifndef WIN32
 void goto_installpath(char *argv0)
 {
     char temppath[PATH_MAX];
@@ -95,3 +96,4 @@ void goto_installpath(char *argv0)
         exit(1);
     }
 }
+#endif
