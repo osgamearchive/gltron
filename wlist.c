@@ -185,10 +185,10 @@ draw_wlist( Wlist *wlist )
 }
 
 void
-setCell_wlist    ( Wlist *wlist, char *data, int len, int line, int col )
+setCell_wlist    ( Wlist *wlist, void *data, int len, int line, int col )
 {
   char **theLine;
-  int test = (int)*((int *)data);
+  int test = (int)(*((int *)data));
 
   theLine = wlist->lines[line];
 
@@ -202,7 +202,7 @@ setCell_wlist    ( Wlist *wlist, char *data, int len, int line, int col )
       wlist->lines[line][col]=NULL;
     }
   printf("setting %d\n", test);
-  wlist->lines[line][col] = ( char *) malloc(len);
+  wlist->lines[line][col] = ( void * ) malloc(len);
   memcpy(wlist->lines[line][col], data, len);
   rebuildindex_wlist(wlist);
 }

@@ -66,7 +66,7 @@ void   draw_wlist       ( Wlist *wlist );
 
 
 /** Accessing and Manipulating datas */
-void   setCell_wlist    ( Wlist *wlist, char *data, int len, int line, int col );
+void   setCell_wlist    ( Wlist *wlist, void *data, int len, int line, int col );
 char*  getCell_wlist    ( Wlist *wlist, int line, int col);
 //void   clearCell_wlist  ( Wlist *wlist, Wcell theCell);
 

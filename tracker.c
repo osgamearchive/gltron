@@ -237,8 +237,9 @@ idleTracker()
 {
   int sockstat = socksnotready;
   int i;
-  float pingf;
-  short *ping=malloc(sizeof(short));
+  //float pingf;
+  //short *ping=malloc(sizeof(short));
+  int ping;
   //char str[255];
 
   sockstat = Net_checksocket(Net_gettrackersock());
@@ -256,16 +257,16 @@ idleTracker()
 	      printf("new ping is %d ( %d )\n", servers[i].ping, servers[i].packets);
 	      
 	      //sprintf(str, "%d", servers[i].ping/servers[i].packets);
-	      pingf = servers[i].ping/servers[i].packets;
+	      ping = (servers[i].ping/servers[i].packets)*1;
 	      //*ping = (int)(pingf);
-	      (*ping)=(int)(pingf)*1;
-	      printf("ping is %d ( %f )\n", *ping, pingf);
-	      setCell_wlist ( serverlist, (char *)ping, sizeof(short), i, 3 );
+	      //(*ping)=(int)(pingf)*1;
+	      printf("ping is %d\n", ping);
+	      setCell_wlist ( serverlist, (char *)&ping, sizeof(int), i, 3 );
 	      rebuildindex_wlist(serverlist);
 	    }
 	}	  
     }
-  free(ping);
+  //free(ping);
 
   if( sockstat != socksnotready )
     {
@@ -383,11 +384,13 @@ char *
 intToStr( WlistPtr list, int line, int col )
 {
   char *str = malloc(255);
-  int  val;
+  int *val;
 
-  val = *(list->lines[line][col]);
+  val = (int *)(list->lines[line][col]);
 
-  sprintf(str, "%d", val);
+  //val = (int)(*(list->lines[line][col]));
+
+  sprintf(str, "%d", *val);
   return str;
 }
 
