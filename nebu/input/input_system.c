@@ -62,10 +62,9 @@ void SystemHandleInput(SDL_Event *event) {
 	switch(event->type) {
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
-		if(event->type == SDL_KEYDOWN)
+		if(event->type == SDL_KEYDOWN) {
 			state = SYSTEM_KEYSTATE_DOWN;
-		else {
-			printf("got keyup\n");
+		} else {
 			state = SYSTEM_KEYSTATE_UP;
 		}
  
