@@ -150,8 +150,10 @@ void initData() {
 
   if(debugtex != NULL)
     free(debugtex);
-
-  debugtex = (unsigned char*) malloc(4 * 256 * 256);
+  
+  debugtex = (unsigned char*) malloc(4 * DEBUG_TEX_W * DEBUG_TEX_H);
+  memset(debugtex, 0, 4 * DEBUG_TEX_W * DEBUG_TEX_H);
+  ogl_debugtex = 0;
 
   initClientData();
   lasttime = SystemGetElapsedTime();
@@ -232,8 +234,19 @@ void crashPlayer(int player) {
 }
 
 void writePosition(int player) {
-  colmap[ game->player[player].data->iposy * colwidth +
-	game->player[player].data->iposx ] = player + 1;
+  unsigned char *source;
+  int x, y;
+  float tx, ty;
+
+  x = game->player[player].data->iposx;
+  y = game->player[player].data->iposy;
+
+  colmap[ y * colwidth + x ] = player + 1;
+
+  source = debugcolors[ colmap [ y * colwidth + x ] ];
+  tx = (float) x * DEBUG_TEX_W / game->settings->grid_size;
+  ty = (float) y * DEBUG_TEX_H / game->settings->grid_size;
+  memcpy(debugtex + (int)ty * DEBUG_TEX_W * 4 + (int)tx * 4, source, 4);
 }
 
 void newTrail(Data* data) {

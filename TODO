@@ -6,7 +6,7 @@ save keyboard settings in .gltronrc
 fix settings loading code ignoring some settings and unsaved settings
   (e.g. keyboard controls)
 warp mouse when running fullscreen
-
+write software cursor
 
 move cycle behind posx, posy
 solve cycle turning issue

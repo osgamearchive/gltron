@@ -1,30 +1,9 @@
 #include "gltron.h"
 #include "geom.h"
 
-static unsigned char debugcolors[6][4] = {
-  { 0, 0, 0, 0 },
-  { 255, 0, 0, 255 },
-  { 0, 255, 255, 255 },
-  { 0, 255, 0, 255 },
-  { 0, 0, 255, 255 },
-  { 255, 255, 255, 255 }
-};
-
 void drawDebugTex(gDisplay *d) {
-  int i, j;
-  unsigned char *source;
-
-  for(i = 0; i < 256; i++) {
-    for(j = 0; j < 256; j++) {
-      if(j < colwidth && i < colwidth) 
-	source = debugcolors[ colmap [ i * colwidth + j ] ];
-      else source = debugcolors[ 0 ];
-      if(i == 0 || j == 0 || i == colwidth || j == colwidth)
-	source = debugcolors[ 5 ];
-      memcpy(debugtex + i * 256 * 4 + j * 4, source, 4);	  
-    }
-  }
-
+  /* build2DTex(); */
+  /* fprintf(stderr, "%d ", SystemGetElapsedTime()); */
   rasonly(d);
   glTranslatef(100, 100, 0);
 
@@ -43,8 +22,14 @@ void drawDebugTex(gDisplay *d) {
 
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, d->texDebug);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA,
-	       GL_UNSIGNED_BYTE, debugtex);
+  if(ogl_debugtex == 0) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DEBUG_TEX_W, DEBUG_TEX_H, 
+		 0, GL_RGBA, GL_UNSIGNED_BYTE, debugtex);
+    ogl_debugtex = 1;
+  } else {
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, DEBUG_TEX_W, DEBUG_TEX_H, GL_RGBA,
+		 GL_UNSIGNED_BYTE, debugtex);
+  }
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -79,6 +64,7 @@ void drawDebugTex(gDisplay *d) {
   glEnd();
   polycount += 4;
   */
+  fprintf(stderr, "%d\n", SystemGetElapsedTime());
 }
 
 void drawFPS(gDisplay *d) {

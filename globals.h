@@ -17,6 +17,7 @@ float camAngle = 0;
 
 unsigned char* colmap = NULL;
 unsigned char* debugtex = NULL;
+int ogl_debugtex;
 int colwidth;
 
 int dirsX[] = { 0, -1, 0, 1 };
@@ -48,6 +49,15 @@ float colors_trail[][4] = { { 1.0, 0.2, 0.4, 1.0 }, { 0.2, 0.3, 1.0, 1.0 },
 
 float colors_model[][4] = { { 1.0, 1.0, 0.0, 1.0 }, { 1.0, 0.1, 0.1, 1.0 },
 		       { 0.3, 1.0, 0.8, 1.0 }, { 0.8, 0.8, 0.8, 1.0 } };
+
+unsigned char debugcolors[6][4] = {
+  { 0, 0, 0, 0 },
+  { 255, 0, 0, 255 },
+  { 0, 255, 255, 255 },
+  { 0, 255, 0, 255 },
+  { 0, 0, 255, 255 },
+  { 255, 255, 255, 255 }
+};
 
 int vp_max[] = { 1, 2, 4 }; /* windows in this display setting */
 float vp_x[3][4] = { { 1 },    { 1, 1 },  { 1, 16, 1, 16 } };

@@ -11,7 +11,6 @@
 - added mouse callbacks for SDL and SYSTEM_MOUSEUP, SYSTEM_MOUSEDOWN constants
 - colored debug texture (2D map)
 
-
 0.53 to 0.59
 most important visible changes (including the ones to 0.59beta)
 Game play:

@@ -34,6 +34,7 @@ void SystemPostRedisplay() {
 }
 
 int SystemGetElapsedTime() {
+  /* fprintf(stderr, "%d\n", SDL_GetTicks()); */
   return SDL_GetTicks();
 }
 

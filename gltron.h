@@ -144,6 +144,8 @@ enum {
 
 #define FAST_FINISH 40
 
+#define DEBUG_TEX_W 64
+#define DEBUG_TEX_H 64
 /* when running as screen saver, wait SCREENSAVER_WAIT ms after each round */
 
 #define SCREENSAVER_WAIT 2000
@@ -173,6 +175,7 @@ extern Menu* pCurrent;
 
 extern unsigned char* colmap;
 extern unsigned char* debugtex;
+extern int ogl_debugtex;
 extern int colwidth;
 
 extern int dirsX[];
@@ -195,7 +198,7 @@ extern float vp_x[3][4];
 extern float vp_y[3][4];
 extern float vp_w[3][4];
 extern float vp_h[3][4];
-
+extern unsigned char debugcolors[6][4];
 /* configure keys stuff */
 
 extern int *configureKeyEntry;
