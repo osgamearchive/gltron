@@ -3,17 +3,14 @@ TODO list
 Bugs:
 
 - Make install doesn't work (Andreas)
-- Visual artefact in the lightcycle trail between textured/untextured bow
-  (Andreas)
 - Screen garbled in-game after switching resolutions (hofi)
 - sound FX garbled on MacOS (sem,darrell)
 
 Features:
 
-- Save current artpack
 - glClearColor() doesn't match artpack. Move glClearColor to settings and
   include in artpack.ini
-- Clear up artpack system, default artpack 
+- Save current artpack / Clear up artpack system, Select default artpack 
 - Add 3d sound source for recognizer
 - Add sound for own cycle. Modulate pitch (or volume) after turns
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
