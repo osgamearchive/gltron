@@ -5,6 +5,7 @@ TODO list
 
 Bugs:
 
+- readDirectoryContents() doesn't use the correct path
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
 - Zooming the camera doesn't work right after choosing 'Start Game' from
@@ -43,6 +44,8 @@ Features:
 - add slightly funny console messages (Robot ate Andi's tail)
 - rewrite save.lua, so .gltronrc is a bit more readable (and settings are
   grouped)
+- peek left/right when in 1st person camera mode
+- quick way to restore sane camera angle (e.g. middle mouse button, or press button, mouse mouse, release button, camera gets restored)
 
 Settings:
 
