@@ -17,6 +17,8 @@ Features [high priority]:
   (serious OS 9 problem, for example), this allows handling of large mp3 files
   too and gets rid of the fixed size buffer
 
+Optimizations/Cleanups [high priority]
+
 Documentation & Packaging:
 
 - decide about artpacks & sound & music included
@@ -25,16 +27,6 @@ Documentation & Packaging:
 - compile decent ChangeLog
 - document tools used. included 'sponsor' message for 3d exploration [ Andreas ]
 
-Optimizations/Cleanups [high priority]
-
-- look at #if 0,#endif and remove obsolete code
-- check various TODOs, FIXMEs and #warnings in the code
-- resolve this:
-  The recognizer shadow suffers from z-buffer artefacts (Andreas)
-  solutions: try to optain 24bit visual, don't zclear and change frustum for
-  the recognizer, render recognizer shadow to texture, and project it onto
-  floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
-  decide about defaults)
 
 Features [medium priority]
 
@@ -49,6 +41,8 @@ Optimizations/Cleanups [medium priority]
 - seperate game from engine a bit more
 - delete the sound object in Audio_Quit to allow restarting the whole
   sound system without memory leaks
+- look at #if 0,#endif and remove obsolete code
+- check various TODOs, FIXMEs and #warnings in the code
 
 Bugs [low priority]:
 
