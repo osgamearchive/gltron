@@ -1,9 +1,15 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#define MODEL_SOLID 0
+#define MODEL_LINES 1
+
+#define MODEL_FLAT 0
 #define MODEL_USE_MATERIAL 1
 #define MODEL_DRAW_BBOX    2
 
+#define MODEL_INVERT_NORMALS 1
+#define MODEL_NORMALIZE 2
 /* warning: changing this will break drawModel() */
 #define MODEL_FACESIZE 4
 
