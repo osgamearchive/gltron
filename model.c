@@ -303,7 +303,7 @@ Mesh* loadModel(const char *filename, float size, int flags) {
   /* copy data to Mesh structure */
   /* new: sort into sub meshes with by materials */
 
-  if(flags & 1) { /* invert normals */
+  if(flags & MODEL_INVERT_NORMALS) { /* invert normals */
     /* printf("inverting normals...really!\n"); */
     inv = -1;
   } else inv = 1;
@@ -341,6 +341,9 @@ Mesh* loadModel(const char *filename, float size, int flags) {
 	    /* copy face and normal data to meshVerts, meshNorms */
 	    vertex = vert + 3 * ( *(face + j * MODEL_FACESIZE + k) - 1);
 	    normal = norm + 3 * ( *(normi + j * MODEL_FACESIZE + k) - 1);
+	    if(flags & MODEL_NORMALIZE)
+	      normalize(normal);
+
 	    for(l = 0; l < 3; l++) {
 	      /* printf("%f ", vertex[l]); */
 	      *(meshVerts + 3 * (pos * MODEL_FACESIZE + k) + l) = *(vertex + l);
