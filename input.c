@@ -1,6 +1,7 @@
 #define KEYBOARD
 #include "gltron.h"
 #include "event.h"
+#include "console.h"
 
 /* I hear people are reading this file because they couldn't find the
    manual! Go to http://www.ards.net/Andreas/gltron.html#usage         */
@@ -84,10 +85,8 @@ void keyGame(int k, int x, int y)
 	return;
       }
     }
-
-    sprintf(messages, "key '%s' is not bound", SystemGetKeyName(k));
-    /* consoleAddLine(messages); */
-    fprintf(stderr, "%s\n", messages);
+    
+    displayMessage(TO_STDERR, "key '%s' is not bound", SystemGetKeyName(k));
   }
 }
 
