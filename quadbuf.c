@@ -140,6 +140,8 @@ int* getSortedQuads(QuadBuffer *q, float eye[3]) {
   for(i = 0; i < q->current; i++)
     if(processed[i] == 0)
       checkWall(eye, q, i, &pos, index, processed);
+
+  free(processed);
   return index;
 }
 
