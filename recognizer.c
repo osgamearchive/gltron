@@ -45,32 +45,45 @@ static void calcRecognizerPosition(float *posx, float *posy) {
   
 void drawRecognizerShadow() {
   float dirx, rx, ry;
+
+  /* states */
+
+  glEnable(GL_CULL_FACE);
+  if(game2->settingsCache.use_stencil) {
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_GREATER, 1, 1);
+    glEnable(GL_BLEND);
+    glColor4fv(shadow_color);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  } else {
+    glColor3f(0, 0, 0);
+    glDisable(GL_BLEND);
+  }
   
+  /* transformations */
+
   dirx = calcRecognizerDirection();
   
   calcRecognizerPosition(&rx, &ry);
 
   glPushMatrix();
   glMultMatrixf(shadow_matrix);
-  glColor4fv(shadow_color);
-  glEnable(GL_CULL_FACE);
-#ifdef DO_STENCIL
-  glEnable(GL_STENCIL_TEST);
-  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-  glStencilFunc(GL_GREATER, 1, 1);
-#endif
   glTranslatef( rx, ry, RECOGNIZER_HEIGHT);
   glRotatef(dirx, 0, 0, 1); /* up */
-
   glScalef(rec_scale_factor, rec_scale_factor, rec_scale_factor);
-
   glEnable(GL_NORMALIZE);
-  glColor3f(0.0, 0.0, 0.0);
+
+  /* render */
+
   drawModel(recognizer, TRI_MESH);
- 
-#ifdef DO_STENCIL
-  glDisable(GL_STENCIL_TEST);
-#endif
+
+  /* restore */
+
+  if(game2->settingsCache.use_stencil)
+    glDisable(GL_STENCIL_TEST);
+
+  glDisable(GL_BLEND);
   glDisable(GL_CULL_FACE);
   glPopMatrix();
 }

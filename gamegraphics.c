@@ -31,12 +31,12 @@ void drawGame() {
                game2->settingsCache.clear_color[2],
                game2->settingsCache.clear_color[3]);
 
-#ifdef DO_STENCIL
-  glClearStencil(0);
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-#else
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-#endif
+  if(game2->settingsCache.use_stencil) {
+    glClearStencil(0);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+  } else {
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+  }
 
   for(i = 0; i < vp_max[game->viewportType]; i++) {
     p = &(game->player[ viewport_content[i] ]);
@@ -462,44 +462,53 @@ void doCycleTurnRotation(Player *p) {
 void drawCycleShadow(Player *p, int lod) {
   Mesh *cycle;
 
+  if(p->data->exp_radius != 0)
+    return;
+
   lod += game2->settingsCache.shadow_lod;
   if(lod > LC_LOD - 1) lod = LC_LOD - 1;
 
   cycle = lightcycle[lod];
+
+  /* states */
+
+  glEnable(GL_CULL_FACE);
+
+  if(game2->settingsCache.use_stencil) {
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_GREATER, 1, 1);
+    glEnable(GL_BLEND);
+    glColor4fv(shadow_color);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  } else {
+    glColor3f(0, 0, 0);
+    glDisable(GL_BLEND);
+  }
+
+  /* transformations */
+
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
-
   glMultMatrixf(shadow_matrix);
   if (game2->settingsCache.turn_cycle) {
     doCycleTurnRotation(p);
   } else if (p->data->exp_radius == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
-
-  glEnable(GL_DEPTH_TEST);
-  glDepthMask(GL_TRUE);
-  glPolygonOffset(1, 1);
-  
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  /* fixme: 
-   * use glColor4fv(shadow_color); instead, but
-   * watch for z-buffer artefacts
-   */
-  glColor3f(0, 0, 0);
-
-  /* lightcycle local transformation */
-  /* glScalef(10, 10, 10); */
   glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-  /* glRotatef(90, 0, 0, 1); */
 
-  if(p->data->exp_radius == 0) {
-    glEnable(GL_CULL_FACE);
-    drawModel(cycle, TRI_MESH);
-    glDisable(GL_CULL_FACE);
-  }
+  /* render */
 
-  glPolygonOffset(0, 0);
+  drawModel(cycle, TRI_MESH);
+
+  /* restore */
+
+  if(game2->settingsCache.use_stencil)
+    glDisable(GL_STENCIL_TEST);
+
+  glDisable(GL_BLEND);
+  glDisable(GL_CULL_FACE);
   glPopMatrix();
 }
 
@@ -873,11 +882,11 @@ void drawCam(Player *p, gDisplay *d) {
     drawTrailShadow(game->player + i);
   }
 
+  glDepthMask(GL_TRUE);
   if (game2->settingsCache.show_recognizer) {
     drawRecognizerShadow();
   }
 
-  glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
 

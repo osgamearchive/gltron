@@ -177,21 +177,31 @@ void drawTrailShadow(Player* p) {
   float ex, ey;
   Data *data;
   data = p->data;
-  /* draw trail shadow */
+
+  /* states */
+
+  if(game2->settingsCache.use_stencil) {
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_GREATER, 1, 1);
+    glEnable(GL_BLEND);
+    glColor4fv(shadow_color);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  } else {
+    glColor3f(0, 0, 0);
+    glDisable(GL_BLEND);
+  }
+
+  /* transformation */
 
   glPushMatrix();
   glMultMatrixf(shadow_matrix);
 
   height = data->trail_height;
-  if (game2->settingsCache.softwareRendering == 0) {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  }
 
-  glColor4fv(shadow_color);
+  /* render */
 
   glBegin(GL_QUADS);
-
   line = &(data->trails[0]);
   while(line != data->trail) { /* the current line is not drawn */
     glNormal3f(0.0, 0.0, 1.0);
@@ -214,10 +224,17 @@ void drawTrailShadow(Player* p) {
   ey = getSegmentEndY(line, data, 0);
   glVertex3f(ex, ey, height);
   glVertex3f(ex, ey, 0.0);
-
   glEnd();
+
   /* trail bow */
   drawTrailBow(p, 0);
+
+  /* restore */
+
+  if(game2->settingsCache.use_stencil)
+    glDisable(GL_STENCIL_TEST);
+
+  glDisable(GL_BLEND);
 
   glPopMatrix();
 }
