@@ -139,8 +139,8 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   int dt;
 
 	if(game2->time.dt == 0) {
-		dt = SystemGetElapsedTime() - last;
-		last = SystemGetElapsedTime();
+		dt = nebu_Time_GetElapsed() - last;
+		last = nebu_Time_GetElapsed();
 	} else {
 		dt = game2->time.dt;
 	}
