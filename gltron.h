@@ -153,7 +153,7 @@ enum {
 #define CAM_FOLLOW_SPEED_FACTOR 1.0 / 82.0
 #define CAM_SPEED 0.000349
 
-#define CAM_COCKPIT_Z 3
+#define CAM_COCKPIT_Z 4
 
 #define CAM_R_MIN 2.0
 #define CAM_R_MAX 100
