@@ -64,8 +64,8 @@ void keyGame(int k, int x, int y)
     break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
-  case SYSTEM_KEY_F11: doBmpScreenShot(); break;
-  case SYSTEM_KEY_F12: doScreenShot(); break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
+  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
 
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;

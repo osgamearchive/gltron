@@ -67,7 +67,8 @@ void keyboardPause(int key, int x, int y) {
 		   game->player[i].data, 
 		   getSettingi("camType"));
     break;
-  case SYSTEM_KEY_F12: doScreenShot(game->screen->vp_w, game->screen->vp_h); break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
+  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
     
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;

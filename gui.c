@@ -208,8 +208,8 @@ void keyboardGui(int key, int x, int y) {
     if(pCurrent->iHighlight < 0)
       pCurrent->iHighlight = pCurrent->nEntries - 1;
     break;
-  case SYSTEM_KEY_F11: doBmpScreenShot(); break;
-  case SYSTEM_KEY_F12: doScreenShot(); break;
+  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
+  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
     /* debug code follows */
   case 'l':
     printf("%d entries:\n", pCurrent->nEntries);
