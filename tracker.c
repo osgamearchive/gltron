@@ -69,6 +69,8 @@ tracker_infos(Trackerpacket *packet)
   printf("erase       : %d\n",servers[which].erase ); 
   printf("description : %s\n",servers[which].description ); 
   printf("version     : %s\n",servers[which].version );  
+  servers[which].ping=0;
+  servers[which].packets=0;
 
   #ifndef macintosh /* no ntohl on MacOS */
   printf("IP          : %d.%d.%d.%d:%i\n",
