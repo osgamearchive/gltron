@@ -291,7 +291,7 @@ scroll_wlist(Wlist *wlist, int dir)
     {
     case LIST_SCROLL_UP:
       if( wlist->current == -1 )
-	wlist->current = wlist->rlines;
+	wlist->current = wlist->rlines-1;
       else if( wlist->current != 0 )
 	wlist->current--;
       if( wlist->current < wlist->scroll )
@@ -305,8 +305,8 @@ scroll_wlist(Wlist *wlist, int dir)
       break;
     }
   if( wlist->focus != NULL )
-    wlist->focus(wlist, wlist->current);
-  printf("current %d\n",wlist->current); 
+    wlist->focus(wlist, wlist->index[wlist->current]);
+  printf("current %d\n",wlist->index[wlist->current]); 
 }
 int
 getcurrent_wlist( Wlist *wlist )

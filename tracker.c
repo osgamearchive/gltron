@@ -50,7 +50,7 @@ void
 tracker_infos(Trackerpacket *packet)
 {
   int which = packet->which;
-  char **cols;
+  //char **cols;
   char  host[255];
   //char *cols[6];
   int i;
@@ -89,30 +89,32 @@ tracker_infos(Trackerpacket *packet)
   printf("nbplayers   : %d\n",servers[which].nbplayers ); 
   printf("------------------------------------------\n");
 
-  cols = (char**)malloc(sizeof(char*)*6);
-  for(i=0; i<6; ++i)
-    {
-      cols[i] = (char *) malloc(255);
-    }
+/*   cols = (char**)malloc(sizeof(char*)*6); */
+/*   for(i=0; i<6; ++i) */
+/*     { */
+/*       cols[i] = (char *) malloc(255); */
+/*     } */
 
-  sprintf(cols[0], "%d.%d.%d.%d:%d",
-	 (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
-	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16,
-	 (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8,
-	 ntohl(servers[which].ipaddress.host) & 0x000000ff,
-	  servers[which].ipaddress.port);
-  sprintf(cols[1], "v:%d s:%d e:%d", servers[which].speed,
-	  servers[which].size, servers[which].erase);
-  sprintf(cols[2], "%s", servers[which].description);
-  sprintf(cols[3], "%d", servers[which].nbplayers);
-  sprintf(cols[4], "%s", servers[which].version);
-  sprintf(cols[5], "%d", servers[which].ping);
+/*   sprintf(cols[0], "%d.%d.%d.%d:%d", */
+/* 	 (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24, */
+/* 	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16, */
+/* 	 (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8, */
+/* 	 ntohl(servers[which].ipaddress.host) & 0x000000ff, */
+/* 	  servers[which].ipaddress.port); */
+/*   sprintf(cols[1], "v:%d s:%d e:%d", servers[which].speed, */
+/* 	  servers[which].size, servers[which].erase); */
+/*   sprintf(cols[2], "%s", servers[which].description); */
+/*   sprintf(cols[3], "%d", servers[which].nbplayers); */
+/*   sprintf(cols[4], "%s", servers[which].version); */
+/*   sprintf(cols[5], "%d", servers[which].ping); */
+
+
   sprintf(host, "%d.%d.%d.%d",
-	 (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
+	  (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
 	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16,
-	 (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8,
+	  (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8,
 	  ntohl(servers[which].ipaddress.host) & 0x000000ff);
-
+  
   make_ping(which, servers, host, PINGPORT);
   nbservers++;
   i = addRow_wlist  ( serverlist, 1 );
