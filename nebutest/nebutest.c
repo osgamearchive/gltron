@@ -11,7 +11,7 @@ void testMesh(void)
 {
 	nebu_Mesh_3ds_File *pFile;
 	
-	pFile = nebu_Mesh_3ds_LoadFile("testMesh.3ds");
+	pFile = nebu_Mesh_3ds_LoadFile("models/teapot.3ds");
 	if(!pFile)
 		return;
 	pMesh = nebu_Mesh_3ds_GetFromFile(pFile);
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	window_id = nebu_Video_Create("nebutest");
 
 	// test: mesh handling
-	// testMesh();
+	testMesh();
 
 	nebu_System_SetCallback_Display(display);
 	nebu_System_SetCallback_Idle(idle);
@@ -36,5 +36,4 @@ int main(int argc, char *argv[])
 	nebu_Video_Destroy(window_id);
 
 	return 0;
-
 }
