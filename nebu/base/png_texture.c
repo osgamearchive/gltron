@@ -31,6 +31,7 @@ png_texture* load_png_texture(const char *filename) {
   png_byte **row_pointers;
   
   f = fopen(filename, "rb");
+  // fprintf(stderr, "[load_png_texture] opening %s\n", filename);
   if(f == NULL) {
     fprintf(stderr, ERR_PREFIX "can't open file %s\n", filename);
 	fprintf(stderr, ERR_PREFIX "errno: %d - %s", errno, strerror(errno));
