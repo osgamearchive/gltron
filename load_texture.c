@@ -28,7 +28,10 @@ texture* loadTextureData(const char *filename) {
 void loadTexture(const char *filename, int format) {
   texture *tex;
   GLint internal;
-
+	int maxSize;
+	
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize);
+	
   tex = loadTextureData(filename);
   if(tex->channels == 3) internal = GL_RGB;
   else internal = GL_RGBA;
@@ -38,37 +41,34 @@ void loadTexture(const char *filename, int format) {
   }
   /* TODO: build mipmaps the proper way, box filters suck */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-  if(getSettingi("use_mipmaps")) {
-    texture *newtex;
-    int level = 0;
-
-    glTexImage2D(GL_TEXTURE_2D, level, format, tex->width, tex->height,
-		 0, internal, GL_UNSIGNED_BYTE, tex->data);
+	
+	{
+		texture *newtex;
+		int level = 0;
     while (tex->width > 1 || tex->height > 1) {
+			if(tex->width <= maxSize && tex->height <= maxSize) {
+					glTexImage2D(GL_TEXTURE_2D, level, format, 
+											 tex->width, tex->height,
+											 0, internal, GL_UNSIGNED_BYTE, tex->data);
+					printf("uploading level %d, %dx%d texture\n", 
+								 level, tex->width, tex->height);
+					if(level == 0 && !getSettingi("use_mipmaps")) { 
+						level++;
+						break;
+					}
+					level++;
+			}
       newtex = mipmap_png_texture(tex, 1, 0, 0);
       freeTextureData(tex);
       tex = newtex;
-      level++;
-      /*
-      fprintf(stderr, "creating mipmap level %d, size(%d, %d)\n", 
-	      level, tex->width, tex->height);
-      */
-      glTexImage2D(GL_TEXTURE_2D, level, format, tex->width, tex->height,
-		   0, internal, GL_UNSIGNED_BYTE, tex->data);
-    }
-  } else { 
-      glTexImage2D(GL_TEXTURE_2D, 0, format, tex->width, tex->height, 0,
-		   internal, GL_UNSIGNED_BYTE, tex->data);
-  }
-    /*
-  if(getSettingi("use_mipmaps")) {
-    gluBuild2DMipmaps(GL_TEXTURE_2D, format, tex->width, tex->height, 
-		      internal, GL_UNSIGNED_BYTE, tex->data);
-  } else { 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, tex->width, tex->height, 0,
-		 internal, GL_UNSIGNED_BYTE, tex->data);
-  }
-    */
-  freeTextureData(tex);
+		}
+		if(level == 0 || getSettingi("use_mipmaps")) {
+			glTexImage2D(GL_TEXTURE_2D, level, format, 
+									 tex->width, tex->height,
+									 0, internal, GL_UNSIGNED_BYTE, tex->data);
+			printf("uploading level %d, %dx%d texture\n", 
+						 level, tex->width, tex->height);
+		}
+		freeTextureData(tex);
+	}
 }
