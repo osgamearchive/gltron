@@ -3,11 +3,18 @@
 static Uint32 ping = 0;
 static Uint32 savedtime = 0; 
 static int    observerstate = 0;
+static int    nbpings = 1;
 
+enum
+  {
+    ASKED,         //the turn has been asked to the server
+    PREDICTED      //the client has made the turn ( perdiction )    
+  };
 typedef struct Predictedturn *Predictedturn;
 typedef struct Predictedturn {
   int            dir;
   int            time;
+  int            statut;
   Predictedturn  next;
 } predictedturn;
 
@@ -16,6 +23,8 @@ typedef struct TurnList {
 } TurnList;
 
 TurnList *turnlist;
+
+void free_turn(Predictedturn turn);
 
 void
 login(char *name)
@@ -165,6 +174,7 @@ do_serverinfo(Packet packet)
 /* 	    } // I used that for synchronization. */
       //ping       = 0;
 	  ping = slots[me].ping;
+	  nbpings = 1;
 	  savedtime  = 0;
 	  game2->time.current=0;
 	  
@@ -603,7 +613,7 @@ handleUDP()
 int
 getping()
 {
-  return ping;
+  return ping/nbpings;
 }
 
 void
@@ -614,7 +624,8 @@ makeping(int time)
       savedtime = SystemGetElapsedTime();
       //ping = 0;
     } else {
-      ping = SystemGetElapsedTime() - savedtime;
+      ping += SystemGetElapsedTime() - savedtime;
+      ++nbpings;
       savedtime=0;
     }
 }
@@ -625,9 +636,10 @@ doPredictedTurn(int dir, int time)
   Predictedturn turn, new;
 
   new = (Predictedturn) malloc(sizeof(predictedturn));
-  new->dir = dir;
-  new->time = time;
-  new->next = NULL;
+  new->dir     = dir;
+  new->time    = time;
+  new->statut  = ASKED;
+  new->next    = NULL;
   
 
   //insert in queue
@@ -637,8 +649,10 @@ doPredictedTurn(int dir, int time)
       turnlist->head = new;
       return;
     }
+  
   while( turn->next )
     { turn = turn->next; }
+
   turn->next = new;    
 }
 
@@ -653,9 +667,19 @@ idleTurns(  )
 
   if( turn != NULL )
     {
-      //turns are ordered
-      if( (game2->time.current - turn->time) >= ((short)ping/2) )
+      //find first turn to predict
+      while( turn != NULL  ) {
+	printf("turn status is %s ( %d / %d )\n", (turn->statut == PREDICTED)? "PREDICTED" : "ASKED", game2->time.current - turn->time, ping);
+	if( turn->statut == ASKED )
+	  break;
+	turn=turn->next;
+      }
+      if( turn == NULL )	
+	  return;
+
+      if( (game2->time.current - turn->time) >= ((short)ping/(2*nbpings)) )
 	{
+	  turn->statut = PREDICTED;
 	  printf("creating turn... at %d\n", game2->time.current);
 	  printf("predicted pos is: %f, %f\n", 
 		     game->player[0].data->posx,
@@ -665,18 +689,73 @@ idleTurns(  )
 	  case TURN_LEFT: e->type = EVENT_TURN_LEFT; break;
 	  case TURN_RIGHT: e->type = EVENT_TURN_RIGHT; break;
 	  }
-	  e->x = game->player[0].data->iposx;
-	  e->y = game->player[0].data->iposy;
+	  e->x = game->player[0].data->posx;
+	  e->y = game->player[0].data->posy;
 	  e->player = 0;
 	  e->timestamp = game2->time.current;
 	  processEvent(e);
-	  //Free this turn!
-	  turnlist->head = turn->next;
-	  free(turn);
 	}
     }
 }
 
+int
+undoTurn(int x, int y, int time)
+{
+  int              ping=0;
+  line             *old, *cur;
+  Predictedturn    turn;
+  int              nbPredictedTurn;
+
+  printf("undoTurn pos x=%d, y=%d at time=%d\n", x, y, time);
+
+  turn = turnlist->head;
+  if( turn == NULL )
+    return 0;
+
+  //search for turn to undo turn = turnlist->head;
+  //we need to get the last PREDICTED ( oldest one )
+  while( turn!= NULL && turn->statut != PREDICTED ) { turn=turn->next; }
+
+  nbPredictedTurn = get_size_predictedturn();
+  printf("nbPredictedTurn %d\n", nbPredictedTurn);
+
+  if( nbPredictedTurn == 0 )
+    {     
+      //free the prediction
+      free_turn(turnlist->head);
+      return 0;
+    }
+
+  //turn is our turn to undo
+  old= game->player[0].data->trail-nbPredictedTurn;
+  old->ex=x;
+  old->ey=y;
+ 
+	  
+  cur=game->player[0].data->trail-nbPredictedTurn+1;
+  cur->sx = x;
+  cur->sy = y;
+
+  //Changing position of cycle
+  ping=getping();
+
+printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",time+ping/2, time, (time+ping/2), (ping/2)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
+
+  game->player[0].data->posx=(ping/2)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+x;
+  
+  game->player[0].data->posy=(ping/2)*game->player[0].data->speed*dirsY[ game->player[0].data->dir]/100+y;
+	      
+  game->player[0].data->iposx=game->player[0].data->posx;
+  game->player[0].data->iposy=game->player[0].data->posy;
+
+  printf("new pos is: %f, %f\n",  
+	 game->player[0].data->posx,
+	 game->player[0].data->posy);
+
+  //Free this turn!
+  free_turn(turn);
+  return 1;
+}
 
 void
 createTurnList()
@@ -706,6 +785,35 @@ initTurnList( )
   turnlist->head=NULL;
 }
 
+void
+free_turn(Predictedturn turn)
+{
+  Predictedturn cur, next;
+
+  cur = turnlist->head;
+  if( cur == NULL )
+    return;
+
+  if( turn == cur )
+    {
+      turnlist->head = turn->next;
+      free(turn);
+      return;
+    }
+
+  next = cur->next;
+  
+  //search turn
+  while( next != NULL )
+    {
+      if( next == turn ) 
+	break;
+      cur = next;
+      next = next->next;
+    }
+  cur->next = next->next;
+  free(turn);
+}
 
 void
 freeTurnList()
@@ -713,4 +821,27 @@ freeTurnList()
   initTurnList();
   free(turnlist);
   turnlist=NULL;
+}
+
+int
+get_size_predictedturn()
+{
+  int           size = 0;
+  Predictedturn turn = turnlist->head;
+
+  if( turn == NULL )
+    {
+      fprintf(stderr, "Error when finding nb Predicted Turns\n");
+      return 0;
+    }
+
+  while( turn )
+    {
+      printf("turn status is %s\n", (turn->statut == PREDICTED)? "PREDICTED" : "ASKED");
+      if( turn->statut == PREDICTED )
+	size++; 
+      turn=turn->next;
+    }
+
+  return size;
 }

@@ -575,6 +575,8 @@ extern void  idleTurns         ( void );
 extern void  initTurnList      ( void );
 extern void  freeTurnList      ( void );
 extern void  doPredictedTurn   ( int, int );
+extern int   get_size_predictedturn();
+extern int   undoTurn          ( int, int, int );
 #ifdef USEUDP
 extern void  handleUDP         ( void );
 #endif
