@@ -49,6 +49,18 @@ TurnList *turnlist;
 void free_turn(Predictedturn turn);
 
 
+static void printSynchPacket( Packet p ) {
+  if( p.type != SYNCH )
+    return;
+  
+  printf("\nSynchpacket %8p:\n", &p );
+  printf("\ttype=%d\n",p.infos.synch.type);
+  printf("\tdata.u.s=%u\n",p.infos.synch.data.u.s);
+  printf("\tdata.u.c=%u\n",p.infos.synch.data.u.c);
+  printf("\tdata.s.s=%d\n",p.infos.synch.data.s.s);
+  printf("\tdata.s.c=%d\n",p.infos.synch.data.s.c);
+}
+
 
 //----------------------------------------------------------------------------------------------
 
@@ -619,6 +631,8 @@ do_synch( Packet packet )
   now  = SDL_GetTicks();
 
   lag  = ( now - last ) / 2.0f ;
+
+  printSynchPacket( packet );
 
   switch( packet.infos.synch.type ) {
   case 0:

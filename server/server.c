@@ -19,6 +19,19 @@ int nbSynch = 0;
 static int  getping();
 static void makeping();
 
+
+static void printSynchPacket( Packet p ) {
+  if( p.type != SYNCH )
+    return;
+  
+  printf("\nSynchpacket %8p:\n", &p );
+  printf("\ttype=%d\n",p.infos.synch.type);
+  printf("\tdata.u.s=%u\n",p.infos.synch.data.u.s);
+  printf("\tdata.u.c=%u\n",p.infos.synch.data.u.c);
+  printf("\tdata.s.s=%d\n",p.infos.synch.data.s.s);
+  printf("\tdata.s.c=%d\n",p.infos.synch.data.s.c);
+}
+
 void
 start_server()
 {
@@ -604,35 +617,7 @@ do_startgame( int which, Packet packet )
     }
 }
 
-void
-do_startconfirm(int which, Packet packet)
-{
-  int time=packet.infos.action.which/2;
 
-  makeping();
-  printf("+ ping start -> confirm = %d at %d\n", getping(), game2->time.current);
-
-  if( slots[which ].isMaster != 1 )
-    return;
-
-
-
-  game2->time.lastFrame = time;
-  game2->time.current   = time;
-  game2->time.offset    = SystemGetElapsedTime();
-
-  if( ! hasstarted )
-    {
-    timeout             = SystemGetElapsedTime();
-    hasstarted = 1;
-    }
-  game2->events.next = NULL;
-  game2->mode = GAME_SINGLE;
-  printf("starting game with %d players at %d\n", game->players, game2->time.current); 
-  printf("- do_startgame\n");
-  printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
-	 game->player[0].data->iposy, game->player[0].data->dir);
-}
 
 void
 do_chgenbwins(int which, Packet packet)
@@ -891,7 +876,7 @@ do_synch( int which, Packet packet )
   last = now;
   now = SDL_GetTicks();
   lag = ( now - last ) / 2.0f;
-
+  printSynchPacket( packet );
   switch(packet.infos.synch.type ) {
   case 0:
     rep.infos.synch.type = 1;
@@ -920,7 +905,7 @@ do_synch( int which, Packet packet )
   if ( nbSynch == users  )
     {
       //game2->time.current   = SDL_GetTicks();
-      game2->time.offset    = (Sint32)SDL_GetTicks();
+      //game2->time.offset    = (Sint32)SDL_GetTicks();
       printf("######################## TIME %d ( %u )#####################\n", game2->time.offset, SDL_GetTicks());
       printf("wait until %u\n", rep.infos.synch.data.u.s );
       while( SDL_GetTicks() < rep.infos.synch.data.u.s );
