@@ -44,7 +44,6 @@ void trailStatesShadowed(void) {
 
 void trailStatesRestore(void) {
 	glDisable(GL_COLOR_MATERIAL);
-	glCullFace(GL_BACK);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
