@@ -6,28 +6,72 @@ Uint8 tmp[65536];
 #define EPSILON 0.1f	 
 #define SOUND_VOL_THRESHOLD 0.1
 #define VOLSCALE_BASE 1000
-     
-int fxShift(float shift, Uint8 *target, Uint8 *source, int len) {
-  int i, j, k;
-  float l;
-  float pa = 0;
 
+#define MAX(x,y) (( (x) > (y) ) ? (x) : (y))
+
+/*!
+  \fn int fxShift(float shift, Uint8 *target, Uint8 *source, int len)
+
+  \param shift   Shift of the frequency (new_frequency = shift * old_frequency)
+  \param target  Target buffer to mix into; format: Sint16 LR stereo
+  \param source  The buffer to mix from
+  \param len     The amount of bytes to mix into the target buffer
+ 
+  \return        The amount of samples read from the source
+*/
+
+int fxComputeShiftLen(float shift, int len) {
+  return (int) ( (len - 1) * shift + 1 );
+}
+
+int fxShift(float shift, Uint8 *target, Uint8 *source, int len) {
+  int i, j;
+
+  // amount of samples to mix/write
   len /= 4; 
 
   for(i = 0; i < len; i++) { // LR pairs 
     for(j = 0; j < 2; j++) { // channels
-      pa = i * shift;
-      k = (int) pa;
-      l = pa - k;
+      Sint32 result = 0;
+      int pa;
+      float t;
 
-      *(Sint16*) (target + 2 * j + 4 * i) += (Sint16) 
-	( *(Sint16*) (source + 2 * j + 4 * (k + 0) ) * ( 1 - l ) +
-	  *(Sint16*) (source + 2 * j + 4 * (k + 2) ) * ( l ) );
+      pa = (int) (i * shift);
+      t = (i * shift) - pa;
+
+      result = (Sint32) (
+	*( (Sint16*) target + j + 2 * i) * 1.0f +
+	*( (Sint16*) source + j + 2 * (pa + 0) ) * (1.0f - t) +
+	*( (Sint16*) source + j + 2 * (pa + 1) ) * (t) );
+
+#define MAX_SINT16 ((1 << 15) - 1)
+#define MIN_SINT16 (- (1 << 15) )
+      if(result > MAX_SINT16) {
+	result = MAX_SINT16;
+	fprintf(stderr, "overflow\n");
+      } else if(result < MIN_SINT16) {
+	result = MIN_SINT16;
+	fprintf(stderr, "underflow\n");
+      }
+
+      *( (Sint16*) target + j + 2 * i ) = (Sint16) result;
+      /* *(Sint16*) (target + 2 * j + 4 * i) += (Sint16) 
+	 ( *(Sint16*) (source + 2 * j + 4 * (k + 0) ) * ( 1 - l ) +
+	 *(Sint16*) (source + 2 * j + 4 * (k + 2) ) * ( l ) ); */
       
     }
   }
-  return ( (int)(len * shift + 0.49999) ) * 4;
+  return 4 * fxComputeShiftLen(shift, len);
 }
+
+/*!
+  \fn void fxPan(float pan, float vol, Uint8 *buf, int len)
+  
+  \param vol   Volume (for distance attenuation), should be between 0 and 1
+  \param pan   Panning, -1.0 is left, 1.0 is right, 0.0 is center
+  \param buf   The sample to be modified in-place, format: Sint16 LR stereo
+  \param len   Number of bytes
+*/
 
 void fxPan(float pan, float vol, Uint8 *buf, int len) {
   int i;
@@ -106,12 +150,14 @@ namespace Sound {
     if(_source->IsPlaying()) {
       int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
       float pan, shift, vol;
-
+      int clen, shifted_len;
 
       GetModifiers(pan, vol, shift);
       // printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
 
-      int clen = (int)((len / 4) * shift + 1) * 4;
+      shifted_len = 4 * fxComputeShiftLen( shift, len / 4 );
+      clen = MAX(len, shifted_len) + 32; // safety distance
+
       assert(clen < _source->_buffersize);
 
       if(vol > SOUND_VOL_THRESHOLD) {
@@ -126,23 +172,20 @@ namespace Sound {
 	}
 
 	fxPan(pan, vol, tmp, clen);
-
-	// fxPan(pan, vol, tmp, len);
-	// SDL_MixAudio(data, tmp, len, SDL_MIX_MAXVOLUME);
-
 	// fxshift mixes the data to the stream
 	_position += fxShift(shift, data, tmp, len);
 
 	if(_position > _source->_buffersize)
 	  _position -= _source->_buffersize;
 
-	//fprintf(stderr, "mixed %s\n", GetName());
 	return 1; // mixed something
       }
     }
     return 0; // didn't mix anything to the stream
   }
 }
+
+
 
 
 
