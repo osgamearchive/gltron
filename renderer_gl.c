@@ -8,7 +8,7 @@ GLstate rendererState;
 GLstate *state = &rendererState;
 Renderer renderer;
 
-int rendererExtensionSupported(const char *extension);
+static int rendererExtensionSupported(const char *extension);
 
 void clearState() {
   state->tex_id = 0;
@@ -70,7 +70,7 @@ void renderQuad(Quad *q) {
 #endif
 }
 
-int rendererExtensionSupported(const char *extension) {
+static int rendererExtensionSupported(const char *extension) {
   const GLubyte *extensions = NULL;
   const GLubyte *start;
   GLubyte *where, *terminator;
