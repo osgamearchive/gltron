@@ -635,7 +635,7 @@ int playerVisible(Player *eye, Player *target) {
   else
     return i;
 }
-	    
+
 void drawPlayers(Player *p) {
   int i;
   float height;
@@ -645,9 +645,17 @@ void drawPlayers(Player *p) {
     height = game->player[i].data->trail_height;
 
     if (game2->settingsCache.show_model) {
+
+      printf("%p %p \n", p, &game->player[i]);
+
+      /* don't draw our bike in cockpit mode */
+      if (game2->settingsCache.camType == CAM_TYPE_COCKPIT && 
+          p == &game->player[i]) {
+        continue;
+      }
       lod = playerVisible(p, &(game->player[i]));
       if (lod >= 0) { 
-	drawCycle(&(game->player[i]), lod);
+        drawCycle(&(game->player[i]), lod);
       }
     }
   }

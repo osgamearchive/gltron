@@ -112,6 +112,7 @@ typedef struct SettingsCache {
   int fast_finish;
   int playMusic;
   int playEffects;
+  int camType;
   float znear;
   float clear_color[4];
 } SettingsCache;

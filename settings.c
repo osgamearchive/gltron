@@ -133,6 +133,7 @@ void updateSettingsCache() {
   game2->settingsCache.fast_finish = getSettingi("fast_finish");
   game2->settingsCache.fov = getSettingf("fov");
   game2->settingsCache.znear = getSettingf("znear");
+  game2->settingsCache.camType = getSettingi("camType");
   game2->settingsCache.playEffects = getSettingi("playEffects");
   game2->settingsCache.playMusic = getSettingi("playMusic");
   scripting_GetFloatArray("clear_color", game2->settingsCache.clear_color, 4);
