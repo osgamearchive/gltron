@@ -9,6 +9,7 @@ namespace Sound {
 		_sample_buffersize = 8192;
     _buffersize = 20 * _sample_buffersize;
 		_buffer = (Uint8*) malloc( _buffersize );
+		memset(_buffer, 0, _buffersize);
 
 		_decoded = 0;
     _read = 0;
@@ -41,11 +42,11 @@ namespace Sound {
   void SourceMusic::CreateSample(void) {
     _rwops = SDL_RWFromFile(_filename, "rb");
     _sample = Sound_NewSample(_rwops, NULL,
-			      _system->GetAudioInfo(),
-			      _sample_buffersize );
+															_system->GetAudioInfo(),
+															_sample_buffersize );
     if(_sample == NULL) {
       fprintf(stderr, "[error] failed loading sample: %s\n", 
-	      Sound_GetError());
+							Sound_GetError());
       return;
     } 
 
@@ -135,7 +136,7 @@ namespace Sound {
 
 			// check for end of sample, loop
 			if(_sample->flags) {
-				// some error has occurer, maybe end of sample reached
+				// some error has occured, maybe end of sample reached
 				SDL_SemWait(_sem);
 				CleanUp();
 				fprintf(stderr, "end of sample reached!\n");
@@ -145,17 +146,13 @@ namespace Sound {
 						_loop--;
 					CreateSample();
 				} else {
+					// todo: let playback finish, because there's still data
+					// in the buffer that has to be mixed
 					_isPlaying = 0;
+					// todo: notify sound system (maybe load another song?)
 				}
 				SDL_SemPost(_sem);
 			}
 		} // buffer has been filled
 	}
 }
-
-
-
-
-
-
-
