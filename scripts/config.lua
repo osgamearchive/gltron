@@ -24,7 +24,7 @@ settings.wall_accel_use = 1.0
 settings.wall_accel_decrease = 0.8
 
 settings.ai_level = 2
-settings.level = "square"
+settings.current_level = "square.lua"
 settings.grid_size = 720
 settings.erase_crashed = 1
 settings.map_ratio_w = 0.333
@@ -40,12 +40,13 @@ settings.camType = 1
 settings.display_type = 3
 
 -- video
-settings.artpacks = { }
+-- settings.artpacks = { }
 settings.current_artpack = "classic"
 -- detail settings
 settings.mipmap_filter = 3
 settings.alpha_trails = 0
 settings.show_glow = 1
+settings.reflection = -1
 settings.show_recognizer = 1
 settings.show_impact = 1
 settings.lod = 1
@@ -79,7 +80,7 @@ settings.screenSaver = 0
 settings.joy_threshold = 0.10
 
 -- audio
-settings.tracks = { }
+-- settings.tracks = { }
 settings.current_track = "revenge_of_cats.it"
 -- music & fx settings
 settings.playEffects = 1
