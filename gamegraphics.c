@@ -356,26 +356,18 @@ void drawCycleShadow(Player *p, int lod, int drawTurn) {
 }
 
 static void drawImpact(Player *p) {
-  float setback;
 
   glDisable(GL_LIGHTING);
   glPushMatrix();
 
   glRotatef(90, 90, 0, 1);
 
-  if (p->data->iposx < 0 || p->data->iposx >= game2->rules.grid_size  -1 ||
-      p->data->iposy < 0 || p->data->iposy >= game2->rules.grid_size -1) {
-    setback = -1.5; /* enough to clear the arena wall */
-  } else {
-    setback = -0.5; /* enough to clear the trail */
-  }
-
   /*
    * Drop impact slightly below the floor and move it a tiny bit
    * back from the impact point so we don't draw behind the
    * trail/wall that's hit.
    */
-  glTranslatef(0.0, -0.5, setback);
+  glTranslatef(0.0, -0.5, -0.5);
 
   glColor3f(0.68, 0, 0);
   
