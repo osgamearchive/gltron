@@ -19,9 +19,4 @@ enum {
 #endif
 };
 
-enum {
-  BILINEAR = 0,
-  TRILINEAR = 1
-};
-
 #endif

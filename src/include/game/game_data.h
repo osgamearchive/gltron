@@ -20,11 +20,6 @@ enum {
 #endif
 };
 
-enum {
-  BILINEAR = 0,
-  TRILINEAR = 1
-};
-
 typedef struct Grid {
   int width, height;
   unsigned char *data;
