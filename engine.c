@@ -7,8 +7,8 @@ enum {
 };
 
 int getCol(int x, int y) {
-  if(x < 0 || x >= getSettingi("grid_size") -1 ||
-     y < 0 || y >= getSettingi("grid_size") -1 ||
+  if(x < 0 || x >= game2->rules.grid_size -1 ||
+     y < 0 || y >= game2->rules.grid_size -1 ||
      colmap[ y * colwidth + x ] != 0)
     return 1;
   else return 0;
@@ -89,7 +89,7 @@ void initGameStructures() { /* called only once */
   }
 
   /* load recognizer model */
-  path = getFullPath("recognizer.obj.gz");
+  path = getPath(PATH_DATA, "recognizer.obj.gz");
   if(path != NULL) {
     recognizer = readMeshFromFile(path);
     /* old code did normalize & invert normals & rescale to size = 60 */
@@ -101,7 +101,7 @@ void initGameStructures() { /* called only once */
 
   /* load lyghtcycle models */
   for(i = 0; i < LC_LOD; i++) {
-    path = getFullPath(lc_lod_names[i]);
+    path = getPath(PATH_DATA, lc_lod_names[i]);
     if(path != NULL) {
       lightcycle[i] = readMeshFromFile(path);
     } else {
@@ -200,6 +200,8 @@ void initData() {
 
   game2->rules.speed = getSettingf("current_speed");
   game2->rules.eraseCrashed = getSettingi("erase_crashed");
+  game2->rules.grid_size = getSettingi("grid_size");
+
   /* time management */
   game2->time.lastFrame = 0;
   game2->time.current = 0;
