@@ -168,10 +168,10 @@ void video_LoadLevel(void) {
 }
 	
 void video_ResetData(void) {
-	printf("[status] reset video data\n");
-
-  /* for each player */
   int i;
+
+  printf("[status] reset video data\n");
+
   for(i = 0; i < game->players; i++) {
 		PlayerVisual *pV = gPlayerVisuals + i;
     {

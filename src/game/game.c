@@ -15,10 +15,10 @@ void loadLevel(void) {
 		free(path);
 	}
 	else
-		{
-			printf("[fatal] can't get valid path for level\n");
-			exit(1); // fatal
-		}
+	{
+		printf("[fatal] can't get valid path for level\n");
+		exit(1); // fatal
+	}
 }
 
 void GameMode_Idle(void) {
