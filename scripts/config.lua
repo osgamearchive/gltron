@@ -21,18 +21,28 @@ use_mipmaps = 1
 mipmap_filter = 1
 stretch_textures = 1
 -- detail settings
-
+alpha_trails = 1
+show_glow = 1
+show_model = 1
+show_recognizer = 1
+lod = 1
+shadow_lod = 1
+show_fps = 0
+show_ai_status = 1
+show_scores = 1
 -- other settings
 show_gl_logo = 1
 windowMode = 1
 
 -- audio
 playEffects = 1
-playMusic = 0
+playMusic = 1
+fxVolume = 0.3
+musicVolume = 0.3
 
 -- colors
 
--- this setting is overridden in artpack.ini
+-- this setting is usually overridden in artpack.ini
 clear_color = { 0, 0, 0, 0 }
 
 model_diffuse_0 = { 1.000, 1.000, 0.000, 1.000 }
