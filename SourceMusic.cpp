@@ -43,11 +43,23 @@ namespace Sound {
   void SourceMusic::Load(char *filename) {
     // FIXME: grow buffer as needed
 #define BUFSIZE 10 * 1024 * 1024
-    file_handle file = file_open(filename, "r");
+    file_handle file = file_open(filename, "rb");
     if(_mem != NULL) free(_mem);
     _mem = (void*) malloc(BUFSIZE);
-    _mem_size = file_read(file, _mem, BUFSIZE);
-    fprintf(stderr, "read %d bytes\n", _mem_size);
+    _mem_size = 0;
+    int readbytes;
+    while(1) {
+      readbytes = file_read(file, (char*)_mem + _mem_size, 8192);
+      _mem_size += readbytes;
+      if(readbytes != 8192) {
+	if( feof( file ) ) {
+	  fprintf(stderr, "eof reached\n");
+	}
+	fprintf(stderr, "read %d bytes from %s, error number %d\n", readbytes, filename,  ferror( file ));
+	break;
+      }
+    }
+    fprintf(stderr, "read a total of %d bytes\n", _mem_size);
     file_close(file);
     CreateSample();
   }
