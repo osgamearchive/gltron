@@ -2,8 +2,8 @@ dnl Process this file with autoconf to produce a configure script.
 
 dnl initialisation
 AC_INIT(gltron.c)
+AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE(gltron, 0.61am)
 
 
