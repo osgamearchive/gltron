@@ -712,7 +712,7 @@ void drawCam(Player *p, gDisplay *d) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(game->settings->fov, d->vp_w / d->vp_h,
-		 1.0, game->settings->grid_size * 1.5);
+		 1.0, game->settings->grid_size * 6.0);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -722,6 +722,10 @@ void drawCam(Player *p, gDisplay *d) {
 	    p->camera->target[0], p->camera->target[1], p->camera->target[2],
 	    0, 0, 1);
   glDisable(GL_LIGHTING);
+
+  if(game->settings->show_skybox)
+    skybox();
+
   drawFloor(d);
   for(i = 0; i < game->players; i++)
     drawTrailShadow(game->player[i].data);
