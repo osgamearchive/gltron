@@ -147,13 +147,6 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
   return l;
 }
 
-char *getMusicPath(char *name) {
-  char *path;
-  path = (char*)malloc(strlen(subdir) + 1 + strlen(name) + 1);
-  sprintf(path, "%s%c%s", subdir, SEPERATOR, name);
-  return path;
-}
-
 /* end of macintosh code */
 
 #else
@@ -191,13 +184,6 @@ list* readDirectoryContents(const char *dirname, char *prefix) {
   closedir(dir);
   return l;
 
-}
-
-char *getMusicPath(char *name) {
-  char *path;
-  path = malloc(strlen(subdir) + 1 + strlen(name) + 1);
-  sprintf(path, "%s%c%s", subdir, SEPERATOR, name);
-  return path;
 }
 
 #endif
