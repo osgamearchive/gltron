@@ -15,6 +15,9 @@ void drawHud(void) {
 	drawAIStatus();
 }
 
+void drawFrame(void) {
+}
+
 void drawFPS(void) {
 }
 
