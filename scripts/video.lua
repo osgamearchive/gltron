@@ -1,11 +1,16 @@
 -- very similiar to setupSoundTracks() in audio.lua
 
 function setupArtpacks()
+	 artpacks = c_loadDirectory(ePath.ART);
    local i,name
+	 for i,name in artpacks do
+			write("found artpack: ", name)
+			write("\n")
+	 end
    for i,name in artpacks do
       if name == settings.current_artpack then
-	 current_artpack_index = i
-	 return
+				 current_artpack_index = i
+				 return
       end
    end
    settings.current_artpack = artpacks[1]
@@ -32,5 +37,42 @@ function previousArtpack()
    c_reloadArtpack()
 end
 
+-- copy-paste from setup/next/previous Artpack
+function setupLevels()
+	 levels = c_loadDirectory(ePath.LEVEL);
+   local i,name
+	 for i,name in levels do
+			write("found level: ", name)
+			write("\n")
+	 end
+   for i,name in levels do
+      if name == settings.current_level then
+				 current_level_index = i
+				 return
+      end
+   end
+   settings.current_level = levels[1]
+   current_level_index = 1
+end
+
+function nextLevel()
+   if current_level_index < getn(levels) then
+      current_level_index = current_level_index + 1
+   else
+      current_level_index = 1
+   end
+   settings.current_level = levels[ current_level_index ]
+   c_reloadLevel()
+end
+
+function previousLevel()
+   if current_level_index > 1 then
+      current_level_index = current_level_index - 1
+   else
+      current_level_index = getn(levels) 
+   end
+   settings.current_level = levels[ current_level_index ]
+   c_reloadLevel()
+end
 
 
