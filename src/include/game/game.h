@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#define NEW_LEVEL
+
 #include "game_data.h"
 #include "game_level.h"
 #include "engine.h"
