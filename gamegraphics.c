@@ -935,17 +935,19 @@ void drawCam(Player *p, gDisplay *d) {
   glDepthMask(GL_FALSE);
 #endif
 
-  if(getSettingi("show_recognizer")) {
-    glEnable(GL_CULL_FACE);
-    drawRecognizers(1);
-    glDisable(GL_CULL_FACE);
-  }
   if(getSettingi("show_wall") == 1)
     drawWalls(d);
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
   glShadeModel(GL_SMOOTH);
+
+  if(getSettingi("show_recognizer")) {
+    glEnable(GL_CULL_FACE);
+    drawRecognizers(1);
+    glDisable(GL_CULL_FACE);
+  }
+
   drawPlayers(p);
 
   glShadeModel(game->screen->shademodel);
