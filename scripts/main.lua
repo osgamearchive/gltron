@@ -15,8 +15,12 @@ RETURN_GUI_ESCAPE = 11
 RETURN_PROMPT_ESCAPE = 12
 RETURN_PAUSE_ESCAPE = 13
 
--- SetCallback("gui")
--- SystemMainLoop()
+-- enable below to run in timedemo-only mode
+if(nil) then
+	SetCallback("timedemo")
+	SystemMainLoop()
+	exit()
+end
 
 callback = "gui"
 last_callback = "gui"
