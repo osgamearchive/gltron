@@ -62,6 +62,8 @@ enum {
 #define PAUSE_GAME_RUNNING 0
 #define PAUSE_GAME_FINISHED 1 
 #define PAUSE_GAME_SUSPENDED 2
+#define PAUSE_DEMO_NEW 3
+#define PAUSE_DEMO_RUNNING 4
 
 extern Game main_game;
 extern Game *game;

@@ -24,7 +24,7 @@ void initGameStructures(void) { /* called only once */
   /* initialize some global variables */
   game2 = &main_game2;
   game = &main_game;
-  game->pauseflag = 0;
+  game->pauseflag = PAUSE_DEMO_NEW;
 
   game->winner = -1;
 
