@@ -66,3 +66,10 @@ void SystemPostRedisplay() {
   redisplay = 1;
 }
 
+void nebu_System_SwapBuffers() {
+	SDL_GL_SwapBuffers();
+}
+
+void nebu_System_SetCallback_Display( void(*display)(void) ) {
+	current->display = display;
+}
