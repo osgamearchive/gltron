@@ -99,6 +99,7 @@ extern List* doMovement(int mode, int dt);
 extern void writePosition(int player);
 
 extern void initGameStructures(void);
+extern void initGameLevel(void);
 extern void initClientData(void);
 
 extern void Game_Idle(void);
