@@ -76,7 +76,7 @@ void initGameStructures() { /* called only once */
   }
   free(path);
  
-  /* load recognizer  quad model (for recognizer outlines) */
+  /* load recognizer quad model (for recognizer outlines) */
   path = getPath(PATH_DATA, "recognizer_quad.obj");
   if(path != NULL) {
     recognizer_quad = readMeshFromFile(path, QUAD_MESH);
@@ -87,7 +87,7 @@ void initGameStructures() { /* called only once */
   }
   free(path);
 
-  /* load lyghtcycle models */
+  /* load lightcycle models */
   for(i = 0; i < LC_LOD; i++) {
     path = getPath(PATH_DATA, lc_lod_names[i]);
     if(path != NULL) {
