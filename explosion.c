@@ -4,9 +4,9 @@
 /* shockwave behavior constants */
 #define SHOCKWAVE_MIN_RADIUS 0.0
 #define SHOCKWAVE_MAX_RADIUS 45.0
-#define SHOCKWAVE_WIDTH 0.3
+#define SHOCKWAVE_WIDTH 0.2
 #define SHOCKWAVE_SPACING 6.0
-#define SHOCKWAVE_SPEED 0.40 
+#define SHOCKWAVE_SPEED 0.50 
 #define SHOCKWAVE_SEGMENTS 25
 #define NUM_SHOCKWAVES 3 
 
@@ -50,7 +50,7 @@ void drawShockwaves(float *radius) {
 
 #define SPIRE_SPEED 0.60
 #define SPIRE_MAX_RADIUS 25
-#define SPIRE_WIDTH 0.25
+#define SPIRE_WIDTH 0.50
 #define NUM_SPIRES 21 
 
 void drawSpires(float *spire_radius) {
