@@ -4,23 +4,26 @@
 #include "gltron.h"
 
 typedef struct {
-	vec3* pVertices;
-	vec3* pNormals;
-	vec2* pTexCoords;
-	unsigned short *pIndices;
-	unsigned char *pColors;
+	vec3* pVertices; // each vertex consists of three floats
+	vec3* pNormals; // each normal consists of three float
+	vec2* pTexCoords; // each texcoord consists of three float
+	unsigned short *pIndices; // each triangle consists of three 16bit indices
+	unsigned char *pColors; // each vertex color consists of 4 bytes
 	unsigned int iSize;
 	unsigned int iUsed;
 } TrailMesh;
 
 void storeVertex(TrailMesh *pMesh, int offset, 
-								 Line *line, int bUseEnd, 
-								 float trail_height, float fSegLength, float fTotalLength);
+								 Line *line, float t, float fFloor, float fTop,
+								 float fSegLength, float fTotalLength);
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset);
 int cmpdir(Line *line1, Line *line2);
-void trailGeometry(Player *pPlayer, TrailMesh *pMesh);
+void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
+								 int *pVertexOffset, int *pIndexOffset);
 void bowGeometry(Player *pPlayer, TrailMesh *pMesh,
-								 int vertexOffset, int indexOffset);
-void trailRender(Player *pPlayer, TrailMesh *pMesh, int texture);
-
+								 int *pVertexOffset, int *pIndexOffset);
+void trailRender(TrailMesh *pMesh);
+void trailStatesNormal(Player *pPlayer, int texture);
+void trailStatesShadowed(void);
+void trailStatesRestore(void);
 #endif

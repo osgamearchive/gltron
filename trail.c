@@ -162,12 +162,6 @@ void drawTrailLines(Player *p) {
 */
 
 void drawTrailShadow(Player* p) {
-  Line *line;
-  float height;
-  float ex, ey;
-  Data *data;
-  data = p->data;
-
   /* states */
 
   if(game2->settingsCache.use_stencil) {
@@ -187,38 +181,31 @@ void drawTrailShadow(Player* p) {
   glPushMatrix();
   glMultMatrixf(shadow_matrix);
 
-  height = data->trail_height;
+  /* geometry */
+	{
+		int vOffset = 0;
+		int iOffset = 0;
 
-  /* render */
+		TrailMesh mesh;
+		mesh.pVertices = (vec3*) malloc(1000 * sizeof(vec3));
+		mesh.pNormals = (vec3*) malloc(1000 * sizeof(vec3));
+		mesh.pColors = (unsigned char*) malloc(1000 * 4 * sizeof(float));
+		mesh.pTexCoords = (vec2*) malloc(1000 * sizeof(vec2));
+		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
+		mesh.iUsed = 0;
+		
+		trailGeometry(p, &mesh, &vOffset, &iOffset);
+		bowGeometry(p, &mesh, &vOffset, &iOffset);
+		trailStatesShadowed();
+		trailRender(&mesh);
+		// no states restore, because we're drawing shadowed geometry
 
-  glBegin(GL_QUADS);
-  line = &(data->trails[0]);
-  while(line != data->trails + data->trailOffset) 
-		{ /* the current line is not drawn */
-    glNormal3f(0.0, 0.0, 1.0);
-    glVertex3f(line->sx, line->sy, 0);
-    glVertex3f(line->sx, line->sy, height);
-    glVertex3f(line->ex, line->ey, height);
-    glVertex3f(line->ex, line->ey, 0);
-    line++;
-    polycount++;
-  }
-  glVertex3f(line->sx, line->sy, 0);
-  glVertex3f(line->sx, line->sy, height);
-  ex = getSegmentEndX(data, 1);
-  ey = getSegmentEndY(data, 1);
-  glVertex3f(ex, ey, height);
-  glVertex3f(ex, ey, 0.0);
-  glVertex3f(ex, ey, 0.0);
-  glVertex3f(ex, ey, height);
-  ex = getSegmentEndX(data, 0);
-  ey = getSegmentEndY(data, 0);
-  glVertex3f(ex, ey, height);
-  glVertex3f(ex, ey, 0.0);
-  glEnd();
-
-  /* trail bow */
-  drawTrailBow(p);
+		free(mesh.pVertices);
+		free(mesh.pNormals);
+		free(mesh.pColors);
+		free(mesh.pTexCoords);
+		free(mesh.pIndices);
+	}
 
   /* restore */
 

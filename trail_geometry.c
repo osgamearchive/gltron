@@ -31,8 +31,9 @@ void storeColor(TrailMesh *pMesh, int offset, Player *p, int type) {
 }
 		
 void storeVertex(TrailMesh *pMesh, int offset, 
-								 Line *line, int bUseEnd, 
-								 float trail_height, float fSegLength, float fTotalLength) {
+								 Line *line, float t, /* 0: start, 1: end */
+								 float fFloor, float fTop, 
+								 float fSegLength, float fTotalLength) {
 	vec3 *pVertices = pMesh->pVertices + offset;
 	vec3 *pNormals = pMesh->pNormals + offset;
 	vec2 *pTexCoords = pMesh->pTexCoords + offset;
@@ -57,23 +58,17 @@ void storeVertex(TrailMesh *pMesh, int offset,
 
 	fUStart = (fTotalLength / DECAL_WIDTH) - floorf(fTotalLength / DECAL_WIDTH);
 	
-	if(!bUseEnd) {
-		v.v[0] = line->sx;
-		v.v[1] = line->sy;
-		v.v[2] = 0;
-		uv.v[0] = fUStart;
-	} else {
-		v.v[0] = line->ex;
-		v.v[1] = line->ey;
-		v.v[2] = 0;
-		uv.v[0] = fUStart + fSegLength / DECAL_WIDTH;
-	}
+	v.v[0] = (1 - t) * line->sx + t * line->ex;
+	v.v[1] = (1 - t) * line->sy + t * line->ey;
+	v.v[2] = fFloor;
+	uv.v[0] = fUStart + t * fSegLength / DECAL_WIDTH;
+
 	uv.v[1] = 0;
 	vec3Copy(pVertices, &v);
 	vec3Copy(pNormals, pvNormals + iNormal);
 	vec2Copy(pTexCoords, &uv);
 			
-	v.v[2] = trail_height;
+	v.v[2] = fTop;
 	uv.v[1] = 1;
 	vec3Copy(pVertices + 1, &v);
 	vec3Copy(pNormals + 1, pvNormals + iNormal);
@@ -108,9 +103,10 @@ int cmpdir(Line *line1, Line *line2) {
 	return 1;
 }
 
-void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
+void trailGeometry(Player *pPlayer, TrailMesh *pMesh,
+									 int *pvOffset, int *piOffset) {
 	Data *pData = pPlayer->data;
-	int curVertex = 0, curIndex = 0;
+	int curVertex = *pvOffset, curIndex = *piOffset;
 	int i;
 	float fTotalLength = 0;
 	float fSegLength;
@@ -120,13 +116,15 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 			fabs( (pData->trails + i)->ey - (pData->trails + i)->sy);
 		if(i == 0 || cmpdir(pData->trails + i - 1, pData->trails + i)) {
 			storeVertex(pMesh, curVertex, pData->trails + i, 0, 
-									pData->trail_height, fSegLength, fTotalLength);
+									0, pData->trail_height, 
+									fSegLength, fTotalLength);
 			storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 			curVertex += 2;
 		}
 			
 		storeVertex(pMesh, curVertex, pData->trails + i, 1,
-								pData->trail_height, fSegLength, fTotalLength);
+								0, pData->trail_height,
+								fSegLength, fTotalLength);
 		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 		curVertex += 2;
 
@@ -148,12 +146,14 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 			fabs( line.ey - line.sy);
 		
 		storeVertex(pMesh, curVertex, &line, 0,
-								pData->trail_height, fSegLength, fTotalLength);
+								0, pData->trail_height, 
+								fSegLength, fTotalLength);
 		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 		curVertex += 2;
 		
 		storeVertex(pMesh, curVertex, &line, 1,
-								pData->trail_height, fSegLength, fTotalLength);
+								0, pData->trail_height, 
+								fSegLength, fTotalLength);
 		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 		curVertex += 2;
 
@@ -172,12 +172,14 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 			fabs( line.ey - line.sy);
 
 		storeVertex(pMesh, curVertex, &line, 0,
-								pData->trail_height, fSegLength, fTotalLength);
+								0, pData->trail_height, 
+								fSegLength, fTotalLength);
 		storeColor(pMesh, curVertex, pPlayer, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeVertex(pMesh, curVertex, &line, 1,
-								pData->trail_height, fSegLength, fTotalLength);
+								0, pData->trail_height, 
+								fSegLength, fTotalLength);
 		storeColor(pMesh, curVertex, pPlayer, COLOR_BRIGHT);
 		curVertex += 2;
 
@@ -185,27 +187,50 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 		curIndex += 6;
 	}
 
-	pMesh->iUsed = curIndex;
+	pMesh->iUsed += curIndex - *piOffset;
+	*piOffset = curIndex;
+	*pvOffset = curVertex;
 }
 
-void bowGeometry(Player *pPlayer, TrailMesh *pMesh, int vOffset, int iOffset) {
+void bowGeometry(Player *pPlayer,
+								 TrailMesh *pMesh, int *pvOffset, int *piOffset) {
 	Data *pData = pPlayer->data;
 	Line line;
 	int bdist = PLAYER_IS_ACTIVE(pPlayer) ? 2 : 3;
+	int i;
+	int vOffset = *pvOffset; int iOffset = *piOffset;
 
 	line.sx = getSegmentEndX( pData, 0 );
 	line.sy = getSegmentEndY( pData, 0 );
 	line.ex = getSegmentEndX( pData, bdist );
 	line.ey = getSegmentEndY( pData, bdist );
-	storeVertex(pMesh, vOffset + 0, &line, 0, 
-							pData->trail_height, DECAL_WIDTH, 0);
-	storeColor(pMesh, vOffset + 0, pPlayer, COLOR_BRIGHT);
-	storeVertex(pMesh, vOffset + 2, &line, 1, 
-							pData->trail_height, DECAL_WIDTH, 0);
-	storeColor(pMesh, vOffset + 2, pPlayer, COLOR_CYCLE);
 
-	storeIndices(pMesh, iOffset, vOffset);
-	pMesh->iUsed = 6;
+	for(i = 0; i < 10; i++) {
+		float t = i * 1.0f / 10;
+		float fTop = sqrt(1 - t*t);
+		float fFloor = (t < 0.6f) ? 0 : 0.5f * (t - 0.6f);
+		if(fTop < 0.3f) fTop = 0.3f;
+		
+		storeVertex(pMesh, vOffset, &line, t, 
+								fFloor * pData->trail_height, fTop * pData->trail_height, 
+								DECAL_WIDTH, 0);
+		storeColor(pMesh, vOffset, pPlayer, COLOR_BRIGHT);
+		vOffset += 2;
+		if(i) {
+			storeIndices(pMesh, iOffset, vOffset - 4);
+			iOffset += 6;
+		}
+	}
+	storeVertex(pMesh, vOffset, &line, 1, 
+							0.2f * pData->trail_height, 0.3f * pData->trail_height, 
+							DECAL_WIDTH, 0);
+	storeColor(pMesh, vOffset, pPlayer, COLOR_CYCLE);
+	vOffset += 2;
+	storeIndices(pMesh, iOffset, vOffset - 4);
+
+	pMesh->iUsed += iOffset - *piOffset;
+	*piOffset = iOffset;
+	*pvOffset = vOffset;
 }
 	
 	
