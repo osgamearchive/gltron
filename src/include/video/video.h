@@ -66,6 +66,14 @@ extern void reloadArt(void);
 #include <GL/gl.h>
 // #include <GL/glext.h>
 
+enum {
+	POINT = 0,
+  LINEAR,
+	MIPMAP,
+  TRILINEAR
+};
+
+
 
 #define B_HEIGHT 0
 #define CYCLE_HEIGHT 8
