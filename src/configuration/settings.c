@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 
+#include "base/util.h"
 #include "game/gltron.h"
 #include "filesystem/path.h"
 
@@ -13,12 +14,8 @@
 
 void initDefaultSettings() {
   /* load some more defaults from config file */
-  { 
-    char *path;
-    path = getPath(PATH_SCRIPTS, "config.lua");
-    scripting_RunFile(path);
-    free(path);
-  }
+	runScript(PATH_SCRIPTS, "config.lua");
+	runScript(PATH_SCRIPTS, "artpack.lua");
 
   game->pauseflag = 0;
 
@@ -125,7 +122,6 @@ void updateSettingsCache() {
   game2->settingsCache.show_decals = getSettingi("show_decals");
   game2->settingsCache.alpha_trails = getSettingi("alpha_trails");
   game2->settingsCache.antialias_lines = getSettingi("antialias_lines");
-  game2->settingsCache.shadow_lod = getSettingi("shadow_lod"); 
   game2->settingsCache.turn_cycle = getSettingi("turn_cycle"); 
   game2->settingsCache.light_cycles = getSettingi("light_cycles"); 
   game2->settingsCache.lod = getSettingi("lod"); 
