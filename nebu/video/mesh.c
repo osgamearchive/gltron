@@ -27,7 +27,7 @@ void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
 		if(pMesh->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
-			glClientActiveTexture(GL_TEXTURE0 + i);
+			glClientActiveTextureARB(GL_TEXTURE0_ARB + i);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			if(pMesh->pTexCoords[i])
 				glTexCoordPointer(2, GL_FLOAT, 0, pMesh->pTexCoords[i]);
@@ -46,10 +46,10 @@ void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 	glDisableClientState(GL_NORMAL_ARRAY);
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
-		glClientActiveTexture(GL_TEXTURE0 + i);
+		glClientActiveTextureARB(GL_TEXTURE0_ARB + i);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
-	glClientActiveTexture(GL_TEXTURE0);
+	glClientActiveTextureARB(GL_TEXTURE0_ARB);
 }
 
 void nebu_Mesh_ComputeTriangleNormal(nebu_Mesh *pMesh, int triangle, float* normal)
