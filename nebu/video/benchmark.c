@@ -25,7 +25,7 @@ int indices[] = { 0, 1, 2, 0, 2, 3 };
 
 /* fill a quarter of the screen */
 
-fill_plain() {
+void fill_plain() {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 
@@ -38,13 +38,13 @@ fill_plain() {
   glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, indices);
 }
 
-fill_textured() {
+void fill_textured() {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }
 
-setupGL() {
-  unsigned char[] pixels = { 255, 0, 0, 255 };
+void setupGL() {
+  unsigned char pixels[] = { 255, 0, 0, 255 };
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glMatrixMode(GL_MODELVIEW);
