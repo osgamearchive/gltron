@@ -167,6 +167,8 @@ extern float camAngles[];
 
 extern int polycount;
 
+extern int isRenderingReflection;
+
 extern float colors_trail_diffuse[][4];
 extern float colors_model_diffuse[][4];
 extern float colors_model_specular[][4];

@@ -61,6 +61,7 @@ float cam_defaults[][3] =  {
 /* milliseconds since last frame */
 
 int polycount; /* poly count - how much do we draw each frame? */
+int isRenderingReflection = 0;
 
 unsigned char debugcolors[6][4] = {
   { 0, 0, 0, 0 },
