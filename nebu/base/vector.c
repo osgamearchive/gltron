@@ -317,6 +317,6 @@ vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
 	return pOut;
 }
 
-float segment2_Length(segment2 *s) {
+float segment2_Length(const segment2 *s) {
 	return vec2Length(&s->vDirection);
 }
