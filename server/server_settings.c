@@ -92,6 +92,11 @@ get_args( int argc, char *argv[] )
 	    }
 	}
       }
+    } else {
+      printf("Usage: %s [-h] [-f <conffile>]\n\n", argv[0]);
+      printf("-f\tset config file path ( default %s )\n", configpath);
+      printf("-h\tthis help\n");
+      exit(1);
     }
   }
 }
@@ -119,7 +124,7 @@ ReadConfigFile()
       fgets(buf, BUFSIZE, f);
       if( buf[0] != '#' && buf[0] != '\n' )
 	{
-	  sscanf(buf, "%[a-zA-Z] %[a-zA-Z 0-9]", com, value);
+	  sscanf(buf, "%[a-zA-Z] %[a-zA-Z 0-9.]", com, value);
 	  //printf("com %s, buf %s\n", com, value);
 	  
 	  //now we can set variables
