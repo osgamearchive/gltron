@@ -28,11 +28,12 @@ float getRecognizerAngle(vec2 *velocity)
   
 void getRecognizerPositionVelocity(vec2 *p, vec2 *v) {
   float max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
-  float rec_boundry = game2->rules.grid_size - max;
-  p->v[0] = (max + (x() + 1.0f) * rec_boundry) / 2.0f;
-  p->v[1] = (max + (y() + 1.0f) * rec_boundry) / 2.0f;
-  v->v[0] = dx() * game2->rules.grid_size / 100.f;
-  v->v[1] = dy() * game2->rules.grid_size / 100.f;
+  float rec_boundry = box2_Diameter(& game2->level->boundingBox);
+  box2_Center(p, & game2->level->boundingBox);
+  p->v[0] += x() * rec_boundry / 2.0f;
+  p->v[1] += y() * rec_boundry / 2.0f;
+  v->v[0] = dx() * rec_boundry / 100.f;
+  v->v[1] = dy() * rec_boundry / 100.f;
 }
 
 void drawRecognizerShadow(void) {
