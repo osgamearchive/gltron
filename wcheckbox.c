@@ -40,7 +40,9 @@ draw_wcheckbox( Wcheckbox *wcheckbox, int active )
   drawText(gameFtx, x, y, wcheckbox->height-8, wcheckbox->title);
 
   //Draw the little box
-  x=wcheckbox->x+(strlen(wcheckbox->title)+2)*(wcheckbox->height-8);
+  //x=wcheckbox->x+(strlen(wcheckbox->title)+2)*(wcheckbox->height-8);
+  x=wcheckbox->x+wcheckbox->width - wcheckbox->height+4;
+  //(strlen(wcheckbox->title)+2)*(wcheckbox->height-8);
   y=wcheckbox->y+4;
   
   glBegin(GL_LINES);

@@ -131,8 +131,8 @@ draw_wlist( Wlist *wlist )
 /*   glEnd(); */
 
   y = wlist->y+wlist->height-h/2;
-  //s = wlist->width / (wlist->nbcols*12);
-  s =h-10;
+
+  s = 7.5*(wlist->width*wlist->colDefs[0].colsize/100)/100;
 
   x = wlist->x;
   for( i = 0; i < wlist->nbcols; ++i )
@@ -148,7 +148,6 @@ draw_wlist( Wlist *wlist )
       drawText(netFtx, x+10, y-h/2+4, s, wlist->colDefs[i].title);
     }
 
-  s-=5;
   //draw Lines
   for(i=wlist->scroll; i < wlist->scroll+wlist->nblines-1; ++i )
     {

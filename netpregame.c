@@ -758,9 +758,13 @@ void initPregame() {
 
   set_colDef( colDefs, 0, "Users", 100, colors[1], drawUsersListBox, charToStr_wlist, NULL);
 
-  x = game->screen->vp_w - 1.5 * 16 *( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 250;
-  pregame.userslist = new_wlist(x, y, 140, 140, 5, 1, colDefs, 0, NULL, NULL, NULL );
+  //x = game->screen->vp_w - 1.5 * 16 *( game->screen->vp_w / (50 * 1.5) );
+  //y = game->screen->vp_h - 250;
+  x = 67.7*game->screen->vp_w /100;
+  y = 47*game->screen->vp_h /100;
+  width=30*game->screen->vp_h /100;
+  height=30*game->screen->vp_h /100;
+  pregame.userslist = new_wlist(x, y,  width, height, 5, 1, colDefs, 0, NULL, NULL, NULL );
 
   //Default value
   i = addRow_wlist     ( pregame.userslist, 4 );
@@ -811,7 +815,7 @@ void initPregame() {
   //Settings now
 
   //game type
-  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 180, h+5, "Game Type", changeGameType);
+  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Game Type   ", changeGameType);
   addchoice_wpopmenu(pregame.gameType, "Games", 0 );
   addchoice_wpopmenu(pregame.gameType, "Time",  1 );
   select_wpopmenu(pregame.gameType, 0 );
@@ -820,7 +824,7 @@ void initPregame() {
 
 
   //Game Rules
-  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 180, h+5, "Games Number", changeGameRule);
+  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 35*game->screen->vp_w /100, h+5, "Games Number", changeGameRule);
   addchoice_wpopmenu(pregame.gameRule, "5",   0 );
   addchoice_wpopmenu(pregame.gameRule, "10",  1 );
   addchoice_wpopmenu(pregame.gameRule, "15",  2 );
@@ -830,11 +834,11 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.gameRule, WpopupMenu);
 
 
-  pregame.erase= new_wcheckbox(60*game->screen->vp_w /100, 25*game->screen->vp_h /100, 180, h+5, "Erase Deads", eraseAction);
+  pregame.erase= new_wcheckbox(60*game->screen->vp_w /100, 25*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Erase Deads ", eraseAction);
   newControl(pregame.pregameControls, (Wptr)pregame.erase, WcheckBox);
 
   //Speed
-  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 180, h+5, "Speed", changeSpeed);
+  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Speed       ", changeSpeed);
   addchoice_wpopmenu(pregame.speed, speed_list[0],  0 );
   addchoice_wpopmenu(pregame.speed, speed_list[1],  1 );
   addchoice_wpopmenu(pregame.speed, speed_list[2],  2 );
@@ -843,7 +847,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.speed, WpopupMenu);
 
   //Size
-  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 180, h+5, "Size", changeSize);
+  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "Size        ", changeSize);
   addchoice_wpopmenu(pregame.size, arena_list[0],  0 );
   addchoice_wpopmenu(pregame.size, arena_list[1],  1 );
   addchoice_wpopmenu(pregame.size, arena_list[2],  2 );
@@ -853,7 +857,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.size, WpopupMenu);
 
   //Level
-  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 10*game->screen->vp_h /100, 180, h+5, "AI level", changeLevel);
+  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 10*game->screen->vp_h /100, 35*game->screen->vp_w/100, h+5, "AI level    ", changeLevel);
   addchoice_wpopmenu(pregame.level, ai_list[0],  0 );
   addchoice_wpopmenu(pregame.level, ai_list[1],  1 );
   addchoice_wpopmenu(pregame.level, ai_list[2],  2 );

@@ -140,45 +140,6 @@ tracker_handle()
     }
 }
 
-static int current = -1;
-
-void
-displayServerLegend()
-{
-  float color[3] =  { 0.6, 0.6, 0.6 };
-  int x, y;
-  int h;
-  char str[255];
-
-  if( current == -1 )
-    return;
-
-  h = game->screen->vp_h / (24 * 1.5);
-  h+=2;
-  glColor3fv(color);
-  x = game->screen->vp_w/2 - 1.5 * 14 *( game->screen->vp_w / (50 * 1.5) );
-  //y = game->screen->vp_h - 1.5 * h;
-  y = game->screen->vp_h - 50;
-  sprintf(str, "Server       : %d.%d.%d.%d",
-	 (SDLNet_Read32(&servers[current].ipaddress.host) & 0xff000000) >> 24,
-	  (SDLNet_Read32(&servers[current].ipaddress.host) & 0x00ff0000) >> 16,
-	 (SDLNet_Read32(&servers[current].ipaddress.host) & 0x0000ff00) >> 8,
-	 SDLNet_Read32(&servers[current].ipaddress.host) & 0x000000ff);
-  drawText(gameFtx, x, y, h, str);
-  y = game->screen->vp_h - 70;
-
-  sprintf(str, "Version      : %s",servers[current].version);
-  drawText(gameFtx, x, y, h, str);
-
- sprintf(str, "Speed        : %s",speed_list[servers[current].speed]);
-  y = game->screen->vp_h - 90;
-  drawText(gameFtx, x, y, h, str);
-
-  sprintf(str, "Size         : %s", arena_list[servers[current].size]);
-  y = game->screen->vp_h - 110;
-  drawText(gameFtx, x, y, h, str);
-}
-
 void
 displayTrackerScreen()
 {
@@ -351,12 +312,6 @@ charToStr(WlistPtr list, int line, int col )
   return str;
 }
 
-void
-focus(WlistPtr list, int line)
-{
-  current = line;
-  printf("focus on server %d\n", line);
-}
 
 void
 mousefocus(WlistPtr list, int line, Wpoint mousexy)
@@ -571,7 +526,7 @@ initTracker()
   set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr_wlist, sortint_wlist); 
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-100,
-			 16, 4, colDefs, 3, focus, action, mousefocus );
+			 16, 4, colDefs, 3, NULL, action, mousefocus );
  
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
 
@@ -594,7 +549,6 @@ initTracker()
 
   setCurrentControl( trackerControls, (Wptr)serverlist );
 
-  current=-1;
 }
 
 void
