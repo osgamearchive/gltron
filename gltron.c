@@ -9,14 +9,8 @@
 /* declare them only in gltron.h */
 /* #include "globals.h" */
 
-void mouseWarp() {
-  SystemWarpPointer(game->screen->w / 2, game->screen->h / 2);
-}
-
 void displayGame() {
   drawGame();
-  if(game->settings->mouse_warp)
-    mouseWarp();
   SystemSwapBuffers();
 }
 
@@ -30,7 +24,6 @@ int initWindow() {
 
   SystemHidePointer();
   if(game->settings->windowMode == 0) {
-    SystemGrabInput();
     fullscreen = SYSTEM_FULLSCREEN;
   }
 
@@ -38,10 +31,16 @@ int initWindow() {
   SystemInitDisplayMode(flags, fullscreen);
 
   win_id = SystemCreateWindow("gltron");
+
   if (win_id < 0) {
     printf("could not create window...exiting\n");
     exit(1);
   }
+
+  if(game->settings->windowMode == 0 || game->settings->mouse_warp == 1) {
+    SystemGrabInput();
+  }
+
   return win_id;
 }
 
@@ -80,7 +79,9 @@ void setupDisplay(gDisplay *d) {
 int main( int argc, char *argv[] ) {
   char *path;
   list *l;
+#ifdef SOUND
   int c;
+#endif
 
 #ifdef __FreeBSD__
   fpsetmask(0);
@@ -115,7 +116,6 @@ int main( int argc, char *argv[] ) {
   initSound();
   setFxVolume(game->settings->fxVolume);
 
-  c = 0;
   if(l->next != NULL) {
     char *tmp;
     tmp = malloc(strlen(path) + 1 + /* seperator */
@@ -127,6 +127,8 @@ int main( int argc, char *argv[] ) {
     free(tmp);
     game->settings->soundIndex = 0;
   }
+
+  c = 0;
   while(l->next != NULL) {
     l = l->next;
     c++;
