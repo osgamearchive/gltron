@@ -475,11 +475,13 @@ void drawCycle(Player *p, int lod) {
   /* glTranslatef(-cycle->bbox[0] / 2, 0, .0); */
   /* glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1], .0); */
 
+
   initModelLights(GL_LIGHT1);
   glDisable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
   glDisable(GL_COLOR_MATERIAL);
-  glEnable(GL_LIGHTING);
+  if(game->settings->light_cycles)
+    glEnable(GL_LIGHTING);
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
@@ -727,8 +729,11 @@ void drawCam(Player *p, gDisplay *d) {
   initTrailLights(0);
   for(i = 0; i < game->players; i++)
     drawTraces(&(game->player[i]), d);
-
   drawPlayers(p);
+
+  /* transparent stuff */
+  for(i = 0; i < game->players; i++)
+    drawTrailBow(&(game->player[i]));
 
   /* draw the glow around the other players: */
   if(game->settings->show_glow == 1)

@@ -1,5 +1,13 @@
 #include "gltron.h"
 
+#define DECAL_WIDTH 20.0
+#define BOW_LENGTH 6
+
+#define BOW_DIST2 0.85
+#define BOW_DIST1 0.4
+
+#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
+
 void drawTraces(Player *p, gDisplay *d) {
   line *line;
   float height;
@@ -15,14 +23,6 @@ void drawTraces(Player *p, gDisplay *d) {
   float color[4];
 
   Data *data;
-
-#define DECAL_WIDTH 20.0
-#define BOW_LENGTH 6
-
-#define BOW_DIST2 0.85
-#define BOW_DIST1 0.4
-
-#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 
   data = p->data;
   height = data->trail_height;
@@ -76,7 +76,6 @@ void drawTraces(Player *p, gDisplay *d) {
     glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
     glVertex3f(line->ex, line->ey, 0.0);
 
-
     line++;
     polycount++;
   }
@@ -128,7 +127,6 @@ void drawTraces(Player *p, gDisplay *d) {
 
   /* quad fading from model color to white, no texture */
 
-
   glBegin(GL_QUADS);
 
   glColor3f(1.0, 1.0, 1.0);
@@ -152,47 +150,15 @@ void drawTraces(Player *p, gDisplay *d) {
 	     py - 2 * blength * dirsY[ data->dir ], 0.0);
 
   glEnd();
-  if(data->speed > 0 && game->settings->show_model == 1) {
-    glEnable(GL_TEXTURE_2D);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  }
-
-    /* quad fading from white to model color, bow texture */
-  glBegin(GL_QUADS);
-
-  glTexCoord2f(TEX_SPLIT, 0.0);
-  glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
-
-  glTexCoord2f(1.0, 0.0);
-  glColor3fv(p->model->color_model);
-  glVertex3f(px - bdist * blength * dirsX[ data->dir ], 
-	     py - bdist * blength * dirsY[ data->dir ], 0.0);
-
-  glTexCoord2f(1.0, 1.0);
-  glColor3fv(p->model->color_model);
-  glVertex3f(px - bdist * blength * dirsX[ data->dir ], 
-	     py - bdist * blength * dirsY[ data->dir ], height);
-
-  glTexCoord2f(TEX_SPLIT, 1.0);
-  glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
-  glEnd();
-
-  polycount += 4;
 
   glShadeModel( game->screen->shademodel );
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
 
+  /* draw lines on top of trails */
   glPolygonOffset(-2.0, -1.0);  
   glEnable(GL_POLYGON_OFFSET_LINE);
-  /* draw lines on top of trails */
+
 
   line = &(data->trails[0]);
   glBegin(GL_LINES);
@@ -217,12 +183,12 @@ void drawTraces(Player *p, gDisplay *d) {
   tlength = px - sx + py - sy;
   if(tlength < 0) tlength = -tlength;
   blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+
   glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
 	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
   glEnd();
 
   glDisable(GL_POLYGON_OFFSET_LINE);
-
 
   /* draw trail shadow */
 #define SHADOWH 0.0
@@ -264,6 +230,84 @@ void drawTraces(Player *p, gDisplay *d) {
   
     glEnd();
 
+    glDisable(GL_POLYGON_OFFSET_FILL);
+  }
+
+
+  glDepthMask(GL_TRUE);
+}
+
+void drawTrailBow(Player *p) {
+  Data *data;
+  line *line;
+
+  float height;
+  float tlength;
+  float blength;
+  float bdist;
+  float px, py, sx, sy;
+
+  data = p->data;
+  height = data->trail_height;
+  if(height < 0) return;
+
+  bdist = (game->settings->show_model &&
+	   data->speed > 0) ? BOW_DIST1 : 0;
+
+  line = data->trail;
+
+  sx = line->sx;
+  sy = line->sy;
+  px = data->posx;
+  py = data->posy;
+  tlength = px - sx + py - sy;
+  if(tlength < 0) tlength = -tlength;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+
+  glShadeModel(GL_SMOOTH);
+
+  if(data->speed > 0 && game->settings->show_model == 1) {
+    glEnable(GL_TEXTURE_2D);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+  }
+
+    /* quad fading from white to model color, bow texture */
+  glBegin(GL_QUADS);
+
+  /* glTexCoord2f(TEX_SPLIT, 0.0); */
+  glTexCoord2f(0.0, 0.0);
+  glColor3f(1.0, 1.0, 1.0);
+  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     py - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
+
+  glTexCoord2f(1.0, 0.0);
+  glColor3fv(p->model->color_model);
+  glVertex3f(px - bdist * blength * dirsX[ data->dir ], 
+	     py - bdist * blength * dirsY[ data->dir ], 0.0);
+
+  glTexCoord2f(1.0, 1.0);
+  glColor3fv(p->model->color_model);
+  glVertex3f(px - bdist * blength * dirsX[ data->dir ], 
+	     py - bdist * blength * dirsY[ data->dir ], height);
+
+  /* glTexCoord2f(TEX_SPLIT, 1.0); */
+  glTexCoord2f(0.0, 1.0);
+  glColor3f(1.0, 1.0, 1.0);
+  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
+	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+  glEnd();
+
+  polycount += 4;
+
+  glShadeModel( game->screen->shademodel );
+  glDisable(GL_BLEND);
+  glDisable(GL_TEXTURE_2D);
+
+}
+
 #undef SHADOWH
 
 #undef BOW_DIST1
@@ -273,9 +317,4 @@ void drawTraces(Player *p, gDisplay *d) {
 #undef DECAL_WIDTH
 #undef BOW_LENGTH
 
-    glDisable(GL_POLYGON_OFFSET_FILL);
-  }
 
-
-  glDepthMask(GL_TRUE);
-}
