@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 vec4* vec4Transform(vec4* pOut, const vec4* pV, const matrix *pM) {
