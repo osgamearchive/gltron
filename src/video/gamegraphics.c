@@ -15,7 +15,7 @@ static int lod_dist[MAX_LOD_LEVEL + 1][LC_LOD + 1] = {
   { 1, 5, 150 } /* ugly */
 };
 
-/* spoke color */
+/* spoke colors */
 static float SpokeColor[4] = {1.0, 1.0, 1.0, 1.0};
 static float NoSpokeColor[4] = {0.0, 0.0, 0.0, 1.0};
 
@@ -177,7 +177,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   Mesh *cycle = lightcycle[lod];
 
-  int spoke_time = game2->time.current  - pV->spoke_time;
+  unsigned int spoke_time = game2->time.current - pV->spoke_time;
 	int turn_time = game2->time.current - p->data->turn_time;
 
   if(turn_time < TURN_LENGTH && !drawTurn)
@@ -199,17 +199,19 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  if (spoke_time > (120 - (p->data->speed * 10))) {
+  if (spoke_time > 90 - (p->data->speed * 10) && !game->pauseflag) {
     if (pV->spoke_state == 1) {
       pV->spoke_state = 0;
+      SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
       SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
     } else {
       pV->spoke_state = 1;
+      SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
       SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
     }
     pV->spoke_time = game2->time.current;
   }
-  
+
   if (game2->settingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
   }
