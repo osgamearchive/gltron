@@ -2,6 +2,7 @@
 #include "base/switchCallbacks.h"
 #include "scripting/nebu_scripting.h"
 #include "filesystem/path.h"
+#include "filesystem/nebu_filesystem.h"
 
 #include "audio/audio.h"
 
@@ -14,6 +15,8 @@ int c_drawCircle(lua_State *l);
 int c_translate(lua_State *l);
 int c_pushMatrix(lua_State *l);
 int c_popMatrix(lua_State *l);
+int c_drawTextFitIntoRect(lua_State *l);
+int c_color(lua_State *l);
 
 int c_quitGame(lua_State *L) {
   saveSettings();
@@ -141,7 +144,7 @@ int c_SystemMainLoop(lua_State *L) {
 
 int c_loadDirectory(lua_State *L) {
 	int dir;
-	char *dirPath;
+	const char *dirPath;
 	nebu_List *files, *p;
 	int nFiles = 0;
 
@@ -156,7 +159,7 @@ int c_loadDirectory(lua_State *L) {
 		lua_error(L, "number  expected for arg1 to function "
 							"c_loadDirecotry");
 	}
-	dir = lua_tonumber(L, -1);
+	dir = (int) lua_tonumber(L, -1);
 
 	dirPath = getDirectory(dir); // PATH_ART or PATH_LEVEL or PATH_MUSIC
 	files = readDirectoryContents(dirPath, NULL);
@@ -171,28 +174,59 @@ int c_loadDirectory(lua_State *L) {
 	return 1;
 }
 
+#ifndef PATH_MAX
+// #warning PATH_MAX "is not defined in limits.h!"
+#define PATH_MAX 255
+#endif
+
+static char art_dir_default[PATH_MAX];
+static char art_dir_artpack[PATH_MAX];
+static char *art_dirs[2];
+
+int c_setArtPath(lua_State *l)
+{
+	char *artpack;
+	scripting_GetGlobal("settings", "current_artpack", NULL);
+	scripting_GetStringResult(&artpack);
+	fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
+
+	sprintf(art_dir_default, "%s%c%s", "art", SEPARATOR, "default");
+	sprintf(art_dir_artpack, "%s%c%s", "art", SEPARATOR, artpack);
+
+	free(artpack);
+
+	art_dirs[0] = art_dir_artpack;
+	art_dirs[1] = art_dir_default;
+
+	nebu_FS_SetupPath(PATH_ART, 2, art_dirs);
+	return 0;
+}
+
 void init_c_interface(void) {
-  scripting_Register("c_quitGame", c_quitGame);
-  scripting_Register("c_resetGame", c_resetGame);
-  scripting_Register("c_resetScores", c_resetScores);
-  scripting_Register("c_resetCamera", c_resetCamera);
-  scripting_Register("c_video_restart", c_video_restart);
-  scripting_Register("c_update_settings_cache", c_update_settings_cache);
-  scripting_Register("c_update_audio_volume", c_update_audio_volume);
-  scripting_Register("c_startGame", c_startGame);
-  scripting_Register("c_reloadTrack", c_reloadTrack);
-  scripting_Register("c_reloadArtpack", c_reloadArtpack);
-  scripting_Register("c_reloadLevel", c_reloadLevel);
-  scripting_Register("c_configureKeyboard", c_configureKeyboard);
-  scripting_Register("c_getKeyName", c_getKeyName);
+	scripting_Register("c_quitGame", c_quitGame);
+	scripting_Register("c_resetGame", c_resetGame);
+	scripting_Register("c_resetScores", c_resetScores);
+	scripting_Register("c_resetCamera", c_resetCamera);
+	scripting_Register("c_video_restart", c_video_restart);
+	scripting_Register("c_update_settings_cache", c_update_settings_cache);
+	scripting_Register("c_update_audio_volume", c_update_audio_volume);
+	scripting_Register("c_startGame", c_startGame);
+	scripting_Register("c_reloadTrack", c_reloadTrack);
+	scripting_Register("c_reloadArtpack", c_reloadArtpack);
+	scripting_Register("c_reloadLevel", c_reloadLevel);
+	scripting_Register("c_configureKeyboard", c_configureKeyboard);
+	scripting_Register("c_getKeyName", c_getKeyName);
 	scripting_Register("c_timedemo", c_timedemo);
 	scripting_Register("c_loadDirectory", c_loadDirectory);
 	scripting_Register("SystemMainLoop", c_SystemMainLoop);
 	scripting_Register("SetCallback", c_SetCallback);
+	scripting_Register("c_setArtPath", c_setArtPath);
 
 	scripting_Register("c_drawCircle", c_drawCircle);
 	scripting_Register("c_drawRectangle", c_drawRectangle);
 	scripting_Register("c_translate", c_translate);
 	scripting_Register("c_pushMatrix", c_pushMatrix);
 	scripting_Register("c_popMatrix", c_popMatrix);
+	scripting_Register("c_drawTextFitIntoRect", c_drawTextFitIntoRect);
+	scripting_Register("c_color", c_color);
 }
