@@ -73,7 +73,7 @@ void getEvents() {
     // latest->timestamp always > to game2->time.current
     //So game never process!!!
 
-    // while(latest->timestamp < game2->time.current) {
+    //while(latest->timestamp < game2->time.current) {
       /* TODO: check if it's safe to ignore the return value here */
 #ifdef __NETWORK__
       printf("event change player %d to %d ( curent time %d )\n", latest->player, getPlayer(latest->player),game2->time.current );
