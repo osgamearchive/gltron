@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "quad.h"
 
+#define POLY_COUNT
+
 extern void printRendererInfo();
 extern void renderQuad(Quad *q);
 extern void clearState();

@@ -1,5 +1,9 @@
 #include "renderer_gl.h"
 
+#ifdef POLY_COUNT
+extern int polycount;
+#endif
+
 GLstate rendererState;
 GLstate *state = &rendererState;
 
@@ -52,5 +56,9 @@ void renderQuad(Quad *q) {
     // printVector3f(q->vertex[i].v);
   }
   glEnd();
+
+#ifdef POLY_COUNT
+  polycount += 2;
+#endif
 }
 
