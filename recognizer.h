@@ -1,6 +1,9 @@
+#ifndef RECOGNIZER_H
+#define RECOGNIZER_H
 
-/* recognizer stuff */
-extern void recognizerMovement();
+extern void doRecognizerMovement();
 extern void drawRecognizer();
 extern void drawRecognizerShadow();
 extern void getRecognizerPositionVelocity(Point *p, Point *v);
+
+#endif
