@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #if !defined(WIN32) && !defined(macintosh)
 #include <unistd.h>
@@ -18,7 +19,7 @@ void user_read_data(png_structp png_ptr,
   fread(data, 1, length, f);
 }
 
-png_texture* load_png_texture(char *filename) {
+png_texture* load_png_texture(const char *filename) {
   unsigned int i;
   int bpc, color_type, zsize;
 
@@ -32,6 +33,8 @@ png_texture* load_png_texture(char *filename) {
   f = fopen(filename, "rb");
   if(f == NULL) {
     fprintf(stderr, ERR_PREFIX "can't open file %s\n", filename);
+	fprintf(stderr, ERR_PREFIX "errno: %d - %s", errno, strerror(errno));
+
     return NULL;
   }
 
