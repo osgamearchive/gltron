@@ -23,7 +23,7 @@ void trailStatesNormal(Player *pPlayer, int texture) {
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
-	if(game2->settingsCache.alpha_trails) {
+	if(gSettingsCache.alpha_trails) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}

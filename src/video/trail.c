@@ -99,7 +99,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
   glDisable(GL_DEPTH_TEST);
   */
 
-  if (game2->settingsCache.antialias_lines) {
+  if (gSettingsCache.antialias_lines) {
     glEnable(GL_LINE_SMOOTH); /* enable line antialiasing */
   }
 
@@ -169,7 +169,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 void drawTrailShadow(Player* p, PlayerVisual *pV) {
   /* states */
 
-  if(game2->settingsCache.use_stencil) {
+  if(gSettingsCache.use_stencil) {
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_GREATER, 1, 1);
@@ -214,7 +214,7 @@ void drawTrailShadow(Player* p, PlayerVisual *pV) {
 
   /* restore */
 
-  if(game2->settingsCache.use_stencil)
+  if(gSettingsCache.use_stencil)
     glDisable(GL_STENCIL_TEST);
 
   glDisable(GL_BLEND);

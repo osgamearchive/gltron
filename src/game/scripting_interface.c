@@ -78,13 +78,6 @@ int c_reloadArtpack(lua_State *L) {
   return 0;
 }
   
-int c_restoreDefaults(lua_State *L) {
-  initDefaultSettings();
-  c_video_restart(L);
-  // fprintf(stderr, "loaded default settings\n");
-  return 0;
-}
-
 int c_configureKeyboard(lua_State *L) {
 	SystemExitLoop(RETURN_GUI_PROMPT);
   return 0;
@@ -134,7 +127,6 @@ void init_c_interface(void) {
   scripting_Register("c_startGame", c_startGame);
   scripting_Register("c_reloadTrack", c_reloadTrack);
   scripting_Register("c_reloadArtpack", c_reloadArtpack);
-  scripting_Register("c_restoreDefaults", c_restoreDefaults);
   scripting_Register("c_configureKeyboard", c_configureKeyboard);
   scripting_Register("c_getKeyName", c_getKeyName);
 	scripting_Register("c_timedemo", c_timedemo);

@@ -41,7 +41,7 @@ void drawRecognizerShadow(void) {
   /* states */
 
   glEnable(GL_CULL_FACE);
-  if(game2->settingsCache.use_stencil) {
+  if(gSettingsCache.use_stencil) {
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_GREATER, 1, 1);
@@ -70,7 +70,7 @@ void drawRecognizerShadow(void) {
 
   /* restore */
 
-  if(game2->settingsCache.use_stencil)
+  if(gSettingsCache.use_stencil)
     glDisable(GL_STENCIL_TEST);
 
   glDisable(GL_BLEND);
@@ -102,7 +102,7 @@ void drawRecognizer(void) {
 
   glEnable(GL_CULL_FACE);
   
-  if (game2->settingsCache.light_cycles) {
+  if (gSettingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
   }
   

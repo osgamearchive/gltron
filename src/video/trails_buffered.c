@@ -92,7 +92,7 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   if(height < 0) return;
 
   /* calculate trail color and set blending modes */
-  if(game2->settingsCache.alpha_trails) {
+  if(gSettingsCache.alpha_trails) {
     setColor4fv(p->pColorAlpha);
   } else {
     setColor3fv(p->pColorAlpha);
@@ -102,8 +102,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   ln = &(data->trails[0]);
   while(ln != data->trails + data->trailOffset) { /* the last segment is special cased */
     q = getNextQuad(qb);
-    if (game2->settingsCache.softwareRendering == 0 && 
-        game2->settingsCache.show_decals == 1) {
+    if (gSettingsCache.softwareRendering == 0 && 
+        gSettingsCache.show_decals == 1) {
       q->type = QUAD_COLOR | QUAD_TEXTURE | QUAD_TEX_DECAL;
     } else {
       q->type = QUAD_COLOR;
@@ -152,8 +152,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   light4fv(color);
 
   q = getNextQuad(qb);
-  if(game2->settingsCache.softwareRendering == 0 && 
-     game2->settingsCache.show_decals == 1) 
+  if(gSettingsCache.softwareRendering == 0 && 
+     gSettingsCache.show_decals == 1) 
     q->type = QUAD_COLOR | QUAD_TEXTURE | QUAD_TEX_DECAL;
   else q->type = QUAD_COLOR;
 
@@ -245,7 +245,7 @@ void doTrails(Player *p) {
   }
   q->current = 0;
   clearState();
-  if(game2->settingsCache.alpha_trails) {
+  if(gSettingsCache.alpha_trails) {
     /* depth sort everything */
     int i;
     for(i = 0; i < game->players; i++) {

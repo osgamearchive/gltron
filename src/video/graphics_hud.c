@@ -137,7 +137,7 @@ void drawConsole(Visual *d) {
   rasonly(d);
   glColor3f(1.0, 0.3f, 0.3f);
   
-  if (game2->settingsCache.softwareRendering) { 
+  if (gSettingsCache.softwareRendering) { 
     lines = 1;
   } else if (gScreen->vp_h < 600) {
     lines = 3;

@@ -225,7 +225,7 @@ void ai_left(int player, AI_Distances *distances) {
 	// printf("trying left turn...");
 	AI *ai = game->player[player].ai;
 	Data *data = game->player[player].data;
-	int level = game2->settingsCache.ai_level;
+	int level = gSettingsCache.ai_level;
 
 	float save_distance = 
 		(ai_params.minTurnTime[level] * data->speed / 1000.0f) + 20;
@@ -244,7 +244,7 @@ void ai_right(int player, AI_Distances *distances) {
 	// printf("trying right turn...");
 	AI *ai = game->player[player].ai;
 	Data *data = game->player[player].data;
-	int level = game2->settingsCache.ai_level;
+	int level = gSettingsCache.ai_level;
 
 	float save_distance = 
 		(ai_params.minTurnTime[level] * data->speed / 1000.0f) + 20;

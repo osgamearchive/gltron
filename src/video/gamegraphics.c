@@ -26,12 +26,12 @@ void drawGame(void) {
 
   glEnable(GL_DEPTH_TEST);
 
-  glClearColor(game2->settingsCache.clear_color[0], 
-               game2->settingsCache.clear_color[1], 
-               game2->settingsCache.clear_color[2],
-               game2->settingsCache.clear_color[3]);
+  glClearColor(gSettingsCache.clear_color[0], 
+               gSettingsCache.clear_color[1], 
+               gSettingsCache.clear_color[2],
+               gSettingsCache.clear_color[3]);
 
-  if(game2->settingsCache.use_stencil) {
+  if(gSettingsCache.use_stencil) {
     glClearStencil(0);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
   } else {
@@ -48,9 +48,9 @@ void drawGame(void) {
 			drawCam(p, pV);
       glDisable(GL_DEPTH_TEST);
       glDepthMask(GL_FALSE);
-      if (game2->settingsCache.show_scores)
+      if (gSettingsCache.show_scores)
 				drawScore(p, d);
-      if (game2->settingsCache.show_ai_status)
+      if (gSettingsCache.show_ai_status)
 				if(p->ai->active == AI_COMPUTER)
 					drawAI(d);
     }
@@ -58,10 +58,10 @@ void drawGame(void) {
     glEnable(GL_DEPTH_TEST);
   }
 
-  if (game2->settingsCache.show_fps)
+  if (gSettingsCache.show_fps)
     drawFPS(gScreen);
 
-	if(game2->settingsCache.show_console)
+	if(gSettingsCache.show_console)
 		drawConsole(gScreen);
 
   /* printf("%d polys\n", polycount); */
@@ -136,7 +136,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 
   glEnable(GL_CULL_FACE);
 
-  if(game2->settingsCache.use_stencil) {
+  if(gSettingsCache.use_stencil) {
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_GREATER, 1, 1);
@@ -157,7 +157,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 		glTranslatef(x,y, 0.0);
 	}
   glMultMatrixf(shadow_matrix);
-  if (game2->settingsCache.turn_cycle) {
+  if (gSettingsCache.turn_cycle) {
     doCycleTurnRotation(pV, p);
   } else if (pV->exp_radius == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
@@ -170,7 +170,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 
   /* restore */
 
-  if(game2->settingsCache.use_stencil)
+  if(gSettingsCache.use_stencil)
     glDisable(GL_STENCIL_TEST);
 
   glDisable(GL_BLEND);
@@ -194,11 +194,11 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 		glTranslatef(x, y, 0.0);
 	}
 
-  if (pV->exp_radius == 0 && game2->settingsCache.turn_cycle == 0) {
+  if (pV->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
 
-  if (game2->settingsCache.turn_cycle) { 
+  if (gSettingsCache.turn_cycle) { 
     doCycleTurnRotation(pV, p);
   }
 
@@ -207,7 +207,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
-  if (game2->settingsCache.light_cycles) {
+  if (gSettingsCache.light_cycles) {
     glEnable(GL_LIGHTING);
   }
 
@@ -242,7 +242,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
    
     glEnable(GL_BLEND);
 
-    if (game2->settingsCache.show_impact) {
+    if (gSettingsCache.show_impact) {
       drawImpact(pV);
     }
 
@@ -275,8 +275,8 @@ int playerVisible(Player *eye, Player *target) {
   tmp[1] = y;
   tmp[2] = 0;
 	
-  lod_level = (game2->settingsCache.lod > MAX_LOD_LEVEL) ? 
-    MAX_LOD_LEVEL : game2->settingsCache.lod;
+  lod_level = (gSettingsCache.lod > MAX_LOD_LEVEL) ? 
+    MAX_LOD_LEVEL : gSettingsCache.lod;
 
   /* calculate lod */
   vsub(eye->camera->cam, tmp, v2);
@@ -289,7 +289,7 @@ int playerVisible(Player *eye, Player *target) {
   normalize(v2);
   s = scalarprod(v1, v2);
   /* maybe that's not exactly correct, but I didn't notice anything */
-  d = cosf((game2->settingsCache.fov / 2) * 2 * PI / 360.0);
+  d = cosf((gSettingsCache.fov / 2) * 2 * PI / 360.0);
   /*
     printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
     v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
@@ -308,7 +308,7 @@ void drawPlayers(Player *p, PlayerVisual *pV) {
 		int lod;
 		int drawTurn = 1;
 
-		if (game2->settingsCache.camType == CAM_TYPE_COCKPIT && 
+		if (gSettingsCache.camType == CAM_TYPE_COCKPIT && 
 				p == &game->player[i])
 			drawTurn = 0;
 
@@ -328,8 +328,8 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  doPerspective(game2->settingsCache.fov, d->vp_w / d->vp_h,
-                game2->settingsCache.znear, game2->rules.grid_size * 6.5f);
+  doPerspective(gSettingsCache.fov, d->vp_w / d->vp_h,
+                gSettingsCache.znear, game2->rules.grid_size * 6.5f);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -343,9 +343,8 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glDepthMask(GL_FALSE);
   glDisable(GL_DEPTH_TEST);
 
-
   /* skybox */
-  if (game2->settingsCache.show_skybox) {
+  if (gSettingsCache.show_skybox) {
     drawSkybox(game2->rules.grid_size);
   }
 
@@ -353,7 +352,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
   /* glDepthMask(GL_TRUE); */
   
   /* floor */
-  if (game2->settingsCache.show_floor_texture) {
+  if (gSettingsCache.show_floor_texture) {
     drawFloorTextured(game2->rules.grid_size,
                       gScreen->textures[TEX_FLOOR]);
   } else {
@@ -361,15 +360,15 @@ void drawCam(Player *p, PlayerVisual* pV) {
     float line_color[] = {1.0, 1.0, 1.0};
     
     drawFloorGrid(game2->rules.grid_size,
-                  game2->settingsCache.line_spacing,
+                  gSettingsCache.line_spacing,
                   line_color,
-                  game2->settingsCache.clear_color);
+                  gSettingsCache.clear_color);
   }
   
   /* glDepthMask(GL_FALSE); */
 
   /* shadows on the floor: cycle, recognizer, trails */
-  if (game2->settingsCache.show_recognizer) {
+  if (gSettingsCache.show_recognizer) {
     drawRecognizerShadow();
   }
 
@@ -377,7 +376,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
     int lod = playerVisible(p, game->player + i);
 		if (lod >= 0) {
 			int drawTurn = 1;
-			if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
+			if (! gSettingsCache.camType == CAM_TYPE_COCKPIT ||
 	 			p != &game->player[i])
 				drawTurn = 0;
 			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
@@ -389,12 +388,12 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 
-  if (game2->settingsCache.show_recognizer &&
+  if (gSettingsCache.show_recognizer &&
       p->data->speed != SPEED_GONE) {
     drawRecognizer();
   }
 
-  if (game2->settingsCache.show_wall == 1) {
+  if (gSettingsCache.show_wall == 1) {
     drawWalls();
   }
 
@@ -442,7 +441,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
   /* transparent stuff */
   /* draw the glow around the other players: */
-  if (game2->settingsCache.show_glow == 1) {
+  if (gSettingsCache.show_glow == 1) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
@@ -455,14 +454,13 @@ void drawCam(Player *p, PlayerVisual* pV) {
     glDisable(GL_BLEND);
     }
   }
-
 	/* 2d hack */
-	if(game2->settingsCache.map_ratio_w > 0)
+	if(gSettingsCache.map_ratio_w > 0)
 	{
 		Visual d2d;
 		memcpy(&d2d, d, sizeof(Visual));
-		d2d.vp_w *= game2->settingsCache.map_ratio_w;
-		d2d.vp_h *= game2->settingsCache.map_ratio_h;
+		d2d.vp_w *= gSettingsCache.map_ratio_w;
+		d2d.vp_h *= gSettingsCache.map_ratio_h;
 
 		d2d.vp_x += 20;
 		d2d.vp_y += 20;

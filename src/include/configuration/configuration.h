@@ -3,8 +3,6 @@
 
 extern void parse_args(int argc, const char *argv[]);
 extern void updateSettingsCache(void);
-extern void initMainGameSettings(void);
-extern void initDefaultSettings(void);
 extern void initColors(void);
 extern void checkSettings(void);
 extern void saveSettings(void);

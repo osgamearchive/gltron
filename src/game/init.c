@@ -25,12 +25,10 @@ void initScripting(void) {
 
 void initConfiguration(int argc, const char *argv[])
 {
-  /* initialize some global variables */
-  initMainGameSettings();
-
   /* load some more defaults from config file */
-  initDefaultSettings();
-
+	runScript(PATH_SCRIPTS, "config.lua");
+	runScript(PATH_SCRIPTS, "artpack.lua");
+	
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
   {
     char *path;
@@ -49,6 +47,14 @@ void initConfiguration(int argc, const char *argv[])
       exit(1); // something is seriously wrong
     }
   }
+	
+	if(!isSettingf("version") || getSettingf("version") < 0.70f) {
+		/* load some more defaults from config file */
+		runScript(PATH_SCRIPTS, "config.lua");
+		runScript(PATH_SCRIPTS, "artpack.lua");
+		printf("[warning] old config file found, overriding using defaults\n");
+	}
+	setSettingf("version", 0.70f);
 
   /* parse any comandline switches overrinding the loaded settings */
   parse_args(argc, argv);
@@ -90,4 +96,9 @@ void initGame(void) {
 
 void initInput(void) {
 	inputInit();
+
+  gInput.mouse1 = 0;
+  gInput.mouse2 = 0;
+  gInput.mousex = 0;
+  gInput.mousey = 0;
 }

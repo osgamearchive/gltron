@@ -8,7 +8,7 @@ void drawWalls(void) {
   float h;
 
   t = game2->rules.grid_size / 240.0f;
-  if (game2->settingsCache.stretch_textures) {
+  if (gSettingsCache.stretch_textures) {
     h = t * WALL_H;
     t = 1.0;
   } else h = WALL_H;

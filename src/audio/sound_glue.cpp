@@ -52,7 +52,7 @@ extern "C" {
 			if( game->player[i].data->speed > 0)
 				Audio_StartEngine(i);
     sample_engine->Start();
-    if (game2->settingsCache.show_recognizer)
+    if (gSettingsCache.show_recognizer)
       sample_recognizer->Start();
     // printf("[audio] turning on engine sound\n");
   }
@@ -118,7 +118,7 @@ extern "C" {
     }
 
     if(sample_recognizer->IsPlaying()) {
-      if (game2->settingsCache.show_recognizer) {
+      if (gSettingsCache.show_recognizer) {
 				vec2 p, v;
 				getRecognizerPositionVelocity(&p, &v);
 				// recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);
@@ -140,8 +140,8 @@ extern "C" {
 
     listener._up = Vector3(0, 0, 1);
 
-    sound->SetMixMusic(game2->settingsCache.playMusic);
-    sound->SetMixFX(game2->settingsCache.playEffects);
+    sound->SetMixMusic(gSettingsCache.playMusic);
+    sound->SetMixFX(gSettingsCache.playEffects);
     sound->Idle();
   }
 
@@ -184,8 +184,8 @@ extern "C" {
 			fprintf(stderr, "[sound] buffer in bytes: %d\n", obtained.size);
 			*/
     }
-    sound->SetMixMusic(game2->settingsCache.playMusic);
-    sound->SetMixFX(game2->settingsCache.playEffects);
+    sound->SetMixMusic(gSettingsCache.playMusic);
+    sound->SetMixFX(gSettingsCache.playEffects);
   }
 
   void Audio_Start(void) {

@@ -7,11 +7,12 @@ Game main_game;
 Game *game;
 Game2 main_game2;
 Game2 *game2;
-
 Visual *gScreen;
 int gViewportType;
 PlayerVisual *gPlayerVisuals;
 Input gInput;
+
+SettingsCache gSettingsCache;
 
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 

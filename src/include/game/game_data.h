@@ -42,7 +42,6 @@ typedef struct RuleSet {
 typedef struct Game2 {
   Grid grid;
   RuleSet rules;
-  SettingsCache settingsCache;
   int mode;
   int players;
   int *startPositions;

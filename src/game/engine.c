@@ -21,6 +21,11 @@ void getPositionFromData(float *x, float *y, Data *data) {
 void initGameStructures(void) { /* called only once */
   int i;
 
+  /* initialize some global variables */
+  game2 = &main_game2;
+  game = &main_game;
+  game->pauseflag = 0;
+
   game->winner = -1;
 
   game->players = PLAYERS;
@@ -105,7 +110,7 @@ void resetPlayerData(void) {
 			int camType;
 			Camera *cam = game->player[i].camera;
 			camType = (game->player[i].ai->active == AI_COMPUTER) ? 
-				CAM_CIRCLE : game2->settingsCache.camType;
+				CAM_CIRCLE : gSettingsCache.camType;
 			initCamera(cam, data, camType);
 		}
 	}

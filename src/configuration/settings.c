@@ -10,29 +10,6 @@
 #define BUFSIZE 100
 #define MAX_VAR_NAME_LEN 64
 
-/* this just screams to be replaced by scripting code */
-
-void initDefaultSettings(void) {
-  /* load some more defaults from config file */
-	runScript(PATH_SCRIPTS, "config.lua");
-	runScript(PATH_SCRIPTS, "artpack.lua");
-
-  game->pauseflag = 0;
-
-}
-
-void initMainGameSettings(void) {
-  game2 = &main_game2;
-  game = &main_game;
-
-  /* initialize some struct members */
-
-  gInput.mouse1 = 0;
-  gInput.mouse2 = 0;
-  gInput.mousex = 0;
-  gInput.mousey = 0;
-}
-
 void checkSettings(void) {
   /* sanity check: speed, grid_size */
   if(getSettingf("speed") <= 0) {
@@ -52,32 +29,28 @@ void checkSettings(void) {
 }
 
 void saveSettings(void) {
-#ifdef WIN32
 	char *script;
 	script = getPath(PATH_SCRIPTS, "save.lua");
 	scripting_RunFile(script);
 	free(script);
 
+#ifdef WIN32
 	scripting_RunFormat("writeto(\"%s\")", "gltron.ini");
-	scripting_Run("save()");
-		scripting_Run("writeto()"); // select stdout again
 #else
-	char *script, *path;
-	script = getPath(PATH_SCRIPTS, "save.lua");
-	scripting_RunFile(script);
-	free(script);
-
-	path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
-	if(path != NULL) {
+	{
+		char *path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
+		if(path == NULL)
+			return;
 		scripting_RunFormat("writeto(\"%s\")", path);
-		scripting_Run("save()");
-			scripting_Run("writeto()"); // select stdout again
 		free(path);
 	}
 #endif
+
+	scripting_Run("save()");
+	scripting_Run("writeto()"); // select stdout again
 }
 
-int getSettingi(char *name) {
+int getSettingi(const char *name) {
   int value;
   if( scripting_GetIntegerSetting(name, &value) ) {
     /* does not exit, return default */
@@ -89,7 +62,7 @@ int getSettingi(char *name) {
   return value;
 }
 
-float getSettingf(char *name) {
+float getSettingf(const char *name) {
   float value;
   if( scripting_GetFloatSetting(name, &value) ) {
     /* does not exit, return default */
@@ -101,48 +74,58 @@ float getSettingf(char *name) {
   return value;
 }
 
-void setSettingf(char *name, float f) {
+int isSettingf(const char *name) {
+	float value;
+	return (scripting_GetFloatSetting(name, &value) == 0);
+}
+
+int isSettingi(const char *name) {
+	int value;
+	return (scripting_GetIntegerSetting(name, &value) == 0);
+}
+
+void setSettingf(const char *name, float f) {
   // printf("setting '%s' to %.2f\n", name, f);
   scripting_SetFloatSetting( name, f );
 }
 
-void setSettingi(char *name, int i) {
+void setSettingi(const char *name, int i) {
   // printf("setting '%s' to %d\n", name, i);
   scripting_SetFloatSetting( name, (float)i );
 }
 
 void updateSettingsCache(void) {
   /* cache lua settings that don't change during play */
-  game2->settingsCache.use_stencil = getSettingi("use_stencil");
-  game2->settingsCache.show_scores = getSettingi("show_scores");
-  game2->settingsCache.show_ai_status = getSettingi("show_ai_status");
-  game2->settingsCache.ai_level = getSettingi("ai_level");
-  game2->settingsCache.show_fps = getSettingi("show_fps");
-  game2->settingsCache.show_console = getSettingi("show_console");
-  game2->settingsCache.softwareRendering = getSettingi("softwareRendering");
-  game2->settingsCache.show_floor_texture = getSettingi("show_floor_texture");
-  game2->settingsCache.line_spacing = getSettingi("line_spacing");
-  game2->settingsCache.show_decals = getSettingi("show_decals");
-  game2->settingsCache.alpha_trails = getSettingi("alpha_trails");
-  game2->settingsCache.antialias_lines = getSettingi("antialias_lines");
-  game2->settingsCache.turn_cycle = getSettingi("turn_cycle"); 
-  game2->settingsCache.light_cycles = getSettingi("light_cycles"); 
-  game2->settingsCache.lod = getSettingi("lod"); 
-  game2->settingsCache.fov = getSettingi("fov"); 
-  game2->settingsCache.stretch_textures = getSettingi("stretch_textures"); 
-  game2->settingsCache.show_skybox = getSettingi("show_skybox"); 
-  game2->settingsCache.show_recognizer = getSettingi("show_recognizer");
-  game2->settingsCache.show_impact = getSettingi("show_impact");
-  game2->settingsCache.show_glow = getSettingi("show_glow"); 
-  game2->settingsCache.show_wall = getSettingi("show_wall");
-  game2->settingsCache.fast_finish = getSettingi("fast_finish");
-  game2->settingsCache.fov = getSettingf("fov");
-  game2->settingsCache.znear = getSettingf("znear");
-  game2->settingsCache.camType = getSettingi("camType");
-  game2->settingsCache.playEffects = getSettingi("playEffects");
-  game2->settingsCache.playMusic = getSettingi("playMusic");
-	game2->settingsCache.map_ratio_w = getSettingf("map_ratio_w");
-	game2->settingsCache.map_ratio_h = getSettingf("map_ratio_h");
+  gSettingsCache.use_stencil = getSettingi("use_stencil");
+  gSettingsCache.show_scores = getSettingi("show_scores");
+  gSettingsCache.show_ai_status = getSettingi("show_ai_status");
+  gSettingsCache.ai_level = getSettingi("ai_level");
+  gSettingsCache.show_fps = getSettingi("show_fps");
+  gSettingsCache.show_console = getSettingi("show_console");
+  gSettingsCache.softwareRendering = getSettingi("softwareRendering");
+  gSettingsCache.show_floor_texture = getSettingi("show_floor_texture");
+  gSettingsCache.line_spacing = getSettingi("line_spacing");
+  gSettingsCache.show_decals = getSettingi("show_decals");
+  gSettingsCache.alpha_trails = getSettingi("alpha_trails");
+  gSettingsCache.antialias_lines = getSettingi("antialias_lines");
+  gSettingsCache.turn_cycle = getSettingi("turn_cycle"); 
+  gSettingsCache.light_cycles = getSettingi("light_cycles"); 
+  gSettingsCache.lod = getSettingi("lod"); 
+  gSettingsCache.fov = getSettingi("fov"); 
+  gSettingsCache.stretch_textures = getSettingi("stretch_textures"); 
+  gSettingsCache.show_skybox = getSettingi("show_skybox"); 
+  gSettingsCache.show_recognizer = getSettingi("show_recognizer");
+  gSettingsCache.show_impact = getSettingi("show_impact");
+  gSettingsCache.show_glow = getSettingi("show_glow"); 
+  gSettingsCache.show_wall = getSettingi("show_wall");
+  gSettingsCache.fast_finish = getSettingi("fast_finish");
+  gSettingsCache.fov = getSettingf("fov");
+  gSettingsCache.znear = getSettingf("znear");
+  gSettingsCache.camType = getSettingi("camType");
+  gSettingsCache.playEffects = getSettingi("playEffects");
+  gSettingsCache.playMusic = getSettingi("playMusic");
+	gSettingsCache.map_ratio_w = getSettingf("map_ratio_w");
+	gSettingsCache.map_ratio_h = getSettingf("map_ratio_h");
 	
-  scripting_GetFloatArray("clear_color", game2->settingsCache.clear_color, 4);
+  scripting_GetFloatArray("clear_color", gSettingsCache.clear_color, 4);
 }

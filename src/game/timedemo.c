@@ -97,11 +97,11 @@ void initTimedemo(void) {
 	updateSettingsCache();
 
 	// overwrite AI skills & rules in settingsCache
-	game2->settingsCache.ai_level = 2;
-	game2->settingsCache.show_ai_status = 0;
-	game2->settingsCache.show_fps = 0;
-	game2->settingsCache.camType = CAM_CIRCLE;
-	game2->settingsCache.show_console = 0;
+	gSettingsCache.ai_level = 2;
+	gSettingsCache.show_ai_status = 0;
+	gSettingsCache.show_fps = 0;
+	gSettingsCache.camType = CAM_CIRCLE;
+	gSettingsCache.show_console = 0;
 	
 	saveRules.speed = getSettingf("speed");
 	saveRules.eraseCrashed = getSettingi("erase_crashed");

@@ -21,7 +21,7 @@ void storeColor(TrailMesh *pMesh, int offset, PlayerVisual *pV, int type) {
 
 	switch(type) {
 	case COLOR_TRAIL:
-		if(game2->settingsCache.alpha_trails)
+		if(gSettingsCache.alpha_trails)
 			memcpy(color, pV->pColorAlpha, 4 * sizeof(float));
 		else
 			memcpy(color, pV->pColorAlpha, 3 * sizeof(float));

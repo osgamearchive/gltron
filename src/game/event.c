@@ -341,7 +341,7 @@ void Game_Idle(void) {
 #endif
 		/* check for fast finish */
     
-		if (game2->settingsCache.fast_finish == 1) {
+		if (gSettingsCache.fast_finish == 1) {
 			int factors[4] = { 4, 6, 12, 25 };
 			int threshold[4] = { 0, 300, 600, 800 };
 			int factor = 1;

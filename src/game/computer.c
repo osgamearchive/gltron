@@ -38,7 +38,7 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
   }
   data = me->data;
   ai = me->ai;
-  level = game2->settingsCache.ai_level;
+  level = gSettingsCache.ai_level;
 
 	// turn off booster
 	data->boost_enabled = 0;
@@ -67,7 +67,8 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 	} else if(distances->left > ai_params.rlDelta[level] &&
 						abs(distances->right - distances->left) < 
 						ai_params.rlDelta[level] &&
-						distances->backleft > distances->left) {
+						distances->backleft > distances->left &&
+						ai->tdiff < ai_params.spiral[level]) {
 		createEvent(player, EVENT_TURN_LEFT);
 		ai->tdiff++;
 	} else if(distances->right > distances->left && 
@@ -81,7 +82,7 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 		ai->tdiff++;
 		// printf("turn left\n");
 	} else {
-		// printf("tdiff decision\n");
+		printf("tdiff decision\n");
 		if(ai->tdiff > 0) { 
 			createEvent(player, EVENT_TURN_RIGHT);
 			ai->tdiff--; 

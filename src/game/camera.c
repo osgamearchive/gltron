@@ -254,7 +254,7 @@ void nextCameraType(void) {
   setSettingi("camType", new_cam_type);
 
   /* update the cached setting */
-  game2->settingsCache.camType = new_cam_type;
+  gSettingsCache.camType = new_cam_type;
   
   for (i = 0; i < game->players; i++) {
     if (game->player[i].ai->active == AI_HUMAN) {
