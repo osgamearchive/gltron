@@ -197,18 +197,28 @@ handle_client(int which)
 	  serverRep->which = SERVERID;
 	  serverRep->type  = chgeState;		  
 	  sState = gameState;
+	  initGameStructures();
+	  resetScores();
+	  initData();
 	  for(i=0; i<4; ++i)
 	    {
 	      if( slots[i].active )
 		{
+		  game2->players=nbUsers;
 		  SDLNet_TCP_Send(slots[i].sock,(char *)serverRep, sizeof(tServRepHdr));
 		  SDLNet_TCP_Send(slots[i].sock,(char *)&sState,sizeof(int));
+		  printf("sending game rules to %d...\n", i);
+		  //Then send nb players
+		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->players,sizeof(int));
+		  //send rules
+		  len = game2->rules.speed * 1000;
+		  SDLNet_TCP_Send(slots[i].sock,(char *)&len,sizeof(int));
+		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->rules.eraseCrashed,sizeof(int));
+		  //send startPositions
+		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->startPositions, (3 * game2->players * sizeof(int)));
 		}
 	    }
-	  initGameStructures();
-	  resetScores();
-	  initData();
-	  game->players = nbUsers;
+	  game->players = game2->players;
 	  printf("starting game with %d players\n", game->players);
 	  break;
 

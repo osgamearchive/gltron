@@ -6,7 +6,7 @@ int processEvent(GameEvent* e) {
 
   //if(game2->mode == GAME_PLAY) {
     writeEvent(e);
-    // }
+    //}
   switch(e->type) {
   case EVENT_TURN_LEFT:
     data = game->player[e->player].data;
