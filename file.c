@@ -127,9 +127,16 @@ void initDirectories() {
     sprintf(snapshots_dir, "%s%s", getHome(), SNAP_DIR + 1);
 
 #ifdef LOCAL_DATA
+  #ifdef macintosh
+  sprintf(data_dir, ":data");
+  sprintf(art_dir, ":art");
+  sprintf(scripts_dir, ":scripts");
+  #else
   sprintf(data_dir, "data");
   sprintf(art_dir, "art");
   sprintf(scripts_dir, "scripts");
+  #endif
+
 #else
   sprintf(data_dir, "%s%c%s", DATA_DIR, SEPERATOR, "data");
   sprintf(art_dir, "%s%c%s", DATA_DIR, SEPERATOR, "art");
