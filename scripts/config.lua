@@ -10,6 +10,10 @@ settings.debug_output = 1
 -- game
 -- game rules
 settings.speed = 8.5
+settings.booster_max = 4.5
+settings.booster_use = 1.0
+settings.booster_decrease = 0.8
+settings.booster_regenerate = 0.2
 settings.ai_level = 2
 settings.grid_size = 720
 settings.erase_crashed = 1
@@ -81,24 +85,28 @@ settings.keys = {
       right = 115, -- lower case 's'
       glance_left = 113, -- lower case 'q'
       glance_right = 119, -- lower case 'w'
+			boost = 101, -- lower case 'd'
    },
    { -- player 2
       left = 106, -- lower case 'j'
       right = 107, -- lower case 'k'
       glance_left = 117, -- lower case 'u'
       glance_right = 105, -- lower case 'i'
+			boost = 108, -- lower case 'l'
    },
    { -- player 3
-      left = 276, -- cursor settings.left
-      right = 275, -- cursor settings.right
+      left = 276, -- cursor left
+      right = 275, -- cursor right
       glance_left = 127, -- 'del'
       glance_right = 279, -- 'end'
+			boost = 274, -- cursor down
    },
    { -- player 4
-      left = 260, -- keypad settings.left/keypad 4
-      right = 262, -- keybad settings.right/keypad 6
+      left = 260, -- keypad 4
+      right = 262, -- keypad 6
       glance_left = 263, -- keypad 7
       glance_right = 265, -- keypad 9
+			boost = 261, -- keypad 5
    }
 }
 

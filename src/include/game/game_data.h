@@ -59,6 +59,8 @@ typedef struct Data {
 
   int score;
   float speed; /* set to -1 when dead */
+	float booster;
+	int boost_enabled;
 	float trail_height;
 
 	int last_dir;

@@ -71,7 +71,7 @@ void initPause() {
 }
 
 void exitPause() {
-/* sound effects are re-enabled in initGame() */
+/* sound effects are re-enabled in enterGame() */
 // Audio_EnableEngine(); 
 }
 

@@ -98,6 +98,19 @@ void keyGame(int state, int k, int x, int y)
 				}
 				return;
 			}
+			// boost
+			scripting_RunFormat("return settings.keys[%d].boost", i + 1);
+			scripting_GetIntegerResult( &key );
+			if(key == k) {
+				if(state == SYSTEM_KEYSTATE_DOWN) {
+					printf("boost down\n");
+					game->player[i].data->boost_enabled = 1;
+				} else {
+					printf("boost up\n");
+					game->player[i].data->boost_enabled = 0;
+				}
+				return;
+			}
 		}
 	}
 	if(state == SYSTEM_KEYSTATE_DOWN) {

@@ -74,6 +74,32 @@ List* doMovement(int mode, int dt) {
     if(data->speed > 0) { /* still alive */
 			float fs;
 			float t;
+
+			// speed boost:
+			if(data->booster > 0 && data->boost_enabled) {
+				float boost = getSettingf("booster_use") * dt / 1000.0f;
+				if(boost > data->booster)
+					boost = data->booster;
+				data->speed += boost;
+				data->booster -= boost;
+			}
+			if(data->speed > game2->rules.speed && !data->boost_enabled) {
+				float decrease = getSettingf("booster_decrease") * dt / 1000.0f;
+				data->speed -= decrease;
+				if(data->speed < game2->rules.speed)
+					data->speed = game2->rules.speed;
+			}
+			if(!data->boost_enabled) { 
+				float booster_max = getSettingf("booster_max");
+				if(data->booster < booster_max) {
+					data->booster += getSettingf("booster_regenerate") * dt / 1000.0f;
+					if(data->booster > booster_max)
+						data->booster = booster_max;
+				}
+			}
+			// if(i == 0)
+			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
+				
       fs = 1.0 - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
 				cos(i * M_PI / 4.0 + 
 						(float)(game2->time.current % SPEED_OZ_FREQ) * 

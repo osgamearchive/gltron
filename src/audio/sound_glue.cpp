@@ -18,7 +18,6 @@ static Sound::SourceSample *sample_recognizer = NULL;
 static Sound::Source3D *players[PLAYERS];
 static Sound::Source3D *recognizerEngine;
 
-#define V 5.0f
 #define TURNLENGTH 250.0f
 
 extern "C" {
@@ -50,6 +49,7 @@ extern "C" {
 				p3d = players[i];
 				p = game->player + i;
 				p3d->_location = Vector3(p->data->posx, p->data->posy, 0);
+				float V = p->data->speed;
 
 				int dt = game2->time.current - p->data->turn_time;
 				if(dt < TURN_LENGTH) {
@@ -65,7 +65,17 @@ extern "C" {
 																	 V * dirsY[p->data->dir], 
 																	 0);
 				}
-
+				if(i == 0) {
+					if(p->data->boost_enabled) {
+						( (Sound::SourceEngine*) p3d )->_speedShift = 1.2;
+					} else {
+						( (Sound::SourceEngine*) p3d )->_speedShift = 1.0;
+					}
+					( (Sound::SourceEngine*) p3d )->_pitchShift =
+						p->data->speed / getSettingf("speed");
+				}
+						
+#if 0
 				if(i == 0) {
 					if( dt < TURNLENGTH ) {
 						float t = (float)dt / TURNLENGTH;
@@ -78,6 +88,7 @@ extern "C" {
 						( (Sound::SourceEngine*) p3d )->_pitchShift = 1.0;
 					}
 				}
+#endif
       }
     }
 

@@ -79,6 +79,8 @@ void resetPlayerData() {
 		/* if player is playing... */
 		if(ai->active != AI_NONE) {
 			data->speed = getSettingf("speed");
+			data->booster = getSettingf("booster_max");
+			data->boost_enabled = 0;
 			data->trail_height = TRAIL_HEIGHT;
 		} else {
 			data->speed = SPEED_GONE;
