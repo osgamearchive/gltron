@@ -14,7 +14,7 @@ void doScreenShot() {
   sprintf(buf, "gltron-0.61-%d.png", screenshots);
   path = getPossiblePath(PATH_SNAPSHOTS, buf);
   if(path != NULL) {
-    screenShot(buf, game->screen);
+    screenShot(path, game->screen);
     screenshots++;
     free(path);
   }
