@@ -1,11 +1,12 @@
 #include "gltron.h"
 
-void drawGlow(Player *p, gDisplay *d, float dim) {
+void drawGlow(Player *pCam, Player *pTarget, gDisplay *d, float dim) {
   float mat[4*4];
-  
+  float alpha, dist;
+
   glPushMatrix();
-  glTranslatef(p->data->posx,
-	       p->data->posy,
+  glTranslatef(pTarget->data->posx,
+	       pTarget->data->posy,
 	       0);
 
   glShadeModel(GL_SMOOTH);
@@ -13,7 +14,7 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   glDepthMask(GL_FALSE);
   glEnable(GL_DEPTH_TEST);
 
-  glBlendFunc(GL_ONE, GL_ONE);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   glEnable(GL_BLEND);
 
   glGetFloatv(GL_MODELVIEW_MATRIX, mat);
@@ -22,8 +23,27 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   mat[4] = mat[6] = 0.0;
   mat[8] = mat[9] = 0.0;
   glLoadMatrixf(mat);
+
+	{
+		vec3 v;
+		v.v[0] = pTarget->data->posx - pCam->camera->cam[0];
+		v.v[1] = pTarget->data->posy - pCam->camera->cam[1];
+		v.v[2] = 0 - pCam->camera->cam[2];
+		dist = vec3Length(&v);
+	}
+	{
+	  const float fMin = 30;
+		const float fMax = 100;
+		if(dist < fMin) alpha = 0.0f;
+		else if(dist > fMax) alpha = 1.0f;
+		else alpha = (dist - fMin) / (fMax - fMin);
+		// printf("dist: %.2f, alpha: %.2f\n", dist, alpha);
+	}
   glBegin(GL_TRIANGLE_FAN);
-  glColor3fv(p->pColorDiffuse);
+  glColor4f(pTarget->pColorDiffuse[0], 
+						pTarget->pColorDiffuse[1], 
+						pTarget->pColorDiffuse[2],
+						alpha);
 
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
@@ -44,14 +64,20 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 
 
   glBegin(GL_TRIANGLES);
-  glColor3fv(p->pColorDiffuse);
+  glColor4f(pTarget->pColorDiffuse[0], 
+						pTarget->pColorDiffuse[1], 
+						pTarget->pColorDiffuse[2],
+						alpha);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
   glVertex3f(0,-TRAIL_HEIGHT/4,0);
   glVertex3f(dim*cos(-0.2*3.1415/5.0),
 	     TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0);
 
-  glColor3fv(p->pColorDiffuse);
+  glColor4f(pTarget->pColorDiffuse[0], 
+						pTarget->pColorDiffuse[1], 
+						pTarget->pColorDiffuse[2],
+						alpha);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
   glVertex3f(dim*cos(5.2*3.1415/5.0),
