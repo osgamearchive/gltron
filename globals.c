@@ -71,6 +71,8 @@ Netscores         netscores;
 
 int    timeout=0;
 int    hasstarted=0;
+
+Wtext    *pregametext = NULL;
 #endif
 
 /* settings stuff */

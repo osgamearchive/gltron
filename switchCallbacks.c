@@ -63,3 +63,12 @@ void chooseCallback(char *name) {
     switchCallbacks(&guiCallbacks);
   }
 }
+
+void changeCallback(callbacks *new) {
+  exitCallback(last_callback);
+  SystemRegisterCallbacks(new);
+  initCallback(new);
+
+  last_callback = &guiCallbacks;
+  current_callback = new;
+}

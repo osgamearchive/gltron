@@ -60,6 +60,7 @@ GameEvent* readEvent() {
   return getNetEvent();
 #endif
   //printf("- read event...\n");
+  return NULL;
 }
 
 void getEvents() {

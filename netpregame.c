@@ -27,7 +27,7 @@ void keyPregame(int k, int unicode, int x, int y)
       isLogged=0;
       Net_disconnect();
       serverstate=preGameState; //We hope that next time server will be to preGameState
-      switchCallbacks(&guiCallbacks);      
+      changeCallback(&guiCallbacks);      
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
       
@@ -77,10 +77,13 @@ void drawPregame() {
   drawText(gameFtx, x, y, h, message);
 
   //chat
-  glColor3fv(colors[0]);
-  x = 10;
-  y = game->screen->vp_h - 1.5 * h * (5 + 1);
-  drawText(gameFtx, x, y, h, chat);
+/*   glColor3fv(colors[0]); */
+/*   x = 10; */
+/*   y = game->screen->vp_h - 1.5 * h * (5 + 1); */
+/*   drawText(gameFtx, x, y, h, chat); */
+  
+  //Draw pregametext
+  draw_wtext(pregametext);
   
   //calculate the max len of a name;
   len=5; //for empty;
@@ -161,11 +164,16 @@ void initPregame() {
   //Reinit scores
   netscores.winner = -1;
 
+  pregametext = new_wtext(100, 10, 15, 100);
+  insert_wtext(pregametext, "welcome to gltron server...\nlogged\n", 0);
+
   printf("entering netpregame\n");
 }
 
 void cleanPregame()
 {
+  free_wtext(pregametext);
+  pregametext=NULL;
   //fprintf(stderr, "pregame: deconnecting...\n");
   //Net_deconnect();
 }

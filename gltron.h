@@ -179,6 +179,7 @@ enum {
 #include <SDL/SDL_net.h>
 #include "protocol.h"
 #include "netevent.h"
+#include "wtext.h"
 #endif
 
 extern char** artpack_list;
@@ -552,6 +553,8 @@ int    timeout;
 int    hasstarted;
 
 extern Netscores         netscores;
+
+extern Wtext    *pregametext;
 
 
 extern void  handleServer      ( void );

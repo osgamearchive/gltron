@@ -6,7 +6,7 @@ static int coffset;
 void mouseConnect (int buttons, int state, int x, int y)
 {
     if ( state == SYSTEM_MOUSEPRESSED )
-      switchCallbacks(&guiCallbacks);
+	changeCallback(&guiCallbacks);
 }
 
 
@@ -38,7 +38,7 @@ void keyConnect(int k, int unicode, int x, int y)
   if( k == SDLK_ESCAPE )
     {
       Net_disconnect();
-      restoreCallbacks();
+      changeCallback(&guiCallbacks);
     }
 }
 
