@@ -52,7 +52,6 @@ void initGameStructures() { /* called only once */
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (line*) malloc(MAX_TRAIL * sizeof(line));
     p->camera = (Camera*) malloc(sizeof(Camera));
-    p->camera->movement = (CameraMovement*) malloc(sizeof(CameraMovement));
     p->camera->type = (CameraType*) malloc(sizeof(CameraType));
 
     /* init model & display & ai */
@@ -105,25 +104,26 @@ void initPlayerData() {
   int not_playing = 0;
 
   for(i = 0; i < game->players; i++) {
+    float startpos[][2] = { 
+	{ 0.5, 0.25 }, { 0.75, 0.5 }, { 0.5, 0.75 }, { 0.25, 0.5 }
+    };
+    /* float startdir[] = { 2, 1, 0, 3 }; */
+
     data = game->player[i].data;
     ai = game->player[i].ai;
 
     /* arrange players in circle around center */
-    data->iposx = game->settings->grid_size / 2 +
-      game->settings->grid_size / 4 *
-      (float) cos ( (float) (i * 2 * M_PI) / (float) game->players );
 
-    data->iposy = game->settings->grid_size / 2 +
-      game->settings->grid_size / 4 * 
-      (float) sin ( (float) (i * 2 * M_PI) / (float) game->players );
-
+    data->iposx = startpos[i][0] * game->settings->grid_size;
+    data->iposy = startpos[i][1] * game->settings->grid_size;
+    if(i == 0) data->iposy -= 1;
+    /* randomize starting direction */
+    data->dir = rand() & 3;
+    /* data->dir = startdir[i]; */
+    data->last_dir = data->dir;
     data->posx = data->iposx;
     data->posy = data->iposy;
     data->t = 0;
-
-    /* randomize starting direction */
-    data->dir = rand() & 3;
-    data->last_dir = data->dir;
     data->turn = 0;
     data->turn_time = -TURN_LENGTH;
 
