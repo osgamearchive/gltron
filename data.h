@@ -232,6 +232,7 @@ typedef struct Settings {
   int show_2d;
   int show_alpha;
   int alpha_trails;
+  int light_cycles;
 
   int show_floor_texture;
   int show_glow;

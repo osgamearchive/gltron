@@ -56,6 +56,9 @@ void keyGame(int k, int x, int y)
 
   case SYSTEM_KEY_UP: consoleScrollBackward(1); break;
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
+  case SYSTEM_KEY_F6: 
+      game->settings->light_cycles = !game->settings->light_cycles;
+      break;
 
   default: 
     for(i = 0; i < KEY_ACTIONS_N; i++) {
