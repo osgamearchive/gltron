@@ -30,6 +30,7 @@ static void initCircleCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_CIRCLE][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_CIRCLE][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_CIRCLE][CAM_PHI];
+	cam->movement[CAM_PHI_OFFSET] = 0;
 
   cam->type.interpolated_cam = 0;
   cam->type.interpolated_target = 0;
@@ -44,6 +45,7 @@ static void initFollowCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_FOLLOW][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
+	cam->movement[CAM_PHI_OFFSET] = 0;
 
   cam->type.interpolated_cam = 1;
   cam->type.interpolated_target = 0;
@@ -57,6 +59,7 @@ static void initCockpitCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_COCKPIT][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_COCKPIT][CAM_CHI];
   cam->movement[CAM_PHI] = M_PI; // cam_defaults ignored
+	cam->movement[CAM_PHI_OFFSET] = 0;
 
   cam->type.interpolated_cam = 0;
   cam->type.interpolated_target = 1;
@@ -71,6 +74,7 @@ static void initFreeCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_FREE][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_FREE][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_FREE][CAM_PHI];
+	cam->movement[CAM_PHI_OFFSET] = 0;
 
   cam->type.interpolated_cam = 0;
   cam->type.interpolated_target = 0;
@@ -156,14 +160,15 @@ void playerCamera(PlayerVisual *pV, Player *p) {
   /* done with mouse movement, now clamp the camera to legal values */
   clampCam(cam);
 
-  phi = cam->movement[CAM_PHI];
+  phi = cam->movement[CAM_PHI] + cam->movement[CAM_PHI_OFFSET];
   chi = cam->movement[CAM_CHI];
   r = cam->movement[CAM_R];
 
   /* if the cam is coupled to player movement, change the phi accordingly */
   if(cam->type.coupled) {
     int time;
-    time = game2->time.current - pV->turn_time;
+    // time = game2->time.current - pV->turn_time;
+		time = game2->time.current - p->data->turn_time;
     if(time < TURN_LENGTH) {
       int dir, ldir;
       dir = p->data->dir;

@@ -12,7 +12,7 @@ typedef struct {
 typedef struct {
   float cam[3];
   float target[3];
-  float movement[3]; /* indices CAM_R, CAM_CHI, CAM_PHI */
+  float movement[4]; /* indices CAM_R, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET */
   CameraType type;
 } Camera;
 
@@ -28,7 +28,7 @@ enum { CAM_CIRCLE = 0,
        CAM_FREE
 };
 
-enum { CAM_R = 0, CAM_CHI, CAM_PHI };
+enum { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET };
 
 extern char *cam_names[];
 extern float cam_defaults[][3];
