@@ -118,6 +118,7 @@ static void drawImpactGlow(float glow_radius) {
   glScalef(glow_radius, glow_radius, 1.0f);
   
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_IMPACT]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glEnable(GL_TEXTURE_2D);
 
   glColor4f(GLOW_INTENSITY, GLOW_INTENSITY, GLOW_INTENSITY, opacity);

@@ -10,6 +10,7 @@ void disableSkyboxTexture(void) {
 
 static void bindSkyboxTexture(int index) {
   glBindTexture(GL_TEXTURE_2D, gScreen->textures[ TEX_SKYBOX + index ]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 }
 
 void drawSkybox(int grid_size) {
