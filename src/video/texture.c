@@ -19,6 +19,8 @@ void initTexture(Visual *d) {
 	case TRILINEAR:
 		min_filter = GL_LINEAR_MIPMAP_LINEAR;
 		break;
+	default:
+		min_filter = GL_LINEAR_MIPMAP_LINEAR;
 	}
 	printf("using min_filter: %d (setting: %d)\n", min_filter,
 				 getSettingi("mipmap_filter"));
