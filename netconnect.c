@@ -9,7 +9,17 @@ static char serveradd[255];
 void mouseConnect (int buttons, int state, int x, int y)
 {
     if ( state == SYSTEM_MOUSEPRESSED )
-	changeCallback(&guiCallbacks);
+      {
+      if( trackeruse == 1 )
+	//switchCallbacks(&trackerCallbacks); 	
+	changeCallback(&trackerCallbacks, &trackerCallbacks);
+      else
+	changeCallback(&guiCallbacks, &guiCallbacks);
+	  //switchCallbacks(&guiCallbacks);   
+      }
+    //switchCallbacks(&guiCallbacks);
+      //changeCallback(&guiCallbacks);
+      //restoreCallbacks();
 }
 
 void setconnection(char *server, char *port)
@@ -66,7 +76,14 @@ void keyConnect(int k, int unicode, int x, int y)
   if( k == SDLK_ESCAPE )
     {
       Net_disconnect();
-      changeCallback(&guiCallbacks);
+      //changeCallback(&guiCallbacks);
+      //restoreCallbacks();
+      
+      if( trackeruse == 1 )	
+	changeCallback(&trackerCallbacks, &trackerCallbacks);
+      else
+	changeCallback(&guiCallbacks, &guiCallbacks);
+      //switchCallbacks(&guiCallbacks);
     }
 }
 

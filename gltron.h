@@ -588,6 +588,7 @@ extern void  doPredictedTurn   ( int, int );
 extern int   get_size_predictedturn();
 extern int   undoTurn          ( int, int, int );
 extern int   tracker_connect();
+extern int   trackeruse;
 extern void setconnection(char *server, char *port);
 #ifdef USEUDP
 extern void  handleUDP         ( void );

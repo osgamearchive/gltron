@@ -124,7 +124,10 @@ tracker_handle()
       //Connection perdu
       fprintf(stderr, "connection lost\n");
       tracker_close();
-      switchCallbacks(&guiCallbacks);
+      //restoreCallbacks();
+      trackeruse=0;
+      //switchCallbacks(&guiCallbacks);
+      changeCallback(&guiCallbacks, &guiCallbacks);
       return;
     }
 
@@ -207,7 +210,10 @@ keyTracker(int k, int unicode, int x, int y)
       free_wlist(serverlist);
       serverlist=NULL;
       nbservers=0;
-      switchCallbacks(&guiCallbacks);
+      //restoreCallbacks();
+      trackeruse=0;
+      //switchCallbacks(&guiCallbacks);      
+      changeCallback(&guiCallbacks, &guiCallbacks);
       break;
     case SDLK_UP:
       scroll_wlist(serverlist, LIST_SCROLL_UP);
@@ -234,8 +240,9 @@ keyTracker(int k, int unicode, int x, int y)
       printf("server %s port %s\n", server, port);
       tracker_close();
       free_wlist(serverlist);
-      serverlist=NULL;
-      switchCallbacks(&netConnectCallbacks);
+      serverlist=NULL;      
+      changeCallback(&netConnectCallbacks, &trackerCallbacks);
+      //switchCallbacks(&netConnectCallbacks);
       break;
     }
 }
@@ -247,6 +254,7 @@ initTracker()
   if( serverlist == NULL )
     serverlist = new_wlist(10, 10,game->screen->vp_w-20, game->screen->vp_h-20,
 			   10, 6, titles);
+  trackeruse=1;
 }
 
 void
@@ -258,7 +266,6 @@ mouseTracker(int buttons, int state, int x, int y)
 void
 cleanTracker()
 {
-
 }
 
 callbacks trackerscreenCallbacks = {

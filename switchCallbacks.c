@@ -64,11 +64,12 @@ void chooseCallback(char *name) {
   }
 }
 
-void changeCallback(callbacks *new) {
+/** this allow to change callback and when leaving going back to that one*/
+void changeCallback(callbacks *new, callbacks *back) {
   exitCallback(last_callback);
   SystemRegisterCallbacks(new);
   initCallback(new);
 
-  last_callback = &guiCallbacks;
+  last_callback = back;
   current_callback = new;
 }

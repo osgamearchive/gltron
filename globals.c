@@ -77,6 +77,7 @@ int    hasstarted=0;
 Wtext    *pregametext = NULL;
 Wintext  *inpregametext = NULL;
 char   server_message[255] = "";
+int trackeruse = 0;
 #endif
 
 Splash   *splash = NULL;

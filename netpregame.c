@@ -231,7 +231,15 @@ void keyPregame(int k, int unicode, int x, int y)
       pregametext=NULL;
       free_wintext(inpregametext);
       inpregametext=NULL;
-      changeCallback(&guiCallbacks);      
+      if( trackeruse == 1 )
+	{
+	  if( ! tracker_connect() )
+	    changeCallback(&trackerscreenCallbacks, &trackerscreenCallbacks);
+	  else
+	    changeCallback(&guiCallbacks, &guiCallbacks);
+	}
+      else
+	changeCallback(&guiCallbacks, &guiCallbacks);
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
     default:

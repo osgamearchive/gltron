@@ -154,7 +154,9 @@ void menuAction(Menu *activated, int type) {
 	  isConnected=0;
 	  isLogged=0;
 	  setconnection(game->settings->server, game->settings->port);
-	  switchCallbacks(&netConnectCallbacks);
+	  //changeCallback(&trackerCallbacks, &guiCallbacks);
+	  changeCallback(&netConnectCallbacks, &guiCallbacks);
+	  //switchCallbacks(&netConnectCallbacks);
 	  break;
 	case 's':
 	  switchCallbacks(&serverCallbacks);
@@ -167,10 +169,12 @@ void menuAction(Menu *activated, int type) {
 	  break;
 	case 'o':
 	  if( ! tracker_connect() )
-	    switchCallbacks(&trackerscreenCallbacks);
+	    //switchCallbacks(&trackerscreenCallbacks);
+	    changeCallback(&trackerscreenCallbacks, &guiCallbacks);
 	  break;
 	case 'l':
-	  switchCallbacks(&trackerCallbacks);
+	  changeCallback(&trackerCallbacks, &guiCallbacks);
+	  //switchCallbacks(&trackerCallbacks);
 	  break;
 	case 'c':
 	  switchCallbacks(&tportCallbacks);
