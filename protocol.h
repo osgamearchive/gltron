@@ -9,6 +9,9 @@
 
 #define PACKETSIZE  56       //Size of biggest packet
 
+#define MAX_PLAYERS 4
+#define MAX_SLOTS   40
+
 //Enums-----------------------------------------------------------------------
 /** Possible errors */
 enum {
@@ -203,7 +206,7 @@ TCPsocket Net_getmainsock        ( void );
 /** Send a packet */
 int       Net_sendpacket         ( Packet* , TCPsocket );
 /** Receive a packet */
-int       Net_receivepacket      ( Packet *, TCPsocket, int, int );
+int       Net_receivepacket      ( Packet *, TCPsocket, int, int, Slots * );
 
 #ifdef USEUDP
 int       Net_sendudppacket         ( Packet* , int, UDPsocket );

@@ -7,12 +7,16 @@ static int nbsocks = 2; //TCP + UDP
 static int nbsocks = 1;
 #endif
 #else
-//this is the server
 #include "server/server_gltron.h"
+#ifdef TRACKER
+static int nbsocks = MAX_SLOTS+2;
+#else
+//this is the server
 #ifdef USEUDP
-static int nbsocks = MAX_PLAYER + 2; 
+static int nbsocks = MAX_PLAYERS + 2; 
 #else
 static int nbsocks = MAX_PLAYERS + 1;
+#endif
 #endif
 #endif
 int netrulenbwins = 5;
@@ -100,6 +104,7 @@ Net_connect( char *server, int port)
     
       //Start listening to port.
       tcpsock = SDLNet_TCP_Open(&serverIP);
+
       if( tcpsock == NULL )
 	{
 	  Net_cleanup();
@@ -394,7 +399,7 @@ Net_sendpacket( Packet  *packet , TCPsocket sock )
 
   //First : we send the header
   SDLNet_Write16(packet->type, buff);
-  printf("sending header: %d at %d\n", packet->type, game2->time.current);
+  //  printf("sending header: %d at %d\n", packet->type, game2->time.current);
   if( ( SDLNet_TCP_Send(sock, buff, sizeof(Sint16))) < sizeof(Sint16) )
     {
       free(buff);
@@ -611,7 +616,7 @@ get_packetsize( int type )
 
 
 int
-Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
+Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type, Slots *slots )
 {
   int   rLen, len;
   char *buff;
@@ -620,7 +625,7 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
     {
       return cantgetpacket;
     }
-  printf("getting packet for %d, type %d at %d\n", which, slots[which].packet, game2->time.current);
+  //  printf("getting packet for %d, type %d at %d\n", which, slots[which].packet, game2->time.current);
   if( type == HEADER )
     {
       buff =  malloc(sizeof(Sint16));
@@ -631,6 +636,7 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
 	  buff=NULL;
 	  return connectionclosed;
 	}
+
       //parse
       slots[which].packet=SDLNet_Read16(buff);
       

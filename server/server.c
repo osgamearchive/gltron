@@ -899,7 +899,7 @@ handle_client(int which)
   int            type = slots[which].packet;
 
   //Get the packet...
-  if( Net_receivepacket(&packet, slots[which].sock, which, type) != 0 )
+  if( Net_receivepacket(&packet, slots[which].sock, which, type, slots) != 0 )
     {
       //Connection perdu
       do_lostplayer(which);

@@ -19,7 +19,7 @@ int main( int argc, char *argv[] ) {
   initGameStructures();
   resetScores();
   initData();
-  initNetwork();
+  initNetwork();		
 
   //starting the server
   start_server();

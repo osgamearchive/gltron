@@ -544,7 +544,7 @@ handleServer()
   
   //makeping(0);
   //Get the packet...
-  if( Net_receivepacket(&packet, Net_getmainsock(), me, packet_type) != 0 )
+  if( Net_receivepacket(&packet, Net_getmainsock(), me, packet_type, slots) != 0 )
     {
       //Connection perdu
       connectionLost();

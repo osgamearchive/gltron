@@ -1,0 +1,15 @@
+todo:
+(x) finish observer things.
+(x) redo a correct input text gui for pregame
+(x) enhance protcol.
+(x) add change settings whithout disconnecting.
+(x) finish ingame chat.
+(x) server need to wait pings finished before starting the game.
+(x) adding timeout for connection.
+
+bugs:
+(x) the client lags( fps descending 1xx to 4x ) sometimes
+(x) the client crash when reconnecting.
+
+possible bugs:
+(0) memory leaks
