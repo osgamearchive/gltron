@@ -47,9 +47,12 @@ void loadArt(void) {
   }
 
   initTexture(gScreen);
+  fprintf(stderr, "[status] done loading textures...\n");
   initFonts();
+  fprintf(stderr, "[status] done loading fonts...\n");
 
   video_LoadLevel();
+  fprintf(stderr, "[status] done loading level...\n");
 }
 
 void reloadArt(void) {
