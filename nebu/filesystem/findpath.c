@@ -36,7 +36,7 @@
 #define PATH_MAX 8192
 #endif
 
-#if !defined(WIN32) && !defined(macintosh)
+#if !defined(WIN32) && !defined(macintosh) && !defined(__APPLE__)
 void goto_installpath(const char *argv0)
 {
     char temppath[PATH_MAX];
