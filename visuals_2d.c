@@ -1,5 +1,7 @@
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
 
+#include "util.h"
 /* draw a 2d map */
 
 void draw2D( Visual *d ) {

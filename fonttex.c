@@ -1,4 +1,5 @@
-#include "gltron.h"
+#include "file.h"
+#include "video.h"
 
 #define FTX_ERR "[FontTex error]: "
 

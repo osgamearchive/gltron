@@ -1,4 +1,7 @@
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
+
+#include "util.h"
 
 void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 							Visual *d, float dim) {
@@ -91,7 +94,7 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
   glPopMatrix();  
 }
 
-void drawImpact(Player *p) {
+void drawImpact(PlayerVisual *pV) {
 
   glDisable(GL_LIGHTING);
   glPushMatrix();
@@ -107,7 +110,7 @@ void drawImpact(Player *p) {
 
   glColor3f(0.68, 0, 0);
   
-  drawExplosion(&(p->data->impact_radius));
+  drawExplosion(&(pV->impact_radius));
   glPopMatrix();
   glEnable(GL_LIGHTING);
 }

@@ -13,7 +13,7 @@ typedef struct {
   float cam[3];
   float target[3];
   float movement[3]; /* indices CAM_R, CAM_CHI, CAM_PHI */
-  CameraType *type;
+  CameraType type;
 } Camera;
 
 enum { 
@@ -34,5 +34,6 @@ extern char *cam_names[];
 extern float cam_defaults[][3];
 
 void nextCameraType();
+void doCameraMovement();
 
 #endif

@@ -13,16 +13,16 @@ class Vector3 {
   Vector3(float a, float b, float c) {
     x = a; y = b; z = c;
   };
-  Vector3(float *v) {
+  Vector3(const float *v) {
     x = v[0]; y = v[1]; z = v[2];
   };
   float x, y, z;
 
-  Vector3 operator+ (const Vector3& v) const {
+  const Vector3 operator+ (const Vector3& v) const {
     return Vector3(x + v.x, y + v.y, z + v.z);
   };
 
-  Vector3 operator- (const Vector3& v) const {
+  const Vector3 operator- (const Vector3& v) const {
     return Vector3(x - v.x, y - v.y, z - v.z);
   };
 
@@ -30,18 +30,16 @@ class Vector3 {
     return x * v.x + y * v.y + z * v.z;
   };
 
-  Vector3 operator* (float f) const {
+  const Vector3 operator* (float f) const {
     return Vector3(x * f, y * f, z * f);
   }
 
-  Vector3& operator*= (float f) {
+  void operator*= (float f) {
     x *= f; y *= f; z *= f;
-    return *this;
   }
 
-  Vector3& operator/= (float f) {
+  void operator/= (float f) {
     x /= f; y /= f; z /= f;
-    return *this;
   }
 
   float Length() const {

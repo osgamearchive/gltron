@@ -27,7 +27,7 @@ int c_resetCamera(lua_State *L) {
   Data *data;
 
   for(i = 0; i < game->players; i++) {
-    cam = gPlayerVisuals[i].camera;
+    cam = game->player[i].camera;
     data = game->player[i].data;
 
     camType = (game->player[i].ai->active == AI_COMPUTER) ? 

@@ -1,5 +1,7 @@
 #include "trail_geometry.h"
 
+#include <math.h>
+
 enum {
 	COLOR_TRAIL, COLOR_BRIGHT, COLOR_CYCLE
 };
@@ -216,7 +218,8 @@ void bowGeometry(Player *pPlayer, PlayerVisual *pV,
 		if(fTop < 0.3f) fTop = 0.3f;
 		
 		storeVertex(pMesh, vOffset, &line, t, 
-								fFloor * pData->trail_height, fTop * pData->trail_height, 
+								fFloor * pPlayer->data->trail_height, 
+								fTop * pPlayer->data->trail_height, 
 								DECAL_WIDTH, 0);
 		storeColor(pMesh, vOffset, pV, COLOR_BRIGHT);
 		vOffset += 2;

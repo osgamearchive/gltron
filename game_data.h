@@ -2,7 +2,10 @@
 #define GAME_DATA_H
 
 #include "basic_types.h"
-#include "settings.h"
+
+#include "configuration.h"
+#include "filesystem.h"
+
 #include "camera.h"
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
@@ -59,17 +62,9 @@ typedef struct Data {
   
   int dir; int last_dir;
 
-  unsigned int turn_time; /* for cycle animation */
-  unsigned int spoke_time; /* for cycle wheel animation */
-  int spoke_state; /* showing spoke or not */
-
   int score;
   float speed; /* set to -1 when dead */
-  float trail_height; /* countdown to zero when dead */
-
-  /* explosion stuff */
-  float impact_radius;
-  float exp_radius; /* explosion of the cycle model */
+	float trail_height;
  
   Line *trails;
 	int trailOffset;
@@ -85,6 +80,7 @@ typedef struct AI {
 } AI;
 
 typedef struct Player {
+	Camera *camera;
   Data *data;
   AI *ai;
 } Player;

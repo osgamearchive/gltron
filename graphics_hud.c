@@ -1,4 +1,8 @@
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
+
+#include "util.h"
+#include "system.h"
 
 void drawAI(Visual *d) {
   char ai[] = "computer player";

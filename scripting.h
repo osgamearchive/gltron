@@ -3,6 +3,7 @@
 
 extern void scripting_Init();
 extern void scripting_Quit();
+extern void Scripting_Idle();
 
 extern int scripting_GetFloatSetting(char *name, float *f);
 extern int scripting_GetIntegerSetting(char *name, int *i);

@@ -1,8 +1,12 @@
-#include "gltron.h"
-#include "event.h"
-#include "engine.h"
+#include "video.h"
+#include "util.h"
+#include "game.h"
+#include "system.h"
 #include "console.h"
 #include "recognizer.h"
+#include "Sound.h"
+#include "camera.h"
+#include "scripting.h"
 
 /*! \fn int processEvent(GameEvent* e)
   handle events, e.g.
@@ -67,11 +71,11 @@ int processEvent(GameEvent* e) {
 
 List* doMovement(int mode, int dt) {
   int i;
-  Data *data;
   List *l = NULL;
 
   for(i = 0; i < game->players; i++) {
-    data = game->player[i].data;
+		Data *data = game->player[i].data;
+		PlayerVisual *pV = gPlayerVisuals + i;
     if(data->speed > 0) { /* still alive */
 			float fs;
 			float t;
@@ -107,8 +111,8 @@ List* doMovement(int mode, int dt) {
     } else { /* already crashed */
       if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
 				data->trail_height -= (float)(dt * TRAIL_HEIGHT) / 1000;
-      if(data->exp_radius < EXP_RADIUS_MAX)
-				data->exp_radius += (float)dt * EXP_RADIUS_DELTA;
+      if(pV->exp_radius < EXP_RADIUS_MAX)
+				pV->exp_radius += (float)dt * EXP_RADIUS_DELTA;
       else if (data->speed == SPEED_CRASHED) {
 				int winner = -1;
 
@@ -137,21 +141,16 @@ List* doMovement(int mode, int dt) {
  
 /*! \fn void idleGame( void )
   game loop:
-  update sound, time, (network), animation (explosion radius, recognizer
-  movement), run ai, process events, do physics, process events again,
-  do camera movement, run garbage collector, schedule gfx redisplay
+  run ai, process events, do physics, process events again,
+  do camera movement
 */
 
-void idleGame(void) {
+void Game_Idle(void) {
   List *l;
   List *p;
   int i;
   int dt;
   int t;
-
-	Sound_idle();
-
-	if(updateTime() == 0) return;
 
 	switch(game2->mode) {
 	case GAME_SINGLE:
@@ -170,7 +169,7 @@ void idleGame(void) {
 			}
 			for (i = 0; i < game->players; i++) {
 				if (game->player[i].ai->active != AI_COMPUTER &&
-						game->player[i].data->exp_radius < EXP_RADIUS_MAX) {
+						gPlayerVisuals[i].exp_radius < EXP_RADIUS_MAX) {
 					factor = 1;
 				}
 			}
@@ -242,9 +241,6 @@ void idleGame(void) {
     
 	doCameraMovement();
 	doRecognizerMovement();
-
-	scripting_RunGC();
-	SystemPostRedisplay();
 }
 
 /*! \fn void createEvent(int player, event_type_e eventType)

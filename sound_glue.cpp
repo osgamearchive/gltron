@@ -5,7 +5,10 @@
 #include "SourceEngine.h"
 #include "Source.h"
 
-#include "gltron.h"
+extern "C" {
+#include "game.h"
+#include "video.h" // 3d sound engine needs to know the camera's location!
+}
 
 #include "SDL.h"
 #include "SDL_sound.h"
@@ -43,7 +46,7 @@ extern "C" {
     // iterate over all the players and update the engines
     if(sample_engine->IsPlaying()) {
       for(int i = 0; i < PLAYERS; i++) {
-				int dt = game2->time.current - game->player[i].data->turn_time;
+				int dt = game2->time.current - gPlayerVisuals[i].turn_time;
       
 				Player *p;
 				Sound::Source3D *p3d;
@@ -91,10 +94,11 @@ extern "C" {
 
     Sound::Listener& listener = sound->GetListener();
 
-    listener._location = Vector3(gPlayerVisuals[0].camera->cam);
-    listener._direction = 
-      Vector3(gPlayerVisuals[0].camera->target) -
-      Vector3(gPlayerVisuals[0].camera->cam);
+    listener._location = Vector3(game->player[0].camera->cam);
+		Vector3 v1 = Vector3(game->player[0].camera->target);
+		Vector3 v2 = Vector3(game->player[0].camera->cam);
+    listener._direction = v1 - v2;
+      
     // listener._location = players[0]->_location;
     // listener._direction = players[0]->_velocity;
     listener._velocity = players[0]->_velocity;

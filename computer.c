@@ -1,5 +1,6 @@
-#include "gltron.h"
-#include "event.h"
+#include "game.h"
+
+#include <math.h>
 
 static void getDistPoint(int dir, int d, int *x, int *y) {
   *x += dirsX[dir] * d;

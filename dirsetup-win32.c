@@ -1,4 +1,4 @@
-#include "gltron.h"
+#include "file.h"
 
 void dirSetup(const char *executable[]) {
   initDirectories();

@@ -1,4 +1,5 @@
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
 
 void drawWalls() {
 #undef WALL_H

@@ -1,4 +1,7 @@
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
+
+#include "util.h"
 
 void checkGLError(const char *where) {
   int error;

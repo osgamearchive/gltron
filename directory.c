@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "gltron.h"
+#include "basic_types.h"
 
 #include <sys/types.h>
 #include <dirent.h>

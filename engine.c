@@ -1,7 +1,10 @@
-#include "gltron.h"
+#include "game.h"
+#include "video.h"
 #include "recognizer.h"
 #include "event.h"
 #include "util.h"
+#include "system.h"
+#include "audio.h"
 
 int getCol(int x, int y) {
   return x < 1 || x >= game2->rules.grid_size ||
@@ -24,13 +27,14 @@ void initGameStructures() { /* called only once */
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (Line*) malloc(MAX_TRAIL * sizeof(Line));
 		p->data->trailOffset = 0;
-  }
+		p->camera = (Camera*) malloc(sizeof(Camera));
+   }
 
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
 }
 
-void initPlayerData() {
+void resetPlayerData() {
   int i;
   Data *data;
   AI *ai;
@@ -74,19 +78,14 @@ void initPlayerData() {
 		data->dir = trand() & 3;
 		/* data->dir = startdir[i]; */
 		data->last_dir = data->dir;
-		data->turn_time = -TURN_LENGTH;
 
 		/* if player is playing... */
 		if(ai->active != AI_NONE) {
 			data->speed = getSettingf("speed");
 			data->trail_height = TRAIL_HEIGHT;
-			data->impact_radius = 0.0;
-			data->exp_radius = 0;
 		} else {
 			data->speed = SPEED_GONE;
 			data->trail_height = 0;
-			data->exp_radius = EXP_RADIUS_MAX;
-
 			not_playing++;
 		}
 		// data->trail = data->trails;
@@ -97,6 +96,14 @@ void initPlayerData() {
 		
 		data->trails[ data->trailOffset ].ex = floorf(data->posx);
 		data->trails[ data->trailOffset ].ey = floorf(data->posy);
+
+		{
+			int camType;
+			Camera *cam = game->player[i].camera;
+			camType = (game->player[i].ai->active == AI_COMPUTER) ? 
+				CAM_CIRCLE : game2->settingsCache.camType;
+			initCamera(cam, data, camType);
+		}
 	}
 
 	free(startIndex);
@@ -141,9 +148,9 @@ void initData() {
 	/* event management */
 	game2->events.next = NULL;
 	/* TODO: free any old events that might have gotten left */
-  
-	initPlayerData();
-	initClientData();
+
+  resetVideoData();
+	resetPlayerData();
 }
 
 int updateTime() {
@@ -154,6 +161,8 @@ int updateTime() {
 	return game2->time.dt;
 }
 
+void Time_Idle() {
+}
 
 void resetScores() {
 	int i;
@@ -210,9 +219,10 @@ void newTrail(Data* data) {
       
 void doTurn(GameEvent *e, int direction) {
 	Data *data = game->player[e->player].data;
-
+	PlayerVisual *pV = gPlayerVisuals + e->player;
 	newTrail(data);
 	data->last_dir = data->dir;
 	data->dir = (data->dir + direction) % 4;
-	data->turn_time = game2->time.current;
+
+	pV->turn_time = game2->time.current;
 }

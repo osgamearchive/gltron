@@ -89,7 +89,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
   float trail_top[] = { 1.0, 1.0, 1.0, 1.0 };
 
   data = p->data;
-  cam = pV->camera;
+  cam = p->camera;
 
   height = data->trail_height;
   if(height <= 0) return;

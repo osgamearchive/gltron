@@ -1,4 +1,5 @@
-#include "gltron.h"
+#include "video.h"
+#include "file.h"
 
 void initFonts() {
   char *path;

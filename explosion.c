@@ -1,5 +1,6 @@
-#include "gltron.h"
+#include "video.h"
 #include "explosion.h" 
+#include "util.h"
 
 #define IMPACT_RADIUS_DELTA 0.025
 #define IMPACT_MAX_RADIUS 25 

@@ -122,8 +122,6 @@ static void loadModels() {
 }
 
 void initVideoData() {
-	int i;
-
   gScreen = (Visual*) malloc(sizeof(Visual));
   gViewportType = getSettingi("display_type"); 
   
@@ -139,14 +137,6 @@ void initVideoData() {
 
 	gPlayerVisuals = (PlayerVisual*) malloc(MAX_PLAYERS * sizeof(PlayerVisual));
 
-  for(i = 0; i < game->players; i++) {
-		PlayerVisual *pV = gPlayerVisuals + i;
-
-    pV->display = (Visual*) malloc(sizeof(Visual));
-    pV->camera = (Camera*) malloc(sizeof(Camera));
-    pV->camera->type = (CameraType*) malloc(sizeof(CameraType));
-  }
-
 	loadModels();
 
   changeDisplay(-1);
@@ -160,3 +150,125 @@ void initGameScreen() {
   d->vp_x = 0; d->vp_y = 0;
   d->vp_w = d->w; d->vp_h = d->h;
 }
+
+
+void resetVideoData() {
+  /* for each player */
+
+  int i;
+  for(i = 0; i < game->players; i++) {
+		PlayerVisual *pV = gPlayerVisuals + i;
+    {
+      char name[32];
+      sprintf(name, "model_diffuse_%d", i);
+      scripting_GetFloatArray(name, pV->pColorDiffuse, 4);
+      sprintf(name, "model_specular_%d", i);
+      scripting_GetFloatArray(name, pV->pColorSpecular, 4);
+      sprintf(name, "trail_diffuse_%d", i);
+      scripting_GetFloatArray(name, pV->pColorAlpha, 4);
+    }
+		pV->turn_time = -TURN_LENGTH;
+		if(game->player[i].ai->active != AI_NONE) {
+			pV->impact_radius = 0.0;
+			pV->exp_radius = 0;
+		} else {
+			pV->exp_radius = EXP_RADIUS_MAX;
+		}
+
+  }
+}
+
+void initDisplay(Visual *d, int type, int p, int onScreen) {
+  int field;
+  field = gScreen->vp_w / 32;
+  d->h = gScreen->h;
+  d->w = gScreen->w;
+  d->vp_x = gScreen->vp_x + vp_x[type][p] * field;
+  d->vp_y = gScreen->vp_y + vp_y[type][p] * field;
+  d->vp_w = vp_w[type][p] * field;
+  d->vp_h = vp_h[type][p] * field;
+  d->onScreen = onScreen;
+}  
+
+static void defaultViewportPositions() {
+  viewport_content[0] = 0;
+  viewport_content[1] = 1;
+  viewport_content[2] = 2;
+  viewport_content[3] = 3;
+}
+
+
+/*
+  autoConfigureDisplay - configure viewports so every human player has one
+ */
+static void autoConfigureDisplay() {
+  int n_humans = 0;
+  int i;
+  int vp;
+
+  defaultViewportPositions();
+
+  /* loop thru players and find the humans */
+  for (i=0; i < game->players; i++) {
+    if (game->player[i].ai->active == AI_HUMAN) {
+      viewport_content[n_humans] = i;
+      n_humans++;
+    }    
+  }
+ 
+  switch(n_humans) {
+    case 0 :
+      /*
+         Not sure what the default should be for
+         a game without human players. For now 
+         just show a single viewport.
+       */
+      /* fall thru */
+    case 1 :
+      vp = VP_SINGLE;
+      break;
+    case 2 :
+      vp = VP_SPLIT;
+      break;
+    default :
+      defaultViewportPositions();
+      vp = VP_FOURWAY;
+  }  
+
+  updateDisplay(vp);
+}
+
+void changeDisplay(int view) {
+
+  /* passing -1 to changeDisplay tells it to use the view from settings */
+  if (view == -1) {
+    view = getSettingi("display_type");
+  }
+  
+  if (view == 3) {
+    autoConfigureDisplay(); 
+  } else {
+    defaultViewportPositions(); 
+    updateDisplay(view);
+  }
+
+  // displayMessage(TO_STDOUT, "set display to %d", view);
+  setSettingi("display_type", view);
+}
+
+void updateDisplay(int vpType) {
+  int i;
+
+  gViewportType = vpType;
+
+  for (i = 0; i < game->players; i++) {
+    gPlayerVisuals[i].display.onScreen = 0;
+  }
+  for (i = 0; i < vp_max[vpType]; i++) {
+       initDisplay(& gPlayerVisuals[ viewport_content[i] ].display, 
+		   vpType, i, 1);
+  }
+
+}
+
+void Video_Idle() { }

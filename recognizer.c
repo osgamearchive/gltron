@@ -1,4 +1,5 @@
-#include "gltron.h"
+#include "video.h"
+#include "util.h"
 
 static float alpha = 0;
 

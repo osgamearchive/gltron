@@ -10,14 +10,7 @@
 extern "C" {
 #endif
 
-#include <math.h>
-#include <limits.h>
-
 #define RC_NAME ".gltronrc"
-
-#ifndef M_PI
-#define M_PI 3.141592654
-#endif
 
 	/* Win32 port maintained by Andreas Umbach <marvin@dataway.ch> */
 #ifdef WIN32
@@ -49,6 +42,7 @@ extern "C" {
 #include "video.h"
 #include "audio.h"
 #include "input.h"
+#include "timesystem.h"
 
 #include "init.h"
 #include "system.h"

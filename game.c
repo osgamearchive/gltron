@@ -1,129 +1,13 @@
 #include "gltron.h"
 
-void initClientData() {
-  /* for each player */
-  /*   init camera (if any) */
-
-  /* needs read access to server data
-     to initialize camera */
-
-  int i;
-  int camType;
-  Camera *cam;
-  Data *data;
-
-  for(i = 0; i < game->players; i++) {
-    cam = gPlayerVisuals[i].camera;
-    data = game->player[i].data;
-
-    camType = (game->player[i].ai->active == AI_COMPUTER) ? CAM_CIRCLE : game2->settingsCache.camType;
-    initCamera(cam, data, camType);
-
-    {
-      char name[32];
-      sprintf(name, "model_diffuse_%d", i);
-      scripting_GetFloatArray(name, gPlayerVisuals[i].pColorDiffuse, 4);
-      sprintf(name, "model_specular_%d", i);
-      scripting_GetFloatArray(name, gPlayerVisuals[i].pColorSpecular, 4);
-      sprintf(name, "trail_diffuse_%d", i);
-      scripting_GetFloatArray(name, gPlayerVisuals[i].pColorAlpha, 4);
-    }
-    if( game->player[i].data->speed > 0)
-      Audio_StartEngine(i);
-  }
-}
-
-void initDisplay(Visual *d, int type, int p, int onScreen) {
-  int field;
-  field = gScreen->vp_w / 32;
-  d->h = gScreen->h;
-  d->w = gScreen->w;
-  d->vp_x = gScreen->vp_x + vp_x[type][p] * field;
-  d->vp_y = gScreen->vp_y + vp_y[type][p] * field;
-  d->vp_w = vp_w[type][p] * field;
-  d->vp_h = vp_h[type][p] * field;
-  d->onScreen = onScreen;
-}  
-
-static void defaultViewportPositions() {
-  viewport_content[0] = 0;
-  viewport_content[1] = 1;
-  viewport_content[2] = 2;
-  viewport_content[3] = 3;
-}
-
-
-/*
-  autoConfigureDisplay - configure viewports so every human player has one
- */
-static void autoConfigureDisplay() {
-  int n_humans = 0;
-  int i;
-  int vp;
-
-  defaultViewportPositions();
-
-  /* loop thru players and find the humans */
-  for (i=0; i < game->players; i++) {
-    if (game->player[i].ai->active == AI_HUMAN) {
-      viewport_content[n_humans] = i;
-      n_humans++;
-    }    
-  }
- 
-  switch(n_humans) {
-    case 0 :
-      /*
-         Not sure what the default should be for
-         a game without human players. For now 
-         just show a single viewport.
-       */
-      /* fall thru */
-    case 1 :
-      vp = VP_SINGLE;
-      break;
-    case 2 :
-      vp = VP_SPLIT;
-      break;
-    default :
-      defaultViewportPositions();
-      vp = VP_FOURWAY;
-  }  
-
-  updateDisplay(vp);
-}
-
-void changeDisplay(int view) {
-
-  /* passing -1 to changeDisplay tells it to use the view from settings */
-  if (view == -1) {
-    view = getSettingi("display_type");
-  }
-  
-  if (view == 3) {
-    autoConfigureDisplay(); 
-  } else {
-    defaultViewportPositions(); 
-    updateDisplay(view);
-  }
-
-  // displayMessage(TO_STDOUT, "set display to %d", view);
-  setSettingi("display_type", view);
-}
-
-void updateDisplay(int vpType) {
-  int i;
-
-  gViewportType = vpType;
-
-  for (i = 0; i < game->players; i++) {
-    gPlayerVisuals[i].display->onScreen = 0;
-  }
-  for (i = 0; i < vp_max[vpType]; i++) {
-       initDisplay(gPlayerVisuals[ viewport_content[i] ].display, 
-		   vpType, i, 1);
-  }
-
+void GameMode_Idle() {
+	Sound_idle();
+	Time_Idle();
+	if(game2->time.dt == 0)
+		return;
+	Game_Idle();
+	Video_Idle();
+	Scripting_Idle();
 }
 
 void enterGame() { /* called when game mode is entered */
@@ -182,5 +66,5 @@ void gameMouse(int buttons, int state, int x, int y) {
 }
 
 Callbacks gameCallbacks = { 
-  displayGame, idleGame, keyGame, enterGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
+  displayGame, GameMode_Idle, keyGame, enterGame, exitGame, initGLGame, gameMouse, gameMouseMotion, "game"
 };

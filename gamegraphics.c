@@ -1,4 +1,7 @@
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
+#include "util.h"
+
 #include "skybox.h"
 #include "recognizer.h"
 #include "explosion.h"
@@ -39,7 +42,7 @@ void drawGame() {
   for(i = 0; i < vp_max[gViewportType]; i++) {
 		Player *p = game->player + viewport_content[i];
 		PlayerVisual *pV = gPlayerVisuals + viewport_content[i];
-		Visual *d = pV->display;
+		Visual *d = & pV->display;
 	
     if(d->onScreen == 1) {
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
@@ -97,14 +100,14 @@ float getDirAngle(int time, Player *p) {
   return dirAngle;
 }
 
-void doCycleTurnRotation(Player *p) {
+void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
   int neigung_dir;
   unsigned int time = 0;
   float dirAngle;
 
   neigung_dir = -1.0;
 
-  time = game2->time.current - p->data->turn_time;
+  time = game2->time.current - pV->turn_time;
 
   dirAngle = getDirAngle(time, p);
   glRotatef(dirAngle, 0, 0, 1);
@@ -123,14 +126,14 @@ void doCycleTurnRotation(Player *p) {
 #undef neigung
 }
 
-void drawCycleShadow(Player *p, int lod, int drawTurn) {
+void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   Mesh *cycle;
   unsigned int turn_time;
-  turn_time = game2->time.current - p->data->turn_time;
+  turn_time = game2->time.current - pV->turn_time;
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
 
-  if(p->data->exp_radius != 0)
+  if(pV->exp_radius != 0)
     return;
 
   lod += game2->settingsCache.shadow_lod;
@@ -160,8 +163,8 @@ void drawCycleShadow(Player *p, int lod, int drawTurn) {
   glTranslatef(p->data->posx, p->data->posy, 0.0);
   glMultMatrixf(shadow_matrix);
   if (game2->settingsCache.turn_cycle) {
-    doCycleTurnRotation(p);
-  } else if (p->data->exp_radius == 0) {
+    doCycleTurnRotation(pV, p);
+  } else if (pV->exp_radius == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
   glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
@@ -185,21 +188,21 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   unsigned int  time, turn_time;
   cycle = lightcycle[lod];
     
-  turn_time = game2->time.current - p->data->turn_time;
+  turn_time = game2->time.current - pV->turn_time;
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
 
-  time = game2->time.current  - p->data->spoke_time;
+  time = game2->time.current  - pV->spoke_time;
   
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
 
-  if (p->data->exp_radius == 0 && game2->settingsCache.turn_cycle == 0) {
+  if (pV->exp_radius == 0 && game2->settingsCache.turn_cycle == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
 
   if (game2->settingsCache.turn_cycle) { 
-    doCycleTurnRotation(p);
+    doCycleTurnRotation(pV, p);
   }
 
 	setupLights(eCycles);
@@ -208,14 +211,14 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 
   if (time > (120 - (p->data->speed * 10))) {
-    if (p->data->spoke_state == 1) {
-      p->data->spoke_state = 0;
+    if (pV->spoke_state == 1) {
+      pV->spoke_state = 0;
       SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
     } else {
-      p->data->spoke_state = 1;
+      pV->spoke_state = 1;
       SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
     }
-    p->data->spoke_time = game2->time.current;
+    pV->spoke_time = game2->time.current;
   }
   
   if (game2->settingsCache.light_cycles) {
@@ -225,7 +228,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
 
-  if (p->data->exp_radius == 0) {
+  if (pV->exp_radius == 0) {
     glEnable(GL_NORMALIZE);
 
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
@@ -234,26 +237,26 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
     drawModel(cycle, TRI_MESH);
     glDisable(GL_CULL_FACE);
 
-  } else if(p->data->exp_radius < EXP_RADIUS_MAX) {
+  } else if(pV->exp_radius < EXP_RADIUS_MAX) {
    
     glEnable(GL_BLEND);
 
     if (game2->settingsCache.show_impact) {
-      drawImpact(p);
+      drawImpact(pV);
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
-    drawModelExplosion(cycle, p->data->exp_radius);
+    drawModelExplosion(cycle, pV->exp_radius);
   }
   glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
   glPopMatrix();
 }
  
-int playerVisible(PlayerVisual *eye, Player *target) {
+int playerVisible(Player *eye, Player *target) {
   float v1[3];
   float v2[3];
   float tmp[3];
@@ -267,7 +270,7 @@ int playerVisible(PlayerVisual *eye, Player *target) {
   tmp[0] = target->data->posx;
   tmp[1] = target->data->posy;
   tmp[2] = 0;
-
+	
   lod_level = (game2->settingsCache.lod > MAX_LOD_LEVEL) ? 
     MAX_LOD_LEVEL : game2->settingsCache.lod;
 
@@ -305,7 +308,7 @@ void drawPlayers(Player *p, PlayerVisual *pV) {
 				p == &game->player[i])
 			drawTurn = 0;
 
-		lod = playerVisible(pV, &(game->player[i]));
+		lod = playerVisible(p, &(game->player[i]));
 		if (lod >= 0) { 
 			drawCycle(game->player + i, gPlayerVisuals + i, lod, drawTurn);
 		}
@@ -315,7 +318,7 @@ void drawPlayers(Player *p, PlayerVisual *pV) {
 void drawCam(Player *p, PlayerVisual* pV) {
   int i;
   float up[3] = { 0, 0, 1 };
-	Visual *d = pV->display;
+	Visual *d = & pV->display;
   
   glColor3f(0.0, 1.0, 0.0);
 	
@@ -327,9 +330,9 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   /* set positions for GL lights in world coordinates */
-  glLightfv(GL_LIGHT1, GL_POSITION, pV->camera->cam);
+  glLightfv(GL_LIGHT1, GL_POSITION, p->camera->cam);
 
-  doLookAt(pV->camera->cam, pV->camera->target, up);
+  doLookAt(p->camera->cam, p->camera->target, up);
   glDisable(GL_LIGHTING);
   glDisable(GL_BLEND);
 
@@ -367,13 +370,13 @@ void drawCam(Player *p, PlayerVisual* pV) {
   }
 
   for(i = 0; i < game->players; i++) {
-    int lod = playerVisible(pV, game->player + i);
+    int lod = playerVisible(p, game->player + i);
 		if (lod >= 0) {
 			int drawTurn = 1;
 			if (! game2->settingsCache.camType == CAM_TYPE_COCKPIT ||
 					p != &game->player[i])
 				drawTurn = 0;
-			drawCycleShadow(game->player + i, lod, drawTurn);
+			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
 		}
 		if (game->player[i].data->trail_height > 0 )
 			drawTrailShadow(game->player + i, gPlayerVisuals + i);
@@ -441,7 +444,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
     
     for (i = 0; i < game->players; i++) {
       if (p != game->player + i && PLAYER_IS_ACTIVE(game->player + i)) {
-	      drawGlow(pV->camera, game->player + i, gPlayerVisuals + i,
+	      drawGlow(p->camera, game->player + i, gPlayerVisuals + i,
 								 d, TRAIL_HEIGHT * 4);
       }
       

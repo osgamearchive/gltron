@@ -1,7 +1,8 @@
 #ifndef TRAIL_GEOMETRY_H
 #define TRAIL_GEOMETRY_H
 
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
 
 typedef struct {
 	vec3* pVertices; // each vertex consists of three floats

@@ -6,10 +6,12 @@
 
 #define SONG_PREFIX "song_"
 
-	/* menu sound enumerations */
-	enum {
-		fx_action,
-		fx_highlight
-	};
+/* menu sound enumerations */
+enum {
+	fx_action,
+	fx_highlight
+};
+
+void resetAudioData();
 
 #endif

@@ -114,9 +114,9 @@ namespace Sound {
 
     /* panning */
     Vector3 vTarget = vSourceLocation - vListenerLocation;
-    Vector3 vTargetPlanar = 
-      vListenerLeft * ( vTarget * vListenerLeft ) +
-      vListenerDirection * (vTarget * vListenerDirection );
+		Vector3 v1 = vListenerLeft * ( vTarget * vListenerLeft );
+		Vector3 v2 = vListenerDirection * (vTarget * vListenerDirection );
+    Vector3 vTargetPlanar = v1 + v2;
   
     float cosPhi = 
       vTargetPlanar.Normalize() * 

@@ -1,8 +1,10 @@
-#include "gltron.h"
+#include "video.h"
+#include "system.h"
 #include "util.h"
+#include "input.h"
 
 static void writeCamDefaults(Camera *cam, int type) {
-  cam_defaults[cam->type->type][type] = cam->movement[type];
+  cam_defaults[cam->type.type][type] = cam->movement[type];
 }
 
 #define CLAMP_R_MIN 6
@@ -11,14 +13,14 @@ static void writeCamDefaults(Camera *cam, int type) {
 #define CLAMP_CHI_MAX 3 * M_PI / 8
 
 static void clampCam(Camera *cam) {
-  if(cam->type->freedom[CAM_FREE_R]) {
+  if(cam->type.freedom[CAM_FREE_R]) {
     if(cam->movement[CAM_R] < CLAMP_R_MIN)
       cam->movement[CAM_R] = CLAMP_R_MIN;
     if(cam->movement[CAM_R] > CLAMP_R_MAX)
       cam->movement[CAM_R] = CLAMP_R_MAX;
   }
 
-  if(cam->type->freedom[CAM_FREE_CHI]) {
+  if(cam->type.freedom[CAM_FREE_CHI]) {
     if(cam->movement[CAM_CHI] < CLAMP_CHI_MIN)
       cam->movement[CAM_CHI] = CLAMP_CHI_MIN;
     if(cam->movement[CAM_CHI] > CLAMP_CHI_MAX)
@@ -31,12 +33,12 @@ static void initCircleCamera(Camera *cam) {
   cam->movement[CAM_CHI] = cam_defaults[CAM_CIRCLE][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_CIRCLE][CAM_PHI];
 
-  cam->type->interpolated_cam = 0;
-  cam->type->interpolated_target = 0;
-  cam->type->coupled = 0;
-  cam->type->freedom[CAM_FREE_R] = 1;
-  cam->type->freedom[CAM_FREE_PHI] = 0;
-  cam->type->freedom[CAM_FREE_CHI] = 1;
+  cam->type.interpolated_cam = 0;
+  cam->type.interpolated_target = 0;
+  cam->type.coupled = 0;
+  cam->type.freedom[CAM_FREE_R] = 1;
+  cam->type.freedom[CAM_FREE_PHI] = 0;
+  cam->type.freedom[CAM_FREE_CHI] = 1;
 }
 
 
@@ -45,12 +47,12 @@ static void initFollowCamera(Camera *cam) {
   cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
 
-  cam->type->interpolated_cam = 1;
-  cam->type->interpolated_target = 0;
-  cam->type->coupled = 1;
-  cam->type->freedom[CAM_FREE_R] = 1;
-  cam->type->freedom[CAM_FREE_PHI] = 1;
-  cam->type->freedom[CAM_FREE_CHI] = 1;
+  cam->type.interpolated_cam = 1;
+  cam->type.interpolated_target = 0;
+  cam->type.coupled = 1;
+  cam->type.freedom[CAM_FREE_R] = 1;
+  cam->type.freedom[CAM_FREE_PHI] = 1;
+  cam->type.freedom[CAM_FREE_CHI] = 1;
 }
 
 static void initCockpitCamera(Camera *cam) {
@@ -58,12 +60,12 @@ static void initCockpitCamera(Camera *cam) {
   cam->movement[CAM_CHI] = cam_defaults[CAM_COCKPIT][CAM_CHI];
   cam->movement[CAM_PHI] = M_PI; // cam_defaults ignored
 
-  cam->type->interpolated_cam = 0;
-  cam->type->interpolated_target = 1;
-  cam->type->coupled = 1;
-  cam->type->freedom[CAM_FREE_R] = 0;
-  cam->type->freedom[CAM_FREE_PHI] = 1;
-  cam->type->freedom[CAM_FREE_CHI] = 0;
+  cam->type.interpolated_cam = 0;
+  cam->type.interpolated_target = 1;
+  cam->type.coupled = 1;
+  cam->type.freedom[CAM_FREE_R] = 0;
+  cam->type.freedom[CAM_FREE_PHI] = 1;
+  cam->type.freedom[CAM_FREE_CHI] = 0;
 }
 
 
@@ -72,18 +74,18 @@ static void initFreeCamera(Camera *cam) {
   cam->movement[CAM_CHI] = cam_defaults[CAM_FREE][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_FREE][CAM_PHI];
 
-  cam->type->interpolated_cam = 0;
-  cam->type->interpolated_target = 0;
-  cam->type->coupled = 0;
-  cam->type->freedom[CAM_FREE_R] = 1;
-  cam->type->freedom[CAM_FREE_PHI] = 1;
-  cam->type->freedom[CAM_FREE_CHI] = 1;
+  cam->type.interpolated_cam = 0;
+  cam->type.interpolated_target = 0;
+  cam->type.coupled = 0;
+  cam->type.freedom[CAM_FREE_R] = 1;
+  cam->type.freedom[CAM_FREE_PHI] = 1;
+  cam->type.freedom[CAM_FREE_CHI] = 1;
 }
 
 void initCamera(Camera *cam, Data *data, int type) {
-  cam->type->type = type;
+  cam->type.type = type;
 
-  switch(cam->type->type) {
+  switch(cam->type.type) {
   case CAM_TYPE_CIRCLING: initCircleCamera(cam); break;
   case CAM_TYPE_FOLLOW: initFollowCamera(cam); break;
   case CAM_TYPE_COCKPIT: initCockpitCamera(cam); break;
@@ -99,9 +101,12 @@ void initCamera(Camera *cam, Data *data, int type) {
 }
 
 /* place user into recognizer */
-void observerCamera(Camera *cam, Data *data, Player *player) {
+void observerCamera(PlayerVisual *pV, Player *player) {
+	Camera *cam;
   Point p, v;
   getRecognizerPositionVelocity(&p, &v);
+
+	cam = player->camera;
   cam->cam[0] = p.x;
   cam->cam[1] = p.y;
   cam->cam[2] = RECOGNIZER_HEIGHT;
@@ -110,27 +115,31 @@ void observerCamera(Camera *cam, Data *data, Player *player) {
   cam->target[2] = RECOGNIZER_HEIGHT - 2;
 }  
 
-void playerCamera(Camera *cam, Data *data, Player *p) {
+void playerCamera(PlayerVisual *pV, Player *p) {
   float dest[3];
   float tdest[3];
   float phi, chi, r;
-
+	Camera *cam;
+	Data *data;
   /* first, process all movement commands */
   /* that means, check for mouse input mainly */
 
   /* dt hack: the time since the last frame is not necessarily the game
      time, since the game maybe hasn't started yet, or was paused */
-  static Uint32 last=0;
-  Uint32 dt;
+  static int last=0;
+  int dt;
 
 	if(game2->time.dt == 0) {
-		dt = SDL_GetTicks() - last;
-		last = SDL_GetTicks();
+		dt = SystemGetElapsedTime() - last;
+		last = SystemGetElapsedTime();
 	} else {
 		dt = game2->time.dt;
 	}
 
-  if(cam->type->freedom[CAM_FREE_R]) {
+	cam = p->camera;
+	data = p->data;
+
+  if(cam->type.freedom[CAM_FREE_R]) {
     if(gInput.mouse1 == 1)
       cam->movement[CAM_R] += (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0;
     if(gInput.mouse2 == 1)
@@ -138,11 +147,11 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
     writeCamDefaults(cam, CAM_R);
   }
 
-  if(cam->type->freedom[CAM_FREE_PHI]) {
+  if(cam->type.freedom[CAM_FREE_PHI]) {
     cam->movement[CAM_PHI] += - gInput.mousex * MOUSE_CX;
     writeCamDefaults(cam, CAM_CHI);
   }
-  if(cam->type->freedom[CAM_FREE_CHI]) {
+  if(cam->type.freedom[CAM_FREE_CHI]) {
     cam->movement[CAM_CHI] += gInput.mousey * MOUSE_CY;
     writeCamDefaults(cam, CAM_PHI);
   }
@@ -154,9 +163,9 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
   r = cam->movement[CAM_R];
 
   /* if the cam is coupled to player movement, change the phi accordingly */
-  if(cam->type->coupled) {
+  if(cam->type.coupled) {
     int time;
-    time = game2->time.current - p->data->turn_time;
+    time = game2->time.current - pV->turn_time;
     if(time < TURN_LENGTH) {
       int dir, ldir;
       dir = p->data->dir;
@@ -179,7 +188,7 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
 
   /* ok, now let's calculate the new camera destination coordinates */
   /* also, perform some camera dependant movement */
-  switch(cam->type->type) {
+  switch(cam->type.type) {
   case CAM_TYPE_CIRCLING: /* Andi-cam */
     cam->movement[CAM_PHI] += CAM_SPEED * game2->time.dt;
     tdest[0] = data->posx;
@@ -211,20 +220,18 @@ void playerCamera(Camera *cam, Data *data, Player *p) {
 
 void doCameraMovement() {
   int i;
-  Camera *cam;
-  Data *data;
   Player *p;
+	PlayerVisual *pV;
 
   for(i = 0; i < game->players; i++) {
-      
-    cam = gPlayerVisuals[i].camera;
-    data = game->player[i].data;
     p = game->player + i;
-
-    if(data->speed == SPEED_GONE)
-      observerCamera(cam, data, p);
+		pV = gPlayerVisuals + i;
+      
+ 
+    if(p->data->speed == SPEED_GONE)
+      observerCamera(pV, p);
     else
-      playerCamera(cam, data, p);
+      playerCamera(pV, p);
   }
 
   /* mouse events consumed */
@@ -244,7 +251,7 @@ void nextCameraType() {
   
   for (i = 0; i < game->players; i++) {
     if (game->player[i].ai->active == AI_HUMAN) {
-      initCamera(gPlayerVisuals[i].camera, game->player[i].data, new_cam_type);
+      initCamera(game->player[i].camera, game->player[i].data, new_cam_type);
     }
   }
 

@@ -1,5 +1,8 @@
-#include "gltron.h"
+#include "video.h"
 #include "scripting.h"
+#include "system.h"
+
+#include "util.h"
 #include <string.h>
 
 void drawMenu(Visual *d) {

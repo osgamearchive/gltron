@@ -50,9 +50,13 @@ enum {
 #define SPEED_CRASHED -1
 #define SPEED_GONE -2
 
+#define TRAIL_HEIGHT 3.5
+
 /* game options */
 #define SPEED_OZ_FREQ 1200
 #define SPEED_OZ_FACTOR 0.09
+
+#define TURN_LENGTH 200
 
 #define FAST_FINISH 40
 
@@ -88,11 +92,12 @@ extern void writePosition(int player);
 extern void initGameStructures();
 extern void initClientData();
 
-extern void idleGame();
+extern void Game_Idle();
 extern void enterGame();
 extern void exitGame();
 
 extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
-
+extern void resetVideoData();
+extern void resetPlayerData();
 #endif

@@ -149,3 +149,7 @@ void scripting_RunFormat(char *format, ... ) {
 void scripting_RunGC() {
   lua_setgcthreshold(L, 0);
 }
+
+void Scripting_Idle() {
+	scripting_RunGC();
+}

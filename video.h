@@ -1,6 +1,8 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+#include "camera.h"
+
 /* dropped support for anything else than libpng */
 #include "png_texture.h"
 #include <png.h>
@@ -44,11 +46,19 @@ typedef struct {
 } Visual;
 
 typedef struct {
-	Visual *display;
-	Camera *camera;
+	Visual display;
+
 	float pColorDiffuse[4];
 	float pColorSpecular[4];
 	float pColorAlpha[4];
+
+  unsigned int turn_time; /* for cycle animation */
+  unsigned int spoke_time; /* for cycle wheel animation */
+  int spoke_state; /* showing spoke or not */
+
+  /* explosion stuff */
+  float impact_radius;
+  float exp_radius; /* explosion of the cycle model */
 } PlayerVisual;
 
 enum { VP_SINGLE = 0, VP_SPLIT = 1, VP_FOURWAY = 2 }; // Viewport Type;
@@ -89,7 +99,6 @@ extern void reloadArt(void);
 
 
 #define B_HEIGHT 0
-#define TRAIL_HEIGHT 3.5
 #define CYCLE_HEIGHT 8
 #define RECOGNIZER_HEIGHT 50
 #define WALL_H 12
@@ -119,8 +128,6 @@ extern void reloadArt(void);
 #define CAM_CHI_MAX M_PI / 2 - M_PI / 6
 
 #define CAM_DR 6.4
-
-#define TURN_LENGTH 200
 
 #define EXP_RADIUS_MAX 30
 #define EXP_RADIUS_DELTA 0.01
@@ -278,12 +285,13 @@ extern void drawMenu(Visual *d);
 extern void initVideoData();
 extern void initGameScreen();
 
+extern void Video_Idle();
+
 extern Visual *gScreen;
 extern int gViewportType;
 extern int video_initialized;
 
 extern PlayerVisual *gPlayerVisuals;
-
 
 #include "console.h"
 

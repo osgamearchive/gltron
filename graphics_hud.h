@@ -1,7 +1,8 @@
 #ifndef GRAPHICS_HUD_H
 #define GRAPHICS_HUD_H
 
-#include "gltron.h"
+#include "video.h"
+#include "game.h"
 
 extern void drawAI(Visual *d);
 extern void drawPause(Visual *d);

@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_UTILITY_H
 #define GRAPHICS_UTILITY_H
 
-#include "gltron.h"
+#include "video.h"
 
 extern void checkGLError(const char *where);
 extern void rasonly(Visual *d);

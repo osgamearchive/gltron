@@ -1,4 +1,8 @@
-#include "gltron.h"
+#include "game.h"
+#include "video.h"
+#include "input.h"
+
+#include "util.h"
 
 /* globals */
 Game main_game;

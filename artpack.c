@@ -1,4 +1,6 @@
-#include "gltron.h"
+#include "video.h"
+#include "scripting.h"
+#include "filesystem.h"
 
 void initArtpacks() {
   const char *art_path;
