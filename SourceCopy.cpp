@@ -1,7 +1,7 @@
 #include "SourceCopy.h"
 
 namespace Sound {
-  void SourceCopy::Mix(Uint8 *data, int len) {
+  int SourceCopy::Mix(Uint8 *data, int len) {
     int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
     // fprintf(stderr, "playing copy sample at %d, position: %d\n", volume, _position);
     int buffersize = _source->_buffersize;
@@ -29,5 +29,6 @@ namespace Sound {
 	_isPlaying = 0;
       }
     }
+    return 1;
   }
 }

@@ -13,7 +13,7 @@ namespace Sound {
     fprintf(stderr, "Source destructor called\n");
   }
 
-  void Source::Mix(Uint8 *data, int len) { }
+  int Source::Mix(Uint8 *data, int len) { }
   void Source::Reset() { }
   void Source::Start() { _isPlaying = 1; Reset(); }
   void Source::Stop() { _isPlaying = 0; Reset(); }
@@ -29,4 +29,6 @@ namespace Sound {
   Uint8 Source::GetLoop() { return _loop; }
   void Source::SetType(int type) { _type = type; }
   int Source::GetType(void) { return _type; }
+  void Source::SetName(char* name) { _name = name; }
+  char* Source::GetName(void) { return _name; }
 }

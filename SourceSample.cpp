@@ -45,7 +45,7 @@ namespace Sound {
     _position = 0;
   }
 
-  void SourceSample::Mix(Uint8 *data, int len) {
+  int SourceSample::Mix(Uint8 *data, int len) {
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
     assert(len < _buffersize);
 
@@ -69,5 +69,6 @@ namespace Sound {
 	_isPlaying = 0;
       }
     }
+    return 1;
   }
 }

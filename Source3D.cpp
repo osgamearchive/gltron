@@ -4,7 +4,7 @@ Uint8 tmp[65536];
 
 #define USOUND 50
 #define EPSILON 0.1f	 
-#define SOUND_VOL_THRESHOLD 0.01
+#define SOUND_VOL_THRESHOLD 0.1
 #define VOLSCALE_BASE 1000
      
 int fxShift(float shift, Uint8 *target, Uint8 *source, int len) {
@@ -102,7 +102,7 @@ namespace Sound {
     /* done doppler */
   }
 
-  void Source3D::Mix(Uint8 *data, int len) {
+  int Source3D::Mix(Uint8 *data, int len) {
     if(_source->IsPlaying()) {
       int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
       float pan, shift, vol;
@@ -135,7 +135,20 @@ namespace Sound {
 
 	if(_position > _source->_buffersize)
 	  _position -= _source->_buffersize;
+
+	fprintf(stderr, "mixed %s\n", GetName());
+	return 1; // mixed something
       }
     }
+    return 0; // didn't mix anything to the stream
   }
 }
+
+
+
+
+
+
+
+
+

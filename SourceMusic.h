@@ -12,7 +12,7 @@ namespace Sound {
     SourceMusic(System *system);
     virtual ~SourceMusic();
     void Load(char *filename);
-    virtual void Mix(Uint8 *data, int len);
+    virtual int Mix(Uint8 *data, int len);
 
   protected:
     virtual void Reset(void) { 

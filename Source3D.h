@@ -8,7 +8,7 @@
 
 #define USOUND 50
 #define EPSILON 0.1f	 
-#define SOUND_VOL_THRESHOLD 0.01
+#define SOUND_VOL_THRESHOLD 0.1
 #define VOLSCALE_BASE 1000
 
 namespace Sound {
@@ -27,7 +27,7 @@ namespace Sound {
     Vector3 _velocity;
     SourceSample* _source;
 
-    virtual void Mix(Uint8 *data, int len);
+    virtual int Mix(Uint8 *data, int len);
     virtual void GetModifiers(float &fPan, float &fVolume, float &fShift);
     //  protected:
     Uint32 _position;

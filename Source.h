@@ -20,7 +20,7 @@ namespace Sound {
     virtual void Pause();
     virtual void UnPause();
     virtual Uint8 IsPlaying();
-    virtual void Mix(Uint8 *data, int len); // abstract
+    virtual int Mix(Uint8 *data, int len); // abstract
     virtual void SetRemovable(void);
     virtual Uint8 IsRemovable(void);
     virtual void SetVolume(float volume);
@@ -29,6 +29,8 @@ namespace Sound {
     virtual Uint8 GetLoop();
     virtual void SetType(int type);
     virtual int GetType(void);
+    void SetName(char *name);
+    char* GetName(void);
 
   protected:
     virtual void Reset();
@@ -39,6 +41,7 @@ namespace Sound {
     Uint8 _removable;
     float _volume;
     int _type;
+    char* _name;
   };
 }
 

@@ -73,7 +73,7 @@ namespace Sound {
       Sound_FreeSample(_sample);
   }
 
-  void SourceMusic::Mix(Uint8 *data, int len) {
+  int SourceMusic::Mix(Uint8 *data, int len) {
     assert(len < _buffersize);
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
     // fprintf(stderr, "setting volume to %.3f -> %d\n", _volume, volume);
@@ -113,5 +113,14 @@ namespace Sound {
 	}
       }
     }
+    fprintf(stderr, "mixed %s\n", GetName());
+    return 1;
   }
 }
+
+
+
+
+
+
+

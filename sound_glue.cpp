@@ -153,6 +153,10 @@ extern "C" {
     music->Load(name);
     music->SetLoop(255);
     music->SetType(Sound::eSoundMusic);
+
+    char *sname = new char[32];
+    sprintf(sname, "music");
+    music->SetName(sname);
     sound->AddSource(music);
   }
 
@@ -191,16 +195,30 @@ extern "C" {
 	players[i] = new Sound::Source3D(sound, sample_engine);
 	players[i]->SetType(Sound::eSoundFX);
 	sound->AddSource(players[i]);
+
+	char *name = new char[32];
+	sprintf(name, "player %d", i);
+	players[i]->SetName(name);
+
       } else {
 	players[i] = new Sound::SourceEngine(sound, sample_engine);
 	players[i]->SetType(Sound::eSoundFX);
 	sound->AddSource(players[i]);
+
+	char *name = new char[32];
+	sprintf(name, "player %d", i);
+	players[i]->SetName(name);
       }
     }
     recognizerEngine = new Sound::Source3D(sound, sample_recognizer);
     recognizerEngine->SetType(Sound::eSoundFX);
     recognizerEngine->Start();
     sound->AddSource(recognizerEngine);
+
+    char *name = new char[32];
+    sprintf(name, "recognizer");
+    recognizerEngine->SetName(name);
+
   }
 
   void Audio_LoadSample(char *name, int number) {
@@ -223,3 +241,5 @@ extern "C" {
     }
   }
 }
+
+

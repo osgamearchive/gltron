@@ -12,7 +12,7 @@ namespace Sound {
     SourceSample(System *system);
     virtual ~SourceSample();
     void Load(char *filename);
-    virtual void Mix(Uint8 *data, int len);
+    virtual int Mix(Uint8 *data, int len);
 
     Uint8* _buffer;
     Uint32 _buffersize;

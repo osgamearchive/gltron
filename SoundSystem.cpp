@@ -18,6 +18,7 @@ namespace Sound {
     // ensure silence
     memset(data, 0, len);
     list* p;
+    int sources_mixed = 0;
     for(p = & _sources; p->next != NULL; p = p->next) {
       Source* s = (Source*) p->data;
       if(s->IsPlaying()) {
@@ -27,9 +28,10 @@ namespace Sound {
 	     (s->GetType() & eSoundMusic && ! _mix_music) )
 	   )
 	  {
-	     s->Mix(data, len);
+	    if( s->Mix(data, len) )
+	      sources_mixed++;
 	  }
-	// fprintf(stderr, "done mixing\n");
+	fprintf(stderr, "done mixing %d sources\n", sources_mixed);
       } else {
 	// check if source is removable
 	if(s->IsRemovable()) {
