@@ -6,13 +6,22 @@ void initTexture(Visual *d) {
 
   int i, j;
 
-  if(getSettingi("use_mipmaps")) {
-    if(getSettingi("mipmap_filter") == TRILINEAR)
-      min_filter = GL_LINEAR_MIPMAP_LINEAR;
-    else
-      min_filter = GL_LINEAR_MIPMAP_NEAREST;
-  } else
-    min_filter = GL_LINEAR;
+  switch(getSettingi("mipmap_filter")) {
+	case POINT:
+		min_filter = GL_NEAREST;
+		break;
+	case LINEAR:
+		min_filter = GL_LINEAR;
+		break;
+	case MIPMAP:
+		min_filter = GL_LINEAR_MIPMAP_NEAREST;
+		break;
+	case TRILINEAR:
+		min_filter = GL_LINEAR_MIPMAP_LINEAR;
+		break;
+	}
+	printf("using min_filter: %d (setting: %d)\n", min_filter,
+				 getSettingi("mipmap_filter"));
 
   checkGLError("texture.c initTexture - start");
   /* todo: move that somewhere else */
@@ -33,7 +42,6 @@ void initTexture(Visual *d) {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textures[i].wrap_t);
 
       if(getSettingi("softwareRendering")) {
-
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       } else {
