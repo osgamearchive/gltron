@@ -16,6 +16,7 @@
 #define SYSTEM_KEY_F4 SDLK_F4
 #define SYSTEM_KEY_F5 SDLK_F5
 #define SYSTEM_KEY_F6 SDLK_F6
+#define SYSTEM_KEY_F7 SDLK_F7
 #define SYSTEM_KEY_F10 SDLK_F10
 #define SYSTEM_KEY_F11 SDLK_F11
 #define SYSTEM_KEY_F12 SDLK_F12
@@ -38,6 +39,7 @@
 #define SYSTEM_DOUBLE 2
 #define SYSTEM_DEPTH 4
 #define SYSTEM_FULLSCREEN 8
+#define SYSTEM_32_BIT 16
 
 /* system specific functions (basically, an SDL/glut wrapper) */
 
@@ -53,7 +55,7 @@ extern void SystemGrabInput();
 extern void SystemUngrabInput();
 extern void SystemMainLoop();
 extern void SystemRegisterCallbacks(callbacks*);
-
+extern void SystemSetGamma(float r, float g, float b);
 extern void SystemInitWindow(int x, int y, int w, int h);
 extern void SystemInitDisplayMode(int flags, unsigned char fullscreen);
 extern int SystemCreateWindow(char *name);
