@@ -12,17 +12,28 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+int isHiddenFile(WIN32_FIND_DATA *search)
+{
+	if(search->cFileName[0] == '.')
+	{
+		return 1;
+	}else 
+	{
+		return search->dwFileAttributes & FILE_ATTRIBUTE_HIDDEN;
+	}
+}
+
 /* FIXME: This is really broken. */
 List* readDirectoryContents(const char *dirname, const char *prefix) {
 	WIN32_FIND_DATA search;
 	HANDLE hSearch;
-	List *l, *f;
+	List *l, *p;
 	char *filename, *searchStr;
 	int   len, prefixLen = 0;
 
-	l = malloc(sizeof(List));
-	l->next= NULL;
-	f = l;
+	p = malloc(sizeof(List));
+	p->next= NULL;
+	l = p;
 
 	if(prefix != NULL)
 	{
@@ -44,22 +55,30 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
 		free(l);
 		free(searchStr);
 		return NULL;
-	}
-
-	len = strlen(search.cFileName) + 1;
-	filename = malloc(len);
-	memcpy(filename, search.cFileName, len);
-	l->data = filename;
-
-	while( FindNextFile(hSearch, &search) )
+	}else if(!isHiddenFile(&search))
 	{
-		l->next = malloc(sizeof(List));
-		l = l->next;
 		len = strlen(search.cFileName) + 1;
 		filename = malloc(len);
 		memcpy(filename, search.cFileName, len);
-		l->data = filename;
-		l->next = NULL;
+		p->data = filename;
+		p->next = malloc(sizeof(List));
+		p = p->next;
+		p->next = NULL;
+
+	}
+
+	while( FindNextFile(hSearch, &search) )
+	{
+		if(!isHiddenFile(&search))
+		{
+			len = strlen(search.cFileName) + 1;
+			filename = malloc(len);
+			memcpy(filename, search.cFileName, len);
+			p->data = filename;
+			p->next = malloc(sizeof(List));
+			p = p->next;
+			p->next = NULL;
+		}
 	}
 
 	if(GetLastError() != ERROR_NO_MORE_FILES)
@@ -71,7 +90,7 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
 	FindClose(hSearch);
 	free(searchStr);
 
-	return f;
+	return l;
 
 }
 
