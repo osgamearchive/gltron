@@ -177,7 +177,7 @@ enum {
 #define PAUSE_GAME_FINISHED 1
 
 #ifdef __NETWORK__
-#include <SDL/SDL_net.h>
+#include <SDL_net.h>
 #include "protocol.h"
 #include "netevent.h"
 #include "wtext.h"
