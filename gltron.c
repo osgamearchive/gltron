@@ -4,6 +4,7 @@
 */
 
 #include "gltron.h"
+#include <assert.h>
 
 /* todo: define the globals where I need them */
 /* declare them only in gltron.h */
