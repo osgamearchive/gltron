@@ -1,13 +1,16 @@
-#include "Nebu_video.h"
+#include "video/nebu_renderer_gl.h"
+#include "video/nebu_video_system.h"
 
 #include "SDL.h"
-#include "SDL_opengl.h"
+
+#include <assert.h>
 
 static SDL_Surface *screen;
 static int width, height;
 static int flags;
 static int fullscreen;
 static int video_initialized = 0;
+static int window_id;
 
 void nebu_Video_SwapBuffers() {
 	SDL_GL_SwapBuffers();
@@ -22,6 +25,7 @@ void nebu_Video_Init(void) {
 }
 
 void SystemInitWindow(int x, int y, int w, int h) {
+  fprintf(stderr, "ignoring (%d,%d) initial window position - feature not implemented\n", x, y);
   width = w;
   height = h;
 }
@@ -69,6 +73,9 @@ int SystemCreateWindow(char *name) {
     fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */
   }
+  SDL_WM_SetCaption(name, NULL);
+  glewInit();
+
   SDL_WM_SetCaption("GLtron", "");
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -84,12 +91,15 @@ void SystemDestroyWindow(int id) {
 	/* there used to be some problems (memory leaks, unprober driver unloading)
 	 * caused by this, but I can't remember what they where
 	 */
-		 
-  SDL_QuitSubSystem(SDL_INIT_VIDEO);
+  if(id == window_id)
+	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+  else
+	  assert(0);
   video_initialized = 0;
 }
 
-void SystemReshapeFunc(void(*reshape)(int, int)) {
+void SystemReshapeFunc(void(*reshape)(int w, int h)) {
+	fprintf(stderr, "can't set reshape function (%p) - feature not supported\n", reshape);
 }
 
 int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
@@ -119,7 +129,7 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
 }
 
 void nebu_Video_WarpPointer(int x, int y) {
-  SDL_WarpMouse(x, y);
+  SDL_WarpMouse( (Uint16)x, (Uint16)y);
 }
 
 void nebu_Video_CheckErrors(const char *where) {
