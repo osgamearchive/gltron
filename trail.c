@@ -1,39 +1,180 @@
 #include "gltron.h"
 
+#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
+#undef TEX_SPLIT
+
+static float normal1[] = { 1.0, 0.0, 0.0 };
+static float normal2[] = { 0.0, 1.0, 0.0 };
+
+/* 
+   getDists returns the minimum distance from (the wall) *line to the
+   specified (eye) point
+   the z component is ignored
+ */
+float getDist(line *line, float* eye) {
+
+  float n[2];
+  float tmp[2];
+  n[0] = line->sx + (line->ey - line->sy);
+  n[1] = line->sy - (line->ex - line->sx);
+  tmp[0] = eye[0] - line->sx;
+  tmp[1] = eye[1] - line->sy;
+  if(n[0] == n[1] == 0) return length(tmp);
+  return abs(scalarprod2(n, tmp) / length(n));
+}
+
+/*
+  getSegmentEnd[XY]() returns the end point of the
+  last trail segment line (before the lightcycles bow starts)
+*/
+
 #define DECAL_WIDTH 20.0
 #define BOW_LENGTH 6
 
+#define BOW_DIST3 2
 #define BOW_DIST2 0.85
 #define BOW_DIST1 0.4
 
-#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
+float dists[] = { BOW_DIST2, BOW_DIST3, BOW_DIST1, 0 };
 
+float getSegmentEndX(line *line, Data *data, int dist) {
+  float tlength, blength;
+
+  if(dirsX[data->dir] == 0) return data->posx;
+
+  tlength = data->posx - line->sx + data->posy - line->sy;
+  if(tlength < 0) tlength = -tlength;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+  return data->posx - dists[dist] * blength * dirsX[ data->dir ];
+}
+
+float getSegmentEndY(line *line, Data *data, int dist) {
+  float tlength, blength;
+  if(dirsY[data->dir] == 0) return data->posy;
+
+  tlength = data->posx - line->sx + data->posy - line->sy;
+  if(tlength < 0) tlength = -tlength;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+  return data->posy - dists[dist] * blength * dirsY[ data->dir ];
+}
+
+/* getSegmentEndUV() calculates the texture coordinates for the last segment */
+float getSegmentEndUV(line *line, Data *data) {
+  float tlength, blength;
+  tlength = data->posx - line->sx + data->posy - line->sy;
+  if(tlength < 0) tlength = -tlength;
+  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
+  return (tlength - 2 * blength) / DECAL_WIDTH;
+}
+
+/* getSegmentUV gets UV coordinates for an ordinary segment */
+float getSegmentUV(line *line) {
+  float tlength;
+  tlength = line->ex - line->sx + line->ey - line->sy;
+  if(tlength < 0) tlength = -tlength;
+  return tlength / DECAL_WIDTH;
+}
+
+#undef BOW_DIST1
+#undef BOW_DIST2
+
+
+#undef DECAL_WIDTH
+#undef BOW_LENGTH
+
+
+/* 
+   drawTrailLines() draws a white line on top of each trail segment
+   the alpha value is reduced with increasing distance to the player
+*/
+
+void drawTrailLines(Player *p) {
+  line *line;
+  float height;
+
+  float *normal;
+  float dist;
+  float alpha;
+  Data *data;
+  Camera *cam;
+
+  data = p->data;
+  cam = p->camera;
+
+  height = data->trail_height;
+  if(height < 0) return;
+
+  glDisable(GL_DEPTH_TEST);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  /* glDisable(GL_LIGHTING); */
+  glColor3f(1.0, 1.0, 1.0);
+  glBegin(GL_LINES);
+
+  line = &(data->trails[0]);
+  while(line != data->trail) { /* the current line is not drawn */
+    /* compute distance from line to eye point */
+    dist = getDist(line, cam->cam);
+    alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
+    /* printf("dist: %.2f, alpha: %.2f\n", dist, alpha); */
+    glColor4f(1.0, 1.0, 1.0, alpha);
+    
+    if(line->sy == line->ey) normal = normal1;
+    else normal = normal2;
+    glNormal3fv(normal);
+    glVertex3f(line->sx, line->sy, height);
+    glVertex3f(line->ex, line->ey, height);
+    line++;
+    polycount++;
+  }
+  glEnd();
+  
+  glColor3f(1.0, 1.0, 1.0);
+  /* compute distance from line to eye point */
+  dist = getDist(line, cam->cam);
+  alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
+  /* printf("dist: %.2f, alpha: %.2f\n", dist, alpha); */
+  glColor4f(1.0, 1.0, 1.0, alpha);
+  glBegin(GL_LINES);
+
+  glVertex3f(line->sx, line->sy, height);
+  glVertex3f( getSegmentEndX(line, data, 0),
+	      getSegmentEndY(line, data, 0),
+	      height );
+
+  glEnd();
+
+  /* glEnable(GL_LIGHTING); */
+  glDisable(GL_BLEND);
+
+  glEnable(GL_DEPTH_TEST);
+}
+
+/* 
+   drawTrailShadow() draws a alpha-blended shadow on the floor for each
+   trail segment.
+   The light source source is (in homogenous coordinates)
+   at (-1,-1,1,0) (I hope that's correct)
+*/
+
+#define SHADOWH 0.0
 void drawTrailShadow(Data* data) {
   line *line;
   float height;
-  float blength;
-  float tlength;
-
-  float px, py;
-  float sx, sy;
-
   /* draw trail shadow */
-#define SHADOWH 0.0
+
   height = data->trail_height;
   if(game->settings->softwareRendering == 0) {
-    glEnable(GL_POLYGON_OFFSET_FILL);
-
     line = &(data->trails[0]);
     glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(0.0, 0.0, 0.0, 0.6);
     glBegin(GL_QUADS);
 
     line = &(data->trails[0]);
     while(line != data->trail) { /* the current line is not drawn */
-      tlength = (line->ex - line->sx + line->ey - line->sy);
-      if(tlength < 0) tlength = -tlength;
-    
       glNormal3f(0.0, 0.0, 1.0);
       glVertex3f(line->sx, line->sy, SHADOWH);
       glVertex3f(line->sx + height, line->sy + height, SHADOWH);
@@ -42,35 +183,30 @@ void drawTrailShadow(Data* data) {
       line++;
       polycount++;
     }
-    sx = line->sx;
-    sy = line->sy;
-    px = data->posx;
-    py = data->posy;
-    tlength = px - sx + py - sy;
-    if(tlength < 0) tlength = -tlength;
-    blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
     glVertex3f(line->sx, line->sy, SHADOWH);
     glVertex3f(line->sx + height, line->sy + height, SHADOWH);
-    glVertex3f(px + height, 
-	       py + height,
+    glVertex3f(data->posx + height, 
+	       data->posy + height,
 	       SHADOWH);
-    glVertex3f(px, py, SHADOWH);
-  
+    glVertex3f(data->posx, data->posy, SHADOWH);
     glEnd();
-
-    glDisable(GL_POLYGON_OFFSET_FILL);
+    glEnable(GL_DEPTH_TEST);
   }
 }
+#undef SHADOWH
+
+/*
+   drawTraces() draws all the trail segments.
+   The last one is split in three parts:
+   One ordinary part, one fading from trail color to white, and
+   a bow fading from white to the models color (that one is drawn
+   seperately in drawTrailBow() ).
+*/
 
 void drawTraces(Player *p, gDisplay *d) {
   line *line;
   float height;
-  float bdist;
-  float blength;
-  float tlength;
-
-  float px, py;
-  float sx, sy;
+  float uv, ex, ey;
   float normal1[] = { 1.0, 0.0, 0.0 };
   float normal2[] = { 0.0, 1.0, 0.0 };
   float *normal;
@@ -83,8 +219,7 @@ void drawTraces(Player *p, gDisplay *d) {
 
   if(height < 0) return;
 
-  drawTrailShadow(data);
-  /* draw trail now */
+  /* calculate trail color and set blending modes */
   if(game->settings->alpha_trails) {
     glColor4fv(p->model->color_alpha);
     glDepthMask(GL_FALSE);
@@ -103,16 +238,15 @@ void drawTraces(Player *p, gDisplay *d) {
 
   glShadeModel(GL_SMOOTH);
 
+  /* start drawing */
   line = &(data->trails[0]);
   glBegin(GL_QUADS);
-  while(line != data->trail) { /* the current line is not drawn */
-    tlength = (line->ex - line->sx + line->ey - line->sy);
-    if(tlength < 0) tlength = -tlength;
-    
+  while(line != data->trail) { /* the last segment is special cased */
+
     if(line->sy == line->ey) normal = normal1;
     else normal = normal2;
 
-    glNormal3fv(normal);
+    /* glNormal3fv(normal); */
     setNormal3fv(normal);
     setVertex3f((line->sx + line->ex) / 2, (line->sy + line->ey) / 2, 0);
     light4fv(color);
@@ -124,81 +258,66 @@ void drawTraces(Player *p, gDisplay *d) {
     glTexCoord2f(0.0, 1.0);
     glVertex3f(line->sx, line->sy, height);
 
-    glTexCoord2f(tlength / DECAL_WIDTH, 1.0);
+    uv = getSegmentUV(line);
+    glTexCoord2f(uv, 1.0);
     glVertex3f(line->ex, line->ey, height);
 
-    glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
+    glTexCoord2f(uv, 0.0);
     glVertex3f(line->ex, line->ey, 0.0);
 
     line++;
     polycount++;
   }
 
-
-  sx = line->sx;
-  sy = line->sy;
-  px = data->posx;
-  py = data->posy;
-
-  if(sy == py) normal = normal1;
+  if(line->sy == data->posy) normal = normal1;
   else normal = normal2;
-  glNormal3fv(normal);
+  /* glNormal3fv(normal); */
 
+  /* calculate segment color */
   setNormal3fv(normal);
-  setVertex3f((line->sx + line->ex) / 2, (line->sy + line->ey) / 2, 0);
+  setVertex3f(line->sx, line->sy, 0);
   light4fv(color);
   glColor4fv(color);
     
-  /* calculate distance of cycle to last corner */
-  tlength = px - sx + py - sy;
-  if(tlength < 0) tlength = -tlength;
-  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
-
   glTexCoord2f(0.0, 0.0);
-  glVertex3f(sx, sy, 0.0);
+  glVertex3f(line->sx, line->sy, 0.0);
   glTexCoord2f(0.0, 1.0);
-  glVertex3f(sx, sy, height);
+  glVertex3f(line->sx, line->sy, height);
 
   /* modify end of trail */
 
-  glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 1.0);
-  glVertex3f(px - 2 * blength * dirsX[ data->dir ], 
-	     py - 2 * blength * dirsY[ data->dir ], height);
-  glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 0.0);
-  glVertex3f(px - 2 * blength * dirsX[ data->dir ], 
-	     py - 2 * blength * dirsY[ data->dir ], 0.0);
+  uv = getSegmentEndUV(line, data);
+  ex = getSegmentEndX(line, data, 1);
+  ey = getSegmentEndY(line, data, 1);
+
+  glTexCoord2f(uv, 1.0);
+  glVertex3f(ex, ey, height);
+  glTexCoord2f(uv, 0.0);
+  glVertex3f(ex, ey, 0.0);
 
   polycount += 2;
   glEnd();
 
   glDisable(GL_TEXTURE_2D);
 
-    /* experimental trail effect */
+  /* experimental trail effect */
   checkGLError("before trail");
-
-  bdist = (game->settings->show_model &&
-	   data->speed > 0) ? BOW_DIST1 : 0;
-
-  /* quad fading from model color to white, no texture */
 
   glBegin(GL_QUADS);
 
-  glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
-
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
-
+  
+  /* glColor3f(1.0, 0.0, 1.0); */
   glColor4fv(color);
 
+  glVertex3f(ex, ey, 0);
+  glVertex3f(ex, ey, height);
 
-  glVertex3f(px - 2 * blength * dirsX[ data->dir ], 
-	     py - 2 * blength * dirsY[ data->dir ], height);
+  glColor3f(1.0, 1.0, 1.0);
+  ex = getSegmentEndX(line, data, 0);
+  ey = getSegmentEndY(line, data, 0);
 
-
-  glVertex3f(px - 2 * blength * dirsX[ data->dir ], 
-	     py - 2 * blength * dirsY[ data->dir ], 0.0);
+  glVertex3f(ex, ey, height);
+  glVertex3f(ex, ey, 0);
 
   glEnd();
 
@@ -206,71 +325,18 @@ void drawTraces(Player *p, gDisplay *d) {
   glDisable(GL_BLEND);
   glDisable(GL_TEXTURE_2D);
 
-  /* draw lines on top of trails */
-  glPolygonOffset(-2.0, -1.0);  
-  glEnable(GL_POLYGON_OFFSET_LINE);
-
-
-  line = &(data->trails[0]);
-  glBegin(GL_LINES);
-  glColor3f(1.0, 1.0, 1.0);
-  while(line != data->trail) { /* the current line is not drawn */
-    tlength = (line->ex - line->sx + line->ey - line->sy);
-    if(tlength < 0) tlength = -tlength;
-    
-    if(line->sy == line->ey) normal = normal1;
-    else normal = normal2;
-    glNormal3fv(normal);
-    glVertex3f(line->sx, line->sy, height);
-    glVertex3f(line->ex, line->ey, height);
-    line++;
-    polycount++;
-  }
-  glVertex3f(line->sx, line->sy, height);
-  sx = line->sx;
-  sy = line->sy;
-  px = data->posx;
-  py = data->posy;
-  tlength = px - sx + py - sy;
-  if(tlength < 0) tlength = -tlength;
-  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
-
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
-  glEnd();
-
-  glDisable(GL_POLYGON_OFFSET_LINE);
-
-
   glDepthMask(GL_TRUE);
 }
 
 void drawTrailBow(Player *p) {
   Data *data;
-  line *line;
-
   float height;
-  float tlength;
-  float blength;
-  float bdist;
-  float px, py, sx, sy;
+  float ex, ey, sx, sy;
+  int bdist;
 
   data = p->data;
   height = data->trail_height;
   if(height < 0) return;
-
-  bdist = (game->settings->show_model &&
-	   data->speed > 0) ? BOW_DIST1 : 0;
-
-  line = data->trail;
-
-  sx = line->sx;
-  sy = line->sy;
-  px = data->posx;
-  py = data->posy;
-  tlength = px - sx + py - sy;
-  if(tlength < 0) tlength = -tlength;
-  blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
 
   glShadeModel(GL_SMOOTH);
 
@@ -282,30 +348,36 @@ void drawTrailBow(Player *p) {
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 
+
+  bdist = (game->settings->show_model &&
+	   data->speed > 0) ? 2 : 3;
+
+  sx = getSegmentEndX(data->trail, data, 0);
+  sy = getSegmentEndY(data->trail, data, 0);
+
+  ex = getSegmentEndX(data->trail, data, bdist);
+  ey = getSegmentEndY(data->trail, data, bdist);
+
     /* quad fading from white to model color, bow texture */
   glBegin(GL_QUADS);
 
   /* glTexCoord2f(TEX_SPLIT, 0.0); */
   glTexCoord2f(0.0, 0.0);
   glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], 0.0);
+  glVertex3f(sx, sy, 0.0);
 
   glTexCoord2f(1.0, 0.0);
   glColor3fv(p->model->color_model);
-  glVertex3f(px - bdist * blength * dirsX[ data->dir ], 
-	     py - bdist * blength * dirsY[ data->dir ], 0.0);
+  glVertex3f(ex, ey, 0.0);
 
   glTexCoord2f(1.0, 1.0);
   glColor3fv(p->model->color_model);
-  glVertex3f(px - bdist * blength * dirsX[ data->dir ], 
-	     py - bdist * blength * dirsY[ data->dir ], height);
+  glVertex3f(ex, ey, height);
 
   /* glTexCoord2f(TEX_SPLIT, 1.0); */
   glTexCoord2f(0.0, 1.0);
   glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(px - BOW_DIST2 * blength * dirsX[ data->dir ], 
-	     py - BOW_DIST2 * blength * dirsY[ data->dir ], height);
+  glVertex3f(sx, sy, height);
   glEnd();
 
   polycount += 4;
@@ -316,13 +388,5 @@ void drawTrailBow(Player *p) {
 
 }
 
-#undef SHADOWH
-
-#undef BOW_DIST1
-#undef BOW_DIST2
-#undef TEX_SPLIT
-
-#undef DECAL_WIDTH
-#undef BOW_LENGTH
 
 
