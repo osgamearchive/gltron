@@ -100,21 +100,15 @@ float getDirAngle(int time, Player *p) {
 }
 
 void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
-  int neigung_dir;
-  unsigned int time = 0;
-  float dirAngle;
+  int neigung_dir = -1;
+	int time = game2->time.current - p->data->turn_time;
+  float dirAngle = getDirAngle(time, p);
 
-  neigung_dir = -1.0;
-
-  // time = game2->time.current - pV->turn_time;
-	time = game2->time.current - p->data->turn_time;
-
-  dirAngle = getDirAngle(time, p);
   glRotatef(dirAngle, 0, 0, 1);
 
 #define neigung 25
-  if(time < TURN_LENGTH) {
-    float axis = 1.0;
+  if(time < TURN_LENGTH && p->data->last_dir != p->data->dir) {
+    float axis = 1.0f;
     if(p->data->dir < p->data->last_dir && p->data->last_dir != 3)
       axis = -1.0;
     else if((p->data->last_dir == 3 && p->data->dir == 2) ||
@@ -128,9 +122,7 @@ void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
 
 void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   Mesh *cycle;
-  unsigned int turn_time;
-  // turn_time = game2->time.current - pV->turn_time;
-	turn_time = game2->time.current - p->data->turn_time;
+  int turn_time = game2->time.current - p->data->turn_time;
       
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
@@ -183,17 +175,13 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
 }
 
 void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
-  Mesh *cycle;
-  unsigned int  spoke_time, turn_time;
-  cycle = lightcycle[lod];
-    
-  // turn_time = game2->time.current - pV->turn_time;
-	turn_time = game2->time.current - p->data->turn_time;
+  Mesh *cycle = lightcycle[lod];
+
+  int spoke_time = game2->time.current  - pV->spoke_time;
+	int turn_time = game2->time.current - p->data->turn_time;
 
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
-
-  spoke_time = game2->time.current  - pV->spoke_time;
   
   glPushMatrix();
   glTranslatef(p->data->posx, p->data->posy, 0.0);
