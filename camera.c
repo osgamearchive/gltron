@@ -14,7 +14,7 @@ void writeCamDefaults(Camera *cam, int type) {
 }
 
 #define CLAMP_R_MIN 5
-#define CLAMP_R_MAX 25
+#define CLAMP_R_MAX 45
 #define CLAMP_CHI_MIN M_PI / 8
 #define CLAMP_CHI_MAX 3 * M_PI / 8
 
@@ -152,9 +152,9 @@ void doCameraMovement() {
       /* that means, check for mouse input mainly */
       if(cam->type->freedom[CAM_FREE_R]) {
 	if(game2->input.mouse1 == 1)
-	  cam->movement[CAM_R] += CAM_DR * game2->time.dt / 1000.0;
+	  cam->movement[CAM_R] += CAM_DR * game2->time.dt / 100.0;
 	if(game2->input.mouse2 == 1)
-	  cam->movement[CAM_R] -= CAM_DR * game2->time.dt / 1000.0;
+	  cam->movement[CAM_R] -= CAM_DR * game2->time.dt / 100.0;
 	writeCamDefaults(cam, CAM_R);
       }
       if(cam->type->freedom[CAM_FREE_PHI]) {
