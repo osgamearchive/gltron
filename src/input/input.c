@@ -104,7 +104,8 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					printf("boost down\n");
-					game->player[i].data->boost_enabled = 1;
+					if(game->player[i].data->booster > getSettingf("booster_min"))
+						game->player[i].data->boost_enabled = 1;
 				} else {
 					printf("boost up\n");
 					game->player[i].data->boost_enabled = 0;
