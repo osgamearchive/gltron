@@ -28,7 +28,7 @@ float getRecognizerAngle(vec2 *velocity)
   
 void getRecognizerPositionVelocity(vec2 *p, vec2 *v) {
   float max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
-  float rec_boundry = box2_Diameter(& game2->level->boundingBox);
+  float rec_boundry = box2_Diameter(& game2->level->boundingBox) - max;
   box2_Center(p, & game2->level->boundingBox);
   p->v[0] += x() * rec_boundry / 2.0f;
   p->v[1] += y() * rec_boundry / 2.0f;
