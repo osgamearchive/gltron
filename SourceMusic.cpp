@@ -19,18 +19,27 @@ namespace Sound {
 
   SourceMusic::~SourceMusic() { 
     fprintf(stderr, "SourceMusic destructor called\n");
-
+		SDL_SemWait(_sem);
 		free(_buffer);
 		
     if(_sample)
       Sound_FreeSample( _sample );
+		_sample = NULL;
 
     if(_filename)
       free(_filename);
+		
+		SDL_SemPost(_sem);
   }
 
+	/*! 
+		\fn void SourceMusic::CreateSample(void)
+		
+		call this function only between semaphores
+	*/
+
   void SourceMusic::CreateSample(void) {
-    _rwops = SDL_RWFromFile(_filename, "r");
+    _rwops = SDL_RWFromFile(_filename, "rb");
     _sample = Sound_NewSample(_rwops, NULL,
 			      _system->GetAudioInfo(),
 			      _sample_buffersize );
@@ -62,7 +71,12 @@ namespace Sound {
 
   int SourceMusic::Mix(Uint8 *data, int len) {
     if(_sample == NULL) return 0;
-		
+
+		if( SDL_SemTryWait(_sem) ) {
+			fprintf(stderr, "semaphore locked, skipping mix\n");
+			return 0;
+		}
+
 		// printf("mixing %d bytes\n", len);
 
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
@@ -76,23 +90,28 @@ namespace Sound {
 				_read = (_read + len) % _buffersize;
 			} else {
 				// wrap around in buffer
-				// printf("wrap around in buffer\n");
+				fprintf(stderr, "wrap around in buffer (%d, %d, %d)\n", 
+								len, _read, _buffersize);
+				
 				SDL_MixAudio(data, _buffer + _read, _buffersize - _read, volume);
 				len -= _buffersize - _read;
-				SDL_MixAudio(data, _buffer, len, volume);
+				SDL_MixAudio(data + _buffersize - _read, _buffer, len, volume);
 				_read = len;
 			}
 		} else {
 			// buffer under-run
-			printf("buffer underrun!\n");
+			fprintf(stderr, "buffer underrun!\n");
 			// don't do anything
 		}
+		
+		SDL_SemPost(_sem);
     return 1;
   }
 
 	void SourceMusic::Idle(void) {
 		if(_sample == NULL)
 			return;
+		
 		// printf("idling\n");
 		while( _read == _decoded || 
 					 (_read - _decoded + _buffersize) % _buffersize >
@@ -105,7 +124,8 @@ namespace Sound {
 			if(count <= _buffersize - _decoded) {
 				memcpy(_buffer + _decoded, _sample->buffer, count);
 			} else {
-				// wrapping around end of buffer
+				// wrapping around end of buffer (usually doesn't happen when 
+				// _buffersize is a multiple of _sample_buffersize)
 				printf("wrapping around end of buffer\n");
 				memcpy(_buffer + _decoded, _sample->buffer, _buffersize - _decoded);
 				memcpy(_buffer, (Uint8*) _sample->buffer + _buffersize - _decoded,
@@ -116,6 +136,7 @@ namespace Sound {
 			// check for end of sample, loop
 			if(_sample->flags) {
 				// some error has occurer, maybe end of sample reached
+				SDL_SemWait(_sem);
 				CleanUp();
 				fprintf(stderr, "end of sample reached!\n");
 				if(_loop) {
@@ -126,6 +147,7 @@ namespace Sound {
 				} else {
 					_isPlaying = 0;
 				}
+				SDL_SemPost(_sem);
 			}
 		} // buffer has been filled
 	}
