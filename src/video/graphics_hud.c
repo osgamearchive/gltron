@@ -13,7 +13,7 @@ void getPauseString(char *buf, float* color);
 void hud_MaskSetup(int maskId, int maskIndex) {
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.9f);
+	glAlphaFunc(GL_GREATER, 0.1f);
 
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, maskIndex, 255);
@@ -172,6 +172,9 @@ void getPauseString(char *buf, float* color) {
 	  sprintf(buf, "%s", starting);
   } else {
 	  // game is running
+	  color[0] = 0;
+	  color[1] = 0;
+	  color[2] = 0;
 	  buf[0] = 0;
   }
 }
