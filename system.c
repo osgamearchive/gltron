@@ -176,7 +176,8 @@ int SystemMainLoop() {
     } else
       current->idle();
   }
-	(current->exit)();
+	if(current->exit)
+		(current->exit)();
 	return return_code;
 }
   
