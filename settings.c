@@ -151,6 +151,7 @@ void initMainGameSettings(char *filename) {
   game->settings->model_backwards = 0;
   game->settings->use_mipmaps = 1;
   game->settings->mipmap_filter = TRILINEAR;
+  game->settings->softwareRendering = 0;
 
   game->settings->display_type = 0;
   game->settings->playMusic = 1;

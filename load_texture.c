@@ -6,6 +6,9 @@ void freeTextureData(texture *tex) {
 }
 
 texture* loadTextureData(char *filename) {
+  texture *tex;
+  char *path;
+
   path = getFullPath(filename);
   if(path != NULL)
     tex = LOAD_TEX(path);
@@ -22,7 +25,6 @@ texture* loadTextureData(char *filename) {
 }
 
 void loadTexture(char *filename, int format) {
-  char *path;
   texture *tex;
   GLint internal;
 

@@ -166,6 +166,7 @@ typedef struct gDisplay {
   unsigned int texTrail;
   unsigned int texTrailDecal;
   unsigned int texDebug;
+  unsigned char *pixelGui;
 } gDisplay;
 
 typedef struct Player {
@@ -214,6 +215,7 @@ typedef struct Settings {
   int use_mipmaps; /* enable / disable mipmapping */
   int mipmap_filter; /* bilinear / trilinear */
 
+  int softwareRendering;
   int camType;
   int mouse_warp;
 

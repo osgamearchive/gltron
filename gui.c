@@ -26,7 +26,7 @@ void drawGuiBackground() {
   rasonly(game->screen);
 
   if(game->settings->softwareRendering) {
-    glRasterPos(0, 0);
+    glRasterPos2i(0, 0);
     glDrawPixels(game->screen->vp_w, game->screen->vp_h,
 		 GL_RGB, GL_UNSIGNED_BYTE,
 		 game->screen->pixelGui);
