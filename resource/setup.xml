@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
-<install product="GLtron" desc="GLtron" version="0.62" uninstall="uninstall.sh"
+<install product="GLtron" desc="GLtron" version="0.70" uninstall="uninstall.sh"
          promptbinaries="yes" update_url="http://www.gltron.org/updates/">
   <readme>
     README

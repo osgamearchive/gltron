@@ -1,7 +1,7 @@
 I'm using a very old loki setup, but it seems to work
 The commandlike to generate it was
 
-sh /home/andreas/src/loki_setup/makeself/makeself.sh Install-Image/ gltron-0.70-linux-beta-1.sh "GLtron 0.70-beta-1" ./setup.sh
+sh /home/andreas/src/loki_setup/makeself/makeself.sh Install-Image/ gltron-0.70.sh "GLtron 0.70" ./setup.sh
 
 The LIBS line for compiling the binary:
 
