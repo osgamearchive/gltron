@@ -3,6 +3,7 @@
 EXTRA_DIST = CREDITS README.html LICENSE CHANGELOG
 
 # SUBDIRS = art data 
+SUBDIRS=lua
 
 bin_PROGRAMS = gltron
 
@@ -18,13 +19,18 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	quad.h renderer_gl.h switchCallbacks.h system.h texture.h credits.c \
         SkyBox.cpp SkyBox.h skybox_glue.cpp skybox_glue.h engine.h event.h
 
-gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@
+gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.la lua/src/lib/liblualib.la
 
-gltron_DEPENDENCIES = @NETWORK_OBJS@ @SOUND_OBJS@
+gltron_DEPENDENCIES = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.la lua/src/lib/liblualib.la
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound.h sound_glue.h \
 	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp SoundSystem.cpp \
 	SourceCopy.cpp 
+
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
+
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
 
 todo:
 	perl todo2html.pl < TODO > TODO.html

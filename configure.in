@@ -11,6 +11,9 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
+AC_DISABLE_SHARED
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
 
 dnl CFLAGS set-up
 dnl CFLAGS=""
@@ -113,4 +116,7 @@ AC_OUTPUT(Makefile \
 	art/Makefile \
 	art/default/Makefile \
 	data/Makefile data/music/Makefile \
+	lua/Makefile \
+	lua/src/Makefile \
+	lua/src/lib/Makefile \
 	)
