@@ -92,7 +92,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   line = &(data->trails[0]);
   while(line != data->trail) { /* the last segment is special cased */
     q = getNextQuad(qb);
-    if(game->settings->softwareRendering == 0) 
+    if(game->settings->softwareRendering == 0 && 
+       game->settings->show_decals == 1) 
       q->type = QUAD_COLOR | QUAD_TEXTURE | QUAD_TEX_DECAL;
     else q->type = QUAD_COLOR;
     q->texture_id = tex;
@@ -136,7 +137,8 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
   light4fv(color);
 
   q = getNextQuad(qb);
-  if(game->settings->softwareRendering == 0) 
+  if(game->settings->softwareRendering == 0 && 
+     game->settings->show_decals == 1) 
     q->type = QUAD_COLOR | QUAD_TEXTURE | QUAD_TEX_DECAL;
   else q->type = QUAD_COLOR;
 
@@ -195,14 +197,6 @@ void bufferPlayerTrail(Player *p, QuadBuffer *qb) {
 
 }
 
-void bufferTrails(QuadBuffer *q) {
-  int i;
-  for(i = 0; i < game->players; i++) {
-    bufferPlayerTrail(game->player + i, q);
-    bufferPlayerBow(game->player + i, q);
-  }
-}
-
 void drawTrails(QuadBuffer *q, int *index) {
   int i;
 
@@ -236,15 +230,32 @@ void doTrails(Player *p) {
     }
   }
   q->current = 0;
-  bufferTrails(q);
-  index = getSortedQuads(q, p->camera->cam);
-
   clearState();
-  drawTrails(q, index);
-  // drawTrails(q, NULL);
-  if(index != NULL) free(index);
+  if(game->settings->alpha_trails) {
+    /* depth sort everything */
+    int i;
+    for(i = 0; i < game->players; i++) {
+      bufferPlayerTrail(game->player + i, q);
+      bufferPlayerBow(game->player + i, q);
+    }
+    index = getSortedQuads(q, p->camera->cam);
+    drawTrails(q, index);
+    if(index != NULL) free(index);
+  } else {
+    /* draw non-transparent trails first (unsorted), then draw
+       bows */
+    int i;
+    for(i = 0; i < game->players; i++)
+      bufferPlayerTrail(game->player + i, q);
+    drawTrails(q, NULL);
+    for(i = 0; i < game->players; i++)
+      bufferPlayerBow(game->player + i, q);
+    /* bows are transparent, so sort back-to-front */
+    index = getSortedQuads(q, p->camera->cam);
+    drawTrails(q, index);
+    if(index != NULL) free(index);
+  }
   
-
   /* 
      printf("%d texture bounds\n", state->binds);
      printf("%d texture mod changes\n", state->mod_changes);
