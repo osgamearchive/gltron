@@ -38,6 +38,7 @@ Features [low priority]:
 - add slightly funny console messages (Robot ate Andi's tail)
 - peek left/right when in 1st person camera mode
 - quick way to restore sane camera angle (e.g. middle mouse button)
+- new bot AI
 - add speed boost / variable speed
 - add armagetron style physics mod 
 
