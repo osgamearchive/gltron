@@ -427,9 +427,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   doPerspective(gSettingsCache.fov, (float) d->vp_w / (float) d->vp_h,
-                gSettingsCache.znear, 
-								box2_Diameter(& game2->level->boundingBox) * 
-								game2->level_scale * 6.5f);
+                gSettingsCache.znear, box2_Diameter(& game2->level->boundingBox) * 6.5f);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -443,8 +441,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
   /* skybox */
   if (gSettingsCache.show_skybox) {
-		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 
-								game2->level_scale * 2.5f );
+		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
   }
 
   glDepthMask(GL_TRUE);

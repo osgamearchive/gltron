@@ -10,10 +10,8 @@ void draw2D( Visual *d ) {
 
 		float aspect = (float)d->vp_w / (float)d->vp_h;
 
-		float grid_width = game2->level_scale * 
-			box2_Width(& game2->level->boundingBox);
-		float grid_height = game2->level_scale * 
-			box2_Height(& game2->level->boundingBox);
+		float grid_width = box2_Width(& game2->level->boundingBox);
+		float grid_height = box2_Height(& game2->level->boundingBox);
 		
 		if(d->vp_w / grid_width < d->vp_h / grid_height) {
 				// black borders top/bottom
