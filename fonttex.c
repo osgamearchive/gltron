@@ -177,6 +177,7 @@ K     75    -           32768      0  16384  800040
 
 void ftxRenderString(fonttex *ftx, char *string, int len) {
   int i;
+  int pos;
   int bound = -1;
   int index;
   
@@ -188,6 +189,7 @@ void ftxRenderString(fonttex *ftx, char *string, int len) {
   w = ftx->texwidth / ftx->width;
   cw = (float)ftx->width / (float)ftx->texwidth;
 
+  pos = 0;
   for(i = 0; i < len; i++) {
     if(string[i] == 3) { // color code
       i++;
@@ -220,14 +222,16 @@ w);
 
     glBegin(GL_QUADS);
     glTexCoord2f(cx, 1 - cy - cw);
-    glVertex2f(i, 0);
+    glVertex2f(pos, 0);
     glTexCoord2f(cx + cw, 1 - cy - cw);
-    glVertex2f(i + 1, 0);
+    glVertex2f(pos + 1, 0);
     glTexCoord2f(cx + cw, 1 - cy);
-    glVertex2f(i + 1, 1);
+    glVertex2f(pos + 1, 1);
     glTexCoord2f(cx, 1 - cy);
-    glVertex2f(i, 1);
+    glVertex2f(pos, 1);
     glEnd();
+
+    pos++;
   }
   /* checkGLError("fonttex.c ftxRenderString\n"); */
 }
