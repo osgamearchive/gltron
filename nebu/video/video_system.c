@@ -47,6 +47,8 @@ void nebu_Video_SetDisplayMode(int f) {
     zdepth = 16;
     bitdepth = 16;
   }
+  if(flags & SYSTEM_ALPHA)
+	  SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8 );
   if(flags & SYSTEM_DEPTH)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, zdepth);
   if(flags & SYSTEM_STENCIL)
@@ -82,6 +84,20 @@ int nebu_Video_Create(char *name) {
   fprintf(stderr, "GL vendor: %s\n", glGetString(GL_VENDOR));
   fprintf(stderr, "GL renderer: %s\n", glGetString(GL_RENDERER));
   fprintf(stderr, "GL version: %s\n", glGetString(GL_VERSION));
+
+  {
+	int value;
+	fprintf(stderr, "Bitdepth:\n");
+	SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &value);
+	fprintf(stderr, "Red: %d\n", value);
+	SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &value);
+	fprintf(stderr, "Green: %d\n", value);
+	SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &value);
+	fprintf(stderr, "Blue: %d\n", value);
+	SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE, &value);
+	fprintf(stderr, "Alpha: %d\n", value);
+  }
+	
 
   glClearColor(0,0,0,0);
   glClear(GL_COLOR_BUFFER_BIT);
