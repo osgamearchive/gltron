@@ -146,28 +146,30 @@ void cycleDisplay(int p) {
 }
 
 void gameMouseMotion(int x, int y) {
-  if(x != MOUSE_ORIG_X || y != MOUSE_ORIG_Y) {
-    /* fprintf(stderr, "Mouse: dx: %d\tdy: %d\n", 
+  if(game->settings->camType == CAM_TYPE_MOUSE) 
+    if(x != MOUSE_ORIG_X || y != MOUSE_ORIG_Y) {
+      /* fprintf(stderr, "Mouse: dx: %d\tdy: %d\n", 
        x - MOUSE_ORIG_Y, y - MOUSE_ORIG_Y); */
-    cam_phi += - (x - MOUSE_ORIG_X) * MOUSE_CX;
-    cam_chi += (y - MOUSE_ORIG_Y) * MOUSE_CY;
-    if(cam_chi < CAM_CHI_MIN) cam_chi = CAM_CHI_MIN;
-    if(cam_chi > CAM_CHI_MAX) cam_chi = CAM_CHI_MAX;
-    SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  }
+      cam_phi += - (x - MOUSE_ORIG_X) * MOUSE_CX;
+      cam_chi += (y - MOUSE_ORIG_Y) * MOUSE_CY;
+      if(cam_chi < CAM_CHI_MIN) cam_chi = CAM_CHI_MIN;
+      if(cam_chi > CAM_CHI_MAX) cam_chi = CAM_CHI_MAX;
+      SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
+    }
 }
 
 #define CAM_DR 1.0
 
 void gameMouse(int buttons, int state, int x, int y) {
-  if(state == SYSTEM_MOUSEPRESSED) {
-    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) {
-      cam_r -= CAM_DR;
-      if(cam_r < CAM_R_MIN) cam_r = CAM_R_MIN;
-    } else if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) {
-      cam_r += CAM_DR;
-      if(cam_r > CAM_R_MAX) cam_r = CAM_R_MAX;
+  if(game->settings->camType == CAM_TYPE_MOUSE) 
+    if(state == SYSTEM_MOUSEPRESSED) {
+      if(buttons == SYSTEM_MOUSEBUTTON_LEFT) {
+	cam_r -= CAM_DR;
+	if(cam_r < CAM_R_MIN) cam_r = CAM_R_MIN;
+      } else if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) {
+	cam_r += CAM_DR;
+	if(cam_r > CAM_R_MAX) cam_r = CAM_R_MAX;
+      }
     }
-  }
   /* fprintf(stderr, "new cam_r: %.2f\n", cam_r); */
 }

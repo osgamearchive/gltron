@@ -104,14 +104,22 @@ enum {
 #define CYCLE_HEIGHT 8
 #define WALL_H 12
 
+#define CAM_TYPE_CIRCLING 0
+#define CAM_TYPE_FOLLOW 1
+#define CAM_TYPE_COCKPIT 2
+#define CAM_TYPE_MOUSE 3
+
 #define CAM_COUNT 4
 #define CAM_CIRCLE_DIST 15
 #define CAM_CIRCLE_Z 8.0
+
 #define CAM_FOLLOW_DIST 12
 #define CAM_FOLLOW_Z 6.0
 #define CAM_FOLLOW_SPEED 0.05
 #define CAM_FOLLOW_SPEED_FACTOR 1.0 / 82.0
 #define CAM_SPEED 2.0
+
+#define CAM_COCKPIT_Z 3
 
 #define CAM_R_MIN 2.0
 #define CAM_R_MAX 100
