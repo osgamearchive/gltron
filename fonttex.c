@@ -8,45 +8,6 @@ void getLine(char *buf, int size, file_handle file) {
   } while( buf[0] == '\n' || buf[0] == '#');
 }
 
-void fbmpUnloadFont(fontbmp *fbmp) {
-  freeTextureData(fbmp->tex);
-  free(fbmp);
-}
-
-fontbmp* fbmpLoadFont(char *filename) {
-  char *path;
-  file_handle file;
-  char buf[100];
-  int len;
-  fontbmp *fbmp;
-  
-  path = getPath(PATH_DATA, filename);
-  if(path == NULL) {
-    fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
-    return NULL;
-  }
-  file = file_open(path, "r");
-  free(path);
-
-  fbmp = (fontbmp*) malloc(sizeof(fontbmp));
-  /* bitmap texture width, character width */
-  getLine(buf, sizeof(buf), file);
-  sscanf(buf, "%d %d ", &(fbmp->texwidth), &(fbmp->width));
-  /* lowest character, highest character */
-  getLine(buf, sizeof(buf), file);
-  sscanf(buf, "%d %d ", &(fbmp->lower), &(fbmp->upper));
-  /* bitmap filename */
-  getLine(buf, sizeof(buf), file);
-  len = strlen(buf) + 1;
-  if(buf[len - 2] == '\n') buf[len - 2] = 0;
-  /* fbmp->bitmapName = (char*) malloc(len);
-     memcpy(fbmp->bitmapName, buf, len); */
-  fbmp->tex = loadTextureData(buf);
-
-  file_close(file);
-  return fbmp;
-}
-
 fonttex *ftxLoadFont(char *filename) {
   char *path;
   file_handle file;

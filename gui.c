@@ -4,8 +4,7 @@
 
 #include "gltron.h"
 
-#warning "ignored playMenuFX"
-
+/* FIXME: "ignored playMenuFX" */
 void playMenuFX(int foo) { }
 
 void guiProjection(int x, int y) {
@@ -29,38 +28,26 @@ void drawGuiBackground() {
 
   rasonly(game->screen);
 
-#if 0
-  if(game->settings->softwareRendering) {
-    glRasterPos2i(0, 0);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glDrawPixels(game->screen->vp_w, game->screen->vp_h,
-		 GL_RGB, GL_UNSIGNED_BYTE,
-		 game->screen->pixelGui);
-  } else {
-#endif
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_GUI]);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_GUI]);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
-    glColor3f(1.0, 1.0, 1.0);
-    glBegin(GL_QUADS);
+  glColor3f(1.0, 1.0, 1.0);
+  glBegin(GL_QUADS);
 
-    glTexCoord2f(0.0, 0.0);
-    glVertex2f(0, 0);
+  glTexCoord2f(0.0, 0.0);
+  glVertex2f(0, 0);
 
-    glTexCoord2f(1.0, 0.0);
-    glVertex2f(game->screen->vp_w, 0);
+  glTexCoord2f(1.0, 0.0);
+  glVertex2f(game->screen->vp_w, 0);
 
-    glTexCoord2f(1.0, .75);
-    glVertex2f(game->screen->vp_w, game->screen->vp_h);
+  glTexCoord2f(1.0, .75);
+  glVertex2f(game->screen->vp_w, game->screen->vp_h);
 
-    glTexCoord2f(0.0, .75);
-    glVertex2f(0, game->screen->vp_h);
+  glTexCoord2f(0.0, .75);
+  glVertex2f(0, game->screen->vp_h);
 
-    glEnd();
-#if 0
-  }
-#endif
+  glEnd();
 }
 
 void drawGuiLogo() {
@@ -195,79 +182,12 @@ void keyboardGui(int key, int x, int y) {
   SystemPostRedisplay();
 }
 
-#if 0
-
-void keyboardGui(int key, int x, int y) {
-  int i;
-  switch(key) {
-  case 27:
-#ifdef SOUND
-    if(getSettingi("playEffects")) 
-      playMenuFX(fx_action);
-#endif
-    if(pCurrent->parent == NULL)
-      restoreCallbacks();
-    else
-      pCurrent = pCurrent->parent;
-    break;
-  case 13: case ' ':
-#ifdef SOUND
-    if(getSettingi("playEffects")) 
-      playMenuFX(fx_action);
-#endif
-    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
-    break;
-  case SYSTEM_KEY_LEFT:
-    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_LEFT);
-    break;
-  case SYSTEM_KEY_RIGHT:
-    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_RIGHT);
-    break;
-    /* case 'q': SystemExit(); break; */
-  case SYSTEM_KEY_DOWN:
-#ifdef SOUND
-    if(getSettingi("playEffects"))
-      playMenuFX(fx_highlight);
-#endif
-    pCurrent->iHighlight = (pCurrent->iHighlight + 1) % pCurrent->nEntries;
-    break;
-  case SYSTEM_KEY_UP:
-#ifdef SOUND
-    if(getSettingi("playEffects"))
-      playMenuFX(fx_highlight);
-#endif
-    pCurrent->iHighlight = (pCurrent->iHighlight - 1) % pCurrent->nEntries;
-    if(pCurrent->iHighlight < 0)
-      pCurrent->iHighlight = pCurrent->nEntries - 1;
-    break;
-  case SYSTEM_KEY_F11: doBmpScreenShot(game->screen); break;
-  case SYSTEM_KEY_F12: doPngScreenShot(game->screen); break;
-    /* debug code follows */
-  case 'l':
-    printf("%d entries:\n", pCurrent->nEntries);
-    for(i = 0; i < pCurrent->nEntries; i++)
-      printf("printing '%s' - %d entries\n",
-	     ((Menu*)*(pCurrent->pEntries + i))->szName,
-	     ((Menu*)*(pCurrent->pEntries + i))->nEntries);
-    break;
-  default: printf("got key %d\n", key);
-  }
-  SystemPostRedisplay();
-}
-#endif /* 0 */
-
 void initGui() {
   SystemUnhidePointer();
 
   updateSettingsCache();
 
   menutime = SystemGetElapsedTime();
-#if 0
-  if(pCurrent == NULL) {
-    pCurrent = *pMenuList; /* erstes Menu ist RootMenu - Default pCurrent */
-    pCurrent->iHighlight = 0;
-  }
-#endif
 }
 
 void exitGui() {
@@ -281,8 +201,6 @@ void initGLGui() {
   glDisable(GL_DEPTH_TEST);
   SystemPostRedisplay();
 }
-
-static int current_highlight = -1;
 	
 void guiMouse(int buttons, int state, int x, int y) {
   fprintf(stderr, "Mouse buttons: %d, State %d, Position (%d, %d)\n",
@@ -294,77 +212,12 @@ void guiMouse(int buttons, int state, int x, int y) {
     if(getSettingi("playEffects"))
       playMenuFX(fx_action);
 #endif
-#if 0	
-    menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
-#endif
     SystemPostRedisplay();
   }
 }
 
 void guiMouseMotion(int mx, int my) {
-  /* fprintf(stderr, "Mouse motion at (%d, %d)\n", x, y); */
- 
-  /* I am using the calculation in drawMenu, perhaps
-     these values should be bound to Menu structure in the future. */
-
-  /* TODO: this is cut-and-paste from menu.c: VERY UGLY */
-  int i;
-  int x, y, size, lineheight;
-  int hsize, vsize;
-  int maxw = 0;
-
-#define MENU_TEXT_START_X 0.08
-#define MENU_TEXT_START_Y 0.40
-
-#define MENU_WIDTH 0.80
-#define MENU_HEIGHT 0.40
-
-#define MENU_TEXT_LINEHEIGHT 1.5
-	
-  gDisplay *d = game->screen; 
-	
-  x = (int) (d->vp_w * MENU_TEXT_START_X);
-  y = (int) (d->vp_h * MENU_TEXT_START_Y);
-
-  /* transform mouse y-coordinate */
-
-  my = d->vp_h - my;
-
-#if 0
-  /* new stuff: calculate menu dimensions */
-  for(i = 0; i < pCurrent->nEntries; i++) {
-    int len;
-    len =  strlen(((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
-    if(len > maxw)
-      maxw = len;
-  }
-  /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
-
-  hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float)maxw );
-  vsize = (int) ((float)d->vp_h * MENU_HEIGHT / 
-		 ( (float)pCurrent->nEntries * MENU_TEXT_LINEHEIGHT));
-
-  size = (hsize < vsize) ? hsize : vsize;
-
-  lineheight = (int)( (float) size * MENU_TEXT_LINEHEIGHT);  
-
-  for (i = 0; i < pCurrent->nEntries; i++) {
-    if (current_highlight != i)
-      if (my < y + lineheight && my > y ) {
-	current_highlight = i;
-
-#ifdef SOUND
-	if(getSettingi("playEffects"))
-	  playMenuFX(fx_highlight);
-#endif
-	pCurrent->iHighlight = i;
-	SystemPostRedisplay ();
-	break;	
-      }
- 		
-    y -= lineheight;
-  }
-#endif
+  /* TODO: add mouse cursor, highlighted areas, etc. */
 }
 
 callbacks configureCallbacks = {

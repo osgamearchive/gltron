@@ -195,7 +195,10 @@ extern Game2 *game2;
 
 extern int viewport_content[4];
 extern void (*ai_function)(int,int);
+
+#ifdef LUA_PROFILE
 extern int lua_profile;
+#endif
 
 extern float camAngle;
 extern float cam_phi;
@@ -225,15 +228,7 @@ extern fonttex *guiFtx;
 extern int fontID;
 #define MAX_FONTS 17
 
-#if 0
-extern Menu** pMenuList;
-extern Menu* pRootMenu;
-extern Menu* pCurrent;
-#endif
-
 extern unsigned char* colmap;
-extern unsigned char* debugtex;
-extern int ogl_debugtex;
 extern int colwidth;
 
 extern int dirsX[];
@@ -268,7 +263,6 @@ extern float shadow_matrix[16];
 
 extern callbacks gameCallbacks;
 extern callbacks guiCallbacks;
-/* extern callbacks chooseModelCallbacks; */
 extern callbacks pauseCallbacks;
 extern callbacks configureCallbacks;
 extern callbacks promptCallbacks;
@@ -473,14 +467,8 @@ extern void initCamera(Camera *cam, Data *data, int type);
 extern void movePlayers();
 
 /* fonttex stuff */
-extern void initBitmaps(gDisplay *d);
-extern void deleteBitmaps(gDisplay *d);
-extern fontbmp* fbmpLoadFont(char *filename);
-extern void fbmpUnloadFont(fontbmp *fbmp);
 extern texture* loadTextureData(const char *filename);
 extern void freeTextureData(texture *tex);
-extern void drawSoftwareText(fonttex *tex, int x, int y, int size, char *text);
-extern void drawSoftwareHighlight(int x, int y, int size, char *text);
 extern fonttex *ftxLoadFont(char *filename);
 extern void ftxUnloadFont(fonttex *ftx);
 extern void loadTexture(const char *filename, int format);

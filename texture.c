@@ -53,8 +53,6 @@ void initTexture(gDisplay *d) {
 
 void deleteTextures(gDisplay *d) {
   glDeleteTextures(game_textures, d->textures);
-  ogl_debugtex = 0;
-
   checkGLError("texture.c deleted textures");
 }
 

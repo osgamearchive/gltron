@@ -6,7 +6,9 @@ Game *game;
 Game2 main_game2;
 Game2 *game2;
 
+#ifdef LUA_PROFILE
 int lua_profile = 0;
+#endif
 
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 /* which ai function to call for the current ai level */
@@ -28,14 +30,6 @@ char *lc_lod_names[] = {
   "lightcycle-med.obj",
   "lightcycle-low.obj"
 };
-
-#if 0
-Menu** pMenuList;
-Menu* pRootMenu;
-
-int *configureKeyEntry;
-Menu *configureKeyMenu;
-#endif
 
 float camAngle = 0;
 float cam_phi = 0;

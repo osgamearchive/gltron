@@ -194,14 +194,7 @@ void initData() {
   colmap = (unsigned char*) malloc(colwidth*colwidth/*getSettingi("grid_size")*/);
   for(i = 0; i < colwidth * colwidth/*getSettingi("grid_size")*/; i++)
     *(colmap + i) = 0;
-
-  if(debugtex != NULL)
-    free(debugtex);
   
-  debugtex = (unsigned char*) malloc(4 * DEBUG_TEX_W * DEBUG_TEX_H);
-  memset(debugtex, 0, 4 * DEBUG_TEX_W * DEBUG_TEX_H);
-  ogl_debugtex = 0;
-
   /* lasttime = SystemGetElapsedTime(); */
   game->pauseflag = 0;
 
@@ -222,38 +215,6 @@ void initData() {
   initPlayerData();
   initClientData();
 }
-
-#if 0
-int applyGameInfo() {
-  int i; 
-  Data *data;
-
-  if(game2->players > game->players) {
-    fprintf(stderr, "more players in demo than allowed\n");
-    return 1;
-  }
-
-  for(i = 0; i < game2->players; i++) {
-    data = game->player[i].data;
-    data->speed = game2->rules.speed;
-    data->iposx = game2->startPositions[3 * i + 0];
-    data->iposy = game2->startPositions[3 * i + 1];
-    data->posx = data->iposx;
-    data->posy = data->iposy;
-    data->t = 0;
-    data->dir = game2->startPositions[3 * i + 2];
-    data->last_dir = data->dir;
-  }
-
-  for(; i < game->players; i++) {
-    data = game->player[i].data;
-    data->speed = SPEED_GONE;
-    data->trail_height = 0;
-    data->exp_radius = EXP_RADIUS_MAX;
-  }
-  return 0;
-}
-#endif
 
 int updateTime() {
   game2->time.lastFrame = game2->time.current;
@@ -292,11 +253,6 @@ void clearTrail(int player) {
   for(i = 0; i < colwidth *  game2->rules.grid_size; i++)
     if(colmap[i] == player + 1)
       colmap[i] = 0;
-
-  /* This causes a substantial hiccup on OS X */
-#if 0
-  rebuildDebugTex();
-#endif
 }
 
 void doCrashPlayer(GameEvent *e) {
@@ -318,21 +274,13 @@ void doCrashPlayer(GameEvent *e) {
 }
 
 void writePosition(int player) {
-  unsigned char *source;
   int x, y;
-  float tx, ty;
 
   x = game->player[player].data->iposx;
   y = game->player[player].data->iposy;
 
   /* collision detection */
   colmap[ y * colwidth + x ] = player + 1;
-
-  /* debug texture */
-  source = debugcolors[ colmap [ y * colwidth + x ] ];
-  tx = (float) x * DEBUG_TEX_W /  game2->rules.grid_size; 
-  ty = (float) y * DEBUG_TEX_H /  game2->rules.grid_size;
-  memcpy(debugtex + (int)ty * DEBUG_TEX_W * 4 + (int)tx * 4, source, 4);
 }
 
 void newTrail(Data* data) {

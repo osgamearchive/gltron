@@ -32,7 +32,6 @@ void initMainGameSettings() {
   game2->input.mouse2 = 0;
   game2->input.mousex = 0;
   game2->input.mousey = 0;
-  game2->network.status = 0;
 }
 
 void checkSettings() {
@@ -84,7 +83,9 @@ int getSettingi(char *name) {
     return 0;
   }
 
+#ifdef LUA_PROFILE
   lua_profile++;
+#endif
   return value;
 }
 
@@ -97,7 +98,9 @@ float getSettingf(char *name) {
     return 0;
   }
 
+#ifdef LUA_PROFILE
   lua_profile++;
+#endif
   return value;
 }
 
@@ -116,7 +119,6 @@ void updateSettingsCache() {
   game2->settingsCache.use_stencil = getSettingi("use_stencil");
   game2->settingsCache.show_scores = getSettingi("show_scores");
   game2->settingsCache.show_ai_status = getSettingi("show_ai_status");;
-  game2->settingsCache.show_2d = getSettingi("show_2d");
   game2->settingsCache.show_fps = getSettingi("show_fps");
   game2->settingsCache.softwareRendering = getSettingi("softwareRendering");
   game2->settingsCache.show_floor_texture = getSettingi("show_floor_texture");

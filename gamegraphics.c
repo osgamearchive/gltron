@@ -56,10 +56,6 @@ void drawGame() {
     glEnable(GL_DEPTH_TEST);
   }
 
-  if (game2->settingsCache.show_2d > 0) {
-    drawDebugTex(game->screen);
-    drawDebugLines(game->screen);
-  }
   if (game2->settingsCache.show_fps)
     drawFPS(game->screen);
 
@@ -91,28 +87,20 @@ void rasonly(gDisplay *d) {
 }
 
 void drawText(fonttex* ftx, int x, int y, int size, char *text) {
-#if 0
-  if(getSettingi("softwareRendering")) {
-    drawSoftwareText(ftx, x, y, size, text);
-  } else {
-#endif 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_TEXTURE_2D);
 
-    glPushMatrix();
+  glPushMatrix();
 
-    glTranslatef(x, y, 0);
-    glScalef(size, size, size);
-    ftxRenderString(ftx, text, strlen(text));
+  glTranslatef(x, y, 0);
+  glScalef(size, size, size);
+  ftxRenderString(ftx, text, strlen(text));
   
-    glPopMatrix();
-    glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
-    polycount += 2 * strlen(text); /* quads are two triangles */
-#if 0
-  }
-#endif
+  glPopMatrix();
+  glDisable(GL_TEXTURE_2D);
+  glDisable(GL_BLEND);
+  polycount += 2 * strlen(text); /* quads are two triangles */
 }
 
 void initModelLights(int light) {
@@ -133,156 +121,6 @@ void initTrailLights(int light) {
   float amb[] = { 0.2, 0.2, 0.2, 1};
   setFactor3fv(amb);
   setLight4fv(arena);
-}
-
-void rebuildDebugTex() {
-  int x, y;
-  int px = -1, py = -1;
-  float tx, ty;
-  int color;
-  unsigned char *source;
-  /* printf("rebuilding texture: %d -> ", SystemGetElapsedTime()); */
-  for(y = 0; y < game2->rules.grid_size; y++) {
-    ty = (float) y * DEBUG_TEX_H / game2->rules.grid_size;
-    for(x = 0; x < game2->rules.grid_size; x++) {
-      tx = (float) x * DEBUG_TEX_W / game2->rules.grid_size;
-      color = colmap [ y * colwidth + x];
-      if(color != 0 || ((int)tx != px && (int)ty != py)) {
-	px = (int) tx; 
-	source = debugcolors[ color ];
-	memcpy(debugtex + (int)ty * DEBUG_TEX_W * 4 + px * 4, source, 4);
-      }
-    }
-    py = (int)ty;
-  }
-  /* printf("%d\n", SystemGetElapsedTime()); */
-}
-
-#define MAP_SIZE 256.0
-
-void drawDebugLines(gDisplay *d) {
-  int i;
-  Player *p;
-  Data *data;
-  Line *line;
-  int size;
-  float scale;
-
-  rasonly(d);
-  glTranslatef(10, 400, 0);
-  size = game2->rules.grid_size;
-
-  scale = MAP_SIZE / size;
-
-  glPushMatrix();
-
-  glScalef(scale, scale, scale);
-  glColor3f(1.0, 1.0, 1.0);
-  glBegin(GL_LINE_LOOP);
-  glVertex2i(0, 0);
-  glVertex2i(size, 0);
-  glVertex2i(size, size);
-  glVertex2i(0, size);
-  glEnd();
-
-  /* glLineWidth(2); */ /* buggy in Mesa/Glide */
-  for(i = 0; i < game->players; i++) {
-    p = &(game->player[i]);
-    data = p->data;
-    if(PLAYER_IS_ACTIVE(p)) {
-      glBegin(GL_LINES);
-      glColor3fv(p->pColorAlpha);
-      line = &(data->trails[0]);
-      while(line != data->trail) {
-
-	glVertex2f(line->sx, line->sy);
-	glVertex2f(line->ex, line->ey);
-	line++;
-	polycount++;
-      }
-      glVertex2f(line->sx, line->sy);
-      glVertex2f(data->posx, data->posy);
-      glEnd();
-    }
-  }
-  /* glLineWidth(1); */
-  glPopMatrix();
-}
-
-void drawDebugTex(gDisplay *d) {
-  glDisable(GL_DEPTH_TEST);
-  /* build2DTex(); */
-  /* fprintf(stderr, "%d ", SystemGetElapsedTime()); */
-  rasonly(d);
-  glTranslatef(10, 100, 0);
-
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  /*
-    glBegin(GL_QUADS);
-    glColor4f(1.0, 1.0, 1.0, 0.1);
-    glTexCoord2f(0.0, 0.0); glVertex2i(0, 0);
-    glTexCoord2f(1.0, 0.0); glVertex2i(255, 0);
-    glTexCoord2f(1.0, 1.0); glVertex2i(255, 255);
-    glTexCoord2f(0.0, 1.0); glVertex2i(0, 255);  
-    glEnd();
-  */
-
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, d->textures[TEX_DEBUG]);
-  if(ogl_debugtex == 0) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DEBUG_TEX_W, DEBUG_TEX_H, 
-		 0, GL_RGBA, GL_UNSIGNED_BYTE, debugtex);
-    ogl_debugtex = 1;
-  } else {
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, DEBUG_TEX_W, DEBUG_TEX_H, GL_RGBA,
-		    GL_UNSIGNED_BYTE, debugtex);
-  }
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-  glBlendFunc(GL_ONE, GL_ONE);
-  glBegin(GL_QUADS);
-  glColor3f(1.0, 1.0, 1.0);
-  glTexCoord2f(0.0, 0.0); glVertex2i(0, 0);
-  glTexCoord2f(1.0, 0.0); glVertex2i(255, 0);
-  glTexCoord2f(1.0, 1.0); glVertex2i(255, 255);
-  glTexCoord2f(0.0, 1.0); glVertex2i(0, 255);  
-  glEnd();
-
-  glDisable(GL_TEXTURE_2D);
-
-  glBegin(GL_LINE_LOOP);
-  glVertex2i(0, 0);
-  glVertex2i(255, 0);
-  glVertex2i(255, 255);
-  glVertex2i(0, 255);
-  glEnd();
-
-  /*
-    int x = 100;
-    int y = 100;
-
-    rasonly(d);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glColor4f(.0, 1.0, .0, 1.0);
-    glRasterPos2i(x, y);
-    glBitmap(colwidth * 8 , game2->rules.grid_size, 0, 0, 0, 0, colmap);
-    glBegin(GL_LINE_LOOP);
-    glVertex2i(x - 1, y - 1);
-    glVertex2i(x + colwidth * 8, y - 1);
-    glVertex2i(x + colwidth * 8, y + game2->rules.grid_size);
-    glVertex2i(x - 1, y + game2->rules.grid_size);
-    glEnd();
-    polycount += 4;
-  */
-  /* fprintf(stderr, "%d\n", SystemGetElapsedTime()); */
-  glEnable(GL_DEPTH_TEST);
 }
 
 void drawConsoleLines(char *line, int call) {
@@ -567,9 +405,7 @@ void drawCycle(Player *p, int lod) {
   if (p->data->exp_radius == 0) {
     glEnable(GL_NORMALIZE);
 
-    /* glScalef(10, 10, 10); */
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-    /* glRotatef(90, 0, 0, 1); */
 
     glEnable(GL_CULL_FACE);
     drawModel(cycle, TRI_MESH);
@@ -581,12 +417,8 @@ void drawCycle(Player *p, int lod) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     alpha = (float) (EXP_RADIUS_MAX - p->data->exp_radius) /
       (float) EXP_RADIUS_MAX;
-#if 0
-    setMaterialAlphas(cycle, alpha);
-#endif
-    /* glScalef(10, 10, 10); */
+
     glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
-    /* glRotatef(90, 0, 0, 1); */
 
     drawModelExplosion(cycle, p->data->exp_radius);
   }

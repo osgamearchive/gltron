@@ -230,14 +230,6 @@ void doComputer2(int player, int target) {
   */
 
   if(front < critical && (left > front || right > front) ) {
-#if 0
-    if(critical <= rear_right && left > critical) {
-      /* turn left */
-      createEvent(player, EVENT_TURN_LEFT);
-      fprintf(stderr, "turning left\n");
-      return;
-    }
-#endif
     if(left < right) {
       /* turn right */
       createEvent(player, EVENT_TURN_RIGHT);

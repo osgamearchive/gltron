@@ -22,17 +22,6 @@
 #    define SEPERATOR '/'
 #endif
 
-#if 0
-static int n_dirs = 2;
-
-#ifdef macintosh 
-static char *dirs[] = { ":Data", ":Art" };
-#else
-static char *dirs[] = { "data", "art" };
-#endif
-
-#endif /* 0 */
-
 /* fopen() in MacOS on a directory returns NULL, here is a better solution */
 /* that tells us if a file OR directory exists */
 #ifdef macintosh
@@ -69,34 +58,6 @@ int itemExists (const char* path) {
 
 #include <unistd.h>
 
-#if 0
-
-static int itemExists (const char* path) {
-    return (access (path, F_OK) == 0);
-}
-
-#endif /* 0 */
-
-#endif
-
-#if 0
-char* getFullPath(const char *filename) {
-  char *path;
-
-  int i;
-  for(i = 0; i < n_dirs; i++) {
-    path = malloc(strlen(dirs[i]) + 1 + strlen(filename) + 1);
-    sprintf(path, "%s%c%s", dirs[i], SEPERATOR, filename);
-    /* printf("checking '%s'...", path); */
-    if (itemExists (path) ) {
-      /* printf("ok\n"); */
-      return path;
-    }
-    free(path);
-    /* printf("unsuccessful\n"); */
-  }
-  return NULL;
-}
 #endif
 
 #ifndef PATH_MAX
@@ -114,6 +75,8 @@ static char scripts_dir[PATH_MAX];
 char* getHome() {
   return getenv("HOME");
 }
+
+extern void makeDirectory(const char* name);
 
 void initDirectories() {
   if(PREF_DIR[0] != '~')

@@ -54,7 +54,6 @@ settings.show_gl_logo = 1
 settings.fov = 105
 settings.znear = 0.5
 settings.light_cycles = 1
-settings.show_2d = 0
 settings.turn_cycle = 1
 settings.line_spacing = 20
 settings.softwareRendering = 0
