@@ -26,7 +26,6 @@ void displayPause() {
 }
 
 void keyboardPause(int key, int x, int y) {
-  int i;
   switch(key) {
   case 27:
     switchCallbacks(&guiCallbacks);
