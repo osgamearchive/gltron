@@ -157,7 +157,7 @@ namespace Sound {
       int clen, shifted_len;
 
       GetModifiers(pan, vol, shift);
-      printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
+      // printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
 
       shifted_len = 4 * fxComputeShiftLen( shift, len / 4 );
       clen = MAX(len, shifted_len) + 32; // safety distance
