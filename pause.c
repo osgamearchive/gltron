@@ -9,7 +9,10 @@ void idlePause() {
   soundIdle();
 #endif
 
+#ifdef __NETWORK__
   switchCallbacks(&gameCallbacks);
+#endif
+
   /* 
   if(SystemGetElapsedTime() - lasttime < 10) return;
   timediff();

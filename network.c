@@ -216,6 +216,17 @@ doChatNetEvent(int len, int which)
   //drawConsoleLines(mesg, 3);
   return err;
 }
+
+
+void
+connectionLost()
+{
+  isConnected=0;
+  Net_deconnect();
+  switchCallbacks(&guiCallbacks);
+}
+
+
 /** Handle network traffic. */
 void
 handleServer()
@@ -228,8 +239,9 @@ handleServer()
   //get header to see what's about, who, when. 
   if( (Recv_header(&type, &which, &len, &time) )!= noErr )
     {
-      Net_deconnect();
+      //Net_deconnect();
       fprintf(stderr,"Connection lost\n");
+      connectionLost();
       //exit(2);
       //Connection 's lost.
     } else {
@@ -239,6 +251,7 @@ handleServer()
 	  if( doLoginNetEvent(1, which, len, time) != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    } else {
 	      switchCallbacks(&netPregameCallbacks);
 	    }
@@ -247,42 +260,49 @@ handleServer()
 	  if( doLoginNetEvent(0, which, len, time) != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	case magic:
 	  if( doMagicNetEvent() != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	case joinPlayer:
 	  if(doJoinNetEvent() != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	case leftPlayer:
 	  if(doPartNetEvent(which) != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	case gameEvent:
 	  if(doGameNetEvent() != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	case chgeState:
 	  if(doChgeStateNetEvent() != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	case chat:
 	  if(doChatNetEvent(len, which) != noErr )
 	    {
 	      //exit(2);
+	      connectionLost();
 	    }
 	  break;
 	}

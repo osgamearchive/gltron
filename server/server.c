@@ -117,7 +117,7 @@ handle_client(int which)
 	  serverRep->which = which;    //C le serveur qui parle
 	  serverRep->type  = leftPlayer; //On refuse le login
 	  serverRep->time  = 0;           //Pas utilisé
-	  printf("%s nous quitte.\n", slots[which].name);
+	  printf("%s part.\n", slots[which].name);
 
 	  switch( which )
 	    {
@@ -181,7 +181,6 @@ handle_client(int which)
 	    {
 	      if( slots[i].active )
 		{
-		  printf("On envoi un chat %s de %d à slot %d\n", mesg, serverRep->which, i);
 		  SDLNet_TCP_Send(slots[i].sock,(char *)serverRep, sizeof(tServRepHdr));
 		  SDLNet_TCP_Send(slots[i].sock,(char *)mesg,serverRep->len);
 		}
@@ -257,23 +256,15 @@ handle_client(int which)
 	  break;
 
 	case magic:
-
-	  //On lit le truc de bienvenue
-#ifdef __DEBUG__
-	  printf("Traite un login.\n");
-#endif
 	  SDLNet_TCP_Recv(slots[which].sock, (char *)welcomRep, sizeof(tWelcom));
-#ifdef __DEBUG__
-	  printf("Login recu ... Version: %d\n", welcomRep->vers);
-#endif
 	  if( welcomRep->vers != VERSION )
 	    {
-	      printf("version mauvaise: %d\n", welcomRep->vers);
+	      printf("bad version: %d\n", welcomRep->vers);
 	      //serverRep = (pServRepHdr ) malloc(sizeof(tServRepHdr));
 	      serverRep->which = SERVERID;    //C le serveur qui parle
 	      serverRep->type  = loginRefuse; //On refuse le login
 	      serverRep->time  = 0;           //Pas utilisé
-	      strcpy(message, "La version de gltron est incompatible.\n");
+	      strcpy(message, "Version of gltron is not good.\n");
 	      serverRep->len   = strlen(message);
 	      SDLNet_TCP_Send(slots[which].sock,(char *)serverRep,sizeof(tServRepHdr));
 	      SDLNet_TCP_Send(slots[which].sock,message,serverRep->len);	  
@@ -287,16 +278,13 @@ handle_client(int which)
 	    }
 	  //On accepte la connection
 	  strcpy(slots[which].name, welcomRep->name);
-#ifdef __DEBUG__
-	  printf("Connection de %s sur le slot %d\n", slots[which].name, which);
-#endif
 	  
 	  //On répond en lui disant que c ok.
 	  //serverRep = (pServRepHdr ) malloc(sizeof(tServRepHdr));
 	  serverRep->which = SERVERID;    //C le serveur qui parle
 	  serverRep->type  = loginAccept; //On accepte le login
 	  serverRep->time  = 0;           //Pas utilisé
-	  strcpy(message, "Bienvenue sur gltrond.");
+	  strcpy(message, "Welcome to gltron server.");
 	  serverRep->len   = strlen(message);
 	  SDLNet_TCP_Send(slots[which].sock,(char *)serverRep,sizeof(tServRepHdr));
 	  SDLNet_TCP_Send(slots[which].sock,message,serverRep->len);
@@ -307,7 +295,6 @@ handle_client(int which)
 	  //loginRep = (pLogin) malloc( sizeof(tLogin) );
 	  loginRep->state    = sState;
 	  loginRep->nbUsers  = nbUsers++;
-	  printf(" on envoi loginRep ave nbUsers = %d\n", nbUsers);
 	  SDLNet_TCP_Send(slots[which].sock,(char *)loginRep,sizeof(tLogin));
 	  slots[which].active = 0;
 
@@ -325,7 +312,6 @@ handle_client(int which)
 	    {
 	      if( slots[i].active )
 		{
-		  printf("On envoi un Who %d, %s\n", i, slots[i].name);
 		  whoRep->which      = i;
 		  whoRep->pingIt     = slots[i].pingIt;
 		  whoRep->color      = slots[i].color;
@@ -358,7 +344,7 @@ handle_client(int which)
 	  sState = preGameState;
 	  SDLNet_TCP_Send(slots[which].sock,(char *)&sState,sizeof(int));
 
-	  printf("Changement d'état...%d\n", sState);
+	  printf("Changing state : %d\n", sState);
 	  //On est en pre-game, on envoie les réglages de la partie.
 	  SDLNet_TCP_Send(slots[which].sock,(char *)netSettings,sizeof(tnetGameSettings));
 
@@ -497,7 +483,6 @@ SendEvents(GameEvent *e)
     {
       if( slots[i].active )
 	{
-	  printf("envoi sur slot %d\n", i);
 	  SDLNet_TCP_Send(slots[i].sock, (char*)serverRep, sizeof(tServRepHdr));
 	  SDLNet_TCP_Send(slots[i].sock,(void *)e,sizeof(GameEvent));
 	}

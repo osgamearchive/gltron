@@ -20,6 +20,7 @@ void keyConnect(int k, int unicode, int x, int y)
       isConnected = status;
       if( status != connected )
 	{
+	  isConnected = 0;
 	  restoreCallbacks();	  
 	}
       Net_allocSocks();
