@@ -19,6 +19,10 @@ void drawGame() {
   Player *p;
 
   polycount = 0;
+
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
+
   glClearColor(.0, .0, .0, .0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -28,6 +32,8 @@ void drawGame() {
       d = p->display;
       glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
       drawCam(p, d);
+      glDisable(GL_DEPTH_TEST);
+      glDepthMask(GL_FALSE);
       drawScore(p, d);
       if(game->settings->show_ai_status)
 	if(p->ai->active == 1)

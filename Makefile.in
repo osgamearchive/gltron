@@ -25,7 +25,6 @@ CFILES = \
 	engine.c \
 	game.c \
 	gltron.c \
-	graphics.c \
 	gamegraphics.c \
 	trail.c \
 	input.c \

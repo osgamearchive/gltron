@@ -2,7 +2,6 @@
 #define SYSTEM_H
 
 #include "gltron.h"
-#include "system_net.h"
 
 #include <SDL/SDL.h>
 
@@ -24,6 +23,9 @@
 
 #define SYSTEM_MOUSEUP SDL_MOUSEBUTTONUP
 #define SYSTEM_MOUSEDOWN SDL_MOUSEBUTTONDOWN
+
+#define SYSTEM_MOUSEPRESSED SDL_PRESSED
+#define SYSTEM_MOUSERELEASED SDL_RELEASED
 
 #define SYSTEM_KEY_TAB SDLK_TAB
 

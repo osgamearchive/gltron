@@ -1,5 +1,44 @@
 #include "gltron.h"
 
+void checkGLError(char *where) {
+  int error;
+  error = glGetError();
+  if(error != GL_NO_ERROR)
+    printf("[glError: %s] - %d\n", where, error);
+}
+
+void rasonly(gDisplay *d) {
+  /* do rasterising only (in local display d) */
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0.0f, (GLfloat) d->vp_w, 0.0f, (GLfloat) d->vp_h, 0.0f, 1.0f);
+  checkGLError("rasonly");
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
+}
+
+void drawText(fonttex* ftx, int x, int y, int size, char *text) {
+  if(game->settings->softwareRendering) {
+    drawSoftwareText(x, y, size, text);
+  } else {
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
+
+    glPushMatrix();
+
+    glTranslatef(x, y, 0);
+    glScalef(size, size, size);
+    ftxRenderString(ftx, text, strlen(text));
+  
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    polycount += 2 * strlen(text); /* quads are two triangles */
+  }
+}
+
 void initModelLights(int light) {
   /* float col[] = { .77, .77, .77, 1.0 }; */
   float col[] = { .95, .95, .95, 1.0 };
@@ -601,7 +640,7 @@ void drawWalls(gDisplay *d) {
 void drawCam(Player *p, gDisplay *d) {
   int i;
 
-  float arena[] = { 1.0, 1.0, 5, 0.0 };
+  float arena[] = { 1.0, 1.0, 1, 0.0 };
   glLightfv(GL_LIGHT0, GL_POSITION, arena);
 
   /* 
@@ -699,24 +738,9 @@ void initGLGame() {
 
   glShadeModel( game->screen->shademodel );
 
-
   if(game->settings->show_alpha) 
     glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  /* 
-  glFogf(GL_FOG_START, 50.0);
-  glFogf(GL_FOG_END, 100.0);
-  glFogf(GL_FOG_MODE, GL_LINEAR);
-  glFogf(GL_FOG_DENSITY, 0.1);
-  glDisable(GL_FOG);
-  */
-
-
-  /* TODO(3): incorporate model stuff */
-  /* initLightAndMaterial(); */
-  /* initCustomLights(); */
-
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 }

@@ -25,26 +25,34 @@ void drawGuiBackground() {
 
   rasonly(game->screen);
 
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, game->screen->texGui);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+  if(game->settings->softwareRendering) {
+    glRasterPos(0, 0);
+    glDrawPixels(game->screen->vp_w, game->screen->vp_h,
+		 GL_RGB, GL_UNSIGNED_BYTE,
+		 game->screen->pixelGui);
 
-  glColor3f(1.0, 1.0, 1.0);
-  glBegin(GL_QUADS);
+  } else {
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, game->screen->texGui);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
-  glTexCoord2f(0.0, 0.0);
-  glVertex2f(0, 0);
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
 
-  glTexCoord2f(1.0, 0.0);
-  glVertex2f(game->screen->vp_w, 0);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2f(0, 0);
 
-  glTexCoord2f(1.0, .75);
-  glVertex2f(game->screen->vp_w, game->screen->vp_h);
+    glTexCoord2f(1.0, 0.0);
+    glVertex2f(game->screen->vp_w, 0);
 
-  glTexCoord2f(0.0, .75);
-  glVertex2f(0, game->screen->vp_h);
+    glTexCoord2f(1.0, .75);
+    glVertex2f(game->screen->vp_w, game->screen->vp_h);
 
-  glEnd();
+    glTexCoord2f(0.0, .75);
+    glVertex2f(0, game->screen->vp_h);
+
+    glEnd();
+  }
 }
 
 void drawGuiLogo() {
@@ -104,7 +112,8 @@ void drawGuiLogo() {
   
 void displayGui() {
   drawGuiBackground();
-  drawGuiLogo();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
   drawMenu(game->screen);
 
   SystemSwapBuffers();  
@@ -113,7 +122,8 @@ void displayGui() {
 void displayConfigure() {
   char message[] = "Press a key for this action!";
   drawGuiBackground();
-  drawGuiLogo();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
   drawMenu(game->screen);
 
   rasonly(game->screen);

@@ -19,8 +19,6 @@ void user_read_data(png_structp png_ptr,
 }
 
 png_texture* load_png_texture(char *filename) {
-
-
   int i;
   int bpc, color_type, zsize;
 

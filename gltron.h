@@ -58,17 +58,12 @@
 #define RC_NAME "gltron.ini"
 #endif 
 
-#ifdef SGI_TEX
-#define TEX_SUFFIX ".sgi"
-#endif
-
-#ifdef SDL_TEX
+/* dropped support for anything else than libpng */
+#include "png_texture.h"
+#include <png.h>
+typedef png_texture texture;
+#define LOAD_TEX(x) load_png_texture(x)
 #define TEX_SUFFIX ".png"
-#endif
-
-#ifdef PNG_TEX
-#define TEX_SUFFIX ".png"
-#endif
 
 #define COS(X)	cos( (X) * M_PI/180.0 )
 #define SIN(X)	sin( (X) * M_PI/180.0 )
