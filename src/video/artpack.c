@@ -30,29 +30,24 @@ void initArtpacks(void) {
 
 void loadArt(void) {
 	char *path;
-	char *artpack;
 
-	runScript(PATH_SCRIPTS, "artpack.lua"); // load default art settings
+	// load default art settings
+	runScript(PATH_SCRIPTS, "artpack.lua");
 
-	scripting_GetGlobal("settings", "current_artpack", NULL);
-	scripting_GetStringResult(&artpack);
-	fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
-	
-	path = getArtPath(artpack, "artpack.lua");
-	free(artpack);
+	// load custom artpack settings
+	path = nebu_FS_GetPath(PATH_ART, "artpack.lua");
+	if(path != NULL) {
+		scripting_RunFile(path);
+		free(path);
+	}
 
-  if(path != NULL) {
-    scripting_RunFile(path);
-    free(path);
-  }
+	initTexture(gScreen);
+	fprintf(stderr, "[status] done loading textures...\n");
+	initFonts();
+	fprintf(stderr, "[status] done loading fonts...\n");
 
-  initTexture(gScreen);
-  fprintf(stderr, "[status] done loading textures...\n");
-  initFonts();
-  fprintf(stderr, "[status] done loading fonts...\n");
-
-  video_LoadLevel();
-  fprintf(stderr, "[status] done loading level...\n");
+	video_LoadLevel();
+	fprintf(stderr, "[status] done loading level...\n");
 }
 
 void reloadArt(void) {

@@ -11,12 +11,7 @@ void freeTextureData(texture *tex) {
 texture* loadTextureData(const char *filename) {
   texture *tex = NULL;
   char *path;
-  char *artpack;
-  
-	scripting_GetGlobal("settings", "current_artpack", NULL);
-  scripting_GetStringResult(&artpack);
-  path = getArtPath(artpack, filename);
-  free(artpack);
+  path = nebu_FS_GetPath(PATH_ART, filename);
   if(path != NULL) {
     tex = LOAD_TEX(path);
     free(path);
