@@ -5,12 +5,12 @@
 
 static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
-static int max_lod = 2;
-
-static int lod_dist[][4] = { 
-  { 25, 50, 250, 0 },
-  { 5, 30, 200, 0 },
-  { 1, 5, 150, 0 }
+#define MAX_LOD_LEVEL 3
+static int lod_dist[MAX_LOD_LEVEL + 1][LC_LOD + 1] = { 
+  { 1000, 1000, 1000 }, /* insane */
+  { 25, 50, 250 }, /* high */
+  { 5, 30, 200 }, /* low */
+  { 1, 5, 150 } /* ugly */
 };
 
 /* spoke color */
@@ -463,7 +463,7 @@ void drawCycleShadow(Player *p, int lod) {
   Mesh *cycle;
 
   lod += game2->settingsCache.shadow_lod;
-  if(lod > max_lod) lod = max_lod;
+  if(lod > LC_LOD - 1) lod = LC_LOD - 1;
 
   cycle = lightcycle[lod];
   glPushMatrix();
@@ -593,7 +593,7 @@ int playerVisible(Player *eye, Player *target) {
   float s;
   float d;
   int i;
-  int lod;
+  int lod_level;
 
   vsub(eye->camera->target, eye->camera->cam, v1);
   normalize(v1);
@@ -601,11 +601,13 @@ int playerVisible(Player *eye, Player *target) {
   tmp[1] = target->data->posy;
   tmp[2] = 0;
 
-  lod = (game2->settingsCache.lod > max_lod) ? max_lod : game2->settingsCache.lod;
+  lod_level = (game2->settingsCache.lod > MAX_LOD_LEVEL) ? 
+    MAX_LOD_LEVEL : game2->settingsCache.lod;
+
   /* calculate lod */
   vsub(eye->camera->cam, tmp, v2);
   d = length(v2);
-  for(i = 0; i < LC_LOD && d >= lod_dist[lod][i]; i++);
+  for(i = 0; i < LC_LOD && d >= lod_dist[lod_level][i]; i++);
   if(i >= LC_LOD)
     return -1;
 
@@ -622,7 +624,7 @@ int playerVisible(Player *eye, Player *target) {
   if(s < d-(lightcycle[i]->BBox.fRadius*2))
     return -1;
   else
-	return i;
+    return i;
 }
 	    
 void drawPlayers(Player *p) {
@@ -636,7 +638,7 @@ void drawPlayers(Player *p) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, &(game->player[i]));
       if (lod >= 0) { 
-	      drawCycle(&(game->player[i]), lod);
+	drawCycle(&(game->player[i]), lod);
       }
     }
   }
@@ -865,7 +867,7 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
-	      drawCycleShadow(game->player + i, lod);
+	drawCycleShadow(game->player + i, lod);
       }
     }
     drawTrailShadow(game->player + i);
