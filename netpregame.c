@@ -281,10 +281,16 @@ void keyPregame(int k, int unicode, int x, int y)
       serverstate=preGameState; //We hope that next time server will be to preGameState
       freeRootControl(pregame.pregameControls);
       pregame.pregameControls=NULL;
-      //free_wtext(pregametext);
-      pregame.pregametext=NULL;
-      //free_wintext(inpregametext);
+      pregame.userslist=NULL;
+      pregame.gameType=NULL;
+      pregame.pregametext =NULL;
       pregame.inpregametext=NULL;
+      pregame.gameRule=NULL;
+      pregame.erase=NULL;
+      pregame.speed=NULL;
+      pregame.size=NULL;
+      pregame.level=NULL;
+      pregame.start=NULL;
       if( trackeruse == 1 )
 	{
 	  if( ! tracker_connect() )
@@ -441,10 +447,7 @@ updateUsersListData()
 void drawPregameBackground() {
   checkGLError("pregame background start");
 
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  rasonly(game->screen);
+  
 
   if(game->settings->softwareRendering) {
     glRasterPos2i(0, 0);
@@ -478,14 +481,15 @@ void drawPregameBackground() {
 
 
 void displayPregame() {
-  /* drawPregameBackground(); */
-/*   if(!game->settings->softwareRendering) */
-/*     drawGuiLogo(); */
 
   rasonly(game->screen);
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+  drawPregameBackground();
+  if(!game->settings->softwareRendering)
+    drawGuiLogo();
 
   updateControls(pregame.pregameControls);
   drawMouse();
@@ -755,8 +759,8 @@ void initPregame() {
   set_colDef( colDefs, 0, "Users", 100, colors[1], drawUsersListBox, charToStr_wlist, NULL);
 
   x = game->screen->vp_w - 1.5 * 16 *( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 230;
-  pregame.userslist = new_wlist(x, y, 150, 140, 5, 1, colDefs, 0, NULL, NULL, NULL );
+  y = game->screen->vp_h - 250;
+  pregame.userslist = new_wlist(x, y, 140, 140, 5, 1, colDefs, 0, NULL, NULL, NULL );
 
   //Default value
   i = addRow_wlist     ( pregame.userslist, 4 );
@@ -799,15 +803,15 @@ void initPregame() {
   getServer(serveradd, &port);
   sprintf(server, "Server %s:%i", serveradd, port);
   printf("server is %s\n", server);
-  top_left_x = game->screen->vp_w /2 - (strlen(server)/2)*( game->screen->vp_w / (50 * 1.5));
-  top_left_y = game->screen->vp_h - 2*h ;
+  top_left_x = game->screen->vp_w /2 - (strlen(server)/2)* (h+5);
+  top_left_y = game->screen->vp_h - 7*h ;
 
   newControl(pregame.pregameControls, (Wptr)new_wstatictext( top_left_x, top_left_y, 1.5 * strlen(server) *( game->screen->vp_w / (50 * 1.5)), h+5, server, h+3, gameFont, colors[0]), WstaticText);
   
   //Settings now
 
   //game type
-  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 45*game->screen->vp_h /100, 180, h+5, "Game Type", changeGameType);
+  pregame.gameType = new_wpopmenu(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 180, h+5, "Game Type", changeGameType);
   addchoice_wpopmenu(pregame.gameType, "Games", 0 );
   addchoice_wpopmenu(pregame.gameType, "Time",  1 );
   select_wpopmenu(pregame.gameType, 0 );
@@ -816,7 +820,7 @@ void initPregame() {
 
 
   //Game Rules
-  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 40*game->screen->vp_h /100, 180, h+5, "Games Number", changeGameRule);
+  pregame.gameRule= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 180, h+5, "Games Number", changeGameRule);
   addchoice_wpopmenu(pregame.gameRule, "5",   0 );
   addchoice_wpopmenu(pregame.gameRule, "10",  1 );
   addchoice_wpopmenu(pregame.gameRule, "15",  2 );
@@ -826,11 +830,11 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.gameRule, WpopupMenu);
 
 
-  pregame.erase= new_wcheckbox(60*game->screen->vp_w /100, 35*game->screen->vp_h /100, 180, h+5, "Erase Deads", eraseAction);
+  pregame.erase= new_wcheckbox(60*game->screen->vp_w /100, 25*game->screen->vp_h /100, 180, h+5, "Erase Deads", eraseAction);
   newControl(pregame.pregameControls, (Wptr)pregame.erase, WcheckBox);
 
   //Speed
-  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 30*game->screen->vp_h /100, 180, h+5, "Speed", changeSpeed);
+  pregame.speed= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 180, h+5, "Speed", changeSpeed);
   addchoice_wpopmenu(pregame.speed, speed_list[0],  0 );
   addchoice_wpopmenu(pregame.speed, speed_list[1],  1 );
   addchoice_wpopmenu(pregame.speed, speed_list[2],  2 );
@@ -839,7 +843,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.speed, WpopupMenu);
 
   //Size
-  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 25*game->screen->vp_h /100, 180, h+5, "Size", changeSize);
+  pregame.size= new_wpopmenu(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 180, h+5, "Size", changeSize);
   addchoice_wpopmenu(pregame.size, arena_list[0],  0 );
   addchoice_wpopmenu(pregame.size, arena_list[1],  1 );
   addchoice_wpopmenu(pregame.size, arena_list[2],  2 );
@@ -849,7 +853,7 @@ void initPregame() {
   newControl(pregame.pregameControls, (Wptr)pregame.size, WpopupMenu);
 
   //Level
-  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 20*game->screen->vp_h /100, 180, h+5, "AI level", changeLevel);
+  pregame.level= new_wpopmenu(60*game->screen->vp_w /100, 10*game->screen->vp_h /100, 180, h+5, "AI level", changeLevel);
   addchoice_wpopmenu(pregame.level, ai_list[0],  0 );
   addchoice_wpopmenu(pregame.level, ai_list[1],  1 );
   addchoice_wpopmenu(pregame.level, ai_list[2],  2 );
@@ -865,7 +869,7 @@ void initPregame() {
   deActivateControl( pregame.pregameControls, (Wptr)pregame.gameType );
 
   //The start button
-  pregame.start = new_wbutton(60*game->screen->vp_w /100, 15*game->screen->vp_h /100, 100, 15, "Start game", NULL, startaction, NULL, startMouseFocus);
+  pregame.start = new_wbutton(70*game->screen->vp_w /100, 5*game->screen->vp_h /100, 100, 15, "Start game", NULL, startaction, NULL, startMouseFocus);
   newControl(pregame.pregameControls, (Wptr)pregame.start, WcontrolButton);
   deActivateControl( pregame.pregameControls, (Wptr)pregame.start );
 
