@@ -103,7 +103,10 @@ draw_wlist(Wlist *wlist, Trackerslots *slots)
 	{
 	  if( slots[i].packets==0 || (slots[i].ping/slots[i].packets > 400) || (strcmp(slots[i].version, VERSION) ))
 	    {
-	      glColor3f(0.7, 0.7, .7);	    
+	      if( i == wlist->current )
+		glColor3f(0.9, 0.9, 0.9);
+	      else
+		glColor3f(0.7, 0.7, .7);	    
 	    } else {
 	      if( i == wlist->current )
 		glColor3f(0.4, 0.4, 1.0);

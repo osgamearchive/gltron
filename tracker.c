@@ -206,6 +206,7 @@ keyTracker(int k, int unicode, int x, int y)
       tracker_close();
       free_wlist(serverlist);
       serverlist=NULL;
+      nbservers=0;
       switchCallbacks(&guiCallbacks);
       break;
     case SDLK_UP:

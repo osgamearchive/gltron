@@ -109,7 +109,7 @@ do_server_login( int which, Trackerpacket *packet )
 static void
 do_client_login( int which )
 {
-  int              i;
+  int              i, j;
   Trackerpacket    rep;
 
   //send server list.
@@ -119,12 +119,12 @@ do_client_login( int which )
   //prepare packet
   rep.type=TINFOS;
   printf("a client has logging in, sending hime list of servers\n");
-
+  j=0
   for(i=0; i<MAX_SLOTS; ++i)
     {
       if( slots[i].active==ACTIVE && slots[i].type == SERVER )
 	{
-	  rep.which=i;
+	  rep.which=j++;
 	  rep.infos.infos.speed = slots[i].speed;
 	  rep.infos.infos.size  = slots[i].size;
 	  rep.infos.infos.erase = slots[i].erase;
