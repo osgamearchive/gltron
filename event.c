@@ -230,10 +230,13 @@ void idleGame( void ) {
     break;
   }
     
-  camMove();
-  chaseCamMove();
+  doCameraMovement();
+  recognizerMovement();
 
   SystemPostRedisplay();
+#ifdef DRI_DEBUG  
+  SDL_Delay(10);
+#endif
   /* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
 }
 
