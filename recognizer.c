@@ -66,7 +66,7 @@ void drawRecognizerShadow() {
 
   glEnable(GL_NORMALIZE);
   glColor3f(0.0, 0.0, 0.0);
-  drawModel(recognizer);
+  drawModel(recognizer, TRI_MESH);
  
 #ifdef DO_STENCIL
   glDisable(GL_STENCIL_TEST);
@@ -107,7 +107,7 @@ void drawRecognizer() {
 
   glEnable(GL_NORMALIZE);
   glColor3f(0.0, 0.0, 0.0);
-  drawModel(recognizer);
+  drawModel(recognizer, TRI_MESH);
 
   glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -119,7 +119,7 @@ void drawRecognizer() {
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glEnable(GL_BLEND);
   glEnable(GL_LINE_SMOOTH);
-  drawQuadModel(recognizer_quad);
+  drawModel(recognizer_quad, QUAD_MESH);
   glDisable(GL_LINE_SMOOTH);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
