@@ -53,20 +53,21 @@ void keyGame(int k, int x, int y)
 
   default: 
     for( i = 0; i < game->players; i++) {
-      if(PLAYER_IS_ACTIVE(&game->player[i])) {
-	int key;
-	scripting_RunFormat("return settings.keys[%d].left", i + 1);
-	scripting_GetIntegerResult( &key );
-	if(key == k) {
-	  createEvent(i, EVENT_TURN_LEFT);
-	  return;
-	}
-	scripting_RunFormat("return settings.keys[%d].right", i + 1);
-	scripting_GetIntegerResult( &key );
-	if(key == k) {
-	  createEvent(i, EVENT_TURN_RIGHT);
-	  return;
-	}
+      if(PLAYER_IS_ACTIVE(&game->player[i]) &&
+				 !game->player[i].ai->active) {
+				int key;
+				scripting_RunFormat("return settings.keys[%d].left", i + 1);
+				scripting_GetIntegerResult( &key );
+				if(key == k) {
+					createEvent(i, EVENT_TURN_LEFT);
+					return;
+				}
+				scripting_RunFormat("return settings.keys[%d].right", i + 1);
+				scripting_GetIntegerResult( &key );
+				if(key == k) {
+					createEvent(i, EVENT_TURN_RIGHT);
+					return;
+				}
       }
     }
     displayMessage(TO_STDERR, "key '%s' is not bound", SystemGetKeyName(k));
