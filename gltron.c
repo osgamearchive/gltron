@@ -129,16 +129,8 @@ int main( int argc, char *argv[] ) {
   /* initialize some global variables */
   initMainGameSettings();
 
-  /* set some sane defaults */
-  initDefaultSettings();
-
   /* load some more defaults from config file */
-  { 
-    char *path;
-    path = getPath(PATH_SCRIPTS, "config.lua");
-    scripting_RunFile(path);
-    free(path);
-  }
+  initDefaultSettings();
 
 #if 1
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
@@ -160,8 +152,6 @@ int main( int argc, char *argv[] ) {
     }
   }
 #endif
-
-  initColors();
 
   /* parse any comandline switches overrinding the loaded settings */
   parse_args(argc, argv);
