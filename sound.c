@@ -4,13 +4,12 @@
 #include "SDL.h"
 #include "SDL_sound.h"
 
-/* linux only, at the moment */
-
 #define NUM_GAME_FX 3
 
 static char *game_fx_names[] = {
 
-#ifdef macintosh 
+  /* #ifdef WIN32 || macintosh */
+#if 1
   "game_engine.wav",
   "game_crash.wav",
   "game_recognizer.wav"
