@@ -4,13 +4,22 @@
 #include "console.h"
 #include "recognizer.h"
 
+/*! \fn int processEvent(GameEvent* e)
+  handle events, e.g.
+  left/right/crash/stop
+
+  frees e
+*/
+
 int processEvent(GameEvent* e) {
   int value = 0;
   Data *data;
 
+#ifdef RECORD
   if(game2->mode == GAME_SINGLE_RECORD) {
     writeEvent(e);
   }
+#endif
   switch(e->type) {
   case EVENT_TURN_LEFT:
     doLeftTurn(e);
@@ -27,6 +36,7 @@ int processEvent(GameEvent* e) {
     break;
   case EVENT_STOP:
     displayMessage(TO_STDERR, "game stopped");
+#ifdef RECORD
     if(game2->mode == GAME_SINGLE_RECORD) {
       stopRecording();
       game2->mode = GAME_SINGLE;
@@ -34,6 +44,7 @@ int processEvent(GameEvent* e) {
       stopPlaying();
       game2->mode = GAME_SINGLE;
     }
+#endif
     if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
       game->winner = e->player;
       displayMessage(TO_CONSOLE | TO_STDOUT, "winner: %d", game->winner + 1);
@@ -51,6 +62,10 @@ int processEvent(GameEvent* e) {
   free(e);
   return value;
 }
+
+/*! \fn static list* doMovement(int mode, int dt)
+  do physics, create CRASH and STOP events
+ */
 
 static list* doMovement(int mode, int dt) {
   int i;
@@ -114,7 +129,32 @@ static list* doMovement(int mode, int dt) {
   return l;
 }
  
-void idleGame( void ) {
+/*! \fn void idleGame( void )
+  game loop:
+  update sound, time, (network), animation (explosion radius, recognizer
+  movement), run ai, process events, do physics, process events again,
+  do camera movement, run garbage collector, schedule gfx redisplay
+*/
+
+#if 0
+void idleGame(void) {
+  /* TODO: handle fast finish in updateTime() */
+  if(updateTime() == 0) return;
+
+#ifdef SOUND
+  soundIdle();
+#endif
+  /* TODO: do game ai, animation, physics and process events */
+
+  doCameraMovement();
+  doRecognizerMovement();
+  
+  scripting_RunGC();
+  SystemPostRedisplay();
+}
+#endif
+  
+void idleGame(void) {
   list *l;
   list *p;
   int i;
@@ -123,8 +163,9 @@ void idleGame( void ) {
 
 #ifdef LUA_PROFILE
   printf("%d lua calls since last idle call\n", lua_profile); */
-#endif
   lua_profile = 0;
+#endif
+
 
 #ifdef SOUND
   soundIdle();
@@ -133,13 +174,17 @@ void idleGame( void ) {
   if(updateTime() == 0) return;
 
   switch(game2->mode) {
+#ifdef RECORD
   case GAME_NETWORK_RECORD:
 #ifdef NETWORK
     updateNet();
 #endif
+#endif
     /* fall through */
   case GAME_SINGLE:
+#ifdef RECORD
   case GAME_SINGLE_RECORD:
+#endif
     /* check for fast finish */
     
     if (game2->settingsCache.fast_finish == 1) {
@@ -162,7 +207,8 @@ void idleGame( void ) {
       /* run AI */
       for(i = 0; i < game->players; i++)
 	if(game->player[i].ai != NULL)
-	  if(game->player[i].ai->active == AI_COMPUTER &&
+	  if(game->player[i].ai->
+active == AI_COMPUTER &&
 	     PLAYER_IS_ACTIVE(&game->player[i])) {
 
 	    ai_function(i, 0);
@@ -199,6 +245,7 @@ void idleGame( void ) {
       dt -= PHYSICS_RATE;
     }
     break;
+#ifdef RECORD
   case GAME_PLAY_NETWORK:
 #ifdef NETWORK
     updateNet();
@@ -209,6 +256,7 @@ void idleGame( void ) {
 #endif
     /* fall through to GAME_PLAY */
   case GAME_PLAY:
+#endif
     getEvents(); 
     l = doMovement(0, game2->time.dt); /* this won't generate new events */
     if(l != NULL) {
@@ -218,7 +266,7 @@ void idleGame( void ) {
   }
     
   doCameraMovement();
-  recognizerMovement();
+  doRecognizerMovement();
 
   scripting_RunGC();
   SystemPostRedisplay();
@@ -229,7 +277,11 @@ void idleGame( void ) {
   /* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
 }
 
-/* create an event and put it into the global event queue */
+/*! \fn void createEvent(int player, event_type_e eventType)
+  helper function to create an event struct and insert it into the
+  global event queue
+*/
+
 void createEvent(int player, event_type_e eventType) {
   GameEvent *e;
   list *p = &(game2->events);
