@@ -1,7 +1,10 @@
 #ifndef Vector3_H
 #define Vector3_H
 
+#ifdef DEBUG
 #include "iostream.h"
+#endif
+
 #include "math.h"
 
 class Vector3 {
@@ -62,21 +65,23 @@ class Vector3 {
 		   x * v.y - y * v.z);
   }
 
+  #ifdef DEBUG
   friend ostream& 
     operator<<(ostream& os, const Vector3& v);
 
   friend Vector3
     operator*(float f, const Vector3& v);
-
+  #endif
 };
 
 inline Vector3 operator*(float f, const Vector3& v) {
   return v * f;
 }
 
+#ifdef DEBUG
 inline ostream& operator<<(ostream& os, const Vector3& v) {
   os << "(" << v.x << ", " << v.y << ", " << v.z << ")";
   return os;
 }
-
+#endif
 #endif
