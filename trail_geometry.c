@@ -106,7 +106,7 @@ void trailRender(Player *pPlayer, TrailMesh *pMesh) {
 	if(pMesh->iUsed == 0)
 		return;
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// glDisable(GL_LIGHTING);
 	
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -147,5 +147,5 @@ void trailRender(Player *pPlayer, TrailMesh *pMesh) {
 	
 	// glEnable(GL_LIGHTING);
 	checkGLError("trail");
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
