@@ -1,4 +1,4 @@
-SUBDIRS = base filesystem scripting audio video input
+SUBDIRS = include base filesystem scripting audio video input
 
 noinst_LIBRARIES = libNebu.a
 

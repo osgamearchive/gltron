@@ -1,4 +1,4 @@
-SUBDIRS = filesystem base configuration audio video input game
+SUBDIRS = include filesystem base configuration audio video input game
 
 noinst_LIBRARIES = libGLtron.a
 
