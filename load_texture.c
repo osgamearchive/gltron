@@ -10,9 +10,9 @@ texture* loadTextureData(const char *filename) {
   char *path;
   char *artpack;
   
-  artpack = artpack_list[artpack_index];
-
+  scripting_GetString("current_artpack", &artpack);
   path = getArtPath(artpack, filename);
+  free(artpack);
   if(path != NULL) {
     tex = LOAD_TEX(path);
     free(path);
