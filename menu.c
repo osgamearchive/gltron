@@ -8,7 +8,8 @@ void drawMenu(gDisplay *d) {
   int i;
   int x, y, size, lineheight;
   int hsize, vsize;
-  int maxw = 0;
+  int max_label = 0;
+  int max_data = 0;
   int nEntries;
   char pMenuName[200];
   int iActiveItem;
@@ -35,26 +36,24 @@ void drawMenu(gDisplay *d) {
 
   /* new stuff: calculate menu dimensions */
   for(i = 0; i < nEntries; i++) {
-    int len = 0;
-    int result;
+    int len_label = 0;
+    int len_data = 0;
 
     scripting_RunFormat("return strlen( Menu[Menu.%s.items[%d]].caption )", 
 			pMenuName, i + 1);
-    scripting_GetIntegerResult(&result);
-    len += result;
-
+    scripting_GetIntegerResult(&len_label);
+    len_label += 2; /* add ': ' */
     scripting_RunFormat("return GetMenuValueWidth( Menu.%s.items[%d] )",
 			pMenuName, i + 1);
-    scripting_GetIntegerResult(&result);
-    len += result;
+    scripting_GetIntegerResult(&len_data);
 
-    if(len > maxw)
-      maxw = len;
+    if(len_label > max_label) max_label = len_label;
+    if(len_data > max_data) max_data = len_data;
   }
 
   /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
 
-  hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float)maxw );
+  hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float) (max_label + max_data));
   vsize = (int) ((float)d->vp_h * MENU_HEIGHT / 
 		 ( (float)nEntries * MENU_TEXT_LINEHEIGHT));
 
@@ -98,12 +97,16 @@ void drawMenu(gDisplay *d) {
       {
 	char line[200];
 	scripting_RunFormat("return "
-			    "Menu[Menu.%s.items[%d]].caption .. ': ' .. "
-			    "GetMenuValueString( Menu.%s.items[%d] )",
-			    pMenuName, i + 1,
+			    "Menu[Menu.%s.items[%d]].caption .. ': '",
 			    pMenuName, i + 1);
 	scripting_CopyStringResult(line, sizeof(line));
 	drawText(guiFtx, x, y, size, line);
+
+	scripting_RunFormat("return "			    
+			    "GetMenuValueString( Menu.%s.items[%d] )",
+			    pMenuName, i + 1);
+	scripting_CopyStringResult(line, sizeof(line));
+	drawText(guiFtx, x + max_label * size, y, size, line);
       }
 
     /*
