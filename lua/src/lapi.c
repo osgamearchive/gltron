@@ -1,5 +1,5 @@
 /*
-** $Id: lapi.c,v 1.1 2002/02/14 10:46:59 jcatki Exp $
+** $Id: lapi.c,v 1.2 2002/07/12 07:49:04 jcatki Exp $
 ** Lua API
 ** See Copyright Notice in lua.h
 */
@@ -485,7 +485,7 @@ LUA_API void lua_concat (lua_State *L, int n) {
 
 
 LUA_API void *lua_newuserdata (lua_State *L, size_t size) {
-  TString *ts = luaS_newudata(L, size, NULL);
+  TString *ts = luaS_newudata(L, (size==0) ? 1 : size, NULL);
   tsvalue(L->top) = ts;
   ttype(L->top) = LUA_TUSERDATA;
   api_incr_top(L);

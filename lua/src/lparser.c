@@ -1,5 +1,5 @@
 /*
-** $Id: lparser.c,v 1.1 2002/02/14 10:46:59 jcatki Exp $
+** $Id: lparser.c,v 1.2 2002/07/12 07:49:04 jcatki Exp $
 ** LL(1) Parser and code generator for Lua
 ** See Copyright Notice in lua.h
 */
@@ -997,7 +997,7 @@ static void retstat (LexState *ls) {
   /* stat -> RETURN explist */
   FuncState *fs = ls->fs;
   next(ls);  /* skip RETURN */
-  if (!block_follow(ls->t.token))
+  if (!block_follow(ls->t.token) && ls->t.token != ';')
     explist1(ls);  /* optional return values */
   luaK_code1(fs, OP_RETURN, ls->fs->nactloc);
   fs->stacklevel = fs->nactloc;  /* removes all temp values */
