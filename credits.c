@@ -18,14 +18,14 @@ char *credits[] = {
   "Additional Thanks to:",
   "Xavier Bouchoux     Mike Field      Steve Baker",
   "Jean-Bruno Richard             Andrey Zahkhatov",
-  "Bjonar Henden   Shaul Kedem    Darrell Walisser",
-  "Jonas Gustavsson  Thomas Flynn  Charles Babbage",
-  "Nicolas Zimmermann  Mattias Engdegard  Ray Kelm",
+  "Bjonar Henden   Shaul Kedem    Jonas Gustavsson",
+  "Mattias Engdegard     Ray Kelm     Thomas Flynn",
   "Martin Fierz    Joseph Valenzuela   Ryan Gordon",
   "Sam Lantinga                   Patrick McCarthy",
   "",
-  "and everyone else, who gave feedback ",
-  "and valuable advice",
+  "Thanks to my sponsors:",
+  "  3dfx:              Voodoo5 5500 graphics card",
+  "  Right Hemisphere:  3D exploration software",
   NULL
 };
 
