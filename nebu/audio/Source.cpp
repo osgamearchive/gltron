@@ -20,7 +20,6 @@ namespace Sound {
 		SDL_DestroySemaphore(_sem);
   }
 
-  int Source::Mix(Uint8 *data, int len) { return 0; }
   void Source::Reset() { }
   void Source::Start() { _isPlaying = 1; Reset(); }
   void Source::Stop() { _isPlaying = 0; Reset(); }
