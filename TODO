@@ -7,15 +7,15 @@ Bugs [high priority]:
 - make sure starting positions are really randomized right now, to prevent
   unfair advantage for player 0
 - fix first person view, e.g. don't draw cycle, check for settingsCache not
-  being updated
+  being updated [ Todd ]
 - disable trails if their height is 0
-- fix cycle sound starting when going from paused to menu
+- fix cycle sound starting when going from paused to menu [ Todd ]
 - check cycle & recognizer sounds again (pause/menu/unpause/game)
 - check missing functions for possible source of static noise
 
 Features [high priority]:
 
-- add console message when camera was changed with F10
+- add console message when camera was changed with F10 [ Todd ]
 - fallback instead of app exiting on corrupt mp3 files
 - fallback instead of app exiting when SDL_sound is present, but doesn't
   support ogg/vorbis, or if sound fx files are corrupt
