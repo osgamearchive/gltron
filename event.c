@@ -120,6 +120,11 @@ void idleGame( void ) {
   int dt;
   int t;
 
+#ifdef LUA_PROFILE
+  printf("%d lua calls since last idle call\n", lua_profile); */
+#endif
+  lua_profile = 0;
+
 #ifdef SOUND
   soundIdle();
 #endif
@@ -211,6 +216,10 @@ void idleGame( void ) {
   recognizerMovement();
 
   SystemPostRedisplay();
+
+#ifdef LUA_PROFILE
+  printf("%d lua calls after idle processing\n", lua_profile);
+#endif
   /* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
 }
 
