@@ -69,6 +69,7 @@ void setupDisplay(gDisplay *d) {
   fprintf(stderr, "trying to create window\n");
   d->win_id = initWindow();
   fprintf(stderr, "window created\n");
+  initRenderer();
   printRendererInfo();
   /* printf("win_id is %d\n", d->win_id); */
   fprintf(stderr, "loading art\n");

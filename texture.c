@@ -33,7 +33,11 @@ void initTexture(gDisplay *d) {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textures[i].wrap_s);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textures[i].wrap_t);
-
+      if(renderer.ext_filter_anisotropic) {
+	fprintf(stderr, "enabling anisotropic filtering\n");
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+                        textures[i].anisotropy);
+	}
       checkGLError("texture.c initTextures");
     }
   }

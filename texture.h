@@ -8,6 +8,7 @@ typedef struct {
   int wrap_s;
   int wrap_t;
   int id;
+  float anisotropy;
 } texture_info;
 
 enum {

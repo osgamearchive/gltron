@@ -6,12 +6,18 @@ extern int polycount;
 
 GLstate rendererState;
 GLstate *state = &rendererState;
+Renderer renderer;
 
 void clearState() {
   state->tex_id = 0;
   state->tex_env_mode = 0;
   state->binds = 0;
   state->mod_changes = 0;
+}
+
+void initRenderer() {
+  renderer.ext_filter_anisotropic = 
+    rendererExtensionSupported("GL_EXT_texture_filter_anisotropic");
 }
 
 void printRendererInfo() {
@@ -61,4 +67,35 @@ void renderQuad(Quad *q) {
   polycount += 2;
 #endif
 }
+
+int rendererExtensionSupported(const char *extension) {
+  const GLubyte *extensions = NULL;
+  const GLubyte *start;
+  GLubyte *where, *terminator;
+
+  /* Extension names should not have spaces. */
+  where = (GLubyte *) strchr(extension, ' ');
+  if (where || *extension == '\0')
+    return 0;
+  extensions = glGetString(GL_EXTENSIONS);
+  /* It takes a bit of care to be fool-proof about parsing the
+     OpenGL extensions string. Don't be fooled by sub-strings,
+     etc. */
+  start = extensions;
+  for (;;) {
+    where = (GLubyte *) strstr((const char *) start, extension);
+    if (!where)
+      break;
+    terminator = where + strlen(extension);
+    if (where == start || *(where - 1) == ' ')
+      if (*terminator == ' ' || *terminator == '\0')
+        return 1;
+    start = terminator;
+  }
+  return 0;
+}
+                         
+
+
+
 

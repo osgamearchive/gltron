@@ -15,6 +15,7 @@
 #define RENDERER_TYPE_TEXTURE 8
 #define RENDERER_TYPE_TEXTURE_MODE 16
 
+extern void initRenderer();
 extern void printRendererInfo();
 extern void renderQuad(Quad *q);
 extern void renderTris(Tris *q);
@@ -28,4 +29,10 @@ typedef struct GLstate {
   int type_mask; /* which modes to change */
 } GLstate;
 
+typedef struct Renderer {
+  // shows caps of the renderer
+  int ext_filter_anisotropic;
+} Renderer;
+
+extern Renderer renderer;
 extern GLstate *state;
