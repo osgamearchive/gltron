@@ -37,7 +37,10 @@ void keyGame(int k, int x, int y)
 
   switch (k) {
   case 'q': SystemExit(); break; /* panic button */
-  case 27: switchCallbacks(&guiCallbacks); break;
+  case 27:
+    switchCallbacks(&pauseCallbacks);
+    switchCallbacks(&guiCallbacks);
+    break;
   case ' ': switchCallbacks(&pauseCallbacks); break;
 
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
