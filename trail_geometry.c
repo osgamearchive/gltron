@@ -188,7 +188,7 @@ void trailGeometry(Player *pPlayer, TrailMesh *pMesh) {
 	pMesh->iUsed = curIndex;
 }
 
-void bowGeometry(Player *pPlayer, TrailMesh *pMesh) {
+void bowGeometry(Player *pPlayer, TrailMesh *pMesh, int vOffset, int iOffset) {
 	Data *pData = pPlayer->data;
 	Line line;
 	int bdist = PLAYER_IS_ACTIVE(pPlayer) ? 2 : 3;
@@ -197,12 +197,14 @@ void bowGeometry(Player *pPlayer, TrailMesh *pMesh) {
 	line.sy = getSegmentEndY( pData, 0 );
 	line.ex = getSegmentEndX( pData, bdist );
 	line.ey = getSegmentEndY( pData, bdist );
-	storeVertex(pMesh, 0, &line, 0, pData->trail_height, DECAL_WIDTH, 0);
-	storeColor(pMesh, 0, pPlayer, COLOR_BRIGHT);
-	storeVertex(pMesh, 2, &line, 1, pData->trail_height, DECAL_WIDTH, 0);
-	storeColor(pMesh, 2, pPlayer, COLOR_CYCLE);
+	storeVertex(pMesh, vOffset + 0, &line, 0, 
+							pData->trail_height, DECAL_WIDTH, 0);
+	storeColor(pMesh, vOffset + 0, pPlayer, COLOR_BRIGHT);
+	storeVertex(pMesh, vOffset + 2, &line, 1, 
+							pData->trail_height, DECAL_WIDTH, 0);
+	storeColor(pMesh, vOffset + 2, pPlayer, COLOR_CYCLE);
 
-	storeIndices(pMesh, 0, 0);
+	storeIndices(pMesh, iOffset, vOffset);
 	pMesh->iUsed = 6;
 }
 	

@@ -418,7 +418,7 @@ void drawCam(Player *p, gDisplay *d) {
 					glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 					trailRender(game->player + i, &mesh, 
 											game->screen->textures[TEX_DECAL]);
-					bowGeometry(game->player + i, &mesh);
+					bowGeometry(game->player + i, &mesh, 0, 0);
 					glColor3f(1.0f, 1.0f, 1.0f);
 					glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 					glEnable(GL_BLEND);

@@ -19,7 +19,8 @@ void storeVertex(TrailMesh *pMesh, int offset,
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset);
 int cmpdir(Line *line1, Line *line2);
 void trailGeometry(Player *pPlayer, TrailMesh *pMesh);
-void bowGeometry(Player *pPlayer, TrailMesh *pMesh);
+void bowGeometry(Player *pPlayer, TrailMesh *pMesh,
+								 int vertexOffset, int indexOffset);
 void trailRender(Player *pPlayer, TrailMesh *pMesh, int texture);
 
 #endif
