@@ -29,3 +29,35 @@ function previousTrack()
    current_track = tracks[ current_track_index ]
    c_reloadTrack()
 end
+
+function MusicVolumeUp()
+   musicVolume = musicVolume + 0.05
+   if musicVolume > 1.0 then
+      musicVolume = 1.0
+   end
+   c_update_audio_volume()
+end
+
+function MusicVolumeDown()
+   musicVolume = musicVolume - 0.05
+   if musicVolume < 0.0 then
+      musicVolume = 0.0
+   end
+   c_update_audio_volume()
+end
+
+function FXVolumeUp()
+   fxVolume = fxVolume + 0.05
+   if fxVolume > 1.0 then
+      fxVolume = 1.0
+   end
+   c_update_audio_volume()
+end
+
+function FXVolumeDown()
+   fxVolume = fxVolume - 0.05
+   if fxVolume < 0.0 then
+      fxVolume = 0.0
+   end
+   c_update_audio_volume()
+end
