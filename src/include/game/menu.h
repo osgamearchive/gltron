@@ -6,7 +6,6 @@ extern float menu_hlColor1[4];
 extern float menu_hlColor2[4];
 
 typedef struct {
-  /* FontTex *font; */
   float fgColor[4]; /* entries */
   float hlColor1[4]; /* the highlighted one */
   float hlColor2[4];
