@@ -55,7 +55,7 @@ namespace Sound {
     _sample = Sound_NewSample(_rwops, NULL,
 															_system->GetAudioInfo(),
 															_sample_buffersize );
-	fprintf(stdout,"\n\n");
+
     if(_sample == NULL) {
       fprintf(stderr, "[error] failed loading sample: %s\n", 
 							Sound_GetError());
