@@ -4,7 +4,7 @@
 #ifdef USEUDP
 static int nbsocks = 2; //TCP + UDP
 #else
-static int nbsocks = 1;
+static int nbsocks = 2;
 #endif
 #else
 #include "server/server_gltron.h"
@@ -15,7 +15,7 @@ static int nbsocks = MAX_SLOTS+2;
 #ifdef USEUDP
 static int nbsocks = MAX_PLAYERS + 2; 
 #else
-static int nbsocks = MAX_PLAYERS + 1;
+static int nbsocks = MAX_PLAYERS + 2;
 #endif
 #endif
 #endif
@@ -265,13 +265,13 @@ Net_checksocks( )
       socksready |=  tcpsockready;
     }
 
-#ifdef USEUDP
+  #ifdef USEUDP
   //looking to udp 
- if( SDLNet_SocketReady(udpsock) )
+ if( SDLNet_SocketReady(Net_getudpsock()) )
     {
       socksready |=  udpsockready;
     }
-#endif
+ #endif
   return socksready; 
 }
 

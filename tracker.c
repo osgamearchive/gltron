@@ -20,7 +20,7 @@ tracker_connect()
   Net_addsocket(Net_gettrackersock());
 
   //init pings
-  init_ping();
+  init_ping(1);
 
   //login
   packet.type=TLOGIN;
@@ -46,6 +46,7 @@ tracker_infos(Trackerpacket *packet)
 {
   int which = packet->which;
   char **cols;
+  char  host[255];
   //char *cols[6];
   int i;
 
@@ -99,7 +100,13 @@ tracker_infos(Trackerpacket *packet)
   sprintf(cols[3], "%d", servers[which].nbplayers);
   sprintf(cols[4], "%s", servers[which].version);
   sprintf(cols[5], "%d", servers[which].ping);
+  sprintf(host, "%d.%d.%d.%d",
+	 (ntohl(servers[which].ipaddress.host) & 0xff000000) >> 24,
+	  (ntohl(servers[which].ipaddress.host) & 0x00ff0000) >> 16,
+	 (ntohl(servers[which].ipaddress.host) & 0x0000ff00) >> 8,
+	  ntohl(servers[which].ipaddress.host) & 0x000000ff);
 
+  make_ping(which, servers, host, PINGPORT);
   newline_wlist(serverlist, cols);
 }
 
@@ -144,18 +151,35 @@ void
 idleTracker()
 {
   int sockstat = socksnotready;
+  //int i;
+  char str[255];
 
   sockstat = Net_checksocket(Net_gettrackersock());
+
+  if(  ready_ping() )
+    {
+      handle_ping(servers);
+	  /** */
+	  printf("%d %d\n", servers[0].ping, servers[0].packets);
+	  if( servers[0].packets > 0 )
+	    {
+	      printf("new ping is %d ( %d )\n", servers[0].ping, servers[0].packets);
+	      sprintf(str, "%d", servers[0].ping/servers[0].packets);
+	      updatecell_wlist( serverlist, str, 0, 5);
+	    }
+	  /** */
+    }
+
   if( sockstat != socksnotready )
     {
       if( sockstat & tcpsockready )
 	{
 	  tracker_handle();
 	}
-      if( sockstat & udpsockready )
-	{
-	  handle_ping(servers);
-	}
+/*       if( sockstat & udpsockready ) */
+/* 	{ */
+/* 	  handle_ping(servers); */
+/* 	} */
     }
   SystemPostRedisplay();
 }

@@ -134,6 +134,15 @@ newline_wlist(Wlist *wlist, char **cols)
 }
 
 void
+updatecell_wlist( Wlist *wlist, char *val, int l, int c)
+{
+  free(wlist->lines[l][c]);
+  wlist->lines[l][c]=(char *)malloc(strlen(val));
+  strcpy(wlist->lines[l][c], val);
+}
+      
+
+void
 scroll_wlist(Wlist *wlist, int dir)
 {
   switch( dir )

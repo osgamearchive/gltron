@@ -52,7 +52,7 @@ start_server()
   
   sState   = waitState;
   nbUsers  = 0;
-  init_ping();
+  init_ping(0);
 
   //Server is started!
   printf("server listening to port %d\n", settings.port);
@@ -1020,7 +1020,6 @@ void
 handle_server()
 {
   int   i;
-  int sockstat;
 
   if( Net_checksocks() )
   {
@@ -1028,30 +1027,22 @@ handle_server()
     handle_connection();
   }
 
+  if(  ready_ping() )
+    {
+      reply_ping();
+    }
+
   //look what is said!
   for(i=0;i<MAX_PLAYERS;++i)
     {
-      sockstat = Net_checksocket(slots[i].sock);
-      if( sockstat != socksnotready )
+      if( Net_readysock(slots[i].sock) )
 	{
-	  if( sockstat & tcpsockready )
-	    {
-	      handle_client(i);
-	    }
-	  if( sockstat & udpsockready )
-	    {
-	      reply_ping();
-	    }
+	  //i said something, handle...
+	  //makeping();
+	  handle_client(i);
+	  //makeping();
+	  //printf("## handle_client took %d ms\n", getping());
 	}
-
-      /* if( Net_readysock(slots[i].sock) ) */
-/* 	{ */
-/* 	  //i said something, handle... */
-/* 	  //makeping(); */
-/* 	  handle_client(i); */
-/* 	  //makeping(); */
-/* 	  //printf("## handle_client took %d ms\n", getping()); */
-/* 	} */
     }
 }
 

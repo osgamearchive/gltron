@@ -41,6 +41,7 @@ typedef struct {
 Wlist *new_wlist(  int x, int y, int width, int height, int nblines, int nbcols, char *titles[] );
 void   draw_wlist       ( Wlist *wlist );
 void   newline_wlist    ( Wlist *wlist, char *cols[]);
+void   updatecell_wlist ( Wlist *wlist, char *val, int l, int c);
 void   scroll_wlist     ( Wlist *wlist, int dir );
 char  *getcell_wlist    ( Wlist *wlist, int l, int c );
 int    getcurrent_wlist ( Wlist *wlist );

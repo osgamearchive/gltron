@@ -1,16 +1,20 @@
 *Author : Nicolas Deniaud
-This file try to describe tracker's protocol.
+*Editor : Nico Kist
 
-A tracker is a server that allow users to find server where to play.
 
-The tracker is listenning two ports: one for clients connections, and one for servers connections. Servers connection need a passwd to connect to the server. Client do not need it.
+This file tries to describe tracker's protocol.
 
+The tracker is the main server that allows users to find a server where to play.
+
+The tracker is listening on two ports: one for client connections, and one for servers connections. Servers need a passwd to connect to tracker,
+Clients do not.
 Server <-> Tracker communication:
--login : server establish the connection and send the passwd, if it is wrong, connection close.
+-login : server establishes the connection and sends the passwd, if it is wrong the tracker will close the connection.
 -ping  : tracker use a ping/pong system to know which server still alive.
--infos : whenever something change on a server and after login, a server send its informations. Informations are: Settings: speed, size, erase; Description; Version; IP; Port; NbPlayers.
+-infos : whenever something changes on a server after it logged on, that server will send its information(Settings: speed,
+size, erase; Description; Version; IP; Port; NbPlayers.)
 
-Servers still connected to the tracker all the time. What to do if tracker crash, reconnect?
+Server 
 
 Client <-> Tracker communication:
 -infos : whenever something change on a server and after login, a server send its informations. Informations are: Settings: speed, size, erase; Description; Version; IP; Port; NbPlayers.
@@ -41,18 +45,19 @@ When a client goes to a server, it disconnects from tracker.
 Session example:
 -tracker start;
 -server A start;
--server A connect to tracker and login;
--client B start and connect to tracker;
--tracker send to client B server list, actually server A only;
--client B select server A;
--client B disconnect from tracker;
--client B connect to server A;
--client B play;
--client B disconnect from server A and connect to tracker;
--client B disconnect from tracker and quit.
+-server A connect to tracker and logs in;
+-client 1 starts and connects to the tracker;
+-tracker sends server list to client 1(right now only server A);
+-client 1 selects server A;
+-client 1 disconnect from the tracker;
+-client 1 connects to server A;
+-client 1 plays;
+-client 1 disconnects from server A and connects to the tracker;
+-client 1 disconnects from the tracker and quits.
 
 Gui:
 Typically, we use a list. It can be a server list, scrollable, one line per server which contain these informations:Settings: speed, size, erase; Description; Version; IP; Port; NbPlayers. Arrows permit to select the server we want. Server list is ordered by ping. 
 
 ping ideas/problems:
-the client need to ping all server? certainly udp ones or does the tracker do it for u but is that good?
+The client needs to ping all the servers (speed matters from his location, not the trackers), but the tracker does need to know if all the
+servers are still online. the offline ones need to be discarded

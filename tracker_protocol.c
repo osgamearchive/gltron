@@ -189,21 +189,28 @@ Net_gettrackersock()
 }
 
 void
-init_ping()
+init_ping(int type)
 {
-  //IPaddress ipaddress;
+  IPaddress ipaddress;
 
 
-  //SDLNet_ResolveHost(&ipaddress, INADDR_ANY, PINGPORT);
+  if( type == 0 )
+    SDLNet_ResolveHost(&ipaddress, INADDR_ANY, PINGPORT);
 
-  udpsock = SDLNet_UDP_Open(PINGPORT);
+  udpsock = SDLNet_UDP_Open(PINGPORT+type);
+
+  //SDLNet_ResolveHost(&udppacket->address, ipaddress, port);
+  if( type == 0 )
+    SDLNet_UDP_Bind(udpsock, 0, &ipaddress);
+
   if( udpsock == NULL )
     {
       fprintf(stderr, "can't create udp endpoint %s\n", SDLNet_GetError());
     }
+  printf("udp endpoint created\n");
   Net_addudpsocket(udpsock);
   //SDLNet_UDP_Bind(udpsock, 0, &ipaddress);
-  udppacket = SDLNet_AllocPacket(sizeof(Pingpacket));
+  udppacket = SDLNet_AllocPacket(sizeof(Pingpacket)+1);
 }
 
 void
@@ -216,32 +223,55 @@ close_ping()
 }
 
 void
-make_ping(int which, char *ipaddress, int port)
+make_ping(int which, Trackerslots *slots, char *ipaddress, int port)
 {
   Pingpacket packet;
   int        i;
+  //  IPaddress  address;
 
   packet.time  = SystemGetElapsedTime();
   packet.which = which;
 
+  /* SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT); */
+/*   SDLNet_UDP_Bind(udpsock, 0, &udppacket->address); */
+
+  /* SDLNet_ResolveHost(&address, ipaddress, PINGPORT); */
+/*   SDLNet_UDP_Bind(udpsock, 1, &address); */
+/*   SDLNet_ResolveHost(&address, ipaddress, PINGPORT+1); */
+/*   SDLNet_UDP_Bind(udpsock, 0, &address); */
+  SDLNet_ResolveHost(&udppacket->address, ipaddress, PINGPORT);
   for(i=0; i < NBPINGPACKET; ++i )
     {
+      printf("sending ping %d to %s:%d\n", i, ipaddress, port);
       packet.num = i;
+      udppacket->len=sizeof(Pingpacket);
       memcpy(udppacket->data, &packet, sizeof(Pingpacket));
-      //SDLNet_UDP_Send(udpsock, 0, udppacket);
-      SDLNet_UDP_Send(udpsock, 0, udppacket);
+      
+      SDLNet_UDP_Send(udpsock, -1, udppacket);
     }
   
 }
-
+static int c=1;
 void
 reply_ping()
 {
   int         n;
+  //IPaddress   address;
+  //Pingpacket  packet;
+  
+  printf("reply to a ping\n");
 
   n = SDLNet_UDP_Recv(udpsock, udppacket);
-
-  SDLNet_UDP_Send(udpsock, 0, udppacket);
+  printf("ping from %s:%hd\n", SDLNet_ResolveIP(&udppacket->address), ntohs(udppacket->address.port));
+  //SDLNet_ResolveHost(&udppacket->address, udppacket->address.host, PINGPORT+1);
+  //udppacket->address.port=23481;
+  /* address.host=udppacket->address.host; */
+/*   address.port=23481; */
+/*   SDLNet_UDP_Bind(udpsock, ++c, &address); */
+/*   SDLNet_UDP_Send(udpsock, c, udppacket); */
+/*   udppacket->address.port=23481; */
+  SDLNet_UDP_Bind(udpsock, ++c, &udppacket->address);
+  SDLNet_UDP_Send(udpsock, c, udppacket);
 }
 
 void
@@ -249,12 +279,22 @@ handle_ping(Trackerslots *slots)
 {
   Pingpacket  packet;
   int         n;
+  
 
   n = SDLNet_UDP_Recv(udpsock, udppacket);
 
   memcpy(&packet, udppacket->data, udppacket->len);
+  //packet=(Pingpacket)*udppacket->data;
+  printf("handle ping for %d\n", packet.which);
 
   slots[packet.which].ping += SystemGetElapsedTime() -  packet.time;
-  slots[packet.which].ping /=2;
   slots[packet.which].packets++;
+  printf("ping total is %d for %d packets\n", slots[packet.which].ping, slots[packet.which].packets);
+}
+
+
+int
+ready_ping()
+{
+  return ( SDLNet_SocketReady(udpsock) );
 }

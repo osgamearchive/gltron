@@ -98,9 +98,10 @@ void Net_tdisconnect( );
 TCPsocket Net_gettrackersock();
 
 /** ping things */
-void init_ping();
+void init_ping(int type);
 void close_ping();
-void make_ping(int which, char *ipaddress, int port);
+void make_ping(int which, Trackerslots *slots, char *ipaddress, int port);
 void handle_ping(Trackerslots *slots);
 void reply_ping();
+int ready_ping();
 #endif

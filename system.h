@@ -5,7 +5,9 @@
 
 #include <SDL.h>
 #include <SDL_types.h>
+#ifdef __NETWORK__
 #include <SDL_net.h>
+#endif
 
 #define SYSTEM_KEY_DOWN SDLK_DOWN
 #define SYSTEM_KEY_UP SDLK_UP
