@@ -5,7 +5,6 @@ TODO list
 
 Bugs:
 
-- Make install doesn't work (Andreas) [ LIM ]
 - tweak LOD values so the lightcycle stays detailed within camera
   clamp range [ LIM ]
 - Zooming the camera doesn't work right after choosing 'Start Game' from
@@ -15,13 +14,13 @@ Bugs:
 - the transparent part of the bow of the trail prevents other trails 
   from drawing in the same pixels (LIM) (Note: proper back-to-front drawing
   should take care of this. Andreas) [ won't fix ]
-- save screenshots to somwhere else on UNIX. Users can't write to the
-  dir where gltron is installed, usually. (LIM)
 - fix pointer not showing up when game was started but not initially unpaused,
   but user went back to menu. (LIM) (software cursor time?)
 - fix mouse not being released when going from fullscreen to windowed in some
   situations. (LIM)
 - changes of settings from within artpack.ini don't update the menu captions (Andreas)
+- preferences/snapshot directory isn't created if it doesn't exist
+- key presses are not modifier immune (shift/capslock, etc.)
 
 Features:
 
@@ -33,6 +32,14 @@ Features:
 - Add sound for own cycle. Modulate pitch (or volume) after turns
 - Consider 'smooth turning' for other cycle sounds (doppler/panning)
 - explosion is missing alpha blending right now
+- Proper HUD for scores / ai info, etc.
+- keys / camera / song are not saved to ~/.gltronrc
+- uv-coordinates for the model, add texture coordinate support to obj loader
+- support other controllers (i.e. joysticks)
+- new drop down console
+- merge software mouse cursor from networkign branch
+- add more special effects (reflections etc.)
+- add slightly funny console messages (Robot ate Andi's tail)
 
 Settings:
 - Tune diffuse / specular materials for the lightcycle, trail & recognizers
@@ -61,44 +68,6 @@ Optimizations/Cleanups
   the recognizer, render recognizer shadow to texture, and project it onto
   floor & cycle / use stencil (UPDATE: Jon Atkins implemented stencilling,
   decide about defaults)
-
-
-Old TODO list, clean up when time available (priority):
-
-(0) fix z-buffer problems (disable z-write on arena walls, adjust near on recognizer, etc.)
-(0) look at cycle collision problem
-(1) investigate framerate drop in win32 cycle collision test
-(2) recognizer sound
-(2) replay capabilities / fix demo recording / playback
-(1) bug ShreadWheat about his point-of-interest ai technology
-(2) make key pressed modifier immune (shift/capslock, etc.)
-(2) generate uv-coordinates for the model
-(1) fix back-to-front rendering
-(2) work a bit more on line antialiasing (trail tops)
-(2) make HUD configurable
-(2) size HUD according to screen resolution
-(0) investigate mipmapping artefacts under win32
-(0) check USB keyboards. can't they record multiple key presses?
-(0) change color values to something less yogurt-like
-(0) check consistency of glEnable(GL_BLEND);
-(0) add joystick code
-(0) don't show resolutions that can't be accelerated (how can I know?)
-(0) fix ugly console message passing
-(1) implement networking
-(0) fix bitmap bug to allow even faster software rendering
-(0) write software mouse cursor
-(0) move cycle behind posx, posy
-(0) add more special effects (reflections etc.)
-(0) check various TODOs in the code
-(0) dynamically load OpenGL
-(0) add slightly funny console messages (Robot ate Andi's tail)
-(0) investigate halo
-(0) proper documentation
-
-bugs:
-(2) demo playpack is broken after interrupt (Escape) 
-(1) sound samples might overflow
-
-possible bugs:
-(0) failing malloc's arent caught, might lock up application/system
-(0) some attributes are not saved to .gltronrc
+- Remove all bitmap stuff
+- check various TODOs and #warnings in the code
+- dynamically load OpenGL (?)
