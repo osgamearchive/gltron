@@ -5,6 +5,7 @@
 #include "game/game.h"
 #include "audio/audio.h"
 #include "Nebu_scripting.h"
+#include "Nebu_base.h"
 
 /*! \fn int processEvent(GameEvent* e)
   handle events, e.g.
@@ -182,7 +183,7 @@ int applyWallAcceleration(int player, int dt) {
 	vPos.v[1] = y;
 
 	for(i = 0; i < eMax; i++) {
-		vec2Copy(&segments[i].vStart, &vPos);
+		vec2_Copy(&segments[i].vStart, &vPos);
 	}
 
 	segments[eLeft].vDirection.v[0] = dirsX[dirLeft];
@@ -346,7 +347,8 @@ void Game_Idle(void) {
 			int threshold[4] = { 0, 300, 600, 800 };
 			int factor = 1;
 			for(i = 0; i < 4; i++) {
-				if(game2->rules.grid_size > threshold[i])
+				if(box2_Diameter(&game2->level->boundingBox) * game2->level_scale > 
+					threshold[i])
 					factor = factors[i];
 			}
 			for (i = 0; i < game->players; i++) {
