@@ -104,15 +104,17 @@ void initTexture(gDisplay *d) {
   /* trail bow texture */
 
   glBindTexture(GL_TEXTURE_2D, d->texTrail);
-  loadTexture("gltron_trail" TEX_SUFFIX, GL_LUMINANCE_ALPHA);
+  loadTexture("gltron_trail" TEX_SUFFIX, GL_RGBA);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
 
+  /* trail decal texture */
+
   glBindTexture(GL_TEXTURE_2D, d->texTrailDecal);
-  loadTexture("gltron_traildecal" TEX_SUFFIX, GL_LUMINANCE_ALPHA);
+  loadTexture("gltron_traildecal" TEX_SUFFIX, GL_RGBA);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

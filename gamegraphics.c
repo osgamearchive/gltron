@@ -90,8 +90,9 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
       glColor4fv(p->model->color_alpha);
     } else {
       glEnable(GL_TEXTURE_2D);
-      glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
       glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+      glBindTexture(GL_TEXTURE_2D, game->screen->texTrailDecal);
+
       glColor3fv(p->model->color_alpha);
     }
 
@@ -166,6 +167,8 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
 
     bdist = (game->settings->show_model &&
 	     data->speed > 0) ? BOW_DIST1 : 0;
+
+    /* quad fading from model color to white, bow texture */
     glBegin(GL_QUADS);
 
     glTexCoord2f(TEX_SPLIT, 0.0);
@@ -193,6 +196,7 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
     glEnd();
 
 
+    /* quad fading from white to model color, bow texture */
     glBegin(GL_QUADS);
 
     glTexCoord2f(TEX_SPLIT, 0.0);
@@ -226,6 +230,8 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
     glDisable(GL_TEXTURE_2D);
 
     checkGLError("after trail");
+
+    /* draw this line if in behind camera mode */
 
     if(game->settings->camType == 1) {
       //       glLineWidth(3);
