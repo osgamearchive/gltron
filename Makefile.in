@@ -67,6 +67,7 @@ CFILES = \
 	fonttex.c \
 	fonts.c \
 	menu.c \
+	findpath.c \
 	file.c \
 	directory.c \
 	model.c \
