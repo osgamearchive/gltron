@@ -192,7 +192,7 @@ void
 init_ping(int type)
 {
   IPaddress ipaddress;
-  int       i;
+  //  int       i;
 
   if( type == 0 )
     {
@@ -289,7 +289,7 @@ handle_ping(Trackerslots *slots)
   //packet=(Pingpacket)*udppacket->data;
   printf("handle ping for %d\n", packet.which);
 
-  slots[packet.which].ping += SystemGetElapsedTime() -  packet.time;
+  slots[packet.which].ping += (SystemGetElapsedTime() -  packet.time);
   slots[packet.which].packets++;
   printf("ping total is %d for %d packets\n", slots[packet.which].ping, slots[packet.which].packets);
 }

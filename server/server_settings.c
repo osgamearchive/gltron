@@ -72,7 +72,7 @@ get_args( int argc, char *argv[] )
       while(argv[j][++i] != 0) {
 	switch(argv[j][i]) {
 	case 'f':
-	  if( j+1 > argc-1 )
+	  if( (j+1) > (argc-1) )
 	    {
 	      printf("you must specify config file with -f\n");
 	      exit(1);
