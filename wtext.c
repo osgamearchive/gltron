@@ -214,19 +214,32 @@ key_wintext(Wintext *wintext, int charcode, int unicode)
       switch( charcode )
 	{
 	case SDLK_BACKSPACE:
-	  printf("backspace");
+	  printf("backspace\n");
+	  if(wintext->cur_char == 0 )
+	    return;
+	  wintext->cur_char--;
+	  for(i=wintext->cur_char; i < strlen(wintext->buffer) ; i++)
+	    {
+	      wintext->buffer[i]=wintext->buffer[i+1];
+	    }
 	  break;
 	case SDLK_DELETE:
-	  printf("delete");
+	  printf("delete\n");
+	  if(wintext->cur_char == 0 )
+	    return;
+	  for(i=wintext->cur_char; i < strlen(wintext->buffer) ; i++)
+	    {
+	      wintext->buffer[i]=wintext->buffer[i+1];
+	    }
 	  break;
 	case SDLK_UP:
-	  printf("going up");
+	  printf("going up\n");
 	  break;
         case SDLK_DOWN:
-	  printf("going down");
+	  printf("going down\n");
 	  break;
         case SDLK_RIGHT:
-	  printf("going right");
+	  printf("going right\n");
 	  if( wintext->cur_char == strlen(wintext->buffer) )
 	    return;
 	  wintext->cur_char++;
@@ -237,7 +250,7 @@ key_wintext(Wintext *wintext, int charcode, int unicode)
 	    }
 	  break;
         case SDLK_LEFT:
-	  printf("going left");
+	  printf("going left\n");
 	  if(wintext->cur_char == 0 )
 	    return;
 	  wintext->cur_char--;
@@ -278,10 +291,18 @@ key_wintext(Wintext *wintext, int charcode, int unicode)
 		    wintext->buffer[i]=wintext->buffer[i-1];
 		    }
 		  wintext->buffer[wintext->cur_char++]=(char)unicode;
-		  if( wintext->wstart > 0 && wintext->wend < wintext->nbchars)
-		    wintext->wstart--;
 		  if( wintext->wend < wintext->nbchars )
-		    wintext->wend++;
+ 		    wintext->wend++;
+		  /* else */
+/* 		    wintext->wend--; */
+/* 		  if(wintext->cur_char==wintext->wend) */
+/* 		    { */
+/* 		      wintext->wend+=2; */
+/* 		    } */
+		  /* if( wintext->wstart > 0 && wintext->wend < wintext->nbchars) */
+/* 		    wintext->wstart--; */
+/* 		  if( wintext->wend < wintext->nbchars ) */
+/* 		    wintext->wend++; */
 		  
 		}
 	    }
