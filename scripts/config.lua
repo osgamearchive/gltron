@@ -67,6 +67,8 @@ settings.mouse_warp = 0
 settings.model_backwards = 0
 settings.screenSaver = 0
 
+settings.joy_threshold = 1000
+
 -- audio
 settings.tracks = { }
 settings.current_track = "song_revenge_of_cats.it"

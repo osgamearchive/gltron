@@ -499,6 +499,8 @@ enum {
 	fx_highlight
 };
 
+extern int joy_threshold;
+	
 #ifdef __cplusplus
 }
 #endif /* extern C */

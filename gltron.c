@@ -168,6 +168,9 @@ int main( int argc, char *argv[] ) {
   /* sanity check some settings */
   checkSettings();
 
+	/* joystick threshold */
+	joy_threshold = getSettingi("joy_threshold");
+	
   /* intialize the settings cache, remember to do that everytime you
      change something */
   updateSettingsCache();

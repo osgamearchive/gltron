@@ -11,6 +11,8 @@ static int flags;
 static int fullscreen;
 static int video_initialized = 0;
 
+int joy_threshold = 0;
+
 void SystemExit() {
   fprintf(stderr, "shutting down sound now\n");
 #ifdef SOUND
@@ -132,7 +134,7 @@ void SystemMainLoop() {
 					current->keyboard(event.key.keysym.sym, 0, 0);
 				break;
 			case SDL_JOYAXISMOTION:
-				if(event.jaxis.value == 0)
+				if(abs(event.jaxis.value) <= joy_threshold)
 					break;
 				key = SYSTEM_JOY_LEFT + event.jaxis.which * SYSTEM_JOY_OFFSET;
 				if(event.jaxis.axis == 1)
