@@ -29,7 +29,8 @@ gltron_DEPENDENCIES = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/l
 man_MANS = gltron.6
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound_glue.h \
-	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp SoundSystem.cpp \
+	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp \
+	SoundSystem.cpp SourceEndgine.cpp \
 	SourceCopy.cpp Sound.h SoundSystem.h SourceMusic.h SourceCopy.h Source3D.h \
 	Source.h Vector3.h SourceSample.h
 
