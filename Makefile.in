@@ -38,7 +38,7 @@ CFILES = \
 	game.c \
 	gltron.c \
 	gamegraphics.c \
-	light.c
+	light.c \
 	software.c \
 	trail.c \
 	input.c \
