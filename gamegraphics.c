@@ -968,16 +968,18 @@ void drawCam(Player *p, gDisplay *d) {
 
   /* transparent stuff */
   /* draw the glow around the other players: */
-
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  if(getSettingi("show_glow") == 1)
-    for(i = 0; i < game->players; i++)
-      if ((p != &(game->player[i])) && PLAYER_IS_ACTIVE(&game->player[i]))
-	drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
-
-  glDisable(GL_BLEND);
+  if (getSettingi("show_glow") == 1) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    for (i = 0; i < game->players; i++) {
+      if ((p != &(game->player[i])) && PLAYER_IS_ACTIVE(&game->player[i])) {
+	      drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
+      }
+      
+    glDisable(GL_BLEND);
+    }
+  }
 
   /*if(getSettingi("show_recognizer")) {
 #if DEPTH_CLEAR
