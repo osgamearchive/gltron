@@ -10,7 +10,7 @@ void idlePause() {
 #endif
 
 #ifdef __NETWORK__
-  if( serverstate == gameState )
+  if( game2->mode == GAME_NETWORK_PLAY && serverstate == gameState )
     {
       switchCallbacks(&gameCallbacks);
     } else {
@@ -51,7 +51,7 @@ void keyboardPause(int key, int unicode, int x, int y) {
   switch(key) {
   case 27:
 #ifdef __NETWORK__
-    if( isConnected )
+    if( game2->mode == GAME_NETWORK_PLAY && isConnected )
       {
 	isConnected = 0;
 	isLogged = 0;
@@ -64,7 +64,7 @@ void keyboardPause(int key, int unicode, int x, int y) {
   case ' ':
 #ifdef __NETWORK__
     //restart game
-    if( (serverstate == preGameState) && (isConnected && slots[me].isMaster == 1)  )
+    if( game2->mode == GAME_NETWORK_PLAY && (serverstate == preGameState) && (isConnected && slots[me].isMaster == 1)  )
       {
 	printf("\nAsk to start the game\n");
 	packet.which=me;
@@ -72,9 +72,9 @@ void keyboardPause(int key, int unicode, int x, int y) {
 	packet.infos.action.type=STARTGAME;
 	Net_sendpacket(&packet,  Net_getmainsock());
       } else {
-	if( ! isConnected )
-	  {
+	if( game2->mode == GAME_NETWORK_PLAY )
 	    printf("\nOnly game master can start the game...\n");
+	else {
 #endif	
 	    if(game->pauseflag & PAUSE_GAME_FINISHED)
 	      initData();

@@ -1,6 +1,7 @@
 #include "gltron.h"
 
-
+static int ping = 0;
+static int savedtime = 0; 
 
 void
 login(char *name)
@@ -94,7 +95,8 @@ do_serverinfo(Packet packet)
 	  //game->players = game2->players;
 	  applyGameInfo();
 	  printf("time is %d\n", game2->time.current);
-	  game2->mode = GAME_PLAY;
+	  game2->mode = GAME_NETWORK_PLAY;
+	  ping = 0;
 	  switchCallbacks(&pauseCallbacks);
 	  break;
 	}
@@ -290,6 +292,13 @@ do_startpos(Packet packet)
 void
 do_event(Packet packet)
 {
+  if( packet.infos.event.event.player == getPlayer(me) )
+    {
+      if( packet.infos.event.event.type != EVENT_CRASH &&  packet.infos.event.event.type != EVENT_STOP)
+	{
+	  makeping(game2->time.current);
+	}
+    }
   addNetEvent(&packet.infos.event.event);
   fprintf(stderr, "get event: %d %d %d %d %d ( current time %d )\n", packet.infos.event.event.type,
 	  packet.infos.event.event.player, packet.infos.event.event.x,
@@ -401,3 +410,22 @@ handleServer()
       fprintf(stderr, "Unknown server state %d\n", serverstate);
     }
 }  
+
+
+int
+getping()
+{
+  return ping;
+}
+
+void
+makeping(int time)
+{
+  if( savedtime == 0 )
+    {
+      savedtime = time;
+    } else {
+      ping = savedtime - time;
+      savedtime=0;
+    }
+}

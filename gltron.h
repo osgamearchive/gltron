@@ -560,6 +560,8 @@ extern void  drawChat          ( char* );
 extern char* getInputEntry     ( void );
 extern void  drawGuiBackground ( void );
 extern void  drawGuiLogo       ( void );
+extern int   getping           ( void );
+extern void  makeping          ( int  );
 #endif
 
 #endif

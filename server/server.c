@@ -482,11 +482,11 @@ do_action( int which, Packet packet )
   switch( packet.infos.action.type )
     {
     case TURNRIGHT:
-      printf("get turn left from %d -> %d\n", which, getPlayer(which));
+      printf("get turn right from %d -> %d (time %d)\n", which, getPlayer(which), game2->time.current);
       createTurnEvent(getPlayer(which), TURN_RIGHT);
       break;
     case TURNLEFT:
-      printf("get turn left from %d -> %d\n", which, getPlayer(which));
+      printf("get turn left from %d -> %d (time %d)\n", which, getPlayer(which), game2->time.current);
       createTurnEvent(getPlayer(which), TURN_LEFT);
       break;
     case STARTGAME:
@@ -764,7 +764,7 @@ do_wingame( int winner)
 
 
   //Change Points
-  netscores.points[winner]++;
+  netscores.points[getWhich(winner)]++;
 
   //See if it's finished?
 
@@ -780,12 +780,18 @@ do_wingame( int winner)
     {
       //The game is finished
       netscores.winner=getWhich(winner);
+      printf("winner is %d\n", winner);
 
       //Sending scores to every one.
       rep.which = SERVERID;
       rep.type  = SCORE;
       rep.infos.score.winner=netscores.winner;
-      memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
+      //memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
+      for(i=0;i<MAX_PLAYERS;++i)
+	{
+	  rep.infos.score.points[i] = netscores.points[i];
+	}
+
 
       for(i=0; i<MAX_PLAYERS; ++i)
 	{
@@ -799,7 +805,7 @@ do_wingame( int winner)
       netscores.winner=-1;
       for(i=0; i<MAX_PLAYERS; ++i)
 	{
-	  netscores.points[getWhich(i)]=0;
+	  netscores.points[i]=0;
 	}
       hasstarted=0;
 

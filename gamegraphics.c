@@ -333,6 +333,13 @@ void drawFPS(gDisplay *d) {
   drawText(gameFtx, d->vp_w - 180, d->vp_h - 35, 10, tmp);
   sprintf(tmp, "triangles: %d", polycount);
   drawText(gameFtx, d->vp_w - 180, d->vp_h - 50, 10, tmp);
+#ifdef __NETWORK__
+  if( game2->mode == GAME_NETWORK_PLAY )
+    {
+      sprintf(tmp, "ping: %d", getping());
+      drawText(gameFtx, d->vp_w - 180, d->vp_h - 65, 10, tmp);    
+    }
+#endif
 }
 
 void drawScore(Player *p, gDisplay *d) {
@@ -917,7 +924,16 @@ void drawPause(gDisplay *display) {
   if((game->pauseflag & PAUSE_GAME_FINISHED) &&
      game->winner != -1) {
     message = buf;
+#ifdef __NETWORK__
+    if( game2->mode == GAME_NETWORK_PLAY )
+      {
+	sprintf(message, "%s Wins", slots[getWhich(game->winner)].name);
+      } else {
+#endif
     sprintf(message, winner, game->winner + 1);
+#ifdef __NETWORK__
+      }
+#endif
   } else {
     message = pause;
   }

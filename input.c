@@ -43,7 +43,7 @@ void keyGame(int k, int unicode, int x, int y)
     /* case 'q': SystemExit(); break; */
   case 27:
 #ifdef __NETWORK__
-    if( isConnected )
+    if( game2->mode == GAME_NETWORK_PLAY  )
       {
 	fprintf(stderr, "exit network game\n");
 	isConnected=0;
@@ -60,7 +60,7 @@ void keyGame(int k, int unicode, int x, int y)
     break;
   case ' ':
 #ifdef __NETWORK__
-    if( ! isConnected )
+    if( game2->mode == GAME_NETWORK_PLAY && ! isConnected )
 #endif
       switchCallbacks(&pauseCallbacks);
     break;
@@ -99,7 +99,7 @@ void keyGame(int k, int unicode, int x, int y)
 	if(game->player[p].data->speed > 0)
 	  {
 #ifdef __NETWORK__
-	    if( ! isConnected )
+	    if( game2->mode != GAME_NETWORK_PLAY  )
 	      {
 #endif
 		createTurnEvent(p, key_actions[i].turn);
@@ -113,7 +113,7 @@ void keyGame(int k, int unicode, int x, int y)
 		else
 		  packet.infos.action.type=TURNRIGHT;
 		Net_sendpacket(&packet, Net_getmainsock());
-		  
+		makeping(game2->time.current);
 	      }
 #endif
 	  }

@@ -5,10 +5,11 @@ int processEvent(GameEvent* e) {
   Data *data;
 
 #ifdef __NETWORK__
-  printf("proccess event ( current time %d )\n", game2->time.current);
+  if( game2->mode == GAME_NETWORK_PLAY )
+    printf("proccess event ( current time %d )\n", game2->time.current);
 #endif
 
-  if(game2->mode == GAME_SINGLE_RECORD) {
+  if(game2->mode == GAME_NETWORK_RECORD) {
     writeEvent(e);
   }
   switch(e->type) {
@@ -58,7 +59,16 @@ int processEvent(GameEvent* e) {
       game2->mode = GAME_SINGLE;
     }
     game->winner = e->player;
-    sprintf(messages, "winner: %d", game->winner + 1);
+#ifdef __NETWORK__
+    if( game2->mode == GAME_NETWORK_PLAY )
+      {
+	sprintf(messages, "winner: %s",  slots[getWhich(game->winner)].name);
+      } else { 
+#endif
+	sprintf(messages, "winner: %d", game->winner + 1);
+#ifdef __NETWORK__
+      }
+#endif
     printf("%s\n", messages);
     consoleAddLine(messages);
     switchCallbacks(&pauseCallbacks);
@@ -166,18 +176,20 @@ void idleGame( void ) {
   //fprintf(stderr, "game time: %.3f\nmode:%d\n", game2->time.current / 1000.0, game2->mode); 
 
   if(updateTime() == 0) return;
+
+
 #ifdef __NETWORK__
   if( isConnected && Net_checksocks() )
     {
       handleServer();
     }
 #endif
-
   switch(game2->mode) {
   case GAME_NETWORK_RECORD:
 #ifdef NETWORK
     updateNet();
 #endif
+
     /* fall through */
   case GAME_SINGLE:
   case GAME_SINGLE_RECORD:
@@ -247,6 +259,8 @@ void idleGame( void ) {
       sendNetEvent((GameEvent*) p->data);
     }
 #endif
+
+  case GAME_NETWORK_PLAY:
     /* fall through to GAME_PLAY */
   case GAME_PLAY:
     getEvents(); 

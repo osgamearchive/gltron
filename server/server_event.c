@@ -15,6 +15,7 @@ int processEvent(GameEvent* e) {
       data->turn = TURN_LEFT;
       doTurn(data, e->timestamp);
     }
+    printf("processEvent turn left at %d\n", game2->time.current);
     break;
   case EVENT_TURN_RIGHT:
     data = game->player[e->player].data;
@@ -24,6 +25,7 @@ int processEvent(GameEvent* e) {
       data->turn = TURN_RIGHT;
       doTurn(data, e->timestamp);
     }
+    printf("processEvent turn right at %d\n", game2->time.current);
     break;
   case EVENT_CRASH: 
     data = game->player[e->player].data;

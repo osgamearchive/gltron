@@ -57,11 +57,12 @@ typedef struct GameEvent {
 } GameEvent;
   
 enum {
-  GAME_SINGLE = 1,
-  GAME_SINGLE_RECORD = 2,
-  GAME_PLAY = 4,
-  GAME_PLAY_NETWORK = 8,
-  GAME_NETWORK_RECORD
+  GAME_SINGLE         = 1,
+  GAME_SINGLE_RECORD  = 2,
+  GAME_PLAY           = 4,
+  GAME_PLAY_NETWORK   = 8,
+  GAME_NETWORK_RECORD = 16,
+  GAME_NETWORK_PLAY   = 32
 };
 
 enum {
