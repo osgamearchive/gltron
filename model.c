@@ -10,7 +10,7 @@
 #define MAX_N 30000
 
 #define FAIL(X) free(vert); free(face); free(norm); free(normi); \
-                printf(X); return 0;
+                printf(X); return NULL;
 
 void rescaleVertices(float *vertices, float size, int nVertices, float *bbox) {
   float x, y, z, xmax, ymax, zmax, max;
@@ -96,7 +96,7 @@ Mesh* loadModel(const char *filename, float size, int flags) {
   int *meshFacesize;
   int currentMat = 0;
   int matCount = 0;
-  int *pMatCount;
+  int *pMatCount = NULL;
   int iLine = 0;
 
   float t1[3], t2[3], t3[3];
@@ -106,8 +106,8 @@ Mesh* loadModel(const char *filename, float size, int flags) {
   int inv;
 
   if((f = fopen(filename, "r")) == 0) {
-    printf("could not open file\n");
-    return 0;
+    fprintf(stderr, "could not open file\n");
+    return NULL;
   }
 
   vert = (float *) malloc(sizeof(float) * 3 * MAX_V);
@@ -122,7 +122,7 @@ Mesh* loadModel(const char *filename, float size, int flags) {
       if(sscanf(buf, "mtllib %s ", namebuf) == 1) {
 	/* load material library */
 	path = getFullPath(namebuf);
-	if(path == 0) {
+	if(path == NULL) {
 	  fprintf(stderr, "fatal: can't find mtllib '%s'\n", namebuf);
 	  exit(1);
 	}
@@ -130,9 +130,8 @@ Mesh* loadModel(const char *filename, float size, int flags) {
 	if(matCount <= 0) {
 	  fprintf(stderr, "fatal: no Materials loaded\n");
 	  exit(1);
-	} else {
-	  /* printf("loaded %d Materials\n", matCount); */
 	}
+	/* printf("loaded %d Materials\n", matCount); */
 	pMatCount = (int*) malloc(sizeof(int) * matCount);
 	for(i = 0; i < matCount; i++)
 	  pMatCount[i] = 0;
@@ -194,7 +193,7 @@ Mesh* loadModel(const char *filename, float size, int flags) {
       }
       /* mark material */
       *(matIndex + nFaces) = currentMat;
-      if(matCount > 0)
+      if(matCount > 0 && pMatCount != NULL)
 	pMatCount[currentMat]++;
 
       if(hasNorms) {
@@ -393,7 +392,7 @@ void setMaterialSpecular(Mesh *mesh, int material, float color[4]) {
   
 void setMaterialAlphas(Mesh *mesh, float alpha) {
   int i;
-  // vertex alpha is the alpha of the diffuse material component
+  /* vertex alpha is the alpha of the diffuse material component */
   for(i = 0; i < mesh->nMaterials; i++)
     (mesh->materials + i)->diffuse[3] = alpha;
 }
@@ -401,10 +400,10 @@ void setMaterialAlphas(Mesh *mesh, float alpha) {
 void unloadModel(Mesh *mesh) {
   int i;
   for(i = 0; i < mesh->nMaterials; i++) {
-    // free material
+    /* free material */
     free( (mesh->materials + i)->name );
     free( (mesh->materials + i) );
-    // free meshpart
+    /* free meshpart */
     free( (mesh->meshparts + i)->facesizes );
     free( (mesh->meshparts + i)->vertices );
     free( (mesh->meshparts + i)->normals );

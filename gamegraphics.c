@@ -19,6 +19,51 @@ void drawDebugTex(gDisplay *d) {
   polycount += 4;
 }
 
+void drawFPS(gDisplay *d) {
+#define FPS_HSIZE 20
+  /* draws FPS in upper left corner of Display d */
+  static int fps_h[FPS_HSIZE];
+  static int pos = -FPS_HSIZE;
+  static int fps_min = 0;
+  static int fps_avg = 0;
+
+  char tmp[20];
+  int diff;
+
+  rasonly(d);
+  diff = (dt > 0) ? dt : 1;
+
+  if(pos < 0) {
+    fps_avg = 1000 / diff;
+    fps_min = 1000 / diff;
+    fps_h[pos + FPS_HSIZE] = 1000 / diff;
+    pos++;
+  } else {
+    fps_h[pos] = 1000 / diff;
+    pos = (pos + 1) % FPS_HSIZE;
+    if(pos % 10 == 0) {
+      int i;
+      int sum = 0;
+      int min = 1000;
+      for(i = 0; i < FPS_HSIZE; i++) {
+	sum += fps_h[i];
+	if(fps_h[i] < min)
+	  min = fps_h[i];
+      }
+      fps_min = min;
+      fps_avg = sum / FPS_HSIZE;
+    }
+  }
+
+  sprintf(tmp, "average FPS: %d", fps_avg);
+  glColor4f(1.0, 0.4, 0.2, 1.0);
+  drawText(gameFtx, d->vp_w - 180, d->vp_h - 20, 10, tmp);
+  sprintf(tmp, "minimum FPS: %d", fps_min);
+  drawText(gameFtx, d->vp_w - 180, d->vp_h - 35, 10, tmp);
+  sprintf(tmp, "triangles: %d", polycount);
+  drawText(gameFtx, d->vp_w - 180, d->vp_h - 50, 10, tmp);
+}
+
 void drawScore(Player *p, gDisplay *d) {
   char tmp[10]; /* hey, they won't reach such a score */
 
@@ -34,7 +79,6 @@ void drawFloor(gDisplay *d) {
   glShadeModel(GL_FLAT);
 
   if(game->settings->show_floor_texture) {
-    glDepthMask(GL_TRUE);
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, game->screen->texFloor);
     /* there are some strange clipping artefacts in software mode */
@@ -57,7 +101,6 @@ void drawFloor(gDisplay *d) {
 	polycount += 2;
       }
     glDisable(GL_TEXTURE_2D);
-    glDepthMask(GL_FALSE);
   } else {
     /* lines as floor... */
     glColor3f(0.0, 0.0, 1.0);
@@ -90,10 +133,9 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
 
   if(height < 0) return;
 
-  // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
   if(game->settings->alpha_trails) {
     glColor4fv(p->model->color_alpha);
+    glDepthMask(GL_FALSE);
   } else {
     glEnable(GL_TEXTURE_2D);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -104,6 +146,14 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
 
   line = &(data->trails[0]);
 
+#define DECAL_WIDTH 20.0
+#define BOW_LENGTH 6
+
+#define BOW_DIST2 0.85
+#define BOW_DIST1 0.4
+
+#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
+
   glBegin(GL_QUADS);
   glTexCoord2f(0.0, 0.0);
   glVertex3f(line->sx, line->sy, 0.0);
@@ -113,10 +163,9 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
   while(line != data->trail) {
     tlength = (line->ex - line->sx + line->ey - line->sy);
     if(tlength < 0) tlength = -tlength;
-#define DECAL_WIDTH 20.0
+
     glTexCoord2f(tlength / DECAL_WIDTH, 1.0);
     glVertex3f(line->ex, line->ey, height);
-
     glTexCoord2f(tlength / DECAL_WIDTH, 0.0);
     glVertex3f(line->ex, line->ey, 0.0);
 
@@ -133,10 +182,8 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
   /* calculate distance of cycle to last corner */
   tlength = (line->ex - line->sx + line->ey - line->sy);
   if(tlength < 0) tlength = -tlength;
-
-#define BOW_LENGTH 6
   blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
-#undef BOW_LENGTH
+
 
   /* modify end of trail */
   glTexCoord2f((tlength - 2 * blength) / DECAL_WIDTH, 1.0);
@@ -149,19 +196,10 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
   polycount += 2;
   glEnd();
 
-#undef DECAL_WIDTH
-
   glDisable(GL_TEXTURE_2D);
 
     /* experimental trail effect */
   checkGLError("before trail");
-
-
-
-#define BOW_DIST2 0.85
-#define BOW_DIST1 0.4
-
-#define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 
   bdist = (game->settings->show_model &&
 	   data->speed > 0) ? BOW_DIST1 : 0;
@@ -194,6 +232,7 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
 
   if(data->speed > 0 && game->settings->show_model == 1) {
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
     glBindTexture(GL_TEXTURE_2D, game->screen->texTrail);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
@@ -229,6 +268,9 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
 #undef BOW_DIST2
 #undef TEX_SPLIT
 
+#undef DECAL_WIDTH
+#undef BOW_LENGTH
+
   glShadeModel( game->screen->shademodel );
   glDisable(GL_TEXTURE_2D);
 
@@ -237,17 +279,16 @@ void drawTraces(Player *p, gDisplay *d, int instance) {
     /* draw this line if in behind camera mode */
 
   if(game->settings->camType == 1) {
-    //       glLineWidth(3);
-    // glBegin(GL_LINES);
+    /*       glLineWidth(3); */
+    /* glBegin(GL_LINES); */
     glBegin(GL_QUADS);
 #define LINE_D 0.05
     glVertex2f(data->trail->sx - LINE_D, data->trail->sy - LINE_D);
     glVertex2f(data->trail->sx + LINE_D, data->trail->sy + LINE_D);
     glVertex2f(data->trail->ex + LINE_D, data->trail->ey + LINE_D);
     glVertex2f(data->trail->ex - LINE_D, data->trail->ey - LINE_D);
-
     glEnd();
-    // glLineWidth(1);
+    /* glLineWidth(1); */
     polycount += 2;
   }
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -277,7 +318,6 @@ void drawCrash(float radius) {
   polycount += 2;
 
   glDisable(GL_TEXTURE_2D);
-  if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
 }
 
 void drawCycle(Player *p, int lod) {
@@ -285,7 +325,7 @@ void drawCycle(Player *p, int lod) {
   float dirangles2[] = { 0, -90, -180, 90, 180, -270 };
   float *dirangles;
   int neigung_dir;
-  int time;
+  int time = 0;
   int last_dir;
   float dirangle;
   Mesh *cycle;
@@ -349,9 +389,7 @@ void drawCycle(Player *p, int lod) {
   /* glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1], .0); */
 
   glEnable(GL_LIGHTING);
-  glEnable(GL_DEPTH_TEST);
-  glDepthMask(GL_TRUE);
-  glEnable(GL_CULL_FACE);
+  /* glEnable(GL_CULL_FACE); */
 
   if(p->data->exp_radius == 0)
     drawModel(cycle, MODEL_USE_MATERIAL, 0);
@@ -370,10 +408,7 @@ void drawCycle(Player *p, int lod) {
   if(game->settings->show_alpha == 0) glDisable(GL_BLEND);
 
   glDisable(GL_LIGHTING);
-  glDisable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
-  glDepthMask(GL_FALSE);
-
   glPopMatrix();
 }
 
@@ -425,36 +460,13 @@ int playerVisible(Player *eye, Player *target) {
 	    
 void drawPlayers(Player *p) {
   int i;
-  int dir;
-  float l = 5.0;
   float height;
   int lod;
 
   glShadeModel(GL_SMOOTH);
   for(i = 0; i < game->players; i++) {
     height = game->player[i].data->trail_height;
-    if(height > 0) {
-      glPushMatrix();
-      glTranslatef(game->player[i].data->posx,
-		   game->player[i].data->posy,
-		   0);
-      /* draw Quad */
-      /*
-      dir = game->player[i].data->dir;
-      glColor3fv(game->player[i].model->color_model);
-      glBegin(GL_QUADS);
-      glVertex3f(0, 0, 0);
-      glColor4f(0, 0, 0, 0);
-      glVertex3f(-dirsX[ dir ] * l, -dirsY[ dir ] * l, 0);
-      glVertex3f(-dirsX[ dir ] * l, -dirsY[ dir ] * l, height);
-      glColor3fv(game->player[i].model->color_model);
-      glVertex3f(0, 0, height);
-      glEnd();
 
-      polycount += 2;
-      */
-      glPopMatrix();
-    }
     if(game->settings->show_model) {
       lod = playerVisible(p, &(game->player[i]));
       if(lod >= 0) 
@@ -471,11 +483,15 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   glTranslatef(p->data->posx,
                p->data->posy,
                0);
-  /* draw Model */
 
   glShadeModel(GL_SMOOTH);
+
+  glDepthMask(GL_FALSE);
+  glDisable(GL_DEPTH_TEST);
+
   glBlendFunc(GL_ONE, GL_ONE);
   glEnable(GL_BLEND);
+
   glGetFloatv(GL_MODELVIEW_MATRIX, mat);
   mat[0] = mat[5] = mat[10] = 1.0;
   mat[1] = mat[2] = 0.0;
@@ -520,12 +536,13 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   glEnd();
   polycount += 3;
 
-
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  if(game->settings->show_alpha != 1) glDisable(GL_BLEND);
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
 
   glShadeModel( game->screen->shademodel );
   glPopMatrix();  
+
+
 }
 
 void drawWalls(gDisplay *d) {
@@ -536,10 +553,7 @@ void drawWalls(gDisplay *d) {
   t = game->settings->grid_size / 240.0;
   glColor4f(1.0, 1.0, 1.0, 1.0);
 
-  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-  /* glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); */
-
+  glDisable(GL_BLEND);
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
 #define T_TOP 1.0
@@ -584,16 +598,17 @@ void drawWalls(gDisplay *d) {
   glDisable(GL_TEXTURE_2D);
 
   glDisable(GL_CULL_FACE);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void drawCam(Player *p, gDisplay *d) {
   int i;
 
+  /* 
   if (d->fog == 1) {
     glEnable(GL_FOG);
     fprintf(stderr, "who enabled the fog?\n");
   }
+  */
 
   glColor3f(0.0, 1.0, 0.0);
   glMatrixMode(GL_PROJECTION);
@@ -623,8 +638,6 @@ void drawCam(Player *p, gDisplay *d) {
     for(i = 0; i < game->players; i++)
       if ((p != &(game->player[i])) && (game->player[i].data->speed > 0))
 	drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
-
-  glDisable(GL_FOG);
 }
 
 void drawAI(gDisplay *d) {
@@ -669,6 +682,47 @@ void drawPause(gDisplay *display) {
   glColor3f(1.0, (sin(d) + 1) / 2, (sin(d) + 1) / 2);
   drawText(gameFtx, display->vp_w / 6, 20, 
 	   display->vp_w / (6.0 / 4.0 * strlen(message)), message);
+}
+
+void initCustomLights() {
+  /* float col[] = { .77, .77, .77, 1.0 }; */
+  float col[] = { .95, .95, .95, 1.0 };
+  float dif[] =  { 0.4, 0.4, 0.4, 1};
+  float amb[] = { 0.05, 0.05, 0.05, 1};
+
+  glEnable(GL_LIGHT0);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, col);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
+}
+
+void initGLGame() {
+  printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
+	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
+  printf("Extensions available: %s\n", glGetString(GL_EXTENSIONS));
+
+  glShadeModel( game->screen->shademodel );
+
+
+  if(game->settings->show_alpha) 
+    glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  /* 
+  glFogf(GL_FOG_START, 50.0);
+  glFogf(GL_FOG_END, 100.0);
+  glFogf(GL_FOG_MODE, GL_LINEAR);
+  glFogf(GL_FOG_DENSITY, 0.1);
+  glDisable(GL_FOG);
+  */
+
+
+  /* TODO(3): incorporate model stuff */
+  /* initLightAndMaterial(); */
+  initCustomLights();
+
+  glDepthMask(GL_TRUE);
+  glEnable(GL_DEPTH_TEST);
 }
 
 

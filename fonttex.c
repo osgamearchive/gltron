@@ -18,14 +18,14 @@ fonttex *ftxLoadFont(char *filename) {
   fonttex *ftx;
   
   path = getFullPath(filename);
-  if(path == 0) {
+  if(path == NULL) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
-    return 0;
+    return NULL;
   }
   file = fopen(path, "r");
   free(path);
 
-  // TODO(5): check for EOF errors in the following code
+  /* TODO(5): check for EOF errors in the following code */
   
   ftx = (fonttex*) malloc(sizeof(fonttex));
   getLine(buf, sizeof(buf), file);
@@ -42,7 +42,7 @@ fonttex *ftxLoadFont(char *filename) {
   for(i = 0; i < ftx->nTextures; i++) {
     getLine(buf, sizeof(buf), file);
 
-    // no spaces in texture filesnames
+    /* no spaces in texture filesnames */
     sscanf(buf, "%s ", texname);
     glBindTexture(GL_TEXTURE_2D, ftx->texID[i]);
     loadTexture(texname, GL_RGBA);
@@ -64,10 +64,6 @@ void ftxUnloadFont(fonttex *ftx) {
   free(ftx->texID);
   free(ftx->fontname);
   free(ftx);
-}
-
-void ftxEstablishTexture(fonttex *ftx, unsigned char setupMipmaps) {
-  fprintf(stderr,"this should not get called!\n");
 }
 
 void ftxRenderString(fonttex *ftx, char *string, int len) {

@@ -56,6 +56,7 @@ float vp_h[3][4] = { { 22.5 }, { 11.5, 11.5 }, { 10.5, 10.5, 10.5, 10.5 } };
 
 /* help message */
 
+/*
 char *help[] = { "This is the gltron - Help Screen",
 		 "",
 		 "Game:",
@@ -72,12 +73,8 @@ char *help[] = { "This is the gltron - Help Screen",
 		 "View:",
 		 "F1 / F2 / F3 - 1, 2 or 4 player view",
 		 "F10          - Change Camera movement",
-		 "Gameplay:",
-		 "e / E       - trails from crashed players vanish / dont vanish",
-		 "f / F       - computers finish game fast / at normal speed",
-		 "1 2 3 4     - toggle computer / human for player 1,2,3,4"
 		 
 };
-
+*/
 
 

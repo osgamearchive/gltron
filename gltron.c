@@ -1,5 +1,5 @@
 /*
-  gltron 0.50 beta
+  gltron
   Copyright (C) 1999 by Andreas Umbach <marvin@dataway.ch>
 */
 
@@ -21,9 +21,7 @@ void drawGame() {
 
   polycount = 0;
   glClearColor(.0, .0, .0, .0);
-  glDepthMask(GL_TRUE);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDepthMask(GL_FALSE);
 
   for(i = 0; i < vp_max[ game->settings->display_type]; i++) {
     p = &(game->player[ game->settings->content[i] ]);
@@ -50,49 +48,12 @@ void drawGame() {
 
   /* printf("%d polys\n", polycount); */
 }
+
 void displayGame() {
   drawGame();
   if(game->settings->mouse_warp)
     mouseWarp();
   SystemSwapBuffers();
-}
-
-void initCustomLights() {
-  /* float col[] = { .77, .77, .77, 1.0 }; */
-  float col[] = { .95, .95, .95, 1.0 };
-  float dif[] =  { 0.4, 0.4, 0.4, 1};
-  float amb[] = { 0.05, 0.05, 0.05, 1};
-
-  glEnable(GL_LIGHT0);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, col);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
-}
-
-void initGLGame() {
-  printf("OpenGL Info: '%s'\n%s - %s\n", glGetString(GL_VENDOR),
-	 glGetString(GL_RENDERER), glGetString(GL_VERSION));
-
-  glShadeModel( game->screen->shademodel );
-
-
-  if(game->settings->show_alpha) 
-    glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
-  glFogf(GL_FOG_START, 50.0);
-  glFogf(GL_FOG_END, 100.0);
-  glFogf(GL_FOG_MODE, GL_LINEAR);
-  glFogf(GL_FOG_DENSITY, 0.1);
-  glDisable(GL_FOG);
-
-
-  /* TODO(3): incorporate model stuff */
-  /* initLightAndMaterial(); */
-  initCustomLights();
-
-  glDepthMask(GL_FALSE);
-  glDisable(GL_DEPTH_TEST);
 }
 
 int initWindow() {
@@ -155,7 +116,7 @@ int main( int argc, char *argv[] ) {
   SystemInit(&argc, argv);
 
   path = getFullPath("settings.txt");
-  if(path != 0)
+  if(path != NULL)
     initMainGameSettings(path); /* reads defaults from ~/.gltronrc */
   else {
     printf("fatal: could not settings.txt, exiting...\n");
@@ -169,21 +130,18 @@ int main( int argc, char *argv[] ) {
 #ifdef SOUND
   printf("initializing sound\n");
   initSound();
-  setMusicVolume(game->settings->musicVolume);
   setFxVolume(game->settings->fxVolume);
   path = getFullPath("gltron.it");
-  if(path == 0 || loadSound(path)) 
-    printf("error trying to load sound\n");
-  else {
-    if(game->settings->playMusic)
-      playSound();
-    free(path);
-  }
+  loadSound(path);
+  if(game->settings->playMusic)
+    playSound();
+  setMusicVolume(game->settings->musicVolume);
+  free(path);
 #endif
 
   printf("loading menu\n");
   path = getFullPath("menu.txt");
-  if(path != 0)
+  if(path != NULL)
     pMenuList = loadMenuFile(path);
   else {
     printf("fatal: could not load menu.txt, exiting...\n");

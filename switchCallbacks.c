@@ -1,13 +1,13 @@
 #include "gltron.h"
 
-callbacks *last_callback = 0;
-callbacks *current_callback = 0;
+callbacks *last_callback = NULL;
+callbacks *current_callback = NULL;
 
 void switchCallbacks(callbacks *new) {
   last_callback = current_callback;
   current_callback = new;
 
-  if(last_callback != 0)
+  if(last_callback != NULL)
     (last_callback->exit)(); /* give them the chance to quit */
 
   SystemRegisterCallbacks(new);
@@ -28,7 +28,7 @@ void updateCallbacks() {
 }
 
 void restoreCallbacks() {
-  if(last_callback == 0) {
+  if(last_callback == NULL) {
     fprintf(stderr, "no last callback present, exiting\n");
     exit(1);
   }

@@ -33,12 +33,14 @@ static int probe_dists[][2] = {
   { 0, 0 },
 };
 
+/*
 static int target_dir[][2] = {
   { 0, 1 },
   { 2, 1 },
   { 3, 0 },
   { 3, 2 }
 };
+*/
 
 static int turn_time[] = {
   300, 300, 200, 100

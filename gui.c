@@ -2,19 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "sgi_texture.h"
 #include "gltron.h"
-
-sgi_texture *tex;
-
-typedef struct {
-float d;
-float posx;
-float posy;
-long lt; 
-} background_states;
-
-background_states bgs;
 
 void guiProjection(int x, int y) {
   checkGLError("gui.c guiProj - start");
@@ -136,27 +124,9 @@ void displayConfigure() {
 }
 
 void idleGui() {
-  float delta;
-  long now;
-
 #ifdef SOUND
   soundIdle();
 #endif
-
-  now = SystemGetElapsedTime();
-  delta = now - bgs.lt;
-  bgs.lt = now;
-  delta /= 1000.0;
-  bgs.d += delta;
-  /* printf("%.5f\n", delta); */
-  
-  if(bgs.d > 2 * M_PI) { 
-    bgs.d -= 2 * M_PI;
-    bgs.posx = 1.0 * (float)rand() / (float)RAND_MAX - 1;
-    bgs.posy = 1.5 * (float)rand() / (float)RAND_MAX - 1;
-  }
-
-  SystemPostRedisplay();
 }
 
 void keyboardConfigure(int key, int x, int y) {
@@ -221,21 +191,14 @@ void keyboardGui(int key, int x, int y) {
     break;
   default: printf("got key %d\n", key);
   }
+  SystemPostRedisplay();
 }
 
 void initGui() {
-  /* init states */
-  bgs.d = 0;
-  bgs.posx = -1;
-  bgs.posy = -1;
-  bgs.lt = SystemGetElapsedTime();
-
-  if(pCurrent == 0) {
+  if(pCurrent == NULL) {
     pCurrent = *pMenuList; /* erstes Menu ist RootMenu - Default pCurrent */
     pCurrent->iHighlight = 0;
   }
-
-  /* rasonly(game->screen); */
 }
 
 void exitGui() {
@@ -243,14 +206,11 @@ void exitGui() {
 }
 
 void initGLGui() {
-  glShadeModel(GL_SMOOTH);
-
-  // glEnable(GL_BLEND);
-  // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+  glShadeModel(GL_FLAT);
+  glDisable(GL_BLEND);
   glDisable(GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
-
+  SystemPostRedisplay();
 }
 
 callbacks configureCallbacks = {

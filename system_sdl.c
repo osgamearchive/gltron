@@ -10,10 +10,14 @@ static int flags;
 static int fullscreen;
 
 void SystemExit() {
+  fprintf(stderr, "shutting down sound now\n");
 #ifdef SOUND
   shutdownSound();
 #endif
+  fprintf(stderr, "shutting down sdl now\n");
   SDL_Quit();
+  fprintf(stderr, "exiting application\n");
+  exit(0);
 }
 
 void SystemInit(int *argc, char *argv[]) {
@@ -22,7 +26,7 @@ void SystemInit(int *argc, char *argv[]) {
     exit(1);
   }
   atexit(SystemExit);
-  SDL_EnableKeyRepeat(0, 0); // turn keyrepeat off
+  SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
 }
 
 void SystemPostRedisplay() {

@@ -1,8 +1,11 @@
 optimize some stuff for software rendering
-lower background music volume in menu
 top-down view
-fix transparency (back to front drawing of trails)
-or do something else to make trails look better
+fix transparency problem with alpha trails (back to front drawing of trails)
+fix transparency bow problem (draw AFTER solid stuff)
+save keyboard settings in .gltronrc
+fix settings loading code ignoring some settings and unsaved settings
+  (e.g. keyboard controls)
+
 
 move cycle behind posx, posy
 solve cycle turning issue
@@ -12,7 +15,7 @@ add more & better sound effects
 
 add mouse support
 
-add light effects (shadows, mirrors etc.)
+add lighting effects (shadows, mirrors etc.)
 
 check various TODOs in the code
 

@@ -14,7 +14,7 @@
 FILE *f;
 
 void user_read_data(png_structp png_ptr,
-		    png_bytep data, png_uint_32 length) {
+		    png_bytep data, png_size_t length) {
   fread(data, 1, length, f);
 }
 
@@ -32,21 +32,21 @@ png_texture* load_png_texture(char *filename) {
   png_byte **row_pointers;
   
   f = fopen(filename, "rb");
-  if(f == 0) {
+  if(f == NULL) {
     fprintf(stderr, ERR_PREFIX "can't open file %s\n", filename);
-    return 0;
+    return NULL;
   }
 
   png_ptr = png_create_read_struct
     (PNG_LIBPNG_VER_STRING, 0, 0, 0);
 
   if (!png_ptr)
-    return 0;
+    return NULL;
 
   info_ptr = png_create_info_struct(png_ptr);
   if (!info_ptr){
     png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-    return 0;
+    return NULL;
   }
 
   /*  png_init_io(png_ptr, f);
@@ -65,18 +65,23 @@ png_texture* load_png_texture(char *filename) {
     png_destroy_read_struct(&png_ptr, &info_ptr, 0);
     fprintf(stderr, ERR_PREFIX "wrong png_color_type\n");
     fclose(f);
-    return 0;
+    return NULL;
   }
 
   if(bpc != 8) {
     png_destroy_read_struct(&png_ptr, &info_ptr, 0);
     fprintf(stderr, ERR_PREFIX "wrong bitdepth: %d\n", bpc);
     fclose(f);
-    return 0;
+    return NULL;
   }
-
-  if(color_type == PNG_COLOR_TYPE_RGB) zsize = 3;
-  if(color_type == PNG_COLOR_TYPE_RGB_ALPHA) zsize = 4;
+ 
+  switch(color_type) {
+  case PNG_COLOR_TYPE_RGB: zsize = 3; break;
+  case PNG_COLOR_TYPE_RGB_ALPHA: zsize = 4; break;
+  default: 
+    fprintf(stderr, "unknown png color type\n");
+    return NULL;
+  }
 
   tex = (png_texture*) malloc(sizeof(png_texture));
   tex->data = malloc(x * y * zsize);

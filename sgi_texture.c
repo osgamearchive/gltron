@@ -23,26 +23,26 @@ sgi_texture* load_sgi_texture(char *filename) {
   sgi_texture *tex;
   
   f = fopen(filename, "r");
-  if(f == 0) {
+  if(f == NULL) {
     fprintf(stderr, ERR_PREFIX "can't open file %s\n", filename);
-    return 0;
+    return NULL;
   }
-  
+   
   fread(buf, 512, 1, f);
   if((buf[0] << 8) + (buf[1] << 0) != 474) {
     fprintf(stderr, ERR_PREFIX "wrong magic: %d %d\n",
 	    buf[0], buf[1]);
-    return 0;
+    return NULL;
   }
   
   if(buf[2] != 0) {
     fprintf(stderr, ERR_PREFIX "RLE compression not supported\n");
-    return 0;
+    return NULL;
   }
 
   if(buf[3] != 1) {
     fprintf(stderr, ERR_PREFIX "BPC is %d - not supported\n", buf[3]);
-    return 0;
+    return NULL;
   }
 
   bpc = buf[3];  
@@ -51,7 +51,7 @@ sgi_texture* load_sgi_texture(char *filename) {
   if(zsize != 3 && zsize != 4) {
     fprintf(stderr, ERR_PREFIX "number of channels is %d - not supported\n",
 	    zsize);
-    return 0;
+    return NULL;
   }
 
   x = (buf[6] << 8) + buf[7];

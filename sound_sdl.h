@@ -7,9 +7,9 @@
 int initSound();
 void shutdownSound();
 
-int loadSound(char *name);
-int playSound();
-int stopSound();
+void loadSound(char *name);
+void playSound();
+void stopSound();
 void deleteSound();
 void soundIdle();
 

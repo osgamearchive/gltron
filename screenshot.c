@@ -21,7 +21,7 @@ void doScreenShot() {
 FILE *fp;
 
 void user_write_data(png_structp png_ptr,
-		     png_bytep data, png_uint_32 length) {
+		     png_bytep data, png_size_t length) {
   fwrite(data, length, 1, fp);
 }
 

@@ -1,13 +1,16 @@
 #include "gltron.h"
 
+/* #ifdef UNIX */
+static char *share1 = "/usr/share/games/gltron";
+static char *share2 = "/usr/local/share/games/gltron";
+/* #endif */
+
 static char* subdir = "data";
+
 char* getFullPath(char *filename) {
   char *path;
   FILE *fp = NULL;
   char *base;
-
-  char *share1 = "/usr/share/games/gltron";
-  char *share2 = "/usr/local/share/games/gltron";
 
   /* check a few directories for the files and */
   /* return the full path. */
@@ -20,7 +23,7 @@ char* getFullPath(char *filename) {
 
   printf("checking '%s'...", path);
   fp = fopen(path, "r");
-  if(fp != 0) {
+  if(fp != NULL) {
     fclose(fp);
 	printf("ok\n");
     return path;
@@ -29,13 +32,13 @@ char* getFullPath(char *filename) {
   printf("unsuccessful\n");
 
   base = getenv("GLTRON_HOME");
-  if(base != 0) {
+  if(base != NULL) {
     path = malloc(strlen(base) + 1 + strlen(filename) + 1);
     sprintf(path, "%s%c%s", base, SEPERATOR, filename);
 
     printf("checking '%s'...", path);
     fp = fopen(path, "r");
-    if(fp != 0) {
+    if(fp != NULL) {
       fclose(fp);
 	  printf("ok\n");
       return path;
@@ -44,12 +47,13 @@ char* getFullPath(char *filename) {
     printf("unsuccessful\n");
   }
 
+  /* #ifdef UNIX */
   path = malloc(strlen(share1) + 1 + strlen(filename) + 1);
   sprintf(path, "%s%c%s", share1, SEPERATOR, filename);
 
   printf("checking '%s'", path);
   fp = fopen(path, "r");
-  if(fp != 0) {
+  if(fp != NULL) {
 	printf("ok\n");
     fclose(fp);
     return path;
@@ -62,15 +66,16 @@ char* getFullPath(char *filename) {
   
   printf("checking '%s'", path);
   fp = fopen(path, "r");
-  if(fp != 0) {
+  if(fp != NULL) {
     fclose(fp);
 	printf("ok\n");
     return path;
   }  
   free(path);
   printf("unsuccessful\n");
+  /* #endif */
 
-  return 0;
+  return NULL;
 }
 
   

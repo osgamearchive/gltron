@@ -1,3 +1,10 @@
+0.59 to current
+- fixed load/save of player options (computer/human/none)
+- fixed crash on exit on linux/3dfx
+- converted all '// ... ' comments to '/* ... */' for added portability
+- added z-tests for everything non-transparent
+- converted 0 to NULL for null pointers
+
 0.53 to 0.59
 most important visible changes (including the ones to 0.59beta)
 Game play:

@@ -21,14 +21,14 @@ void loadTexture(char *filename, int format) {
   GLint internal;
 
   path = getFullPath(filename);
-  if(path != 0)
+  if(path != NULL)
     tex = LOAD_TEX(path);
   else {
     fprintf(stderr, "fatal: could not load %s, exiting...\n", filename);
     exit(1);
   }
 
-  if(tex == 0) {    
+  if(tex == NULL) {    
     fprintf(stderr, "fatal: failed load %s, exiting...\n", filename);
     exit(1);
   }
@@ -69,14 +69,14 @@ void loadTexture(char *name, int wantedFormat) {
   char *path;
 
   path = getFullPath(name);
-  if(path != 0) {
+  if(path != NULL) {
     image = IMG_Load(path);
   } else {
     fprintf(stderr, "fatal: could not load %s, exiting...\n", name);
     exit(1);
   }
 
-  if(image == 0) {
+  if(image == NULL) {
     fprintf(stderr, "can't load image: %s\n", SDL_GetError());
     exit(1);
   }
@@ -87,7 +87,9 @@ void loadTexture(char *name, int wantedFormat) {
   bpp = image->format->BitsPerPixel;
   if(bpp != 24 && bpp != 32) {
     SDL_FreeSurface(image);
-    return -1;
+    fprintf(stderr, "unsupported bitdepth: %d, " 
+	    "only 24 and 32 bit is supported\n", bpp);
+    return;
   }
   
   printf("bpp: %d\n", bpp);
@@ -129,7 +131,7 @@ void loadTexture(char *name, int wantedFormat) {
 
   free(data);
   SDL_FreeSurface(image);
-  return 0;
+  return;
 }
 
 #endif

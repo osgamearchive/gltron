@@ -28,10 +28,7 @@ typedef struct fonttex {
 
 extern fonttex *ftxLoadFont(char *filename);
 extern void ftxUnloadFont(fonttex *ftx);
-
-/* mipmaps not supported yet */
-extern void ftxEstablishTexture(fonttex *ftx,
-				unsigned char setupMipmaps);
+extern void loadTexture(char *filename, int format);
 
 /* It's not necessary to bind the texture explicitly. */
 /* (and we don't know which texture to bind) */

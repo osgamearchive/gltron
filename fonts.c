@@ -7,7 +7,7 @@ void initFonts() {
   char buf[100];
   char gamefont[100];
   char guifont[100];
-  char *game, *gui;
+  char *game = NULL, *gui = NULL;
 
   if(gameFtx != NULL) ftxUnloadFont(gameFtx);
   if(guiFtx != NULL) ftxUnloadFont(guiFtx);
@@ -21,8 +21,17 @@ void initFonts() {
       else if(sscanf(buf, "menu: %s ", guifont) == 1)
 	gui = guifont;
     }
+    fclose(f);
+    free(path);
+  } else {
+    fprintf(stderr, "can't load fonts.txt\n");
+    exit(1);
   }
-  free(path);
+
+  if(game == NULL || gui == NULL) {
+    fprintf(stderr, "incomplete font definition in fonts.txt\n");
+    exit(1);
+  }
 
   gameFtx = ftxLoadFont(game);
   guiFtx = ftxLoadFont(gui);
@@ -36,9 +45,6 @@ void initFonts() {
     fprintf(stderr, "can't load font %s\n", gui);
     exit(1);
   }
-
-  fprintf(stderr, "initFonts end\n");
-  // ftxEstablishTexture(ftx, GL_TRUE);
 }
 
 void deleteFonts() {

@@ -1,5 +1,5 @@
 /*
-  gltron 0.50 beta
+  gltron
   Copyright (C) 1999 by Andreas Umbach <marvin@dataway.ch>
 */
 
@@ -102,6 +102,18 @@
 #ifdef SOUND
 #include "sound.h"
 #endif
+
+/* use enums, not magic */
+
+enum { 
+  TURN_LEFT = 1,
+  TURN_RIGHT = 3,
+  
+  AI_HUMAN = 0,
+  AI_COMPUTER = 1,
+  AI_NONE = 2
+  
+};
 
 /* global constants */
 
@@ -215,11 +227,6 @@ extern int getCol(int x, int y, int width, unsigned char *map);
 
 extern void turn(Data* data, int direction);
 
-enum { 
-  TURN_LEFT = 1,
-  TURN_RIGHT = 3
-};
-
 extern void idleGame();
 
 extern void initGame();
@@ -228,8 +235,8 @@ extern void exitGame();
 extern void initGameStructures();
 
 extern void initGameScreen();
-extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
-extern void changeDisplay();
+
+
 extern void defaultDisplay(int n);
 extern void cycleDisplay(int p);
 
@@ -238,9 +245,14 @@ extern void fixTrails();
 extern void clearTrails(Data *data);
 
 /* gltron.c */
+/* game.c */
+
+extern void initClientData();
+extern void initDisplay(gDisplay *d, int type, int p, int onScreen);
+extern void changeDisplay();
+void initModel(Player *p, int p_num);
 
 extern void mouseWarp();
-
 extern void initData();
 extern void drawGame();
 extern void displayGame();
@@ -318,22 +330,28 @@ extern void updateCallbacks();
 
 extern void checkGLError(char *where);
 extern void rasonly(gDisplay *d);
-extern void drawFPS(gDisplay *d);
+
 extern void drawText(fonttex* ftx, int x, int y, int size, char *text);
 extern int hsv2rgb(float, float, float, float*, float*, float*);
 extern void colorDisc();
 
 /* gltron game graphics -> gamegraphics.c */
 extern void drawDebugTex(gDisplay *d);
+extern void drawFPS(gDisplay *d);
 extern void drawScore(Player *p, gDisplay *d);
+extern void drawAI(gDisplay *d);
+extern void drawPause(gDisplay *d);
+/* extern void drawHelp(gDisplay *d); */
+
 extern void drawFloor(gDisplay *d);
 extern void drawTraces(Player *, gDisplay *d, int instance);
 extern void drawPlayers(Player *);
 extern void drawWalls(gDisplay *d);
+
 extern void drawCam(Player *p, gDisplay *d);
-extern void drawAI(gDisplay *d);
-extern void drawPause(gDisplay *d);
-extern void drawHelp(gDisplay *d);
+
+
+
 
 /* font stuff ->fonts.c */
 extern void initFonts();

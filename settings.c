@@ -92,7 +92,7 @@ int* getVi(char* name) {
     if(strstr(name, si[i].name) == name) 
       return si[i].value;
   }
-  return 0;
+  return NULL;
 }
 
 float* getVf(char* name) {
@@ -101,7 +101,7 @@ float* getVf(char* name) {
     if(strstr(name, sf[i].name) == name) 
       return sf[i].value;
   }
-  return 0;
+  return NULL;
 }
 
 void initMainGameSettings(char *filename) {
@@ -177,7 +177,7 @@ void initMainGameSettings(char *filename) {
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
 
   home = getenv("HOME"); /* find homedir */
-  if(home == 0) {
+  if(home == NULL) {
     fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
     sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
   } else {
@@ -185,7 +185,7 @@ void initMainGameSettings(char *filename) {
     sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
   }
   f = fopen(fname, "r");
-  if(f == 0)
+  if(f == NULL)
     printf("no %s found - using defaults\n", fname);
   else {
     while(fgets(buf, sizeof(buf), f)) {
@@ -250,7 +250,7 @@ void saveSettings() {
   FILE* f;
 
   home = getenv("HOME"); /* find homedir */
-  if(home == 0) {
+  if(home == NULL) {
     fname = malloc(strlen(CURRENT_DIR) + strlen(RC_NAME) + 2);
     sprintf(fname, "%s%c%s", CURRENT_DIR, SEPERATOR, RC_NAME);
   } else {
@@ -258,7 +258,7 @@ void saveSettings() {
     sprintf(fname, "%s%c%s", home, SEPERATOR, RC_NAME);
   }
   f = fopen(fname, "w");
-  if(f == 0) {
+  if(f == NULL) {
     printf("can't open %s ", fname);
     perror("for writing");
     return; /* can't write rc */

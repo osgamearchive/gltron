@@ -103,7 +103,7 @@ void menuAction(Menu *activated, int type) {
       switch(activated->szName[2]) {
       case 'i':
 	piValue = getVi(activated->szName + 4);
-	if(piValue != 0) {
+	if(piValue != NULL) {
 	  *piValue = (*piValue - 1) * (-1);
 	  initMenuCaption(activated);
 	  changeAction(activated->szName + 4);
@@ -116,7 +116,7 @@ void menuAction(Menu *activated, int type) {
 	  int dummy;
 	  sscanf(activated->szName, "stl_%d_%d_%s", &dummy, &max_value, buf);
 	  piValue = getVi(buf);
-	  if(piValue != 0) {
+	  if(piValue != NULL) {
 	    (*piValue)++;
 	    if(*piValue > max_value) *piValue = 0;
 	    initMenuCaption(activated);
@@ -139,7 +139,7 @@ void menuAction(Menu *activated, int type) {
     char buf[64];
     sscanf(activated->szName, "ssf_%f_%f_%f_%s", &min, &max, &step, buf);
     pfValue = getVf(buf);
-    if(pfValue != 0) {
+    if(pfValue != NULL) {
       *pfValue = (type == MENU_LEFT) ? (*pfValue - step) : (*pfValue + step);
       if(*pfValue < min) *pfValue = min;
       if(*pfValue > max) *pfValue = max;
@@ -172,7 +172,7 @@ void initMenuCaption(Menu *m) {
       case 'i':
 	/* printf("dealing with %s\n", m->szName); */
 	piValue = getVi(m->szName + 4);
-	if(piValue != 0) {
+	if(piValue != NULL) {
 	  if(*piValue == 0) sprintf(m->display.szCaption,
 				    m->szCapFormat, "off");
 	  else sprintf(m->display.szCaption, m->szCapFormat, "on");
@@ -198,15 +198,15 @@ void initMenuCaption(Menu *m) {
       int player, turn;
       int i;
       int key;
-      char *caption;
+      char *caption = NULL;
       sscanf(m->szName + 1, "k_%d_%d ", &player, &turn);
       for(i = 0; i < KEY_ACTIONS_N; i++)
 	if(key_actions[i].player == player &&
 	   key_actions[i].turn == turn) {
 	  key = key_actions[i].key;
+	  caption = SystemGetKeyName(key);
 	  break;
 	}
-      caption = SystemGetKeyName(key);
       sprintf(m->display.szCaption, m->szCapFormat, caption);
       /* free(caption); */
       break;
@@ -230,7 +230,7 @@ void initMenuCaption(Menu *m) {
     break;
   default:
     sprintf(m->display.szCaption, "%s", m->szCapFormat);
-    // printf("using default capformat\n");
+    /* printf("using default capformat\n"); */
   }
   /* printf("[menu] cap-format: %s, caption: %s\n", m->szCapFormat,
      m->display.szCaption); */
@@ -309,11 +309,11 @@ Menu** loadMenuFile(char *filename) {
   int sp = 0;
 
   if((f = fopen(filename, "r")) == NULL)
-    return 0;
+    return NULL;
   /* read count of Menus */
   getNextLine(buf, MENU_BUFSIZE, f);
   sscanf(buf, "%d ", &nMenus);
-  if(nMenus <= 0) return 0;
+  if(nMenus <= 0) return NULL;
 
   /* allocate space for data structures */
   list = (Menu**) malloc(sizeof(Menu*) * nMenus);

@@ -38,29 +38,24 @@ int initSound() {
   return 0;
 }
 
-int loadSound(char* name) {
+void loadSound(char* name) {
   sound_module = Player_Load(name, 64, 0);
   if(!sound_module) {
-    printf("Could not load module: %s\n",
+    fprintf(stderr, "Could not load module: %s\n",
 	   MikMod_strerror(MikMod_errno));
-    return 1;
   }
-  return 0;
 }
 
-int playSound() {
+void playSound() {
   if (sound_module) {
     Player_Start(sound_module);
     printf("sound startet\n");
-    return 0;
-  } else 
-    return 1;
+  }
 }
 
-int stopSound() {
+void stopSound() {
   Player_Stop();
   printf("sound stopped");
-  return 0;
 }
 
 void deleteSound() {
@@ -75,3 +70,8 @@ void soundIdle() {
   if(Player_Active())
     MikMod_Update();
 }
+
+
+
+
+
