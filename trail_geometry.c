@@ -4,6 +4,13 @@ enum {
 	COLOR_TRAIL, COLOR_BRIGHT, COLOR_CYCLE
 };
 
+void float2ubyte(unsigned char* pubColor, float *pfColor) {
+	pubColor[0] = (unsigned char)(pfColor[0] * 255.0f);
+	pubColor[1] = (unsigned char)(pfColor[1] * 255.0f);
+	pubColor[2] = (unsigned char)(pfColor[2] * 255.0f);
+	pubColor[3] = (unsigned char)(pfColor[3] * 255.0f);
+}
+		 
 void storeColor(TrailMesh *pMesh, int offset, Player *p, int type) {
   float color[] = { 0, 0, 0, 1 };
 	float white[] = { 1, 1, 1, 1 };
@@ -19,8 +26,8 @@ void storeColor(TrailMesh *pMesh, int offset, Player *p, int type) {
 		memcpy(color, p->pColorDiffuse, 3 * sizeof(float));
 		break;
 	}
-	memcpy(pMesh->pColors + 4 * offset, color, 4 * sizeof(float));
-	memcpy(pMesh->pColors + 4 * (offset + 1), color, 4 * sizeof(float));
+	float2ubyte(pMesh->pColors + 4 * offset, color);
+	float2ubyte(pMesh->pColors + 4 * (offset + 1), color);
 }
 		
 void storeVertex(TrailMesh *pMesh, int offset, 

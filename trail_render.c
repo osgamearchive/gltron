@@ -15,7 +15,7 @@ void trailRender(Player *pPlayer, TrailMesh *pMesh, int texture) {
 	glVertexPointer(3, GL_FLOAT, 0, pMesh->pVertices);
 	glNormalPointer(GL_FLOAT, 0, pMesh->pNormals);
 	glTexCoordPointer(2, GL_FLOAT, 0, pMesh->pTexCoords);
-	glColorPointer(4, GL_FLOAT, 0, pMesh->pColors);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 0, pMesh->pColors);
 
 	checkGLError("texcoord pointer");
 	// glEnable(GL_CULL_FACE);
@@ -27,29 +27,13 @@ void trailRender(Player *pPlayer, TrailMesh *pMesh, int texture) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	{ 
 		float black[] = { 0, 0, 0, 1 };
-		float color[] = { 0, 0, 0, 1 };
-		memcpy(color, pPlayer->pColorAlpha, 3 * sizeof(float));
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
 	}
 
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
-	// glCullFace(GL_BACK);
+
 	glDrawElements(GL_TRIANGLES, pMesh->iUsed, GL_UNSIGNED_SHORT, pMesh->pIndices);
-
-#if 0
-	{ 
-		float color[] = { 1, .2, .2, 1 }; 
-		float black[] = { 0, 0, 0, 1 };
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
-	}
-
-	glCullFace(GL_FRONT);
-	glDrawElements(GL_TRIANGLES, pMesh->iUsed, 
-								 GL_UNSIGNED_SHORT, pMesh->pIndices);
-#endif
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);

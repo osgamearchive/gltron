@@ -8,8 +8,7 @@ typedef struct {
 	vec3* pNormals;
 	vec2* pTexCoords;
 	unsigned short *pIndices;
-	// unsigned int *pColors;
-	float *pColors;
+	unsigned char *pColors;
 	unsigned int iSize;
 	unsigned int iUsed;
 } TrailMesh;

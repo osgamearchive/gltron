@@ -409,7 +409,7 @@ void drawCam(Player *p, gDisplay *d) {
 		TrailMesh mesh;
 		mesh.pVertices = (vec3*) malloc(1000 * sizeof(vec3));
 		mesh.pNormals = (vec3*) malloc(1000 * sizeof(vec3));
-		mesh.pColors = (float*) malloc(1000 * 4 * sizeof(float));
+		mesh.pColors = (unsigned char*) malloc(1000 * 4 * sizeof(float));
 		mesh.pTexCoords = (vec2*) malloc(1000 * sizeof(vec2));
 		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
 		for(i = 0; i < game->players; i++) {
