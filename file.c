@@ -5,60 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef macintosh
-#   include <limits.h>
-#   include <unistd.h>
-#endif
-
-#ifdef macintosh
-#    define SEPERATOR ':'
-#endif
-
-#ifdef WIN32
-#    define SEPERATOR '\\'
-#endif
-
-#ifndef SEPERATOR
-#    define SEPERATOR '/'
-#endif
-
-/* fopen() in MacOS on a directory returns NULL, here is a better solution */
-/* that tells us if a file OR directory exists */
-#ifdef macintosh
-
-#include <Files.h>
-
-extern OSStatus GetApplicationDirectory(short *vRefNum, long *dirID); /* in directory.c */
-
-int itemExists (const char* path) {
-    
-  OSStatus  err;
-  Str255    relPath; 
-  short     vRefNum;
-  long      dirID;
-  FSSpec    spec;
-
-  if (*path != ':')
-   sprintf (relPath, "%c:%s", (strlen(path) + 1), path);
-  else 
-   sprintf (relPath, "%c%s", (strlen(path)) , path);
-
-  err = GetApplicationDirectory (&vRefNum, &dirID);
-  if (err != noErr) {
-    fprintf (stderr, "GetApplicationDirectory failed\n");
-    exit (-1);
-  }
-  
-  err = FSMakeFSSpec  (vRefNum, dirID, relPath, &spec);
-  
-  return (err == noErr);
-}
-
-#else /* UNIX, Windoze, MacOS X */
-
 #include <unistd.h>
-
-#endif
+#include <limits.h>
 
 #ifndef PATH_MAX
 #warning PATH_MAX "is not defined in limits.h!"
@@ -91,7 +39,7 @@ void initDirectories() {
 
 #ifdef LOCAL_DATA
   #ifdef macintosh
-  sprintf(data_dir, ":data");
+  sprintf(data_dir, "data");
   sprintf(art_dir, ":art");
   sprintf(scripts_dir, ":scripts");
   sprintf(music_dir, ":music");
@@ -103,13 +51,11 @@ void initDirectories() {
   #endif
 
 #else
-  sprintf(data_dir, "%s%c%s", DATA_DIR, SEPERATOR, "data");
-  sprintf(art_dir, "%s%c%s", DATA_DIR, SEPERATOR, "art");
-  sprintf(scripts_dir, "%s%c%s", DATA_DIR, SEPERATOR, "scripts");
-  sprintf(music_dir, "%s%c%s", DATA_DIR, SEPERATOR, "music");
+  sprintf(data_dir, "%s%c%s", DATA_DIR, SEPARATOR, "data");
+  sprintf(art_dir, "%s%c%s", DATA_DIR, SEPARATOR, "art");
+  sprintf(scripts_dir, "%s%c%s", DATA_DIR, SEPARATOR, "scripts");
+  sprintf(music_dir, "%s%c%s", DATA_DIR, SEPARATOR, "music");
 #endif
-
-
 
 	/*
   printf("directories:\n"
@@ -144,7 +90,7 @@ char* getPath( int eLocation, const char *filename) {
 
 char* getPossiblePath( int eLocation, const char *filename ) {
   char *path = malloc( PATH_MAX );
-  sprintf(path, "%s%c%s", getDirectory( eLocation ), SEPERATOR, filename);
+  sprintf(path, "%s%c%s", getDirectory( eLocation ), SEPARATOR, filename);
   return path;
 }
 
@@ -164,12 +110,12 @@ const char* getDirectory( int eLocation ) {
 char *getArtPath(const char *artpack, const char *filename ) {
   char *path = malloc( PATH_MAX );
   sprintf(path, "%s%c%s%c%s", 
-	  art_dir, SEPERATOR, artpack, SEPERATOR, filename);
+	  art_dir, SEPARATOR, artpack, SEPARATOR, filename);
   if( fileExists(path) )
     return path;
 
   sprintf(path, "%s%c%s%c%s", 
-	  art_dir, SEPERATOR, "default", SEPERATOR, filename);
+	  art_dir, SEPARATOR, "default", SEPARATOR, filename);
   if( fileExists(path) )
     return path;
 
@@ -188,21 +134,3 @@ int fileExists(const char *path) {
   }
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
