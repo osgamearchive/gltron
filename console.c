@@ -1,11 +1,11 @@
-#define CONSOLE_DEPTH 100
-#define CONSOLE_WIDTH 80
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "console.h"
+
+#define CONSOLE_DEPTH 100
+#define CONSOLE_WIDTH 80
 
 static char buffer[CONSOLE_DEPTH][CONSOLE_WIDTH];
 static int position;
@@ -76,11 +76,11 @@ void consoleScrollBackward(int range) {
   post a message to the console and/or stdout/stderr.
 
   NOTE: Don't put newlines at the end of the format string,
-        The function will handle adding them when appropriate
+        the function will handle adding them when appropriate.
  */
 void displayMessage(outloc_e where, const char *fmt_str, ...) {
 
-  char message[80];
+  char message[CONSOLE_WIDTH];
   va_list ap;
   
   va_start(ap, fmt_str);
@@ -100,3 +100,4 @@ void displayMessage(outloc_e where, const char *fmt_str, ...) {
     fputc('\n', stderr);
   }
 }
+
