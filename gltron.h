@@ -61,18 +61,15 @@ typedef png_texture texture;
 #include "model.h"
 #include "data.h"
 #include "menu.h"
-#ifdef DEPTH_SORT
 #include "quad.h"
-#endif
 
 #include "system.h"
 #include "geom.h"
 #include "light.h"
 
 /* rendering stuff */
-#ifdef DEPTH_SORT
 #include "renderer_gl.h"
-#endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -191,6 +188,7 @@ extern int dirsY[];
 extern float default_speeds[];
 extern int default_arena_sizes[];
 
+extern int stoptime;
 /*
 extern int lasttime; 
 extern double dt; 
@@ -389,12 +387,17 @@ extern void drawWalls(gDisplay *d);
 extern void drawCam(Player *p, gDisplay *d);
 
 /* trail.c */
-extern void drawTrails(Player *p, Player *p_eye, gDisplay *d);
+/* extern void drawTrails(Player *p, Player *p_eye, gDisplay *d); */
 extern void drawTrailBow(Player *p);
 extern void drawTrailLines(Player *p);
-extern void drawTrailShadows(Data *d);
+extern void doTrails(Player *p);
+extern void drawTrailShadow(Data *d);
 extern void drawTrailQuadBow(Player *p, int *q);
 extern void drawTrailsWithQuadBuf(Player *p_eye);
+extern float getSegmentUV(line *line);
+extern float getSegmentEndUV(line *line, Data *data);
+extern float getSegmentEndX(line *line, Data *data, int type);
+extern float getSegmentEndY(line *line, Data *data, int type);
 extern void checkQuad2D(char *flags, int q, int n);
 
 /* clip.c */
