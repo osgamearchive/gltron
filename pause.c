@@ -31,13 +31,6 @@ void keyboardPause(int key, int x, int y) {
   case 27:
     switchCallbacks(&guiCallbacks);
     break;
-  case ' ':
-    if(game->pauseflag & PAUSE_GAME_FINISHED)
-      initData();
-    /* lasttime = SystemGetElapsedTime(); */
-    switchCallbacks(&gameCallbacks);
-    break;
-    /* case 'q': SystemExit(); break; */
   case SYSTEM_KEY_F1: defaultDisplay(0); break;
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;
@@ -54,6 +47,12 @@ void keyboardPause(int key, int x, int y) {
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
 
   case SYSTEM_KEY_TAB: switchCallbacks(&promptCallbacks); break;
+	default:
+    if(game->pauseflag & PAUSE_GAME_FINISHED)
+      initData();
+    /* lasttime = SystemGetElapsedTime(); */
+    switchCallbacks(&gameCallbacks);
+    break;
   }
 }
 
