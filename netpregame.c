@@ -216,7 +216,7 @@ void initPregame() {
   if( pregametext == NULL )
     {
       //make position relative to screen size in percent
-      top_left_x = 2*game->screen->vp_w /100 ;
+      top_left_x = 3*game->screen->vp_w /100 ;
       top_left_y = 75*game->screen->vp_h /100 ;
 
       //make size relative to screen size in percent.

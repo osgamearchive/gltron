@@ -14,7 +14,7 @@ new_wtext(int width, int height, int posx, int posy, int nblines)
   wtext->nbchars     = wtext->width*wtext->nblines/wtext->height*1.5;
   wtext->nbchars     +=2;
   printf("nbchars = %d\n", wtext->nbchars);
-  wtext->x           = posx-2*game->screen->vp_w / (50 * 1.5);
+  wtext->x           = posx;//-2*game->screen->vp_w / (50 * 1.5);
   wtext->y           = posy;
 
   wtext->current     = 0;
