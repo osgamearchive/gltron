@@ -78,6 +78,8 @@ typedef png_texture texture;
 #include "geom.h"
 #include "light.h"
 
+#include "recognizer.h"
+
 /* rendering stuff */
 #include "renderer_gl.h"
 
