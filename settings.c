@@ -192,6 +192,7 @@ void initSettingData(char *filename) {
   si[40].value = &(game->settings->show_scores);
   si[41].value = &(game->settings->shadow_lod);
   si[42].value = &(game->settings->show_gl_logo);
+  si[43].value = &(game->settings->show_recognizer);
 
   sf[0].value = &(game->settings->current_speed);
   sf[1].value = &(game->settings->musicVolume);
@@ -313,6 +314,7 @@ void initMainGameSettings(char *filename) {
   game->settings->show_crash_texture = 1;
   game->settings->show_decals = 1;
   game->settings->show_model = 1;
+  game->settings->show_recognizer = 1;
   game->settings->lod = 0;
   game->settings->shadow_lod = 1;
   game->settings->turn_cycle = 1;

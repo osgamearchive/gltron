@@ -3,7 +3,7 @@ f3
 speed
 musicVolume
 fxVolume
-i43
+i44
 show_help
 show_fps
 show_wall
@@ -47,6 +47,7 @@ show_decals
 show_scores
 shadow_lod
 show_gl_logo
+show_recognizer
 v5
 keys
 cycle_colors

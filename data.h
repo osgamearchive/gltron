@@ -261,6 +261,7 @@ typedef struct Settings {
   int show_scores;
   int show_ai_status;
   int show_model;
+  int show_recognizer;
   int show_decals; /* disable on G200/G400/win32 due to a driver bug */
   int lod;
   int shadow_lod;

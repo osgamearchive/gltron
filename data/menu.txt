@@ -234,7 +234,7 @@ Scale Walls    - %s
 
 # Options Submenu (11 entries)
 
-8
+9
 xsub
 Detail Options
 
@@ -249,6 +249,10 @@ Halos             - %s
 0
 sti_show_model
 Lightcycles       - %s
+
+0
+sti_show_recognizer
+Recognizers       - %s
 
 0
 stl_3_2_lod

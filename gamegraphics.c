@@ -808,11 +808,13 @@ void drawCam(Player *p, gDisplay *d) {
       if(lod >= 0) 
 	drawCycleShadow(game->player + i, lod);
     }
-    glPushMatrix();
-    glMultMatrixf(shadow_matrix);
-    glColor4fv(shadow_color);
-    drawRecognizers(0);
-    glPopMatrix();
+    if(game->settings->show_recognizer) {
+      glPushMatrix();
+      glMultMatrixf(shadow_matrix);
+      glColor4fv(shadow_color);
+      drawRecognizers(0);
+      glPopMatrix();
+    }
 
     drawTrailShadow(game->player + i);
   }
@@ -856,11 +858,13 @@ void drawCam(Player *p, gDisplay *d) {
       if ((p != &(game->player[i])) && (game->player[i].data->speed > 0))
 	drawGlow(&(game->player[i]), d, TRAIL_HEIGHT * 4);
 
-  glClear(GL_DEPTH_BUFFER_BIT);
   glEnable(GL_DEPTH_TEST);
-  // glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
-  drawRecognizers(1);
+
+  if(game->settings->show_recognizer) {
+    glClear(GL_DEPTH_BUFFER_BIT);
+    drawRecognizers(1);
+  }
 
 
 }
