@@ -130,4 +130,4 @@ float shadow_matrix[] = { LX * LY, 0,       0, 0,
 #undef LX
 #undef LY
 
-
+nebu_2d* gpHUD;

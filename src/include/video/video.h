@@ -7,6 +7,7 @@
 #include "video/fonttex.h"
 #include "video/model.h"
 #include "video/video_level.h"
+#include "video/nebu_2d.h"
 #include "base/nebu_png_texture.h"
 
 #include "Nebu_video.h"
@@ -267,5 +268,7 @@ extern int gViewportType;
 extern int video_initialized;
 
 extern PlayerVisual *gPlayerVisuals;
+
+extern nebu_2d* gpHUD;
 
 #endif
