@@ -44,10 +44,17 @@ int processEvent(GameEvent* e) {
       stopPlaying();
       game2->mode = GAME_SINGLE;
     }
+    if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
     game->winner = e->player;
     sprintf(messages, "winner: %d", game->winner + 1);
     printf("%s\n", messages);
     consoleAddLine(messages);
+    } else {
+      game->winner = -2;
+      strcpy(messages, "everyone died! no one wins!");
+      printf("%s\n", messages);
+      consoleAddLine(messages);
+    }
     switchCallbacks(&pauseCallbacks);
     /* screenSaverCheck(0); */
     stoptime = SystemGetElapsedTime();

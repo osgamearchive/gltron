@@ -967,6 +967,7 @@ void drawAI(gDisplay *d) {
 void drawPause(gDisplay *display) {
   char pause[] = "Game is paused";
   char winner[] = "Player %d wins!";
+  char nowinner[] = "No one wins!";
   char buf[100];
   char *message;
   static float d = 0;
@@ -987,8 +988,12 @@ void drawPause(gDisplay *display) {
 
   if((game->pauseflag & PAUSE_GAME_FINISHED) &&
      game->winner != -1) {
+    if(game->winner >= -1) {
     message = buf;
     sprintf(message, winner, game->winner + 1);
+    } else {
+      message = nowinner;
+    }
   } else {
     message = pause;
   }
