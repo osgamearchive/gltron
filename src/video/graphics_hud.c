@@ -7,6 +7,30 @@
 #include <lua.h>
 #include <lualib.h>
 
+void drawHudComponent(const char *s, nebu_2d *pMask) {
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.9);
+
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 0, 255);
+		glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		nebu_2d_Draw(pMask);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_BLEND);
+
+		// draw gauge where stencil is set
+		glStencilFunc(GL_LESS, 0, 255);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+		scripting_Run(s);
+		
+		glDisable(GL_STENCIL_TEST);
+}
+
 void drawHUD(Player *p, PlayerVisual *pV) {
 	if (gSettingsCache.show_scores) {
 		char tmp[10]; /* hey, they won't reach such a score */
@@ -27,33 +51,8 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 						 pV->display.vp_w / 4, 10, 
 						 pV->display.vp_w / (2 * strlen(ai)), ai);
 	}
-
-	{ 
-		char temp[40];
-		Visual hud = pV->display;
-		hud.vp_x = hud.vp_w + hud.vp_x - 248;
-		hud.vp_w = 248;
-		hud.vp_h = 150;
-		rasonly(&hud);
-		// rasonly(&pV->display);
-		
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		nebu_2d_Draw(gpHUD);
-		glDisable(GL_BLEND);
-
-		glDisable(GL_DEPTH_TEST);
-		sprintf(temp, "drawGauge(%.2f)", 
-						p->data->speed / (2 * game2->rules.speed));
-		scripting_Run(temp);
-		
-		sprintf(temp, "drawTurbo(%.2f)",
-						p->data->booster / getSettingf("booster_max"));
-		scripting_Run(temp);
-
-		glEnable(GL_DEPTH_TEST);
-	}
 }
+
 
 void drawPause(Visual *display) {
   char pause[] = "Game is paused";
