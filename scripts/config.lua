@@ -10,14 +10,14 @@ settings.debug_output = 1
 
 -- game
 -- game rules
-settings.speed = 8.5
+settings.speed = 8.5                      -- lightcycle speed
 
-settings.booster_on = 1
-settings.booster_min = 1.0
-settings.booster_max = 6.5
-settings.booster_use = 1.0
-settings.booster_decrease = 0.8
-settings.booster_regenerate = 0.4
+settings.booster_on = 1                   -- booster option (0=off,1=on)
+settings.booster_min = 1.0                -- min. booster value so it can be activated
+settings.booster_max = 6.5                -- fully charged booster
+settings.booster_use = 1.0                -- how much speed to add per second
+settings.booster_decrease = 0.8           -- speed decrease per second after booster ran out
+settings.booster_regenerate = 0.4         -- regeneration of booster when not in use
 
 settings.wall_accel_on = 0
 settings.wall_accel_limit = 20.0
