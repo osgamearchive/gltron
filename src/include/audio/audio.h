@@ -11,8 +11,6 @@ enum {
 	fx_highlight
 };
 
-void resetAudioData();
-
 #include "SDL.h"
 #include "SDL_sound.h"
 
