@@ -164,3 +164,26 @@ matrix* matrixRotationAxis(matrix *pOut, float fAngle, const vec3 *vAxis)
 
 	return pOut;
 }
+
+matrix* matrixTranslation(matrix *pOut, const vec3 *vTranslation)
+{
+	float *m = pOut->m;
+	matrixIdentity(pOut);
+	m[12] = vTranslation->v[0];
+	m[13] = vTranslation->v[1];
+	m[14] = vTranslation->v[2];
+
+	return pOut;
+}
+	
+matrix* matrixScale(matrix *pOut, const vec3 *vScale)
+{
+	float *m = pOut->m;
+	memset(pOut, 0, sizeof(matrix));
+	m[0] = vScale->v[0];
+	m[5] = vScale->v[1];
+	m[10] = vScale->v[2];
+	m[15] = 1;
+	
+	return pOut;
+}

@@ -19,6 +19,9 @@ matrix* matrixAdjoint(matrix *pOut, float* pDet, const matrix *pM);
 vec4* vec4Transform(vec4 *pOut, const vec4 *pV, const matrix *pM);
 
 matrix* matrixRotationAxis(matrix *pOut, float fAngle, const vec3 *vAxis);
+matrix* matrixTranslation(matrix *pOut, const vec3 *vTranslation);
+matrix* matrixScale(matrix *pOut, const vec3 *vScale);
+
 void matrixPrint(matrix *m);
 
 #endif
