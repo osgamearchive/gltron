@@ -720,6 +720,9 @@ void drawCam(Player *p, gDisplay *d) {
 	    0, 0, 1);
 
   drawFloor(d);
+  for(i = 0; i < game->players; i++)
+    drawTrailShadow(game->player[i].data);
+
   if(game->settings->show_wall == 1)
     drawWalls(d);
 
@@ -728,8 +731,10 @@ void drawCam(Player *p, gDisplay *d) {
   glShadeModel(GL_SMOOTH);
   initTrailLights(0);
   drawPlayers(p);
-  for(i = 0; i < game->players; i++)
+  for(i = 0; i < game->players; i++) {
     drawTraces(&(game->player[i]), d);
+    drawTrailLines(&(game->player[i]));
+  }
 
 
   /* transparent stuff */
