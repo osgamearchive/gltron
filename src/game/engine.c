@@ -137,7 +137,6 @@ void resetPlayerData(void) {
 }
 
 void game_ResetData(void) {
-	/* lasttime = SystemGetElapsedTime(); */
 	game->pauseflag = PAUSE_GAME_RUNNING;
 
 	game2->rules.speed = getSettingf("speed");
@@ -146,7 +145,7 @@ void game_ResetData(void) {
 	/* time management */
 	game2->time.lastFrame = 0;
 	game2->time.current = 0;
-	game2->time.offset = SystemGetElapsedTime();
+	game2->time.offset = nebu_Time_GetElapsed();
 	/* TODO: fix that */
 	game2->players = game->players;
 	/* event management */
@@ -158,7 +157,7 @@ void game_ResetData(void) {
 
 void Time_Idle(void) {
 	game2->time.lastFrame = game2->time.current;
-	game2->time.current = SystemGetElapsedTime() - game2->time.offset;
+	game2->time.current = nebu_Time_GetElapsed() - game2->time.offset;
 	game2->time.dt = game2->time.current - game2->time.lastFrame;
 	/* fprintf(stderr, "dt: %d\n", game2->time.dt); */
 }

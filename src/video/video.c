@@ -8,7 +8,7 @@
 
 void displayGame(void) {
   drawGame();
-  SystemSwapBuffers();
+  nebu_Video_SwapBuffers();
 }
 
 int initWindow(void) {

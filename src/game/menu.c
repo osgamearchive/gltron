@@ -77,7 +77,7 @@ void drawMenu(Visual *d) {
       float active2[4];
       int j;
       float t;
-      int time = SystemGetElapsedTime() & 4095; 
+      int time = nebu_Time_GetElapsed() & 4095; 
       t = sinf( time * PI / 2048.0 ) / 2.0f + 0.5f;
 
 			scripting_GetGlobal("menu_item_active1", NULL);

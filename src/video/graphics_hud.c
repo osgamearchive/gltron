@@ -23,7 +23,7 @@ void drawPause(Visual *display) {
   float delta;
   int now;
 
-  now = SystemGetElapsedTime();
+  now = nebu_Time_GetElapsed();
   delta = now - lt;
   lt = now;
   delta /= 500.0;

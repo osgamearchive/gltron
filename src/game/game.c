@@ -37,8 +37,8 @@ void enterGame(void) { /* called when game mode is entered */
   updateSettingsCache();
 
   SystemHidePointer();
-  SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  game2->time.offset = SystemGetElapsedTime() - game2->time.current;
+  nebu_Video_WarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
+  game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
   Audio_EnableEngine();
  
 	// disable booster and cam offset
@@ -75,7 +75,7 @@ void gameMouseMotion(int x, int y) {
        if(cam_chi < CAM_CHI_MIN) cam_chi = CAM_CHI_MIN;
        if(cam_chi > CAM_CHI_MAX) cam_chi = CAM_CHI_MAX;
     */
-    SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
+    nebu_Video_WarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   }
 }
 

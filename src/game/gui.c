@@ -109,7 +109,7 @@ void displayGui(void) {
   drawGuiLogo();
   drawMenu(gScreen);
 
-  SystemSwapBuffers();  
+  nebu_Video_SwapBuffers();  
 }
 
 void displayConfigure(void) {
@@ -122,7 +122,7 @@ void displayConfigure(void) {
   glColor3f(1.0, 1.0, 1.0);
   drawText(guiFtx, gScreen->vp_w / 6, 20,
 	   gScreen->vp_w / (6.0f / 4.0f * strlen(message)), message);
-  SystemSwapBuffers();
+  nebu_Video_SwapBuffers();
 }
 
 void idleGui(void) {

@@ -3,6 +3,7 @@
 #include "game/gltron.h"
 #include "base/util.h"
 #include "scripting/scripting.h"
+#include "audio/nebu_audio_system.h"
 
 #define INI_VERSION 0.705f
 
@@ -88,7 +89,7 @@ void initConfiguration(int argc, const char *argv[])
 }
 
 void initVideo(void) {
-	videoInit();
+	nebu_Video_Init();
 
 	initVideoData();
 
@@ -101,7 +102,7 @@ void initVideo(void) {
 }
 
 void initAudio(void) {
-	audioInit();
+	nebu_Audio_Init();
 	runScript(PATH_SCRIPTS, "audio.lua");
   /* probe for artpacks & songs */
   Sound_initTracks();
@@ -116,7 +117,7 @@ void initGame(void) {
 }
 
 void initInput(void) {
-	inputInit();
+	nebu_Input_Init();
 
   gInput.mouse1 = 0;
   gInput.mouse2 = 0;

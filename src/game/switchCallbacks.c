@@ -21,7 +21,7 @@ void switchCallbacks(Callbacks *new) {
 	// if(current_callback)
 	// fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
   exitCallback(current_callback);
-  SystemRegisterCallbacks(new);
+  nebu_System_SetCallbacks(new);
 	// fprintf(stderr, "callbacks: initializing %s\n", new->name);
   initCallback(new);
 
@@ -32,7 +32,7 @@ void switchCallbacks(Callbacks *new) {
 void updateCallbacks(void) {
   /* called when the window is recreated */
   exitCallback(current_callback);
-  SystemRegisterCallbacks(current_callback);
+  nebu_System_SetCallbacks(current_callback);
   initCallback(current_callback);
 }
 
@@ -44,7 +44,7 @@ void restoreCallbacks(void) {
 
   exitCallback(last_callback);
   current_callback = last_callback;
-  SystemRegisterCallbacks(current_callback);
+  nebu_System_SetCallbacks(current_callback);
   initCallback(current_callback);
 }
 
@@ -65,7 +65,7 @@ void setCallback(const char *name) {
 		fprintf(stderr, "fatal: no callback named '%s' found\n", name);
 		exit(1); // OK: programmer error, critical
 	}
-	switchCallbacks(callbackList[i]);
+	nebu_System_SetCallbacks(callbackList[i]);
 }
 
 

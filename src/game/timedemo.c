@@ -88,7 +88,7 @@ void initTimedemo(void) {
 	printf("-- initializing timedemo\n");
 	
 	frames = 0;
-	startTime = SystemGetElapsedTime();
+	startTime = nebu_Time_GetElapsed();
 	
 	nebu_srand(12313);
 
@@ -123,12 +123,12 @@ void initTimedemo(void) {
 	}
 	
   SystemHidePointer();
-  SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  game2->time.offset = SystemGetElapsedTime() - game2->time.current;
+  nebu_Video_WarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
+  game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
 }
 
 void exitTimedemo(void) {
-	int dt = SystemGetElapsedTime() - startTime;
+	int dt = nebu_Time_GetElapsed() - startTime;
 	if(dt) {
 		displayMessage(TO_STDERR | TO_CONSOLE, 
 									 "timedemo FPS: %.2f\n", 
