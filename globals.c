@@ -30,11 +30,13 @@ char *lc_lod_names[] = {
   "lightcycle-low.obj.gz"
 };
 
+#if 0
 Menu** pMenuList;
 Menu* pRootMenu;
 
 int *configureKeyEntry;
 Menu *configureKeyMenu;
+#endif
 
 float camAngle = 0;
 float cam_phi = 0;

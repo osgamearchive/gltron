@@ -229,9 +229,11 @@ extern fonttex *guiFtx;
 extern int fontID;
 #define MAX_FONTS 17
 
+#if 0
 extern Menu** pMenuList;
 extern Menu* pRootMenu;
 extern Menu* pCurrent;
+#endif
 
 extern unsigned char* colmap;
 extern unsigned char* debugtex;
