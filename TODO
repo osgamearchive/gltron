@@ -5,14 +5,9 @@ TODO list
 
 Bugs [high priority]:
 - check cycle & recognizer sounds again (pause/menu/unpause/game)
-- make all sound/audio functions check if the sound-system system is
-  initialized
 
 Features [high priority]:
 
-- fallback instead of app exiting on corrupt mp3 files
-- fallback instead of app exiting when SDL_sound is present, but doesn't
-  support ogg/vorbis, or if sound fx files are corrupt
 - stream music from disk instead of reading the whole file to memory
   (serious OS 9 problem, for example), this allows handling of large mp3 files
   too and gets rid of the fixed size buffer
@@ -57,6 +52,7 @@ Bugs [low priority]:
   
 Features [low priority]:
 
+- configurable zoom functionality (e.g. other mouse buttons)
 - support other controllers (i.e. joysticks)
 - add (merge) software mouse cursor (from networking branch)
 - add more special effects (reflections etc.)
