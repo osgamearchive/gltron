@@ -695,7 +695,7 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
   glShadeModel(GL_SMOOTH);
 
   glDepthMask(GL_FALSE);
-  glDisable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
 
   glBlendFunc(GL_ONE, GL_ONE);
   glEnable(GL_BLEND);
