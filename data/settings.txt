@@ -3,7 +3,7 @@ f3
 speed
 musicVolume
 fxVolume
-i38
+i42
 show_help
 show_fps
 show_wall
@@ -42,7 +42,16 @@ ai_level
 mipmap_filter
 stretch_textures
 show_skybox
-v3
+bitdepth_32
+show_decals
+show_scores
+shadow_lod
+v4
 keys
 cycle_colors
 trail_colors
+cam_settings
+
+
+
+
