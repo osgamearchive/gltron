@@ -67,6 +67,8 @@ enum {
 	SYSTEM_JOY_BUTTON_19
 };
 
+void nebu_Input_Init(void);
+
 void SystemGrabInput();
 void SystemUngrabInput();
 
