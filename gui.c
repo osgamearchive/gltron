@@ -170,7 +170,7 @@ void keyboardGui(int key, int x, int y) {
   switch(key) {
   case 27:
 #ifdef SOUND
-    if(getSettingi("play_fx")) 
+    if(getSettingi("playEffects")) 
       playMenuFX(fx_action);
 #endif
     if(pCurrent->parent == NULL)
@@ -180,7 +180,7 @@ void keyboardGui(int key, int x, int y) {
     break;
   case 13: case ' ':
 #ifdef SOUND
-    if(getSettingi("play_fx")) 
+    if(getSettingi("playEffects")) 
       playMenuFX(fx_action);
 #endif
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
@@ -194,14 +194,14 @@ void keyboardGui(int key, int x, int y) {
     /* case 'q': SystemExit(); break; */
   case SYSTEM_KEY_DOWN:
 #ifdef SOUND
-    if(getSettingi("play_fx"))
+    if(getSettingi("playEffects"))
       playMenuFX(fx_highlight);
 #endif
     pCurrent->iHighlight = (pCurrent->iHighlight + 1) % pCurrent->nEntries;
     break;
   case SYSTEM_KEY_UP:
 #ifdef SOUND
-    if(getSettingi("play_fx"))
+    if(getSettingi("playEffects"))
       playMenuFX(fx_highlight);
 #endif
     pCurrent->iHighlight = (pCurrent->iHighlight - 1) % pCurrent->nEntries;
@@ -252,7 +252,7 @@ void guiMouse(int buttons, int state, int x, int y) {
   /* fprintf(stderr, "testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
   if (state == SYSTEM_MOUSEPRESSED) {	
 #ifdef SOUND
-    if(getSettingi("play_fx"))
+    if(getSettingi("playEffects"))
       playMenuFX(fx_action);
 #endif	
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
@@ -312,7 +312,7 @@ void guiMouseMotion(int mx, int my) {
 	current_highlight = i;
 
 #ifdef SOUND
-	if(getSettingi("play_fx"))
+	if(getSettingi("playEffects"))
 	  playMenuFX(fx_highlight);
 #endif
 	pCurrent->iHighlight = i;

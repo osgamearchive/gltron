@@ -19,7 +19,7 @@ namespace Sound {
 	// fprintf(stderr, "mixing source\n");
 	if(!(
 	     (s->GetType() & eSoundFX &&
-	      ! getSettingi("play_fx") ) ||
+	      ! getSettingi("playEffects") ) ||
 	     (s->GetType() & eSoundMusic &&
 	       ! getSettingi("playMusic") )
 	     ))
