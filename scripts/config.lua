@@ -24,6 +24,7 @@ settings.wall_accel_use = 1.0
 settings.wall_accel_decrease = 0.8
 
 settings.ai_level = 2
+settings.level = "square"
 settings.grid_size = 720
 settings.erase_crashed = 1
 settings.map_ratio_w = 0.333
