@@ -188,10 +188,11 @@ Menu = {
 
    -- Texture
    Artpack = {
-      type = MenuC.type.list, caption = "Artpack",
-      labels = { }, -- initialized by directory listing code
-      values = { }, -- initialized by directory listing code
-      store = function(value) artpack = value; c_reloadTextures(); end
+      type = MenuC.type.slider, caption = "Artpack",
+      right = nextArtpack,
+      left = previousArtpack,
+      action = nextArtpack,
+      read = function() return current_artpack; end
    },
    Floor = {
       type = MenuC.type.list, caption = "Floor texture",
@@ -369,24 +370,22 @@ Menu = {
    },
    Music_Volume = {
       type = MenuC.type.slider, caption = "Music Volume",
-      boundaries = { low = 0.0, high = 1.0 },
-      step = { 0.05 },
-      -- read = function() return musicVolume; end,
-      store = function(value) musicVolume = value; c_update_audio_volume(); end,
-      stringValue = function() return format("%02d%%", musicVolume); end
+      right = function() MusicVolumeUp(); end,
+      left = function() MusicVolumeDown(); end,
+      read = function() return format("%.0f%%", musicVolume * 100); end
    },
    FX_Volume = {
       type = MenuC.type.slider, caption = "FX Volume",
-      boundaries = { low = 0.0, high = 1.0 },
-      step = { 0.05 },
-      store = function(value) fxVolume = value; c_update_audio_volume(); end,
-      stringValue = function() return format("%02d%%", fxVolume); end
+      right = FXVolumeUp,
+      left = FXVolumeDown,
+      read = function() return format("%.0f%%", fxVolume * 100); end
    },
    Song = {
-      type = MenuC.type.list, caption = "Song",
-      labels = { "none" }, -- initialized by directory listing code
-      values = { 0 }, -- initialized by directory listing code
-      store = function(value) song = value; c_reloadMusic(); end
+      type = MenuC.type.slider, caption = "Song",
+      right = nextTrack,
+      left = previousTrack,
+      action = nextTrack,
+      read = function() return current_track; end
    }
 }
 
@@ -422,6 +421,31 @@ Menu.Action = function ()
    script_print("calling action of '" .. menu .. "', type " .. type )
    MenuAction[ type ]( menu )
 end
+
+Menu.Left = function ()
+   local menu = Menu[Menu.current].items[Menu.active]
+   local type = Menu[ menu  ].type
+   if type == MenuC.type.slider then
+      script_print("calling left of '" .. menu .. "'")
+      Menu[ menu ].left()
+   else
+      script_print("calling action of '" .. menu .. "', type " .. type )
+      MenuAction[ type ]( menu )      
+   end
+end
+
+Menu.Right = function ()
+   local menu = Menu[Menu.current].items[Menu.active]
+   local type = Menu[ menu  ].type
+   if type == MenuC.type.slider then
+      script_print("calling right of '" .. menu .. "'")
+      Menu[ menu ].right()
+   else
+      script_print("calling action of '" .. menu .. "', type " .. type )
+      MenuAction[ type ]( menu )
+   end
+end
+
 
 Menu.Next = function ()
    if Menu.active < getn(Menu[Menu.current].items) then
