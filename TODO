@@ -43,8 +43,7 @@ Optimizations/Cleanups [medium priority]
 - seperate game from engine a bit more
 - delete the sound object in Audio_Quit to allow restarting the whole
   sound system without memory leaks
-- look at #if 0,#endif and remove obsolete code
-- check various TODOs, FIXMEs and #warnings in the code
+- check various TODOs and FIXMEs in the code
 
 Bugs [low priority]:
 
