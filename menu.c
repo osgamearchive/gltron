@@ -26,7 +26,7 @@ void drawMenu(gDisplay *d) {
   x = (int) (d->vp_w * MENU_TEXT_START_X);
   y = (int) (d->vp_h * MENU_TEXT_START_Y);
 
-  /* optaion menu name */
+  /* obtain menu name */
   scripting_Run("return Menu.current");
   scripting_CopyStringResult(pMenuName, 200);
   /* obtain some information about the active menu */
