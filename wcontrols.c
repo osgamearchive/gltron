@@ -196,6 +196,7 @@ updateControls( WrootControl  *root )
       switch( wcontrol->type )
 	{
 	case WcontrolButton:
+	  root->activeFocus = mouseFocus_wbutton((Wbutton *)wcontrol->control, pt );
 	  break;
 	case WprogressBar:
 	  break;
@@ -259,6 +260,7 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
   switch( wcontrol->type )
     {
     case WcontrolButton:
+      mouse_wbutton((Wbutton *)wcontrol->control, buttons, state, dblClick, mousexy);
       break;
     case WprogressBar:
       break;
@@ -280,6 +282,31 @@ clickControls( WrootControl  *root, int buttons, int state, Wpoint mousexy )
 }
 
 
+static void
+mouseFocusControls( WrootControl  *root, Wpoint mousexy, WcontrolRef wcontrol )
+{
+switch( wcontrol->type )
+    {
+    case WcontrolButton:
+      mouseMotion_wbutton((Wbutton *)wcontrol->control, mousexy, root->activeFocus);
+      break;
+    case WprogressBar:
+      break;
+    case WprogressStatus:
+      break;
+    case WinputText:
+      break;
+    case WoutputText:
+      break;
+    case  WstaticText:
+      break;
+    case Wlistbox:
+      //mouseMotion_wlist((Wlist *)wcontrol->control, mousexy);
+      break;
+    case Wscrollbar:	  
+      break;
+    }
+}
 void
 mouseControls( WrootControl  *root, Wpoint mousexy )
 {
@@ -303,42 +330,34 @@ mouseControls( WrootControl  *root, Wpoint mousexy )
   if( wcontrol == NULL )
     {
       root->activeFocus  = 0;
+
+      //find all wcontrol focused to deactivate
+      wcontrol = root->controlList;
+      i= 1;
+      while( wcontrol != NULL && i++ < root->currentFocus )
+	{
+	  wcontrol = wcontrol->next;
+	}
+      if( wcontrol == NULL )
+	return;
+      
+      mouseFocusControls( root, mousexy, wcontrol );
       root->currentFocus = -1;
-      return;
-    }
+    } else {
  
+      if( root->activeFocus == 1 && i == root->currentFocus )
+	{
+	  return;
+	}
+      
+      root->currentFocus  = i;
+      root->activeFocus   = 1;
+      root->lastFocus     = SDL_GetTicks();
+      
 
-
-  if( root->activeFocus == 1 && i == root->currentFocus )
-    return;
-    
-  root->currentFocus  = i;
-  root->activeFocus   = 1;
-  root->lastFocus     = SDL_GetTicks();
-
-  printf("new focus is %d\n", root->currentFocus );
-
-/*   switch( wcontrol->type ) */
-/*     { */
-/*     case WcontrolButton: */
-/*       break; */
-/*     case WprogressBar: */
-/*       break; */
-/*     case WprogressStatus: */
-/*       break; */
-/*     case WinputText: */
-/*       break; */
-/*     case WoutputText: */
-/*       break; */
-/*     case  WstaticText: */
-/*       break; */
-/*     case Wlistbox: */
-/*       mouseMotion_wlist((Wlist *)wcontrol->control, mousexy); */
-/*       break; */
-/*     case Wscrollbar:	   */
-/*       break; */
-/*     } */
-
+      mouseFocusControls( root, mousexy, wcontrol );
+      printf("new focus is %d\n", root->currentFocus );
+    }
 }
 
 

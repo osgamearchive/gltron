@@ -215,8 +215,8 @@ displayTrackerScreen()
 
 
   glColor3fv(colors[0]);
-  x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 1.5 * h;
+/*   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) ); */
+/*   y = game->screen->vp_h - 1.5 * h; */
   /* drawText(gameFtx, x, y, h+3, "GLTRON SERVERS"); */
   
   //draw server info
@@ -224,34 +224,34 @@ displayTrackerScreen()
 
   //draw server list
   //draw_wlist(serverlist);
-  updateControls(trackerControls);
+
 
   //Display errors
-  y = 1.5 * h * 2;
-  glColor3fv(colors[3]);
-  if(getcurrent_wlist(serverlist)>=0 )
-    {
-      if( servers[getcurrent_wlist(serverlist)].packets > 0 && ((servers[getcurrent_wlist(serverlist)].ping/servers[getcurrent_wlist(serverlist)].packets) > PINGLIMIT))
-	{
-	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION))
-	    {
-	      sprintf(str, "Your version is not comptatible and ping is too high" );
-	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
-	      drawText(netFtx, x, y, h-1, str);
-	    } else {
-	      sprintf(str, "ping is too high");
-	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
-	      drawText(netFtx, x, y, h-1, str);
-	    }
-	} else {
-	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION))
-	    {
-	      sprintf(str, "Your version is not comptatible");
-	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
-	      drawText(netFtx, x, y, h-1, str);
-	    }
-	}
-    }
+  /* y = 1.5 * h * 2; */
+/*   glColor3fv(colors[3]); */
+/*   if(getcurrent_wlist(serverlist)>=0 ) */
+/*     { */
+/*       if( servers[getcurrent_wlist(serverlist)].packets > 0 && ((servers[getcurrent_wlist(serverlist)].ping/servers[getcurrent_wlist(serverlist)].packets) > PINGLIMIT)) */
+/* 	{ */
+/* 	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION)) */
+/* 	    { */
+/* 	      sprintf(str, "Your version is not comptatible and ping is too high" ); */
+/* 	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) ); */
+/* 	      drawText(netFtx, x, y, h-1, str); */
+/* 	    } else { */
+/* 	      sprintf(str, "ping is too high"); */
+/* 	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) ); */
+/* 	      drawText(netFtx, x, y, h-1, str); */
+/* 	    } */
+/* 	} else { */
+/* 	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION)) */
+/* 	    { */
+/* 	      sprintf(str, "Your version is not comptatible"); */
+/* 	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) ); */
+/* 	      drawText(netFtx, x, y, h-1, str); */
+/* 	    } */
+/* 	} */
+/*     } */
 
 
   //draw number of servers
@@ -260,8 +260,10 @@ displayTrackerScreen()
   sprintf(str, "%d gltron servers.", nbservers);
   x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
   drawText(netFtx, x, y, h, str);
-  drawMouse();
 
+
+  updateControls(trackerControls);
+  drawMouse();
   SystemSwapBuffers();
 
 }
@@ -560,6 +562,70 @@ action(WlistPtr list)
       changeCallback(&netConnectCallbacks, &trackerCallbacks);
 }
 
+void
+buttonaction( Wbutton *wbutton )
+{
+  printf("refresh pressed\n");
+}
+
+void
+buttonMouseFocus( Wbutton *wbutton )
+{  
+  float color[4] = { 0.1f, 0.2f, 0.8f, .8f };
+  int   x, y;
+  int   width    = 190;
+  //int   h      = wbutton->height;
+  int   s        = 8;
+  int   height   = s*3;
+  char  str[255];
+
+  //draw a beautifull transparent box using alpha trucs
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glColor4fv(color);
+
+  //find pos x, y
+  x = wbutton->x + wbutton->width/2;
+  y = wbutton->y + 10;
+  glBegin(GL_QUADS); 
+  glVertex3f(x, y, 0.0f);   //top left
+  glVertex3f(x+width, y, 0.0f);   //top right
+  glVertex3f(x+width, y-height, 0.0f);  //Bottom right
+  glVertex3f(x, y-height, 0.0f);  //Bottom left  
+  glEnd();
+  glDisable(GL_BLEND);
+
+  glColor3f(1.0,1.0, 1.0);
+  glBegin(GL_LINES);
+  glVertex2d(x,y);
+  glVertex2d(x+width, y);
+  glEnd();
+  
+  
+  glBegin(GL_LINES);
+  glVertex2d(x+width, y);
+  glVertex2d(x+width, y-height);
+  glEnd();
+  
+      
+  glBegin(GL_LINES);
+  glVertex2d(x+width, y-height);
+  glVertex2d(x, y-height);
+  glEnd();
+  
+
+  glBegin(GL_LINES);
+  glVertex2d(x, y-height);
+  glVertex2d(x, y);
+  glEnd();
+
+  y -=2*s;
+  x+=10;
+  sprintf(str, "Refresh servers list");
+  drawText(gameFtx, x, y, s, str);
+  y -=s;
+}
+
 int
 sortit( WlistPtr list, int line, int next )
 {
@@ -616,7 +682,7 @@ initTracker()
   newControl(trackerControls, (Wptr)serverlist, Wlistbox);
 
   //a button for testing
-  newControl(trackerControls, (Wptr)new_wbutton(game->screen->vp_w/2-40, 40, 80, 15, "Refresh", NULL, NULL, NULL), WcontrolButton);
+  newControl(trackerControls, (Wptr)new_wbutton(game->screen->vp_w/2-40, 40, 80, 15, "Refresh", NULL, buttonaction, NULL, buttonMouseFocus), WcontrolButton);
 
   //title
   x = game->screen->vp_w/2 - 1.5 * 7 *( game->screen->vp_w / (50 * 1.5) );

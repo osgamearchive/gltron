@@ -27,6 +27,8 @@ struct ButtonRecord {
   void             (*drawit)(WbuttonRef wbutton); //draw the button
   void             (*action)(WbuttonRef wbutton); //when click or press enter
   void             (*focus) (WbuttonRef wbutton); //when focus on button
+  int              focused;
+  void             (*mouseFocus) (WbuttonRef wbutton); //when focus on button
 };
 
 /** Creating the Button               */
@@ -34,7 +36,8 @@ Wbutton*   new_wbutton( int x, int y, int width, int height,
 			char *title,
 			void (*drawit)(WbuttonRef wbutton),
 			void (*action)(WbuttonRef wbutton),
-			void (*focus) (WbuttonRef wbutton));
+			void (*focus) (WbuttonRef wbutton),
+			void (*mouseFocus) (WbuttonRef wbutton));
 
 /** Draw the button */
 void         draw_wbutton(Wbutton *wbutton);
@@ -44,4 +47,10 @@ void         free_wbutton(Wbutton *wbutton);
 
 /** Get Rect */
 Wrect        getRect_wbutton( Wbutton *wbutton );
+
+/** Mouse events */
+void mouse_wbutton( Wbutton *wbutton, int buttons, int state, int dblClick, Wpoint mousexy );
+void mouseMotion_wbutton( Wbutton *wbutton, Wpoint mousexy, int active );
+int  mouseFocus_wbutton( Wbutton *wbutton, Wpoint mousexy );
+
 #endif

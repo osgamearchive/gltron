@@ -435,7 +435,7 @@ mouse_wlist( Wlist *wlist, int buttons, int state, int dblClick, Wpoint mousexy 
   if( wlist->current != line )
     wlist->current = line;
 
-if( wlist->focus != NULL )
+  if( wlist->focus != NULL )
     wlist->focus(wlist, wlist->index[wlist->current]);
 
   if( dblClick )
