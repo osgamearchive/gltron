@@ -1,7 +1,11 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/* this structure is defined in nebu/base/nebu_types.h */
+/* we declare it here because GLTron's headers conflict with */
+/* the macos headers used below (Mac OS headers define "Point") */
 typedef struct List List;
 struct List {
   void *data;
@@ -53,7 +57,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    StringPtr filename;							  
    int   len;
    
-   list *l = (list*) user_data;
+   List *l = (List*) user_data;
 	/* filter invisible files & folders */
    if ( (cpb_ptr->hFileInfo.ioFlFndrInfo.fdFlags & kIsInvisible) == 0) {	
    	
@@ -71,7 +75,7 @@ pascal void iterateProc (const CInfoPBRec * const cpb_ptr,
    	l->data = (char*) malloc (sizeof(char) * len + 1);  							  
       strcpy ((char*)l->data, (const char*)filename);
       
-      l->next = (list*) malloc (sizeof (list));
+      l->next = (List*) malloc (sizeof (List));
       if (l == NULL) {
   	    fprintf (stderr, "iterateProc: out of memory\n");
   		exit (-1);
@@ -119,7 +123,7 @@ List* readDirectoryContents(const char *dirname, const char *prefix) {
   l->data = NULL;
   l->next = NULL;
  
-  filter_prefix = prefix;
+  filter_prefix = (char*)prefix;
   
   err = FSpIterateDirectory (&spec, 1, NewIterateFilterUPP(iterateProc), l);
     
