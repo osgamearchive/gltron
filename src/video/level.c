@@ -25,9 +25,9 @@ void video_ScaleLevel(video_level *l, float fSize)
 }
 
 void video_Shader_Setup(video_level_shader* shader) {
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 void video_Shader_Cleanup(video_level_shader* shader) {
