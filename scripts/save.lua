@@ -6,7 +6,7 @@ function savevar (n,v)
  -- if type(v)=="userdata" or type(v)=="function" then write("\t-- ") end
  -- don't print lua constants
  if strsub(n, 1, 1) == "_" then return end
- write(n," = ")
+ write("settings.", n," = ")
  if type(v) == "string" then write(format("%q",v))
  elseif type(v) == "table" then
    if v.__visited__ ~= nil then
@@ -29,5 +29,5 @@ function savevar (n,v)
 end
 
 function save ()
-  foreach(globals(),savevar)
+  foreach(settings,savevar)
 end
