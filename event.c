@@ -144,22 +144,6 @@ list* doMovement(int mode, int dt) {
   do camera movement, run garbage collector, schedule gfx redisplay
 */
 
-#if 0
-void idleGame(void) {
-  /* TODO: handle fast finish in updateTime() */
-  if(updateTime() == 0) return;
-
-  soundIdle();
-  /* TODO: do game ai, animation, physics and process events */
-
-  doCameraMovement();
-  doRecognizerMovement();
-  
-  scripting_RunGC();
-  SystemPostRedisplay();
-}
-#endif
-  
 void idleGame(void) {
   list *l;
   list *p;
@@ -167,127 +151,102 @@ void idleGame(void) {
   int dt;
   int t;
 
-#ifdef LUA_PROFILE
-  printf("%d lua calls since last idle call\n", lua_profile); */
-		lua_profile = 0;
-#endif
+	Sound_idle();
 
+	if(updateTime() == 0) return;
 
-		Sound_idle();
-
-		if(updateTime() == 0) return;
-
-		switch(game2->mode) {
+	switch(game2->mode) {
+	case GAME_SINGLE:
 #ifdef RECORD
-		case GAME_NETWORK_RECORD:
-#ifdef NETWORK
-			updateNet();
+	case GAME_SINGLE_RECORD:
 #endif
-#endif /* RECORD */
-			/* fall through */
-		case GAME_SINGLE:
-#ifdef RECORD
-		case GAME_SINGLE_RECORD:
-#endif
-			/* check for fast finish */
+		/* check for fast finish */
     
-			if (game2->settingsCache.fast_finish == 1) {
-				int factors[4] = { 4, 6, 12, 25 };
-				int threshold[4] = { 0, 300, 600, 800 };
-				int factor = 1;
-				for(i = 0; i < 4; i++) {
-					if(game2->rules.grid_size > threshold[i])
-						factor = factors[i];
-				}
-				for (i = 0; i < game->players; i++) {
-					if (game->player[i].ai->active != AI_COMPUTER &&
-							game->player[i].data->exp_radius < EXP_RADIUS_MAX) {
-						factor = 1;
-					}
-				}
-				dt = game2->time.dt * factor;
-			} else { 
-				dt = game2->time.dt;
+		if (game2->settingsCache.fast_finish == 1) {
+			int factors[4] = { 4, 6, 12, 25 };
+			int threshold[4] = { 0, 300, 600, 800 };
+			int factor = 1;
+			for(i = 0; i < 4; i++) {
+				if(game2->rules.grid_size > threshold[i])
+					factor = factors[i];
 			}
-
-			while(dt > 0) {
-				if(dt > PHYSICS_RATE) t = PHYSICS_RATE;
-				else t = dt;
-
-				/* run AI */
-				for(i = 0; i < game->players; i++)
-					if(game->player[i].ai != NULL)
-						if(game->player[i].ai->active == AI_COMPUTER &&
-							 PLAYER_IS_ACTIVE(&game->player[i])) {
-
-							if (game2->settingsCache.ai_level < 2) {
-								doComputer(i, 0);
-							} else {
-								doComputer2(i, 0);
-							} 
-						}
-
-				/* process any outstanding events (turns, etc) */
-				for(p = &(game2->events); p->next != NULL; p = p->next) {
-					if(processEvent((GameEvent*) p->data)) return;
+			for (i = 0; i < game->players; i++) {
+				if (game->player[i].ai->active != AI_COMPUTER &&
+						game->player[i].data->exp_radius < EXP_RADIUS_MAX) {
+					factor = 1;
 				}
-
-				/* free events */
-				p = game2->events.next;
-				while(p != NULL) {
-					l = p;
-					p = p->next;
-					free(l);
-				}
-				game2->events.next = NULL;
-
-				l = doMovement(1, t); /* this can generate new events */
-				if(l != NULL) {
-					for(p = l; p->next != NULL; p = p->next) {
-						if(processEvent((GameEvent*) p->data));
-					}
-
-				}
-				/* free list  */
-				p = l;
-				while(p != NULL) {
-					l = p;
-					p = p->next;
-					free(l);
-				}
-				dt -= PHYSICS_RATE;
 			}
-			break;
-#ifdef RECORD
-		case GAME_PLAY_NETWORK:
-#ifdef NETWORK
-			updateNet();
-			/* broadCast any outstanding events (turns, etc) */
-			for(p = &(game2->events); p->next != NULL; p = p->next) {
-				sendNetEvent((GameEvent*) p->data);
-			}
-#endif
-			/* fall through to GAME_PLAY */
-		case GAME_PLAY:
-			getEvents(); 
-			l = doMovement(0, game2->time.dt); /* this won't generate new events */
-			if(l != NULL) {
-				fprintf(stderr, "something is seriously wrong - ignoring events\n");
-			}
-			break;
-#endif /* RECORD */
+			dt = game2->time.dt * factor;
+		} else { 
+			dt = game2->time.dt;
 		}
+
+		while(dt > 0) {
+			if(dt > PHYSICS_RATE) t = PHYSICS_RATE;
+			else t = dt;
+
+			/* run AI */
+			for(i = 0; i < game->players; i++)
+				if(game->player[i].ai != NULL)
+					if(game->player[i].ai->active == AI_COMPUTER &&
+						 PLAYER_IS_ACTIVE(&game->player[i])) {
+
+						if (game2->settingsCache.ai_level < 2) {
+							doComputer(i, 0);
+						} else {
+							doComputer2(i, 0);
+						} 
+					}
+
+			/* process any outstanding events (turns, etc) */
+			for(p = &(game2->events); p->next != NULL; p = p->next) {
+				if(processEvent((GameEvent*) p->data)) return;
+			}
+
+			/* free events */
+			p = game2->events.next;
+			while(p != NULL) {
+				l = p;
+				p = p->next;
+				free(l);
+			}
+			game2->events.next = NULL;
+
+			l = doMovement(1, t); /* this can generate new events */
+			if(l != NULL) {
+				for(p = l; p->next != NULL; p = p->next) {
+					if(processEvent((GameEvent*) p->data));
+				}
+
+			}
+			/* free list  */
+			p = l;
+			while(p != NULL) {
+				l = p;
+				p = p->next;
+				free(l);
+			}
+			dt -= PHYSICS_RATE;
+		}
+		break;
+#ifdef RECORD
+	case GAME_PLAY_NETWORK:
+		/* fall through to GAME_PLAY */
+	case GAME_PLAY:
+		getEvents(); 
+		l = doMovement(0, game2->time.dt); /* this won't generate new events */
+		if(l != NULL) {
+			fprintf(stderr, "something is seriously wrong - ignoring events\n");
+		}
+		break;
+#endif /* RECORD */
+	}
     
-		doCameraMovement();
-		doRecognizerMovement();
+	doCameraMovement();
+	doRecognizerMovement();
 
-		scripting_RunGC();
-		SystemPostRedisplay();
-
-#ifdef LUA_PROFILE
-		printf("%d lua calls after idle processing\n", lua_profile);
-#endif
-		/* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
+	scripting_RunGC();
+	SystemPostRedisplay();
 }
 
 /*! \fn void createEvent(int player, event_type_e eventType)
