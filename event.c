@@ -50,6 +50,7 @@ int processEvent(GameEvent* e) {
     consoleAddLine(messages);
     switchCallbacks(&pauseCallbacks);
     /* screenSaverCheck(0); */
+    stoptime = SystemGetElapsedTime();
     game->pauseflag = PAUSE_GAME_FINISHED;
     value = 1;
     break;
@@ -103,7 +104,7 @@ list* doMovement(int mode, int dt) {
       if(data->exp_radius < EXP_RADIUS_MAX)
 	data->exp_radius += (float)dt * EXP_RADIUS_DELTA;
       else if (data->speed == SPEED_CRASHED) {
-	int winner;
+	int winner = -1;
 
 	data->speed = SPEED_GONE;
 	game->running--;
