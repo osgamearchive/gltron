@@ -1,6 +1,5 @@
 
 /* recognizer stuff */
-extern void initRecognizer();
 extern void recognizerMovement();
 extern void drawRecognizer();
 extern void drawRecognizerShadow();

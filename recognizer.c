@@ -1,8 +1,6 @@
 #include "gltron.h"
 
 static float alpha = 0;
-static float max;
-static float rec_boundry;
 
 const static float rec_scale_factor = 0.25;
 
@@ -14,11 +12,6 @@ static float y() { return yv[0] * cos(yv[1] * alpha + yv[2]) - yv[3] * sin(yv[4]
 
 static float dx() { return xv[1] * xv[0] * cos(xv[1] * alpha + xv[2]) - xv[4] * xv[3] * cos(xv[4] * alpha + xv[5]); }
 static float dy() { return - yv[1] * yv[0] * sin(yv[1] * alpha + yv[2]) - yv[4] * yv[3] * sin(yv[4] * alpha + yv[5]); }
-
-void initRecognizer(int grid_size) {
-  max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
-  rec_boundry = grid_size - max;
-}
 
 void getRecognizerPositionVelocity(Point *p, Point *v) {
   p->x = ( x() + 1.0 ) * game2->rules.grid_size / 2.0;
@@ -39,13 +32,15 @@ float calcRecognizerDirection() {
 }
 
 static void calcRecognizerPosition(float *posx, float *posy) {
-  *posx = (max + (x() + 1.0) * rec_boundry) / 2.0;
+  float max = recognizer->BBox.vSize.v[0] * rec_scale_factor;
+  float rec_boundry = game2->rules.grid_size - max;
+ *posx = (max + (x() + 1.0) * rec_boundry) / 2.0;
   *posy = (max + (y() + 1.0) * rec_boundry) / 2.0;
 }
   
 void drawRecognizerShadow() {
   float dirx, rx, ry;
-
+  
   /* states */
 
   glEnable(GL_CULL_FACE);
@@ -90,7 +85,7 @@ void drawRecognizerShadow() {
 
 void drawRecognizer() {
   float dirx, rx, ry;
-
+ 
   dirx = calcRecognizerDirection(); 
 
   glPushMatrix();
