@@ -68,7 +68,7 @@ settings.mouse_warp = 0
 settings.model_backwards = 0
 settings.screenSaver = 0
 
-settings.joy_threshold = 1000
+settings.joy_threshold = 0.10
 
 -- audio
 settings.tracks = { }
