@@ -4,7 +4,6 @@
 #define NEW_LEVEL_DRAW
 
 #include "game/camera.h"
-#include "video/fonttex.h"
 #include "video/model.h"
 #include "video/video_level.h"
 #include "video/nebu_2d.h"
@@ -148,10 +147,8 @@ extern gltron_Mesh *lightcycle[];
 extern video_level *gWorld;
 
 /* extern TexFont *txf; */
-extern FontTex *gameFtx;
-extern FontTex *guiFtx;
-extern int fontID;
-#define MAX_FONTS 17
+extern nebu_Font *gameFtx;
+extern nebu_Font *guiFtx;
 
 extern float camAngles[];
 
@@ -164,6 +161,7 @@ extern float colors_model_diffuse[][4];
 extern float colors_model_specular[][4];
 extern int vps;
 extern int vp_max[];
+// viewports, in virtual units
 extern float vp_x[4][4];
 extern float vp_y[4][4];
 extern float vp_w[4][4];
@@ -187,24 +185,9 @@ extern void initFonts(void);
 extern void deleteFonts(void);
 extern void draw( void );
 
-/* FontTex stuff */
 extern texture* loadTextureData(const char *filename);
 extern void freeTextureData(texture *tex);
-extern FontTex *ftxLoadFont(const char *filename);
-extern void ftxUnloadFont(FontTex *ftx);
 extern void loadTexture(const char *filename, int format);
-
-/* It's not necessary to bind the texture explicitly. */
-/* (and we don't know which texture to bind) */
-
-/* ftxRenderString will take care of that */
-/* extern void ftxBindFontTexture(fontTex *ftx); */
-
-extern void ftxRenderString(FontTex *ftx, const char *string, int len);
-
-/* extern void ftxGetStringWidth(fontTex *ftx, */
-/*                               const char *string, int len, int *width); */
-/* can't get max_ascent, max_descent yet */
 
 extern void doTrail(segment2 *t, int value);
 

@@ -1,29 +1,16 @@
 #include "video/video.h"
+#include "video/nebu_renderer_gl.h"
 #include "filesystem/path.h"
 #include "Nebu_filesystem.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-// #include <GL/gl.h>
-#define NO_SDL_GLEXT
-#include "SDL_opengl.h"
 
 #define FTX_ERR "[FontTex error]: "
 
-void getLine(char *buf, int size, file_handle file) {
-  do {
-    file_gets(file, buf, size);
-  } while( buf[0] == '\n' || buf[0] == '#');
-}
-
 FontTex *ftxLoadFont(const char *filename) {
   char *path;
-  file_handle file;
-  char buf[100];
-
-  int i;
-  int len;
   FontTex *ftx;
   
   path = getPath(PATH_DATA, filename);
@@ -31,59 +18,13 @@ FontTex *ftxLoadFont(const char *filename) {
     fprintf(stderr, FTX_ERR "can't load font file '%s'\n", filename);
     return NULL;
   }
-  file = file_open(path, "r");
+  ftx = nebu_Font_Load(path);
   free(path);
-
-  /* TODO(5): check for EOF errors in the following code */
-  
-  /* nTextures, texture width, char width */
-  ftx = (FontTex*) malloc(sizeof(FontTex));
-  getLine(buf, sizeof(buf), file);
-  sscanf(buf, "%d %d %d ", &(ftx->nTextures), &(ftx->texwidth), &(ftx->width));
-  /* lowest character, highest character */
-  getLine(buf, sizeof(buf), file);
-  sscanf(buf, "%d %d ", &(ftx->lower), &(ftx->upper));
-  /* font name */
-  getLine(buf, sizeof(buf), file);
-  len = strlen(buf) + 1;
-
-  ftx->fontname = (char*)malloc(len);
-  memcpy(ftx->fontname, buf, len);
-
-  /* prepare space for texture IDs  */
-  ftx->texID = (GLuint*) malloc(ftx->nTextures * sizeof(unsigned int));
-  glGenTextures(ftx->nTextures, ftx->texID);
-
-  /* the individual textures */
-  for(i = 0; i < ftx->nTextures; i++) {
-    char *texname;
-    getLine(buf, sizeof(buf), file);
-    len = strlen(buf) + 1;
-    if(buf[len - 2] == '\n') buf[len - 2] = 0;
-    texname = (char*)malloc(len);
-    memcpy(texname, buf, len); 
-    glBindTexture(GL_TEXTURE_2D, ftx->texID[i]);
-    loadTexture(texname, GL_RGBA);
-    free(texname);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); */
-    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); */
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  }
-
-  file_close(file);
   return ftx;
 }
 
 void ftxUnloadFont(FontTex *ftx) {
-  glDeleteTextures(ftx->nTextures, ftx->texID);
-
-  free(ftx->texID);
-  free(ftx->fontname);
-  free(ftx);
+	nebu_Font_Free(ftx);
 }
 
 static int color_base = 48;
@@ -189,13 +130,13 @@ w);
 
     glBegin(GL_QUADS);
     glTexCoord2f(cx, 1 - cy - cw);
-    glVertex2f(i, 0);
+    glVertex2i(i, 0);
     glTexCoord2f(cx + cw, 1 - cy - cw);
-    glVertex2f(i + 1, 0);
+    glVertex2i(i + 1, 0);
     glTexCoord2f(cx + cw, 1 - cy);
-    glVertex2f(i + 1, 1);
+    glVertex2i(i + 1, 1);
     glTexCoord2f(cx, 1 - cy);
-    glVertex2f(i, 1);
+    glVertex2i(i, 1);
     glEnd();
   }
   /* nebu_Video_CheckErrors("FontTex.c ftxRenderString\n"); */

@@ -1,4 +1,5 @@
 #include "video/video.h"
+#include "video/nebu_font.h"
 #include "game/game.h"
 
 #include "base/nebu_math.h"
@@ -47,7 +48,7 @@ void doLookAt(float *cam, float *target, float *up) {
   glTranslatef( -cam[0], -cam[1], -cam[2]);
 }
 
-void drawText(FontTex* ftx, float x, float y, float size, const char *text) {
+void drawText(nebu_Font* ftx, float x, float y, float size, const char *text) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_TEXTURE_2D);
@@ -56,7 +57,7 @@ void drawText(FontTex* ftx, float x, float y, float size, const char *text) {
 
   glTranslatef(x, y, 0);
   glScalef(size, size, size);
-  ftxRenderString(ftx, text, strlen(text));
+  nebu_Font_Render(ftx, text, strlen(text));
   
   glPopMatrix();
   glDisable(GL_TEXTURE_2D);

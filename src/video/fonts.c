@@ -10,8 +10,8 @@ void initFonts(void) {
   char guifont[100];
   char *game = NULL, *gui = NULL;
 
-  if(gameFtx != NULL) ftxUnloadFont(gameFtx);
-  if(guiFtx != NULL) ftxUnloadFont(guiFtx);
+  if(gameFtx != NULL) nebu_Font_Free(gameFtx);
+  if(guiFtx != NULL) nebu_Font_Free(guiFtx);
 
   path = getPath(PATH_DATA, "fonts.txt");
   if(path != NULL) {
@@ -34,8 +34,16 @@ void initFonts(void) {
     exit(1); /* OK: critical, installation corrupt */
   }
 
-  gameFtx = ftxLoadFont(game);
-  guiFtx = ftxLoadFont(gui);
+  path = getPath(PATH_DATA, game);
+  if(path != NULL) {
+	  gameFtx = nebu_Font_Load(path, PATH_ART);
+	  free(path);
+  }
+  path = getPath(PATH_DATA, gui);
+  if(path != NULL) {
+	guiFtx = nebu_Font_Load(path, PATH_ART);
+	free(path);
+  }
 
   if(gameFtx == NULL) {
     fprintf(stderr, "can't load font %s\n", game);
@@ -50,9 +58,9 @@ void initFonts(void) {
 
 void deleteFonts(void) {
   if(gameFtx != NULL)
-    ftxUnloadFont(gameFtx);
+    nebu_Font_Free(gameFtx);
   gameFtx = NULL;
   if(guiFtx != NULL)
-    ftxUnloadFont(guiFtx);
+    nebu_Font_Free(guiFtx);
   guiFtx = NULL;
 }

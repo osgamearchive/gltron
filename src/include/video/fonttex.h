@@ -1,6 +1,11 @@
 #ifndef FONTTEX_H
 #define FONTTEX_H
 
+#include "video/nebu_font.h"
+
+#if 1
+typedef nebu_Font FontTex;
+#else
 typedef struct {
   int nTextures;
   
@@ -11,11 +16,7 @@ typedef struct {
   int upper; /* highest ascii character (normally: 126) */
 
   int *texID;
-
-  char *fontname;
-  char *bitmapname;
-  int bitmapTexwidth;
-  int bitmapWidth; /* character width */
 } FontTex;
+#endif
 
 #endif
