@@ -274,8 +274,8 @@ Menu = {
    },
    CycleLod = {
       type = MenuC.type.list, caption = "Cycle LOD",
-      labels = { "ugly", "low", "high" },
-      values = { 2, 1, 0 },
+      labels = { "ugly", "low", "high", "ultra-high" },
+      values = { 3, 2, 1, 0 },
       read = function() return settings.lod; end,
       store = function(value) settings.lod = value; end
    },
