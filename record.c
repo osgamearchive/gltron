@@ -94,32 +94,39 @@ void getEvents() {
 		 game->player[0].data->posx,
 		 game->player[0].data->posy);
 	  //undo prediction turn
-	  old= game->player[0].data->trail-1;
-	  old->ex=latest->x;
-	  old->ey=latest->y;
+	  //do not undo if it is first trail
+	  //if( game->player[0].data->trail != game->player[0].data->trails )
+	  //{//buggus just work for first game!
+	      old= game->player[0].data->trail-1;
+	      old->ex=latest->x;
+	      old->ey=latest->y;
+	      //}
 	  game->player[0].data->trail->sx = latest->x;
 	  game->player[0].data->trail->sy = latest->y;
 
 
 	  //adjust position because of prediction
-	  if((game2->time.current-latest->timestamp)>0)
-	    {
+	  //if((game2->time.current-latest->timestamp)>0)
+	  //{
 	      printf("distance to change( %d - %d = %d ) is %f dirX %d, dirY %d\n",game2->time.current, latest->timestamp, (game2->time.current-latest->timestamp), (game2->time.current-latest->timestamp)*game->player[0].data->speed,dirsX[ game->player[0].data->dir],dirsY[ game->player[0].data->dir]);
 		     
-	      game->player[0].data->posx=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]+latest->x;
+	      game->player[0].data->posx=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsX[ game->player[0].data->dir]/100+latest->x;
 
-	      game->player[0].data->posy=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsY[ game->player[0].data->dir]+latest->y;
+	      game->player[0].data->posy=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsY[ game->player[0].data->dir]/100+latest->y;
+
+	      game->player[0].data->iposx=game->player[0].data->posx;
+	      game->player[0].data->iposy=game->player[0].data->posy;
 
 	      printf("new pos is: %f, %f\n", 
 		     game->player[0].data->posx,
 		     game->player[0].data->posy);
 	      
-	      game->player[0].data->trail->ex = game->player[0].data->posx;
-	      game->player[0].data->trail->ey = game->player[0].data->posy;
-	    } else {
+	      //game->player[0].data->trail->ex = game->player[0].data->iposx;
+	      //game->player[0].data->trail->ey = game->player[0].data->iposy;
+	      //} else {
 	      //TODO:change synchro 'cause system has changed!
-	      game2->time.current=latest->timestamp-slots[me].ping/2;
-	    }
+	      //game2->time.current=latest->timestamp-slots[me].ping/2;
+	      //}
 	} else {
 	  printf("process others events ( no predictions\n");
 	  latest->player = getPlayer(latest->player);
