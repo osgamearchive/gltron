@@ -5,7 +5,6 @@ TODO list
 
 Bugs:
 
-- menu formatting needs prettifying
 - Changing song leaks memory
 - App crashes on corrupt mp3 files
 - Menu system got broken with new scripts. Still missing: Configuring Keys
