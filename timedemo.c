@@ -75,7 +75,7 @@ void idleTimedemo(void) {
 
 void keyTimedemo(int key, int x, int y) {
 	if(key == 27)
-		switchCallbacks(&guiCallbacks);
+		SystemExitLoop(RETURN_TIMEDEMO_ABORT);
 }
 
 struct {
@@ -88,6 +88,8 @@ extern int c_resetCamera();
 void initTimedemo() {
 	int i = 0;
 
+	printf("-- initializing timedemo\n");
+	
 	frames = 0;
 	startTime = SystemGetElapsedTime();
 	

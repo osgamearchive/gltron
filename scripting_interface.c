@@ -5,7 +5,7 @@
 
 int c_quitGame(lua_State *L) {
   saveSettings();
-  switchCallbacks(&creditsCallbacks);
+	SystemExitLoop(RETURN_GAME_CREDITS);
   return 0;
 }
 
@@ -62,7 +62,7 @@ int c_startGame(lua_State *L) {
   game2->mode = GAME_SINGLE;
   initData();
   changeDisplay(-1);
-  switchCallbacks(&pauseCallbacks);
+	SystemExitLoop(RETURN_GAME_LAUNCH);
   return 0;
 }
 
@@ -86,7 +86,7 @@ int c_restoreDefaults(lua_State *L) {
 }
 
 int c_configureKeyboard(lua_State *L) {
-  switchCallbacks(&configureCallbacks);
+	SystemExitLoop(RETURN_GUI_PROMPT);
   return 0;
 }
 
@@ -101,8 +101,27 @@ int c_getKeyName(lua_State *L) {
 }
 
 int c_timedemo(lua_State *L) {
-	switchCallbacks(&timedemoCallbacks);
+	SystemExitLoop(RETURN_TIMEDEMO);
 	return 0;
+}
+
+int c_SetCallback(lua_State *L) {
+	const char *name;
+	int top = lua_gettop(L);
+	if(lua_isstring(L, top)) {
+		name = lua_tostring(L, top);
+	}
+	printf("enabling callback-set '%s'\n", name);
+	setCallback(name);
+
+	return 0;
+}
+
+int c_SystemMainLoop(lua_State *L) {
+	int value = SystemMainLoop();
+	lua_pushnumber(L, value);
+
+	return 1;
 }
 
 void init_c_interface(lua_State *L) {
@@ -120,10 +139,7 @@ void init_c_interface(lua_State *L) {
   lua_register(L, "c_configureKeyboard", c_configureKeyboard);
   lua_register(L, "c_getKeyName", c_getKeyName);
 	lua_register(L, "c_timedemo", c_timedemo);
+	
+	lua_register(L, "SystemMainLoop", c_SystemMainLoop);
+	lua_register(L, "SetCallback", c_SetCallback);
 }
-
-
-
-
-
-

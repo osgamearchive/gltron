@@ -125,6 +125,19 @@ extern "C" {
 		AI_NONE = 2
 	};
 
+	enum {
+		RETURN_GAME_LAUNCH = 0,
+		RETURN_GAME_END,
+		RETURN_GAME_PAUSE,
+		RETURN_GAME_UNPAUSE,
+		RETURN_GAME_CREDITS,
+		RETURN_GAME_ESCAPE,
+		RETURN_GUI_PROMPT,
+		RETURN_TIMEDEMO,
+		RETURN_TIMEDEMO_ABORT,
+		RETURN_CREDITS,
+		RETURN_QUIT
+	};
 	/* global constants */
 
 	/* physics recomputed every 10ms */

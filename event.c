@@ -52,7 +52,7 @@ int processEvent(GameEvent* e) {
       game->winner = -2;
       displayMessage(TO_CONSOLE | TO_STDOUT, "everyone died! no one wins!");
     }
-    switchCallbacks(&pauseCallbacks);
+		SystemExitLoop(RETURN_GAME_END);
     /* screenSaverCheck(0); */
     stoptime = SystemGetElapsedTime();
     game->pauseflag = PAUSE_GAME_FINISHED;

@@ -5,6 +5,7 @@
 
 static int redisplay = 0;
 static callbacks *current = 0;
+static int return_code = -1;
 static SDL_Surface *screen;
 static int width, height;
 static int flags;
@@ -106,13 +107,14 @@ void SystemMouseMotion(int x, int y) {
       current->mouseMotion(x, y);
 }
 
-void SystemMainLoop() {
+int SystemMainLoop() {
   SDL_Event event;
   char *keyname;
   int key;
   int skip_axis_event = 0;
   
-  while(1) {
+	return_code = -1;
+  while(return_code == -1) {
     while(SDL_PollEvent(&event) && current) {
 			switch(event.type) {
 			case SDL_KEYDOWN:
@@ -174,6 +176,8 @@ void SystemMainLoop() {
     } else
       current->idle();
   }
+	(current->exit)();
+	return return_code;
 }
   
 void SystemRegisterCallbacks(callbacks *cb) {
@@ -291,10 +295,15 @@ int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
 void SystemQuit() {
   static int quitting = 0;
   if(quitting) {
-    SystemExit();
+		SystemExitLoop(RETURN_QUIT);
+    // SystemExit();
   } else {
     saveSettings(); 
-    switchCallbacks(&creditsCallbacks);
+		SystemExitLoop(RETURN_CREDITS);
     quitting = 1;
   }
+}
+
+void SystemExitLoop(int value) {
+	return_code = value;
 }
