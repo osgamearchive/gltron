@@ -119,7 +119,7 @@ do_lostplayer(int which )
 	  game2->mode = GAME_NETWORK_RECORD;
 	  hasstarted=0;
 	  lastping = 0;
-	  slowest    = INT_MAX;
+	  slowest    = 0;
 	  starting = 0;
 	} else {
 	  
@@ -555,7 +555,7 @@ do_startgame( int which, Packet packet )
   
   printf("slowest ping : %d\n", slowest);
   starting=1;
-  timetostart=-slowest;
+  timetostart=-slowest/2;
   starttime = SystemGetElapsedTime();
 
   //Send a change state	  
@@ -766,14 +766,15 @@ do_chgeerase(int which, Packet packet)
 void
 do_pingrep( int which, Packet packet )
 {
-  short ping;
+  //short ping;
   //doing average: is this good?
 /*   slots[which].ping+=(SystemGetElapsedTime() - packet.infos.action.which); */
 /*   slots[which].ping/=2; */
   //slots[which].ping = SystemGetElapsedTime() - packet.infos.action.which;
-  ping = SystemGetElapsedTime() - packet.infos.action.which;
-  slots[which].ping+=ping;
-  slots[which].ping/=2;
+  //ping = SystemGetElapsedTime() - packet.infos.action.which;
+  slots[which].ping = (short)(SystemGetElapsedTime() - packet.infos.action.which);
+  //slots[which].ping+=ping;
+  //slots[which].ping/=2;
   printf("ping is %d\n", slots[which].ping);  
   getpingrep++;
 }
@@ -1022,7 +1023,7 @@ handle_server()
     }
 }
 
-void
+int
 do_starting()
 {
   Packet rep;
@@ -1043,8 +1044,8 @@ do_starting()
 	{
 	  //start the server
 	  starting=0;
-	  game2->time.lastFrame = 0;
-	  game2->time.current   = 0;
+	  game2->time.lastFrame = timetostart;
+	  game2->time.current   = timetostart;
 	  game2->time.offset    = SystemGetElapsedTime();
 	  
 	  if( ! hasstarted )
@@ -1062,9 +1063,9 @@ do_starting()
 	} else {
 	  for(i=0; i<MAX_PLAYERS; ++i)
 	    {
-	      if( slots[i].active == 1 && timetostart >= (slots[i].ping*-1) && slots[i].hasstarted == 0 )
+	      if( (slots[i].active == 1) && (timetostart >= (slots[i].ping/-2)) && (slots[i].hasstarted == 0) )
 		{
-	      printf("%d >= %d\n", timetostart, slots[i].ping );
+	      printf("%d >= %d\n", timetostart, slots[i].ping/2 );
 		  slots[i].hasstarted=1;
 		  printf("sending signal to %s\n", slots[i].name);
 		  //send him signal to start
@@ -1084,6 +1085,7 @@ do_starting()
 	 game->player[0].data->iposy, game->player[0].data->dir);
   **/
     }
+  return starting;
 }
 
 void
@@ -1092,6 +1094,8 @@ do_ping_users()
   Packet packet;
   int    i;
 
+  if( starting == 1 )
+    return;
   if( lastping == 0 )
     lastping=SystemGetElapsedTime();
 

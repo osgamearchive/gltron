@@ -65,6 +65,7 @@ GameEvent* readEvent() {
 
 void getEvents() {
   static GameEvent *latest = NULL;
+  int ping=0;
   line *old;
 
   if(latest == NULL)
@@ -103,7 +104,10 @@ void getEvents() {
 	      //}
 	  game->player[0].data->trail->sx = latest->x;
 	  game->player[0].data->trail->sy = latest->y;
-
+ping=getping();
+		printf("ping is %d, changing time %d to %d\n", 
+		       ping, game2->time.current, latest->timestamp+(short)ping/2);
+		game2->time.current=latest->timestamp+(short)ping/2;
 
 	  //adjust position because of prediction
 	  //if((game2->time.current-latest->timestamp)>0)
@@ -123,10 +127,15 @@ void getEvents() {
 	      
 	      //game->player[0].data->trail->ex = game->player[0].data->iposx;
 	      //game->player[0].data->trail->ey = game->player[0].data->iposy;
-	      //} else {
+	      //    } else {
 	      //TODO:change synchro 'cause system has changed!
 	      //game2->time.current=latest->timestamp-slots[me].ping/2;
-	      //}
+		ping=getping();
+		printf("ping is %d, changing time %d to %d\n", 
+		       ping, game2->time.current, latest->timestamp+(short)ping/2);
+		//game2->time.current=latest->timestamp+(short)ping/2;
+		//game2->time.offset+=latest->timestamp-game2->time.current+(short)ping/2;
+		//}
 	} else {
 	  printf("process others events ( no predictions\n");
 	  latest->player = getPlayer(latest->player);

@@ -66,6 +66,7 @@ void playEngine(void *data, Uint8 *stream, int len) {
 void initGame() { /* called when game mode is entered */
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
+  printf("init game at %d( offset = %d )\n", game2->time.current,game2->time.offset);
 #ifdef SOUND
   Mix_SetPostMix(playEngine, NULL);
 #endif

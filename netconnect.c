@@ -21,7 +21,7 @@ void idleConnect() {
   if( isConnected==1  ) //game2->mode == GAME_NETWORK_PLAY && 
     {
       sockstat = Net_checksocks();
-      printf("sockstat = %d\n", sockstat);
+      //printf("sockstat = %d\n", sockstat);
       if( sockstat != socksnotready )
 	{
 	  if( sockstat & tcpsockready )

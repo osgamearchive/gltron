@@ -166,6 +166,9 @@ do_serverinfo(Packet packet)
       //ping       = 0;
 	  ping = slots[me].ping;
 	  savedtime  = 0;
+	  game2->time.current=0;
+	  
+	  printf("starting game at%d\n", SystemGetElapsedTime());
 	  
 	  switchCallbacks(&pauseCallbacks);
 	  break;
@@ -651,9 +654,12 @@ idleTurns(  )
   if( turn != NULL )
     {
       //turns are ordered
-      if( (game2->time.current - turn->time) >= (ping/2) )
+      if( (game2->time.current - turn->time) >= ((short)ping/2) )
 	{
 	  printf("creating turn... at %d\n", game2->time.current);
+	  printf("predicted pos is: %f, %f\n", 
+		     game->player[0].data->posx,
+		     game->player[0].data->posy);
 	  e = (GameEvent*) malloc(sizeof(GameEvent));
 	  switch(turn->dir) {
 	  case TURN_LEFT: e->type = EVENT_TURN_LEFT; break;

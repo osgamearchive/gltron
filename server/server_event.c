@@ -144,20 +144,24 @@ void idleGame( void ) {
   int dt;
   int t;
 
+  if( updateTime() == 0  ) return;
   
-  handle_server();
   if( game2->mode == GAME_NETWORK_RECORD )
     {
       do_ping_users();
-      do_starting();
+      if( do_starting() )
+	return;
     }
+  //handle_server();
   //if( game2->mode == GAME_SINGLE && netruletime > 0 )
   if( netruletime > 0 && hasstarted==1 )
     do_timeout();
-  if(updateTime() == 0 && game2->mode == GAME_SINGLE ) return;
+/*   if( game2->mode == GAME_SINGLE) */
+/*     printf("time is %d\n", game2->time.current); */
 
   switch(game2->mode) {
   case GAME_SINGLE:
+    handle_server();
     /* check for fast finish */
     if(game->settings->fast_finish == 1) {
       int factor = 4;

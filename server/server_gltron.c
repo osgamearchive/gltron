@@ -27,7 +27,7 @@ int main( int argc, char *argv[] ) {
 
   while(1) {
     idleGame();
-    SDL_Delay(10);
+    SDL_Delay(1);
   }
   stop_server();
   return 0;
