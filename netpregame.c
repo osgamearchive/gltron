@@ -143,6 +143,11 @@ void displayPregame() {
 
 void initPregame() {
   coffset = SDL_GetTicks();
+
+  //Reinit scores
+  netscores.winner = -1;
+
+  printf("entering netpregame\n");
 }
 
 void cleanPregame()

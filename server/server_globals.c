@@ -31,4 +31,6 @@ int               sState=-1; //-1 means server is down...
 //Slots infos
 Slots             slots[MAX_PLAYERS];
 
+Netscores         netscores;
+
 int server_port=23460;

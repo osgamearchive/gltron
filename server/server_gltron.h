@@ -133,6 +133,7 @@ extern void start_server();
 extern void stop_server();
 extern void handle_server();
 extern void SendEvents(GameEvent *e);
+extern void do_wingame(int);
 
 
 extern int getPlayer          ( int );
@@ -144,8 +145,10 @@ extern SDLNet_SocketSet  socketset;
 extern int               nbUsers;
 extern int               sState;
 extern Slots             slots[MAX_PLAYERS];
+extern Netscores         netscores;
 
 extern int server_port;
+
 #endif
 
 

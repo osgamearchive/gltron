@@ -138,6 +138,10 @@ typedef struct {
   int           isMaster;    //If it's a master
 } Slots;
 
+typedef struct {
+  int          winner;      //Who win? -1 if game not finished
+  int          points[MAX_PLAYERS]; //Player's pioints.
+} Netscores;
 //Globals---------------------------------------------------------------------
 extern int isConnected;
 extern int netrulenbwins;

@@ -77,7 +77,12 @@ do_serverinfo(Packet packet)
 	case preGameState:
 	  if( lastserverstate == gameState )
 	    {
-	      switchCallbacks(&pauseCallbacks);
+	      if( netscores.winner == -1 )
+		{
+		  switchCallbacks(&pauseCallbacks);
+		}  else { //Game is finished
+		  switchCallbacks(&scoresCallbacks);
+		}
 	    } else {
 	      switchCallbacks(&netPregameCallbacks);
 	    }
@@ -274,6 +279,13 @@ do_event(Packet packet)
 	  packet.infos.event.event.y, packet.infos.event.event.timestamp, game2->time.current);
 }
 
+void
+do_score(Packet packet)
+{
+  netscores.winner=packet.infos.score.winner;
+  memcpy(netscores.points, packet.infos.score.points, 4*MAX_PLAYERS);
+}
+
 
 /** Handle network traffic. */
 void
@@ -329,8 +341,11 @@ do_gameState( Packet packet )
     case ACTION:
       do_action(packet);
       break;
+    case SCORE:
+      do_score(packet);
+      break;
     default:
-      fprintf(stderr, "Received a packet with a type %d that not be allowed in the preGameState\n", packet.type);
+      fprintf(stderr, "Received a packet with a type %d that not be allowed in the gameState\n", packet.type);
       break;
     }
 }

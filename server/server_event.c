@@ -3,18 +3,9 @@
 int processEvent(GameEvent* e) {
   int      value = 0;
   Data     *data;
-  Packet   rep;
-  int      i;
-  /**
-  int  i;
-  int  sState = preGameState;
-  pServRepHdr    serverRep;
-  */
 
-  //if(game2->mode == GAME_PLAY) {
-  printf("parsing player %d ( speed %f ) \n", e->player, game->player[e->player].data->speed);
   writeEvent(e);
-    //}
+
   switch(e->type) {
   case EVENT_TURN_LEFT:
     data = game->player[e->player].data;
@@ -54,39 +45,7 @@ int processEvent(GameEvent* e) {
     game->winner = e->player;
     sprintf(messages, "winner: %d", game->winner + 1);
     printf("%s\n", messages);
-
-    game->pauseflag = PAUSE_GAME_FINISHED;
-    //start a new game...
-    
-    game2->mode = GAME_NETWORK_RECORD;
-    //go to pregame state...
-    sState = preGameState;
-
-    rep.which=SERVERID;
-    rep.type=SERVERINFO;
-    rep.infos.serverinfo.serverstate=preGameState;
-    for(i=0; i<4; ++i)
-      {
-	if( slots[i].active )
-	  {
-	    Net_sendpacket(&rep, slots[i].sock);
-	  }
-      }
-    /*
-    serverRep = (pServRepHdr) malloc( sizeof(tServRepHdr) );
-    
-    serverRep->which = SERVERID;
-    serverRep->type  = chgeState;	
-    for(i=0; i<4; ++i)
-      {
-	if( slots[i].active )
-	  {
-	    SDLNet_TCP_Send(slots[i].sock,(char *)serverRep, sizeof(tServRepHdr));
-	    SDLNet_TCP_Send(slots[i].sock,(char *)&sState,sizeof(int));
-	  }
-      }
-    free(serverRep);
-    */
+    do_wingame(game->winner);
     value = 1;
     break;
   }

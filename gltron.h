@@ -280,6 +280,7 @@ extern callbacks serverCallbacks;
 extern callbacks portCallbacks;
 extern callbacks netPregameCallbacks;
 extern callbacks keyboardreadingCallbacks;
+extern callbacks scoresCallbacks;
 #endif
 
 #define KEY_ACTIONS_N 8
@@ -546,6 +547,9 @@ int    me;
 netEventList neteventlist;
 
 int    packet_type;
+
+
+extern Netscores         netscores;
 
 extern void  handleServer      ( void );
 extern void  login             ( char* );

@@ -299,9 +299,8 @@ do_startgame( int which, Packet packet )
 {
   Packet   rep, rep2;
   int      i, j;
-  Player   *p;
-  AI       *ai;
-  Data     *data;
+
+  netscores.winner=-1;
 
   //TODO: clean this part of code. Really UGLY...
 
@@ -330,38 +329,7 @@ do_startgame( int which, Packet packet )
 
   //TODO : change all things about init data ( andi will do )
 
-  //initData();
-  //Send game rules...
-
-  game->pauseflag = 0;
-
-  /**
-  for(i=0; i< game2->players; ++i)
-    {
-    p = (game->player + i);
-    ai = p->ai;
-    ai->active = ( slots[getWhich(i)].active == 1 ) ? 0 : 2;
-    ai->tdiff = 0;
-    ai->moves = 0;
-    ai->danger = 0;
-    ai->lastx = 0;
-    ai->lasty = 0;
-    data = game->player[i].data;
-    data->speed = game->settings->current_speed;
-    }
-  for( i=game2->players; i < MAX_PLAYERS;  ++i)
-    {
-      p = (game->player + i);
-      ai = p->ai;
-      ai->active = 0;
-      printf("deactiving player %d\n", i);
-      data = game->player[i].data;
-      data->speed = SPEED_GONE;
-      data->trail_height = 0;
-      data->exp_radius = EXP_RADIUS_MAX;
-    }
-  */
-
+ 
   /** before doing initData check for active players */
   for(i=0; i<MAX_PLAYERS;  ++i)
     {
@@ -374,13 +342,8 @@ do_startgame( int which, Packet packet )
   game->players = nbUsers;
   initData();
 
-  //game2->players                   = nbUsers;
   //resetScores();
 
-
-  game->running=game2->players;
-
-  //game->players=game2->players;
 
   rep.which                        = SERVERID;
   rep.type                         = GAMERULES;
@@ -392,42 +355,14 @@ do_startgame( int which, Packet packet )
   rep.infos.gamerules.arena_size   = game->settings->arena_size;
   rep.infos.gamerules.time         = game2->time;
   //Startpos
-  printf("%d players, getting start post\n", game2->players);
-  //if( game2->startPositions != NULL )
-  //  free(game2->startPositions);
-  //game2->startPositions = ( int *)malloc(3* MAX_PLAYERS *sizeof(int));
-
-  //Here we need to do the equivalent player
-  //server work with slots[which].player but send which and get which.
-  /**
-  for(i=0; i<game2->players; ++i)
-    {
-      game2->startPositions[3*i+0]=game->player[i].data->iposx;
-      game2->startPositions[3*i+1]=game->player[i].data->iposy;
-      game2->startPositions[3*i+2]=game->player[i].data->dir;
-      printf("\n\npos player %d %d %d %d\n\n\n", i,
-	     game2->startPositions[3*i+0],
-	     game2->startPositions[3*i+1],
-	     game2->startPositions[3*i+2]);
-    }
-  */
   printf("%d players, preparing start post\n", game2->players);
   rep2.which                        = SERVERID;
   rep2.type                         = STARTPOS;
   for(i=0; i<game2->players; ++i)
     {
-	  /**
-	  rep2.infos.startpos.startPos[3*i+0]=game->player[i].data->iposx;
-	  rep2.infos.startpos.startPos[3*i+1]=game->player[i].data->iposy;
-	  rep2.infos.startpos.startPos[3*i+2]=game->player[i].data->dir;
-	  */
+	 
 	  j=getWhich(i);
 	  printf("\nget startpos client ( sent ) %d <-> server %d\n", j, i);
-	  /**
-	  rep2.infos.startpos.startPos[3*j+0]=game2->startPositions[3*i+0];
-	  rep2.infos.startpos.startPos[3*j+1]=game2->startPositions[3*i+1];
-	  rep2.infos.startpos.startPos[3*j+2]=game2->startPositions[3*i+2];
-	  */
 	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx;
 	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy;
 	  rep2.infos.startpos.startPos[3*j+2]=game->player[i].data->dir;
@@ -462,9 +397,6 @@ do_startgame( int which, Packet packet )
     }
   game2->events.next = NULL;
   game2->mode = GAME_SINGLE;
-  //game->players = game2->players;
-  //game2->players = nbUsers;
-  //game->players=game2->players;
   printf("starting game with %d players\n", game->players); 
   printf("- do_startgame\n");
   printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
@@ -743,6 +675,74 @@ getWhich(int player)
 	  return i;
 	}
     }
-  printf("\n\n\n\n############# Which NOT FOUND #############\n\n\n");
   return -1;
+}
+
+void
+do_wingame( int winner)
+{
+  Packet rep;
+  int    i;
+  int    max;
+
+  //TODO: time rules..
+
+
+  //Change Points
+  netscores.points[winner]++;
+
+  //See if it's finished?
+
+  //Search for each player max points
+  max=0;
+  for(i=0;i<MAX_PLAYERS;++i)
+    {
+      if( netscores.points[i] > max )
+	max = netscores.points[i];
+    }
+
+  if(  max >= netrulenbwins )
+    {
+      //The game is finished
+      netscores.winner=winner;
+
+      //Sending scores to every one.
+      rep.which = SERVERID;
+      rep.type  = SCORE;
+      rep.infos.score.winner=netscores.winner;
+      memcpy(rep.infos.score.points, netscores.points, 4*MAX_PLAYERS);
+
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  if( slots[i].active )
+	    {
+	      Net_sendpacket(&rep, slots[i].sock);
+	    }
+	}
+      
+      //Init netscores for next games
+      netscores.winner=-1;
+      for(i=0; i<MAX_PLAYERS; ++i)
+	{
+	  netscores.points[i]=0;
+	}
+    }
+
+  game->pauseflag = PAUSE_GAME_FINISHED;
+  //start a new game...
+  
+  game2->mode = GAME_NETWORK_RECORD;
+  //go to pregame state...
+  sState = preGameState;
+  
+  rep.which=SERVERID;
+  rep.type=SERVERINFO;
+  rep.infos.serverinfo.serverstate=preGameState;
+  for(i=0; i<4; ++i)
+    {
+      if( slots[i].active )
+	{
+	  Net_sendpacket(&rep, slots[i].sock);
+	}
+    }
 }

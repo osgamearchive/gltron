@@ -70,7 +70,7 @@ if test "x$enable_network" = xyes; then
 	AC_CHECK_LIB(SDL_net, SDLNet_Init,
 	CFLAGS="$CFLAGS -D__NETWORK__";
 	LIBS="$LIBS -lSDL_net";
-	NETWORK_OBJS="network.o netevent.o netpregame.o pregamegui.o netconnect.o protocol.o",
+	NETWORK_OBJS="network.o netevent.o netpregame.o pregamegui.o netconnect.o protocol.o scores.o",
 	AC_MSG_WARN(SDL_net not found - disabling network))
 	AC_SUBST(NETWORK_OBJS)
 fi
