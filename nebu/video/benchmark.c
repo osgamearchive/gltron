@@ -1,4 +1,4 @@
-#include <GL/gl.h>
+#include "video/nebu_gl.h"
 
 float vertices[] = { 
   -.5, -.5, 0, 1,
