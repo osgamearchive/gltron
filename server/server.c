@@ -99,7 +99,9 @@ do_lostplayer(int which )
 	  //init NetRules
 	  netrulenbwins = 5;
 	  netruletime   = 0;
-    
+	  initDefaultSettings();
+
+
 	  //Change game mode... nothing to do with game things...
 	  game2->mode = GAME_NETWORK_RECORD;
 	  hasstarted=0;
@@ -314,6 +316,18 @@ do_login( int which, Packet packet )
   printf("Net rules : %d %d\n", netrulenbwins,  netruletime);
   Net_sendpacket(&rep, slots[which].sock);
 
+  //Send init GameSet
+  rep.which = SERVERID;
+  rep.type  = GAMESET;
+  rep.infos.gameset.eraseCrashed =   game->settings->erase_crashed;
+  rep.infos.gameset.gamespeed    = game->settings->game_speed;
+  rep.infos.gameset.arena_size   = game->settings->arena_size;
+  printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
+	 packet.infos.gameset.eraseCrashed,
+	 packet.infos.gameset.arena_size);
+  Net_sendpacket(&rep, slots[which].sock);
+  
+
 }
 
 void
@@ -354,8 +368,6 @@ do_startgame( int which, Packet packet )
 
   netscores.winner=-1;
 
-  
-
   //TODO: clean this part of code. Really UGLY...
 
 
@@ -394,6 +406,8 @@ do_startgame( int which, Packet packet )
     }
 
   game->players = nbUsers;
+  //
+  applyGameInfo();
   initData();
 
   //resetScores();
@@ -403,7 +417,7 @@ do_startgame( int which, Packet packet )
   rep.type                         = GAMERULES;
   rep.infos.gamerules.players      = game2->players;
   rep.infos.gamerules.speed        = game2->rules.speed;
-  rep.infos.gamerules.eraseCrashed = game2->rules.eraseCrashed;
+  rep.infos.gamerules.eraseCrashed = game->settings->erase_crashed;
   rep.infos.gamerules.gamespeed    = game->settings->game_speed;
   rep.infos.gamerules.grid_size    = game->settings->grid_size;
   rep.infos.gamerules.arena_size   = game->settings->arena_size;
@@ -545,6 +559,102 @@ do_chgetimeout(int which, Packet packet)
 }
 
 void
+do_chgespeed(int which, Packet packet)
+{
+  Packet rep;
+  int    i;
+
+  if( ! slots[which].isMaster )
+    return;
+
+  if( sState != preGameState )
+    return;
+
+  if( packet.infos.action.which < 0 ||
+      packet.infos.action.which > 3 )
+    return;
+
+  game->settings->game_speed  = packet.infos.action.which;
+
+  //Send new NetRules to users...
+  rep.which = SERVERID;
+  rep.type  = GAMESET;
+  rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
+  rep.infos.gameset.gamespeed    = game->settings->game_speed;
+  rep.infos.gameset.arena_size   = game->settings->arena_size;
+  printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
+	 packet.infos.gameset.eraseCrashed,
+	 packet.infos.gameset.arena_size);
+  for(i=0; i<MAX_PLAYERS; ++i)
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);
+}
+
+void
+do_chgesize(int which, Packet packet)
+{
+  Packet rep;
+  int    i;
+
+  if( ! slots[which].isMaster )
+    return;
+
+  if( sState != preGameState )
+    return;
+
+  if( packet.infos.action.which < 0 ||
+      packet.infos.action.which > 4 )
+    return;
+
+  game->settings->arena_size  = packet.infos.action.which;
+
+  //Send new NetRules to users...
+  rep.which = SERVERID;
+  rep.type  = GAMESET;
+  rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
+  rep.infos.gameset.gamespeed    = game->settings->game_speed;
+  rep.infos.gameset.arena_size   = game->settings->arena_size;
+  printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
+	 packet.infos.gameset.eraseCrashed,
+	 packet.infos.gameset.arena_size);
+  for(i=0; i<MAX_PLAYERS; ++i)
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);
+}
+
+void
+do_chgeerase(int which, Packet packet)
+{
+  Packet rep;
+  int    i;
+
+  if( ! slots[which].isMaster )
+    return;
+
+  if( sState != preGameState )
+    return;
+
+  if( packet.infos.action.which != 0 &&
+      packet.infos.action.which != 1 )
+    return;
+  game->settings->erase_crashed = packet.infos.action.which;
+  game->settings->erase_crashed     = packet.infos.action.which;
+
+  //Send new NetRules to users...
+  rep.which = SERVERID;
+  rep.type  = GAMESET;
+  rep.infos.gameset.eraseCrashed = game->settings->erase_crashed;
+  rep.infos.gameset.gamespeed    = game->settings->game_speed;
+  rep.infos.gameset.arena_size   = game->settings->arena_size;
+  printf("GameSet : %d %d %d\n", packet.infos.gameset.gamespeed,
+	 packet.infos.gameset.eraseCrashed,
+	 packet.infos.gameset.arena_size);
+  for(i=0; i<MAX_PLAYERS; ++i)
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);
+}
+
+void
 do_action( int which, Packet packet )
 {
   printf("+ do_action\n");
@@ -569,6 +679,15 @@ do_action( int which, Packet packet )
       break;
     case CHGETIMEOUT:
       do_chgetimeout(which, packet);
+      break;
+    case CHGESPEED:
+      do_chgespeed(which, packet);
+      break;
+    case CHGESIZE:
+      do_chgesize(which, packet);
+      break;
+    case CHGEERASE:
+      do_chgeerase(which, packet);
       break;
     default:
       fprintf(stderr, "Received an action packet with a type %d that not be allowed or unknown\n", packet.infos.action.type);

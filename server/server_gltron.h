@@ -124,7 +124,7 @@ extern void initDefaultSettings();
 extern int  readDemoInfo();
 extern int  writeDemoInfo();
 extern void resetScores();
-
+extern int applyGameInfo();
 extern void movePlayers();
 
 /* server stuffs */

@@ -221,4 +221,32 @@ void doTurn(Data *data, int time) {
   data->posy = data->iposy + data->t * dirsY[data->dir];
 }
 
+int applyGameInfo() {
+  int i; 
+  Data *data;
+  if(game2->players > game->players) {
+    fprintf(stderr, "more players in demo than allowed\n");
+    return 1;
+  }
 
+
+
+  game->settings->grid_size = default_arena_sizes[game->settings->arena_size];
+
+  /* choose speed */
+  game->settings->current_speed = default_speeds[ game->settings->game_speed ];
+
+  for(i = 0; i < game2->players; i++) {
+    data = game->player[i].data;
+    data->speed = game->settings->current_speed;
+
+  }
+
+  for(; i < MAX_PLAYERS; i++) {
+    data = game->player[i].data;
+    data->speed = SPEED_GONE;
+  }
+
+
+  return 0;
+}

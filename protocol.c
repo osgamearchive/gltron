@@ -236,6 +236,11 @@ Net_preparepacket(Packet* packet, void *buf)
     ADD_INT16(packet->infos.netrules.nbWins);
     ADD_INT16(packet->infos.netrules.time);   
     break;
+  case GAMESET:
+    ADD_INT16(packet->infos.gameset.eraseCrashed);
+    ADD_INT16(packet->infos.gameset.gamespeed);
+    ADD_INT16(packet->infos.gameset.arena_size);
+    break;
   case SCORE:
     ADD_INT16(packet->infos.score.winner);
     //Points for each players
@@ -365,6 +370,11 @@ Net_handlepacket(Packet* packet, void *buf)
     GET_INT16(packet->infos.netrules.nbWins, buf);
     GET_INT16(packet->infos.netrules.time, buf);
     break;
+  case GAMESET:
+    GET_INT16(packet->infos.gameset.eraseCrashed, buf);
+    GET_INT16(packet->infos.gameset.gamespeed, buf);
+    GET_INT16(packet->infos.gameset.arena_size, buf);
+    break;
   case SCORE:
     GET_INT16(packet->infos.score.winner, buf);
     for(i=0; i< MAX_PLAYERS; ++i)
@@ -416,6 +426,9 @@ get_packetsize( int type )
     break;
   case NETRULES:
     return 4 * sizeof(Sint16);
+    break;
+  case GAMESET:
+    return 5 * sizeof(Sint16);
     break;
   case SCORE:
     return 3 * sizeof(Sint16) + MAX_PLAYERS * sizeof(Sint16);

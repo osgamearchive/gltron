@@ -205,6 +205,14 @@ int applyGameInfo() {
   //game->running = game2->players;
 
   //game->players=game2->players;
+
+    game->settings->current_speed = 
+      default_speeds[ game->settings->game_speed ];
+
+    game->settings->grid_size = 
+      default_arena_sizes[ game->settings->arena_size ];
+
+
   for(i = 0; i < game2->players; i++) {
 
 

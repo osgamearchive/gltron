@@ -1,5 +1,7 @@
 #include "gltron.h"
 
+static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
+static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
 
 static int coffset;
 
@@ -120,7 +122,7 @@ void drawPregame() {
 
   //NetRules
   glColor3fv(colors[1]);
-  x = game->screen->vp_w - 1.5 * 15*( game->screen->vp_w / (50 * 1.5) );
+  x = game->screen->vp_w - 1.5 * 20*( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h * 10;
   drawText(gameFtx, x, y, h, "Game Settings"); 
   sprintf(str, "Games: %d", netrulenbwins);
@@ -129,6 +131,18 @@ void drawPregame() {
   sprintf(str, "Time: %d", netruletime);
   y = game->screen->vp_h - 1.5 * h * 12; 
   drawText(gameFtx, x, y, h, str);
+
+  //GameRules 
+  sprintf(str, "eraseCrashed: %d", game2->rules.eraseCrashed);
+  y = game->screen->vp_h - 1.5 * h * 13; 
+  drawText(gameFtx, x, y, h, str);
+  sprintf(str, "Speed: %s", speed_list[game->settings->game_speed]);
+  y = game->screen->vp_h - 1.5 * h * 14; 
+  drawText(gameFtx, x, y, h, str);
+  sprintf(str, "arena size: %s", arena_list[game->settings->arena_size]);
+  y = game->screen->vp_h - 1.5 * h * 15; 
+  drawText(gameFtx, x, y, h, str);
+
   
   
 }

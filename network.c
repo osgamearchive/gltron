@@ -352,6 +352,19 @@ do_score(Packet packet)
   serverstate = gameState;
 }
 
+void
+do_gameset( Packet packet )
+{
+  printf("getting gameset : %d %d %d\n", packet.infos.gameset.gamespeed,
+	 packet.infos.gameset.eraseCrashed,
+	 packet.infos.gameset.arena_size);
+  game->settings->game_speed  = packet.infos.gameset.gamespeed;
+  game2->rules.eraseCrashed   = packet.infos.gameset.eraseCrashed;
+  game->settings->erase_crashed   = packet.infos.gameset.eraseCrashed;
+  game->settings->arena_size  = packet.infos.gameset.arena_size;
+}
+
+
 
 /** Handle network traffic. */
 void
@@ -379,6 +392,9 @@ do_preGameState( Packet packet )
       break;
     case NETRULES:
       do_netrules(packet);
+      break;
+    case GAMESET:
+      do_gameset(packet);
       break;
     case SCORE:
       do_score(packet); //if we are in pause, we can get score, and need to stop

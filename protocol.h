@@ -42,6 +42,9 @@ enum {
   CHGEGAMEMASTER,           //One server say that game master has changed
   CHGENBWINS,               //GameMaster ask to change nbWins setting
   CHGETIMEOUT,              //change time out, 0 is no timeout.
+  CHGESPEED,                //Change game_speed
+  CHGESIZE,                 //Change arena_size
+  CHGEERASE,                //Change erased trail when crashed 1 if yes.
   HASSTARTED                //Game already started!
 };
 
@@ -58,6 +61,7 @@ typedef enum packettype
     GAMERULES,               //Game rules and settings.
     STARTPOS,                //Start positions of the players ( server decide ).
     NETRULES,                //Net rules: rules that set the server behaviour.
+    GAMESET,                 //Just to show what is current speed and size.
     SCORE,                   //Score at the end of a game.
     SNAPSHOT,                //Snapshot ( quite same as EVENT )
     EVENT,                   //Event
@@ -112,6 +116,11 @@ typedef struct packet {
       Sint16   nbWins;       //NbWins before getting score
       Sint16   time;         //How many time before stopping game.
     } netrules;
+    struct {
+      Sint16   eraseCrashed; //1 if erase Crashed player.
+      Sint16   gamespeed;    //The game speed
+      Sint16   arena_size;   //arena_size      
+    } gameset;
     struct {
       Sint16   winner;        //Who is the winner
       Sint16   points[MAX_PLAYERS]; //Points for each player.
