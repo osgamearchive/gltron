@@ -22,6 +22,7 @@
 /* I modified this file a little, removing unneeded features and making the
    thing compile ( Andreas Umbach <marvin@dataway.ch> ) */
 
+#include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
