@@ -96,7 +96,7 @@ int *quadBufIndex;
 #endif
 
 int game_textures = TEX_COUNT + 5; /* 11 + 6 + debug texture */
-int n_textures = 11;
+int n_textures = 7;
 
 #ifndef GL_VERSION_1_2
 #  define GL_CLAMP_TO_EDGE GL_CLAMP
@@ -107,14 +107,6 @@ TextureInfo textures[] = {
   { 1, "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI, 1 },
   { 1, "gltron_logo", GL_RGBA, 
     GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_LOGO, 1 },
-  { 1, "gltron_wall_1", GL_DONT_CARE, 
-    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL1, 1 },
-  { 1, "gltron_wall_2", GL_DONT_CARE, 
-    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL2, 1 },
-  { 1, "gltron_wall_3", GL_DONT_CARE, 
-    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL3, 1 },
-  { 1, "gltron_wall_4", GL_DONT_CARE, 
-    GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_WALL4, 1 },
   { 1, "gltron_trail", GL_RGBA, 
     GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_TRAIL, 1 },
   { 1, "gltron_traildecal", GL_RGBA, 
