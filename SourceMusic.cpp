@@ -43,12 +43,12 @@ namespace Sound {
   void SourceMusic::Load(char *filename) {
     // FIXME: grow buffer as needed
 #define BUFSIZE 10 * 1024 * 1024
-    gzFile file = gzopen(filename, "r");
+    file_handle file = file_open(filename, "r");
     if(_mem != NULL) free(_mem);
     _mem = (void*) malloc(BUFSIZE);
-    _mem_size = gzread(file, _mem, BUFSIZE);
+    _mem_size = file_read(file, _mem, BUFSIZE);
     fprintf(stderr, "read %d bytes\n", _mem_size);
-    gzclose(file);
+    file_close(file);
     CreateSample();
   }
 

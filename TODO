@@ -23,7 +23,6 @@ Features [high priority]:
 
 Features [medium priority, or easily implemented]:
 
-- Add 'smooth turning' for other cycle sounds (doppler/panning)
 - fast finish should be relative to the arena size (or really finish instantly)
 - fix camera zoom generally (speed / settings)
 - new bot AI

@@ -16,7 +16,7 @@ extern "C" {
 #include <limits.h>
 
   /* basic io wrapper */
-#include "io.h"
+#include "file_io.h"
 
 #define SEPERATOR '/'
 #define RC_NAME ".gltronrc"
