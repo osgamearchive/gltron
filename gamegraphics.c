@@ -475,7 +475,6 @@ void drawCycle(Player *p, int lod) {
   /* glTranslatef(-cycle->bbox[0] / 2, 0, .0); */
   /* glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1], .0); */
 
-
   initModelLights(GL_LIGHT1);
   glDisable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
@@ -485,8 +484,6 @@ void drawCycle(Player *p, int lod) {
   glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
-
-
 
   if(p->data->exp_radius == 0)
     drawModel(cycle, MODEL_USE_MATERIAL, 0);
@@ -718,7 +715,7 @@ void drawCam(Player *p, gDisplay *d) {
   gluLookAt(p->camera->cam[0], p->camera->cam[1], p->camera->cam[2],
 	    p->camera->target[0], p->camera->target[1], p->camera->target[2],
 	    0, 0, 1);
-
+  glDisable(GL_LIGHTING);
   drawFloor(d);
   for(i = 0; i < game->players; i++)
     drawTrailShadow(game->player[i].data);
@@ -729,17 +726,23 @@ void drawCam(Player *p, gDisplay *d) {
   glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
   glEnable(GL_COLOR_MATERIAL);
   glShadeModel(GL_SMOOTH);
-  initTrailLights(0);
   drawPlayers(p);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  // glDepthMask(GL_FALSE);
+  initTrailLights(0);
+  doTrails(p);
+  // glDepthMask(GL_TRUE);
   for(i = 0; i < game->players; i++) {
-    drawTraces(&(game->player[i]), d);
+    // drawTraces(&(game->player[i]), d);
     drawTrailLines(&(game->player[i]));
   }
 
 
   /* transparent stuff */
-  for(i = 0; i < game->players; i++)
-    drawTrailBow(&(game->player[i]));
+  /* for(i = 0; i < game->players; i++)
+     drawTrailBow(&(game->player[i])); */
 
   /* draw the glow around the other players: */
   if(game->settings->show_glow == 1)
