@@ -122,7 +122,7 @@ void drawTrailLines(Player *p) {
   while(line != data->trail) { /* the current line is not drawn */
     /* compute distance from line to eye point */
     dist = getDist(line, cam->cam);
-    alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
+    alpha = (getSettingi("grid_size") - dist / 2) / getSettingi("grid_size");
     trail_top[3] = alpha;
     glColor4fv(trail_top);
     
@@ -139,7 +139,7 @@ void drawTrailLines(Player *p) {
 
   /* compute distance from line to eye point */
   dist = getDist(line, cam->cam);
-  alpha = (game->settings->grid_size - dist / 2) / game->settings->grid_size;
+  alpha = (getSettingi("grid_size") - dist / 2) / getSettingi("grid_size");
   glColor4fv(trail_top);
 
   glBegin(GL_LINES);
@@ -180,7 +180,7 @@ void drawTrailShadow(Player* p) {
   glMultMatrixf(shadow_matrix);
 
   height = data->trail_height;
-  if(game->settings->softwareRendering == 0) {
+  if(getSettingi("softwareRendering") == 0) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
@@ -245,14 +245,14 @@ void drawTraces(Player *p, gDisplay *d) {
   if(height < 0) return;
 
   /* calculate trail color and set blending modes */
-  if(game->settings->alpha_trails) {
+  if(getSettingi("alpha_trails")) {
     glColor4fv(p->pColorAlpha);
     glDepthMask(GL_FALSE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     setColor4fv(p->pColorAlpha);
   } else {
-    if(game->settings->softwareRendering == 0) {
+    if(getSettingi("softwareRendering") == 0) {
       glDisable(GL_BLEND);
       glEnable(GL_TEXTURE_2D);
       glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -366,7 +366,7 @@ void drawTrailBow(Player *p, int flag) {
   if(flag) 
     glShadeModel(GL_SMOOTH);
 
-  if(PLAYER_IS_ACTIVE(p) && game->settings->show_model == 1) {
+  if(PLAYER_IS_ACTIVE(p) && getSettingi("show_model") == 1) {
     glEnable(GL_TEXTURE_2D);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -375,7 +375,7 @@ void drawTrailBow(Player *p, int flag) {
   }
 
 
-  bdist = (game->settings->show_model &&
+  bdist = (getSettingi("show_model") &&
 	   PLAYER_IS_ACTIVE(p)) ? 2 : 3;
 
   sx = getSegmentEndX(data->trail, data, 0);

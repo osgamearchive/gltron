@@ -20,14 +20,14 @@ int initWindow() {
   unsigned char fullscreen = 0;
   /* char buf[20]; */
 
-  SystemInitWindow(0, 0, game->settings->width, game->settings->height);
+  SystemInitWindow(0, 0, getSettingi("width"), getSettingi("height"));
 
-  if(game->settings->windowMode == 0) {
+  if(getSettingi("windowMode") == 0) {
     fullscreen = SYSTEM_FULLSCREEN;
   }
 
   flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH;
-  if(game->settings->bitdepth_32)
+  if(getSettingi("bitdepth_32"))
     flags |= SYSTEM_32_BIT;
 
   SystemInitDisplayMode(flags, fullscreen);
@@ -39,7 +39,7 @@ int initWindow() {
     exit(1);
   }
 
-  if(game->settings->windowMode == 0 || game->settings->mouse_warp == 1) {
+  if(getSettingi("windowMode") == 0 || getSettingi("mouse_warp") == 1) {
     SystemGrabInput();
   }
 
@@ -47,12 +47,12 @@ int initWindow() {
 }
 
 void reshape(int x, int y) {
-  if(x < game->settings->height || x < game->settings->width)
+  if(x < getSettingi("height") || x < getSettingi("width"))
     initGameScreen();
-  if(x > game->settings->width )
-    game->screen->vp_x = (x - game->settings->width) / 2;
-  if(y > game->settings->height )
-    game->screen->vp_y = (y - game->settings->height) / 2;
+  if(x > getSettingi("width") )
+    game->screen->vp_x = (x - getSettingi("width")) / 2;
+  if(y > getSettingi("height") )
+    game->screen->vp_y = (y - getSettingi("height")) / 2;
   changeDisplay();
 }
 
@@ -106,9 +106,14 @@ int main( int argc, char *argv[] ) {
   goto_installpath(argv[0]);
 #endif
 
-  /* initialize artpack list before loading settigns! */
+  /* initialize artpack list before loading settings! */
   initArtpacks();
 
+  scripting_Init();
+  initMainGameSettings("");
+  scripting_LoadConfig("config.lua");
+
+#if 0      
   path = getFullPath("settings.txt");
   if(path != NULL)
     initMainGameSettings(path); /* reads defaults from ~/.gltronrc */
@@ -116,6 +121,7 @@ int main( int argc, char *argv[] ) {
     printf("fatal: could not settings.txt, exiting...\n");
     exit(1);
   }
+#endif
 
   parse_args(argc, argv);
 
@@ -128,14 +134,14 @@ int main( int argc, char *argv[] ) {
   soundList = 
     readDirectoryContents(path, SONG_PREFIX);
   
-  game->settings->soundIndex = -1;
+  setSettingi("soundIndex", -1);
 
   l = soundList;
 
 #ifdef SOUND
   printf("initializing sound\n");
   initSound();
-  setFxVolume(game->settings->fxVolume);
+  setFxVolume(getSettingf("fxVolume"));
 
   if(l->next != NULL) {
     char *tmp;
@@ -146,7 +152,7 @@ int main( int argc, char *argv[] ) {
     fprintf(stderr, "loading song %s\n", tmp);
     loadSound(tmp);
     free(tmp);
-    game->settings->soundIndex = 0;
+    setSettingi("soundIndex", 0);
   }
 
   c = 0;
@@ -154,13 +160,13 @@ int main( int argc, char *argv[] ) {
     l = l->next;
     c++;
   }
-  game->settings->soundSongCount = c;
+  setSettingi("soundSongCount", c);
 
-  if(game->settings->playMusic)
+  if(getSettingi("playMusic"))
     playSound();
   fprintf(stderr, "setting music volume to %.3f\n",
-	  game->settings->musicVolume);
-  setMusicVolume(game->settings->musicVolume);
+	  getSettingf("musicVolume"));
+  setMusicVolume(getSettingf("musicVolume"));
   free(path);
 #endif
 

@@ -44,7 +44,7 @@ extern "C" {
 				 0);
       }
 #ifdef RECOGNIZER_SOUND
-      if(game->settings->show_recognizer) {
+      if( getSettingi("show_recognizer") ) {
 	Point p, v;
 	getRecognizerPositionVelocity(&p, &v);
 	recognizerEngine->_location = Vector3(p.x, p.y, RECOGNIZER_HEIGHT);

@@ -50,17 +50,17 @@ void keyGame(int k, int x, int y)
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;
   case SYSTEM_KEY_F4: 
-    game->settings->display_type = 3;
+    setSettingi("display_type", 3);
     changeDisplay();
     break;
 
   case SYSTEM_KEY_F10:
-    game->settings->camType = (game->settings->camType + 1) % CAM_COUNT;
+    setSettingi("camType", (getSettingi("camType") + 1) % CAM_COUNT);
     for(i = 0; i < game->players; i++)
       if(game->player[i].ai->active == AI_HUMAN)
 	initCamera(game->player[i].camera, 
 		   game->player[i].data, 
-		   game->settings->camType);
+		   getSettingi("camType"));
     break;
 
   case SYSTEM_KEY_F5: saveSettings(); break;
@@ -71,7 +71,7 @@ void keyGame(int k, int x, int y)
   case SYSTEM_KEY_DOWN: consoleScrollForward(1); break;
     /* toggle lighting
   case SYSTEM_KEY_F6: 
-      game->settings->light_cycles = !game->settings->light_cycles;
+      setSettingi("light_cycles", !game->settings->light_cycles);
       break;
     */
 
@@ -97,46 +97,46 @@ void parse_args(int argc, char *argv[]) {
       i = 0;
       while(argv[argc][++i] != 0) {
 	switch(argv[argc][i]) {
-	case 'm': game->settings->show_model = 0; break;
-	case 'x': game->settings->show_crash_texture = 0; break;
-	case 'F': game->settings->show_fps = 0; break;
-	case 't': game->settings->show_floor_texture = 0; break;
-	case 'c': game->settings->show_ai_status = 0; break;
-	case 'g': game->settings->show_glow = 0; break;
-	case 'w': game->settings->show_wall = 0; break;
-	case 'C': game->settings->show_ai_status = 1; break;
-	case 'v': game->settings->screenSaver = 1; break;
-	case 'i': game->settings->windowMode = 1; break;
-	case 'O': game->settings->softwareRendering = 1; break;
+	case 'm': setSettingi("show_model", 0); break;
+	case 'x': setSettingi("show_crash_texture", 0); break;
+	case 'F': setSettingi("show_fps", 0); break;
+	case 't': setSettingi("show_floor_texture", 0); break;
+	case 'c': setSettingi("show_ai_status", 0); break;
+	case 'g': setSettingi("show_glow", 0); break;
+	case 'w': setSettingi("show_wall", 0); break;
+	case 'C': setSettingi("show_ai_status", 1); break;
+	case 'v': setSettingi("screenSaver", 1); break;
+	case 'i': setSettingi("windowMode", 1); break;
+	case 'O': setSettingi("softwareRendering", 1); break;
 	case '1': /* default is 4 */
-	  game->settings->width = 320;
-	  game->settings->height = 240;
+	  setSettingi("width", 320);
+	  setSettingi("height", 240);
 	  break;
 	case '2': 
-	  game->settings->width = 400;
-	  game->settings->height = 300;
+	  setSettingi("width", 400);
+	  setSettingi("height", 300);
 	  break;
 	case '3': 
-	  game->settings->width = 512;
-	  game->settings->height = 384;
+	  setSettingi("width", 512);
+	  setSettingi("height", 384);
 	  break;
 	case '4': 
-	  game->settings->width = 640;
-	  game->settings->height = 480;
+	  setSettingi("width", 640);
+	  setSettingi("height", 480);
 	  break;
 	case '5': 
-	  game->settings->width = 800;
-	  game->settings->height = 600;
+	  setSettingi("width", 800);
+	  setSettingi("height", 600);
 	  break;
 	case '6':
-	  game->settings->width = 1024;
-	  game->settings->height = 768;
+	  setSettingi("width", 1024);
+	  setSettingi("height", 768);
 	case '7': 
-	  game->settings->width = 1280;
-	  game->settings->height = 1024;
+	  setSettingi("width", 1280);
+	  setSettingi("height", 1024);
 	case 's':
-	  game->settings->playMusic = 0;
-	  game->settings->playEffects = 0;
+	  setSettingi("playMusic", 0);
+	  setSettingi("playEffects", 0);
 	  break;
 	case 'h':
 	default:

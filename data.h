@@ -196,20 +196,12 @@ typedef struct Player {
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
-/* if you want to add something and make it permanent (via
-   .gltronrc) then
-   1) add it to Settings in data.h
-   2) add it to settings.txt
-   3) add pointer to initSettingData() in settings.c
-   4) add a default to initMainGameSettings() in settings.c
-   5) make a menu entry in menu.txt
-*/
-
 enum {
   BILINEAR = 0,
   TRILINEAR = 1
 };
 
+#if 0
 typedef struct Settings {
   /* these settings affect the visuals and sound etc.
      and are client side only */
@@ -282,6 +274,7 @@ typedef struct Settings {
   int grid_size;
   int arena_size; /* index */
 } Settings;
+#endif
 
 typedef enum ViewportType {
     VP_SINGLE = 0,
@@ -292,7 +285,6 @@ typedef enum ViewportType {
 typedef struct Game {
   gDisplay *screen;
   ViewportType viewportType;
-  Settings *settings;
   Player *player;
   int players; /* number of players - currently limited to 4 somewhere */
   int winner; /* who won this round */
@@ -300,21 +292,5 @@ typedef struct Game {
 		    is set */
   int running; /* the amount of players that are still alive */
 } Game;
-
-typedef struct settings_int {
-  char name[32];
-  int *value;
-} settings_int;
-
-typedef struct settings_float {
-  char name[32];
-  float *value;
-} settings_float;
-
-
-typedef struct settings_v {
-  char name[32];
-  void (*value)(char*, FILE*);
-} settings_v;
 
 #endif

@@ -67,7 +67,8 @@ void doComputer(int player, int target) {
   AI *ai;
   Data *data;
   Player *me, *him;
-  int i, j, level, x, y, rdist = 0, ldist = 0;
+  int i, j, level, x, y;
+  int rdist = 0, ldist = 0;
 
   me = &(game->player[ player ]);
   him = &(game->player[ target ]);
@@ -77,7 +78,7 @@ void doComputer(int player, int target) {
   }
   data = me->data;
   ai = me->ai;
-  level = game->settings->ai_level;
+  level = getSettingi("ai_level");
 
   ai->moves++;
   /* avoid to short turns */
@@ -99,7 +100,7 @@ void doComputer(int player, int target) {
     if(ai->danger != 0) break;
   }
 
-  if(ai->danger != 0 || ai->moves > max_moves[level] * game->settings->grid_size) {
+  if(ai->danger != 0 || ai->moves > max_moves[level] * getSettingi("grid_size")) {
     ai->moves = 0;
 
     /* figure out how far it's to either side */
@@ -200,7 +201,7 @@ void doComputer2(int player, int target) {
     return;
   }
   ai = me->ai;
-  level = game->settings->ai_level;
+  level = getSettingi("ai_level");
   data = me->data;
   if(abs(data->iposx - ai->lastx) < min_turn[level] &&
      abs(data->iposy - ai->lasty) < min_turn[level]) {
@@ -208,7 +209,7 @@ void doComputer2(int player, int target) {
     return;
   }
 
-  critical = (1 - CRIT_F) * game->settings->grid_size;
+  critical = (1 - CRIT_F) * getSettingi("grid_size");
   x = dirsX[ data->dir ];
   y = dirsY[ data->dir ];
   getXYdir(DIR_FRONT, &x, &y);

@@ -44,7 +44,7 @@ void SkyBox::draw() {
     
   float uv[4][2] = { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
   int i, j;
-  float d = game->settings->grid_size * 3;
+  float d = getSettingi("grid_size") * 3;
 
   glEnable(GL_TEXTURE_2D);
   glDepthMask(GL_FALSE);

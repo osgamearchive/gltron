@@ -134,7 +134,7 @@ void idleGame( void ) {
   case GAME_SINGLE:
   case GAME_SINGLE_RECORD:
     /* check for fast finish */
-    if(game->settings->fast_finish == 1) {
+    if(getSettingi("fast_finish") == 1) {
       int factor = 4;
       for(i = 0; i < game->players; i++) {
 	if(game->player[i].ai->active != AI_COMPUTER &&

@@ -7,7 +7,7 @@ void idlePause() {
   soundIdle();
 #endif
   doCameraMovement();
-  if(game->settings->screenSaver && stoptime != 0 &&
+  if(getSettingi("screenSaver") && stoptime != 0 &&
      SystemGetElapsedTime() - stoptime > 2000) {
     initData();
     stoptime = 0;
@@ -40,7 +40,8 @@ void keyboardPause(int key, int x, int y) {
   case SYSTEM_KEY_F2: defaultDisplay(1); break;
   case SYSTEM_KEY_F3: defaultDisplay(2); break;
   case SYSTEM_KEY_F4:
-    game->settings->display_type = 3;
+#warning "why is this not calling defaultDisplay() ?"
+    setSettingi("display_type", 3);
     changeDisplay();
     break;
     /* doesn't really work on my box */
@@ -59,12 +60,12 @@ void keyboardPause(int key, int x, int y) {
     break;
     */
   case SYSTEM_KEY_F10:
-    game->settings->camType = (game->settings->camType + 1) % CAM_COUNT;
+    setSettingi("camType", (getSettingi("camType") + 1) % CAM_COUNT);
     for(i = 0; i < game->players; i++)
       if(game->player[i].ai->active == AI_HUMAN)
 	initCamera(game->player[i].camera, 
 		   game->player[i].data, 
-		   game->settings->camType);
+		   getSettingi("camType"));
     break;
   case SYSTEM_KEY_F12: doScreenShot(game->screen->vp_w, game->screen->vp_h); break;
     

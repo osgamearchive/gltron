@@ -7,8 +7,8 @@ enum {
 };
 
 int getCol(int x, int y) {
-  if(x < 0 || x >= game->settings->grid_size -1 ||
-     y < 0 || y >= game->settings->grid_size -1 ||
+  if(x < 0 || x >= getSettingi("grid_size") -1 ||
+     y < 0 || y >= getSettingi("grid_size") -1 ||
      colmap[ y * colwidth + x ] != 0)
     return 1;
   else return 0;
@@ -37,13 +37,14 @@ void initGameStructures() { /* called only once */
 
   game->winner = -1;
   game->screen = (gDisplay*) malloc(sizeof(gDisplay));
-  game->viewportType = game->settings->display_type; 
+  game->viewportType = getSettingi("display_type"); 
   
   /* Setup the game's ai */
-  initGameAI(game->settings->ai_level);
+  initGameAI(getSettingi("ai_level"));
   
   d = game->screen;
-  d->h = game->settings->height; d->w = game->settings->width;
+  d->w = getSettingi("width"); 
+  d->h = getSettingi("height"); 
   d->vp_x = 0; d->vp_y = 0;
   d->vp_w = d->w; d->vp_h = d->h;
   d->blending = 1;
@@ -67,14 +68,14 @@ void initGameStructures() { /* called only once */
     /* init ai */
 
     ai = p->ai;
-    if(game->settings->screenSaver) {
+    if(getSettingi("screenSaver")) {
       ai->active = AI_COMPUTER;
     } else {
       switch(i) {
-      case 0: ai->active = game->settings->ai_player1; break;
-      case 1: ai->active = game->settings->ai_player2; break;
-      case 2: ai->active = game->settings->ai_player3; break;
-      case 3: ai->active = game->settings->ai_player4; break;
+      case 0: ai->active = getSettingi("ai_player1"); break;
+      case 1: ai->active = getSettingi("ai_player2"); break;
+      case 2: ai->active = getSettingi("ai_player3"); break;
+      case 3: ai->active = getSettingi("ai_player4"); break;
       default:
 	fprintf(stderr, "player index #%d not caught!\n", i);
 	ai->active = AI_NONE;
@@ -133,8 +134,8 @@ void initPlayerData() {
 
     /* arrange players in circle around center */
 
-    data->iposx = startpos[i][0] * game->settings->grid_size;
-    data->iposy = startpos[i][1] * game->settings->grid_size;
+    data->iposx = startpos[i][0] * getSettingi("grid_size");
+    data->iposy = startpos[i][1] * getSettingi("grid_size");
     if(i == 0) data->iposy -= 1;
     /* randomize starting direction */
     data->dir = rand() & 3;
@@ -147,7 +148,7 @@ void initPlayerData() {
 
     /* if player is playing... */
     if(ai->active != AI_NONE) {
-      data->speed = game->settings->current_speed;
+      data->speed = getSettingf("current_speed");
       data->trail_height = TRAIL_HEIGHT;
       data->exp_radius = 0;
     } else {
@@ -163,7 +164,7 @@ void initPlayerData() {
     data->trail->sy = data->trail->ey = data->iposy;
 
     ai->tdiff = 0;
-    ai->moves = game->settings->grid_size / 10;
+    ai->moves = getSettingi("grid_size") / 10;
     ai->danger = 0;
     ai->lasttime = 0;
   }
@@ -180,11 +181,11 @@ void initData() {
   /* TODO: check if grid_size/colwidth has changed and  
    *       reallocate colmap accordingly                */
 
-  colwidth = game->settings->grid_size;
+  colwidth = getSettingi("grid_size");
   if(colmap != NULL)
     free(colmap);
-  colmap = (unsigned char*) malloc(colwidth * game->settings->grid_size);
-  for(i = 0; i < colwidth * game->settings->grid_size; i++)
+  colmap = (unsigned char*) malloc(colwidth * getSettingi("grid_size"));
+  for(i = 0; i < colwidth * getSettingi("grid_size"); i++)
     *(colmap + i) = 0;
 
   if(debugtex != NULL)
@@ -197,8 +198,8 @@ void initData() {
   /* lasttime = SystemGetElapsedTime(); */
   game->pauseflag = 0;
 
-  game2->rules.speed = game->settings->current_speed;
-  game2->rules.eraseCrashed = game->settings->erase_crashed;
+  game2->rules.speed = getSettingf("current_speed");
+  game2->rules.eraseCrashed = getSettingi("erase_crashed");
   /* time management */
   game2->time.lastFrame = 0;
   game2->time.current = 0;
@@ -277,7 +278,7 @@ void moveStep(Data* data) {
 void clearTrail(int player) {
   int i;
 
-  for(i = 0; i < colwidth * game->settings->grid_size; i++)
+  for(i = 0; i < colwidth * getSettingi("grid_size"); i++)
     if(colmap[i] == player + 1)
       colmap[i] = 0;
 
@@ -318,8 +319,8 @@ void writePosition(int player) {
 
   /* debug texture */
   source = debugcolors[ colmap [ y * colwidth + x ] ];
-  tx = (float) x * DEBUG_TEX_W / game->settings->grid_size;
-  ty = (float) y * DEBUG_TEX_H / game->settings->grid_size;
+  tx = (float) x * DEBUG_TEX_W / getSettingi("grid_size");
+  ty = (float) y * DEBUG_TEX_H / getSettingi("grid_size");
   memcpy(debugtex + (int)ty * DEBUG_TEX_W * 4 + (int)tx * 4, source, 4);
 }
 

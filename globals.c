@@ -62,16 +62,6 @@ int menutime;
    double dt; */
 /* milliseconds since last frame */
 
-/* settings stuff */
-
-settings_int *si;
-int si_count;
-settings_float *sf;
-int sf_count;
-settings_v *sv;
-int sv_count;
-
-
 int polycount; /* poly count - how much do we draw each frame? */
 int screenshots = 0;
 

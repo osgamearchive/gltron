@@ -139,7 +139,7 @@ void SystemInitWindow(int x, int y, int w, int h) {
 }
 
 void SystemInitDisplayMode(int f, unsigned char full) {
-  int bitdepth;
+  int bitdepth, zdepth;
 
   flags = f;
   fullscreen = full;
@@ -153,16 +153,22 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   }
   if(flags & SYSTEM_DOUBLE)
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1);
-  if(flags & SYSTEM_32_BIT)
+
+  if(flags & SYSTEM_32_BIT) {
+    zdepth = 24;
     bitdepth = 32;
-  else bitdepth = 16;
+  } else {
+    zdepth = 16;
+    bitdepth = 16;
+  }
   if(flags & SYSTEM_DEPTH)
-    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, zdepth);
   /* SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8); */
 #ifdef DO_STENCIL
   SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8);
 #endif
   video_initialized = 1;
+#warning "bitdepth value unused"
 }
 
 void SystemSetGamma(float red, float green, float blue) {

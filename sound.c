@@ -55,7 +55,7 @@ void loadSound(char *name) {
 }
 
 void playSound() {
-  Audio_SetMusicVolume(game->settings->musicVolume);
+  Audio_SetMusicVolume(getSettingf("musicVolume"));
   Audio_PlayMusic();
   return;
 }

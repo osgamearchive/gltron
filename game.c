@@ -16,7 +16,7 @@ void initClientData() {
     cam = game->player[i].camera;
     data = game->player[i].data;
 
-    camType = (game->player[i].ai->active == AI_COMPUTER) ? 0 : game->settings->camType;
+    camType = (game->player[i].ai->active == AI_COMPUTER) ? 0 : getSettingi("camType");
     initCamera(cam, data, camType);
 
     memcpy(game->player[i].pColorDiffuse, 
@@ -95,11 +95,11 @@ static void autoConfigureDisplay() {
 }
 
 void changeDisplay() {
-  if (game->settings->display_type == 3) {
+  if (getSettingi("display_type") == 3) {
      autoConfigureDisplay(); 
   } else {
     defaultViewportPositions(); 
-    updateDisplay(game->settings->display_type);
+    updateDisplay(getSettingi("display_type"));
   }
 }
 
@@ -136,7 +136,7 @@ void exitGame() {
 
 void defaultDisplay(int n) {
   printf("set display to %d\n", n);
-  game->settings->display_type = n;
+  setSettingi("display_type", n);
   defaultViewportPositions();
   updateDisplay(n);
 }
@@ -144,7 +144,8 @@ void defaultDisplay(int n) {
 void initGameScreen() {
   gDisplay *d;
   d = game->screen;
-  d->h = game->settings->height; d->w = game->settings->width;
+  d->w = getSettingi("width");
+  d->h = getSettingi("height"); 
   d->vp_x = 0; d->vp_y = 0;
   d->vp_w = d->w; d->vp_h = d->h;
 }
@@ -186,7 +187,7 @@ void gameMouse(int buttons, int state, int x, int y) {
   }
 
   /*
-  if(game->settings->camType == CAM_TYPE_MOUSE) 
+  if(getSettingi("camType") == CAM_TYPE_MOUSE) 
     if(state == SYSTEM_MOUSEPRESSED) {
       if(buttons == SYSTEM_MOUSEBUTTON_LEFT) {
 	cam_r -= CAM_DR;

@@ -82,7 +82,8 @@ void drawGuiLogo() {
   glsize *= game->screen->vp_w / 512.0;
   
   glEnable(GL_TEXTURE_2D);
-  if(game->settings->show_gl_logo == 1) {
+
+  if(getSettingi("show_gl_logo") == 1) {
     glPushMatrix();
     glTranslatef(pos[0] - glpos + glsize * font_shift[0], 
 		 pos[1] + glsize * font_shift[1], 0);
@@ -91,6 +92,7 @@ void drawGuiLogo() {
     ftxRenderString(gameFtx, "gl", 2);
     glPopMatrix();
   }
+
   glBindTexture(GL_TEXTURE_2D, game->screen->textures[TEX_LOGO]);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
@@ -168,7 +170,7 @@ void keyboardGui(int key, int x, int y) {
   switch(key) {
   case 27:
 #ifdef SOUND
-    if(game->settings->playEffects) 
+    if(getSettingi("play_fx")) 
       playMenuFX(fx_action);
 #endif
     if(pCurrent->parent == NULL)
@@ -178,7 +180,7 @@ void keyboardGui(int key, int x, int y) {
     break;
   case 13: case ' ':
 #ifdef SOUND
-    if(game->settings->playEffects) 
+    if(getSettingi("play_fx")) 
       playMenuFX(fx_action);
 #endif
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
@@ -192,14 +194,14 @@ void keyboardGui(int key, int x, int y) {
     /* case 'q': SystemExit(); break; */
   case SYSTEM_KEY_DOWN:
 #ifdef SOUND
-    if(game->settings->playEffects)
+    if(getSettingi("play_fx"))
       playMenuFX(fx_highlight);
 #endif
     pCurrent->iHighlight = (pCurrent->iHighlight + 1) % pCurrent->nEntries;
     break;
   case SYSTEM_KEY_UP:
 #ifdef SOUND
-    if(game->settings->playEffects)
+    if(getSettingi("play_fx"))
       playMenuFX(fx_highlight);
 #endif
     pCurrent->iHighlight = (pCurrent->iHighlight - 1) % pCurrent->nEntries;
@@ -250,7 +252,7 @@ void guiMouse(int buttons, int state, int x, int y) {
   /* fprintf(stderr, "testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
   if (state == SYSTEM_MOUSEPRESSED) {	
 #ifdef SOUND
-    if(game->settings->playEffects)
+    if(getSettingi("play_fx"))
       playMenuFX(fx_action);
 #endif	
     menuAction(*(pCurrent->pEntries + pCurrent->iHighlight), MENU_ACTION);
@@ -310,7 +312,7 @@ void guiMouseMotion(int mx, int my) {
 	current_highlight = i;
 
 #ifdef SOUND
-	if(game->settings->playEffects)
+	if(getSettingi("play_fx"))
 	  playMenuFX(fx_highlight);
 #endif
 	pCurrent->iHighlight = i;

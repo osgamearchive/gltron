@@ -24,19 +24,19 @@ static char **clists[] = { speed_list, player_list, arena_list, lod_list,
 void changeAction(char *name) {
 #ifdef SOUND
   if(strstr(name, "playMusic") == name) {
-    if(game->settings->playMusic == 0)
+    if(getSettingi("playMusic") == 0)
       stopSound();
-    else if(game->settings->soundIndex >= 0)
+    else if(getSettingi("soundIndex") >= 0)
       playSound();
   } else if(strstr(name, "musicVolume") == name) {
-    setMusicVolume(game->settings->musicVolume);
+    setMusicVolume(getSettingf("musicVolume"));
   } else if(strstr(name, "fxVolume") == name) {
-    setFxVolume(game->settings->fxVolume);
+    setFxVolume(getSettingf("fxVolume"));
 #if 0
     playMenuFX(fx_highlight);
 #endif
   } else if(strstr(name, "song") == name) {
-    if(game->settings->soundIndex != -1) {
+    if(getSettingi("soundIndex") != -1) {
       char *tmp;
       char *path;
       list *p;
@@ -44,11 +44,11 @@ void changeAction(char *name) {
 
       c = 0;
       for(p = soundList; p->next != NULL; p = p->next) {
-	if(c == game->settings->soundIndex)
+	if(c == getSettingi("soundIndex"))
 	  break;
 	c++;
       }      
-      if(c == game->settings->soundIndex) {
+      if(c == getSettingi("soundIndex")) {
 	path = getFullPath(MUSIC_DIR);
 	tmp = (char*)malloc(strlen(path) + 1 + /* seperator */
 		     strlen((char*) p->data) + 1);
@@ -56,15 +56,15 @@ void changeAction(char *name) {
 		(char*) p->data);
 	fprintf(stderr, "loading song %s\n", tmp);
 
-	if(game->settings->playMusic)
+	if(getSettingi("playMusic"))
 	  stopSound();
 	loadSound(tmp);
 	free(tmp);
-	if(game->settings->playMusic)
+	if(getSettingi("playMusic"))
 	  playSound();
       }
     } else {
-      if(game->settings->playMusic)
+      if(getSettingi("playMusic"))
 	stopSound();
     }
   }
@@ -77,13 +77,13 @@ void changeAction(char *name) {
     initTexture(game->screen);
   }
   else if(strstr(name, "game_speed") == name) {
-    game->settings->current_speed = 
-      default_speeds[ game->settings->game_speed ];
+    setSettingf("current_speed",
+		default_speeds[ getSettingi("game_speed") ]);
     initData();
   } 
   else if(strstr(name, "arena_size") == name) {
-    game->settings->grid_size = 
-      default_arena_sizes[ game->settings->arena_size ];
+    setSettingi("grid_size", 
+		default_arena_sizes[ getSettingi("arena_size") ]);
     initData();
   } 
   else if(strstr(name, "display_type") == name) {
@@ -94,16 +94,13 @@ void changeAction(char *name) {
 
   else if(strstr(name, "ai_player") == name) {
     int c;
-    int *v;
 
     /* printf("changing AI status\n"); */
     c = name[9] - '0';
-    v = getVi(name);
-    game->player[c - 1].ai->active = *v;
+    game->player[c - 1].ai->active = getSettingi(name);
     /* printf("changed AI status for player %c\n", c + '0'); */
   } else if(strstr(name, "ai_level") == name) {
-    int *v = getVi(name);
-    initGameAI(*v);
+    initGameAI( getSettingi(name) );
   } 
   else if(strstr(name, "windowMode") == name) {
     initGameScreen();
@@ -115,24 +112,24 @@ void changeAction(char *name) {
   } else if(strstr(name, "artpack") == name) {
     reloadArt();
   } else if(strstr(name, "mouse_warp") == name) {
-    if(game->settings->mouse_warp == 1)
+    if(getSettingi("mouse_warp") == 1)
       SystemGrabInput();
     else
-      if(game->settings->windowMode == 1) SystemUngrabInput();
+      if(getSettingi("windowMode") == 1) SystemUngrabInput();
   } else if(strstr(name, "camType") == name) {
     int i;
     for(i = 0; i < game->players; i++)
       if(game->player[i].ai->active == AI_HUMAN)
 	initCamera(game->player[i].camera, 
 		   game->player[i].data, 
-		   game->settings->camType);
+		   getSettingi("camType"));
   }
 }
 
 void menuAction(Menu *activated, int type) {
   int x, y;
   char c;
-  int *piValue;
+  int n;
   if(activated->nEntries > 0) {
     pCurrent = activated;
     pCurrent->iHighlight = 0;
@@ -193,9 +190,9 @@ void menuAction(Menu *activated, int type) {
       break;
     case 'v':
       sscanf(activated->szName, "%cv%dx%d ", &c, &x, &y);
-      game->settings->width = x;
-      game->settings->height = y;
-
+      setSettingi("width", x);
+      setSettingi("height", y);
+ 
       initGameScreen();
       shutdownDisplay(game->screen);
       setupDisplay(game->screen);
@@ -221,28 +218,29 @@ void menuAction(Menu *activated, int type) {
     case 't':
       switch(activated->szName[2]) {
       case 'i':
-	piValue = getVi(activated->szName + 4);
-	if(piValue != NULL) {
-	  *piValue = (*piValue - 1) * (-1);
-	  initMenuCaption(activated);
-	  changeAction(activated->szName + 4);
-	}
+#warning "FIXME: check if this is ok"
+	setSettingi(activated->szName + 4, 
+	  (getSettingi(activated->szName + 4) - 1) * (-1));
+	initMenuCaption(activated);
+	changeAction(activated->szName + 4);
 	break;
       case 'l':
 	{
 	  char buf[64];
 	  int dummy;
 	  int clist_index;
+	  int n;
 	  
 	  sscanf(activated->szName, "stl_%d_%d_%s", &clist_index, &dummy, buf);
-	  piValue = getVi(buf);
-	  if(piValue != NULL) {
-	    (*piValue)++;
-	    if(clists[clist_index][*piValue] == NULL) *piValue = 0;
-	    initMenuCaption(activated);
-	    changeAction(buf);
-	    break;
-	  }
+#warning "FIXME: check if this is ok"
+	  n = getSettingi(buf);
+	  n++;
+	  if(clists[clist_index][n] == NULL) 
+	    n = 0;
+	  setSettingi(buf, n);
+	  initMenuCaption(activated);
+	  changeAction(buf);
+	  break;
 	}
       }
       break;
@@ -260,32 +258,35 @@ void menuAction(Menu *activated, int type) {
     switch(activated->szName[1]) {
     case 's': 
       {
-	float *pfValue;
 	float min, max, step;
+	float f;
 	char buf[64];
 	sscanf(activated->szName, "ssf_%f_%f_%f_%s", &min, &max, &step, buf);
-	pfValue = getVf(buf);
-	if(pfValue != NULL) {
-	  *pfValue = (type == MENU_LEFT) ? (*pfValue - step) : (*pfValue + step);
-	  if(*pfValue < min) *pfValue = min;
-	  if(*pfValue > max) *pfValue = max;
-	}
+	f = getSettingf(buf);
+	f = (type == MENU_LEFT) ? (f - step) : (f + step);
+	if(f < min) f = min;
+	if(f > max) f = max;
+	setSettingf(buf, f);
+
 	initMenuCaption(activated);
 	changeAction(buf);
 	break;
       }
     case 'm':
+      n = getSettingi("soundIndex");
       switch(type) {
       case MENU_LEFT:
-	game->settings->soundIndex--;
-	if(game->settings->soundIndex < -1) game->settings->soundIndex = -1;
+	n--;
+	if(n < -1)
+	  n = -1;
 	break;
       case MENU_RIGHT:
-	game->settings->soundIndex++;
-	if(game->settings->soundIndex >= game->settings->soundSongCount) 
-	  game->settings->soundIndex = game->settings->soundSongCount - 1;
+	n++;
+	if(n >= getSettingi("soundSongCount"))
+	  n = getSettingi("soundSongCount") - 1;
 	break;
       }
+      setSettingi("soundIndex", n);
       initMenuCaption(activated);
       break;
     }
@@ -293,8 +294,7 @@ void menuAction(Menu *activated, int type) {
 }
 
 void initMenuCaption(Menu *m) {
-  int *piValue;
-
+  int n;
   /* TODO support all kinds of types */
   switch(m->szName[0]) {
   case 's':
@@ -308,13 +308,11 @@ void initMenuCaption(Menu *m) {
       switch(m->szName[2]) {
       case 'i':
 	/* printf("dealing with %s\n", m->szName); */
-	piValue = getVi(m->szName + 4);
-	if(piValue != NULL) {
-	  if(*piValue == 0) sprintf(m->display.szCaption,
-				    m->szCapFormat, "off");
-	  else sprintf(m->display.szCaption, m->szCapFormat, "on");
-	  /* printf("changed caption to %s\n", m->display.szCaption); */
-	} /* else printf("can't find value for %s\n", m->szName + 4); */
+	n = getSettingi(m->szName + 4);
+	if(n == 0) sprintf(m->display.szCaption,
+			   m->szCapFormat, "off");
+	else sprintf(m->display.szCaption, m->szCapFormat, "on");
+	/* printf("changed caption to %s\n", m->display.szCaption); */
 	break;
       case 'l':
 	{
@@ -322,10 +320,10 @@ void initMenuCaption(Menu *m) {
 	  int dummy;
 	  char buf[64];
 	  sscanf(m->szName, "stl_%d_%d_%s ", &clist_index, &dummy, buf);
-	  piValue = getVi(buf);
+	  n = getSettingi(buf);
 	  /* TODO: bounds checking */
 	  sprintf(m->display.szCaption, m->szCapFormat,
-		  (clists[clist_index])[*piValue]);
+		  (clists[clist_index])[n]);
 	  break;
 	}
       } /* end szName[2] */
@@ -353,12 +351,10 @@ void initMenuCaption(Menu *m) {
 	case 'f':
 	  {
 	    char buf[64];
-	    float *pfValue;
+	    float f;
 	    sscanf(m->szName, "ssf_%*f_%*f_%*f_%s ", buf);
-	    pfValue = getVf(buf);
-	    if(pfValue != NULL) {
-	      sprintf(m->display.szCaption, m->szCapFormat, *pfValue * 100);
-	    }
+	    f = getSettingf(buf);
+	    sprintf(m->display.szCaption, m->szCapFormat, f * 100);
 	    break;
 	  }
       }
@@ -368,12 +364,12 @@ void initMenuCaption(Menu *m) {
 	list *p;
 	int c = 0;
 	for(p = soundList; p->next != NULL; p = p->next) {
-	  if(c == game->settings->soundIndex)
+	  if(c == getSettingi("soundIndex"))
 	    sprintf(m->display.szCaption, m->szCapFormat, 
 		    (char*) p->data + strlen(SONG_PREFIX));
 	  c++;
 	}
-	if(game->settings->soundIndex == -1)
+	if(getSettingi("soundIndex") == -1)
 	  sprintf(m->display.szCaption, m->szCapFormat, "none");
       }
       break;

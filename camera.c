@@ -125,12 +125,12 @@ void doCameraMovement() {
       float tmp[3];
       float tdest[3];
 
-      dest[0] = cam_park_pos[i][0] * game->settings->grid_size;
-      dest[1] = cam_park_pos[i][1] * game->settings->grid_size;
+      dest[0] = cam_park_pos[i][0] * getSettingi("grid_size");
+      dest[1] = cam_park_pos[i][1] * getSettingi("grid_size");
     
       dest[2] = park_height;
-      tdest[0] = game->settings->grid_size / 2;
-      tdest[1] = game->settings->grid_size / 2;
+      tdest[0] = getSettingi("grid_size") / 2;
+      tdest[1] = getSettingi("grid_size") / 2;
       tdest[2] = -10;
       vsub(dest, cam->cam, tmp);
       if(length(tmp) > 1) {

@@ -90,6 +90,10 @@ typedef png_texture texture;
 
 #include "console.h"
 
+/* scripting */
+#include "scripting.h"
+#include "settings.h"
+
 extern int game_textures;
 extern int n_textures;
 extern texture_info textures[];
@@ -191,13 +195,6 @@ extern char** artpack_list;
 extern int artpack_index;
 
 extern int gl_error;
-
-extern settings_int *si;
-extern int si_count;
-extern settings_float *sf;
-extern int sf_count;
-extern settings_v *sv;
-extern int sv_count;
 
 extern Game main_game;
 extern Game *game;

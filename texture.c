@@ -6,8 +6,8 @@ void initTexture(gDisplay *d) {
 
   int i, j;
 
-  if(game->settings->use_mipmaps) {
-    if(game->settings->mipmap_filter == TRILINEAR)
+  if(getSettingi("use_mipmaps")) {
+    if(getSettingi("mipmap_filter") == TRILINEAR)
       min_filter = GL_LINEAR_MIPMAP_LINEAR;
     else
       min_filter = GL_LINEAR_MIPMAP_NEAREST;
@@ -29,7 +29,7 @@ void initTexture(gDisplay *d) {
       }
       loadTexture(texname, textures[i].type);
 
-      if(game->settings->softwareRendering) {
+      if(getSettingi("softwareRendering")) {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textures[i].wrap_s);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textures[i].wrap_t);
 
