@@ -421,6 +421,8 @@ extern void drawPlayers(Player *);
 extern void  drawWalls();
 extern void drawCam(Player *p, gDisplay *d);
 
+extern void draw2D( gDisplay *d );
+		
 /* trail.c */
 /* extern void drawTrails(Player *p, Player *p_eye, gDisplay *d); */
 extern void drawTrailBow(Player *p, int flag);
