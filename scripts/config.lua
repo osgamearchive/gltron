@@ -83,6 +83,7 @@ settings.joy_threshold = 0.10
 -- settings.tracks = { }
 settings.current_track = "revenge_of_cats.it"
 -- music & fx settings
+settings.loopMusic = 0
 settings.playEffects = 1
 settings.playMusic = 1
 settings.fxVolume = 0.2

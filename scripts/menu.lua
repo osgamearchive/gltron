@@ -459,7 +459,14 @@ Menu = {
 									 return settings.current_track
 								end
 						 end
-   }
+   },
+   LoopMusic = {
+      type = MenuC.type.list, caption = "Loop Music",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.loopMusic; end,
+      store = function(value) settings.loopMusic = value; end
+   },
 }
 
 Menu.SetParent = function ( menu )
@@ -595,7 +602,9 @@ Menu.ScreenMenu.items = {
    "_1600x1200", "WindowMode"
 }
 
-Menu.AudioMenu.items = { "Music", "FX", "Music_Volume", "FX_Volume", "Song" }
+Menu.AudioMenu.items = { 
+	 "Music", "FX", "Music_Volume", "FX_Volume", "Song", "LoopMusic"
+}
 
 -- initialization code
 Menu.SetNames()

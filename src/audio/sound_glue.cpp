@@ -3,6 +3,7 @@
 extern "C" {
 #include "game/game.h"
 #include "video/video.h" // 3d sound engine needs to know the camera's location!
+#include "scripting/nebu_scripting.h"
 }
 #include "audio/sound_glue.h"
 
@@ -127,6 +128,14 @@ extern "C" {
       }
     }
 
+		if(music && !music->IsPlaying()) {
+			// check if music is enabled. if it is, advance to
+			// next song
+			if(gSettingsCache.playMusic) {
+				scripting_Run("nextTrack()");
+			}
+		}
+
     Sound::Listener& listener = sound->GetListener();
 
     listener._location = Vector3(game->player[0].camera->cam);
@@ -205,7 +214,8 @@ extern "C" {
     }
     music = new Sound::SourceMusic(sound);
     music->Load(name);
-    music->SetLoop(255);
+		if(getSettingi("loopMusic"))
+			music->SetLoop(255);
     music->SetType(Sound::eSoundMusic);
 
     char *sname = new char[32];
