@@ -31,6 +31,7 @@ Bugs [medium priority]:
 
 Features [medium priority]
 
+- remove space around single player view
 - fast finish should be relative to the arena size (or really finish instantly)
 - fix camera zoom generally (speed / settings)
 - new bot AI
