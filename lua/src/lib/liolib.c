@@ -1,6 +1,7 @@
 /*
-** $Id: liolib.c,v 1.5 2002/03/22 10:04:22 andi75 Exp $
+** $Id: liolib.c,v 1.6 2003/06/30 19:15:26 ahowe Exp $
 ** Standard I/O (and system) library
+** This file modified from it's original form.
 ** See Copyright Notice in lua.h
 */
 
@@ -14,7 +15,13 @@
 #include <assert.h>
 
 #ifndef macintosh
+#ifndef WIN32
 #  include <unistd.h> /* for close() */
+#endif
+#endif
+
+#ifdef WIN32
+#  define close _close
 #endif
 
 #include "lua.h"
