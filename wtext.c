@@ -199,17 +199,46 @@ free_wintext(Wintext *wintext)
 }
 
 void
-key_wintext(Wintext *wintext, int unicode)
+key_wintext(Wintext *wintext, int charcode, int unicode)
 {
   if( wintext->cur_char > wintext->maxchars )
     return;
 
-  if( unicode < 0x80 && unicode > 0 )
-    {
+  /* if( unicode < 0x80 && unicode > 0 ) */
+/*     { */
       
-      wintext->buffer[wintext->cur_char++]=(char)unicode;
-      wintext->buffer[wintext->cur_char]='\0';
-    }
+
+      switch( charcode )
+	{
+	case SDLK_BACKSPACE:
+	  printf("backspace");
+	  break;
+	case SDLK_DELETE:
+	  printf("delete");
+	  break;
+	case SDLK_UP:
+	  printf("going up");
+	  break;
+        case SDLK_DOWN:
+	  printf("going down");
+	  break;
+        case SDLK_RIGHT:
+	  printf("going right");
+	  //wintext->cur_char++;
+	  break;
+        case SDLK_LEFT:
+	  printf("going left");
+	  //wintext->cur_char--;
+	  break;
+	default:
+	  if( unicode < 0x80 && unicode > 0 ) 
+	    { 
+	      wintext->buffer[wintext->cur_char++]=(char)unicode;
+	      wintext->buffer[wintext->cur_char]='\0';
+	    }
+	  break;
+	}
+      //}
 }
 
 void
@@ -239,7 +268,8 @@ draw_wintext(Wintext *wintext)
       start=0;
       end=strlen(wintext->buffer);
     } else {
-      start=wintext->cur_char-wintext->nbchars;
+      //start=wintext->cur_char-wintext->nbchars;
+      start=strlen(wintext->buffer)-wintext->nbchars;
       end=wintext->nbchars;
     }
   
@@ -250,7 +280,7 @@ draw_wintext(Wintext *wintext)
   drawText(gameFtx, x, y, h, tmp);   
 
   wintext->time = SystemGetElapsedTime() - wintext->offset;
-  if( wintext->time % 1000 > 100 )
+  if( wintext->time % 1000 > 200 )
     {
       //no line
       //do nothing
@@ -266,4 +296,21 @@ draw_wintext(Wintext *wintext)
 
     }
 
+}
+
+char *
+get_wintext(Wintext *wintext)
+{
+  char *text;
+
+  text = (char *)malloc(strlen(wintext->buffer)+1);
+  strcpy(text, wintext->buffer);
+  return text;
+}
+
+void
+clear_wintext(Wintext *wintext)
+{
+  strcpy(wintext->buffer, "");
+  wintext->cur_char    = 0;
 }

@@ -8,6 +8,195 @@ static int coffset;
 static char message[255] ="pregame";
 static char chat[1024]   = "";
 
+#define MAX_CHARS 32
+
+void
+handlecommand(char *command, char *params)
+{
+  Packet   packet;
+  char     *str;
+  int      i;
+
+  //check commands here.
+  switch( command[0] )
+    {
+    case 's'://start
+      if( serverstate == preGameState && isConnected )
+	{
+	  if( slots[me].isMaster )
+	    {
+	      printf("\nAsk to start the game\n");	      
+	      makeping(game2->time.current);
+	      printf("ping ask when start game is%d\n", getping());
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=STARTGAME;
+	      Net_sendpacket(&packet, Net_getmainsock());
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to start the game, u must be Game Master\n");
+	    }
+	}
+      break;
+    case 'w':
+      if( serverstate == preGameState && isConnected  )
+	{
+	  //Whisper
+	  packet.which=me;
+	  packet.type=CHAT;
+
+	  //Find dest
+	  str = strtok(params, " ");
+	  printf("wisper to %s\n", str);
+	  packet.infos.chat.which=BROADCAST;
+	  for(i=0; i < MAX_PLAYERS; ++i)
+	    {
+	      if( ! strcasecmp(slots[i].name, str) )
+		{
+		  packet.infos.chat.which=i;
+		}
+	    }
+	  if( packet.infos.chat.which==BROADCAST )
+	    {
+	      fprintf(stderr, "User %s doesn't exist.\n", str);
+	      return;
+	    }
+	  str = strtok(NULL, " ");
+	  strcpy(packet.infos.chat.mesg, str);
+	  Net_sendpacket(&packet, Net_getmainsock());	  
+	}
+      break;
+    case 'g': //Change Netsettings nbWins
+      if( serverstate == preGameState && isConnected  )
+	{
+
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGENBWINS;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
+    case 't': //Change Netsettings timeout
+      if( serverstate == preGameState && isConnected  )
+	{
+	  
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGETIMEOUT;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      if( packet.infos.action.which < 60 && packet.infos.action.which > 0 )
+		{
+		  Net_sendpacket(&packet, Net_getmainsock());
+		} else {
+	      fprintf(stderr,"\nValue is out of bound..\n");		  
+		}	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
+      case 'v': //Change Netset speed
+      if( serverstate == preGameState && isConnected  )
+	{
+
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGESPEED;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
+      case 'z': //Change Netsettings nbWins
+      if( serverstate == preGameState && isConnected  )
+	{
+
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGESIZE;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
+      case 'e': //Change Netsettings nbWins
+      if( serverstate == preGameState && isConnected  )
+	{
+
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGEERASE;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
+    case 'h': //print help
+      insert_wtext(pregametext, "s : start a game\nw : wipser a player\ng : change nbwins settings\nt : change timeout ( minutes)\nv : change game speed ( 0 to 3 )\nz : change arena size ( 0 to 4 )\ne : change erased Crashed\n\n", 0);
+      break;
+    default:
+      insert_wtext(pregametext, "unknown command\ntype /h for hep\n", 0);
+      break;
+    }
+}
+void
+keyboardreadingreturn(char *buff)
+{
+  char command[MAX_CHARS]="", params[MAX_CHARS]="";
+  Packet packet;
+
+  if( strlen(buff) == 0 )
+    return;
+
+  //We have our buffer.
+  sscanf(buff, "/%[A-Za-z] %[A-Za-z0-9 ]", command, params);
+  if( strlen(command) > 0 )
+    {
+      handlecommand(command, params);
+      strcpy(buff, "");
+      //fprintf(stderr, "\ncommand: %s\nparams: %s\n", command, params);
+    } else {
+      fprintf(stderr, "\nsend chat: %s\n", buff);
+      packet.which=me;
+      packet.type=CHAT;
+      packet.infos.chat.which=BROADCAST;
+      strcpy(packet.infos.chat.mesg, buff);
+      Net_sendpacket(&packet, Net_getmainsock());
+    }
+  strcpy(buff, "");
+}
+
+
+
 void mousePregame (int buttons, int state, int x, int y)
 {
   //if ( state == SYSTEM_MOUSEPRESSED )
@@ -16,13 +205,18 @@ void mousePregame (int buttons, int state, int x, int y)
 
 void keyPregame(int k, int unicode, int x, int y)
 {
+  char *str;
   switch( k )
     {
     case SYSTEM_KEY_F11: doBmpScreenShot(); break;
     case SYSTEM_KEY_F12: doScreenShot(); break;
-    /* case 13: */
-/*       switchCallbacks(&keyboardreadingCallbacks); */
-/*       break; */
+    case 13:
+      str = get_wintext(inpregametext);
+      keyboardreadingreturn(str);
+      free(str);
+      str=NULL;
+      clear_wintext(inpregametext);
+      break;
     case SDLK_ESCAPE:
       fprintf(stderr, "exit network game\n");
       isConnected=0;
@@ -36,7 +230,7 @@ void keyPregame(int k, int unicode, int x, int y)
       //TODO: see how not to came back to this callBack when doing lot of esc in gui!
       break;
     default:
-      key_wintext(inpregametext, unicode);
+      key_wintext(inpregametext, k, unicode);
       break;
     }
 }
@@ -252,7 +446,7 @@ void initPregame() {
       height    = 6*game->screen->vp_h /100;
 
       //Wintext *new_wintext(int width, int height, int posx, int posy, int nbchars, int maxchars);
-      inpregametext = new_wintext(width, height, top_left_x, top_left_y, 20, 255);
+      inpregametext = new_wintext(width, height, top_left_x, top_left_y, 20, MAX_CHARS);
     }
   resetScores();
   printf("entering netpregame\n");

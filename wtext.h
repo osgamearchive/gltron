@@ -36,6 +36,8 @@ void     free_wtext(Wtext *wtext);
 //Wintext functions : read and print input text.
 Wintext *new_wintext(int width, int height, int posx, int posy, int nbchars, int maxchars);
 void     free_wintext(Wintext *wintext);
-void     key_wintext(Wintext *wintext, int unicode);
+void     key_wintext(Wintext  *wintext, int charcode, int unicode);
 void     draw_wintext(Wintext *wintext);
+char    *get_wintext(Wintext  *wintext);
+void     clear_wintext(Wintext *wintext);
 #endif
