@@ -19,7 +19,7 @@ void drawMeshPart(MeshPart* meshpart, int flag) {
     if(c > 4) type = GL_POLYGON;
     if(c == 4) type = GL_QUADS; 
     if(c == 3) type = GL_TRIANGLES;
-    if(flag & 1) type = GL_LINE_LOOP;
+    if(flag & MODEL_LINES) type = GL_LINE_LOOP;
     if(type != 0) {
       glBegin(type);
       for(j = 0; j < c; j++) {
@@ -64,7 +64,7 @@ void drawExplosionPart(MeshPart* meshpart, float radius, int flag) {
     if(c > 4) type = GL_POLYGON;
     if(c == 4) type = GL_QUADS; 
     if(c == 3) type = GL_TRIANGLES;
-    if(flag & 1) type = GL_LINE_LOOP;
+    if(flag & MODEL_LINES) type = GL_LINE_LOOP;
     if(type != 0) {
       glPushMatrix();
       normal = meshpart->normals + 3 * (i * MODEL_FACESIZE);
@@ -121,6 +121,7 @@ void drawExplosion(Mesh *mesh, float radius, int mode, int flag) {
   int i;
   /* printf("radius: %.2f\n", radius); */
   for(i = 0; i < mesh->nMaterials; i++) {
+    if(mode & MODEL_USE_MATERIAL) {
       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,
 		   (mesh->materials + i)->ambient);
 
@@ -129,6 +130,7 @@ void drawExplosion(Mesh *mesh, float radius, int mode, int flag) {
 
       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,
 		   (mesh->materials + i)->specular);
-      drawExplosionPart(mesh->meshparts + i, radius, flag);
+    }
+    drawExplosionPart(mesh->meshparts + i, radius, flag);
   }
 }
