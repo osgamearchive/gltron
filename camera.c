@@ -152,9 +152,11 @@ void doCameraMovement() {
       /* that means, check for mouse input mainly */
       if(cam->type->freedom[CAM_FREE_R]) {
 	if(game2->input.mouse1 == 1)
-	  cam->movement[CAM_R] += CAM_DR * game2->time.dt / 100.0;
+	  /*cam->movement[CAM_R] += CAM_DR * game2->time.dt / 100.0;*/
+	  cam->movement[CAM_R] *= 1.1 * (1+game2->time.dt/1000.0);
 	if(game2->input.mouse2 == 1)
-	  cam->movement[CAM_R] -= CAM_DR * game2->time.dt / 100.0;
+	  /*cam->movement[CAM_R] -= CAM_DR * game2->time.dt / 100.0;*/
+	  cam->movement[CAM_R] *= 0.9 * (1-game2->time.dt/1000.0);
 	writeCamDefaults(cam, CAM_R);
       }
       if(cam->type->freedom[CAM_FREE_PHI]) {
