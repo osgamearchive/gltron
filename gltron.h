@@ -331,6 +331,9 @@ extern int screenSaverCheck(int t);
 extern void scaleDownModel(float height, int i);
 extern void setMainIdleFunc(void);
 
+/* skybox.c */
+extern void skybox(void);
+
 /* various initializations -> init.c */
 
 extern void initFonts();
