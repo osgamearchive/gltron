@@ -160,7 +160,7 @@ void parse_args(int argc, char *argv[]) {
 	  printf("-O\tenable software rendering optimization (only if "
 		 "you don't have a 3d card!)\n");
 	  printf("-h\tthis help\n");
-	  exit(1);
+	  exit(0); /* OK: end of program */
 	}
       }
     }
