@@ -19,17 +19,17 @@ function color_interpolate(t, c1, c2)
 end
 
 function drawCircleSegment(circle, range)
-	c_pushMatrix();
-	c_translate(circle.center.x, circle.center.y, 0);
+	c_pushMatrix()
+	c_translate(circle.center.x, circle.center.y, 0)
 	c_drawCircle(range.arc_start.angle, range.arc_end.angle, 
 							 20, circle.inner_radius, circle.radius,
 							 range.arc_start.color, range.arc_end.color, 
 							 range.arc_start.color, range.arc_end.color)
-	c_popMatrix();
+	c_popMatrix()
 end
 
 function drawRectangle(rect, range)
-	 c_pushMatrix();
+	 c_pushMatrix()
 	 -- convert range to pixels
 	 local left = rect.right + 
 			range.range_end.width * (rect.left - rect.right)
@@ -40,13 +40,42 @@ function drawRectangle(rect, range)
 	 c_drawRectangle(right - left, rect.bottom - rect.top,
 							range.range_end.color, range.range_end.color,
 							range.range_start.color, range.range_start.color)
-	c_popMatrix();
+	c_popMatrix()
 end
 
-function drawGauge(speed) -- between 0 and 1
+-- flags for text
+
+FontFormat = {
+	AlignTop				=	0, -- 0x00000000,
+	AlignVCenter			=	1, -- 0x00000001,
+	AlignBottom				=	2, -- 0x00000002,
+	AlignLeft				=	4, -- 0x00000004,
+	AlignCenter				=   8, -- 0x00000008,
+	AlignRight				=	16, -- 0x00000010,
+	ScaleFitHorizontally	=	32, -- 0x00000020,
+	ScaleFitVertically		=	64, -- 0x00000040,
+	WordWrap				=	128  -- 0x00000080
+}
+
+function drawSpeedDigital(speed) -- between 0 and N
+	rect = { top = 60, left = 150, right = 194, bottom = 88 }
+	c_pushMatrix()
+	c_translate(rect.left, rect.top, 0)
+	if(speed > 0) then
+		c_color(0, 0, .4, 1)
+ 		c_drawTextFitIntoRect(
+ 			format("%.0f", speed * 10), -- TODO: reformat speed into string
+ 			rect.right - rect.left, rect.bottom - rect.top,
+ 			FontFormat.ScaleFitHorizontally + 
+ 			FontFormat.ScaleFitVertically)
+ 	end
+	c_popMatrix()
+end
+
+function drawSpeedAnalog(speed) -- between 0 and 1
 	-- circle center in pixel coordinates
 	-- circle inner and outer radius in pixels
-	-- write("speed: ", speed, "\n");
+	-- write("speed: ", speed, "\n")
 	circle = {
 		center = { x = 174, y = 75 },
 		inner_radius = 23,
@@ -124,23 +153,23 @@ function drawGauge(speed) -- between 0 and 1
 	for index, range in angles do
 		if(speed > range.arc_start.speed) then
 			if(speed > range.arc_end.speed) then
-				drawCircleSegment(circle, range);
+				drawCircleSegment(circle, range)
 			else
 				 local t = (speed - range.arc_start.speed) / 
 						(range.arc_end.speed - range.arc_start.speed)
 				range.arc_end.angle = 
 						(1 - t) * range.arc_start.angle + 
-					 t * range.arc_end.angle;
+					 t * range.arc_end.angle
 				range.arc_end.color = 
-						color_interpolate(t, range.arc_start.color, range.arc_end.color);
-				drawCircleSegment(circle, range);
+						color_interpolate(t, range.arc_start.color, range.arc_end.color)
+				drawCircleSegment(circle, range)
 			end
 		end
 	end
 end
 
 function drawTurbo(charge) -- between 0 and 1
-	 -- write("charge: ", charge, "\n");
+	 -- write("charge: ", charge, "\n")
 	 -- Rectangle in pixel coordinates
 	 rect = { top = 5, left = 5, right = 130, bottom = 45 }
 	 ranges = {
@@ -202,16 +231,16 @@ function drawTurbo(charge) -- between 0 and 1
 	 for index, range in ranges do
 			if(charge > range.range_start.charge) then
 				 if(charge > range.range_end.charge) then
-						drawRectangle(rect, range);
+						drawRectangle(rect, range)
 				 else
 						local t = (charge - range.range_start.charge) / 
 							 (range.range_end.charge - range.range_start.charge)
 						range.range_end.width = 
 							 (1 - t) * range.range_start.width + 
-							 t * range.range_end.width;
+							 t * range.range_end.width
 						range.range_end.color = 
-							 color_interpolate(t, range.range_start.color, range.range_end.color);
-						drawRectangle(rect, range);
+							 color_interpolate(t, range.range_start.color, range.range_end.color)
+						drawRectangle(rect, range)
 				 end
 			end
 	 end
