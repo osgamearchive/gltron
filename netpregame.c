@@ -125,7 +125,8 @@ void drawPregame() {
   //Inputs
   glColor3fv(colors[2]);
 /*   x = 10; */
-  x = 20;
+  //x = 20;
+  x =  2 *( game->screen->vp_w / (50 * 1.5) );
   y = h;
   drawText(gameFtx, x, y, h, getInputEntry());
 

@@ -1,5 +1,5 @@
 #include "gltron.h"
-#define MAX_CHARS 31
+#define MAX_CHARS 25
 static char buff[MAX_CHARS]; //TODO Defines MAX_CHARS
 static int  nbreads;
 
@@ -217,10 +217,15 @@ keyboardreadingpressed(int k)
 void keyreading(int k, int unicode, int x, int y)
 {
   
-  if( nbreads > MAX_CHARS )
+  if( nbreads > MAX_CHARS-1 )
     {
       //leave, no space left...
-      restoreCallbacks();
+      if( k == 13 )
+	{
+	  buff[nbreads++]='\0';
+	  keyboardreadingreturn();
+	  restoreCallbacks();
+	}
     } else {
       switch( k )
 	{
