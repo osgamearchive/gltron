@@ -1,4 +1,4 @@
-EXTRA_LTLIBRARIES=liblualib.la
+noinst_LIBRARIES=liblualib.a
 
 DEFS=
 CPPFLAGS=
@@ -6,9 +6,6 @@ CFLAGS=-O2 -ansi -pedantic -Wall -I../ -I../../include
 LDFALGS=
 LIBS=-lm
 
-liblualib_la_SOURCES=lauxlib.c lbaselib.c ldblib.c liolib.c lmathlib.c lstrlib.c
+liblualib_a_SOURCES=lauxlib.c lbaselib.c ldblib.c liolib.c lmathlib.c lstrlib.c
 
-all: liblualib.la
-
-clean:
-	rm -f liblualib.la
+EXTRA_DIST=README
