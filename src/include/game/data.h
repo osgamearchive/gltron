@@ -7,8 +7,6 @@
 
 /* general data structures */
   
-#define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
-
 enum {
   GAME_SINGLE = 1,
 #ifdef RECORD
