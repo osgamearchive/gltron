@@ -22,10 +22,10 @@ enum {
   TEX_TRAIL,
   TEX_DECAL,
   TEX_DEBUG,
-  TEX_SKYBOX,
 #ifdef __NETWORK__
-  TEX_PREGAME
+  TEX_PREGAME,
 #endif
+  TEX_SKYBOX
 };
 
 #endif
