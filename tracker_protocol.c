@@ -196,10 +196,12 @@ init_ping(int type)
 
   if( type == 0 )
     {
-      for( i=PINGPORT; i<10 && udpsock != NULL; ++i)
-	{
-	  udpsock = SDLNet_UDP_Open(i);
-	}
+      /* for( i=PINGPORT; i<PINGPORT+10 && udpsock != NULL; ++i) */
+/* 	{ */
+/* 	  printf("trying to open udp on port %d\n", i); */
+/* 	  udpsock = SDLNet_UDP_Open(i); */
+/* 	} */
+      udpsock = SDLNet_UDP_Open(PINGPORT);
       if( udpsock==NULL )
 	{
 	  fprintf(stderr, "can't open udpsock %s\n", SDLNet_GetError());

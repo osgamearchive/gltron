@@ -52,11 +52,26 @@ void keyGame(int k, int unicode, int x, int y)
 	serverstate=preGameState; //We hope that next time server will be to preGameState
 
 	//TODO: see how not to came back to this callBack when doing lot of esc in gui!
-      }
 
+
+    if( trackeruse == 1 )
+      {
+	if( ! tracker_connect() )
+	  {
+	    changeCallback(&trackerscreenCallbacks, &trackerscreenCallbacks);
+	  } else {
+	    changeCallback(&guiCallbacks, &guiCallbacks);
+	  }
+	//changeCallback(&guiCallbacks, &guiCallbacks);
+	//changeCallback(&netPregameCallbacks, &netPregameCallbacks);
+      } else {
 #endif
-    switchCallbacks(&pauseCallbacks);
-    switchCallbacks(&guiCallbacks);
+	switchCallbacks(&pauseCallbacks);
+	switchCallbacks(&guiCallbacks);
+#ifdef __NETWORK__
+      }
+      }
+#endif
     break;
   case ' ':
 #ifdef __NETWORK__

@@ -256,7 +256,7 @@ int
 Net_checksocks( )
 {  
   int socksready = socksnotready;
-  SDLNet_CheckSockets(socketset, 0);
+  SDLNet_CheckSockets(socketset, 10);
   
   // something appens, look what it was...
 

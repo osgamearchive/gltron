@@ -80,7 +80,7 @@ draw_wlist(Wlist *wlist, Trackerslots *slots)
   
 
   y = wlist->y+wlist->height-h/2;
-  s = (wlist->width/wlist->height)*9;
+  s = (wlist->width/wlist->height)*8;
   for(i=0; i < wlist->nbcols; ++i)
     {
       x = wlist->x+i*c+10;

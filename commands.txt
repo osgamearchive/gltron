@@ -1,0 +1,14 @@
+console commands:
+
+/<command> {<param>, }
+
+commands:
+s : start a game
+w : wipser a player ( eg: /w Sem hi )
+g : change nbwins settings ( eg : /g 3 )
+t : change timeout ( eg : /t 2 , means 2 minutes game, nbwins is not used if timeout is != 0)
+v : change game speed ( 0 to 3 )
+z : change arena size ( 0 to 4 )
+e : change erased Crashed if want to set : /e 1
+
+only whisper is allowed for non game master.

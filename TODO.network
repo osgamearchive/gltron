@@ -1,15 +1,24 @@
 todo:
-(x) finish observer things.
-(x) redo a correct input text gui for pregame
-(x) enhance protcol.
+(x) finish observer things ( some case doesn't work, that case needs to be find too ).
+(x) redo a pretty nice server's list ( see with Nicolas Zimermann )
+(x) do a font set for small size one.
+(x) IMPORTANT: see if server really waste time, or if it is the client. If true, where etc... .
+(x) check for bad predicted turn result.
+(x) see protocol.txt to redo tracker protocol so it can avoid DOS Attacks
+(x) finish pings things ( udp ones when in tracker ), looks like first packet say a good result and others grow rapidely. ( may be due to a server wasting time ).
+(x) see what to do when running several servers on the same machine, it's actually not possible.
+(x) enhance protocol.
 (x) add change settings whithout disconnecting.
 (x) finish ingame chat.
 (x) server need to wait pings finished before starting the game.
 (x) adding timeout for connection.
+(x) add other players scores in-game.
+(x) see how enhance in-game ping.
+(x) making cycle crash when leaving, otherwise it can have zombies in the next round.
+
 
 bugs:
 (x) the client lags( fps descending 1xx to 4x ) sometimes
-(x) the client crash when reconnecting.
 
 possible bugs:
 (0) memory leaks
