@@ -22,7 +22,12 @@ void drawGame() {
   glEnable(GL_DEPTH_TEST);
 
   glClearColor(28.0f / 255.0f, 26.0 / 255.0f, 100.0 / 255.0f, .0);
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+#ifdef DO_STENCIL
+  glClearStencil(0);
+  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+#else
+  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+#endif
 
   for(i = 0; i < vp_max[game->viewportType]; i++) {
     p = &(game->player[ game->settings->content[i] ]);
@@ -889,7 +894,15 @@ void drawCam(Player *p, gDisplay *d) {
       glMultMatrixf(shadow_matrix);
       glColor4fv(shadow_color);
       glEnable(GL_CULL_FACE);
+#ifdef DO_STENCIL
+      glEnable(GL_STENCIL_TEST);
+      glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+      glStencilFunc(GL_GREATER,1,1);
+#endif
       drawRecognizers(0);
+#ifdef DO_STENCIL
+      glDisable(GL_STENCIL_TEST);
+#endif
       glDisable(GL_CULL_FACE);
       glPopMatrix();
     }

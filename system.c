@@ -159,6 +159,9 @@ void SystemInitDisplayMode(int f, unsigned char full) {
   if(flags & SYSTEM_DEPTH)
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
   /* SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8); */
+#ifdef DO_STENCIL
+  SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8);
+#endif
   video_initialized = 1;
 }
 
