@@ -479,10 +479,11 @@ void drawCycleShadow(Player *p, int lod) {
   glMultMatrixf(shadow_matrix);
   if(game->settings->turn_cycle)
     doCycleTurnRotation(p);
+  else if (p->data->exp_radius == 0) {
+    glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
+  }
 
   glTranslatef(-cycle->bbox[0] / 2, -cycle->bbox[1] / 2, .0);
-  
-
 
   glEnable(GL_DEPTH_TEST);
   glDepthMask(GL_TRUE);
@@ -514,6 +515,10 @@ void drawCycle(Player *p, int lod) {
       drawCrash(p->data->exp_radius);
       glPopMatrix();
     }
+  }
+
+  if (p->data->exp_radius == 0 && game->settings->turn_cycle == 0) {
+    glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
 
   if(game->settings->turn_cycle) 
@@ -847,6 +852,7 @@ void drawCam(Player *p, gDisplay *d) {
   // glDepthMask(GL_TRUE);
   for(i = 0; i < game->players; i++) {
     // drawTraces(&(game->player[i]), d);
+    // glEnable(GL_DEPTH_TEST);
     drawTrailLines(&(game->player[i]));
   }
 
