@@ -324,11 +324,36 @@ void drawConsole(gDisplay *d) {
 }
 
 #ifdef __NETWORK__  
+int
+playerIsOnScreen(Player *eye, Player *target)
+{
+  float v1[3];
+  float v2[3];
+  float tmp[3];
+  float s;
+  float d;
+
+  vsub(eye->camera->target, eye->camera->cam, v1);
+  normalize(v1);
+  tmp[0] = target->data->posx;
+  tmp[1] = target->data->posy;
+  tmp[2] = 0;
+  vsub(tmp, eye->camera->cam, v2);
+  normalize(v2);
+  s = scalarprod(v1, v2);
+  /* maybe that's not exactly correct, but I didn't notice anything */
+  d = cos((game->settings->fov / 2) * 2 * M_PI / 360.0);
+  if(s < d)
+    return 0;
+  else
+    return 1;
+}
+
+
 void
 drawPlayersName(gDisplay *d)
 {
   Data *data;
-  int   lod;
   int   i;
   int   x, y;
   int   j, k, l;
@@ -354,8 +379,7 @@ drawPlayersName(gDisplay *d)
   //is player visible?
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      lod = playerVisible(&(game->player[0]), &(game->player[i]));
-      if(lod >= 0) 
+      if( playerIsOnScreen(&(game->player[0]), &(game->player[i])))
 	{
 	  //find screen coordinates
 	  data = game->player[i].data;
