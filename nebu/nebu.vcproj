@@ -169,6 +169,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="video\mesh.c">
+			</File>
+			<File
 				RelativePath=".\video\pixels.c">
 			</File>
 			<File
@@ -315,6 +318,9 @@
 			</File>
 			<File
 				RelativePath=".\include\base\nebu_matrix.h">
+			</File>
+			<File
+				RelativePath="include\video\nebu_mesh.h">
 			</File>
 			<File
 				RelativePath=".\include\video\nebu_png_texture.h">

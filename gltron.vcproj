@@ -331,6 +331,21 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="src\video\level.c">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="src\game\level.c">
 			</File>
 			<File
@@ -639,6 +654,9 @@
 			</File>
 			<File
 				RelativePath=".\src\include\video\video.h">
+			</File>
+			<File
+				RelativePath="src\include\video\video_level.h">
 			</File>
 		</Filter>
 		<Filter
