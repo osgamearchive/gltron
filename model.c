@@ -1,5 +1,6 @@
 // include a few datastructures & constants
 
+#include "math.h"
 #include "model.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -336,7 +337,7 @@ void drawModelExplosion(Mesh *pMesh, float fRadius) {
       glPushMatrix();
       glTranslatef(fRadius * (*(normal + 0) + vectors[j % EXP_VECTORS][0]),
 		   fRadius * (*(normal + 1) + vectors[j % EXP_VECTORS][1]),
-		   fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) );
+		   fabs(fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) ));
       glBegin(GL_TRIANGLES);
       for(k = 0; k < 3; k++) {
 	normal = pMesh->pNormals + 3 * pMesh->ppIndices[i][3 * j + k];
