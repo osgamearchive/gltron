@@ -1,0 +1,351 @@
+# Menu File
+# Format: 
+#  first line: 1 (there is only one menu tree currently)
+#  then: menu entry
+#  a menu entry consists of three lines
+#  - number of entries in the menu (always 0 for normal entries)
+#  - menu code
+#  - menu caption
+
+# if the menu code is 'xsub', the menu contains a submenu (i.e. has
+# no action). The entry is followed by the submenu description (i.e. more
+# menu entries)
+
+1
+
+# Root Menu - Game / Audio / Video / Quit
+
+4
+Root
+Root
+
+# Game Submenu - Start Game / Game Settings / Configure Players
+# 2 (chooseModel)
+6
+xsub
+Game
+
+0
+xreset
+Start Game
+
+3
+xsub
+Network
+
+3
+xsub
+Tracker
+
+0
+xnco
+Connect
+
+0
+sn_ltracker
+Tracker IP: %s
+
+0
+sn_cport
+Port: %s
+
+3
+xsub
+Server
+
+0
+xnet
+Connect
+
+0
+sn_server
+Server IP: %s
+
+0
+sn_port
+Port: %s
+
+0
+sn_nick
+Nickname: %s
+
+
+
+
+
+#2
+#xsub
+#Demo
+#
+#0
+#xdp
+#Play demo
+#
+#0
+#xdr
+#Record demo
+
+4
+xsub
+Game Rules
+
+0
+stl_0_3_game_speed
+Game speed:  %s
+
+0
+stl_4_3_ai_level
+Bot skill:   %s
+
+0
+stl_2_4_arena_size
+Arena size:  %s
+
+0
+sti_erase_crashed
+Erase dead players   - %s
+
+5
+xsub
+Play Settings
+
+0
+sti_fast_finish
+Fast Finish          - %s
+
+0
+sti_show_2d
+Show 2D map          - %s
+
+0
+stl_6_3_camType
+Camera mode          - %s
+
+0
+stl_7_2_display_type
+Viewports            - %s
+
+0
+xp__resetScores
+Reset Scores
+
+4
+xsub
+Configure Players
+
+0
+stl_1_2_ai_player1
+Player 1 - %s
+
+0
+stl_1_2_ai_player2
+Player 2 - %s
+
+0
+stl_1_2_ai_player3
+Player 3 - %s
+
+0
+stl_1_2_ai_player4
+Player 4 - %s
+
+4 
+xsub 
+Configure Keys
+
+2
+xsub
+Player 1
+
+0
+sk_0_3
+Turn left  - %s
+
+0
+sk_0_1
+Turn right - %s
+
+2
+xsub
+Player 2
+
+0
+sk_1_3
+Turn left  - %s
+
+0
+sk_1_1
+Turn right - %s
+
+2
+xsub
+Player 3
+
+0
+sk_2_3
+Turn left  - %s
+
+0
+sk_2_1
+Turn right - %s
+
+2
+xsub
+Player 4
+
+0
+sk_3_3
+Turn left  - %s
+
+0
+sk_3_1
+Turn right - %s
+
+# 0
+# xc_chooseModel
+# Choose Model (not implemented)
+
+# Audio Submenu (1 entry)
+5
+xsub
+Audio
+
+0
+sti_playMusic
+Music         - %s
+
+0
+sti_playEffects
+Sound Effects - %s
+
+0
+ssf_0_1_0.05_musicVolume
+Music Volume  - %.0f%%
+
+0
+ssf_0_1_0.05_fxVolume
+FX Volume     - %.0f%%
+
+0 
+sm_song
+Song: %s
+
+# Video Submenu
+# Texturing / Detail Options / Screen Options
+3
+xsub
+Video
+
+9
+xsub
+Texturing
+
+0
+sa_artpack
+Artpack:       - %s
+
+0
+sti_show_floor_texture
+Floor Texture  - %s
+
+0
+sti_show_wall
+Wall Texture   - %s
+
+0
+sti_show_crash_texture
+Crash texture  - %s
+
+0
+sti_show_skybox
+Skybox         - %s
+
+0
+sti_show_decals
+Trail Decals   - %s
+
+0
+sti_use_mipmaps
+Use MipMaps    - %s
+
+0
+stl_5_1_mipmap_filter
+Filtering      - %s
+
+0
+sti_stretch_textures
+Scale Walls    - %s
+
+# Options Submenu (11 entries)
+
+9
+xsub
+Detail Options
+
+0
+sti_alpha_trails
+Use alpha trails  - %s
+
+0
+sti_show_glow
+Halos             - %s
+
+0
+sti_show_model
+Lightcycles       - %s
+
+0
+sti_show_recognizer
+Recognizers       - %s
+
+0
+stl_3_2_lod
+Cycle LOD:        - %s
+
+0
+stl_8_2_shadow_lod
+Shadow LOD:       - %s
+
+0
+sti_show_fps
+FPS counter       - %s
+
+0
+sti_show_ai_status
+AI status         - %s
+
+0
+sti_show_scores
+Scores            - %s
+
+# Change Resolution sub menu
+7
+xsub
+Screen Options
+0
+xv320x240
+320 x 240
+0
+xv640x480
+640 x 480
+0
+xv800x600
+800 x 600
+0
+xv1024x768
+1024 x 768
+0
+xv1280x1024
+1280 x 1024
+0
+xv1600x1200
+1600 x 1200
+0
+sti_windowMode
+Windowed Mode - %s
+
+# Quit entry (saves settings)
+0
+xquit
+Quit
+
