@@ -1,3 +1,8 @@
+0.59 to 0.61
+- fixed lightcycle-hits-lightcycle lockup bug
+- fixed a view z-buffer issues
+- camera settings are saved
+
 0.59 to 0.60
 
 Usage:

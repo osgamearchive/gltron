@@ -1,4 +1,7 @@
 todo:
+(0) fix z-buffer problems (disable z-write on arena walls, adjust near on recognizer, etc.)
+(0) look at cycle collision problem
+(1) investigate framerate drop in win32 cycle collision test
 (2) recognizer sound
 (2) replay capabilities / fix demo recording / playback
 (1) bug ShreadWheat about his point-of-interest ai technology
