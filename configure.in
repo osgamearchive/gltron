@@ -1,21 +1,14 @@
 dnl Process this file with autoconf to produce a configure script.
 
-dnl any file will do
-AC_INIT(camera.c)
-
+dnl initialisation
+AC_INIT(gltron.c)
+AM_INIT_AUTOMAKE(gltron, 0.61am)
 
 dnl Checks for programs.
-
-dnl Checks for libraries.
-dnl Replace `main' with a function in -lGL:
-LIBS='-L/usr/X11R6/lib'
-
 AC_PROG_CC
 AC_PROG_CPP
-AC_PROG_INSTALL
-AC_PROG_LN_S
-AC_PROG_MAKE_SET
 
+dnl CFLAGS set-up
 CFLAGS=""
 
 AC_ARG_ENABLE(warn,
@@ -50,60 +43,39 @@ if test "x$enable_optimize" ; then
 	CFLAGS="$CFLAGS -O$enable_optimize"
 fi
 
+dnl library checks
+AM_PATH_SDL(1.1.0, CFLAGS="$CFLAGS $SDL_CFLAGS"; LIBS="$LIBS $SDL_LIBS",
+	AC_MSG_ERROR(SDL is not installed))
+AC_CHECK_LIB(GL, glEnable,, AC_MSG_ERROR(OpenGL is not installed))
+AC_CHECK_LIB(png, png_read_info,, AC_MSG_ERROR(libpng is not installed))
+
+dnl sound set-up
+AC_ARG_ENABLE(sound,
+[ --disable-sound              Don't compile in sound [default=off]],
+   use_sound=no, use_sound=yes)
+if test "x$use_sound" = xyes; then
+	AC_CHECK_LIB(SDL_mixer, Mix_OpenAudio,
+	CFLAGS="$CFLAGS -DSOUND";
+	LIBS="$LIBS -lSDL_mixer";
+	SOUND_OBJS="sound.o sound3d.o",
+	AC_MSG_WARN(SDL_mixer not found - disabling sound))
+	AC_SUBST(SOUND_OBJS)
+fi
+
+dnl network set-up
 AC_ARG_ENABLE(network,
 [ --enable-network             Experimental network mode [default=off]],
 	enable_network=$enableval, enable_network=off)
 if test "x$enable_network" = xyes; then
-AC_CHECK_LIB(SDL_net, main,, AC_MSG_ERROR(SDL_net is needed))
-	${LN_S} -f system_net_sdl.c system_net.c
-	${LN_S} -f system_net_sdl.h system_net.h
-	CFLAGS="$CFLAGS -DNETWORK"
-	LIBS="$LIBS -lSDL_net"
-	NETWORK_FILES="network.c system_net.c"
-	AC_SUBST(NETWORK_FILES)
+	AC_CHECK_LIB(SDL_net, SDLNet_Init,
+	CFLAGS="$CFLAGS -DNETWORK";
+	LIBS="$LIBS -lSDL_net";
+	NETWORK_OBJS="network.o system_net.o",
+	AC_MSG_WARN(SDL_net not found - disabling network))
+	AC_SUBST(NETWORK_OBJS)
 fi
 
-AC_ARG_ENABLE(sound,
-[ --disable-sound              Dont compile in sound [default=off]],
-   use_sound=no, use_sound=yes)
-
-AC_CHECK_LIB(m, main,, AC_MSG_ERROR(libm is needed))
-AC_CHECK_LIB(X11, main,, AC_MSG_ERROR(X11 is needed, course))
-AC_CHECK_LIB(GL, main,, AC_MSG_ERROR(OpenGL is needed))
-dnl AC_CHECK_LIB(GLU, main,, AC_MSG_ERROR(GLU should come with OpenGL))
-dnl AC_CHECK_LIB(pthread, main,, AC_MSG_ERROR(SDL needs pthread to run properly))
-
-AC_CHECK_LIB(SDL, main, 
-${LN_S} -f system_sdl.c system.c ; \
-${LN_S} -f system_sdl.h system.h ; \
-LIBS="$LIBS `sdl-config --libs`" ; \
-CFLAGS="$CFLAGS `sdl-config --cflags`" ; \
-HAVE_SDL=1,
-AC_CHECK_LIB(glut, main, 
-${LN_S} -f system_glut.c system.c ; \
-${LN_S} -f system_glut.h system.h ; \
-LIBS="$LIBS -lglut", \
-AC_MSG_ERROR(Neither SDL or glut is installed!)))
-
-if test "x$use_sound" = xyes; then
-	SOUND_FILE="sound.c sound3d.c"
-	AC_SUBST(SOUND_FILE)
-	AC_CHECK_LIB(SDL_mixer, main,
-	${LN_S} -f sound_sdl.c sound.c ; \
-	${LN_S} -f sound_sdl.h sound.h ; \
-	CFLAGS="$CFLAGS -DSOUND"; \
-	LIBS="$LIBS -lSDL_mixer", 
-	AC_CHECK_LIB(mikmod, main,
-	${LN_S} -f sound_libmikmod.c sound.c ; \
-	${LN_S} -f sound_libmikmod.h sound.h ; \
-	CFLAGS="$CFLAGS -DSOUND"; \
-	LIBS="$LIBS -lmikmod",
-	AC_MSG_ERROR(Neither SDL_mixer nor libmikmod is installed!)))
-fi
-
-AC_CHECK_LIB(z, main,, AC_MSG_ERROR(libz is needed))
-AC_CHECK_LIB(png, main,, AC_MSG_ERROR(libpng is needed))
-
+dnl header checks
 AC_HEADER_STDC
 AC_CHECK_HEADERS(unistd.h)
 
@@ -114,20 +86,14 @@ AC_CHECK_HEADERS(GL/gl.h,,
 	includes_in_local=1,
 AC_MSG_ERROR(cant find GL headers))))
 
-if test "$includes_in_x" = 1 ; then
-	INCS="$INCS -I/usr/X11R6/include"
-fi
-
-if test "$includes_in_local" = 1; then
-	INCS="$INCS -I/usr/local/include"
-fi
-
-AC_SUBST(INCS)
-
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS(strstr)
 
-AC_OUTPUT(Makefile)
+AC_OUTPUT(Makefile \
+	art/Makefile art/arcade_spots/Makefile art/biohazard/Makefile \
+	art/default/Makefile  art/metalTron/Makefile \
+	data/Makefile data/music/Makefile \
+	sounds/Makefile tools/Makefile win32/Makefile)

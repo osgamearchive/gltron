@@ -2,9 +2,9 @@
 
 static int lod_n = 3;
 static char *lod_names[] = {
-  "lightcycle high.obj",
-  "lightcycle med.obj",
-  "lightcycle low.obj"
+  "lightcycle-high.obj",
+  "lightcycle-med.obj",
+  "lightcycle-low.obj"
 };
 /* static int lod_dist[] = { 25, 50, 150 }; */
 
