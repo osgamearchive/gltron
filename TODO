@@ -1,13 +1,22 @@
-bugs:
+prerelease things:
+(1) fix back-to-front rendering
+(2) generate uv-coordinates for the model
+(2) do drop shadows
 (3) key definitions are not saved to .gltronrc
+(2) fix lighting problems
+(3) fix demo recording / playback
+(3) decide on packaging (installer?)
+
+bugs:
 (2) demo playpack is broken after interrupt (Escape) 
 (6) switching resolution still leaks a little memory
-(2) fix lighting problem
+
 possible bugs:
 (0) more memory leaks
 (0) failing malloc's arent caught, might lock up application/system
 (0) some attributes are not saved to .gltronrc
 todo: 
+(2) work a bit more on line antialiasing (trail tops)
 (2) implement one of the two top-down views and arrange HUD
 (2) size HUD according to screen resolution
 (2) add menu items for view (1,2,4-players)
@@ -30,6 +39,7 @@ todo:
 (0) win32: sdl should dynamically load 3dfx opengl for Voodoo 1&2
 (0) make score display configurable
 (0) add slightly funny console messages (Robot ate Andi's tail)
+(0) investigate halo
 at release time:
 (0) decide which floor texture to use
 (0) create RPM files for various linux distributions
