@@ -58,7 +58,7 @@ void saveSettings() {
   script = getPath(PATH_SCRIPTS, "save.lua");
   scripting_RunFile(script);
   free(script);
-
+#ifndef WIN32
   path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
 
   if(path != NULL) {
@@ -67,6 +67,11 @@ void saveSettings() {
 		scripting_Run("writeto()"); // select stdout again
     free(path);
   }
+#else
+    scripting_RunFormat("writeto(\"%s\")", "gltron.ini");
+    scripting_Run("save()");
+		scripting_Run("writeto()"); // select stdout again
+#endif
 }
 
 int getSettingi(char *name) {
