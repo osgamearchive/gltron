@@ -1,5 +1,3 @@
-#include "system.c"
-
 #include <GL/gl.h>
 
 float vertices[] = { 
@@ -43,6 +41,7 @@ fill_plain() {
 fill_textured() {
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
+}
 
 setupGL() {
   unsigned char[] pixels = { 255, 0, 0, 255 };
