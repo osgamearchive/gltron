@@ -172,6 +172,8 @@ do_gamerules(Packet packet)
 {
   int   i, j;
 
+
+  //TODO: clean all this ugly code, and do a safe clean init function.
   game->settings->ai_player1= ( slots[0].active ) ? 0 : 2;
   game->settings->ai_player2= ( slots[1].active ) ? 0 : 2;
   game->settings->ai_player3= ( slots[2].active ) ? 0 : 2;
