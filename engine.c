@@ -70,22 +70,22 @@ void initGameStructures() { /* called only once */
   /* load recognizer model */
   path = getPath(PATH_DATA, "recognizer.obj.gz");
   if(path != NULL) {
-    recognizer = readTriMeshFromFile(path);
+    recognizer = readMeshFromFile(path, TRI_MESH);
     /* old code did normalize & invert normals & rescale to size = 60 */
   } else {
     fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
   free(path);
  
   /* load recognizer  quad model (for recognizer outlines) */
   path = getPath(PATH_DATA, "recognizer_quad.obj.gz");
   if(path != NULL) {
-    recognizer_quad = readQuadMeshFromFile(path);
+    recognizer_quad = readMeshFromFile(path, QUAD_MESH);
     /* old code did normalize & invert normals & rescale to size = 60 */
   } else {
     fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
-    exit(1);
+    exit(1); /* OK: critical, installation corrupt */
   }
   free(path);
 
@@ -95,10 +95,10 @@ void initGameStructures() { /* called only once */
   for(i = 0; i < LC_LOD; i++) {
     path = getPath(PATH_DATA, lc_lod_names[i]);
     if(path != NULL) {
-      lightcycle[i] = readTriMeshFromFile(path);
+      lightcycle[i] = readMeshFromFile(path, TRI_MESH);
     } else {
       fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
-      exit(1);
+      exit(1); /* OK: critical, installation corrupt */
     }
   }
   free(path);
