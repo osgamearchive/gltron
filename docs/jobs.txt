@@ -1,4 +1,0 @@
-- add Shadow Volumes
-- drop bitfield from collision detection (check SDLtron), and develop new
-  'freeway' algorithm
-
