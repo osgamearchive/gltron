@@ -79,18 +79,26 @@ settings.keys = {
    { -- player 1
       left = 97, -- lower case 'a'
       right = 115, -- lower case 's'
+      glance_left = 113, -- lower case 'q'
+      glance_right = 119, -- lower case 'w'
    },
    { -- player 2
       left = 106, -- lower case 'j'
-      right = 107 -- lower case 'k'
+      right = 107, -- lower case 'k'
+      glance_left = 117, -- lower case 'u'
+      glance_right = 105, -- lower case 'i'
    },
    { -- player 3
       left = 276, -- cursor settings.left
       right = 275, -- cursor settings.right
+      glance_left = 127, -- 'del'
+      glance_right = 279, -- 'end'
    },
    { -- player 4
       left = 260, -- keypad settings.left/keypad 4
       right = 262, -- keybad settings.right/keypad 6
+      glance_left = 263, -- keypad 7
+      glance_right = 265, -- keypad 9
    }
 }
 
