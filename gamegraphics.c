@@ -895,28 +895,28 @@ void drawCam(Player *p, gDisplay *d) {
     if (game2->settingsCache.show_model) {
       lod = playerVisible(p, game->player + i);
       if (lod >= 0) {
-	      drawCycleShadow(game->player + i, lod);
+	drawCycleShadow(game->player + i, lod);
       }
     }
-    if (game2->settingsCache.show_recognizer) {
-      glPushMatrix();
-      glMultMatrixf(shadow_matrix);
-      glColor4fv(shadow_color);
-      glEnable(GL_CULL_FACE);
-#ifdef DO_STENCIL
-      glEnable(GL_STENCIL_TEST);
-      glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-      glStencilFunc(GL_GREATER,1,1);
-#endif
-      drawRecognizers(0);
-#ifdef DO_STENCIL
-      glDisable(GL_STENCIL_TEST);
-#endif
-      glDisable(GL_CULL_FACE);
-      glPopMatrix();
-    }
-
     drawTrailShadow(game->player + i);
+  }
+
+  if (game2->settingsCache.show_recognizer) {
+    glPushMatrix();
+    glMultMatrixf(shadow_matrix);
+    glColor4fv(shadow_color);
+    glEnable(GL_CULL_FACE);
+#ifdef DO_STENCIL
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_GREATER,1,1);
+#endif
+    drawRecognizers(0);
+#ifdef DO_STENCIL
+    glDisable(GL_STENCIL_TEST);
+#endif
+    glDisable(GL_CULL_FACE);
+    glPopMatrix();
   }
 
   /* z-buffer hack to do away with explosions */
