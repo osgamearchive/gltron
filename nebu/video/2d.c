@@ -7,6 +7,7 @@ nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 	nebu_2d *p2d;
 	int source_format, target_format;
 	int bpp, y;
+	unsigned char *pixels;
 
 	switch(pSurface->format) {
 	case NEBU_SURFACE_RGB:
@@ -37,7 +38,7 @@ nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 	while(p2d->tex_w < p2d->w) p2d->tex_w *= 2;
 	while(p2d->tex_h < p2d->h) p2d->tex_h *= 2;
 
-	unsigned char *pixels = 
+	pixels = 
 		(unsigned char*) malloc(p2d->tex_w * p2d->tex_h * bpp / 8);
 	
 	memset(pixels, 0, p2d->tex_w * p2d->tex_h * bpp / 8);
