@@ -616,7 +616,8 @@ Recv_rules()
   int rLen;
   int ilen=sizeof(int);
   int *speed = (int*)malloc(ilen);
- 
+  int *startPos;
+
 
   fprintf(stderr, "get players\n");
   rLen = SDLNet_TCP_Recv(tcpsock, (void *)&game2->players, sizeof(int));
@@ -647,14 +648,27 @@ Recv_rules()
   ilen = (3 * game2->players * sizeof(int));
 
   fprintf(stderr, "set startPositions: %d\n", ilen);
-  game2->startPositions = (int*) malloc(ilen);
-  rLen = SDLNet_TCP_Recv(tcpsock, (void *)game2->startPositions, ilen);
+  startPos = (int *) malloc( ilen );
+  rLen = SDLNet_TCP_Recv(tcpsock, (void *)startPos, ilen);
   if( rLen <= 0 )
     {
       printf("get %d <=> %d", rLen, ilen);
       return connectLost;
     }
+  game2->startPositions=startPos;
+  printf("start : x %d\n", game2->startPositions[0]);
+  printf("game2->startPositions %d\n", *game2->startPositions);
 
+
+  fprintf(stderr, "get time\n");	
+  rLen = SDLNet_TCP_Recv(tcpsock, (void *)&game2->time, sizeof(Time));
+
+  if( rLen <= 0 )
+    {
+      return connectLost;
+    }
+
+  fprintf(stderr, "time is %d\n", game2->time.current);	
   return noErr;
 }
 

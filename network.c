@@ -115,7 +115,7 @@ doChgeStateNetEvent()
 {
   int err = noErr;
   int newState; 
-  //Data *data;   
+  Data   *data;
 
   Recv_chgeState(&newState);
   fprintf(stderr, "Server has changed state:");
@@ -142,22 +142,21 @@ doChgeStateNetEvent()
 	fprintf(stderr, "got an error while reading rules\n");
       else
 	fprintf(stderr, "rules set...\n");
-      game->players=game2->players;
-      /*
-      data = game->player[0].data;
+      //game->players=game2->players;
+      
+      
 
-      printf("player 0 start with x: %d y: %d direction: %d\n", data->iposx,
-	                                                        data->iposy,
-	                                                        data->dir);
-
-      data = game->player[1].data;
-      printf("player 1 start with x: %d y: %d direction: %d\n", data->iposx,
-	                                                        data->iposy,
-	                                                        data->dir);
-      */
 
       if( applyGameInfo() )//applying gamerules
 	fprintf(stderr, "got an error while applying GameInfo\n");
+
+      data = game->player[me].data;
+      //data = (Data *)game2->startPositions[0];
+
+      printf("init position with x: %d y: %d direction: %d\n", data->iposx,
+	                                                        data->iposy,
+	                                                        data->dir);
+
       fprintf(stderr, "starting the game\n");
       printf("grid size: %d\n", game->settings->grid_size);
       game2->mode = GAME_PLAY;

@@ -55,7 +55,9 @@ void stopPlaying() {
 }
 
 GameEvent* readEvent() {
+  //printf("+ read event...\n");
   return getNetEvent();
+  //printf("- read event...\n");
 }
 
 void getEvents() {
@@ -63,6 +65,7 @@ void getEvents() {
   if(latest == NULL)
     latest = readEvent();
   if(latest != NULL) {
+    //printf("%d < %d...\n", latest->timestamp, game2->time.current);
     while(latest->timestamp < game2->time.current) {
       /* TODO: check if it's safe to ignore the return value here */
       fprintf(stderr, "process : %d %d %d %d %d\n", latest->type, latest->player, 
@@ -70,7 +73,7 @@ void getEvents() {
       processEvent(latest);
       latest = readEvent();
       if(latest == NULL) return;
-    }
+      }
   }
 }
   

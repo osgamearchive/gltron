@@ -96,6 +96,8 @@ handle_client(int which)
   pWho           whoRep;
   pWelcom        welcomRep;
   char           *mesg;
+  Data           *data;
+  int            j=0;
 
   serverRep = (pServRepHdr) malloc( sizeof(tServRepHdr) );
   loginRep  = (pLogin) malloc( sizeof(tLogin) );
@@ -214,7 +216,34 @@ handle_client(int which)
 		  SDLNet_TCP_Send(slots[i].sock,(char *)&len,sizeof(int));
 		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->rules.eraseCrashed,sizeof(int));
 		  //send startPositions
-		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->startPositions, (3 * game2->players * sizeof(int)));
+		  game2->startPositions=(int *) malloc(3 * game2->players * sizeof(int));
+		  for(j=0; j<game2->players; ++j)
+		    {
+		      game2->startPositions[3*j+0]=game->player[j].data->iposx;
+		      game2->startPositions[3*j+1]=game->player[j].data->iposy;
+		      game2->startPositions[3*j+2]=game->player[j].data->dir;
+		      printf("start position: %d %d %d\n", game->player[j].data->iposx,
+			     game->player[j].data->iposy,
+			     game->player[j].data->dir);
+		    }
+
+		  printf("game2->startPositions %d\n", *game2->startPositions);
+
+		  SDLNet_TCP_Send(slots[i].sock,(char *)game2->startPositions, (3 * game2->players * sizeof(int)));
+		  for(j=0; j<4; ++j)
+		    {
+		      if( slots[j].active )
+			{
+			  data = game->player[j].data;
+			  
+			  printf("init position with x: %d y: %d direction: %d : %d\n", data->iposx,
+				 data->iposy,
+				 data->dir, game2->startPositions[j]);
+			}
+		    }
+
+		  //Send time t synchronize...
+		  SDLNet_TCP_Send(slots[i].sock,(char *)&game2->time, sizeof(Time));
 		  
 		}
 	    }

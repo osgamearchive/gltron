@@ -198,17 +198,14 @@ void initData() {
 int applyGameInfo() {
   int i; 
   Data *data;
-  fprintf(stderr, "1\n");
   if(game2->players > game->players) {
     fprintf(stderr, "more players in demo than allowed\n");
     return 1;
   }
 
-  fprintf(stderr, "2: %d\n",game2->players );
   for(i = 0; i < game2->players; i++) {
     data = game->player[i].data;
     data->speed = game2->rules.speed;
-    fprintf(stderr, "3\n");
     data->iposx = game2->startPositions[3 * i + 0];
     data->iposy = game2->startPositions[3 * i + 1];
     data->posx = data->iposx;
@@ -216,6 +213,12 @@ int applyGameInfo() {
     data->t = 0;
     data->dir = game2->startPositions[3 * i + 2];
     data->last_dir = data->dir;
+
+     printf("chaging init position Player %d  x: %d y: %d direction: %d\n", i, data->iposx,
+	    data->iposy,
+	    data->dir);
+
+
   }
 
   for(; i < game->players; i++) {
@@ -224,7 +227,6 @@ int applyGameInfo() {
     data->trail_height = 0;
     data->exp_radius = EXP_RADIUS_MAX;
   }
-  fprintf(stderr, "4\n");
   return 0;
 }
 

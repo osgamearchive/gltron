@@ -3,7 +3,7 @@
 int processEvent(GameEvent* e) {
   int value = 0;
   Data *data;
-
+  //printf("proccess event\n");
   if(game2->mode == GAME_SINGLE_RECORD) {
     writeEvent(e);
   }
@@ -65,9 +65,14 @@ list* doMovement(int mode, int dt) {
   Data *data;
   list *l = NULL;
   GameEvent *e;
+  // printf("+ doMovement %d %d\n", mode, dt);
 
   for(i = 0; i < game->players; i++) {
     data = game->player[i].data;
+    /*printf("Player %d : x: %d y: %d direction: %d\n", i, data->iposx,
+	   data->iposy,
+	   data->dir);*/
+
     if(data->speed > 0) { /* still alive */
 
 #define FREQ 1200
@@ -130,6 +135,7 @@ list* doMovement(int mode, int dt) {
       }
     }      
   }
+//printf("- doMovement\n");
   return l;
 }
 
@@ -144,6 +150,7 @@ void idleGame( void ) {
 #ifdef SOUND
   soundIdle();
 #endif
+  //fprintf(stderr, "game time: %.3f\nmode:%d\n", game2->time.current / 1000.0, game2->mode); 
 
   if(updateTime() == 0) return;
 #ifdef __NETWORK__
@@ -244,7 +251,7 @@ void idleGame( void ) {
 #ifdef DRI_DEBUG  
   SDL_Delay(10);
 #endif
-  /* fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
+  /*fprintf(stderr, "game time: %.3f\n", game2->time.current / 1000.0); */
 }
 
 /* create an event and put it into the global event queue */
