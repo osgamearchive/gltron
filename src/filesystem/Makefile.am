@@ -1,7 +1,7 @@
 noinst_LIBRARIES=libfilesystem.a
 
 libfilesystem_a_SOURCES = \
-	path.c dirsetup-win32.c
+	path.c dirsetup.c
 
 AM_CFLAGS = \
 	-I$(top_srcdir)/nebu/include \
