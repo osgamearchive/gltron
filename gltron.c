@@ -180,9 +180,7 @@ int main( int argc, char *argv[] ) {
 
   /* probe for artpacks & songs */
   initArtpacks();
-#ifdef SOUND
   Sound_initTracks();
-#endif
 
   // printf("[status] loading menu\n");
   { 

@@ -135,9 +135,7 @@ void initGame() { /* called when game mode is entered */
   SystemHidePointer();
   SystemWarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
   game2->time.offset = SystemGetElapsedTime() - game2->time.current;
-#ifdef SOUND
   Audio_EnableEngine();
-#endif
   /* fprintf(stderr, "init game\n"); */
 }
 
