@@ -24,7 +24,7 @@ void initGameStructures(void) { /* called only once */
 
     p->ai = (AI*) malloc(sizeof(AI));
     p->data = (Data*) malloc(sizeof(Data));
-    p->data->trails = (Line*) malloc(MAX_TRAIL * sizeof(Line));
+    p->data->trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
 		p->data->trailOffset = 0;
 		p->camera = (Camera*) malloc(sizeof(Camera));
    }
@@ -62,10 +62,6 @@ void resetPlayerData(void) {
 			ai->active = AI_NONE;
 		}
 		ai->tdiff = 0;
-		ai->moves = getSettingi("grid_size") / 10;
-		ai->danger = 0;
-		ai->lastx = 0;
-		ai->lasty = 0;
 
 		/* arrange players in circle around center */
 
@@ -92,11 +88,11 @@ void resetPlayerData(void) {
 		// data->trail = data->trails;
 		data->trailOffset = 0;
 
-		data->trails[ data->trailOffset ].sx = floorf(data->posx);
-		data->trails[ data->trailOffset ].sy = floorf(data->posy);
+		data->trails[ data->trailOffset ].vStart.v[0] = floorf(data->posx);
+		data->trails[ data->trailOffset ].vStart.v[1] = floorf(data->posy);
 		
-		data->trails[ data->trailOffset ].ex = floorf(data->posx);
-		data->trails[ data->trailOffset ].ey = floorf(data->posy);
+		data->trails[ data->trailOffset ].vDirection.v[0] = 0;
+		data->trails[ data->trailOffset ].vDirection.v[1] = 0;
 
 		{
 			int camType;
@@ -129,7 +125,7 @@ void initData(void) {
 	colmap = (unsigned char*) malloc(colwidth*colwidth/*getSettingi("grid_size")*/);
 	for(i = 0; i < colwidth * colwidth/*getSettingi("grid_size")*/; i++)
 		*(colmap + i) = 0;
-  
+
 	/* lasttime = SystemGetElapsedTime(); */
 	game->pauseflag = PAUSE_GAME_RUNNING;
 
@@ -152,6 +148,8 @@ void initData(void) {
 
   resetVideoData();
 	resetPlayerData();
+
+  initWalls();
 }
 
 void Time_Idle(void) {
@@ -202,16 +200,18 @@ void writePosition(int player) {
 }
 
 void newTrail(Data* data) {
-	data->trails[data->trailOffset].ex = data->posx;
-	data->trails[data->trailOffset].ey = data->posy;
+	segment2 *s = data->trails + data->trailOffset;
+	s->vDirection.v[0] = data->posx - s->vStart.v[0];
+	s->vDirection.v[1] = data->posy - s->vStart.v[1];
 
-	data->trailOffset++;
+	s++;
 	
-	data->trails[data->trailOffset].sx = data->posx;
-	data->trails[data->trailOffset].sy = data->posy;
-
-	data->trails[data->trailOffset].ex = data->posx;
-	data->trails[data->trailOffset].ey = data->posy;
+	s->vStart.v[0] = data->posx;
+	s->vStart.v[1] = data->posy;
+	s->vDirection.v[0] = 0;
+	s->vDirection.v[1] = 0;
+	
+	data->trailOffset++;
 }
       
 void doTurn(GameEvent *e, int direction) {
@@ -220,4 +220,25 @@ void doTurn(GameEvent *e, int direction) {
 	data->last_dir = data->dir;
 	data->dir = (data->dir + direction) % 4;
 	data->turn_time = game2->time.current;
+}
+
+void initWalls(void) {
+	float raw[4][4] = {
+		{ 0.0f, 0.0f, 1.0f,  0.0f },
+		{ 1.0f, 0.0f, 0.0f, 1.0f },
+		{ 1.0f, 1.0f, -1.0f, 0.0f },
+		{ 0.0f, 1.0f, 0.0f, -1.0f }
+	};
+
+	float width = game2->rules.grid_size;
+	float height = game2->rules.grid_size;
+	
+	int j;
+
+	for(j = 0; j < 4; j++) {
+		walls[j].vStart.v[0] = raw[j][0] * width;
+		walls[j].vStart.v[1] = raw[j][1] * height;
+		walls[j].vDirection.v[0] = raw[j][2] * width;
+		walls[j].vDirection.v[1] = raw[j][3] * height;
+	}
 }
