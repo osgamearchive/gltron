@@ -20,7 +20,11 @@ namespace Sound {
 
   SourceMusic::~SourceMusic() { 
     fprintf(stderr, "SourceMusic destructor called\n");
+#ifndef macintosh
 		SDL_SemWait(_sem);
+#else
+        SDL_LockAudio();
+#endif
 		free(_buffer);
 		
     if(_sample)
@@ -29,8 +33,12 @@ namespace Sound {
 
     if(_filename)
       free(_filename);
-		
+
+#ifndef macintosh		
 		SDL_SemPost(_sem);
+#else
+        SDL_UnlockAudio();
+#endif
   }
 
 	/*! 
@@ -72,12 +80,12 @@ namespace Sound {
 
   int SourceMusic::Mix(Uint8 *data, int len) {
     if(_sample == NULL) return 0;
-
+#ifndef macintosh
 		if( SDL_SemTryWait(_sem) ) {
 			fprintf(stderr, "semaphore locked, skipping mix\n");
 			return 0;
 		}
-
+#endif
 		// printf("mixing %d bytes\n", len);
 
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
@@ -104,8 +112,10 @@ namespace Sound {
 			fprintf(stderr, "buffer underrun!\n");
 			// don't do anything
 		}
-		
+
+#ifndef macintosh
 		SDL_SemPost(_sem);
+#endif
     return 1;
   }
 
@@ -137,7 +147,11 @@ namespace Sound {
 			// check for end of sample, loop
 			if(_sample->flags) {
 				// some error has occured, maybe end of sample reached
+#ifndef macintosh
 				SDL_SemWait(_sem);
+#else
+                SDL_LockAudio();
+#endif
 				// todo: let playback finish, because there's still data
 				// in the buffer that has to be mixed
 				CleanUp();
@@ -151,7 +165,11 @@ namespace Sound {
 					_isPlaying = 0;
 					// todo: notify sound system (maybe load another song?)
 				}
+#ifndef macintosh
 				SDL_SemPost(_sem);
+#else
+                SDL_UnlockAudio();
+#endif
 			}
 		} // buffer has been filled
 	}
