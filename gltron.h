@@ -70,6 +70,14 @@ typedef png_texture texture;
 /* rendering stuff */
 #include "renderer_gl.h"
 
+/* resource management */
+#include "texture.h"
+
+extern int game_textures;
+extern int n_textures;
+extern texture_info textures[];
+
+/* graphics libs */
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -94,6 +102,8 @@ enum {
 
 #define SONG_PREFIX "song_"
 #define MUSIC_DIR "music"
+
+#define PATH_ART "art"
 
 #define PLAYERS 4
 #define MAX_PLAYERS 4
@@ -149,6 +159,9 @@ enum {
 #define SCREENSAVER_WAIT 2000
 
 #define PAUSE_GAME_FINISHED 1
+
+extern char** artpack_list;
+extern int artpack_index;
 
 extern int gl_error;
 
@@ -464,3 +477,5 @@ extern void ftxRenderString(fonttex *ftx, char *string, int len);
 /* can't get max_ascent, max_descent yet */
 
 #endif
+
+
