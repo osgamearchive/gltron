@@ -4,7 +4,7 @@ dnl initialisation
 AC_INIT(src/gltron.c)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE(gltron, 0.62)
+AM_INIT_AUTOMAKE(gltron, 0.63alpha1)
 
 AC_PREFIX_DEFAULT("/usr/local")
 
@@ -145,6 +145,13 @@ AC_OUTPUT([Makefile \
 	lua/src/Makefile \
 	lua/src/lib/Makefile \
 	nebu/Makefile \
+	nebu/include/Makefile \
+	nebu/include/audio/Makefile \
+	nebu/include/base/Makefile \
+	nebu/include/filesystem/Makefile \
+	nebu/include/input/Makefile \
+	nebu/include/scripting/Makefile \
+	nebu/include/video/Makefile \
 	nebu/base/Makefile \
 	nebu/filesystem/Makefile \
 	nebu/scripting/Makefile \
@@ -152,9 +159,17 @@ AC_OUTPUT([Makefile \
 	nebu/video/Makefile \
 	nebu/audio/Makefile
 	src/Makefile \
+	src/include/Makefile \
+	src/include/audio/Makefile \
+	src/include/base/Makefile \
+	src/include/configuration/Makefile \
+	src/include/filesystem/Makefile \
+	src/include/game/Makefile \
+	src/include/input/Makefile \
+	src/include/scripting/Makefile \
+	src/include/video/Makefile \
 	src/base/Makefile \
 	src/filesystem/Makefile \
-	src/scripting/Makefile \
 	src/configuration/Makefile \
 	src/audio/Makefile \
 	src/video/Makefile \
