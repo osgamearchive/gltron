@@ -26,6 +26,11 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 	basic_types.h game_data.h client_data.h recognizer.h file_io.h \
 	system_keynames.c system_keynames.h \
 	timedemo.c timedemo.h random.c random.h \
+	graphics_lights.c graphics_lights.h \
+	graphics_world.c graphics_world.h \
+	graphics_hud.c graphics_hud.h \
+	graphics_fx.c graphics_fx.h \
+	graphics_utility.c graphics_utility.h \
 	# extgl.h extgl.c 
 
 
