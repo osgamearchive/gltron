@@ -385,7 +385,7 @@ Menu = {
       right = nextTrack,
       left = previousTrack,
       action = nextTrack,
-      read = function() return current_track; end
+      read = function() _, _, name = strfind(current_track, "song_([^\.]*)"); return name; end
    }
 }
 
