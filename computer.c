@@ -89,7 +89,7 @@ void doComputer(int player, int target) {
     if(ai->danger != 0) break;
   }
 
-  if(ai->danger != 0 || ai->moves > max_moves[level] * getSettingi("grid_size")) {
+  if(ai->danger != 0 || ai->moves > max_moves[level] * game2->rules.grid_size) {
     ai->moves = 0;
 
     /* figure out how far it's to either side */
@@ -198,7 +198,7 @@ void doComputer2(int player, int target) {
     return;
   }
 
-  critical = (1 - CRIT_F) * getSettingi("grid_size");
+  critical = (1 - CRIT_F) * game2->rules.grid_size;
   x = dirsX[ data->dir ];
   y = dirsY[ data->dir ];
   getXYdir(DIR_FRONT, &x, &y);

@@ -12,10 +12,10 @@ static float dx() { return xv[1] * xv[0] * cos(xv[1] * alpha + xv[2]) - xv[4] * 
 static float dy() { return - yv[1] * yv[0] * sin(yv[1] * alpha + yv[2]) - yv[4] * yv[3] * sin(yv[4] * alpha + yv[5]); }
 
 void getRecognizerPositionVelocity(Point *p, Point *v) {
-  p->x = ( x() + 1.0 ) * getSettingi("grid_size") / 2.0;
-  p->y = ( y() + 1.0 ) * getSettingi("grid_size") / 2.0;
-  v->x = dx() * getSettingi("grid_size");
-  v->y = dy() * getSettingi("grid_size");
+  p->x = ( x() + 1.0 ) * game2->rules.grid_size / 2.0;
+  p->y = ( y() + 1.0 ) * game2->rules.grid_size / 2.0;
+  v->x = dx() * game2->rules.grid_size;
+  v->y = dy() * game2->rules.grid_size;
 }
 
 void drawRecognizers(int flag) {
@@ -36,8 +36,8 @@ void drawRecognizers(int flag) {
 
   max = 1;
 
-  rx = ( max + ( x() + 1.0 ) * (getSettingi("grid_size") - max) ) / 2.0;
-  ry = ( max + ( y() + 1.0 ) * (getSettingi("grid_size") - max) ) / 2.0;
+  rx = ( max + ( x() + 1.0 ) * (game2->rules.grid_size - max) ) / 2.0;
+  ry = ( max + ( y() + 1.0 ) * (game2->rules.grid_size - max) ) / 2.0;
   glTranslatef( rx, ry, RECOGNIZER_HEIGHT );
   glRotatef( (phi + M_PI / 2) * 180 / M_PI, 0, 0, 1); /* up */
 

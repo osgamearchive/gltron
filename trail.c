@@ -124,7 +124,7 @@ void drawTrailLines(Player *p) {
   while(line != data->trail) { /* the current line is not drawn */
     /* compute distance from line to eye point */
     dist = getDist(line, cam->cam);
-    alpha = (getSettingi("grid_size") - dist / 2) / getSettingi("grid_size");
+    alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
     trail_top[3] = alpha;
     glColor4fv(trail_top);
     
@@ -141,7 +141,7 @@ void drawTrailLines(Player *p) {
 
   /* compute distance from line to eye point */
   dist = getDist(line, cam->cam);
-  alpha = (getSettingi("grid_size") - dist / 2) / getSettingi("grid_size");
+  alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
   glColor4fv(trail_top);
 
   glBegin(GL_LINES);
