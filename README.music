@@ -1,9 +1,9 @@
 GLtron has now the ability to playback mp3 files and other music (if
 SDL_sound was configured correctly).
 
-Put your music in the data/music/ directory and prefix the song name with
+Put your music in the music/ directory and prefix the song name with
 'song_', e.g. 'song_aybabtu.mp3'. Use the arrow keys on the Audio->Song
 menu item to cycle through the list (generated at startup).
 
-Switching songs currently leaks memory and filesize is limited to 10 MB,
+Songs filesize is limited to 10 MB, and needs as much memory
 I'll see to fixing that in the near future.

@@ -6,10 +6,16 @@ TODO list
 Bugs [high priority]:
 - make sure starting positions are really randomized right now, to prevent
   unfair advantage for player 0
-- fix first person view, e.g. don't draw cycle
+- fix first person view, e.g. don't draw cycle, check for settingsCache not
+  being updated
+- disable trails if their height is 0
+- fix cycle sound starting when going from paused to menu
+- check cycle & recognizer sounds again (pause/menu/unpause/game)
+- check missing functions for possible source of static noise
 
 Features [high priority]:
 
+- add console message when camera was changed with F10
 - fallback instead of app exiting on corrupt mp3 files
 - fallback instead of app exiting when SDL_sound is present, but doesn't
   support ogg/vorbis, or if sound fx files are corrupt
@@ -37,6 +43,7 @@ Features [medium priority]
 - new bot AI
 - add speed boost / variable speed
 - Add new starting positions, e.g. 3 against one
+- add screen resolution independent font rendering
 
 Optimizations/Cleanups [medium priority]
 
