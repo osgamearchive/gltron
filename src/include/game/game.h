@@ -78,8 +78,6 @@ extern Game2 *game2;
 
 extern SettingsCache gSettingsCache;
 
-extern segment2 walls[];
-
 extern int dirsX[];
 extern int dirsY[];
 
