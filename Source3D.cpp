@@ -1,48 +1,12 @@
 #include "Source3D.h"
 
 Uint8 tmp[65536];
-/* ugly old code from gltron's sound3d.c */
 
 #define USOUND 50
-
-void getSound3dData(Vector3& pp, Vector3& vp, Vector3& lc,
-		    Vector3& po, Vector3& vo,
-	       float *pan, float *vol, float *shift) {
-  
-  float scalar = lc.x * ( po.x - pp.x ) + lc.y * ( po.y - pp.y );
-  
-  float temp = ( lc.x * lc.x + lc.y * lc.y ) * 
-      ( ( po.x - pp.x ) * ( po.x - pp.x ) + 
-	( po.y - pp.y ) * ( po.y - pp.y ) );
-
-  if(temp != 0) {
-    float cos2phi = scalar * scalar / temp;
-    if(1 - cos2phi > 0)
-      *pan = sqrt( 1 - cos2phi );
-    else *pan = 0;
-    if( lc.x * ( po.y - pp.y ) - lc.y * (po.x - pp.x) > 0 )
-      *pan = - *pan;
-  } else {
-    *pan = 0;
-  }
-
-  float dist2 = ( po.x - pp.x ) * ( po.x - pp.x ) +
-    ( po.y - pp.y ) * ( po.y - pp.y );
-  if(dist2 < 1) dist2 = 1;
-
-  float speed = 1.0;
-
+#define EPSILON 0.1f	 
+#define SOUND_VOL_THRESHOLD 0.01
 #define VOLSCALE_BASE 1000
-  *vol = 
-    (dist2 > VOLSCALE_BASE * speed) ? 
-    (VOLSCALE_BASE * speed / dist2) : (1.0);
-  *shift = 
-    ( USOUND + 
-      ( vo.x * ( pp.x - po.x ) + vo.y * ( pp.y - po.y ) ) / sqrt(dist2) ) /
-    ( USOUND + 
-      ( vp.x * ( pp.x - po.x ) + vp.y * ( pp.y - po.y ) ) / sqrt(dist2) );
-}
-	      
+     
 int fxShift(float shift, Uint8 *target, Uint8 *source, int len) {
   int i, j, k;
   float l;
@@ -77,22 +41,74 @@ void fxPan(float pan, float vol, Uint8 *buf, int len) {
   }
 }
       
-#define SOUND_VOL_THRESHOLD 0.01
-
 namespace Sound {
+
+  void Source3D::GetModifiers(float& fPan, float& fVolume, float& fShift) {
+
+    Vector3& vSourceLocation = _location;
+    Vector3& vSourceVelocity = _velocity;
+
+    Listener listener = _system->GetListener();
+    Vector3& vListenerLocation = listener._location;
+    Vector3 vListenerVelocity = listener._velocity;
+    Vector3 vListenerDirection = listener._direction;
+    Vector3 vListenerUp = listener._up;
+
+    if( (vSourceLocation - vListenerLocation).Length() < EPSILON  ) {
+      fPan = 0;
+      fVolume = 1.0f;
+      fShift = 1.0;
+      return;
+    }
+
+    vListenerDirection.Normalize();
+    vListenerUp.Normalize();
+    Vector3 vListenerLeft = vListenerDirection.Cross( vListenerUp );
+    vListenerLeft.Normalize();
+
+    /* panning */
+    Vector3 vTarget = vSourceLocation - vListenerLocation;
+    Vector3 vTargetPlanar = 
+      vListenerLeft * ( vTarget * vListenerLeft ) +
+      vListenerDirection * (vTarget * vListenerDirection );
+  
+    float cosPhi = 
+      vTargetPlanar.Normalize() * 
+      vListenerDirection;
+
+    fPan = 1 - fabs(cosPhi);
+
+    if( vTargetPlanar * vListenerLeft < 0 )
+      fPan = -fPan;
+
+  /* done panning */
+
+  /* attenuation */
+    fVolume = (vTarget.Length2() > VOLSCALE_BASE) ?
+      (VOLSCALE_BASE / vTarget.Length2()) : (1.0);
+  
+    /* done attenuation */
+
+  /* doppler */
+
+    fShift = 
+      (USOUND + ( vListenerVelocity * vTarget ) / vTarget.Length() ) / 
+      (USOUND + ( vSourceVelocity * vTarget ) / vTarget.Length() );
+
+    /* done doppler */
+  }
+
   void Source3D::Mix(Uint8 *data, int len) {
     if(_source->IsPlaying()) {
       int volume = (int)(_source->GetVolume() * SDL_MIX_MAXVOLUME);
-      Listener listener = _system->GetListener();
       float pan, shift, vol;
-      getSound3dData(listener._location, listener._velocity, 
-		     listener._direction,
-		     this->_location, this->_velocity,
-		     &pan, &vol, &shift);
-	
+
+
+      GetModifiers(pan, vol, shift);
+      printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
+
       int clen = (int)((len / 4) * shift + 1) * 4;
       assert(clen < _source->_buffersize);
-      // printf("volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
 
       if(vol > SOUND_VOL_THRESHOLD) {
 	// copy clen bytes from the buffer to a temporary buffer
