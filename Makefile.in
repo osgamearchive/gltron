@@ -84,6 +84,7 @@ CFILES = \
 	recognizer.c \
 	console.c \
 	renderer_gl.c \
+	credits.c \
 	@NETWORK_FILES@
 #	network.c \
 #	system_net.c
