@@ -47,7 +47,7 @@ while 1 do
 	SetCallback(callback)
 	-- write(format("[lua] setting callback '%s'\n", callback))
 	 
-	status = SystemMainLoop()
+	status = c_mainLoop()
 	-- write(format("[lua] system returned (%d)\n", status))
 	 
 	if(next_callback[ status ]) then
