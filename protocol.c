@@ -4,7 +4,7 @@
 static int nbsocks = 1;
 #else
 //this is the server
-#include "server_gltron.h"
+#include "server/server_gltron.h"
 static int nbsocks = MAX_PLAYERS+1;
 #endif
 int netrulenbwins = 5;

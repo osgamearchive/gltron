@@ -2,6 +2,7 @@
 
 static Uint32 ping = 0;
 static Uint32 savedtime = 0; 
+static int    observerstate = 0;
 
 void
 login(char *name)
@@ -80,6 +81,7 @@ do_serverinfo(Packet packet)
 {
   int lastserverstate = serverstate;
   //Packet rep;
+  Data *data;
 
   nbUsers = packet.infos.serverinfo.players;
 
@@ -104,12 +106,37 @@ do_serverinfo(Packet packet)
 	  break;
 	case gameState:
 	  //game->players = game2->players;
+	  game2->players=nbUsers;
 	  applyGameInfo();
 	  printf("time is %d\n", game2->time.current);
 	  if( ! hasstarted )
 	    {
 	      hasstarted = 1;
 	      timeout = SystemGetElapsedTime();
+	    }
+	  if( observerstate == 1 )
+	    {
+	      observerstate = 0; //next time we play!
+
+	      //Setting player 1 to be observer
+	      data = game->player[0].data;
+	      data->speed = SPEED_CRASHED;
+	      data->iposx = game2->startPositions[3];
+	      data->iposy = game2->startPositions[4];
+	      data->posx = data->iposx;
+	      data->posy = data->iposy;
+	      data->t = 0;
+	      data->dir = game2->startPositions[5];
+	      data->last_dir = data->dir;
+	      data->speed = game->settings->current_speed;
+	      
+	      data->trail = data->trails;
+	      
+	      data->trail->sx = data->trail->ex = data->iposx;
+	      data->trail->sy = data->trail->ey = data->iposy;
+	      data->speed = SPEED_GONE;
+	      data->trail_height = 0;
+	      data->exp_radius = EXP_RADIUS_MAX;
 	    }
 	  game2->mode = GAME_NETWORK_PLAY;
 /* 	  if( slots[me].isMaster == 1 ) */
@@ -250,8 +277,9 @@ do_action(Packet packet)
       serverstate=preGameState; //We hope that next time server will be to preGameState
 
       //Game has started go to netWaitCallbacks;
-      if( serverstate == preGameState )
-	switchCallbacks(&netWaitCallbacks);
+      /* if( serverstate == preGameState ) */
+/* 	switchCallbacks(&netWaitCallbacks); */
+      observerstate = 1;
       break;
     case PING:
       //Need to reply to ping
@@ -335,9 +363,9 @@ do_startpos(Packet packet)
 	  game2->startPositions[3*i+0]=packet.infos.startpos.startPos[3*j+0];
 	  game2->startPositions[3*i+1]=packet.infos.startpos.startPos[3*j+1];
 	  game2->startPositions[3*i+2]=packet.infos.startpos.startPos[3*j+2];
-	  printf("\n\npos %d %d %d\n\n\n", game2->startPositions[3*i+0],
+	  printf("\n\npos %d %d %d for player %d\n\n\n", game2->startPositions[3*i+0],
 		 game2->startPositions[3*i+1],
-		 game2->startPositions[3*i+2]);
+		 game2->startPositions[3*i+2], i);
 	}
     }
 }
@@ -453,6 +481,8 @@ do_gameState( Packet packet )
     case SERVERINFO:
       do_serverinfo(packet);
       break;
+    case USERINFO:
+      do_userinfo(packet);
     case ACTION:
       do_action(packet);
       break;

@@ -224,7 +224,9 @@ void doTurn(Data *data, int time) {
 int applyGameInfo() {
   int i; 
   Data *data;
-  if(game2->players > game->players) {
+  //if(game2->players > game->players) {
+  if(game2->players > MAX_PLAYERS) {
+  
     fprintf(stderr, "more players in demo than allowed\n");
     return 1;
   }

@@ -255,7 +255,7 @@ do_login( int which, Packet packet )
     rep.infos.serverinfo.serverstate = sState;
   else
     rep.infos.serverinfo.serverstate = preGameState;
-  rep.infos.serverinfo.players     = nbUsers;
+  rep.infos.serverinfo.players       = nbUsers;
   Net_sendpacket(&rep, slots[which].sock);
 
   //Send his infos...
@@ -346,10 +346,29 @@ do_login( int which, Packet packet )
 
   if( hasstarted == 1 )
     {
+
+   /*    for(i=0; i<MAX_PLAYERS; ++i) */
+/* 	{ */
+/* 	  slots[i].player     = -1; */
+/* 	  slots[i].hasstarted = 0; */
+/* 	} */
+      
+/*       for(i=0; i<MAX_PLAYERS; ++i) */
+/* 	{ */
+/* 	  if( slots[i].active == 1 ) */
+/* 	    { */
+/* 	      //find the new player ident */
+/* 	      slots[i].player = find_freeplayer(); */
+/* 	      printf("new player %d -> %d\n", i, slots[i].player); */
+/* 	    } else { */
+/* 	      slots[i].player = -1; */
+/* 	    } */
+/* 	} */
+
       //Send rules as we are starting the game...
       rep.which                        = SERVERID;
       rep.type                         = GAMERULES;
-      rep.infos.gamerules.players      = game2->players;
+      rep.infos.gamerules.players      = game2->players+1;
       rep.infos.gamerules.speed        = game2->rules.speed;
       rep.infos.gamerules.eraseCrashed = game->settings->erase_crashed;
       rep.infos.gamerules.gamespeed    = game->settings->game_speed;
@@ -357,7 +376,7 @@ do_login( int which, Packet packet )
       rep.infos.gamerules.arena_size   = game->settings->arena_size;
       rep.infos.gamerules.time         = game2->time;
       //Startpos
-      printf("%d players, preparing start post\n", game2->players);
+      printf("%d players, preparing start post\n", game2->players+1);
       rep2.which                        = SERVERID;
       rep2.type                         = STARTPOS;
       for(i=0; i<game2->players; ++i)
@@ -365,9 +384,12 @@ do_login( int which, Packet packet )
 	  
 	  j=getWhich(i);
 	  printf("\nget startpos client ( sent ) %d <-> server %d\n", j, i);
-	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx;
-	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy;
-	  rep2.infos.startpos.startPos[3*j+2]=game->player[i].data->dir;
+/* 	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx; */
+/* 	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy; */
+/* 	  rep2.infos.startpos.startPos[3*j+2]=game->player[i].data->dir; */
+	  rep2.infos.startpos.startPos[3*j+0]=game2->startPositions[3*i];
+	  rep2.infos.startpos.startPos[3*j+1]=game2->startPositions[3*i+1];
+	  rep2.infos.startpos.startPos[3*j+2]=game2->startPositions[3*i+2];
 	  
 	  printf("\n\npos %d %d %d\n\n\n", rep2.infos.startpos.startPos[3*j+0],
 		 rep2.infos.startpos.startPos[3*j+1],
@@ -424,6 +446,7 @@ do_startgame( int which, Packet packet )
     return;
 
   netscores.winner=-1;
+  initEventlist(eventList);
 
   //TODO: clean this part of code. Really UGLY...
 
@@ -484,6 +507,12 @@ do_startgame( int which, Packet packet )
   printf("%d players, preparing start post\n", game2->players);
   rep2.which                        = SERVERID;
   rep2.type                         = STARTPOS;
+
+  if( game2->startPositions == NULL )
+    {
+      game2->startPositions = (int*) malloc( 3*MAX_PLAYERS*sizeof(int));
+    }
+
   for(i=0; i<game2->players; ++i)
     {
 	 
@@ -492,11 +521,15 @@ do_startgame( int which, Packet packet )
 	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx;
 	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy;
 	  rep2.infos.startpos.startPos[3*j+2]=game->player[i].data->dir;
-	  
+
+	  game2->startPositions[3*i]  = game->player[i].data->iposx;
+	  game2->startPositions[3*i+1]= game->player[i].data->iposy;
+	  game2->startPositions[3*i+2]= game->player[i].data->dir;
 	  printf("\n\npos %d %d %d\n\n\n", rep2.infos.startpos.startPos[3*j+0],
 		 rep2.infos.startpos.startPos[3*j+1],
 		 rep2.infos.startpos.startPos[3*j+2]);
     }
+
   for(i=0; i<MAX_PLAYERS; ++i)
     {
       if( slots[i].active == 1 )
