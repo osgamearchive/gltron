@@ -3,7 +3,7 @@
 
 void enableSkyboxTexture(void);
 void disableSkyboxTexture(void);
-void drawSkybox(int grid_size);
+void drawSkybox(float d);
 
 #endif /* SKYBOX_H */
 

@@ -13,7 +13,7 @@ static void bindSkyboxTexture(int index) {
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 }
 
-void drawSkybox(int grid_size) {
+void drawSkybox(float d) {
   /* 
      matrices are: 
      projection: perspective projection 
@@ -44,7 +44,6 @@ void drawSkybox(int grid_size) {
     
   float uv[4][2] = { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 0, 1 } };
   int i, j;
-  float d = grid_size * 3;
   
   glEnable(GL_TEXTURE_2D);
   glDepthMask(GL_FALSE);
