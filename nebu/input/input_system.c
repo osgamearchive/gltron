@@ -101,12 +101,8 @@ void nebu_Intern_HandleInput(SDL_Event *event) {
 			break;
 		}
 		/* check: is that translation necessary? */
-		if(key)
-			if(current && current->keyboard)
-				current->keyboard(state, key, 0, 0);
-		else
-			if(current && current->keyboard)
-				current->keyboard(state, event->key.keysym.sym, 0, 0);
+		if(current && current->keyboard)
+			current->keyboard(state, key ? key : event->key.keysym.sym, 0, 0);
 		break;
 	case SDL_JOYAXISMOTION:
 		if( abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
