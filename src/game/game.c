@@ -1,5 +1,25 @@
+#include "filesystem/path.h"
 #include "game/gltron.h"
 #include "game/timesystem.h"
+
+void loadLevel(void) {
+	char *path, *level;
+
+	scripting_GetGlobal("settings", "current_level", NULL);
+	scripting_GetStringResult(&level);
+	fprintf(stderr, "[status] loading level '%s'\n", level);
+
+	path = getPath(PATH_LEVEL, level);
+	if(path) {
+		scripting_RunFile(path);
+		free(path);
+	}
+	else
+		{
+			printf("[fatal] can't get valid path for level\n");
+			exit(1); // fatal
+		}
+}
 
 void GameMode_Idle(void) {
 	Sound_idle();
