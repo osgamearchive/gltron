@@ -122,8 +122,8 @@ draw_wlist( Wlist *wlist )
 
   //draw Titles
   glBegin(GL_LINES);
-  glVertex2d(wlist->x,               wlist->y+wlist->height-h );
-  glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h );
+  glVertex2d(wlist->x,               wlist->y+wlist->height-h+1 );
+  glVertex2d(wlist->x+wlist->width,  wlist->y+wlist->height-h+1 );
   glEnd();
 
   y = wlist->y+wlist->height-h/2;
@@ -166,16 +166,16 @@ draw_wlist( Wlist *wlist )
 		  //draw hilight
 		  glColor3f(.1, .1, 0.4);
 		  glBegin(GL_QUADS);	  
-		  glVertex3f(x+1, y+h/2-1, 0.0f);     //top left
+		  glVertex3f(x+1, y+h/2+1, 0.0f);     //top left
 		  if( j == wlist->nbcols-1 )
 		    {
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2-1, 0.0f);   //top right
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y-h/2+1, 0.0f);   //Bottom right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y+h/2+1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100-1, y-h/2-1, 0.0f);   //Bottom right
 		    } else {
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2-1, 0.0f);   //top right
-		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y-h/2+1, 0.0f);   //Bottom right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y+h/2+1, 0.0f);   //top right
+		      glVertex3f(x+ wlist->width*wlist->colDefs[j].colsize/100+1, y-h/2-1, 0.0f);   //Bottom right
 		    }
-		  glVertex3f(x+1, y-h/2+1, 0.0f);         //Bottom left
+		  glVertex3f(x+1, y-h/2-1, 0.0f);         //Bottom left
 		  glEnd();
 		  glColor3f(.9, .9, 0.6);
 		} else 
@@ -330,7 +330,10 @@ scroll_wlist(Wlist *wlist, int dir)
 int
 getcurrent_wlist( Wlist *wlist )
 {
-  return wlist->index[wlist->current];
+  if( wlist->current == -1 )
+    return -1;
+  else
+    return wlist->index[wlist->current];
 }
 
 void

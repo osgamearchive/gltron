@@ -39,7 +39,7 @@ int processEvent(GameEvent* e) {
 #ifdef __NETWORK__
     if( isConnected && serverstate==gameState )
       {
-	sprintf(messages, "%s crashed", slots[getWhich(e->player)].name);
+	sprintf(messages, "%s crashed", (slots[getWhich(e->player)].active==1)?slots[getWhich(e->player)].name:"Computer");
 	if( e->player == 0 )
 	  initTurnList();
       } else {

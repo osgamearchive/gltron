@@ -222,7 +222,7 @@ do_userinfo(Packet packet)
 	{
 	  sprintf(mesg, "logged...\n");
 	  printf("logged...\n");
-	  insert_wtext(pregametext, mesg, 65);
+	  insert_wtext(pregametext, mesg, 3);
 	}
     } else {
       slots[which].player=(which==0)?me:which;

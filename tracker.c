@@ -7,6 +7,7 @@ static int nbservers = 0;
 static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
 
+#define PINGLIMIT 400
 
 int
 tracker_connect()
@@ -199,7 +200,7 @@ displayServerLegend()
 void
 displayTrackerScreen()
 {
-  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { 0.0, 0.5, 1.0 }};
+  float colors[][3] = { { 1.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 1.0, 0.5, 0.5} , { .8, .1, .1 }};
   int x, y;
   int h;
   char str[255];
@@ -217,6 +218,39 @@ displayTrackerScreen()
   y = game->screen->vp_h - 1.5 * h;
   drawText(gameFtx, x, y, h+3, "GLTRON SERVERS");
   
+  //draw server info
+  displayServerLegend();
+
+  //draw server list
+  draw_wlist(serverlist);
+
+  //Display errors
+  y = 1.5 * h * 2;
+  glColor3fv(colors[3]);
+  if(getcurrent_wlist(serverlist)>=0 )
+    {
+      if( servers[getcurrent_wlist(serverlist)].packets > 0 && ((servers[getcurrent_wlist(serverlist)].ping/servers[getcurrent_wlist(serverlist)].packets) > PINGLIMIT))
+	{
+	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION))
+	    {
+	      sprintf(str, "Your version is not comptatible and ping is too high" );
+	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
+	      drawText(netFtx, x, y, h-1, str);
+	    } else {
+	      sprintf(str, "ping is too high");
+	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
+	      drawText(netFtx, x, y, h-1, str);
+	    }
+	} else {
+	  if( strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION))
+	    {
+	      sprintf(str, "Your version is not comptatible");
+	      x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
+	      drawText(netFtx, x, y, h-1, str);
+	    }
+	}
+    }
+
 
   //draw number of servers
   y = 1.5 * h;
@@ -224,13 +258,8 @@ displayTrackerScreen()
   sprintf(str, "%d gltron servers.", nbservers);
   x = game->screen->vp_w/2 - 1.5 * strlen(str)/2 *( game->screen->vp_w / (50 * 1.5) );
   drawText(netFtx, x, y, h, str);
-
-  //draw server info
-  displayServerLegend();
-
-  //draw server list
-  draw_wlist(serverlist);
   SystemSwapBuffers();
+
 }
 
 void
@@ -310,6 +339,9 @@ keyTracker(int k, int unicode, int x, int y)
       break;
     case 13:
       //connect to the server
+      if(  (servers[getcurrent_wlist(serverlist)].packets > 0 && ((servers[getcurrent_wlist(serverlist)].ping/servers[getcurrent_wlist(serverlist)].packets) > PINGLIMIT)) || strcmp(servers[getcurrent_wlist(serverlist)].version, VERSION))
+	return;
+
       //str = getcell_wlist ( serverlist, getcurrent_wlist(serverlist), 0);
       ipaddress = (IPaddress *)getCell_wlist( serverlist, getcurrent_wlist(serverlist), 0);
 
@@ -357,18 +389,39 @@ void
 drawit( WlistPtr list, int x, int y, int line, int col )
 {
   int h = list->height/serverlist->nblines;
-  int s = h-15;
+  //int s = h-15;
+
+
+  //printf("comparing %d <>100 and %s <> %s\n", servers[line].ping, servers[line].version, VERSION);
+  if( ( servers[line].packets > 0 && ((servers[line].ping/servers[line].packets) <= PINGLIMIT) && ! (strcmp(servers[line].version, VERSION)) )|| line > nbservers)
+    return;
+
+  //draw not available
+  glColor3f(.3, .3, .4);
+  glBegin(GL_QUADS);	  
+  glVertex3f(x+1, y+h/2+1, 0.0f);     //top left
+  if( col == list->nbcols-1 )
+    {
+      glVertex3f(x+ list->width*list->colDefs[col].colsize/100-1, y+h/2+1, 0.0f);   //top right
+      glVertex3f(x+ list->width*list->colDefs[col].colsize/100-1, y-h/2-1, 0.0f);   //Bottom right
+    } else {
+      glVertex3f(x+ list->width*list->colDefs[col].colsize/100+1, y+h/2+1, 0.0f);   //top right
+      glVertex3f(x+ list->width*list->colDefs[col].colsize/100+1, y-h/2-1, 0.0f);   //Bottom right
+    }
+  glVertex3f(x+1, y-h/2-1, 0.0f);         //Bottom left
+  glEnd();
+
 
   //glColor3f(list->colDefs[col].color[0], list->colDefs[col].color[1], list->colDefs[col].color[2] );
-  glColor3f(.8, .4, .4);
-  glBegin(GL_LINES);
-  glVertex2d(x,                                            y-h/2);
-  glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y+h/2);
-  glEnd();
-  glBegin(GL_LINES);
-  glVertex2d(x,                                            y+h/2);
-  glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y-h/2);
-  glEnd();
+  /* glColor3f(.8, .4, .4); */
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(x,                                            y-h/2); */
+/*   glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y+h/2); */
+/*   glEnd(); */
+/*   glBegin(GL_LINES); */
+/*   glVertex2d(x,                                            y+h/2); */
+/*   glVertex2d(x+(list->width*list->colDefs[col].colsize/100),   y-h/2); */
+/*   glEnd(); */
 
 
   //fprintf(stderr, "line %d col %d\n", line, col);
@@ -474,10 +527,10 @@ initTracker()
 
   colDefs = new_colDefs( 4 );
 
-  set_colDef( colDefs, 0, "Address", 30, colors[1], NULL, addressToStr, NULL); 
-  set_colDef( colDefs, 1, "Description", 40, colors[1], NULL, charToStr, NULL); 
-  set_colDef( colDefs, 2, "Players", 20, colors[1], NULL, intToStr, NULL); 
-  set_colDef( colDefs, 3, "Ping", 10, colors[3], NULL, intToStr, sortit); 
+  set_colDef( colDefs, 0, "Address", 30, colors[1], drawit, addressToStr, NULL); 
+  set_colDef( colDefs, 1, "Description", 40, colors[1], drawit, charToStr, NULL); 
+  set_colDef( colDefs, 2, "Players", 20, colors[1], drawit, intToStr, NULL); 
+  set_colDef( colDefs, 3, "Ping", 10, colors[3], drawit, intToStr, sortit); 
 
   serverlist = new_wlist(10, 60,game->screen->vp_w-20, game->screen->vp_h-250,
 			 10, 4, colDefs, 3, focus);
