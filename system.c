@@ -177,7 +177,7 @@ int SystemCreateWindow(char *name) {
     fprintf(stderr, "Couldn't set GL mode: %s\n", SDL_GetError());
     exit(1);
   }
-  else return 1;
+  return 1;
 }
 
 void SystemDestroyWindow(int id) {
