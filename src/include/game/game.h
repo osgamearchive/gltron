@@ -103,4 +103,8 @@ extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
 extern void resetVideoData();
 extern void resetPlayerData();
+
+extern void doCameraMovement();
+extern void initCamera(Camera *cam, Data *data, int type);
+
 #endif
