@@ -101,6 +101,9 @@ void changeAction(char *name) {
     v = getVi(name);
     game->player[c - 1].ai->active = *v;
     /* printf("changed AI status for player %c\n", c + '0'); */
+  } else if(strstr(name, "ai_level") == name) {
+    int *v = getVi(name);
+    initGameAI(*v);
   } 
   else if(strstr(name, "windowMode") == name) {
     initGameScreen();

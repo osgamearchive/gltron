@@ -38,6 +38,10 @@ void initGameStructures() { /* called only once */
   game->winner = -1;
   game->screen = (gDisplay*) malloc(sizeof(gDisplay));
   game->viewportType = game->settings->display_type; 
+  
+  /* Setup the game's ai */
+  initGameAI(game->settings->ai_level);
+  
   d = game->screen;
   d->h = game->settings->height; d->w = game->settings->width;
   d->vp_x = 0; d->vp_y = 0;

@@ -155,14 +155,7 @@ void idleGame( void ) {
 	  if(game->player[i].ai->active == AI_COMPUTER &&
 	     PLAYER_IS_ACTIVE(&game->player[i])) {
 
-            /* 
-              TODO: replace this block with a pointer
-                    to the correct doComputer function
-	    */
-	    if(game->settings->ai_level < 2)
-	      doComputer(i, 0);
-	    else 
-	      doComputer2(i, 0);
+	    game->settings->ai_function(i, 0);
 	  }
 
       /* process any outstanding events (turns, etc) */

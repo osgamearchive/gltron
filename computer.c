@@ -1,6 +1,16 @@
 #include "gltron.h"
 #include "event.h"
 
+void initGameAI(int level) {
+
+  /* set ai function ptr based on difficulty level setting */
+  if (level < 2) {
+    game->settings->ai_function = doComputer;
+  } else {
+    game->settings->ai_function = doComputer2;
+  }
+}
+
 int freeway(Data *data, int dir) {
   int i;
   int wd = 20;

@@ -378,6 +378,7 @@ extern void doBmpScreenShot();
 
 /* ai -> computer.c */
 
+extern void initGameAI(int level);
 extern void doComputer(int player, int target);
 extern void doComputer2(int player, int target);
 
