@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "SDL_opengl.h"
-
 #include "filesystem/path.h"
 #include "video/nebu_mesh.h"
 #include "video/video_level.h"
@@ -136,7 +134,8 @@ nebu_Mesh* loadMesh(void) {
 	int i, j;
 	
 	pMesh = (nebu_Mesh*) malloc( sizeof(nebu_Mesh) );
-	
+	memset(pMesh, 0, sizeof(nebu_Mesh));
+
 	scripting_GetValue("vertexformat");
 	scripting_GetIntegerResult(& pMesh->vertexformat);
 	scripting_GetValue("vertices");
@@ -146,8 +145,8 @@ nebu_Mesh* loadMesh(void) {
 		pMesh->pVertices = malloc( pMesh->nVertices * 3 * sizeof(float) );
 	if(pMesh->vertexformat & NEBU_MESH_NORMAL)
 		pMesh->pNormals = malloc( pMesh->nVertices * 3 * sizeof(float) );
-	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD)
-		pMesh->pTexCoords = malloc( pMesh->nVertices * 2 * sizeof(float) );
+	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0)
+		pMesh->pTexCoords[0] = malloc( pMesh->nVertices * 2 * sizeof(float) );
 
 	for(i = 0; i < pMesh->nVertices; i++) {
 		scripting_GetArrayIndex(i + 1);
@@ -171,12 +170,12 @@ nebu_Mesh* loadMesh(void) {
 			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 2] );
 			scripting_PopTable(); // pos
 		}
-		if(pMesh->vertexformat & NEBU_MESH_TEXCOORD) {
+		if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0) {
 			scripting_GetValue("uv");
 			scripting_GetValue("u");
-			scripting_GetFloatResult( & pMesh->pTexCoords[2 * i + 0] );
+			scripting_GetFloatResult( & pMesh->pTexCoords[0][2 * i + 0] );
 			scripting_GetValue("v");
-			scripting_GetFloatResult( & pMesh->pTexCoords[2 * i + 1] );
+			scripting_GetFloatResult( & pMesh->pTexCoords[0][2 * i + 1] );
 			scripting_PopTable(); // uv
 		}
 		scripting_PopTable(); // index i
