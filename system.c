@@ -16,9 +16,6 @@ void SystemExit() {
   fprintf(stderr, "[system] shutting down sound now\n");
   Sound_shutdown();
   fprintf(stderr, "[system] shutting down network now\n");
-#ifdef NETWORK
-  SystemNetExit();
-#endif
   fprintf(stderr, "[system] shutting down sdl now\n");
   SDL_Quit();
   fprintf(stderr, "[system] exiting application\n");
@@ -54,10 +51,6 @@ void SystemInit(int *argc, char *argv[]) {
 		if(i)
 			SDL_JoystickEventState(SDL_ENABLE);
 	}
-			
-#ifdef NETWORK
-  SystemNetInit();
-#endif
 }
 
 void SystemGrabInput() {

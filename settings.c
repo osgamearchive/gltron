@@ -84,9 +84,6 @@ int getSettingi(char *name) {
     return 0;
   }
 
-#ifdef LUA_PROFILE
-  lua_profile++;
-#endif
   return value;
 }
 
@@ -99,9 +96,6 @@ float getSettingf(char *name) {
     return 0;
   }
 
-#ifdef LUA_PROFILE
-  lua_profile++;
-#endif
   return value;
 }
 

@@ -6,10 +6,6 @@ Game *game;
 Game2 main_game2;
 Game2 *game2;
 
-#ifdef LUA_PROFILE
-int lua_profile = 0;
-#endif
-
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 
 /* TexFont *txf = NULL; */

@@ -237,10 +237,6 @@ extern "C" {
 	extern int viewport_content[4];
 	extern void (*ai_function)(int,int);
 
-#ifdef LUA_PROFILE
-	extern int lua_profile;
-#endif
-
 	extern float camAngle;
 	extern float cam_phi;
 	extern float cam_chi;

@@ -1,8 +1,6 @@
 #include "renderer_gl.h"
 
-#ifdef POLY_COUNT
 extern int polycount;
-#endif
 
 GLstate rendererState;
 GLstate *state = &rendererState;
@@ -72,9 +70,7 @@ void renderQuad(Quad *q) {
   if(q->type & QUAD_ALPHA_TEST);
     glDisable(GL_ALPHA_TEST);
 
-#ifdef POLY_COUNT
   polycount += 2;
-#endif
 }
 
 static int rendererExtensionSupported(const char *extension) {
@@ -103,8 +99,3 @@ static int rendererExtensionSupported(const char *extension) {
   }
   return 0;
 }
-                         
-
-
-
-
