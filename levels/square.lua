@@ -1,3 +1,5 @@
+directions = { random = -1, up = 2, down = 0, right = 1, left = 3 }
+
 level = {
 
 version = 71,
@@ -19,10 +21,10 @@ boundary = {
 -- (they don't have to be sorted, they will be randomized anyway)
 
 spawn = {
-  { x = .25, y = .5 },
-  { x = .5, y = .25 },
-  { x = .5, y = .75 },
-  { x = .75, y = .5 }
+  { x = .25, y = .5, dir = directions.random }, 
+  { x = .5, y = .25, dir = directions.random }, 
+  { x = .5, y = .75, dir = directions.random }, 
+  { x = .75, y = .5, dir = directions.random }
 },
 
 geometry = {

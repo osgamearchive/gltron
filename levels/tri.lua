@@ -1,3 +1,4 @@
+directions = { random = -1, up = 2, down = 0, right = 1, left = 3 }
 sqrt3 = 1.73205
 
 level = {
@@ -20,10 +21,10 @@ boundary = {
 -- (they don't have to be sorted, they will be randomized anyway)
 
 spawn = {
-	{ x = .25, y = sqrt3/6 },
-	{ x = .5, y = 2*sqrt3/6 },
-	{ x = .5, y = sqrt3/6 },
-	{ x = .75, y = sqrt3/6 }
+	{ x = .25, y = sqrt3/6, dir = directions.up },
+	{ x = .5, y = 2*sqrt3/6, dir = directions.down },
+	{ x = .5, y = sqrt3/6, dir = directions.up },
+	{ x = .75, y = sqrt3/6, dir = directions.up }
 },
 
 geometry = {
