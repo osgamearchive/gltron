@@ -1,6 +1,6 @@
 # GNU automake Makefile.am for gltron
 
-EXTRA_DIST = CREDITS README.html README.lua COPYING ChangeLog INSTALL FAQ TODO
+EXTRA_DIST = CREDITS README.html README.lua COPYING ChangeLog INSTALL FAQ TODO gltron.6
 
 # SUBDIRS = art data 
 SUBDIRS=lua data art sounds scripts
@@ -25,6 +25,8 @@ gltron_SOURCES = artpack.c png_texture.c pixels.c switchCallbacks.c gui.c \
 gltron_LDADD = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/liblualib.a -lm
 
 gltron_DEPENDENCIES = @NETWORK_OBJS@ @SOUND_OBJS@ lua/src/liblua.a lua/src/lib/liblualib.a
+
+man_MANS = gltron.6
 
 EXTRA_gltron_SOURCES = sound.c sound_glue.cpp sound_glue.h \
 	Source.cpp Source3D.cpp SourceMusic.cpp SourceSample.cpp SoundSystem.cpp \
