@@ -13,22 +13,11 @@ static float dy() { return - yv[1] * yv[0] * sin(yv[1] * alpha + yv[2]) - yv[4] 
 
 
 void initRecognizerColor() {
-  int r = 1 + (int)(10.0*rand()/(RAND_MAX+1.0));   
-  
-  /* 20% chance for a blue recognizer */
-  if (r < 2) {
-    rec_outline_color[0] = 0.0;
-    rec_outline_color[2] = 0.8;
-    rec_spec_color[0] = 0.10;
-    rec_spec_color[1] = 0.10;
-    rec_spec_color[2] = 0.30;
-  } else {
-    rec_outline_color[0] = 0.8;
-    rec_outline_color[2] = 0.0;
-    rec_spec_color[0] = 0.05;
-    rec_spec_color[1] = 0.14;
-    rec_spec_color[2] = 0.05;
-  } 
+  rec_outline_color[0] = 0.8;
+  rec_outline_color[2] = 0.0;
+  rec_spec_color[0] = 0.05;
+  rec_spec_color[1] = 0.14;
+  rec_spec_color[2] = 0.05;
 }
 
 void getRecognizerPositionVelocity(Point *p, Point *v) {
