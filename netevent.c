@@ -4,6 +4,11 @@
 int
 getPlayer(int which)
 {
+  if( which < 0 || which > MAX_PLAYERS )
+    {
+      fprintf(stderr, "error getPlayer with invalid which %d\n", which);
+      //return 0;//what could be the best?!!
+    }
   return slots[which].player;
 }
 

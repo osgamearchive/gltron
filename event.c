@@ -182,16 +182,19 @@ void idleGame( void ) {
 
 
 #ifdef __NETWORK__
-  idleTurns();
-  sockstat = Net_checksocks();
-  if( game2->mode == GAME_NETWORK_PLAY && isConnected && sockstat != socksnotready )
+  if( game2->mode == GAME_NETWORK_PLAY && isConnected   )
     {
-      if( sockstat & tcpsockready )
-	handleServer();
+      idleTurns();
+      sockstat = Net_checksocks();
+      if( sockstat != socksnotready )
+	{
+	  if( sockstat & tcpsockready )
+	    handleServer();
 #ifdef USEUDP
-      if( sockstat & udpsockready )
-	printf("getting udp\n");
+	  if( sockstat & udpsockready )
+	    printf("getting udp\n");
 #endif
+	}
     }
 #endif
 

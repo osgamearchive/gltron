@@ -77,16 +77,29 @@ void getEvents() {
       /* TODO: check if it's safe to ignore the return value here */
 #ifdef __NETWORK__
       printf("event change player %d to %d ( curent time %d )\n", latest->player, getPlayer(latest->player),game2->time.current );
-      latest->player = getPlayer(latest->player);
 #endif
       fprintf(stderr, "process : %d %d %d %d %d\n", latest->type, latest->player, 
   	 latest->x, latest->y, latest->timestamp);
-      if( latest->player == me && (latest->type == EVENT_TURN_LEFT ||latest->type == EVENT_TURN_RIGHT) )
+
+
+
+      if( ( latest->player == me ) && 
+	  ( latest->type == EVENT_TURN_LEFT ||
+	    latest->type == EVENT_TURN_RIGHT ) &&
+	  game->player[0].data->speed != SPEED_CRASHED)
 	{
+	  printf("changing pos 'cause of prediction: %f, %f\n", 
+		 game->player[0].data->posx,
+		 game->player[0].data->posy);
 	  //adjust position because of prediction
 	  game->player[0].data->posx+=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsX[ game->player[0].data->dir];
 	  game->player[0].data->posy+=(game2->time.current-latest->timestamp)*game->player[0].data->speed*dirsY[ game->player[0].data->dir];
+	  printf("new pos is: %f, %f\n", 
+		 game->player[0].data->posx,
+		 game->player[0].data->posy);
 	} else {
+	  printf("process others events ( no predictions\n");
+	  latest->player = getPlayer(latest->player);
 	  processEvent(latest);
 	}
       latest = readEvent();
