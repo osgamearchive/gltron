@@ -10,10 +10,11 @@ settings.debug_output = 1
 -- game
 -- game rules
 settings.speed = 8.5
-settings.booster_max = 4.5
+settings.booster_min = 1.0
+settings.booster_max = 6.5
 settings.booster_use = 1.0
 settings.booster_decrease = 0.8
-settings.booster_regenerate = 0.2
+settings.booster_regenerate = 0.4
 settings.ai_level = 2
 settings.grid_size = 720
 settings.erase_crashed = 1
