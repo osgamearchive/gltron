@@ -103,7 +103,7 @@ void keyboardPrompt(int key, int x, int y) {
   case SYSTEM_KEY_TAB:
     restoreCallbacks();
     break;
-  case SYSTEM_RETURN:
+  case SYSTEM_KEY_RETURN:
     /* promptEvaluate(); */
     break;
   }
