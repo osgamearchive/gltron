@@ -753,7 +753,7 @@ void drawGlow(Player *p, gDisplay *d, float dim) {
 
 }
 
-void drawWalls(gDisplay *d) {
+void drawWalls() {
 #undef WALL_H
 #define WALL_H 48
   float t;

@@ -420,7 +420,7 @@ extern void drawAI(gDisplay *d);
 extern void drawPause(gDisplay *d);
 /* extern void drawHelp(gDisplay *d); */
 extern void drawPlayers(Player *);
-extern void drawWalls(gDisplay *d);
+extern void  drawWalls();
 extern void drawCam(Player *p, gDisplay *d);
 extern GLuint buildFloorDispList(GLuint list_start);
 extern GLuint buildSkyboxDispList(GLuint list_start);
