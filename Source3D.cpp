@@ -84,8 +84,10 @@ namespace Sound {
   /* done panning */
 
   /* attenuation */
-    fVolume = (vTarget.Length2() > VOLSCALE_BASE) ?
-      (VOLSCALE_BASE / vTarget.Length2()) : (1.0);
+    // float fallOff = vTarget.Length2();
+    float fallOff = pow(vTarget.Length(), 1.8);
+    fVolume = (fallOff > VOLSCALE_BASE) ?
+      (VOLSCALE_BASE / fallOff) : (1.0);
   
     /* done attenuation */
 
