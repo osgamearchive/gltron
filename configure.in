@@ -6,6 +6,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(gltron, 0.61am)
 
+AC_PREFIX_DEFAULT("/usr/local")
 
 dnl Checks for programs.
 AC_PROG_CC
@@ -19,14 +20,14 @@ CFLAGS="-ansi -pedantic"
 CXXFLAGS=""
 
 AC_ARG_ENABLE(warn,
-[ --enable-warn                Enable compiler warnings [default=on]],
+AC_HELP_STRING([--enable-warn],[Enable compiler warnings @<:@default=on@:>@]),
 	enable_warn=$enableval, enable_warn=yes)
 if test "x$enable_warn" = xyes; then
 	CFLAGS="$CFLAGS -Wall"
 fi
 
 AC_ARG_ENABLE(debug,
-[ --enable-debug               Enable debugging [default=off]],
+AC_HELP_STRING([--enable-debug],[Enable debugging @<:@default=off@:>@]),
 	enable_debug=$enableval, enable_debug=off)
 if test "x$enable_debug" = xyes; then
 	CFLAGS="$CFLAGS -g3"
@@ -34,7 +35,7 @@ if test "x$enable_debug" = xyes; then
 fi
 
 AC_ARG_ENABLE(profile,
-[ --enable-profile             Enable profiling [default=off]],
+AC_HELP_STRING([--enable-profile],[Enable profiling @<:@default=off@:>@]),
 	enable_profile=$enableval, enable_profile=off)
 if test "x$enable_profile" = xyes; then
 	if test "x$GCC" = xyes; then
@@ -45,7 +46,7 @@ if test "x$enable_profile" = xyes; then
 fi
 
 AC_ARG_ENABLE(optimize,
-[ --enable-optimize=[level]    Enable optimization [default=s]],
+AC_HELP_STRING([--enable-optimize=@<:@level@:>@],[Enable optimization @<:@default=s@:>@]),
 	enable_optmize=$enableval, enable_optimize=s)
 dnl this is always true
 if test "x$enable_optimize" ; then
@@ -61,13 +62,25 @@ AC_CHECK_LIB(png, png_read_info,, AC_MSG_ERROR(libpng is not installed))
 
 dnl data-dir setup
 AC_ARG_ENABLE(localdata,
-[ --enable-localdata           Data directory [default=no]],
-CPPFLAGS="$CPPFLAGS -DDATA_DIR=\".\"",
-CPPFLAGS="$CPPFLAGS -DDATA_DIR=\"\$(datadir)/\$(PACKAGE)\"")
+AC_HELP_STRING([--enable-localdata],[Use local data directory @<:@default=no@:>@]),
+	CPPFLAGS="$CPPFLAGS -DLOCAL_DATA",
+	CPPFLAGS="$CPPFLAGS -DDATA_DIR=\"\$(datadir)/\$(PACKAGE)\"")
+
+dnl snapshot dir setup
+AC_ARG_WITH(snapshot-dir,
+AC_HELP_STRING([--with-snapshot-dir=@<:@path@:>@],[Snapshot directory @<:@default=~/.gltron@:>@]),
+	CPPFLAGS="$CPPFLAGS -DSNAP_DIR=\"$withval\"",
+	CPPFLAGS="$CPPFLAGS -DSNAP_DIR=\"~/.gltron\"")
+
+dnl preferences dir setup
+AC_ARG_WITH(preferences-dir,
+AC_HELP_STRING([--with-preferences-dir=@<:@path@:>@],[Preferences directory @<:@default=~/.gltron@:>@]),
+	CPPFLAGS="$CPPFLAGS -DPREF_DIR=\"$withval\"",
+	CPPFLAGS="$CPPFLAGS -DPREF_DIR=\"~/.gltron\"")
 
 dnl sound set-up
 AC_ARG_ENABLE(sound,
-[ --disable-sound              Don't compile in sound [default=off]],
+AC_HELP_STRING([--disable-sound],[Don't compile in sound @<:@default=off@:>@]),
    use_sound=no, use_sound=yes)
 if test "x$use_sound" = xyes; then
 	AC_CHECK_LIB(SDL_sound, Sound_Init,
@@ -80,7 +93,7 @@ fi
 
 dnl network set-up
 AC_ARG_ENABLE(network,
-[ --enable-network             Experimental network mode [default=off]],
+AC_HELP_STRING([--enable-network],[Experimental network mode @<:@default=off@:>@]),
 	enable_network=$enableval, enable_network=off)
 if test "x$enable_network" = xyes; then
 	AC_CHECK_LIB(SDL_net, SDLNet_Init,
