@@ -45,6 +45,7 @@ enum {
   CHGESPEED,                //Change game_speed
   CHGESIZE,                 //Change arena_size
   CHGEERASE,                //Change erased trail when crashed 1 if yes.
+  PING,                     //to ping a player
   HASSTARTED                //Game already started!
 };
 
@@ -65,6 +66,7 @@ typedef enum packettype
     SCORE,                   //Score at the end of a game.
     SNAPSHOT,                //Snapshot ( quite same as EVENT )
     EVENT,                   //Event
+    PLAYERSPING,             //ping of players
     ACTION                   //This is a simple action.
   } PacketType;
 
@@ -132,11 +134,18 @@ typedef struct packet {
       GameEvent event;       //event
     } event;                 //Type EVENT
     struct {
+      int       ping[MAX_PLAYERS];
+    } playersping;
+    struct {
       Sint16    type;        //Which action?
       Sint16    which;       //To which if necessary.
     } action;
   } infos;
 } Packet;
+
+
+/*** */
+//TODO: change time in int because time is in ms and could be biggest than a short
 
 //Server slots
 typedef struct {
@@ -149,6 +158,8 @@ typedef struct {
   int           player;      //Equiv player ( for the client )
   int           packet;      //Next Packet type
   int           isMaster;    //If it's a master
+  int           ping;        //ping of the player
+  int           hasstarted;  //if player has started
 } Slots;
 
 typedef struct {

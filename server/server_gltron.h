@@ -135,7 +135,8 @@ extern void handle_server();
 extern void SendEvents(GameEvent *e);
 extern void do_wingame(int);
 extern void do_timeout( void );
-
+extern void do_ping_users( void );
+extern void do_starting();
 
 extern int getPlayer          ( int );
 extern int getWhich           ( int );

@@ -14,9 +14,10 @@ login(char *name)
  
   for(i=0;i<4;++i)
     {
-      slots[i].active=0;
-      slots[i].packet=HEADER;    
-      slots[i].player = -1;    
+      slots[i].active  = 0;
+      slots[i].packet  = HEADER;    
+      slots[i].player  = -1;   
+      slots[i].ping    = 0;
     }
 
   packet_type = HEADER;
@@ -78,7 +79,7 @@ void
 do_serverinfo(Packet packet)
 {
   int lastserverstate = serverstate;
-  Packet rep;
+  //Packet rep;
 
   nbUsers = packet.infos.serverinfo.players;
 
@@ -111,17 +112,17 @@ do_serverinfo(Packet packet)
 	      timeout = SystemGetElapsedTime();
 	    }
 	  game2->mode = GAME_NETWORK_PLAY;
-	  if( slots[me].isMaster == 1 )
-	    {
-	      printf("->  send confirmation... %d\n", ping);
-	      rep.which=me;
-	      rep.type=ACTION;
-	      rep.infos.action.type=CONFSTART;
-	      rep.infos.action.which=ping;
-	      /** time server get ping is ping/2 and it needs to get
-		  ping/2, so 2*ping/2=ping                          */
-	      Net_sendpacket(&rep, Net_getmainsock());
-	    } // I used that for synchronization.
+/* 	  if( slots[me].isMaster == 1 ) */
+/* 	    { */
+/* 	      printf("->  send confirmation... %d\n", ping); */
+/* 	      rep.which=me; */
+/* 	      rep.type=ACTION; */
+/* 	      rep.infos.action.type=CONFSTART; */
+/* 	      rep.infos.action.which=ping; */
+/* 	       time server get ping is ping/2 and it needs to get */
+/* 		  ping/2, so 2*ping/2=ping                           */
+/* 	      Net_sendpacket(&rep, Net_getmainsock()); */
+/* 	    } // I used that for synchronization. */
 	  ping = 0;
 	  savedtime = 0;
 	  
@@ -252,6 +253,11 @@ do_action(Packet packet)
       if( serverstate == preGameState )
 	switchCallbacks(&netWaitCallbacks);
       break;
+    case PING:
+      //Need to reply to ping
+      packet.which=me;
+      Net_sendpacket(&packet, Net_getmainsock());
+      break;
     }
 }
 
@@ -377,6 +383,16 @@ do_gameset( Packet packet )
   game->settings->arena_size  = packet.infos.gameset.arena_size;
 }
 
+void
+do_playersping( Packet packet )
+{
+  int i=0;
+
+  for(i=0; i < MAX_PLAYERS; ++i )
+    {
+      slots[i].ping = packet.infos.playersping.ping[i];
+    }
+}
 
 
 /** Handle network traffic. */
@@ -411,6 +427,9 @@ do_preGameState( Packet packet )
       break;
     case SCORE:
       do_score(packet); //if we are in pause, we can get score, and need to stop
+      break;
+    case PLAYERSPING:
+      do_playersping(packet);
       break;
     case ACTION:
       do_action(packet);

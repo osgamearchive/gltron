@@ -1,8 +1,17 @@
 #include "server_gltron.h"
+#include <limits.h>
 
-static Uint32 ping      = 0;
-static Uint32 savedtime = 0; 
-static Uint32 timeout   = 0;
+static Uint32 ping       = 0;
+static Uint32 savedtime  = 0; 
+static Uint32 timeout       = 0;
+static Uint32 lastping       = 0;
+/* static Uint32 slowest    = RAND_MAX; */
+static int    slowest       = INT_MAX;
+static int    getpingrep    = 0;
+static int    starting      = 0;
+static Uint32 starttime     = 0;
+static int    timetostart   = 0;
+
 
 static int  getping();
 static void makeping();
@@ -20,6 +29,8 @@ start_server()
       slots[i].sock   = 0;   //So no sock..
       slots[i].packet = HEADER;
       slots[i].player = -1;  //means no player found
+      slots[i].ping   = 0;
+      slots[i].hasstarted = 0;
     }
 
   //Alocate the sock
@@ -105,6 +116,9 @@ do_lostplayer(int which )
 	  //Change game mode... nothing to do with game things...
 	  game2->mode = GAME_NETWORK_RECORD;
 	  hasstarted=0;
+	  lastping = 0;
+	  slowest    = INT_MAX;
+	  starting = 0;
 	} else {
 	  
 	  //TODO: If it was the game master, change that #done
@@ -326,7 +340,7 @@ do_login( int which, Packet packet )
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
   Net_sendpacket(&rep, slots[which].sock);
-  
+  lastping=SystemGetElapsedTime()-16*1000;
 
 }
 
@@ -378,7 +392,8 @@ do_startgame( int which, Packet packet )
   //for each player, rearange player ident
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      slots[i].player=-1;
+      slots[i].player     = -1;
+      slots[i].hasstarted = 0;
     }
   
   for(i=0; i<MAX_PLAYERS; ++i)
@@ -449,22 +464,40 @@ do_startgame( int which, Packet packet )
 	}
     }  
 
-  //Send a change state	  
-  sState = gameState;
-  rep.which=SERVERID;
-  rep.type =SERVERINFO;
-  rep.infos.serverinfo.serverstate = sState;
-  rep.infos.serverinfo.players     = nbUsers; // may be game2->players?
- 
+  //find slowest ping
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      if( slots[i].active == 1 )
+      if (slots[i].active == 1)
 	{
-	  if( slots[i].isMaster == 1 )
-	    makeping();
-	  Net_sendpacket(&rep, slots[i].sock);
+	  //printf("get i=%d %d < %d\n", i, SDLNet_Read16(&slots[i].ping), slowest );
+	  if( slots[i].ping < slowest ){
+	    slowest = slots[i].ping;
+	  }
 	}
     }
+  
+  
+  printf("slowest ping : %d\n", slowest);
+  starting=1;
+  timetostart=-slowest;
+  starttime = SystemGetElapsedTime();
+
+  //Send a change state	  
+/*   sState = gameState; */
+/*   rep.which=SERVERID; */
+/*   rep.type =SERVERINFO; */
+/*   rep.infos.serverinfo.serverstate = sState; */
+/*   rep.infos.serverinfo.players     = nbUsers; // may be game2->players? */
+ 
+/*   for(i=0; i<MAX_PLAYERS; ++i) */
+/*     { */
+/*       if( slots[i].active == 1 ) */
+/* 	{ */
+/* 	  if( slots[i].isMaster == 1 ) */
+/* 	    makeping(); */
+/* 	  Net_sendpacket(&rep, slots[i].sock); */
+/* 	} */
+/*     } */
   /**
   if( ! hasstarted )
     hasstarted = 1;
@@ -655,6 +688,21 @@ do_chgeerase(int which, Packet packet)
 }
 
 void
+do_pingrep( int which, Packet packet )
+{
+  short ping;
+  //doing average: is this good?
+/*   slots[which].ping+=(SystemGetElapsedTime() - packet.infos.action.which); */
+/*   slots[which].ping/=2; */
+  //slots[which].ping = SystemGetElapsedTime() - packet.infos.action.which;
+  ping = SystemGetElapsedTime() - packet.infos.action.which;
+  slots[which].ping=ping;
+  printf("ping is %d\n", slots[which].ping);  
+  getpingrep++;
+}
+
+
+void
 do_action( int which, Packet packet )
 {
   printf("+ do_action\n");
@@ -671,8 +719,8 @@ do_action( int which, Packet packet )
     case STARTGAME:
       do_startgame(which, packet);
       break;
-    case CONFSTART:
-      do_startconfirm(which, packet);
+/*     case CONFSTART: */
+/*       do_startconfirm(which, packet); */
       break;
     case CHGENBWINS:
       do_chgenbwins(which, packet);
@@ -688,6 +736,10 @@ do_action( int which, Packet packet )
       break;
     case CHGEERASE:
       do_chgeerase(which, packet);
+      break;
+    case PING:
+      //it's a ping reply
+      do_pingrep(which, packet);
       break;
     default:
       fprintf(stderr, "Received an action packet with a type %d that not be allowed or unknown\n", packet.infos.action.type);
@@ -890,6 +942,110 @@ handle_server()
 	  //makeping();
 	  //printf("## handle_client took %d ms\n", getping());
 	}
+    }
+}
+
+void
+do_starting()
+{
+  Packet rep;
+  int    i;
+  
+  
+  if( starting == 1 )
+    {
+
+      sState = gameState;
+      rep.which=SERVERID;
+      rep.type =SERVERINFO;
+      rep.infos.serverinfo.serverstate = sState;
+      rep.infos.serverinfo.players     = nbUsers;
+
+      printf("timetostart %d\n", timetostart);
+      if( timetostart >= 0 )
+	{
+	  //start the server
+	  starting=0;
+	  game2->time.lastFrame = 0;
+	  game2->time.current   = 0;
+	  game2->time.offset    = SystemGetElapsedTime();
+	  
+	  if( ! hasstarted )
+	    {
+	      timeout             = SystemGetElapsedTime();
+	      hasstarted = 1;
+	    }
+	  game2->events.next = NULL;
+	  game2->mode = GAME_SINGLE;
+	  printf("starting game with %d players at %d\n", game->players, game2->time.current); 
+	  printf("- do_startgame\n");
+	  printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
+		 game->player[0].data->iposy, game->player[0].data->dir);
+
+	} else {
+	  for(i=0; i<MAX_PLAYERS; ++i)
+	    {
+	      //printf("%d >= %d\n", timetostart, slots[i].ping );
+	      if( slots[i].active == 1 && timetostart >= slots[i].ping*-1 && slots[i].hasstarted == 0 )
+		{
+		  slots[i].hasstarted=1;
+		  printf("sending signal to %s\n", slots[i].name);
+		  //send him signal to start
+		   Net_sendpacket(&rep, slots[i].sock);
+		} 
+	    }
+	}
+      timetostart+=SystemGetElapsedTime()-starttime;
+  /**
+  if( ! hasstarted )
+    hasstarted = 1;
+  game2->events.next = NULL;
+  game2->mode = GAME_SINGLE;
+  printf("starting game with %d players\n", game->players); 
+  printf("- do_startgame\n");
+  printf("\n\npos Player 1 is %d %d %d\n\n\n", game->player[0].data->iposx,
+	 game->player[0].data->iposy, game->player[0].data->dir);
+  **/
+    }
+}
+
+void
+do_ping_users()
+{
+  Packet packet;
+  int    i;
+
+  if( lastping == 0 )
+    lastping=SystemGetElapsedTime()-16*1000;
+
+  if( (SystemGetElapsedTime() - lastping)/1000 > 15 )
+    {
+      packet.which               = SERVERID;
+      packet.type                = ACTION;
+      packet.infos.action.type   = PING;
+      packet.infos.action.which  = SystemGetElapsedTime();
+      for(i=0; i< MAX_PLAYERS; ++i )
+	{
+	  if( slots[i].active == 1 )
+	    {
+	      Net_sendpacket(&packet, slots[i].sock);
+	    }
+	}
+      lastping=SystemGetElapsedTime();
+    }
+  if( getpingrep >= nbUsers )
+    {
+      packet.type                = PLAYERSPING;
+      for(i=0; i< MAX_PLAYERS; ++i )
+	packet.infos.playersping.ping[i] = slots[i].ping;
+      for(i=0; i< MAX_PLAYERS; ++i )
+	{
+	  if( slots[i].active == 1 )
+	    {
+	      Net_sendpacket(&packet, slots[i].sock);
+	    }
+	}
+      getpingrep=0;
     }
 }
 

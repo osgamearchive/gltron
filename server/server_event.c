@@ -141,6 +141,11 @@ void idleGame( void ) {
 
   
   handle_server();
+  if( game2->mode == GAME_NETWORK_RECORD )
+    {
+      do_ping_users();
+      do_starting();
+    }
   //if( game2->mode == GAME_SINGLE && netruletime > 0 )
   if( netruletime > 0 && hasstarted==1 )
     do_timeout();

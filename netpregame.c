@@ -99,7 +99,7 @@ void drawPregame() {
 	}
     }
   glColor3fv(colors[1]);
-  x = game->screen->vp_w - 1.5 * (len+1)*( game->screen->vp_w / (50 * 1.5) );
+  x = game->screen->vp_w - 1.5 * (len+10)*( game->screen->vp_w / (50 * 1.5) );
   y = game->screen->vp_h - 1.5 * h * (5);
   drawText(gameFtx, x, y, h, "Users");
 
@@ -112,7 +112,8 @@ void drawPregame() {
 	  if( slots[i].isMaster )
 	    glColor3fv(colors[3]);
 	    
-	  drawText(gameFtx, x, y, h, slots[i].name);
+	  sprintf(str, "%s ( %d )\n", slots[i].name, slots[i].ping);
+	  drawText(gameFtx, x, y, h, str);
 	  if( slots[i].isMaster )
 	    glColor3fv(colors[1]);
 	  
