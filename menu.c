@@ -11,6 +11,7 @@ static char *speed_list[] = {  "boring", "normal", "fast", "crazy", NULL };
 static char *player_list[] = { "human", "computer", "none", NULL };
 static char *arena_list[] = { "tiny", "medium", "big", "vast", "extreme", NULL };
 static char *lod_list[] = { "normal", "lower", "ugly", NULL };
+static char *shadow_lod_list[] = { "high", "normal", "low", NULL };
 static char *ai_list[] = { "dumb", "normal", "strong", "the MCP himself", NULL };
 static char *filter_list[] = { "bilinear", "trilinear", NULL };
 static char *camera_list[] = { "circling", "behind", "cockpit", "mouse", NULL };
@@ -18,6 +19,7 @@ static char *viewports_list[] = { "single", "split", "4 player", NULL };
 
 static char **clists[] = { speed_list, player_list, arena_list, lod_list,
 			   ai_list, filter_list, camera_list, viewports_list,
+			   shadow_lod_list,
 			   NULL 
 };
 
@@ -114,8 +116,14 @@ void changeAction(char *name) {
       SystemGrabInput();
     else
       if(game->settings->windowMode == 1) SystemUngrabInput();
+  } else if(strstr(name, "camType") == name) {
+    int i;
+    for(i = 0; i < game->players; i++)
+      if(game->player[i].ai->active == 0)
+	initCamera(game->player[i].camera, 
+		   game->player[i].data, 
+		   game->settings->camType);
   }
-
 }
 
 void menuAction(Menu *activated, int type) {
@@ -535,6 +543,7 @@ void drawMenu(gDisplay *d) {
     if(len > maxw)
       maxw = len;
   }
+
   /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
 
   hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float)maxw );
