@@ -9,6 +9,7 @@ typedef struct {
 typedef matrix nebu_Matrix4D;
 
 vec4* vec4Transform(vec4* pOut, const vec4* pV, const matrix *pM);
+vec3* vec3Transform(vec3* pOut, const vec3* pV, const matrix *pM);
 float matrixCofactor(const matrix *pM, int cf_row, int cf_col);
 float matrixDeterminant(const matrix *pM);
 matrix* matrixIdentity(matrix *pOut);

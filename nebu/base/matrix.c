@@ -20,6 +20,15 @@ vec4* vec4Transform(vec4* pOut, const vec4* pV, const matrix *pM) {
   return pOut;
 }
 
+vec3* vec3Transform(vec3* pOut, const vec3* pV, const matrix *pM) {
+  vec3 tmp;
+  tmp.v[0] = pM->m[0] * pV->v[0] + pM->m[4] * pV->v[1] + pM->m[8] * pV->v[2];
+  tmp.v[1] = pM->m[1] * pV->v[0] + pM->m[5] * pV->v[1] + pM->m[9] * pV->v[2];
+  tmp.v[2] = pM->m[2] * pV->v[0] + pM->m[6] * pV->v[1] + pM->m[10] * pV->v[2];
+  memcpy(pOut, &tmp, sizeof(vec3));
+  return pOut;
+}
+
 matrix* matrixIdentity(matrix *pOut) {
   memset(pOut, 0, sizeof(matrix));
   pOut->m[0] = pOut->m[5] = pOut->m[10] = pOut->m[15] = 1;
