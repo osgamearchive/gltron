@@ -27,6 +27,9 @@
 #define SYSTEM_MOUSEPRESSED SDL_PRESSED
 #define SYSTEM_MOUSERELEASED SDL_RELEASED
 
+#define SYSTEM_MOUSEBUTTON_LEFT SDL_BUTTON_LEFT
+#define SYSTEM_MOUSEBUTTON_RIGHT SDL_BUTTON_RIGHT
+
 #define SYSTEM_KEY_TAB SDLK_TAB
 
 #define SYSTEM_RGBA 1
@@ -44,6 +47,7 @@ extern void SystemSwapBuffers();
 extern void SystemWarpPointer(int x, int y);
 extern void SystemHidePointer();
 extern void SystemUnhidePointer();
+extern void SystemGrabInput();
 extern void SystemMainLoop();
 extern void SystemRegisterCallbacks(callbacks*);
 
