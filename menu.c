@@ -17,9 +17,6 @@ static char *filter_list[] = { "bilinear", "trilinear", NULL };
 static char *camera_list[] = { "circling", "behind", "cockpit", "mouse", NULL };
 static char *viewports_list[] = { "single", "split", "4 player", NULL };
 
-// this one is not static, since it's initialized from initArtpacks
-char **artpack_list;
-
 static char **clists[] = { speed_list, player_list, arena_list, lod_list,
 			   ai_list, filter_list, camera_list, viewports_list,
 			   NULL 
