@@ -20,8 +20,8 @@ nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 		bpp = 32;
 		break;
 	case NEBU_SURFACE_ALPHA:
-		source_format = GL_LUMINANCE;
-		target_format = GL_LUMINANCE;
+		source_format = GL_ALPHA;
+		target_format = GL_ALPHA;
 		bpp = 8;
 		break;
 	default:
@@ -56,6 +56,8 @@ nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	free(pixels);
 
@@ -99,11 +101,6 @@ void nebu_2d_Draw(const nebu_2d *p2d) {
 
 	glBindTexture(GL_TEXTURE_2D, p2d->tex_id);
 	glEnable(GL_TEXTURE_2D);
-
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glColor3f(1,1,1);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indices);
