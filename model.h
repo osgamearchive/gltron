@@ -41,10 +41,13 @@ typedef struct {
   BoundingBox BBox;
 } Mesh;
 
-extern Mesh* readTriMeshFromFile(const char* filename);
-extern Mesh* readQuadMeshFromFile(const char* filename);
-extern void drawQuadModel(Mesh* pMesh);
-extern void drawModel(Mesh* pMesh);
+typedef enum {
+  TRI_MESH,
+  QUAD_MESH
+} MeshType;
+    
+extern Mesh* readMeshFromFile(const char* filename, MeshType type);
+extern void drawModel(Mesh* pMesh, MeshType type);
 extern void drawModelExplosion(Mesh *pMesh, float fRadius);
 
 typedef enum {
