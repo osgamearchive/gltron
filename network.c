@@ -17,6 +17,7 @@ static const int chatcolor[4] = {4, 2, 5, 0};
 static Uint32 ping[5]       = {0, 0, 0, 0, 0};
 static Uint32 savedtime     = 0;
 static int    observerstate = 0;
+static Sint32 current = 0;
 
 //Enums----------------------------------------------------------------------------------------
 enum
@@ -142,6 +143,9 @@ do_loginrep(Packet packet)
   strcpy(server_message, packet.infos.loginrep.message);
   updateUsersListData();
   nbUsers++;
+  synchCount    = 0;
+  nbSynch       = 0;
+  current = 0;
   switchCallbacks(&netPregameCallbacks);
 }
 
@@ -182,6 +186,7 @@ do_serverinfo(Packet packet)
 
 	  applyGameInfo();
 
+	  printf("######################## TIME %d #####################\n", game2->time.current);
 #ifdef DEBUG
 	  printf("time is %d\n", game2->time.current);
 #endif
@@ -219,7 +224,7 @@ do_serverinfo(Packet packet)
 	  game2->mode = GAME_NETWORK_PLAY;
 	  ping[0] = slots[me].ping;
 	  savedtime  = 0;
-	  game2->time.current=0;
+	  //game2->time.current=0;
 
 #ifdef DEBUG	  
 	  printf("starting game at%d\n", SystemGetElapsedTime());
@@ -606,60 +611,73 @@ clear_synch() {
   synch.lag   = 0;
   synch.phase = 0;
 }
+
+Uint32 base;
+
 void
 do_synch( Packet packet )
 {
   Packet rep;
   char   str[2];
   int    now;
-
+  if( nbSynch == 0 && synchCount == 0 )
+    current = 0;
   if ( nbSynch  >= 5 )
     {
-      game2->time.current = SystemGetElapsedTime();
-      rep.infos.synch.t1 = packet.infos.synch.t1;
-      rep.infos.synch.t2 = game2->time.current;      
+      game2->time.current   = current;
+      game2->time.lastFrame = current;
+      game2->time.current   = current;
+      game2->time.offset    = SystemGetElapsedTime();
+      printf("######################## TIME %d #####################\n", current);
+/*       game2->time.current = SystemGetElapsedTime(); */
+/*       rep.infos.synch.t1 = packet.infos.synch.t1; */
+/*       rep.infos.synch.t2 = game2->time.current;       */
       return;
     }
   
   if( synchCount  >= 3 )
     {
+      printf("######################## TIME %d #####################\n", current);
+      synchCount = 0;
       sprintf(str, "%d", 5 - nbSynch );
       insert_wtext(pregame.pregametext, str, 3);
       clear_synch();
       nbSynch++;
       
-    } else {
-      switch( synch.phase ) {
-      case 0:
-	game2->time.current = SystemGetElapsedTime();
-	rep.infos.synch.t1  = packet.infos.synch.t1;
-	rep.infos.synch.t2  = game2->time.current ;
-	break;
-      case 1:
-	now =  SystemGetElapsedTime() - game2->time.current;
-	synch.lag = ( now - packet.infos.synch.t2 ) / 2.0;
-	game2->time.current -= synch.lag;
-	now +=  synch.lag;
-	rep.infos.synch.t1  = ( now - packet.infos.synch.t1 ) / 2.0;
-	rep.infos.synch.t2  = now;
-	break;
-      case 2:
-	game2->time.current -= packet.infos.synch.t1;
-	break;
-      default:
-	printf("synch error");
-	break;
-      }
-      synch.phase++;
-      
-      //Start Synch
-      rep.which                        = me;
-      rep.type                         = SYNCH;
-     
-      
-      Net_sendpacket(&rep, Net_getmainsock());
-      synchCount++;
     }
+  rep.which                        = me;
+  rep.type                         = SYNCH;
+  printf(">>>>>>>>>>>>>>>>>> phase %d from synch %d-%d\n", synch.phase, synchCount, nbSynch);
+  switch( synch.phase ) {
+  case 0:
+    base = SystemGetElapsedTime();
+    rep.infos.synch.t1  = packet.infos.synch.t1;
+    rep.infos.synch.t2  = 0 ;
+    Net_sendpacket(&rep, Net_getmainsock());
+    break;
+  case 1:
+    now =  SystemGetElapsedTime() - base;
+    printf("----------->>>>>>>>>>>> now %d\n", now);
+    synch.lag = ( now - packet.infos.synch.t2 ) / 2.0;
+    printf("lag = %d\n", synch.lag);
+    base -= synch.lag;
+    now +=  synch.lag;
+    rep.infos.synch.t1  = ( now - packet.infos.synch.t1 ) / 2;
+    rep.infos.synch.t2  = now;
+    Net_sendpacket(&rep, Net_getmainsock());
+    break;
+  case 2:
+    now =  SystemGetElapsedTime() - base;
+    printf("----------->>>>>>>>>>>> now %d ( %d )\n", now, packet.infos.synch.t2);
+    current += ( Sint32 ) ( now + packet.infos.synch.t2 ) / 2;
+    break;
+  default:
+    printf(">>>>>>>>>>> synch error");
+    break;
+  }
+  synch.phase++;
+  synchCount++;
+
 }
 
 /**

@@ -494,6 +494,7 @@ do_startgame( int which, Packet packet )
   if( ! slots[which].isMaster )
     return;
 
+
   netscores.winner=-1;
   initEventlist(eventList);
 
@@ -877,8 +878,8 @@ do_ailevel( int which, Packet packet )
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
   for(i=0; i<MAX_PLAYERS; ++i)
-      if( slots[i].active == 1 )
-	Net_sendpacket(&rep, slots[i].sock);
+    if( slots[i].active == 1 )
+      Net_sendpacket(&rep, slots[i].sock);
 
 }
 
@@ -887,16 +888,59 @@ do_synch( int which, Packet packet )
 {
   Packet rep;
   int    i;
+  int users = 0;
+  Uint32 now;
 
-  if ( nbSynch / nbUsers >= 5 )
+  for(i = 0; i < MAX_PLAYERS; ++i ) 
     {
-      for(i=0; i<MAX_PLAYERS; ++i)
-	{
-	  if( slots[i].active == 1 )
-	    {
-	      Net_sendpacket(&rep, slots[i].sock);
-	    }
-	}
+      if( slots[i].active == 1 )
+	users++;
+    }
+
+
+  
+  printf(">>>>>>>>>>>>>>>>>> phase %d from synch %d-%d\n", synch[ packet.which ].phase, synchCount, nbSynch);
+  switch( synch[ packet.which ].phase ) {
+  case 0:
+    now = SystemGetElapsedTime() -  game2->time.current;
+    synch[packet.which].lag = ( now - packet.infos.synch.t1 ) / 2;	
+    rep.infos.synch.t2      = packet.infos.synch.t2;
+    printf("now %d\n", now);
+    break;
+  case 1:
+    now = SystemGetElapsedTime() -  game2->time.current;
+    synch[packet.which].lag += packet.infos.synch.t1;
+    rep.infos.synch.t2               = ( now - packet.infos.synch.t2 ) / 2 ;
+    break;
+  default:
+    printf("synch error %d users %d\n", synchCount, users);
+    break;
+  }
+  synch[ packet.which ].phase++;
+  //Start Synch
+  rep.which                        = SERVERID;
+  rep.type                         = SYNCH;
+  rep.infos.synch.t1               = SystemGetElapsedTime() - game2->time.current + synch[packet.which].lag;
+  
+  
+  Net_sendpacket(&rep, slots[which].sock);
+  synchCount++;
+  if( synch[ packet.which ].phase >= 2 )
+    {
+      printf(">>>>>>>>>>>>> start synch %d\n", synchCount / users);
+      clear_synch();
+      game2->time.current = SDL_GetTicks();
+      rep.which                        = SERVERID;
+      rep.type                         = SYNCH;
+      rep.infos.synch.t1               = 0;
+      rep.infos.synch.t2               = ~0L;
+      synchCount = 1;
+      nbSynch++;
+      Net_sendpacket(&rep, slots[which].sock);
+    }
+  if ( nbSynch / users >= 4 )
+    {
+      printf("######################## TIME %d #####################\n", game2->time.current);
       sState = gameState;
       rep.which=SERVERID;
       rep.type =SERVERINFO;
@@ -911,7 +955,7 @@ do_synch( int which, Packet packet )
 	      Net_sendpacket(&rep, slots[i].sock);
 	    } 
 	}
-      game2->time.offset    = SystemGetElapsedTime();
+      game2->time.offset    = game2->time.current;
       
       if( ! hasstarted )
 	{
@@ -923,42 +967,7 @@ do_synch( int which, Packet packet )
       game2->mode = GAME_SINGLE;
       return;
     }
-  
-  if( synchCount / nbUsers >= 3 )
-    {
-      clear_synch();
-      game2->time.current = SDL_GetTicks();
-      rep.which                        = SERVERID;
-      rep.type                         = SYNCH;
-      rep.infos.synch.t1               = 0;
-      rep.infos.synch.t2               = ~0L;
-      synchCount = 1;
-      nbSynch++;
-      
-    } else {
-      switch( synch[ packet.which ].phase ) {
-      case 0:
-	synch[packet.which].lag = ( ( SystemGetElapsedTime() -  game2->time.current ) - packet.infos.synch.t1 ) / 2;	
-	rep.infos.synch.t2               = packet.infos.synch.t2;
-	break;
-      case 1:
-	synch[packet.which].lag += packet.infos.synch.t1;
-	rep.infos.synch.t2               = ( ( SystemGetElapsedTime() -  game2->time.current ) - packet.infos.synch.t1 ) / 2 ;
-	break;
-      default:
-	printf("synch error");
-	break;
-      }
-      synch[ packet.which ].phase++;
-      //Start Synch
-      rep.which                        = SERVERID;
-      rep.type                         = SYNCH;
-      rep.infos.synch.t1               = SystemGetElapsedTime() - game2->time.current + synch[packet.which].lag;
-     
-      
-      Net_sendpacket(&rep, slots[which].sock);
-      synchCount++;
-    }
+
 }
 
 
