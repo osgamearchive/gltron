@@ -59,7 +59,6 @@ int processEvent(GameEvent* e) {
   return value;
 }
 
-			
 list* doMovement(int mode, int dt) {
   int i;
   float fs;
@@ -174,9 +173,14 @@ void idleGame( void ) {
       /* run AI */
       for(i = 0; i < game->players; i++)
 	if(game->player[i].ai != NULL)
-	  if(game->player[i].ai->active == 1)
-	    doComputer(i, game->player[i].data);
-   
+	  if(game->player[i].ai->active == 1 &&
+	     game->player[i].data->speed > 0) {
+	    if(game->settings->ai_level < 2)
+	      doComputer(i, 0);
+	    else 
+	      doComputer2(i, 0);
+	  }
+
       /* process any outstanding events (turns, etc) */
       for(p = &(game2->events); p->next != NULL; p = p->next) {
 	if(processEvent((GameEvent*) p->data)) return;
