@@ -87,10 +87,6 @@ void setupDisplay(gDisplay *d) {
 
 
 int main( int argc, char *argv[] ) {
-  list *l;
-#ifdef SOUND
-  int c;
-#endif
 
 #ifdef __FreeBSD__
   fpsetmask(0);
@@ -107,9 +103,7 @@ int main( int argc, char *argv[] ) {
 #endif
   initDirectories();
 
-  /* initialize artpack list before loading settings! */
-  /* creates a list of directories found in art/ */
-  initArtpacks();
+
 
   /* initialize lua */
   scripting_Init();
@@ -119,6 +113,15 @@ int main( int argc, char *argv[] ) {
     path = getPath(PATH_SCRIPTS, "basics.lua");
     scripting_RunFile(path);
     free(path);
+
+    path = getPath(PATH_SCRIPTS, "audio.lua");
+    scripting_RunFile(path);
+    free(path);
+
+    path = getPath(PATH_SCRIPTS, "video.lua");
+    scripting_RunFile(path);
+    free(path);
+
   }
 
   /* initialize some global variables */
@@ -135,15 +138,18 @@ int main( int argc, char *argv[] ) {
     free(path);
   }
 
+#if 1
   /* go for .gltronrc (or whatever is defined in RC_NAME) */
   {
     char *path;
     path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
     if(path != NULL) {
-      if(fileExists(path)) 
+      if(fileExists(path)) {
+	printf("loading settings from %s\n", path);
 	scripting_RunFile(path);
-      else
+      } else {
 	printf("cannot load %s from %s\n", RC_NAME, path);
+      }
       free(path);
     }
     else {
@@ -151,6 +157,7 @@ int main( int argc, char *argv[] ) {
       assert(0);
     }
   }
+#endif
 
   initColors();
 
@@ -165,59 +172,29 @@ int main( int argc, char *argv[] ) {
   initGameStructures();
   resetScores();
 
-  /* sound */
-  {
-    const char *music_path;
-    music_path = getDirectory( PATH_MUSIC );
-    soundList = 
-      readDirectoryContents(music_path, SONG_PREFIX);
-  }
-    setSettingi("soundIndex", -1);
-
-    l = soundList;
-
+  /* probe for artpacks & songs */
+  initArtpacks();
 #ifdef SOUND
-    printf("initializing sound\n");
-    initSound();
-    setFxVolume(getSettingf("fxVolume"));
-
-    if(l->next != NULL) {
-      char *path;
-      path = getPath( PATH_MUSIC, l->data );
-      fprintf(stderr, "loading song %s\n", path);
-      loadSound(path);
-      free(path);
-      setSettingi("soundIndex", 0);
-    }
-
-    c = 0;
-    while(l->next != NULL) {
-      l = l->next;
-      c++;
-    }
-    setSettingi("soundSongCount", c);
-
-    if(getSettingi("playMusic"))
-      playSound();
-    fprintf(stderr, "setting music volume to %.3f\n",
-	    getSettingf("musicVolume"));
-    setMusicVolume(getSettingf("musicVolume"));
+  initSoundTracks();
 #endif
 
-    printf("loading menu\n");
-    { 
-      char *path;
-      path = getPath(PATH_SCRIPTS, "menu.lua");
-      scripting_RunFile(path);
-      free(path);
+  printf("loading menu\n");
+  { 
+    char *path;
+    path = getPath(PATH_SCRIPTS, "menu.lua");
+    scripting_RunFile(path);
+    free(path);
 
-      path = getPath(PATH_SCRIPTS, "menu_functions.lua");
-      scripting_RunFile(path);
-      free(path);
-    }
-    printf("menu loaded\n");
+    path = getPath(PATH_SCRIPTS, "menu_functions.lua");
+    scripting_RunFile(path);
+    free(path);
+  }
+  printf("menu loaded\n");
 
-    setupDisplay(game->screen);
+  setupDisplay(game->screen);
+#ifdef SOUND
+  setupSound();
+#endif
 
   /* switch callbacks twice to establish stack */
     switchCallbacks(&guiCallbacks);
@@ -231,6 +208,7 @@ int main( int argc, char *argv[] ) {
 callbacks gameCallbacks = { 
   displayGame, idleGame, keyGame, initGame, exitGame, initGLGame, gameMouse, gameMouseMotion
 };
+
 
 
 
