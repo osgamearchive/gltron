@@ -152,6 +152,15 @@ extern Netscores         netscores;
 extern int server_port;
 extern int hasstarted;
 
+//records
+Eventlist*      createEventlist ( void );
+void            sendEventlist   ( Eventlist *, int );
+void            addEvent        ( Eventlist *, GameEvent * );
+void            initEventlist   ( Eventlist * );
+
+extern Eventlist *eventList;
+
+
 #endif
 
 

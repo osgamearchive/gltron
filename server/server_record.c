@@ -30,6 +30,7 @@ void stopRecording() {
 
 void writeEvent(GameEvent* e) {
   SendEvents(e);
+  addEvent(eventList, e);
   printf("send event %d %d %d %d %d\n", e->type, e->player, 
   	 e->x, e->y, e->timestamp);
 }
@@ -123,3 +124,94 @@ int readDemoInfo() {
 }
 									   
     
+
+
+Eventlist*
+createEventlist ( void )
+{
+  Eventlist *eventlist = ( Eventlist*)malloc(sizeof(Eventlist));
+
+  eventlist->head = NULL;
+  return eventlist;
+}
+void
+sendEventlist        ( Eventlist *eventlist, int which )
+{
+  Eventcell *cell;
+  Packet     packet;
+
+  packet.type  = EVENT;
+  packet.which = SERVERID;
+
+  if( eventlist == NULL )
+    return;
+
+  cell = eventlist->head;
+  if( cell == NULL )
+    return;
+
+  while( cell != NULL )
+    {
+      packet.infos.event.event = cell->event;
+      Net_sendpacket( &packet, slots[which].sock );
+      cell = cell->next;
+    }
+  
+}
+
+Eventcell *
+createEventcell(GameEvent *event)
+{
+  Eventcell *cell = ( Eventcell *) malloc( sizeof(Eventcell));
+
+  cell->next  = NULL;
+  cell->event = *event;
+  return cell;
+}
+
+void
+addEvent        ( Eventlist *eventlist, GameEvent *event )
+{
+  //add in queue
+  Eventcell *cell;
+
+  if( event == NULL )
+    return;
+
+  if( eventlist == NULL )
+    return;
+
+  cell = eventlist->head;
+  
+  if( cell == NULL )
+    {
+      eventlist->head = createEventcell(event);
+      return;
+    }
+
+  while( cell->next != NULL )
+    {
+      cell = cell->next;     
+    } 
+  cell->next = createEventcell(event);
+}
+
+void
+initEventlist    ( Eventlist *eventlist )
+{
+  Eventcell *cell, *next;
+  
+  if( eventlist == NULL )
+    return;
+
+  cell = eventlist->head;
+
+  while( cell != NULL )
+    {
+      next = cell->next;
+      free(cell);
+      cell=NULL;
+      cell=next;     
+    }
+  eventlist->head = NULL;
+}

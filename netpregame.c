@@ -99,14 +99,14 @@ void drawPregame() {
 	}
     }
   glColor3fv(colors[1]);
-  x = game->screen->vp_w - 1.5 * (len+10)*( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 1.5 * h * (5);
+  x = game->screen->vp_w - 1.5 * 16 *( game->screen->vp_w / (50 * 1.5) );
+  y = game->screen->vp_h - 1.5 * h * (8);
   drawText(gameFtx, x, y, h, "Users");
 
   //Users
   for(i=0; i<MAX_PLAYERS; ++i)
     {
-      y = game->screen->vp_h - 1.5 * h * (i + 6);
+      y = game->screen->vp_h - 1.5 * h * (i + 9);
       if( slots[i].active == 1 )
 	{
 	  if( slots[i].isMaster )
@@ -125,31 +125,31 @@ void drawPregame() {
   //Inputs
   glColor3fv(colors[2]);
 /*   x = 10; */
-  x = 10;
+  x = 20;
   y = h;
   drawText(gameFtx, x, y, h, getInputEntry());
 
   //NetRules
   glColor3fv(colors[1]);
   x = game->screen->vp_w - 1.5 * 20*( game->screen->vp_w / (50 * 1.5) );
-  y = game->screen->vp_h - 1.5 * h * 10;
+  y = game->screen->vp_h - 1.5 * h * 17;
   drawText(gameFtx, x, y, h, "Game Settings"); 
   sprintf(str, "Games: %d", netrulenbwins);
-  y = game->screen->vp_h - 1.5 * h * 11; 
+  y = game->screen->vp_h - 1.5 * h * 18; 
   drawText(gameFtx, x, y, h, str);
   sprintf(str, "Time: %d", netruletime);
-  y = game->screen->vp_h - 1.5 * h * 12; 
+  y = game->screen->vp_h - 1.5 * h * 19; 
   drawText(gameFtx, x, y, h, str);
 
   //GameRules 
   sprintf(str, "eraseCrashed: %d", game2->rules.eraseCrashed);
-  y = game->screen->vp_h - 1.5 * h * 13; 
+  y = game->screen->vp_h - 1.5 * h * 20; 
   drawText(gameFtx, x, y, h, str);
   sprintf(str, "Speed: %s", speed_list[game->settings->game_speed]);
-  y = game->screen->vp_h - 1.5 * h * 14; 
+  y = game->screen->vp_h - 1.5 * h * 21; 
   drawText(gameFtx, x, y, h, str);
   sprintf(str, "arena size: %s", arena_list[game->settings->arena_size]);
-  y = game->screen->vp_h - 1.5 * h * 15; 
+  y = game->screen->vp_h - 1.5 * h * 22; 
   drawText(gameFtx, x, y, h, str);
 
   
@@ -211,7 +211,7 @@ void initPregame() {
 
   if( pregametext == NULL )
     {
-      pregametext = new_wtext(28, 15, 10, 100);
+      pregametext = new_wtext(28, 17, -5, 110);
       insert_wtext(pregametext, "connected...\n", 3);
       insert_wtext(pregametext, server_message, 7);
     }

@@ -72,6 +72,8 @@ initNetwork()
   game2->mode = GAME_NETWORK_RECORD;
   sState = waitState;
   nbUsers  = 0;
+
+  eventList = createEventlist();
 }
 
 void
@@ -191,7 +193,7 @@ void
 do_login( int which, Packet packet )
 {
   Packet rep, rep2;
-  int    i;
+  int    i, j;
 
   if( ! check_version(packet.infos.login.version) )
     {
@@ -209,21 +211,7 @@ do_login( int which, Packet packet )
       return;
     }
 
-  if( hasstarted )
-    {
-      //game has already started, this player must be inform that it already has started!      
-      rep.which = SERVERID;
-      rep.type  = ACTION;
-      rep.infos.action.type=HASSTARTED;
-      Net_sendpacket(&rep, slots[which].sock);
-      Net_closesock(slots[which].sock);
-      Net_delsocket(slots[which].sock);
-      slots[which].active=0;
-      slots[which].sock=NULL;
-      //TODO: change that, make client possible to stay connected and be advice when
-      //game is finished...
-      return; //return here, client will have to reconnect later
-    }
+
 
   //Look if it is a game master
   if( nbUsers == 0 )
@@ -247,12 +235,26 @@ do_login( int which, Packet packet )
   //Changing server state...
   sState = preGameState;
 
+  if( hasstarted )
+    {
+      //game has already started, this player must be inform that it already has started!      
+      rep.which = SERVERID;
+      rep.type  = ACTION;
+      rep.infos.action.type=HASSTARTED;
+      Net_sendpacket(&rep, slots[which].sock);      
+      sState = gameState;
+    }
+
+
   nbUsers++;
 
   //Send server infos...
   rep.which   = SERVERID;
   rep.type    = SERVERINFO;
-  rep.infos.serverinfo.serverstate = sState;
+  if( ! hasstarted )
+    rep.infos.serverinfo.serverstate = sState;
+  else
+    rep.infos.serverinfo.serverstate = preGameState;
   rep.infos.serverinfo.players     = nbUsers;
   Net_sendpacket(&rep, slots[which].sock);
 
@@ -340,8 +342,49 @@ do_login( int which, Packet packet )
 	 packet.infos.gameset.eraseCrashed,
 	 packet.infos.gameset.arena_size);
   Net_sendpacket(&rep, slots[which].sock);
-  lastping=SystemGetElapsedTime()-16*1000;
+  lastping=SystemGetElapsedTime();
 
+  if( hasstarted == 1 )
+    {
+      //Send rules as we are starting the game...
+      rep.which                        = SERVERID;
+      rep.type                         = GAMERULES;
+      rep.infos.gamerules.players      = game2->players;
+      rep.infos.gamerules.speed        = game2->rules.speed;
+      rep.infos.gamerules.eraseCrashed = game->settings->erase_crashed;
+      rep.infos.gamerules.gamespeed    = game->settings->game_speed;
+      rep.infos.gamerules.grid_size    = game->settings->grid_size;
+      rep.infos.gamerules.arena_size   = game->settings->arena_size;
+      rep.infos.gamerules.time         = game2->time;
+      //Startpos
+      printf("%d players, preparing start post\n", game2->players);
+      rep2.which                        = SERVERID;
+      rep2.type                         = STARTPOS;
+      for(i=0; i<game2->players; ++i)
+	{
+	  
+	  j=getWhich(i);
+	  printf("\nget startpos client ( sent ) %d <-> server %d\n", j, i);
+	  rep2.infos.startpos.startPos[3*j+0]=game->player[i].data->iposx;
+	  rep2.infos.startpos.startPos[3*j+1]=game->player[i].data->iposy;
+	  rep2.infos.startpos.startPos[3*j+2]=game->player[i].data->dir;
+	  
+	  printf("\n\npos %d %d %d\n\n\n", rep2.infos.startpos.startPos[3*j+0],
+		 rep2.infos.startpos.startPos[3*j+1],
+		 rep2.infos.startpos.startPos[3*j+2]);
+	}
+      printf("sending game rules and startpos to %d\n", i);
+      Net_sendpacket(&rep, slots[which].sock);
+      Net_sendpacket(&rep2, slots[which].sock);
+      
+      //Send server infos...
+      rep.which   = SERVERID;
+      rep.type    = SERVERINFO;
+      rep.infos.serverinfo.serverstate = sState;
+      rep.infos.serverinfo.players     = nbUsers;
+      Net_sendpacket(&rep, slots[which].sock);
+      sendEventlist(eventList, which);
+    }
 }
 
 void
@@ -696,7 +739,8 @@ do_pingrep( int which, Packet packet )
 /*   slots[which].ping/=2; */
   //slots[which].ping = SystemGetElapsedTime() - packet.infos.action.which;
   ping = SystemGetElapsedTime() - packet.infos.action.which;
-  slots[which].ping=ping;
+  slots[which].ping+=ping;
+  slots[which].ping/=2;
   printf("ping is %d\n", slots[which].ping);  
   getpingrep++;
 }
@@ -1016,9 +1060,9 @@ do_ping_users()
   int    i;
 
   if( lastping == 0 )
-    lastping=SystemGetElapsedTime()-16*1000;
+    lastping=SystemGetElapsedTime();
 
-  if( (SystemGetElapsedTime() - lastping)/1000 > 15 )
+  if( (SystemGetElapsedTime() - lastping)/1000 > 5 )
     {
       packet.which               = SERVERID;
       packet.type                = ACTION;

@@ -122,12 +122,14 @@ draw_wtext( Wtext *wtext )
   int i;
   int h;
   int y;
+  int x;
 
 
   if( wtext == NULL )
     return;
 
   h = game->screen->vp_h / (24 * 1.5);
+  x = wtext->x;
 
   //printf("displaying line 0 to %d\n", wtext->height);
   for(i=0; i < wtext->height; ++i )
@@ -137,7 +139,8 @@ draw_wtext( Wtext *wtext )
 	return;
       //printf("line %d -> %s\n", i, wtext->buffer[i]);
       //ftxRenderString(gameFtx, wtext->buffer[i], strlen(wtext->buffer[i]));
-      drawText(gameFtx, wtext->x, y, h, wtext->buffer[i]);   
+      //printf("drawing at pos %d\n", wtext->x);
+      drawText(gameFtx, x, y, h, wtext->buffer[i]);   
     }
 }
 

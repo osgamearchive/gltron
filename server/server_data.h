@@ -171,6 +171,16 @@ typedef struct Game {
   int running; /* the amount of players that are still alive */
 } Game;
 
+typedef struct Eventcell *pEventcell;
+typedef struct Eventcell {
+  GameEvent    event;
+  pEventcell   next;
+} Eventcell;
+
+typedef struct Eventlist {
+  Eventcell    *head;
+} Eventlist;
+
 #endif
 
 

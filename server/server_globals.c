@@ -35,3 +35,5 @@ Netscores         netscores;
 
 int server_port=23460;
 int hasstarted = 0;
+
+Eventlist *eventList;

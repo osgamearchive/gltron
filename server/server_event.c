@@ -5,6 +5,7 @@ int processEvent(GameEvent* e) {
   Data     *data;
 
   writeEvent(e);
+  
 
   switch(e->type) {
   case EVENT_TURN_LEFT:
