@@ -1,6 +1,6 @@
 #ifdef WIN32
 
-#include "base/nebu_types.h"
+#include "base/nebu_util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +24,7 @@ int isHiddenFile(WIN32_FIND_DATA *search)
 }
 
 /* FIXME: This is really broken. */
-List* readDirectoryContents(const char *dirname, const char *prefix) {
+nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 	WIN32_FIND_DATA search;
 	HANDLE hSearch;
 	nebu_List *l, *p;
