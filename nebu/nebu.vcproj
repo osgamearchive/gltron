@@ -150,6 +150,9 @@
 				<File
 					RelativePath=".\video\video_system.c">
 				</File>
+				<File
+					RelativePath=".\video\video_utility.c">
+				</File>
 			</Filter>
 			<Filter
 				Name="base"
@@ -257,13 +260,7 @@
 				RelativePath=".\include\Nebu_input.h">
 			</File>
 			<File
-				RelativePath=".\include\input\nebu_input_system.h">
-			</File>
-			<File
 				RelativePath=".\include\video\nebu_quad.h">
-			</File>
-			<File
-				RelativePath=".\include\input\nebu_system_keynames.h">
 			</File>
 			<Filter
 				Name="base"
@@ -381,6 +378,9 @@
 				<File
 					RelativePath=".\include\video\nebu_video_types.h">
 				</File>
+				<File
+					RelativePath=".\include\video\nebu_video_utility.h">
+				</File>
 			</Filter>
 			<Filter
 				Name="filesystem"
@@ -403,6 +403,16 @@
 				</File>
 				<File
 					RelativePath=".\include\Nebu_scripting.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="input"
+				Filter="">
+				<File
+					RelativePath=".\include\input\nebu_input_system.h">
+				</File>
+				<File
+					RelativePath=".\include\input\nebu_system_keynames.h">
 				</File>
 			</Filter>
 		</Filter>

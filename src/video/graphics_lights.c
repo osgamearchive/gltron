@@ -1,4 +1,5 @@
 #include "video/video.h"
+#include "video/graphics_lights.h"
 
 void setupLights(int type) {
 	float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };

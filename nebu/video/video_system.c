@@ -27,6 +27,12 @@ void nebu_Video_SetWindowMode(int x, int y, int w, int h) {
   height = h;
 }
 
+void nebu_Video_GetDimension(int *x, int *y)
+{
+	*x = width;
+	*y = height;
+}
+
 void nebu_Video_SetDisplayMode(int f) {
   int bitdepth, zdepth;
 
@@ -123,32 +129,6 @@ void nebu_Video_Destroy(int id) {
 
 void SystemReshapeFunc(void(*reshape)(int w, int h)) {
 	fprintf(stderr, "can't set reshape function (%p) - feature not supported\n", reshape);
-}
-
-int SystemWriteBMP(char *filename, int x, int y, unsigned char *pixels) {
-  /* this code is shamelessly stolen from Ray Kelm, but I believe he
-     put it in the public domain */
-  SDL_Surface *temp;
-  int i;
-
-  temp = SDL_CreateRGBSurface(SDL_SWSURFACE, x, y, 24,
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-			      0x000000FF, 0x0000FF00, 0x00FF0000, 0
-#else
-			      0x00FF0000, 0x0000FF00, 0x000000FF, 0
-#endif
-			      );
-
-  if (temp == NULL)
-    return -1;
-
-  for (i = 0; i < y; i++)
-    memcpy(((char *) temp->pixels) + temp->pitch * i, 
-	   pixels + 3 * x * (y - i - 1), x * 3);
-
-  SDL_SaveBMP(temp, filename);
-  SDL_FreeSurface(temp);
-  return 0;
 }
 
 void nebu_Video_WarpPointer(int x, int y) {

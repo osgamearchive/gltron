@@ -1,3 +1,12 @@
+-- The following information is mostly useful for artpack authors:
+-- 
+-- This is the default configuration file for all artpacks.
+-- It gets loaded whenever an artpack is changed, and before the
+-- artpack.lua file contained in the new artpack is executed
+
+-- You can use it to
+-- - configure the (cycling) colors for the menu font
+
 -- menu colors
 menu_item = { 1, 1, 1, 1 }
 menu_item_active1 = { .5, 1, 0, 1 }

@@ -12,14 +12,11 @@ typedef struct TextureInfo {
 } TextureInfo;
 
 enum {
-  TEX_FLOOR = 0,
-  TEX_GUI,
-  TEX_LOGO,
-  TEX_IMPACT,
-  TEX_TRAIL,
-  TEX_DECAL,
-  TEX_DEBUG,
-  TEX_SKYBOX,
+	TEX_TRAIL,
+	TEX_DECAL,
+	TEX_SKYBOX0, TEX_SKYBOX1, TEX_SKYBOX2,
+	TEX_SKYBOX3, TEX_SKYBOX4, TEX_SKYBOX5,
+	TEX_IMPACT,
 	/* insert all texture tokens before TEX_COUNT */
 	TEX_COUNT
 };

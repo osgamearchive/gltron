@@ -5,14 +5,16 @@
 #include "base/nebu_system.h"
 
 extern nebu_Scene* pScene;
+extern void checkKeyboard(int dt);
 
 void idle() {
-	static int count = 0;
+	int dt;
 	nebu_System_Sleep(10);
-	nebu_System_PostRedisplay();
-	if((count++) == 200)
-		nebu_System_ExitLoop(0);
-	
+	dt = nebu_Time_GetElapsedSinceLastFrame();
+	if(dt < 10)
+		return;
+	nebu_Time_SetCurrentFrameTime( nebu_Time_GetElapsed() );
+	checkKeyboard(dt);
 }
 
 void display() {

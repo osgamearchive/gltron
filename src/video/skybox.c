@@ -1,7 +1,8 @@
 #include "video/video.h"
+#include "game/game.h"
 
 static void bindSkyboxTexture(int index) {
-	glBindTexture(GL_TEXTURE_2D, gScreen->textures[ TEX_SKYBOX + index ]);
+	glBindTexture(GL_TEXTURE_2D, gScreen->textures[ TEX_SKYBOX0 + index ]);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 }
 

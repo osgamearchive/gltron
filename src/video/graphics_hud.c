@@ -300,8 +300,8 @@ int c_drawTextFitIntoRect(lua_State *l) {
 int c_draw2D(lua_State* l)
 {
 	nebu_Rect rect = { 0, 0, 0, 0 };
-	scripting_GetFloatResult(&rect.height);
-	scripting_GetFloatResult(&rect.width);
+	scripting_GetIntegerResult(&rect.height);
+	scripting_GetIntegerResult(&rect.width);
 	draw2D(&rect);
 	return 0;
 }

@@ -77,7 +77,7 @@ void initDirectories(void) {
 
 char* getPath( int eLocation, const char *filename) {
   char *path = getPossiblePath( eLocation, filename );
-  if( fileExists(path) )
+  if( nebu_FS_Test(path) )
     return path;
 
 
@@ -108,23 +108,5 @@ const char* getDirectory( int eLocation ) {
     fprintf(stderr, "invalid path type\n");
     assert(0);
   }
-  return NULL;
-}
-char *getArtPath(const char *artpack, const char *filename ) {
-  char *path = malloc( PATH_MAX );
-  sprintf(path, "%s%c%s%c%s", 
-	  art_dir, SEPARATOR, artpack, SEPARATOR, filename);
-  if( fileExists(path) )
-    return path;
-
-  sprintf(path, "%s%c%s%c%s", 
-	  art_dir, SEPARATOR, "default", SEPARATOR, filename);
-  if( fileExists(path) )
-    return path;
-
-  fprintf(stderr, "*** failed to locate art file '%s', giving up\n", filename);
-  assert(0);
-
-  free(path);
   return NULL;
 }

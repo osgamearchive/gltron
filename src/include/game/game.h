@@ -107,13 +107,10 @@ extern void Game_Idle(void);
 extern void enterGame(void);
 extern void exitGame(void);
 
-extern void gameMouseMotion(int x, int y);
 extern void gameMouse(int buttons, int state, int x, int y);
 extern void video_ResetData(void);
 extern void resetPlayerData(void);
-extern void video_LoadLevel(void);
 
-extern void doCameraMovement(void);
 extern void initCamera(Camera *cam, Data *data, int type);
 
 extern void initWalls(void);

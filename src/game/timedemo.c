@@ -1,4 +1,5 @@
 #include "game/gltron.h"
+#include "video/recognizer.h"
 
 static int startTime = 0;
 static int frames = 0;
@@ -48,6 +49,7 @@ void idleTimedemo(void) {
 	
 	game2->time.dt = 20;
 	doCameraMovement();
+	nebu_Input_Mouse_WarpToOrigin();
 	doRecognizerMovement();
 	scripting_RunGC();
 	nebu_System_PostRedisplay();
@@ -63,7 +65,7 @@ void keyTimedemo(int state, int key, int x, int y) {
 		nebu_System_ExitLoop(RETURN_TIMEDEMO_ABORT);
 }
 
-struct svaeRules {
+struct saveRules {
 	float speed;
 	int eraseCrashed, grid_size;
 } saveRules;
@@ -74,14 +76,14 @@ void initTimedemo(void) {
 	int i = 0;
 
 	printf("-- initializing timedemo\n");
-	
+
 	frames = 0;
 	startTime = nebu_Time_GetElapsed();
-	
+
 	nebu_srand(12313);
 
 	resetRecognizer();
-	
+
 	updateSettingsCache();
 
 	// overwrite AI skills & rules in settingsCache
@@ -90,18 +92,18 @@ void initTimedemo(void) {
 	gSettingsCache.show_fps = 0;
 	gSettingsCache.camType = CAM_CIRCLE;
 	gSettingsCache.show_console = 0;
-	
+
 	saveRules.speed = getSettingf("speed");
 	saveRules.eraseCrashed = getSettingi("erase_crashed");
 	saveRules.grid_size = getSettingi("grid_size");
 
-  setSettingf("speed", 12);
+	setSettingf("speed", 12);
 	setSettingi("erase_crashed", 1);
 	setSettingi("grid_size", 200);
 		
- 	game2->mode = GAME_SINGLE;
-  game_ResetData();
-  changeDisplay(-1);
+	game2->mode = GAME_SINGLE;
+	game_ResetData();
+	changeDisplay(-1);
 
 	for(i = 0; i < game->players; i++) {
 		game->player[i].ai->active = AI_COMPUTER;
@@ -109,18 +111,18 @@ void initTimedemo(void) {
 		game->player[i].camera->movement[CAM_PHI] = PI / 18;
 		game->player[i].camera->movement[CAM_CHI] = PI / 3;
 	}
-	
-  SystemHidePointer();
-  nebu_Video_WarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
+
+	SystemHidePointer();
+	nebu_Input_Mouse_WarpToOrigin();
+	game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
 }
 
 void exitTimedemo(void) {
 	int dt = nebu_Time_GetElapsed() - startTime;
 	if(dt) {
 		displayMessage(TO_STDERR | TO_CONSOLE, 
-									 "timedemo FPS: %.2f\n", 
-									 (float) frames / dt * 1000.0f);
+			"timedemo FPS: %.2f\n", 
+			(float) frames / dt * 1000.0f);
 		// displayMessage(TO_STDERR | TO_CONSOLE, "timedemo FPS: %.2f (%d frames in %f seconds)\n", (float) frames / dt * 1000.0f, frames, dt / 1000.0f);
 	}
 	else {
@@ -128,7 +130,7 @@ void exitTimedemo(void) {
 		// actually, this would be a good reason to abort with a fatal error
 	}
 
-  setSettingf("speed", saveRules.speed);
+	setSettingf("speed", saveRules.speed);
 	setSettingi("eraseCrashed", saveRules.eraseCrashed);
 	setSettingi("grid_size", saveRules.grid_size);
 }

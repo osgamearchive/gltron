@@ -3,13 +3,15 @@
 
 #define NEW_LEVEL_DRAW
 
-#include "game/camera.h"
-#include "video/model.h"
+#include "video/texture.h" // Texture
+#include "video/model.h" // gltron_Mesh
+#include "game/game_data.h" // Player
 #include "video/video_level.h"
-#include "video/nebu_2d.h"
-#include "base/nebu_png_texture.h"
 
-#include "Nebu_video.h"
+#include "video/nebu_video_types.h" // Visual
+#include "video/nebu_2d.h"
+#include "base/nebu_png_texture.h" // png_texture
+#include "video/nebu_font.h"
 
 /* dropped support for anything else than libpng */
 #include <png.h>
@@ -40,23 +42,6 @@ typedef struct PlayerVisual {
 
 enum { VP_SINGLE = 0, VP_SPLIT = 1, VP_FOURWAY = 2 }; // Viewport Type;
 
-#include "recognizer.h"
-
-/* rendering stuff */
-#include "explosion.h"
-
-#include "graphics_utility.h"
-#include "graphics_fx.h"
-#include "graphics_hud.h"
-#include "graphics_lights.h"
-#include "graphics_world.h"
-#include "trail_geometry.h"
-
-/* resource management */
-#include "texture.h"
-
-extern int game_textures;
-extern int n_textures;
 extern TextureInfo textures[];
 
 /* artpack stuff */
@@ -158,10 +143,13 @@ enum {
 	eHUDMap,
 	eHUDScores,
 	eHUDFPS,
+	eHUDBuster,
+	eHUDMaskBuster,
 	eHUDElementCount
 };
 
 extern nebu_2d *gpHUD[];
+extern nebu_2d *gpGUIBackground;
 
 extern float camAngles[];
 
@@ -189,9 +177,9 @@ extern float shadow_matrix[16];
 /* pixel stuff */
 extern unsigned char* loadPixels(const char *filename, Visual *d);
 extern unsigned char* scalePixels(const unsigned char *source, 
-																	int sw, int sh,
-																	int x, int y, int w, int h,
-																	int dw, int dh, int bytes);
+	int sw, int sh,
+	int x, int y, int w, int h,
+	int dw, int dh, int bytes);
 
 /* font stuff ->fonts.c */
 extern void initFonts(void);

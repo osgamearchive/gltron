@@ -22,6 +22,7 @@ nebu_Font *guiFtx = NULL;
 nebu_Font *gameFtx = NULL;
 
 nebu_2d *gpHUD[eHUDElementCount];
+nebu_2d *gpGUIBackground;
 
 gltron_Mesh* recognizer_quad;
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
@@ -96,26 +97,24 @@ Quad *quadBuf;
 int *quadBufIndex;
 #endif
 
-// TODO: fix this
-int game_textures = TEX_COUNT + 5; /* 7 + 6 + debug texture */
-int n_textures = 7;
-
-#ifndef GL_VERSION_1_2
-#  define GL_CLAMP_TO_EDGE GL_CLAMP
-#endif
-
-TextureInfo textures[] = {
-  { 1, "gltron_floor", GL_DONT_CARE, GL_REPEAT, GL_REPEAT, TEX_FLOOR, 64 },
-  { 1, "gltron", GL_RGB, GL_REPEAT, GL_REPEAT, TEX_GUI, 1 },
-  { 1, "gltron_logo", GL_RGBA, 
-    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_LOGO, 1 },
-  { 1, "gltron_trail", GL_RGBA, 
+TextureInfo textures[TEX_COUNT] = {
+  { 1, "gltron_trail.png", GL_RGBA, 
     GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_TRAIL, 1 },
-  { 1, "gltron_traildecal", GL_RGBA, 
+  { 1, "gltron_traildecal.png", GL_RGBA, 
     GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_DECAL, 1 },
-  { 6, "skybox", GL_RGB, 
-    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX, 1 },
-  { 1, "gltron_impact", GL_RGBA, GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_IMPACT, 1 },
+  { 1, "skybox0.png", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX0, 1 },
+  { 1, "skybox1.png", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX1, 1 },
+  { 1, "skybox2.png", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX2, 1 },
+  { 1, "skybox3.png", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX3, 1 },
+  { 1, "skybox4.png", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX4, 1 },
+  { 1, "skybox5.png", GL_RGB, 
+    GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_SKYBOX5, 1 },
+  { 1, "gltron_impact.png", GL_RGBA, GL_REPEAT, GL_CLAMP_TO_EDGE, TEX_IMPACT, 1 },
 };
 
 float gShadowColor[] = { 0, 0, 0, .8f };

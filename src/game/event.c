@@ -2,10 +2,13 @@
 #include <float.h>
 
 #include "video/video.h"
+#include "video/recognizer.h"
 #include "game/game.h"
 #include "audio/audio.h"
 #include "Nebu_scripting.h"
 #include "Nebu_base.h"
+#include "Nebu_input.h"
+#include "video/nebu_console.h"
 
 /*! \fn int processEvent(GameEvent* e)
   handle events, e.g.
@@ -460,6 +463,14 @@ void Game_Idle(void) {
 	}
 
 	doCameraMovement();
+	{
+		// why I can't just warp the mouse to the orig is still not 100% clear to me
+		// oh well, it's not a big loss.
+		int mouse_dx, mouse_dy;
+		nebu_Input_Mouse_GetDelta(&mouse_dx, &mouse_dy);
+		if(mouse_dx != 0 || mouse_dy != 0)
+			nebu_Input_Mouse_WarpToOrigin();
+	}
 	doRecognizerMovement();
 }
 

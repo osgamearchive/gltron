@@ -1,5 +1,6 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "video/explosion.h"
 
 #include "base/nebu_math.h"
 

@@ -2,24 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "video/graphics_utility.h"
 #include "game/gltron.h"
 #include "input/input.h"
 
 /* FIXME: "ignored playMenuFX" */
 void playMenuFX(int foo) { }
-
-void guiProjection(int x, int y) {
-  nebu_Video_CheckErrors("gui.c guiProj - start");
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  /*glOrtho(0, 0, x, y, -1, 1); */
-  nebu_Video_CheckErrors("gui.c guiProj - proj");
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glViewport(gScreen->vp_x, gScreen->vp_y,
-	     x, y);
-  nebu_Video_CheckErrors("gui.c guiProj - end");
-}
 
 void drawGuiBackground(void) {
   nebu_Video_CheckErrors("gui background start");
@@ -27,87 +15,18 @@ void drawGuiBackground(void) {
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  rasonly(gScreen);
-
-  glDisable(GL_BLEND);
-  glDisable(GL_LIGHTING);
+  // rasonly(gScreen);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(0,gpGUIBackground->w,0,gpGUIBackground->h,0,1);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
   glDisable(GL_DEPTH_TEST);
-
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_GUI]);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-  glColor3f(1.0, 1.0, 1.0);
-  glBegin(GL_QUADS);
-
-  glTexCoord2f(0.0, 0.0);
-  glVertex2f(0, 0);
-
-  glTexCoord2f(1.0, 0.0);
-  glVertex2i(gScreen->vp_w, 0);
-
-  glTexCoord2f(1.0, .75);
-  glVertex2i(gScreen->vp_w, gScreen->vp_h);
-
-  glTexCoord2f(0.0, .75);
-  glVertex2i(0, gScreen->vp_h);
-
-  glEnd();
-}
-
-void drawGuiLogo(void) {
-  float pos[] = { 512 - 10 - 320, 384 - 80 };
-  float size[] = { 320, 80 };
-  float glpos = 64;
-  float glsize = 32;
-
-  nebu_Video_CheckErrors("gui logo start");
-  
-  rasonly(gScreen);
-
-  pos[0] *= gScreen->vp_w / 512.0f;
-  pos[1] *= gScreen->vp_h / 384.0f;
-  size[0] *= gScreen->vp_w / 512.0f;
-  size[1] *= gScreen->vp_h / 384.0f;
-  glpos *= gScreen->vp_w / 512.0f;
-  glsize *= gScreen->vp_w / 512.0f;
-  
-  glEnable(GL_TEXTURE_2D);
-
-  glBindTexture(GL_TEXTURE_2D, gScreen->textures[TEX_LOGO]);
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  glColor3f(1.0, 1.0, 1.0);
-  glBegin(GL_QUADS);
-
-	{ 
-		// float texy = 1.0f - 256.0f / 320.0f;
-		float texy = 0.0f;
-		glTexCoord2f(0.0, texy);
-		glVertex2f(pos[0], pos[1]);
-
-		glTexCoord2f(1.0, texy);
-		glVertex2f(pos[0] + size[0], pos[1]);
-
-		glTexCoord2f(1.0, 1.0);
-		glVertex2f(pos[0] + size[0], pos[1] + size[1]);
-
-		glTexCoord2f(0.0, 1.0);
-		glVertex2f(pos[0], pos[1] + size[1]);
-	}
-  glEnd();
-
-  glDisable(GL_BLEND);
-
-  nebu_Video_CheckErrors("gui background end");
+  nebu_2d_Draw(gpGUIBackground);
 }
   
 void displayGui(void) {
   drawGuiBackground();
-  drawGuiLogo();
   drawMenu(gScreen);
 
   nebu_System_SwapBuffers();  
@@ -116,7 +35,6 @@ void displayGui(void) {
 void displayConfigure(void) {
   char message[] = "Press a key for this action!";
   drawGuiBackground();
-  drawGuiLogo();
   drawMenu(gScreen);
 
   rasonly(gScreen);

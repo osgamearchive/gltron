@@ -59,7 +59,7 @@ int nebu_System_MainLoop() {
 
 	return_code = -1;
 	while(return_code == -1) {
-		while(SDL_PollEvent(&event) && current) {
+		while(SDL_PollEvent(&event)) {
 			switch(event.type) {
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
@@ -80,14 +80,14 @@ int nebu_System_MainLoop() {
 			break;
 			}
 		}
-		if(redisplay) {
+		if(current && current->display && redisplay) {
 			current->display();
 			redisplay = 0;
 		}
-		if(idle) 
+		if(current && current->idle && idle) 
 			current->idle();
 	}
-	if(current->exit)
+	if(current && current->exit)
 		(current->exit)();
 	return return_code;
 }

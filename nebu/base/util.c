@@ -28,13 +28,10 @@ void nebu_Clamp( float *f, float min, float max )
   else if(*f > max) *f = max;
 }
 
-void nebu_List_AddTail(nebu_List **l, void* data) {
+void nebu_List_AddTail(nebu_List *l, void* data) {
 	nebu_List *p;
-	if(*l == NULL) {
-		*l = (nebu_List*) malloc(sizeof(nebu_List));
-		(*l)->next = NULL;
-	}
-	for(p = *l; p->next != NULL; p = p->next);
+
+	for(p = l; p->next != NULL; p = p->next);
 	p->next = (nebu_List*) malloc(sizeof(nebu_List));
 	p->next->next = NULL;
 	p->data = data;

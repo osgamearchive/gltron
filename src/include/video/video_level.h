@@ -19,6 +19,7 @@ typedef struct video_level {
 	video_level_shader arena_shader;
 } video_level;
 
+void video_LoadLevel(void);
 void video_FreeLevel(video_level *l);
 video_level* video_CreateLevel(void);
 void video_ScaleLevel(video_level *l, float fSize);

@@ -1,6 +1,7 @@
 #include "video/video.h"
 #include "game/game.h"
-
+#include "video/trail_geometry.h"
+#include "video/nebu_video_system.h"
 #include "base/nebu_math.h"
 
 #define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)

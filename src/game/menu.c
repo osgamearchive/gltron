@@ -1,4 +1,6 @@
 #include "video/video.h"
+#include "video/graphics_utility.h"
+
 #include "Nebu_scripting.h"
 
 #include <string.h>

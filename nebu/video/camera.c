@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 static void doLookAt(const float *cam, const float *target, const float *up) {
   matrix m;
@@ -50,6 +51,8 @@ void nebu_Camera_GetRotationMatrix(nebu_Matrix4D *matrix,
 }
 
 void nebu_Camera_LookAt(const nebu_Camera *pCamera) {
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	doLookAt(pCamera->vEye.v, pCamera->vLookAt.v , pCamera->vUp.v);
 }
 
@@ -70,14 +73,31 @@ void nebu_Camera_Roll(nebu_Camera *pCamera, float d) {
 	vec3_Transform(&pCamera->vUp, &pCamera->vUp, &m);
 }
 
-void nebu_Camera_RotateAroundTarget(nebu_Camera *pCamera,
-																		float dx, float dy) {
+void nebu_Camera_Rotate(nebu_Camera *pCamera, int flags,
+	float dx, float dy)
+{
 	// adjust up vector, so that it is orthogonal to
 	// view direction
 	vec3 vDiff, vView, vRight, vUp;
 	vec3 vdx, vdy;
+	vec3 *pvCenter, *pvMoving;
+
+	switch(flags & NEBU_CAMERA_ROTATE_MASK)
+	{
+	case NEBU_CAMERA_ROTATE_AROUND_EYE:
+		pvCenter = &pCamera->vEye;
+		pvMoving = &pCamera->vLookAt;
+		break;
+	case NEBU_CAMERA_ROTATE_AROUND_LOOKAT:
+		pvCenter = &pCamera->vLookAt;
+		pvMoving = &pCamera->vEye;
+		break;
+	default:
+		assert(0);
+		return;
+	}
 	
-	vec3_Sub(&vDiff, &pCamera->vLookAt, &pCamera->vEye);
+	vec3_Sub(&vDiff, pvCenter, pvMoving);
 	vec3_Normalize(&vView, &vDiff);
 	vec3_Cross(&vRight, &pCamera->vUp, &vView);
 	vec3_Normalize(&vRight, &vRight);
@@ -88,7 +108,7 @@ void nebu_Camera_RotateAroundTarget(nebu_Camera *pCamera,
 	if(dx == 0) {
 		vec3_Zero(&vdx);
 	} else {
-		// rotate eye point around up vector through lookAt point
+		// rotate moving around up vector through center point
 		vec3 v = vDiff;
 		float fAngle = dx * 2 * (float)M_PI / 360.0f;
 		matrix matRotation;
@@ -110,24 +130,19 @@ void nebu_Camera_RotateAroundTarget(nebu_Camera *pCamera,
 		vec3_Sub(&vdy, &v, &vDiff);
 
 		matrixTranspose(&matRotation, &matRotation);
-		vec3_Transform(&pCamera->vUp, &pCamera->vUp, &matRotation);
+		if(!(flags & NEBU_CAMERA_FIXED_UP))
+			vec3_Transform(&pCamera->vUp, &pCamera->vUp, &matRotation);
 	}
 
-	// add relative movements to camera position
-	
-	/*
-	vec3_Add(&pCamera->vEye, &pCamera->vEye, &vdx);
-	vec3_Add(&pCamera->vEye, &pCamera->vEye, &vdy);
-	*/
 	{
 		vec3 v;
 		vec3_Add(&v, &vdx, &vdy);
-		vec3_Add(&v, &v, &pCamera->vEye);
-		vec3_Sub(&v, &v, &pCamera->vLookAt);
+		vec3_Add(&v, &v, pvMoving);
+		vec3_Sub(&v, &v, pvCenter);
 		vec3_Normalize(&v, &v);
 		// printf("up dot view: %.4f\n", - vec3_Dot(&v, &pCamera->vUp));
 		vec3_Scale(&v, &v, vec3_Length(&vDiff));
-		vec3_Add(&pCamera->vEye, &v, &pCamera->vLookAt);
+		vec3_Add(pvMoving, &v, pvCenter);
 
 	}
 }
@@ -169,3 +184,21 @@ void nebu_Camera_SetupEyeUpLookAt(nebu_Camera *pCamera, vec3 *pEye, vec3 *pUp, v
 	pCamera->vLookAt = *pLookAt;
 }
 
+void nebu_Camera_Slide(nebu_Camera *pCamera, float dx, float dy, float dz)
+{
+	vec3 vLook, vUp, vRight, vMovement;
+	vec3_Sub(&vLook, &pCamera->vLookAt, &pCamera->vEye);
+	vec3_Cross(&vRight, &vLook, &pCamera->vUp);
+	vec3_Cross(&vUp, &vRight, &vLook);
+
+	vec3_Normalize(&vUp, &vUp);
+	vec3_Normalize(&vRight, &vRight);
+	vec3_Normalize(&vLook, &vLook);
+	vec3_Scale(&vUp, &vUp, dy);
+	vec3_Scale(&vRight, &vRight, dx);
+	vec3_Scale(&vLook, &vLook, dz);
+	vec3_Add(&vMovement, &vUp, &vRight);
+	vec3_Add(&vMovement, &vMovement, &vLook); 
+	vec3_Add(&pCamera->vEye, &pCamera->vEye, &vMovement);
+	vec3_Add(&pCamera->vLookAt, &pCamera->vLookAt, &vMovement);
+}

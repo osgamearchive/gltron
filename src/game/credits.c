@@ -1,4 +1,5 @@
 #include "game/gltron.h"
+#include "video/graphics_utility.h"
 
 static int coffset;
 

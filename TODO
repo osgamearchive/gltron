@@ -1,0 +1,47 @@
+Immediate:
+
+- Convert artpacks on gltron.org
+- Publish artpack conversion tool
+- test non-pow2 textures on older hardware
+
+Soon:
+
+- check cycle colors on OS X
+- check cycle on startup on OS X
+- check crashes on OS X
+
+- cleanup: replace getPath() stuff with nebu calls
+
+- Level editing tools
+- Level & artpack preview
+  - Add 'preview' option to Artpack/Level menu
+  - Design Screen layout for previews
+  - Create temporary texture set
+  - Load/Save game state (what about camera position?)
+  - ??
+- Level & artpack packaging tools (consistency check, uploading, etc)
+- Level & artpack browsing for webpage
+- Document artpack.lua
+- support older artpack revisions (4 walls, non-unified GUI),
+  add artpack version to artpack.lua
+
+- homepage: task list & blogging tools
+
+- SDL_sound: decent windows binaries with stereo mod & mp3 support
+- SDL_sound: OS X binaries with ogg / mod / mp3 support
+
+- own cycle: increase volume upon acceeleration, decrease default sound volume
+  for own cycle
+- multiple listeners for split-screen
+
+- Redo homepage a little (better news update (old/archive) system?):
+- Redo headlines
+- CSS support
+- add wiki
+
+- keep developer/art/support information somewhere
+- plea for help
+
+- compile clean TODO list
+- compile priority list
+- revise release schedule

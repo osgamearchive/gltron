@@ -2,17 +2,11 @@
 #include "video/nebu_font.h"
 #include "game/game.h"
 
+#include "video/nebu_video_utility.h"
 #include "base/nebu_math.h"
 
 void rasonly(Visual *d) {
-  /* do rasterising only (in local display d) */
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0.0f, (GLfloat) d->vp_w, 0.0f, (GLfloat) d->vp_h, 0.0f, 1.0f);
-  nebu_Video_CheckErrors("rasonly");
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
+	nebu_Video_rasonly(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
 }
 
 

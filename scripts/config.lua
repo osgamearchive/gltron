@@ -75,7 +75,7 @@ settings.windowMode = 1
 -- other settings (not available via menu)
 settings.show_gl_logo = 1
 
-settings.fov = 105
+settings.fov = 90
 settings.znear = 0.5
 settings.light_cycles = 1
 settings.turn_cycle = 1
@@ -102,8 +102,9 @@ settings.musicVolume = 0.5
 
 -- input
 
-settings.invert_mouse_x = 0
-settings.invert_mouse_y = 0
+settings.mouse_lock_ingame = 0
+settings.mouse_invert_x = 0
+settings.mouse_invert_y = 0
 
 settings.keys = { 
    { -- player 1

@@ -1,10 +1,10 @@
 #include "video/video.h"
 #include "base/nebu_surface.h"
 #include "video/nebu_2d.h"
+#include "video/nebu_video_system.h"
 
 void initTexture(Visual *d) {
   GLint min_filter;
-  char texname[120];
 
   int i, j;
 
@@ -29,18 +29,12 @@ void initTexture(Visual *d) {
 
   nebu_Video_CheckErrors("texture.c initTexture - start");
   /* todo: move that somewhere else */
-  glGenTextures(game_textures, d->textures);
+  glGenTextures(TEX_COUNT, d->textures);
   nebu_Video_CheckErrors("texture.c initTexture - creating textures");
-  for(i = 0; i < n_textures; i++) {
+  for(i = 0; i < TEX_COUNT; i++) {
     for( j = 0; j < textures[i].count; j++) {
       glBindTexture(GL_TEXTURE_2D, d->textures[ textures[i].id + j ]);
-      /* todo: snprintf would be safer, but win32 doesn't have it */
-      if(textures[i].count == 1) {
-				sprintf(texname, "%s%s", textures[i].name, TEX_SUFFIX);
-      } else {
-				sprintf(texname, "%s%d%s", textures[i].name, j, TEX_SUFFIX);
-      }
-      loadTexture(texname, textures[i].type);
+      loadTexture(textures[i].name, textures[i].type);
 
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textures[i].wrap_s);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textures[i].wrap_t);
@@ -70,7 +64,7 @@ void initTexture(Visual *d) {
 }
 
 void deleteTextures(Visual *d) {
-  glDeleteTextures(game_textures, d->textures);
+  glDeleteTextures(TEX_COUNT, d->textures);
   nebu_Video_CheckErrors("texture.c deleted textures");
 }
 

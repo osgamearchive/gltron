@@ -6,7 +6,15 @@ eHUD = {
 	Map = 4,
 	Scores = 5,
 	FPS = 6,
-	ElementCount = 7
+	Buster = 7,
+	MaskBuster = 8,
+	ElementCount = 9
+}
+
+eHUDStencil = {
+	MaskSpeed = 17,
+	MaskTurbo = 18,
+	MaskBuster = 19,
 }
 
 -- 	drawHud: parameters
@@ -47,9 +55,9 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 		c_translate(config.Speed.x, config.Speed.y, 0)
 		c_drawHUDSurface(eHUD.Speed)
 		drawSpeedDigital(speed_digital, config.Speed_Text, HUDColors.Speed)
-		c_drawHUDMask(eHUD.MaskSpeed, 17)
+		c_drawHUDMask(eHUD.MaskSpeed, eHUDStencil.MaskSpeed)
 		drawSpeedAnalog(speed_analog, HUDSpeedDial.circle, HUDSpeedDial.angles)
-		c_drawHUDMask(eHUD.MaskTurbo, 18)
+		c_drawHUDMask(eHUD.MaskTurbo, eHUDStencil.MaskTurbo)
 		drawBar(booster, settings.booster_min / settings.booster_max, HUDTurbo.rect, HUDTurbo.ranges)
 		c_drawHUDMask(-1, -1)
 		c_popMatrix()
@@ -59,8 +67,9 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 	if settings.show_wall_buster == 1 then
 		c_pushMatrix()
 		c_translate(config.Buster.x, config.Buster.y, 0)
-		c_drawHUDMask(eHUD.MaskTurbo, 19)
-		drawBar(wall_buster, settings.wall_buster_min / settings.wall_buster_max, HUDBuster.rect, HUDBuster.ranges)
+		c_drawHUDSurface(eHUD.Buster)
+		c_drawHUDMask(eHUD.MaskBuster, eHUDStencil.MaskBuster)
+		-- drawBar(wall_buster, settings.wall_buster_min / settings.wall_buster_max, HUDBuster.rect, HUDBuster.ranges)
 		c_drawHUDMask(-1,-1)
 		c_popMatrix()
 	end

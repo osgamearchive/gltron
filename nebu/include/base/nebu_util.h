@@ -12,6 +12,6 @@ struct nebu_List {
 void nebu_RandomPermutation( int N, int *nodes );
 void nebu_Clamp( float *f, float min, float max );
 
-void nebu_List_AddTail(nebu_List **l, void* data);
+void nebu_List_AddTail(nebu_List *l, void* data);
 
 #endif

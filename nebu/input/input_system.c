@@ -1,12 +1,15 @@
 #include "input/nebu_input_system.h"
 #include "input/nebu_system_keynames.h"
 #include "base/nebu_system.h"
+#include "video/nebu_video_system.h"
 #include "scripting/nebu_scripting.h"
 
 #include "SDL.h"
 #include <stdlib.h>
 
 static float joystick_threshold = 0;
+static int mouse_x = -1;
+static int mouse_y = -1;
 
 void nebu_Input_Init(void) {
 	/* keyboard */
@@ -34,11 +37,11 @@ void nebu_Input_Init(void) {
 	}
 }
 
-void SystemGrabInput() {
+void nebu_Input_Grab() {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 
-void SystemUngrabInput() {
+void nebu_Input_Ungrab() {
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 }
 
@@ -55,7 +58,47 @@ void SystemMouse(int buttons, int state, int x, int y) {
 		current->mouse(buttons, state, x, y);
 }
 
+
+int nebu_Input_GetKeyState(int key)
+{
+	int numKeys;
+	if(SDL_GetKeyState(&numKeys)[key])
+		return NEBU_INPUT_KEYSTATE_DOWN;
+	else
+		return NEBU_INPUT_KEYSTATE_UP;
+}
+
+void nebu_Input_Mouse_GetDelta(int *x, int *y)
+{
+	int wx, wy;
+
+	if(mouse_x == -1 || mouse_y == -1)
+	{
+		// mouse coordinates not yet initialized
+		*x = 0;
+		*y = 0;
+	}
+	
+	nebu_Video_GetDimension(&wx, &wy);
+	*x = mouse_x - wx / 2;
+	*y = mouse_y - wy / 2;
+
+	// printf("[input] returned delta %d,%d\n", *x, *y);
+}
+
+void nebu_Input_Mouse_WarpToOrigin(void)
+{
+	int wx, wy;
+	nebu_Video_GetDimension(&wx, &wy);
+	nebu_Video_WarpPointer(wx / 2, wy / 2);
+	// printf("[input] warped to %d,%d\n", wx / 2, wy /2);
+}
+
 void SystemMouseMotion(int x, int y) {
+	// save mouse position
+	// printf("[input] mouse motion to %d, %d\n", x, y);
+	mouse_x = x;
+	mouse_y = y;
 	if(current && current->mouseMotion)
 		current->mouseMotion(x, y);
 }

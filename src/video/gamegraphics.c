@@ -1,10 +1,16 @@
 #include "video/video.h"
+#include "video/trail_geometry.h"
 #include "game/game.h"
-
+#include "video/graphics_lights.h"
+#include "video/graphics_utility.h"
+#include "video/graphics_fx.h"
+#include "video/graphics_hud.h"
+#include "video/graphics_world.h"
 #include "video/skybox.h"
 #include "video/recognizer.h"
 #include "video/explosion.h"
 
+#include "video/nebu_video_system.h"
 #include "base/nebu_math.h"
 
 // static float arena[] = { 1.0, 1.2, 1, 0.0 };

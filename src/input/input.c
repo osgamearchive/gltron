@@ -6,8 +6,7 @@
 #include "Nebu_input.h"
 #include "Nebu_scripting.h"
 #include "input/input.h"
-/* I hear people are reading this file because they couldn't find the
-   manual! Go to http://www.gltron.org/ */
+#include "video/nebu_console.h"
 
 int ReservedKeyCodes[eReservedKeys] = {
   27,

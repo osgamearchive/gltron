@@ -5,17 +5,7 @@
 #include <string.h>
 #include <assert.h>
 
-void initFilesystem(int argc, const char *argv[]) {
-	if(argc == 1)
-		dirSetup(argv[0]);
-	else
-	{
-		dirSetup(argv[0]);
-		assert(0);
-	}
-}
-
-int fileExists(const char *path) {
+int nebu_FS_Test(const char *path) {
   FILE *f = fopen(path, "r");
   if(f) {
     fclose(f);
@@ -60,7 +50,6 @@ void nebu_FS_SetupPath(int tag, int nDirs, const char **directories)
 	}
 }
 
-
 char* nebu_FS_GetPath(int tag, const char *filename)
 {
 	nebu_List *p;
@@ -75,7 +64,7 @@ char* nebu_FS_GetPath(int tag, const char *filename)
 				int length = strlen(pConfig->directories[i]) + 1 /* seperator */ + strlen(filename) + 1 /* terminator */;
 				char *path = (char*) malloc(length);
 				sprintf(path, "%s%c%s", pConfig->directories[i], PATH_SEPARATOR, filename);
-				if(fileExists(path))
+				if(nebu_FS_Test(path))
 					return path;
 				else
 					free(path);

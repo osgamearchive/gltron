@@ -1,5 +1,5 @@
 #include "video/video.h"
-
+#include "game/game.h"
 #include "base/nebu_math.h"
 
 static float alpha = 0;

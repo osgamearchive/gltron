@@ -11,7 +11,7 @@ typedef struct {
 } SystemTime;
 
 typedef struct {
-	float x, y, width, height;
+	int x, y, width, height;
 } nebu_Rect;
 
 #endif

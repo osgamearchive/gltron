@@ -1,4 +1,5 @@
 #include "filesystem/path.h"
+#include "filesystem/dirsetup.h"
 #include "game/init.h"
 #include "game/gltron.h"
 #include "base/util.h"
@@ -6,7 +7,9 @@
 #include "base/nebu_system.h"
 #include "audio/nebu_audio_system.h"
 
-#define INI_VERSION 0.7106f
+#define INI_VERSION 0.7110f
+
+void initFilesystem(int argc, const char *argv[]);
 
 void initSubsystems(int argc, const char *argv[]) {
 	nebu_Init();
@@ -24,6 +27,11 @@ void initSubsystems(int argc, const char *argv[]) {
 	initVideo();
 	initAudio();
 	initInput();
+}
+
+void initFilesystem(int argc, const char *argv[]) {
+	dirSetup(argv[0]);
+	assert(argc == 1);
 }
 
 void initScripting(void) {
@@ -52,7 +60,7 @@ void initConfiguration(int argc, const char *argv[])
 		char *path;
 		path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
 		if (path != NULL) {
-		if (fileExists(path)) {
+		if (nebu_FS_Test(path)) {
 			printf("[status] loading settings from %s\n", path);
 			scripting_RunFile(path);
 		} else {
@@ -127,6 +135,4 @@ void initInput(void) {
 
 	gInput.mouse1 = 0;
 	gInput.mouse2 = 0;
-	gInput.mousex = 0;
-	gInput.mousey = 0;
 }

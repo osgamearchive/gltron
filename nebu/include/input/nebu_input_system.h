@@ -74,10 +74,18 @@ enum {
 	SYSTEM_JOY_BUTTON_19
 };
 
-void nebu_Input_Init(void);
+enum {
+	NEBU_INPUT_KEYSTATE_DOWN = 1,
+	NEBU_INPUT_KEYSTATE_UP = 2
+};
 
-void SystemGrabInput();
-void SystemUngrabInput();
+void nebu_Input_Init(void);
+void nebu_Input_Mouse_GetDelta(int *dx, int *dy);
+void nebu_Input_Mouse_WarpToOrigin();
+void nebu_Input_Grab();
+void nebu_Input_Ungrab();
+
+int nebu_Input_GetKeyState(int key);
 
 char* SystemGetKeyName(int key);
 

@@ -194,13 +194,11 @@ HUDTurbo = {
 		-- width, and charge range for red area
 			range_start = {
 				color = { r = .3, g = 0, b = 0 },
-				color_disabled = { r = .3, g = 0, b = 0 },
 				charge = 0.0,
 				width = 0.0,
 			},
 			range_end = {
 				color = { r = .3, g = 0, b = 0 },
-				color_disabled = { r = .3, g = 0, b = 0 },
 				charge = 0.3,
 				width = 0.3,
 			},
@@ -209,13 +207,11 @@ HUDTurbo = {
 		{
 			range_start = {
 				color = { r = .3, g = 0, b = .0 },
-				color_disabled = { r = .3, g = 0, b = 0 },
 				charge = 0.3,
 				width = 0.3,
 			},
 			range_end = {
 				color = { r = 1, g = 0, b = .0 },
-				color_disabled = { r = 1, g = 0, b = 0 },
 				charge = 1,
 				width = 1,
 			},
@@ -232,13 +228,11 @@ HUDBuster = {
 		-- width, and charge range for red area
 			range_start = {
 				color = { r = .3, g = 0, b = 0 },
-				color_disabled = { r = .0, g = .0, b = .0 },
 				charge = 0.0,
 				width = 0.0,
 			},
 			range_end = {
 				color = { r = .3, g = 0, b = 0 },
-				color_disabled = { r = .3, g = .3, b = .3 },
 				charge = 0.3,
 				width = 0.3,
 			},
@@ -247,13 +241,11 @@ HUDBuster = {
 		{
 			range_start = {
 				color = { r = .3, g = 0, b = .0 },
-				color_disabled = { r = .3, g = .3, b = .3 },
 				charge = 0.3,
 				width = 0.3,
 			},
 			range_end = {
 				color = { r = 1, g = 0, b = .0 },
-				color_disabled = { r = .6, g = .6, b = .6 },
 				charge = 1,
 				width = 1,
 			},

@@ -4,7 +4,9 @@ extern "C" {
 #include "game/game.h"
 #include "video/video.h" // 3d sound engine needs to know the camera's location!
 #include "scripting/nebu_scripting.h"
+#include "video/recognizer.h"
 }
+
 #include "audio/sound_glue.h"
 
 #include "SDL.h"

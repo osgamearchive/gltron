@@ -105,15 +105,10 @@ function drawBar(charge, clear, rect, ranges) -- between 0 and 1
 		if(charge > range.range_start.charge) then
 			if(charge > range.range_end.charge) then
 				local r = range
-				if(charge < clear) then
-					r.range_start.color = range.range_start.color_disabled
-					r.range_end.color = 
-						color_interpolate(t, range.range_start.color_disabled, range.range_end.color_disabled)
-				end		
 				drawRectangle(rect, r)
 			else
 				local t = (charge - range.range_start.charge) / 
-						(range.range_end.charge - range.range_start.charge)
+					(range.range_end.charge - range.range_start.charge)
 				local r = {
 					range_start = {
 						charge = range.range_start.charge,
@@ -125,15 +120,10 @@ function drawBar(charge, clear, rect, ranges) -- between 0 and 1
 					}
 				}
 				r.range_end.width = 
-						(1 - t) * range.range_start.width + 
-						t * range.range_end.width
+					(1 - t) * range.range_start.width + 
+					t * range.range_end.width
 				r.range_end.color = 
-						color_interpolate(t, range.range_start.color, range.range_end.color)
-				if(charge < clear) then
-					r.range_start.color = range.range_start.color_disabled
-					r.range_end.color = 
-						color_interpolate(t, range.range_start.color_disabled, range.range_end.color_disabled)
-				end
+					color_interpolate(t, range.range_start.color, range.range_end.color)
 				drawRectangle(rect, r)
 			end
 		end

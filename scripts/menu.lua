@@ -173,21 +173,27 @@ Menu = {
       read = function() return settings.ai_player4; end,
       store = function(value) settings.ai_player4 = value; c_resetGame(); end
    },
-
-   InvertMouseY = {
+   MouseLockIngame = {
+	type = MenuC.type.list, caption = "Lock Mouse in Game",
+	labels = { "off", "on" },
+	values = { 0, 1 },
+	read = function() return settings.mouse_lock_ingame; end,
+	store = function(value) settings.mouse_lock_ingame = value; end
+   },
+   MouseInvertY = {
      type = MenuC.type.list, caption = "Invert Mouse (Y)",
      labels = { "off", "on" },
      values = { 0, 1 },
-     read = function() return settings.invert_mouse_y; end,
-     store = function(value) settings.invert_mouse_y = value; end
-  },
-   InvertMouseX = {
+     read = function() return settings.mouse_invert_y; end,
+     store = function(value) settings.mouse_invert_y = value; end
+   },
+   MouseInvertX = {
      type = MenuC.type.list, caption = "Invert Mouse (X)",
      labels = { "off", "on" },
      values = { 0, 1 },
-     read = function() return settings.invert_mouse_x; end,
-     store = function(value) settings.invert_mouse_x = value; end
-  },
+     read = function() return settings.mouse_invert_x; end,
+     store = function(value) settings.mouse_invert_x = value; end
+   },
    -- PlayerX_Key
    Player1_Left = { 
       type = MenuC.type.key, caption = "Turn Left",
@@ -420,6 +426,13 @@ Menu = {
       read = function() return settings.show_2d; end,
       store = function(value) settings.show_2d = value; end
    },
+   Fov = {
+      type = MenuC.type.list, caption = "Field of View",
+      labels = { "very narrow", "narrow", "normal", "wide", "ultra-wide", "fish-eye" },
+      values = { 60, 75, 90, 105, 120, 165 },
+      read = function() return settings.fov; end,
+      store = function(value) settings.fov = value; end
+   },
 
    -- Screen
 	Resolution = {
@@ -571,7 +584,8 @@ Menu = {
 Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "ControlsMenu", "Quit" }
 
 Menu.ControlsMenu.items = {
-	"KeyConfigMenu", "JoyConfigMenu", "InvertMouseX", "InvertMouseY"
+	"KeyConfigMenu", "JoyConfigMenu", "MouseLockIngame",
+	"MouseInvertX", "MouseInvertY"
 }
 
 Menu.GameMenu.items = { 
@@ -625,7 +639,7 @@ Menu.VideoMenu.items = {
 Menu.DetailsMenu.items = {
    "Filtering", "AlphaTrails", "Halos", "Reflections",
     -- "Lightcycles",
-    "Recognizer", "Lod"
+    "Recognizer", "Lod", "Fov"
 }
 
 Menu.HudMenu.items = {

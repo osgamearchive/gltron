@@ -10,17 +10,17 @@ nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 	unsigned char *pixels;
 
 	switch(pSurface->format) {
-	case NEBU_SURFACE_RGB:
+	case NEBU_SURFACE_FMT_RGB:
 		source_format = GL_RGB;
 		target_format = GL_RGB;
 		bpp = 24;
 		break;
-	case NEBU_SURFACE_RGBA:
+	case NEBU_SURFACE_FMT_RGBA:
 		source_format = GL_RGBA;
 		target_format = GL_RGBA;
 		bpp = 32;
 		break;
-	case NEBU_SURFACE_ALPHA:
+	case NEBU_SURFACE_FMT_ALPHA:
 		source_format = GL_ALPHA;
 		target_format = GL_ALPHA;
 		bpp = 8;

@@ -5,8 +5,6 @@
 typedef struct Input {
   int mouse1;
   int mouse2;
-  int mousex;
-  int mousey;
 } Input;
 
 

@@ -38,7 +38,7 @@ void enterGame(void) { /* called when game mode is entered */
   updateSettingsCache();
 
   SystemHidePointer();
-  nebu_Video_WarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
+  nebu_Input_Mouse_WarpToOrigin();
   game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
   Audio_EnableEngine();
  
@@ -60,30 +60,14 @@ void exitGame(void) {
   /* fprintf(stderr, "exit game\n"); */
 }
 
-void gameMouseMotion(int x, int y) {
-  if(x != MOUSE_ORIG_X || y != MOUSE_ORIG_Y) {
-    gInput.mousex += x - MOUSE_ORIG_X;
-    gInput.mousey += y - MOUSE_ORIG_Y;
-    /* fprintf(stderr, "Mouse: dx: %d\tdy: %d\n", 
-       x - MOUSE_ORIG_Y, y - MOUSE_ORIG_Y); */
-    /* 
-       cam_phi += - (x - MOUSE_ORIG_X) * MOUSE_CX;
-       cam_chi += (y - MOUSE_ORIG_Y) * MOUSE_CY;
-       if(cam_chi < CAM_CHI_MIN) cam_chi = CAM_CHI_MIN;
-       if(cam_chi > CAM_CHI_MAX) cam_chi = CAM_CHI_MAX;
-    */
-    nebu_Video_WarpPointer(MOUSE_ORIG_X, MOUSE_ORIG_Y);
-  }
-}
-
 void gameMouse(int buttons, int state, int x, int y) {
-  if(state == SYSTEM_MOUSEPRESSED) {
-    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) gInput.mouse1 = 1;
-    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) gInput.mouse2 = 1;
-  } else if(state == SYSTEM_MOUSERELEASED) {
-    if(buttons == SYSTEM_MOUSEBUTTON_LEFT) gInput.mouse1 = 0;
-    if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) gInput.mouse2 = 0;
-  }
+	if(state == SYSTEM_MOUSEPRESSED) {
+		if(buttons == SYSTEM_MOUSEBUTTON_LEFT) gInput.mouse1 = 1;
+		if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) gInput.mouse2 = 1;
+	} else if(state == SYSTEM_MOUSERELEASED) {
+		if(buttons == SYSTEM_MOUSEBUTTON_LEFT) gInput.mouse1 = 0;
+		if(buttons == SYSTEM_MOUSEBUTTON_RIGHT) gInput.mouse2 = 0;
+	}
 
   /*
   if(getSettingi("camType") == CAM_TYPE_MOUSE) 
@@ -101,5 +85,5 @@ void gameMouse(int buttons, int state, int x, int y) {
 }
 
 Callbacks gameCallbacks = { 
-  displayGame, GameMode_Idle, keyGame, enterGame, exitGame, gameMouse, gameMouseMotion, "game"
+  displayGame, GameMode_Idle, keyGame, enterGame, exitGame, gameMouse, NULL, "game"
 };

@@ -15,7 +15,7 @@ void draw2D( nebu_Rect *pRect ) {
 	float grid_height = box2_Height(& game2->level->boundingBox);
 
 	glPushMatrix();
-	glTranslatef(pRect->x, pRect->y, 0);
+	glTranslatef( (float)pRect->x, (float)pRect->y, 0);
 	glScalef(pRect->width / grid_width, pRect->height / grid_height, 1);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -106,7 +106,7 @@ void Sound_initTracks(void) {
     
     // bugfix: filter track list to readable files (and without directories)
     char *path = getPossiblePath( PATH_MUSIC, (char*)p->data );
-  	if( path != NULL && fileExists( path ) ) {
+  	if( path != NULL && nebu_FS_Test( path ) ) {
     	scripting_RunFormat("tracks[%d] = \"%s\"", i, (char*) p->data);
         i++;
     	free( path );

@@ -1,6 +1,8 @@
 #include "video/video.h"
+#include "game/game.h"
 #include "filesystem/path.h"
 #include "base/util.h"
+#include "video/video_level.h"
 
 #include "Nebu_scripting.h"
 #include "Nebu_filesystem.h"
@@ -38,7 +40,9 @@ void artpack_LoadSurfaces(void)
 		"hud-ai.png",
 		"hud-map.png",
 		"hud-scores.png",
-		"hud-fps.png"
+		"hud-fps.png",
+		"hud-buster.png",
+		"hud-mask-buster.png"
 	};
 	int i;
 	for(i = 0; i < eHUDElementCount; i++)
@@ -57,6 +61,22 @@ void artpack_LoadSurfaces(void)
 		if(gpHUD[i]) { nebu_2d_Free(gpHUD[i]); gpHUD[i] = NULL; }
 		gpHUD[i] = nebu_2d_Create(surface, 0);
 
+		nebu_Surface_Free(surface);
+		free(path);
+	}
+
+	{
+		nebu_Surface *surface;
+		char *path;
+		
+		path = nebu_FS_GetPath(PATH_ART, "gui.png");
+		if(!path)
+		{
+			fprintf(stderr, "fatal: failed loading %s, exiting...\n", "gui.png");
+			exit(1); /* OK: critical, installation corrupt */
+		}
+		surface = nebu_Surface_LoadPNG(path);
+		gpGUIBackground = nebu_2d_Create(surface, 0);
 		nebu_Surface_Free(surface);
 		free(path);
 	}

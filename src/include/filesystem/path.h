@@ -4,7 +4,6 @@
 extern const char* getDirectory(int eLocation);
 extern char* getPath(int eLocation, const char *filename);
 extern char* getPossiblePath(int eLocation, const char *filename);
-extern char* getArtPath(const char *artpack, const char *filename);
 extern void initDirectories(void);
 
 /* if you update this listing, also make sure you update scripts/path.lua */

@@ -1,5 +1,6 @@
 #include "video/trail_geometry.h"
-								 
+#include "video/nebu_video_system.h"
+
 void trailStatesNormal(Player *pPlayer, int texture) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);

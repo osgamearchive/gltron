@@ -15,16 +15,13 @@ typedef struct {
 
 void nebu_FS_SetupPath(int tag, int nDirs, const char **directories);
 char* nebu_FS_GetPath(int tag, const char *filename);
-
-extern void initFilesystem(int argc, const char *argv[]);
+int nebu_FS_Test(const char *path);
 
 extern nebu_List* readDirectoryContents(const char *dirname, const char *prefix);
 
 /* findpath.c, GPL'd code */
 extern void goto_installpath(const char *executable);
 
-extern void dirSetup(const char *executable);
-extern int fileExists(const char *path);
 extern void makeDirectory(const char* name);
 
 #endif
