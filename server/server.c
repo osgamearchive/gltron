@@ -148,8 +148,12 @@ do_lostplayer(int which )
 int
 check_version(char *vers )
 {
-  //TODO: check version.
-  return 1;
+  //TODO: check version. #done
+
+#define VERSION "0.61am" 
+  //Check for curent version 0.61am
+  printf("checking version %s <> %s\n", vers, VERSION);
+  return ! strcmp(vers, VERSION);
 }
 
 void
@@ -209,13 +213,26 @@ do_login( int which, Packet packet )
   rep.type   = USERINFO;
   rep.infos.userinfo.which = which;
   rep.infos.userinfo.ismaster = slots[which].isMaster;
-  rep.infos.userinfo.color = 1; //TODO: get right color..
+  rep.infos.userinfo.color = 1; //TODO: get right color...
 
-  //TODO : Check for dupplicate login  
-  strcpy(slots[which].name, packet.infos.login.nick);
+  //TODO : Check for duplicate login #done
+  for(i=0; i<MAX_PLAYERS; ++i)
+    {
+      if( slots[i].active && ! strcmp(packet.infos.login.nick, slots[i].name) )
+	break;
+    }
+  if( i < MAX_PLAYERS )
+    {
+      //Someone already have this nickname 
+      i=1+(int) (100.0*rand()/(RAND_MAX+1.0));   
+      sprintf(slots[which].name, "%s%d", packet.infos.login.nick, i);
+    } else {      
+      strcpy(slots[which].name, packet.infos.login.nick);
+    }
+
   printf("Connection from %s one slot %d\n", slots[which].name, which);
 
-  //TODO: if nick already exists, change and send...
+  //TODO: if nick already exists, change and send... #done
   strcpy(rep.infos.userinfo.nick, slots[which].name); //TODO: get right color..
   Net_sendpacket(&rep, slots[which].sock);
   
@@ -299,6 +316,9 @@ do_startgame( int which, Packet packet )
 {
   Packet   rep, rep2;
   int      i, j;
+
+  if( ! slots[which].isMaster )
+    return;
 
   netscores.winner=-1;
 
@@ -404,6 +424,31 @@ do_startgame( int which, Packet packet )
 }
 
 void
+do_chgenbwins(int which, Packet packet)
+{
+  Packet rep;
+  int    i;
+
+  if( ! slots[which].isMaster )
+    return;
+
+  if( sState != preGameState )
+    return;
+
+  netrulenbwins = packet.infos.action.which;
+
+  //Send new NetRules to users...
+  rep.which = SERVERID;
+  rep.type  = NETRULES;
+  rep.infos.netrules.nbWins = netrulenbwins;
+  rep.infos.netrules.time   = netruletime;
+  printf("Net rules : %d %d\n", netrulenbwins,  netruletime);
+  for(i=0; i<MAX_PLAYERS; ++i)
+      if( slots[i].active == 1 )
+	Net_sendpacket(&rep, slots[i].sock);
+}
+
+void
 do_action( int which, Packet packet )
 {
   printf("+ do_action\n");
@@ -419,6 +464,9 @@ do_action( int which, Packet packet )
       break;
     case STARTGAME:
       do_startgame(which, packet);
+      break;
+    case CHGENBWINS:
+      do_chgenbwins(which, packet);
       break;
     default:
       fprintf(stderr, "Received an action packet with a type %d that not be allowed or unknown\n", packet.infos.action.type);

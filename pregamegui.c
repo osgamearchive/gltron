@@ -64,6 +64,24 @@ handlecommand(char *command, char *params)
 	  Net_sendpacket(&packet, Net_getmainsock());	  
 	}
       break;
+    case 'g': //Change Netsettings nbWins
+      if( serverstate == preGameState && isConnected  )
+	{
+
+	  if( slots[me].isMaster )
+	    {
+	      packet.which=me;
+	      packet.type=ACTION;
+	      packet.infos.action.type=CHGENBWINS;
+	      str = strtok(params, " ");
+	      //str is new settings
+	      packet.infos.action.which = strtol(str, (char**) NULL, 10);
+	      Net_sendpacket(&packet, Net_getmainsock());	  
+	    } else {
+	      fprintf(stderr,"\nYour are not allowed to change game settings, u must be Game Master\n");
+	    }
+	}
+      break;
     }
 }
 

@@ -38,7 +38,8 @@ enum {
   STARTGAME,                //Ask to start game
   PART,                     //Someone left
   JOIN,                     //Someone join
-  CHGEGAMEMASTER            //One server say that game master has changed
+  CHGEGAMEMASTER,           //One server say that game master has changed
+  CHGENBWINS                //GameMaster ask to change nbWins setting
 };
 
 //Typedefs--------------------------------------------------------------------

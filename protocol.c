@@ -464,7 +464,7 @@ Net_receivepacket( Packet *packet, TCPsocket sock, int which, int type )
 
 
       rLen = SDLNet_TCP_Recv(sock, (void *) buff, len);
-      printf("got packet %d, readbytes was %d ( %d )\n", slots[which].packet, rLen, len);
+      
       if( rLen < len )
 	{
 	  free(buff);
