@@ -40,7 +40,7 @@ unsigned int uintFromVec3(vec3 *pV);
 vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
 												 const segment2 *s1, const segment2 *s2);
 
-vec2* vec2_Orhogonal(vec2 *pOut, const vec2 *pV);
+vec2* vec2_Orthogonal(vec2 *pOut, const vec2 *pV);
 
 vec2* vec2Add(vec2 *pOut, const vec2 *pV1, const vec2 *pV2);
 vec2* vec2Sub(vec2 *pOut, const vec2 *pV1, const vec2 *pV2);
