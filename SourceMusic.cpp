@@ -5,68 +5,55 @@ namespace Sound {
     _system = system;
 
     _sample = NULL;
-    _buffersize = 8192;
-    _position = 0;
-    _decoded = 0;
 
-    _mem = NULL;
-    _mem_size = 0;
+		_sample_buffersize = 8192;
+    _buffersize = 20 * _sample_buffersize;
+		_buffer = (Uint8*) malloc( _buffersize );
+
+		_decoded = 0;
+    _read = 0;
+
+    _filename = NULL;
     _rwops = NULL;
   }
 
   SourceMusic::~SourceMusic() { 
     fprintf(stderr, "SourceMusic destructor called\n");
+
+		free(_buffer);
+		
     if(_sample)
       Sound_FreeSample( _sample );
 
-    if(_mem)
-      free(_mem);
-    // Source::~Source();
+    if(_filename)
+      free(_filename);
   }
 
   void SourceMusic::CreateSample(void) {
-    _rwops = SDL_RWFromMem(_mem, _mem_size);
+    _rwops = SDL_RWFromFile(_filename, "r");
     _sample = Sound_NewSample(_rwops, NULL,
 			      _system->GetAudioInfo(),
-			      _buffersize );
+			      _sample_buffersize );
     if(_sample == NULL) {
       fprintf(stderr, "[error] failed loading sample: %s\n", 
 	      Sound_GetError());
       return;
     } 
 
-    _position = 0;
-    _decoded = _buffersize;
+    _read = 0;
+    _decoded = 0;
     fprintf(stderr, "created sample\n");
   }
 
   void SourceMusic::Load(char *filename) {
-    // FIXME: grow buffer as needed
-#define BUFSIZE 10 * 1024 * 1024
-    file_handle file = file_open(filename, "rb");
-    if(_mem != NULL) free(_mem);
-    _mem = (void*) malloc(BUFSIZE);
-    _mem_size = 0;
-    int readbytes;
-    while(1) {
-      readbytes = file_read(file, (char*)_mem + _mem_size, 8192);
-      _mem_size += readbytes;
-      if(readbytes != 8192) {
-	if( feof( file ) ) {
-	  fprintf(stderr, "eof reached\n");
-	}
-	fprintf(stderr, "read %d bytes from %s, error number %d\n", readbytes, filename,  ferror( file ));
-	break;
-      }
-    }
-    fprintf(stderr, "read a total of %d bytes\n", _mem_size);
-    file_close(file);
+		int n = strlen(filename);
+		_filename = (char*) malloc(n + 1);
+		memcpy(_filename, filename, n + 1);
     CreateSample();
   }
 
   void SourceMusic::CleanUp(void) {
-    // cleanup doesn't free the memory of the loaded sample data
-    _position = 0;
+		_read = 0;
     _decoded = 0;
 
     if(_sample != NULL) 
@@ -75,48 +62,73 @@ namespace Sound {
 
   int SourceMusic::Mix(Uint8 *data, int len) {
     if(_sample == NULL) return 0;
+		
+		// printf("mixing %d bytes\n", len);
 
-    assert(len < _buffersize);
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
     // fprintf(stderr, "setting volume to %.3f -> %d\n", _volume, volume);
     // fprintf(stderr, "entering mixer\n");
-    Uint8* buffer = (Uint8*) _sample->buffer;
-
-    if(len <= _decoded - _position) {
-      SDL_MixAudio(data, buffer + _position, len, volume);
-      _position += len;
-      // fprintf(stderr, "mixed %d bytes without decoding\n", len);
-    } else { 
-      SDL_MixAudio(data, buffer + _position, _decoded - _position,
-		   volume);
-      len -= _decoded - _position;
-      _position = 0;
-      _decoded = 0;
-      _decoded += Sound_Decode(_sample);
-      buffer = (Uint8*) _sample->buffer;
-      // fprintf(stderr, "decoded %d bytes\n", _decoded);
-      if(len <= _decoded) {
-	SDL_MixAudio(data, buffer + _position, len, volume);
-	_position += len;
-	// fprintf(stderr, "mixed %d bytes after decoding\n", len);
-      } else {
-	// fprintf(stderr, "mixing remaining %d bytes\n");
-	SDL_MixAudio(data, buffer + _position, _decoded - _position, 
-		     volume);
-	CleanUp();
-	// fprintf(stderr, "end of sample reached!\n");
-	if(_loop) {
-	  fprintf(stderr, "looping music\n");
-	  if(_loop != 255) 
-	    _loop--;
-	  CreateSample();
-	} else {
-	  _isPlaying = 0;
-	}
-      }
-    }
+		
+    if(len < (_decoded - _read + _buffersize) % _buffersize) {
+			// enough data to mix
+			if(_read + len <= _buffersize) {
+				SDL_MixAudio(data, _buffer + _read, len, volume);
+				_read = (_read + len) % _buffersize;
+			} else {
+				// wrap around in buffer
+				// printf("wrap around in buffer\n");
+				SDL_MixAudio(data, _buffer + _read, _buffersize - _read, volume);
+				len -= _buffersize - _read;
+				SDL_MixAudio(data, _buffer, len, volume);
+				_read = len;
+			}
+		} else {
+			// buffer under-run
+			printf("buffer underrun!\n");
+			// don't do anything
+		}
     return 1;
   }
+
+	void SourceMusic::Idle(void) {
+		if(_sample == NULL)
+			return;
+		// printf("idling\n");
+		while( _read == _decoded || 
+					 (_read - _decoded + _buffersize) % _buffersize >
+					 _sample_buffersize )	{
+			if(_read == _decoded)
+				printf("_read == _decoded == %d\n", _read);
+			// fill the buffer
+			int count = Sound_Decode(_sample);
+			// printf("adding %d bytes to buffer\n", count);
+			if(count <= _buffersize - _decoded) {
+				memcpy(_buffer + _decoded, _sample->buffer, count);
+			} else {
+				// wrapping around end of buffer
+				printf("wrapping around end of buffer\n");
+				memcpy(_buffer + _decoded, _sample->buffer, _buffersize - _decoded);
+				memcpy(_buffer, (Uint8*) _sample->buffer + _buffersize - _decoded,
+							 count - (_buffersize - _decoded));
+			}
+			_decoded = (_decoded + count) % _buffersize;
+
+			// check for end of sample, loop
+			if(_sample->flags) {
+				// some error has occurer, maybe end of sample reached
+				CleanUp();
+				fprintf(stderr, "end of sample reached!\n");
+				if(_loop) {
+					fprintf(stderr, "looping music\n");
+					if(_loop != 255) 
+						_loop--;
+					CreateSample();
+				} else {
+					_isPlaying = 0;
+				}
+			}
+		} // buffer has been filled
+	}
 }
 
 

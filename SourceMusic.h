@@ -13,13 +13,14 @@ namespace Sound {
     virtual ~SourceMusic();
     void Load(char *filename);
     virtual int Mix(Uint8 *data, int len);
+		virtual void Idle(void);
 
   protected:
     virtual void Reset(void) { 
-      if(_position != 0) {
-	CleanUp();
-	CreateSample();
-	fprintf(stderr, "sample resetted\n");
+      if(_sample != NULL) {
+				CleanUp();
+				CreateSample();
+				fprintf(stderr, "sample resetted\n");
       };
     };
     void CleanUp(void);
@@ -27,12 +28,14 @@ namespace Sound {
 
   private:
     Sound_Sample* _sample;
+		Uint32 _sample_buffersize;
+		
+		Uint8* _buffer;
     Uint32 _buffersize;
-    Uint32 _position;
+    Uint32 _read;
     Uint32 _decoded;
 
-    void *_mem;
-    int _mem_size;
+		char *_filename;
     SDL_RWops *_rwops;
   };
 }
