@@ -1,7 +1,6 @@
 #include "gltron.h"
 
 #include <png.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,21 +9,29 @@ int bmpScreenShot(char *filename, gDisplay *d);
 
 void doScreenShot() {
   char buf[100];
-
+  char *path;
 #ifndef macintosh  
   sprintf(buf, "gltron-0.61-%d.png", screenshots);
-  screenShot(buf, game->screen);
-  screenshots++;
-
+  path = getPossiblePath(PATH_SNAPSHOTS, buf);
+  if(path != NULL) {
+    screenShot(buf, game->screen);
+    screenshots++;
+    free(path);
+  }
 #endif
 }
 
 void doBmpScreenShot() {
   char buf[100];
+  char *path;
 
   sprintf(buf, "gltron-0.61-%d.bmp", screenshots);
-  bmpScreenShot(buf, game->screen);
-  screenshots++;
+  path = getPossiblePath(PATH_SNAPSHOTS, buf);
+  if(path != NULL) {
+    bmpScreenShot(path, game->screen);
+    screenshots++;
+    free(path);
+  }
 }
 
 FILE *fp;
