@@ -6,6 +6,7 @@
 
 #include "configuration/configuration.h"
 #include "game/camera.h"
+#include "game/game_level.h"
 
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
@@ -21,11 +22,6 @@ enum {
 #endif
 };
 
-typedef struct Grid {
-  int width, height;
-  unsigned char *data;
-} Grid;
-
 /* 
    this struct contains all the necessary parameters to define a game round
    (except number of players)
@@ -35,12 +31,11 @@ typedef struct Grid {
 typedef struct RuleSet {
   int eraseCrashed;
   float speed;
-  int grid_size;
 } RuleSet;
 
-
 typedef struct Game2 {
-  Grid grid;
+  game_level *level;
+  float level_scale;
   RuleSet rules;
   int mode;
   int players;
