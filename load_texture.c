@@ -37,6 +37,28 @@ void loadTexture(char *filename, int format) {
   }
   /* TODO: build mipmaps the proper way, box filters suck */
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+  if(game->settings->use_mipmaps) {
+    texture *newtex;
+    int level = 0;
+
+    glTexImage2D(GL_TEXTURE_2D, level, format, tex->width, tex->height,
+		 0, internal, GL_UNSIGNED_BYTE, tex->data);
+    while (tex->width > 1 || tex->height > 1) {
+      newtex = mipmap_png_texture(tex, 1, 0, 0);
+      freeTextureData(tex);
+      tex = newtex;
+      level++;
+      fprintf(stderr, "creating mipmap level %d, size(%d, %d)\n", 
+	      level, tex->width, tex->height);
+      glTexImage2D(GL_TEXTURE_2D, level, format, tex->width, tex->height,
+		   0, internal, GL_UNSIGNED_BYTE, tex->data);
+    }
+  } else { 
+      glTexImage2D(GL_TEXTURE_2D, 0, format, tex->width, tex->height, 0,
+		   internal, GL_UNSIGNED_BYTE, tex->data);
+  }
+    /*
   if(game->settings->use_mipmaps) {
     gluBuild2DMipmaps(GL_TEXTURE_2D, format, tex->width, tex->height, 
 		      internal, GL_UNSIGNED_BYTE, tex->data);
@@ -44,5 +66,6 @@ void loadTexture(char *filename, int format) {
     glTexImage2D(GL_TEXTURE_2D, 0, format, tex->width, tex->height, 0,
 		 internal, GL_UNSIGNED_BYTE, tex->data);
   }
+    */
   freeTextureData(tex);
 }
