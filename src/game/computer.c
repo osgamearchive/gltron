@@ -5,7 +5,7 @@
 #define LEFT(x) ((x + 3) % 4)
 #define RIGHT(x) ((x + 1) % 4)
 
-#define OPP_MAX_DIST (0.2f * game2->rules.grid_size)
+#define OPP_MAX_DIST (0.2f * criticalDistance())
 #define SAVE_T_DIFF 0.500f
 #define SAVE_SPEED_DIFF 1.0f
 #define HOPELESS_T 0.80f
@@ -22,6 +22,10 @@ AI_Parameters ai_params = {
 	// rlDelta
 	{	0, 10, 20, 30 }
 };
+
+float criticalDistance(void) {
+	return 84.0f * game2->rules.speed;
+}
 
 // play as if nothing concerned us
 void doComputerSimple(int player, int target, AI_Distances *distances) {
@@ -53,9 +57,9 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 		 turning once in a while
 	 */
 
-  if(distances->front > ai_params.critical[level] * game2->rules.grid_size &&
+  if(distances->front > ai_params.critical[level] * criticalDistance() &&
 		 segment2_Length(data->trails + data->trailOffset) <
-		 ai_params.maxSegLength[level] * game2->rules.grid_size)
+		 ai_params.maxSegLength[level] * criticalDistance())
 		return;
 		
 	// printf("%.2f, %.2f, %.2f\n", distances->front, 
