@@ -9,7 +9,7 @@ static float cam_park_pos[4][2] = {
 
 static float park_height = 80.0;
 
-void writeCamDefaults(Camera *cam, int type) {
+static void writeCamDefaults(Camera *cam, int type) {
   cam_defaults[cam->type->type][type] = cam->movement[type];
 }
 
@@ -18,7 +18,7 @@ void writeCamDefaults(Camera *cam, int type) {
 #define CLAMP_CHI_MIN M_PI / 8
 #define CLAMP_CHI_MAX 3 * M_PI / 8
 
-void clampCam(Camera *cam) {
+static void clampCam(Camera *cam) {
   if(cam->type->freedom[CAM_FREE_R]) {
     if(cam->movement[CAM_R] < CLAMP_R_MIN)
       cam->movement[CAM_R] = CLAMP_R_MIN;
@@ -34,7 +34,7 @@ void clampCam(Camera *cam) {
   }
 }
 
-void initCircleCamera(Camera *cam) {
+static void initCircleCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_CIRCLE][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_CIRCLE][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_CIRCLE][CAM_PHI];
@@ -48,7 +48,7 @@ void initCircleCamera(Camera *cam) {
 }
 
 
-void initFollowCamera(Camera *cam) {
+static void initFollowCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_FOLLOW][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
@@ -62,7 +62,7 @@ void initFollowCamera(Camera *cam) {
 }
 
 
-void initCockpitCamera(Camera *cam) {
+static void initCockpitCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_COCKPIT][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_COCKPIT][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_COCKPIT][CAM_PHI];
@@ -76,7 +76,7 @@ void initCockpitCamera(Camera *cam) {
 }
 
 
-void initFreeCamera(Camera *cam) {
+static void initFreeCamera(Camera *cam) {
   cam->movement[CAM_R] = cam_defaults[CAM_FREE][CAM_R];
   cam->movement[CAM_CHI] = cam_defaults[CAM_FREE][CAM_CHI];
   cam->movement[CAM_PHI] = cam_defaults[CAM_FREE][CAM_PHI];
@@ -125,12 +125,12 @@ void doCameraMovement() {
       float tmp[3];
       float tdest[3];
 
-      dest[0] = cam_park_pos[i][0] * getSettingi("grid_size");
-      dest[1] = cam_park_pos[i][1] * getSettingi("grid_size");
+      dest[0] = cam_park_pos[i][0] * game2->rules.grid_size;
+      dest[1] = cam_park_pos[i][1] * game2->rules.grid_size;
     
       dest[2] = park_height;
-      tdest[0] = getSettingi("grid_size") / 2;
-      tdest[1] = getSettingi("grid_size") / 2;
+      tdest[0] = game2->rules.grid_size / 2;
+      tdest[1] = game2->rules.grid_size / 2;
       tdest[2] = -10;
       vsub(dest, cam->cam, tmp);
       if(length(tmp) > 1) {
@@ -245,3 +245,4 @@ void doCameraMovement() {
   game2->input.mousey = 0;
 
 }
+
