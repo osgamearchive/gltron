@@ -22,7 +22,7 @@ void SystemExit() {
   exit(0); /* OK: end of program */
 }
 
-void SystemInit(int *argc, char *argv[]) {
+void SystemInit(int *argc, const char *argv[]) {
   if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0 ){
     fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
     exit(1); /* OK: critical, no visual */

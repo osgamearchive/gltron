@@ -95,7 +95,7 @@ void setupDisplay(Visual *d) {
 
 
 
-int main( int argc, char *argv[] ) {
+int main( int argc, const char *argv[] ) {
   SystemInit(&argc, argv);
 
 	dirSetup(argv[0]);

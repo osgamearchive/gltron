@@ -74,7 +74,7 @@ enum {
 
 /* system specific functions (basically, an SDL/glut wrapper) */
 
-extern void SystemInit(int *argc, char *argv[]);
+extern void SystemInit(int *argc, const char *argv[]);
 extern void SystemExit();
 extern void SystemPostRedisplay();
 extern unsigned int SystemGetElapsedTime();
