@@ -42,11 +42,12 @@ void enterGame(void) { /* called when game mode is entered */
   game2->time.offset = nebu_Time_GetElapsed() - game2->time.current;
   Audio_EnableEngine();
  
-	// disable booster and cam offset
+	// disable booster, wallbuster and cam offset
 	{
 		int i;
 		for(i = 0; i < game->players; i++) {
 			game->player[i].data->boost_enabled = 0;
+			game->player[i].data->wall_buster_enabled = 0;
 			game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
 		}
 	}

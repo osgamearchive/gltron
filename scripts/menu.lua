@@ -56,31 +56,27 @@ Menu = {
    },
 
    -- Game Rules
-	 GameType = {
-			type = MenuC.type.list, caption = "Game type",
-			labels = { "classic", "booster", "wall accell.", "both" },
-			values = { 0, 1, 2, 3 },
-			read = 
-				 function()
-						value = 0;
-						if(settings.booster_on == 1) then value = value + 1; end;
-						if(settings.wall_accel_on == 1) then value = value + 2; end;
-						return value;
-					end,
-			store = 
-				 function (value)
-						if(value >= 2) 
-						then settings.wall_accel_on = 1;
-						else settings.wall_accel_on = 0;
-						end;
-						if(value == 1 or value == 3) 
-						then settings.booster_on = 1; 
-						else settings.booster_on = 0;
-						end;
-						script_print("booster: " .. settings.booster_on);
-						script_print("wall accel: " .. settings.wall_accel_on);
-				 end
-	 },
+   Booster = {    
+      type = MenuC.type.list, caption = "Booster",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.booster_on; end,
+      store = function(value) settings.booster_on = value; c_resetGame(); end
+   },
+   WallAccell = {    
+      type = MenuC.type.list, caption = "Wall Acceleration",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.wall_accel_on; end,
+      store = function(value) settings.wall_accel_on = value; c_resetGame(); end
+   },
+   WallBuster = {    
+      type = MenuC.type.list, caption = "Wall Buster",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.wall_buster_on; end,
+      store = function(value) settings.wall_buster_on = value; c_resetGame(); end
+   },
    GameSpeed = { 
       type = MenuC.type.list, caption = "Game speed",
       labels = { "boring", "normal", "fast", "crazy" },
@@ -197,6 +193,10 @@ Menu = {
       type = MenuC.type.key, caption = "Booster",
       player = 1, event = "boost"
    },
+   Player1_WallBuster = { 
+      type = MenuC.type.key, caption = "Wall Buster",
+      player = 1, event = "bust"
+   },
    Player2_Left = { 
       type = MenuC.type.key, caption = "Turn Left",
       player = 2, event = "left"
@@ -216,6 +216,10 @@ Menu = {
    Player2_Booster = { 
       type = MenuC.type.key, caption = "Booster",
       player = 2, event = "boost"
+   },
+   Player2_WallBuster = { 
+      type = MenuC.type.key, caption = "Wall Buster",
+      player = 2, event = "bust"
    },
    Player3_Left = { 
       type = MenuC.type.key, caption = "Turn Left",
@@ -237,6 +241,10 @@ Menu = {
       type = MenuC.type.key, caption = "Booster",
       player = 3, event = "boost"
    },
+   Player3_WallBuster = { 
+      type = MenuC.type.key, caption = "Wall Buster",
+      player = 3, event = "bust"
+   },
    Player4_Left = { 
       type = MenuC.type.key, caption = "Turn Left",
       player = 4, event = "left"
@@ -256,6 +264,10 @@ Menu = {
    Player4_Booster = { 
       type = MenuC.type.key, caption = "Booster",
       player = 4, event = "boost"
+   },
+   Player4_WallBuster = { 
+      type = MenuC.type.key, caption = "Wall Buster",
+      player = 4, event = "bust"
    },
 
    -- Joystick
@@ -527,7 +539,7 @@ Menu.GameMenu.items = {
 }
 
 Menu.GameRulesMenu.items = { 
-   "GameType", "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
+   "Booster", "WallAccell", "WallBuster", "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
 }
 
 Menu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports", "Map" }
@@ -540,21 +552,25 @@ Menu.Player1_KeyMenu.items = {
 	"Player1_Left", "Player1_Right",
 	"Player1_GlanceLeft", "Player1_GlanceRight",
 	"Player1_Booster",
+	"Player1_WallBuster",
 }
 Menu.Player2_KeyMenu.items = { 
 	"Player2_Left", "Player2_Right",
 	"Player2_GlanceLeft", "Player2_GlanceRight",
 	"Player2_Booster",
+	"Player2_WallBuster",
 }
 Menu.Player3_KeyMenu.items = { 
 	"Player3_Left", "Player3_Right",
 	"Player3_GlanceLeft", "Player3_GlanceRight",
 	"Player3_Booster",
+	"Player3_WallBuster",
 }
 Menu.Player4_KeyMenu.items = { 
 	"Player4_Left", "Player4_Right",
 	"Player4_GlanceLeft", "Player4_GlanceRight",
 	"Player4_Booster",
+	"Player4_WallBuster",
 }
 
 Menu.VideoMenu.items = {

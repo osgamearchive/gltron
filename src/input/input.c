@@ -120,6 +120,20 @@ void keyGame(int state, int k, int x, int y)
 				}
 				return;
 			}
+			// wallbuster
+			scripting_RunFormat("return settings.keys[%d].bust", i + 1);
+			scripting_GetIntegerResult( &key );
+			if(key == k) {
+				if(state == SYSTEM_KEYSTATE_DOWN) {
+					printf("wall_buster down\n");
+					if(game->player[i].data->wall_buster > getSettingf("wall_buster_min"))
+						game->player[i].data->wall_buster_enabled = 1;
+				} else {
+					printf("wall_buster up\n");
+					game->player[i].data->wall_buster_enabled = 0;
+				}
+				return;
+			}
 		}
 	}
 	if(state == SYSTEM_KEYSTATE_DOWN) {

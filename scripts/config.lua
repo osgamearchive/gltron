@@ -20,9 +20,15 @@ settings.booster_decrease = 0.8           -- speed decrease per second after boo
 settings.booster_regenerate = 0.4         -- regeneration of booster when not in use
 
 settings.wall_accel_on = 0
-settings.wall_accel_limit = 20.0
+settings.wall_accel_max = 20.0
 settings.wall_accel_use = 1.0
 settings.wall_accel_decrease = 0.8
+
+settings.wall_buster_on = 1
+settings.wall_buster_use = 0.8
+settings.wall_buster_max = 1.0
+settings.wall_buster_min = 0.9
+settings.wall_buster_regenerate = 0.2
 
 settings.ai_level = 2
 settings.current_level = "square.lua"
@@ -99,7 +105,8 @@ settings.keys = {
       right = 115, -- lower case 's'
       glance_left = 113, -- lower case 'q'
       glance_right = 119, -- lower case 'w'
-			boost = 101, -- lower case 'd'
+      boost = 101, -- lower case 'e'
+      bust = 100, -- lower case 'd'
    },
    { -- player 2
       left = 106, -- lower case 'j'
@@ -107,6 +114,7 @@ settings.keys = {
       glance_left = 117, -- lower case 'u'
       glance_right = 105, -- lower case 'i'
 			boost = 108, -- lower case 'l'
+			bust = 111, -- lower case 'o'
    },
    { -- player 3
       left = 276, -- cursor left
@@ -114,13 +122,15 @@ settings.keys = {
       glance_left = 127, -- 'del'
       glance_right = 279, -- 'end'
 			boost = 274, -- cursor down
+			bust = 273, -- cursor up
    },
    { -- player 4
       left = 260, -- keypad 4
       right = 262, -- keypad 6
       glance_left = 263, -- keypad 7
       glance_right = 265, -- keypad 9
-			boost = 261, -- keypad 5
+			boost = 261, -- keypad h
+			bust = 259, -- keypad 3
    }
 }
 

@@ -104,11 +104,19 @@ void resetPlayerData(void) {
 		/* if player is playing... */
 		if(ai->active != AI_NONE) {
 			data->speed = getSettingf("speed");
+
 			if(getSettingf("booster_on"))
 				data->booster = getSettingf("booster_max");
 			else
 				data->booster = 0;
 			data->boost_enabled = 0;
+
+			if(getSettingf("wall_buster_on"))
+				data->wall_buster = getSettingf("wall_buster_max");
+			else
+				data->wall_buster = 0;
+			data->wall_buster_enabled = 0;
+
 			data->trail_height = TRAIL_HEIGHT;
 		} else {
 			data->speed = SPEED_GONE;

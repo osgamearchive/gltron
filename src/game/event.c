@@ -152,6 +152,34 @@ int applyBooster(int player, int dt) {
 	}
 }
 
+int applyWallBuster(int player, int dt) {
+	Data *data = game->player[player].data;
+	if(data->wall_buster_enabled) {
+		// printf("%i: wall buster enabled\n", player);
+	}
+	if(data->wall_buster > 0 && data->wall_buster_enabled) {
+		// printf("using buster: %.2f\n", data->wall_buster);
+		float wall_buster = getSettingf("wall_buster_use") * dt / 1000.0f;
+		if(wall_buster > data->wall_buster) {
+			wall_buster = data->wall_buster;
+			data->wall_buster_enabled = 0;
+		}
+		data->wall_buster -= wall_buster;
+		// printf("buster: %.2f\n\n", data->wall_buster);
+		return 1;
+	}
+	else {
+		float wall_buster_max = getSettingf("wall_buster_max");
+		if(data->wall_buster < wall_buster_max) {
+			data->wall_buster += getSettingf("wall_buster_regenerate") * dt / 1000.0f;
+			if(data->wall_buster > wall_buster_max)
+				data->wall_buster = wall_buster_max;
+		}
+		// printf("regenerating buster: %.2f\n", data->wall_buster);
+		return 0;
+	}
+}
+
 void applyDecceleration(int player, int dt, float factor) {
 	Data *data = game->player[player].data;
 	if(data->speed > game2->rules.speed) {
@@ -252,6 +280,10 @@ nebu_List* doMovement(int mode, int dt) {
 					deccel = -1; // forbid deacceleration for booster
 				}
 			}
+			if(getSettingf("wall_buster_on") == 1) {
+				// printf("applying wallbuster for player %i\n");
+				applyWallBuster(i, dt);
+			}
 			if(getSettingf("booster_on") == 1) {
 				if(!applyBooster(i, dt) && deccel != -1) {
 					float d = getSettingf("booster_decrease");
@@ -287,8 +319,9 @@ nebu_List* doMovement(int mode, int dt) {
 				
 				current->vDirection.v[0] += t * dirsX[data->dir];
 				current->vDirection.v[1] += t * dirsY[data->dir];
-
-				crash = crash || crashTestPlayers(i, &movement);
+				
+				if(!data->wall_buster_enabled)
+					crash = crash || crashTestPlayers(i, &movement);
 				crash = crash || crashTestWalls(i, &movement);
 			}
     } else { /* already crashed */

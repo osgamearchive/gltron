@@ -180,8 +180,16 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 		doCycleTurnRotation(pV, p);
 	}
 
-	gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
-	gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
+	if(p->data->wall_buster_enabled) {
+		float black[] = { 0, 0, 0, 1};
+		float white[] = { 1, 1, 1, 1};
+		gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, black);
+		// gltron_Mesh_SetMaterialColor(cycle, "Hull", eAmbient, black);
+		gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, white); 
+	} else {
+		gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
+		gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
+	}
 
 	if (pV->exp_radius == 0) {
 		glEnable(GL_NORMALIZE);
