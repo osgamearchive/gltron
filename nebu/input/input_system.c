@@ -5,7 +5,9 @@
 #include "scripting/nebu_scripting.h"
 
 #include "SDL.h"
+#include "SDL_getenv.h"
 #include <stdlib.h>
+#include <errno.h>
 
 static float joystick_threshold = 0;
 static int mouse_x = -1;
@@ -20,11 +22,28 @@ void nebu_Input_Init(void) {
 		int i;
 		SDL_Joystick *joy;
 		int joysticks = SDL_NumJoysticks();
-
+		
 		/* FIXME: why only two joysticks? */
 		/* joystick, currently at most 2 */
-		if(joysticks > 2)
-			joysticks = 2;
+		int max_joy=2; /* default... override by setting NEBU_MAX_JOY */
+		char *NEBU_MAX_JOY=getenv("NEBU_MAX_JOY");
+		
+		if(NEBU_MAX_JOY)
+		{
+			int n;
+			char *endptr;
+			errno=0;
+			n=strtol(NEBU_MAX_JOY, &endptr, 10);
+			if(n<0)
+				n=0;
+			if(n>4)
+				n=4; /* this is the max we can handle! */
+			if(!*endptr && !errno)
+				max_joy=n;
+		}
+		
+		if(joysticks > max_joy)
+			joysticks = max_joy;
 		
 		for(i = 0; i < joysticks; i++) {
 			joy = SDL_JoystickOpen(i);

@@ -1,7 +1,7 @@
 #ifndef NEBU_SYSTEM_KEYNAMES_H
 #define NEBU_SYSTEM_KEYNAMES_H
 
-#define CUSTOM_KEY_COUNT 2 * 24
+#define CUSTOM_KEY_COUNT 4 * 24
 
 typedef struct {
 	int key;
