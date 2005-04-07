@@ -38,6 +38,7 @@ typedef struct SettingsCache {
 	float map_ratio_w, map_ratio_h;
 } SettingsCache;
 
+extern SettingsCache gSettingsCache;
 
 int isSetting(const char *name);
 float getSettingf(const char *name);

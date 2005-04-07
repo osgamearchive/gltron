@@ -5,7 +5,6 @@ typedef struct Game Game;
 typedef struct Game2 Game2;
 typedef struct GameEvent GameEvent;
 typedef struct Data Data;
-typedef struct SettingsCache SettingsCache;
 
 #define NEW_LEVEL
 
@@ -75,8 +74,6 @@ extern Game main_game;
 extern Game *game;
 extern Game2 main_game2;
 extern Game2 *game2;
-
-extern SettingsCache gSettingsCache;
 
 extern int dirsX[];
 extern int dirsY[];
