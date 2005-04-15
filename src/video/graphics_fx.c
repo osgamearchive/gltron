@@ -4,6 +4,7 @@
 #include "video/explosion.h"
 
 #include "base/nebu_math.h"
+#include "video/nebu_renderer_gl.h"
 
 void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 							Visual *d, float dim) {
@@ -65,8 +66,6 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
   glVertex3d(dim*cos(5.2*3.1415/5.0),
 	     TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0);
   glEnd();
-  polycount += 5;
-
 
   glBegin(GL_TRIANGLES);
   glColor4f(pV->pColorDiffuse[0], 
@@ -89,7 +88,6 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
 	     TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0);
   glVertex3f(0,-TRAIL_HEIGHT/4,0);
   glEnd();
-  polycount += 3;
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
@@ -97,7 +95,7 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
   glPopMatrix();  
 }
 
-void drawImpact(PlayerVisual *pV) {
+void drawImpact(int player) {
 	glPushMatrix();
 	glRotatef(90, 90, 0, 1);
 	/*
@@ -107,7 +105,7 @@ void drawImpact(PlayerVisual *pV) {
 	*/
 	glTranslatef(0.0, -0.5, -0.5);
 	glColor3f(0.68f, 0, 0);
-	drawExplosion(&(pV->impact_radius));
+	drawExplosion(game->player[player].data->exp_radius);
 	glPopMatrix();
 }
 

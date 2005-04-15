@@ -3,6 +3,20 @@
 #include "video/nebu_video_system.h"
 #include <stdlib.h>
 
+nebu_2d* nebu_2d_LoadPNG(const char *path, int flags)
+{
+	nebu_2d *p2d = NULL;
+
+	nebu_Surface *pSurface = nebu_Surface_LoadPNG(path);
+	if(!pSurface)
+		return NULL;
+
+	p2d = nebu_2d_Create(pSurface, flags);
+	nebu_Surface_Free(pSurface);
+
+	return p2d;
+}
+
 nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 	nebu_2d *p2d;
 	int source_format, target_format;

@@ -3,6 +3,7 @@
 #include "filesystem/nebu_filesystem.h"
 
 #include "Nebu_scripting.h"
+#include "video/nebu_renderer_gl.h"
 
 void freeTextureData(texture *tex) {
   free(tex->data);

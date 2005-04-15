@@ -1,10 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-typedef struct Game Game;
-typedef struct Game2 Game2;
-typedef struct GameEvent GameEvent;
-typedef struct Data Data;
+#include "game/game_data.h" // Game, Game2, Data
+#include "game/event.h" // GameEvent
+#include "configuration/settings.h" // SettingsCache
 
 #define NEW_LEVEL
 
@@ -20,22 +19,6 @@ enum {
 	AI_NONE = 2
 };
 
-enum {
-	RETURN_QUIT = 0,
-	RETURN_GAME_END,
-	RETURN_GAME_PAUSE,
-	RETURN_GAME_UNPAUSE,
-	RETURN_GAME_CREDITS,
-	RETURN_GAME_ESCAPE,
-	RETURN_GUI_PROMPT,
-	RETURN_TIMEDEMO,
-	RETURN_TIMEDEMO_ABORT,
-	RETURN_CREDITS,
-	RETURN_GAME_LAUNCH,
-	RETURN_GUI_ESCAPE,
-	RETURN_PROMPT_ESCAPE,
-	RETURN_PAUSE_ESCAPE
-};
 
 /* physics recomputed every 10ms */
 #define PHYSICS_RATE 20

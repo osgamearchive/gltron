@@ -89,11 +89,15 @@ int nebu_System_MainLoop() {
 	}
 	if(current && current->exit)
 		(current->exit)();
+	current = NULL;
 	return return_code;
 }
   
 void nebu_System_SetCallbacks(Callbacks *cb) {
-  current = cb;
+	if(current && current->exit)
+		(current->exit)();
+
+	current = cb;
 	if(current && current->init)
 		current->init();
 }

@@ -220,14 +220,14 @@ void ai_getConfig(int player, int target,
 	
 }
 
-void ai_left(int player, AI_Distances *distances) {
+void ai_left(int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
 	// printf("trying left turn...");
 	AI *ai = game->player[player].ai;
 	Data *data = game->player[player].data;
 	int level = gSettingsCache.ai_level;
 
 	float save_distance = 
-		(ai_params.minTurnTime[level] * data->speed / 1000.0f) + 20;
+		(pAIParameters->minTurnTime[level] * data->speed / 1000.0f) + 20;
 	
 	if(distances->left > save_distance) {
 		createEvent(player, EVENT_TURN_LEFT);
@@ -239,14 +239,14 @@ void ai_left(int player, AI_Distances *distances) {
 	}
 }
 
-void ai_right(int player, AI_Distances *distances) {
+void ai_right(int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
 	// printf("trying right turn...");
 	AI *ai = game->player[player].ai;
 	Data *data = game->player[player].data;
 	int level = gSettingsCache.ai_level;
 
 	float save_distance = 
-		(ai_params.minTurnTime[level] * data->speed / 1000.0f) + 20;
+		(pAIParameters->minTurnTime[level] * data->speed / 1000.0f) + 20;
 	
 	if(distances->right > save_distance) {
 		createEvent(player, EVENT_TURN_RIGHT);
@@ -258,7 +258,7 @@ void ai_right(int player, AI_Distances *distances) {
 	}
 }
 
-int agressive_action[8][4] = {
+static int agressive_action[8][4] = {
 	{ 2, 0, 2, 2 },
 	{ 0, 1, 1, 2 },
 	{ 0, 1, 1, 2 },
@@ -281,32 +281,32 @@ int evasive_action[8][4] = {
 };
 
 
-void ai_action(int action, int player, AI_Distances *distances) {
+void ai_action(int action, int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
 	switch(action) {
 	case 0: break;
-	case 1: ai_left(player, distances); break;
-	case 2: ai_right(player, distances); break;
+	case 1: ai_left(player, distances, pAIParameters); break;
+	case 2: ai_right(player, distances, pAIParameters); break;
 	}
 }
 		
 void ai_aggressive(int player, int target, int location,
-									 AI_Distances *distances) {
+									 AI_Distances *distances, AI_Parameters *pAIParameters) {
 	int dirdiff = (4 + 
 								 game->player[player].data->dir -
 								 game->player[target].data->dir) % 4;
 	
 	// printf("aggressive mode (%d, %d)\n", player, target, location, dirdiff);
 
-	ai_action(agressive_action[location][dirdiff], player, distances);
+	ai_action(agressive_action[location][dirdiff], player, distances, pAIParameters);
 }
 
 void ai_evasive(int player, int target, int location, 
-								AI_Distances *distances) {
+								AI_Distances *distances, AI_Parameters *pAIParameters) {
 	int dirdiff = (4 + 
 								 game->player[player].data->dir -
 								 game->player[target].data->dir) % 4;
 	// printf("evasive mode (%d,%d,%d)\n", player, target, location);
 	
-	ai_action(evasive_action[location][dirdiff], player, distances);
+	ai_action(evasive_action[location][dirdiff], player, distances, pAIParameters);
 }
 

@@ -15,7 +15,7 @@
 #define SAVE_SPEED_DIFF 1.0f
 #define HOPELESS_T 0.80f
 
-AI_Parameters ai_params = {
+static AI_Parameters ai_params = {
 	// minTurnTime, time to pass between turns, in milliseconds
 	{ 600, 400, 200, 100 },
 	// maxSegLength 
@@ -132,21 +132,21 @@ void doComputerActive(int player, int target, AI_Distances *distances) {
 				 game->player[target].data->speed < SAVE_SPEED_DIFF)
 				data->boost_enabled = 1;
 			// aggressive
-			ai_aggressive(player, target, config.location, distances);
+			ai_aggressive(player, target, config.location, distances, &ai_params);
 		} else {
 			// printf("I'm behind: %.2f, %.2f\n", 
 			// config.t_player, config.t_opponent);
 			// check speed, adjust or evasive
 			if(config.t_opponent < HOPELESS_T) {
 				// evasive
-				ai_evasive(player, target, config.location, distances);
+				ai_evasive(player, target, config.location, distances, &ai_params);
 			}	else if(config.t_opponent - config.t_player < SAVE_T_DIFF)	{
 				data->boost_enabled = 1;
 				// aggressive
-				ai_aggressive(player, target, config.location, distances);
+				ai_aggressive(player, target, config.location, distances, &ai_params);
 			}	else {
 				// evasive
-				ai_evasive(player, target, config.location, distances);
+				ai_evasive(player, target, config.location, distances, &ai_params);
 			}
 		}
 		break;

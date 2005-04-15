@@ -1,9 +1,10 @@
 #include "video/video.h"
 #include "game/game.h"
-#include "base/nebu_math.h"
 #include "game/game_level.h"
-#include "base/nebu_math.h"
 #include "configuration/settings.h"
+
+#include "base/nebu_math.h"
+#include "video/nebu_renderer_gl.h"
 
 static float alpha = 0;
 

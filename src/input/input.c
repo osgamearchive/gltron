@@ -3,6 +3,7 @@
 #include "game/camera.h"
 #include "game/event.h"
 #include "configuration/settings.h"
+#include "scripting/scripting.h"
 
 #include "base/nebu_math.h"
 
@@ -38,11 +39,11 @@ void keyGame(int state, int k, int x, int y)
 			/* case 'q': SystemExit(); return; */
 		case 27:
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
-			nebu_System_ExitLoop(RETURN_GAME_ESCAPE);
+			nebu_System_ExitLoop(eSRC_Game_Escape);
 			return;
 		case ' ':
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
-			nebu_System_ExitLoop(RETURN_GAME_PAUSE);
+			nebu_System_ExitLoop(eSRC_Game_Pause);
 			return;
 		case SYSTEM_KEY_F1: changeDisplay(0); return;
 		case SYSTEM_KEY_F2: changeDisplay(1); return;
@@ -90,10 +91,10 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					// printf("glance left down\n");
-					game->player[i].camera->movement[CAM_PHI_OFFSET] = PI / 2.0f;
+					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = PI / 2.0f;
 				}	else {
 					// printf("glance left up\n");
-					game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
+					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = 0;
 				}
 				return;
 			}
@@ -103,10 +104,10 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					// printf("glance right down\n");
-					game->player[i].camera->movement[CAM_PHI_OFFSET] = - PI / 2.0f;
+					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = - PI / 2.0f;
 				} else {
 					// printf("glance right up\n");
-					game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
+					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = 0;
 				}
 				return;
 			}

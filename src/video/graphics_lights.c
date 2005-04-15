@@ -1,5 +1,6 @@
 #include "video/video.h"
 #include "video/graphics_lights.h"
+#include "video/nebu_renderer_gl.h"
 
 void setupLights(eLightEnvironment eType)
 {

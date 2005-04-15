@@ -1,8 +1,8 @@
 #ifndef GRAPHICS_HUD_H
 #define GRAPHICS_HUD_H
 
-typedef struct Player Player;
-typedef struct PlayerVisual PlayerVisual;
+#include "game/game_data.h" // Player
+#include "video/video.h" // PlayerVisual
 
 void drawHUD(Player *p, PlayerVisual *pV);
 

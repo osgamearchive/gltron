@@ -1,12 +1,12 @@
-
-#include "base/nebu_vector.h"
 #include "game/game_data.h"
 #include "game/game.h"
 #include "video/video.h"
 #include "video/trail_geometry.h"
 #include "configuration/settings.h"
 
+#include "base/nebu_vector.h"
 #include "base/nebu_math.h"
+#include "video/nebu_renderer_gl.h"
 
 enum {
 	COLOR_TRAIL, COLOR_BRIGHT, COLOR_CYCLE

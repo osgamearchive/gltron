@@ -1,10 +1,11 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "filesystem/path.h"
+#include "configuration/settings.h"
 
 #include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
-#include "filesystem/path.h"
-#include "configuration/settings.h"
+#include "video/nebu_renderer_gl.h"
 
 void getPauseString(char *buf, float* color);
 

@@ -16,6 +16,7 @@
 #include "video/explosion.h"
 
 #include "video/nebu_video_system.h"
+#include "video/nebu_renderer_gl.h"
 #include "base/nebu_math.h"
 
 // static float arena[] = { 1.0, 1.2, 1, 0.0 };
@@ -49,8 +50,6 @@ void clearScreen() {
 void drawGame(void) {
 	GLint i;
 
-	polycount = 0;
-
 	clearScreen();
 
 	glShadeModel( GL_SMOOTH );
@@ -58,19 +57,17 @@ void drawGame(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	for(i = 0; i < vp_max[gViewportType]; i++) {
-		Player *p = game->player + viewport_content[i];
-		PlayerVisual *pV = gPlayerVisuals + viewport_content[i];
-		Visual *d = & pV->display;
+		Visual *d = &gPlayerVisuals[viewport_content[i]].display;
 
 		if(d->onScreen == 1) {
 			glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
-			drawCam(p, pV);
+			drawCam(viewport_content[i]);
 
 			/* hud stuff for every player */
-			drawHUD(p, pV);
+			drawHUD(game->player + viewport_content[i],
+				gPlayerVisuals + viewport_content[i]);
 		}
 	}
-	/* printf("%d polys\n", polycount); */
 }
 
 /* 
@@ -135,7 +132,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   if(turn_time < TURN_LENGTH && !drawTurn)
     return;
 
-  if(pV->exp_radius != 0)
+  if(p->data->exp_radius != 0)
     return;
 
   cycle = lightcycle[lod];
@@ -155,7 +152,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   glMultMatrixf(shadow_matrix);
   if (gSettingsCache.turn_cycle) {
     doCycleTurnRotation(pV, p);
-  } else if (pV->exp_radius == 0) {
+  } else if (p->data->exp_radius == 0) {
     glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
   }
   glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
@@ -169,7 +166,10 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   glPopMatrix();
 }
 
-void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
+void drawCycle(int player, int lod, int drawTurn) {
+	Player *p = game->player + player;
+	PlayerVisual *pV = gPlayerVisuals + player;
+
 	gltron_Mesh *cycle = lightcycle[lod];
 	float x, y;
 
@@ -183,7 +183,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 	glPushMatrix();
 	glTranslatef(x, y, 0.0);
 
-	if (pV->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
+	if (p->data->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
 		glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
 	}
 
@@ -202,7 +202,7 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 		gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 	}
 
-	if (pV->exp_radius == 0) {
+	if (p->data->exp_radius == 0) {
 		glEnable(GL_NORMALIZE);
 
 		glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
@@ -229,11 +229,11 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 		gltron_Mesh_Draw(cycle, TRI_MESH);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_LIGHTING);
-	} else if(pV->exp_radius < EXP_RADIUS_MAX) {
+	} else if(p->data->exp_radius < EXP_RADIUS_MAX) {
 		glEnable(GL_BLEND);
 
 		if (gSettingsCache.show_impact) {
-			drawImpact(pV);
+			drawImpact(player);
 		}
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -243,75 +243,75 @@ void drawCycle(Player *p, PlayerVisual *pV, int lod, int drawTurn) {
 		if (gSettingsCache.light_cycles) {
 			glEnable(GL_LIGHTING); // enable OpenGL lighting for lightcycles
 		}
-		gltron_Mesh_DrawExplosion(cycle, pV->exp_radius);
+		gltron_Mesh_DrawExplosion(cycle, p->data->exp_radius);
 		glDisable(GL_LIGHTING); // disable ligthing after lightcycles
 		glDisable(GL_BLEND);
 	}
 	glPopMatrix();
 }
  
-int playerVisible(Player *eye, Player *target) {
-  vec3 v1, v2, tmp;
-	
-  float s;
-  float d;
-  int i;
-  int lod_level;
+int playerVisible(int eyePlayer, int targetPlayer) {
+	vec3 v1, v2, tmp;
+		
+	float s;
+	float d;
+	int i;
+	int lod_level;
 	float x, y;
 
-  vec3_Sub(&v1, (vec3*) eye->camera->target, (vec3*) eye->camera->cam);
+	vec3_Sub(&v1, (vec3*) gPlayerVisuals[eyePlayer].camera.target, (vec3*) gPlayerVisuals[eyePlayer].camera.cam);
 	vec3_Normalize(&v1, &v1);
 	
-	getPositionFromData(&x, &y, target->data);
+	getPositionFromData(&x, &y, game->player[targetPlayer].data);
 	tmp.v[0] = x;
-  tmp.v[1] = y;
-  tmp.v[2] = 0;
-	
-  lod_level = (gSettingsCache.lod > MAX_LOD_LEVEL) ? 
-    MAX_LOD_LEVEL : gSettingsCache.lod;
+	tmp.v[1] = y;
+	tmp.v[2] = 0;
+		
+	lod_level = (gSettingsCache.lod > MAX_LOD_LEVEL) ? 
+		MAX_LOD_LEVEL : gSettingsCache.lod;
 
-  /* calculate lod */
-  vec3_Sub(&v2, (vec3*) eye->camera->cam, &tmp);
-  d = vec3_Length(&v2);
-  for(i = 0; i < LC_LOD && d >= lod_dist[lod_level][i]; i++);
-  if(i >= LC_LOD)
-    return -1;
+	/* calculate lod */
+	vec3_Sub(&v2, (vec3*) &gPlayerVisuals[eyePlayer].camera.cam, &tmp);
+	d = vec3_Length(&v2);
+	for(i = 0; i < LC_LOD && d >= lod_dist[lod_level][i]; i++);
+	if(i >= LC_LOD)
+		return -1;
 
-  vec3_Sub(&v2, &tmp, (vec3*) eye->camera->cam);
-  vec3_Normalize(&v2, &v2);
-  s = vec3_Dot(&v1, &v2);
-  /* maybe that's not exactly correct, but I didn't notice anything */
-  d = cosf((gSettingsCache.fov / 2) * 2 * PI / 360.0);
-  /*
-    printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
-    v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
-    s, d);
-  */
-  if(s < d-(lightcycle[i]->BBox.fRadius*2))
-    return -1;
-  else
-    return i;
+	vec3_Sub(&v2, &tmp, (vec3*) gPlayerVisuals[eyePlayer].camera.cam);
+	vec3_Normalize(&v2, &v2);
+	s = vec3_Dot(&v1, &v2);
+	/* maybe that's not exactly correct, but I didn't notice anything */
+	d = cosf((gSettingsCache.fov / 2) * 2 * PI / 360.0);
+	/*
+		printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
+		v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
+		s, d);
+	*/
+	if(s < d-(lightcycle[i]->BBox.fRadius*2))
+		return -1;
+	else
+		return i;
 }
 
-void drawPlayers(Player *p, PlayerVisual *pV) {
+void drawPlayers(int player) {
   int i;
 
   for(i = 0; i < game->players; i++) {
 		int lod;
 		int drawTurn = 1;
 
-		if (gSettingsCache.camType == CAM_TYPE_COCKPIT && 
-				p == &game->player[i])
+		if (i == player &&
+			gSettingsCache.camType == CAM_TYPE_COCKPIT)
 			drawTurn = 0;
 
-		lod = playerVisible(p, &(game->player[i]));
+		lod = playerVisible(player, i);
 		if (lod >= 0) { 
-			drawCycle(game->player + i, gPlayerVisuals + i, lod, drawTurn);
+			drawCycle(i, lod, drawTurn);
 		}
 	}
 }
 
-void drawPlanarShadows(Player *p) {
+void drawPlanarShadows(int player) {
 	int i;
 
 	if(gSettingsCache.use_stencil) {
@@ -332,14 +332,9 @@ void drawPlanarShadows(Player *p) {
 	}
 
 	for(i = 0; i < game->players; i++) {
-	int lod = playerVisible(p, game->player + i);
+	int lod = playerVisible(player, i);
 		if (lod >= 0) {
-			int drawTurn = 1;
-			if (!gSettingsCache.camType == CAM_TYPE_COCKPIT ||
-	 			p != &game->player[i])
-			{
-				drawTurn = 0;
-			}
+			int drawTurn = (i != player  && gSettingsCache.camType != CAM_TYPE_COCKPIT) ? 1 : 0;
 			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
 		}
 		if (game->player[i].data->trail_height > 0 )
@@ -352,7 +347,7 @@ void drawPlanarShadows(Player *p) {
 	glDisable(GL_BLEND);
 }
 
-void drawWorld(Player *p, PlayerVisual *pV) {
+void drawWorld(int player) {
 	int i;
 
 	nebu_Video_CheckErrors("before world");
@@ -360,7 +355,7 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 	setupLights(eWorld);
 
 	if (gSettingsCache.show_recognizer &&
-		p->data->speed != SPEED_GONE) {
+		game->player[player].data->speed != SPEED_GONE) {
 		drawRecognizer();
 	}
 
@@ -371,7 +366,7 @@ void drawWorld(Player *p, PlayerVisual *pV) {
 
 	setupLights(eCycles);
 
-	drawPlayers(p, pV);
+	drawPlayers(player);
 
 	setupLights(eWorld);
 
@@ -422,10 +417,10 @@ static float getReflectivity() {
 	return reflectivity;
 }
 
-void drawCam(Player *p, PlayerVisual* pV) {
+void drawCam(int player) {
 	int i;
 	float up[3] = { 0, 0, 1 };
-	Visual *d = & pV->display;
+	Visual *d = & gPlayerVisuals[player].display;
 	
 	float reflectivity = getReflectivity();
 	// compute shadow color based on glocal constant & reflectivity
@@ -442,7 +437,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	doLookAt(p->camera->cam, p->camera->target, up);
+	doLookAt(gPlayerVisuals[player].camera.cam, gPlayerVisuals[player].camera.target, up);
 	glDisable(GL_LIGHTING); // initial config at frame start
 	glDisable(GL_BLEND); // initial config at frame start
 
@@ -516,7 +511,7 @@ void drawCam(Player *p, PlayerVisual* pV) {
 		}
 
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
-		drawWorld(p, pV);
+		drawWorld(player);
 
 		glDisable(GL_CLIP_PLANE0);
 		glCullFace(GL_BACK);
@@ -557,13 +552,13 @@ void drawCam(Player *p, PlayerVisual* pV) {
 	glDisable(GL_DEPTH_TEST);
 
 	if(reflectivity != 1) // there are no shadows on perfect mirrors
-		drawPlanarShadows(p);
+		drawPlanarShadows(player);
 
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
 	/* planar shadows done */
 
-	drawWorld(p, pV);
+	drawWorld(player);
 
 	/* transparent stuff */
 	/* draw the glow around the other players: */
@@ -573,9 +568,9 @@ void drawCam(Player *p, PlayerVisual* pV) {
 
 		for (i = 0; i < game->players; i++)
 		{
-			if (p != game->player + i && PLAYER_IS_ACTIVE(game->player + i))
+			if (i != player && PLAYER_IS_ACTIVE(game->player + i))
 			{
-				drawGlow(p->camera, game->player + i, gPlayerVisuals + i,
+				drawGlow(&gPlayerVisuals[player].camera, game->player + i, gPlayerVisuals + i,
 					d, TRAIL_HEIGHT * 4);
 			}
 		}

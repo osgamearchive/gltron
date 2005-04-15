@@ -8,10 +8,8 @@
 #include "base/nebu_system.h"
 #include "base/nebu_types.h"
 
-typedef struct Camera Camera;
-typedef struct Player Player;
-typedef struct Data Data;
-typedef struct game_level game_level;
+// #include "game/camera.h"
+#include "game/game_level.h"
 
 #define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
 
@@ -63,8 +61,12 @@ typedef struct Data {
 	float trail_height;
 
 	int last_dir;
-	unsigned int turn_time; /* for cycle animation */
- 
+	/* for cycle animation */
+	unsigned int turn_time; 
+	/* explosion  & impact stuff */
+	float impact_radius;
+	float exp_radius;
+
 	segment2 *trails;
 	int trailOffset;
 } Data;
@@ -77,7 +79,6 @@ typedef struct AI {
 } AI;
 
 typedef struct Player {
-	Camera *camera;
 	Data *data;
 	AI *ai;
 } Player;

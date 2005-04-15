@@ -2,8 +2,10 @@
 
 #include "video/video.h"
 #include "video/recognizer.h"
+#include "video/explosion.h"
 #include "game/game.h"
 #include "game/game_level.h"
+#include "scripting/scripting.h"
 #include "audio/audio.h"
 #include "Nebu_scripting.h"
 #include "Nebu_base.h"
@@ -58,7 +60,7 @@ int processEvent(GameEvent* e) {
 			game->winner = -2;
 			displayMessage(TO_CONSOLE, "everyone died! no one wins!");
 		}
-		nebu_System_ExitLoop(RETURN_GAME_END);
+		nebu_System_ExitLoop(eSRC_Game_End);
 		game->pauseflag = PAUSE_GAME_FINISHED;
 		value = 1;
 		break;
@@ -272,33 +274,42 @@ void doMovement(int dt)
 {
 	int i;
 
-	for(i = 0; i < game->players; i++) { // foreach player
+	for(i = 0; i < game->players; i++)
+	{ // foreach player
 		Data *data = game->player[i].data;
-		PlayerVisual *pV = gPlayerVisuals + i;
-		if(data->speed > 0) { // still alive
+		if(data->speed > 0)
+		{ // still alive
 			float fs;
 			float t;
 
 			float deccel = 0;
-			if(getSettingf("wall_accel_on") == 1) { // wall acceleration
-				if(!applyWallAcceleration(i, dt)) {
+			if(getSettingf("wall_accel_on") == 1)
+			{ // wall acceleration
+				if(!applyWallAcceleration(i, dt))
+				{
 					deccel = getSettingf("wall_accel_decrease");
 				}
-				else {
+				else
+				{
 					deccel = -1; // forbid deacceleration for booster
 				}
 			} // wall acceleration
 
-			if(getSettingf("wall_buster_on") == 1) { // wall buster
+			if(getSettingf("wall_buster_on") == 1)
+			{ // wall buster
 				// printf("applying wallbuster for player %i\n");
 				applyWallBuster(i, dt);
 			} // wall buster
 
-			if(getSettingf("booster_on") == 1) { // booster
-				if(!applyBooster(i, dt) && deccel != -1) {
+			if(getSettingf("booster_on") == 1)
+			{ // booster
+				if(!applyBooster(i, dt) && deccel != -1)
+				{
 					float d = getSettingf("booster_decrease");
 					deccel = d > deccel ? d : deccel;
-				} else {
+				}
+				else
+				{
 					deccel = -1;
 				}
 			} // booster
@@ -331,9 +342,11 @@ void doMovement(int dt)
 				current->vDirection.v[0] += t * dirsX[data->dir];
 				current->vDirection.v[1] += t * dirsY[data->dir];
 
-				if(!data->wall_buster_enabled) { // collision detection against players
+				if(!data->wall_buster_enabled)
+				{ // collision detection against players
 					crash = crashTestPlayers(i, &movement);
-					if(crash) {
+					if(crash)
+					{
 						printf("player %d crashed into other players \n", i);
 						printf("%f %f %f %f\n",
 							movement.vStart.v[0],
@@ -342,9 +355,11 @@ void doMovement(int dt)
 							movement.vDirection.v[1]);
 					} // crash debug output
 				} // collision detection against players
-				if(!crash) { // collision detection against walls
+				if(!crash)
+				{ // collision detection against walls
 					crash = crashTestWalls(i, &movement);
-					if(crash) {
+					if(crash)
+					{
 						printf("player %d crashed into the walls\n", i);
 						printf("%f %f %f %f\n",
 							movement.vStart.v[0],
@@ -355,22 +370,30 @@ void doMovement(int dt)
 				} // collision detection against walls
 			} // movement
 		} // still alive
-		else { // already crashed
+		else
+		{ // already crashed
+			if(data->impact_radius < IMPACT_MAX_RADIUS)
+				data->impact_radius += game2->time.dt * IMPACT_RADIUS_DELTA;
+
 			if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
 				data->trail_height -= (dt * TRAIL_HEIGHT) / 1000.0f;
-			if(pV->exp_radius < EXP_RADIUS_MAX)
-				pV->exp_radius += dt * EXP_RADIUS_DELTA;
-			else if (data->speed == SPEED_CRASHED) { // done exploding
+			if(data->exp_radius < EXP_RADIUS_MAX)
+				data->exp_radius += dt * EXP_RADIUS_DELTA;
+			else if (data->speed == SPEED_CRASHED)
+			{ // done exploding
 				int winner = -1;
 
 				data->speed = SPEED_GONE;
 				game->running--;
-				if(game->running <= 1) { // all dead
+				if(game->running <= 1)
+				{ // all dead
 					/* find survivor, create winner event */
 					int i;
 					float maxSpeed = SPEED_GONE;
-					for(i = 0; i < game->players; i++) {
-						if(game->player[i].data->speed >= maxSpeed) {
+					for(i = 0; i < game->players; i++)
+					{
+						if(game->player[i].data->speed >= maxSpeed)
+						{
 							winner = i;
 							maxSpeed = game->player[i].data->speed;
 						}
@@ -383,7 +406,7 @@ void doMovement(int dt)
 		} // already crashed
 	} // foreach player
 }
- 
+
 /*! \fn void idleGame( void )
   game loop:
   run ai, process events, do physics, process events again,
@@ -417,7 +440,7 @@ void Game_Idle(void) {
 		for (i = 0; i < game->players; i++)
 		{
 			if (game->player[i].ai->active != AI_COMPUTER &&
-				gPlayerVisuals[i].exp_radius < EXP_RADIUS_MAX)
+				game->player[i].data->exp_radius < EXP_RADIUS_MAX)
 			{
 				factor = 1;
 			}

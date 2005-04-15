@@ -145,8 +145,6 @@ void initVideoData(void) {
 	{
 		gpHUD[i] = NULL;
 	}
-	gpGUIBackground = NULL;
-
 	changeDisplay(-1);
 }
 
@@ -176,6 +174,7 @@ void video_ResetData(void) {
 
 	for(i = 0; i < game->players; i++) {
 		PlayerVisual *pV = gPlayerVisuals + i;
+		Player *p = game->player + i;
 		{
 			char name[32];
 			sprintf(name, "model_diffuse_%d", i);
@@ -189,10 +188,10 @@ void video_ResetData(void) {
 			scripting_GetFloatArrayResult(pV->pColorAlpha, 4);
 		}
 		if(game->player[i].ai->active != AI_NONE) {
-			pV->impact_radius = 0.0;
-			pV->exp_radius = 0;
+			p->data->impact_radius = 0.0;
+			p->data->exp_radius = 0;
 		} else {
-			pV->exp_radius = EXP_RADIUS_MAX;
+			p->data->exp_radius = EXP_RADIUS_MAX;
 		}
 	}
 }

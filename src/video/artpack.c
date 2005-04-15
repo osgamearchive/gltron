@@ -7,6 +7,8 @@
 #include "Nebu_scripting.h"
 #include "Nebu_filesystem.h"
 
+#include <string.h>
+
 void initArtpacks(void) {
   const char *art_path;
   nebu_List *artList;
@@ -47,7 +49,6 @@ void artpack_LoadSurfaces(void)
 	int i;
 	for(i = 0; i < eHUDElementCount; i++)
 	{
-		nebu_Surface *surface;
 		char *path;
 		
 		path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
@@ -56,28 +57,9 @@ void artpack_LoadSurfaces(void)
 			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
 			exit(1); /* OK: critical, installation corrupt */
 		}
-		surface = nebu_Surface_LoadPNG(path);
-
 		if(gpHUD[i]) { nebu_2d_Free(gpHUD[i]); gpHUD[i] = NULL; }
-		gpHUD[i] = nebu_2d_Create(surface, 0);
+		gpHUD[i] = nebu_2d_LoadPNG(path, 0);
 
-		nebu_Surface_Free(surface);
-		free(path);
-	}
-
-	{
-		nebu_Surface *surface;
-		char *path;
-		
-		path = nebu_FS_GetPath(PATH_ART, "gui.png");
-		if(!path)
-		{
-			fprintf(stderr, "fatal: failed loading %s, exiting...\n", "gui.png");
-			exit(1); /* OK: critical, installation corrupt */
-		}
-		surface = nebu_Surface_LoadPNG(path);
-		gpGUIBackground = nebu_2d_Create(surface, 0);
-		nebu_Surface_Free(surface);
 		free(path);
 	}
 }

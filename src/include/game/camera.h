@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-typedef struct Data Data;
+#include "game/game_data.h" // Data
 
 typedef struct CameraType {
 	int interpolated_cam;
@@ -25,7 +25,7 @@ typedef enum eCamType {
 	CAM_FREE
 } eCamType;
 
-enum { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET };
+typedef enum ECamAxis { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET } ECamAxis;
 
 void initCamera(Camera *cam, Data *data, int type);
 void nextCameraType(void);

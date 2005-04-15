@@ -4,6 +4,7 @@
 #include "video/video.h"
 
 #include "base/nebu_math.h"
+#include "video/nebu_renderer_gl.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "zlib.h"
@@ -309,8 +310,6 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
 
     glDrawElements(primitive, iFaceSize * pMesh->pnFaces[i],
 		   GL_UNSIGNED_SHORT, pMesh->ppIndices[i]);
-
-    polycount += pMesh->pnFaces[i];
   }
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -364,7 +363,6 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius) {
       glEnd();
       glPopMatrix();
     }
-    polycount += pMesh->pnFaces[i];
   }
 }
 

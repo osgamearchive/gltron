@@ -8,7 +8,6 @@
 
 #define BUF_SIZE 120
 
-#include "video/nebu_renderer_gl.h"
 #include "base/nebu_vector.h"
 
 typedef struct gltron_Mesh_Material {
@@ -27,9 +26,9 @@ typedef struct gltron_Mesh_BoundingBox {
 } gltron_Mesh_BoundingBox;
 
 typedef struct gltron_Mesh {
-  GLfloat *pVertices;
-  GLfloat *pNormals;
-  GLshort **ppIndices;
+  float *pVertices;
+  float *pNormals;
+  unsigned short **ppIndices;
   int nVertices, nNormals, nMaterials;
   gltron_Mesh_Material* pMaterials;
   int *pnFaces;
@@ -55,11 +54,5 @@ void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name,
 	 ColorType eType, float pColor[4]);
 
 void gltron_Mesh_ComputeBBox(gltron_Mesh* pMesh);
-
-extern int polycount;
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* MODEL_H */

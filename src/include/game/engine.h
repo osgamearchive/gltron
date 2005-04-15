@@ -1,7 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-typedef struct GameEvent GameEvent;
+#include "game/event.h" // GameEvent
 
 void doLeftTurn(GameEvent *e);
 void doRightTurn(GameEvent *e);

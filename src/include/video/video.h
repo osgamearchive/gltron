@@ -3,18 +3,17 @@
 
 #define NEW_LEVEL_DRAW
 
-#include "video/texture.h" // Texture
-#include "video/model.h" // gltron_Mesh
 #include "game/game_data.h" // Player
-#include "video/video_level.h"
-
+#include "game/camera.h" // Camera
+#include "video/texture.h" // Texture
 #include "video/nebu_video_types.h" // Visual
 #include "video/nebu_2d.h"
-#include "base/nebu_png_texture.h" // png_texture
 #include "video/nebu_font.h"
+#include "video/video_level.h"
+#include "video/model.h" // gltron_Mesh
+#include "base/nebu_png_texture.h" // png_texture
 
 /* dropped support for anything else than libpng */
-#include <png.h>
 typedef png_texture texture;
 #define LOAD_TEX(x) load_png_texture(x)
 #define TEX_SUFFIX ".png"
@@ -25,6 +24,8 @@ typedef struct Artpack {
 } Artpack;
 
 typedef struct PlayerVisual {
+	Camera camera;
+
 	Visual display;
 
 	float pColorDiffuse[4];
@@ -34,10 +35,6 @@ typedef struct PlayerVisual {
   // unsigned int turn_time; /* for cycle animation */
   unsigned int spoke_time; /* for cycle wheel animation */
   int spoke_state; /* showing spoke or not */
-
-  /* explosion stuff */
-  float impact_radius;
-  float exp_radius; /* explosion of the cycle model */
 } PlayerVisual;
 
 enum { VP_SINGLE = 0, VP_SPLIT = 1, VP_FOURWAY = 2 }; // Viewport Type;
@@ -131,9 +128,7 @@ extern gltron_Mesh *lightcycle[];
 
 extern video_level *gWorld;
 
-/* extern TexFont *txf; */
 extern nebu_Font *gameFtx;
-extern nebu_Font *guiFtx;
 
 enum { 
 	eHUDSpeed = 0,
@@ -149,11 +144,8 @@ enum {
 };
 
 extern nebu_2d *gpHUD[];
-extern nebu_2d *gpGUIBackground;
 
 extern float camAngles[];
-
-extern int polycount;
 
 extern int isRenderingReflection;
 
@@ -227,8 +219,8 @@ extern void rebuildDebugTex(void);
 extern void drawDebugLines(Visual *d);
 extern void drawDebugTex(Visual *d);
 /* extern void drawHelp(Visual *d); */
-extern void drawPlayers(Player *p, PlayerVisual *pV);
-extern void drawCam(Player *p, PlayerVisual *pV);
+extern void drawPlayers(int player);
+extern void drawCam(int player);
 
 extern void draw2D( nebu_Rect *pRect );
 		
@@ -239,8 +231,6 @@ extern float getSegmentUV(segment2 *line);
 extern float getSegmentEndUV(segment2 *line, Data *data);
 extern float getSegmentEndX(Data *data, int type);
 extern float getSegmentEndY(Data *data, int type);
-
-extern void drawMenu(Visual *d);
 
 extern void initVideoData(void);
 extern void initGameScreen(void);

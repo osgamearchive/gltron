@@ -10,6 +10,7 @@ typedef struct {
 } nebu_2d;
 
 nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags);
+nebu_2d* nebu_2d_LoadPNG(const char *path, int flags);
 void nebu_2d_Free(nebu_2d *p2d);
 
 void nebu_2d_Draw(const nebu_2d *p2d);

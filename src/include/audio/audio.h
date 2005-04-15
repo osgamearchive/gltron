@@ -3,12 +3,6 @@
 
 #define SONG_PREFIX "song_"
 
-/* menu sound enumerations */
-enum {
-	fx_action,
-	fx_highlight
-};
-
 void Sound_loadFX(void);
 void Sound_init(void);
 void Sound_shutdown(void);

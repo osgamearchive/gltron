@@ -6,6 +6,7 @@
 #include "video/video.h"
 #include "configuration/settings.h"
 #include "configuration/configuration.h"
+#include "scripting/scripting.h"
 
 #include "configuration/settings.h"
 #include "base/switchCallbacks.h"
@@ -33,7 +34,7 @@ int c_drawHUDMask(lua_State* l);
 
 int c_quitGame(lua_State *L) {
 	saveSettings();
-	nebu_System_ExitLoop(RETURN_CREDITS);
+	nebu_System_ExitLoop(eSRC_Credits);
 	return 0;
 }
 
@@ -55,7 +56,7 @@ int c_resetCamera(lua_State *L) {
 	Data *data;
 
 	for(i = 0; i < game->players; i++) {
-		cam = game->player[i].camera;
+		cam = & gPlayerVisuals[i].camera;
 		data = game->player[i].data;
 
 		camType = (game->player[i].ai->active == AI_COMPUTER) ? 
@@ -90,7 +91,7 @@ int c_startGame(lua_State *L) {
 	game_ResetData();
 	video_ResetData();
 	changeDisplay(-1);
-	nebu_System_ExitLoop(RETURN_GAME_LAUNCH);
+	nebu_System_ExitLoop(eSRC_Game_Launch);
 	return 0;
 }
 
@@ -114,7 +115,7 @@ int c_reloadLevel(lua_State *L) {
 }
   
 int c_configureKeyboard(lua_State *L) {
-	nebu_System_ExitLoop(RETURN_GUI_PROMPT);
+	nebu_System_ExitLoop(eSRC_GUI_Prompt);
 	return 0;
 }
 
@@ -129,7 +130,7 @@ int c_getKeyName(lua_State *L) {
 }
 
 int c_timedemo(lua_State *L) {
-	nebu_System_ExitLoop(RETURN_TIMEDEMO);
+	nebu_System_ExitLoop(eSRC_Timedemo);
 	return 0;
 }
 
@@ -231,7 +232,7 @@ void init_c_interface(void) {
 	scripting_Register("c_timedemo", c_timedemo);
 	scripting_Register("c_loadDirectory", c_loadDirectory);
 	scripting_Register("c_mainLoop", c_mainLoop);
-	scripting_Register("SetCallback", c_SetCallback);
+	scripting_Register("c_setCallback", c_SetCallback);
 	scripting_Register("c_setArtPath", c_setArtPath);
 
 	scripting_Register("c_drawCircle", c_drawCircle);

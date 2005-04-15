@@ -38,20 +38,22 @@ Tools
 - support older artpack revisions (4 walls, non-unified GUI),
   add artpack version to artpack.lua
 
-- homepage: task list & blogging tools
-
-- own cycle: increase volume upon acceeleration, decrease default sound volume
-  for own cycle
-- multiple listeners for split-screen
-
+Homepage
 - Redo homepage a little (better news update (old/archive) system?):
 - Redo headlines
 - CSS support
-- add wiki
+- wiki
+- blog
 
 - keep developer/art/support information somewhere
 - plea for help
 
+Audio:
+- own cycle: increase volume upon acceeleration, decrease default sound volume
+  for own cycle
+- multiple listeners for split-screen
+
+Project:
 - compile clean TODO list
 - compile priority list
 - revise release schedule

@@ -7,6 +7,7 @@
 #include "video/video.h"
 
 #include "Nebu_scripting.h"
+#include "video/nebu_renderer_gl.h"
 
 nebu_Mesh* loadMesh(void);
 

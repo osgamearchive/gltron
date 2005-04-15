@@ -12,6 +12,7 @@
 #include "input/nebu_input_system.h"
 #include "audio/audio.h"
 #include "base/nebu_random.h"
+#include "scripting/scripting.h"
 
 static int startTime = 0;
 static int frames = 0;
@@ -74,7 +75,7 @@ void keyTimedemo(int state, int key, int x, int y) {
 		return;
 
 	if(key == 27)
-		nebu_System_ExitLoop(RETURN_TIMEDEMO_ABORT);
+		nebu_System_ExitLoop(eSRC_Timedemo_Abort);
 }
 
 struct saveRules {

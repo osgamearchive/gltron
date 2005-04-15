@@ -1,10 +1,12 @@
 #include "video/video.h"
+#include "video/trail_geometry.h"
 #include "game/game.h"
 #include "game/camera.h"
 #include "configuration/settings.h"
-#include "video/trail_geometry.h"
-#include "video/nebu_video_system.h"
+
 #include "base/nebu_math.h"
+#include "video/nebu_video_system.h"
+#include "video/nebu_renderer_gl.h"
 
 #define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 #undef TEX_SPLIT
@@ -94,7 +96,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 	float trail_top[] = { 1.0, 1.0, 1.0, 1.0 };
 
 	data = p->data;
-	cam = p->camera;
+	cam = & pV->camera;
 
 	height = data->trail_height;
 	if(height <= 0)
@@ -138,7 +140,6 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 			s->vStart.v[1] + s->vDirection.v[1],
 			height);
 		s++;
-		polycount++;
 	}
 	glEnd();
 

@@ -2,10 +2,8 @@
 #define TRAIL_GEOMETRY_H
 
 #include "base/nebu_vector.h"
-
-typedef struct segment2 segments2;
-typedef struct Player Player;
-typedef struct PlayerVisual PlayerVisual;
+#include "game/game_data.h" // Player
+#include "video/video.h" // PlayerVisual
 
 typedef struct TrailMesh {
 	vec3* pVertices; // each vertex consists of three floats

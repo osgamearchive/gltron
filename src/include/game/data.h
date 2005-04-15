@@ -3,7 +3,7 @@
 
 /* general data structures */
   
-enum {
+typedef enum EGameType {
   GAME_SINGLE = 1,
 #ifdef RECORD
   GAME_SINGLE_RECORD = 2,
@@ -11,6 +11,6 @@ enum {
   GAME_PLAY_NETWORK = 8,
   GAME_NETWORK_RECORD
 #endif
-};
+} EGameType;
 
 #endif

@@ -12,6 +12,7 @@
 
 #include "base/nebu_math.h"
 #include <assert.h>
+#include <string.h>
 
 void getPositionFromIndex(float *x, float *y, int player) {
 	getPositionFromData(x, y, game->player[player].data);
@@ -61,28 +62,27 @@ void initGameStructures(void) { /* called only once */
     p->data = (Data*) malloc(sizeof(Data));
     p->data->trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
 		p->data->trailOffset = 0;
-		p->camera = (Camera*) malloc(sizeof(Camera));
    }
 
   game2->mode = GAME_SINGLE;
 }
 
 void resetPlayerData(void) {
-  int i;
-  Data *data;
-  AI *ai;
-  int not_playing = 0;
+	int i;
+	Data *data;
+	AI *ai;
+	int not_playing = 0;
 
-  int *startIndex;
-  startIndex = malloc( game->players * sizeof(int) );
-  nebu_RandomPermutation(game->players, startIndex);
+	int *startIndex;
+	startIndex = malloc( game->players * sizeof(int) );
+	nebu_RandomPermutation(game->players, startIndex);
 
-  for(i = 0; i < game->players; i++) {
+	for(i = 0; i < game->players; i++) {
 		float x, y;
 
-    data = game->player[i].data;
-    ai = game->player[i].ai;
-    /* init ai */
+		data = game->player[i].data;
+		ai = game->player[i].ai;
+		/* init ai */
 
 		switch(i) {
 		case 0: ai->active = getSettingi("ai_player1"); break;
@@ -140,10 +140,9 @@ void resetPlayerData(void) {
 
 		{
 			int camType;
-			Camera *cam = game->player[i].camera;
 			camType = (game->player[i].ai->active == AI_COMPUTER) ? 
 				CAM_CIRCLE : gSettingsCache.camType;
-			initCamera(cam, data, camType);
+			initCamera(&gPlayerVisuals[i].camera, data, camType);
 		}
 	}
 

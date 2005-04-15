@@ -68,10 +68,8 @@ void setCallback(const char *name) {
 		exit(1); // OK: programmer error, critical
 	}
 
-  last_callback = current_callback;
-  current_callback = callbackList[i];
-	
+	last_callback = current_callback;
+	current_callback = callbackList[i];
+
 	nebu_System_SetCallbacks(callbackList[i]);
 }
-
-

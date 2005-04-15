@@ -1,8 +1,10 @@
 #include "game/game.h"
 #include "video/video.h"
 #include "input/input.h"
-#include "base/nebu_math.h"
 #include "configuration/settings.h"
+
+#include "base/nebu_math.h"
+#include "video/nebu_renderer_gl.h"
 
 /* globals */
 Game main_game;
@@ -19,12 +21,9 @@ SettingsCache gSettingsCache;
 
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 
-/* TexFont *txf = NULL; */
-nebu_Font *guiFtx = NULL;
 nebu_Font *gameFtx = NULL;
 
 nebu_2d *gpHUD[eHUDElementCount];
-nebu_2d *gpGUIBackground;
 
 gltron_Mesh* recognizer_quad;
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
@@ -57,7 +56,6 @@ float camAngles[] = { PI / 2, 0, 3 * PI / 2, PI, 2 * PI };
    double dt; */
 /* milliseconds since last frame */
 
-int polycount; /* poly count - how much do we draw each frame? */
 int isRenderingReflection = 0;
 
 unsigned char debugcolors[6][4] = {

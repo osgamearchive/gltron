@@ -5,6 +5,8 @@
 #include "game/game_data.h"
 #include "game/gltron.h"
 
+#include "scripting/scripting.h"
+
 #include "configuration/configuration.h"
 
 #include "video/video.h"
@@ -40,7 +42,7 @@ void keyboardPause(int state, int key, int x, int y) {
 
 	switch(key) {
 	case 27:
-		nebu_System_ExitLoop(RETURN_PAUSE_ESCAPE);
+		nebu_System_ExitLoop(eSRC_Pause_Escape);
 		break;
 	case SYSTEM_KEY_F1: changeDisplay(0); break;
 	case SYSTEM_KEY_F2: changeDisplay(1); break;
@@ -71,7 +73,7 @@ void keyboardPause(int state, int key, int x, int y) {
 		else
 		{
 			game->pauseflag = PAUSE_GAME_RUNNING;
-			nebu_System_ExitLoop(RETURN_GAME_UNPAUSE);
+			nebu_System_ExitLoop(eSRC_Game_Unpause);
 		}
 		/* lasttime = SystemGetElapsedTime(); */
 		break;
@@ -109,7 +111,7 @@ void keyboardPrompt(int state, int key, int x, int y) {
 	switch(key) {
 	case 27:
 	case SYSTEM_KEY_TAB:
-		nebu_System_ExitLoop(RETURN_PAUSE_ESCAPE);
+		nebu_System_ExitLoop(eSRC_Pause_Escape);
 		break;
 	case SYSTEM_KEY_RETURN:
 		/* promptEvaluate(); */

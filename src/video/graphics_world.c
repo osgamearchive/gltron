@@ -1,5 +1,6 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "video/nebu_renderer_gl.h"
 
 void drawWalls(void) {
 	video_Shader_Setup(& gWorld->arena_shader);

@@ -7,6 +7,7 @@
 #include "base/nebu_callbacks.h"
 #include "scripting/nebu_scripting.h"
 #include "input/nebu_input_system.h"
+#include "scripting/scripting.h"
 
 static int coffset;
 
@@ -42,7 +43,7 @@ void mouseCredits (int buttons, int state, int x, int y)
 {
 	if ( state == SYSTEM_MOUSEPRESSED ) {
 		nebu_System_Exit();
-		nebu_System_ExitLoop(RETURN_QUIT);
+		nebu_System_ExitLoop(eSRC_Quit);
 	}
 }
 
@@ -51,7 +52,7 @@ void keyCredits(int state, int k, int x, int y)
 	if(state == SYSTEM_KEYSTATE_UP)
 		return;
 	nebu_System_Exit();
-	nebu_System_ExitLoop(RETURN_QUIT);
+	nebu_System_ExitLoop(eSRC_Quit);
 }
 
 void idleCredits(void) {

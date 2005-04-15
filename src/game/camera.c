@@ -1,12 +1,14 @@
-#include "video/video.h"
 #include "video/recognizer.h"
+#include "video/video.h"
+#include "game/camera.h"
 #include "game/game.h"
 #include "input/input.h"
-#include "video/nebu_console.h"
-#include "base/nebu_math.h"
-#include "game/camera.h"
 #include "configuration/settings.h"
+
+#include "base/nebu_math.h"
 #include "input/nebu_input_system.h"
+#include "video/nebu_renderer_gl.h"
+#include "video/nebu_console.h"
 
 typedef enum eCamFreedom { 
 	CAM_FREE_R = 0,
@@ -144,12 +146,10 @@ void initCamera(Camera *cam, Data *data, int type) {
 }
 
 /* place user into recognizer */
-void observerCamera(PlayerVisual *pV, Player *player) {
-	Camera *cam;
+void observerCamera(Camera *cam) {
 	vec2 p, v;
 	getRecognizerPositionVelocity(&p, &v);
 
-	cam = player->camera;
 	cam->cam[0] = p.v[0];
 	cam->cam[1] = p.v[1];
 	cam->cam[2] = RECOGNIZER_HEIGHT;
@@ -158,7 +158,7 @@ void observerCamera(PlayerVisual *pV, Player *player) {
 	cam->target[2] = RECOGNIZER_HEIGHT - 2;
 }  
 
-void playerCamera(PlayerVisual *pV, Player *p, int player) {
+void playerCamera(Player *p, int player) {
 	float dest[3];
 	float tdest[3];
 	float phi, chi, r;
@@ -182,7 +182,7 @@ void playerCamera(PlayerVisual *pV, Player *p, int player) {
 	}
 
 
-	cam = p->camera;
+	cam = &gPlayerVisuals[player].camera;
 	data = p->data;
 	getPositionFromData(&x, &y, data);
 
@@ -297,16 +297,14 @@ void playerCamera(PlayerVisual *pV, Player *p, int player) {
 void doCameraMovement(void) {
 	int i;
 	Player *p;
-	PlayerVisual *pV;
 
 	for(i = 0; i < game->players; i++) {
 		p = game->player + i;
-		pV = gPlayerVisuals + i;
 
 		if(p->data->speed == SPEED_GONE)
-			observerCamera(pV, p);
+			observerCamera(&gPlayerVisuals[i].camera);
 		else
-			playerCamera(pV, p, i);
+			playerCamera(p, i);
 	}
 }
 
@@ -322,7 +320,7 @@ void nextCameraType(void) {
 	  
 	for (i = 0; i < game->players; i++) {
 		if (game->player[i].ai->active == AI_HUMAN) {
-			initCamera(game->player[i].camera, game->player[i].data, new_cam_type);
+			initCamera(&gPlayerVisuals[i].camera, game->player[i].data, new_cam_type);
 		}
 	}
 

@@ -1,59 +1,77 @@
 -- loop until RETURN_QUIT code is sent
 
-RETURN_QUIT = 0
-RETURN_GAME_END = 1
-RETURN_GAME_PAUSE = 2
-RETURN_GAME_UNPAUSE = 3
-RETURN_GAME_CREDITS = 4
-RETURN_GAME_ESCAPE = 5
-RETURN_GUI_PROMPT = 6
-RETURN_TIMEDEMO = 7
-RETURN_TIMEDEMO_ABORT = 8
-RETURN_CREDITS = 9
-RETURN_GAME_LAUNCH = 10
-RETURN_GUI_ESCAPE = 11
-RETURN_PROMPT_ESCAPE = 12
-RETURN_PAUSE_ESCAPE = 13
+EScriptingReturnCode =
+{
+	eSRC_Quit = 0,
+	eSRC_Game_End = 1,
+	eSRC_Game_Pause = 2,
+	eSRC_Game_Unpause = 3,
+	eSRC_Game_Credits = 4,
+	eSRC_Game_Escape = 5,
+	eSRC_Timedemo = 7,
+	eSRC_Timedemo_Abort = 8,
+	eSRC_Credits = 9,
+	eSRC_Game_Launch = 10,
+	eSRC_GUI_Escape = 11,
+	eSRC_GUI_Prompt = 12,
+	eSRC_GUI_Prompt_Escape = 13,
+	eSRC_Pause_Escape = 14
+}
 
 -- enable below to run in timedemo-only mode
-if(nil) then
-	SetCallback("timedemo")
+timedemo = nil
+-- timedemo = 1
+if(timedemo) then
+	c_setCallback("timedemo")
 	c_mainLoop()
 	os.exit()
 end
 
 callback = "gui"
 
+game_initialized = 0;
+
 next_callback = {}
-next_callback[ RETURN_GAME_LAUNCH ] = "pause"
-next_callback[ RETURN_GAME_END ] = "pause"
-next_callback[ RETURN_GAME_PAUSE ] = "pause"
-next_callback[ RETURN_GAME_UNPAUSE ] = "game"
-next_callback[ RETURN_CREDITS ] = "credits"
-next_callback[ RETURN_GAME_CREDITS ] = "credits"
+next_callback[ EScriptingReturnCode.eSRC_Game_Launch ] = 
+	function() 
+		game_initialized = 1;
+		return "pause";
+	end
+next_callback[ EScriptingReturnCode.eSRC_Game_End ] = function() return "pause"; end
+next_callback[ EScriptingReturnCode.eSRC_Game_Pause ] = function() return "pause"; end
+next_callback[ EScriptingReturnCode.eSRC_Game_Unpause ] = function() return "game"; end
+next_callback[ EScriptingReturnCode.eSRC_Credits ] = function() return "credits"; end
 
-next_callback[ RETURN_GAME_ESCAPE ] = "gui"
-next_callback[ RETURN_GUI_ESCAPE ] = "pause"
-next_callback[ RETURN_PROMPT_ESCAPE ] = "gui"
-next_callback[ RETURN_PAUSE_ESCAPE ] = "gui"
+next_callback[ EScriptingReturnCode.eSRC_Game_Escape ] = function() return "gui"; end
+next_callback[ EScriptingReturnCode.eSRC_GUI_Escape ] =
+	function() 
+		if(game_initialized == 1) then
+			return "pause"
+		else
+			return "gui"
+		end
+	end
+	
+next_callback[ EScriptingReturnCode.eSRC_GUI_Prompt_Escape ] = function() return "gui"; end
+next_callback[ EScriptingReturnCode.eSRC_Pause_Escape ] = function() return "gui"; end
 
-next_callback[ RETURN_GUI_PROMPT ] = "configure"
-next_callback[ RETURN_TIMEDEMO ] = nil
-next_callback[ RETURN_TIMEDEMO_ABORT ] = nil
-next_callback[ RETURN_QUIT ] = nil
+next_callback[ EScriptingReturnCode.eSRC_GUI_Prompt ] = function() return "configure"; end
+next_callback[ EScriptingReturnCode.eSRC_Timedemo ] = nil
+next_callback[ EScriptingReturnCode.eSRC_Timedemo_Abort ] = nil
+next_callback[ EScriptingReturnCode.eSRC_Quit ] = nil
 
 
 while 1 do
-	SetCallback(callback)
+	c_setCallback(callback)
 	-- io.write(string.format("[lua] setting callback '%s'\n", callback))
 	 
 	status = c_mainLoop()
 	-- io.write(string.format("[lua] system returned (%d)\n", status))
 	 
 	if(next_callback[ status ]) then
-		 callback = next_callback[ status ]
+		 callback = next_callback[ status ]()
 	else
-		if(status == RETURN_QUIT) then
+		if(status == EScriptingReturnCode.eSRC_Quit) then
 			io.write(string.format("[lua] clean exit\n"))
 			os.exit()
                 else

@@ -1,15 +1,15 @@
-#include "Nebu_audio.h"
-
+#include "audio/sound_glue.h"
 extern "C" {
 #include "game/game.h"
+#include "video/recognizer.h"
+#include "scripting/nebu_scripting.h"
+#include "video/video.h"
 #include "game/camera.h"
 #include "game/game_data.h"
 #include "configuration/settings.h"
-#include "scripting/nebu_scripting.h"
-#include "video/recognizer.h"
 }
 
-#include "audio/sound_glue.h"
+#include "Nebu_audio.h"
 
 #include "SDL.h"
 #include "SDL_sound.h"
@@ -142,9 +142,9 @@ extern "C" {
 
     Sound::Listener& listener = sound->GetListener();
 
-    listener._location = Vector3(game->player[0].camera->cam);
-		Vector3 v1 = Vector3(game->player[0].camera->target);
-		Vector3 v2 = Vector3(game->player[0].camera->cam);
+    listener._location = Vector3(gPlayerVisuals[0].camera.cam);
+		Vector3 v1 = Vector3(gPlayerVisuals[0].camera.target);
+		Vector3 v2 = Vector3(gPlayerVisuals[0].camera.cam);
     listener._direction = v1 - v2;
       
     // listener._location = players[0]->_location;

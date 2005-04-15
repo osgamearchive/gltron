@@ -3,9 +3,7 @@
 #include "video/explosion.h" 
 
 #include "base/nebu_math.h"
-
-#define IMPACT_RADIUS_DELTA 0.025f
-#define IMPACT_MAX_RADIUS 25.0f 
+#include "video/nebu_renderer_gl.h"
 
 /* shockwave behavior constants */
 #define SHOCKWAVE_MIN_RADIUS 0.0f
@@ -139,17 +137,15 @@ static void drawImpactGlow(float glow_radius) {
   glPopMatrix();
 }
 
-void drawExplosion(float *radius) {
+void drawExplosion(float radius) {
 
-  float shockwave_radius = (*radius * SHOCKWAVE_SPEED);
+  float shockwave_radius = (radius * SHOCKWAVE_SPEED);
 
   drawShockwaves(shockwave_radius);
 
-  if (*radius < IMPACT_MAX_RADIUS) {
-    drawImpactGlow(*radius);
-    drawSpires(*radius);
+  if (radius < IMPACT_MAX_RADIUS) {
+    drawImpactGlow(radius);
+    drawSpires(radius);
   }
-  
-  *radius += game2->time.dt * IMPACT_RADIUS_DELTA;
 }
 

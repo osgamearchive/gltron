@@ -1,6 +1,7 @@
 #include "video/video.h"
 #include "game/game.h"
 #include "configuration/settings.h"
+#include "video/nebu_renderer_gl.h"
 
 static void bindSkyboxTexture(int index) {
 	glBindTexture(GL_TEXTURE_2D, gScreen->textures[ TEX_SKYBOX0 + index ]);

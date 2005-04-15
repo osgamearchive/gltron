@@ -1,19 +1,24 @@
 #include "audio/audio.h"
-#include "video/graphics_utility.h"
 #include "video/video.h"
-#include "game/game.h"
-#include "game/game_data.h"
+#include "video/graphics_utility.h"
 #include "input/input.h"
-#include "video/nebu_renderer_gl.h"
 #include "configuration/configuration.h"
 #include "configuration/settings.h"
+#include "filesystem/path.h"
+#include "scripting/scripting.h"
+
+#include "video/nebu_2d.h"
+#include "video/nebu_renderer_gl.h"
 #include "video/nebu_video_system.h"
 #include "input/nebu_input_system.h"
-
+#include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
+#include "filesystem/nebu_filesystem.h"
+// local resources
+nebu_2d *pBackground = NULL;
+nebu_Font *pFont = NULL;
 
-/* FIXME: "ignored playMenuFX" */
-void playMenuFX(int foo) { }
+void drawMenu(Visual *d);
 
 void drawGuiBackground(void) {
   nebu_Video_CheckErrors("gui background start");
@@ -24,11 +29,11 @@ void drawGuiBackground(void) {
   // rasonly(gScreen);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0,gpGUIBackground->w,0,gpGUIBackground->h,0,1);
+  glOrtho(0,pBackground->w,0,pBackground->h,0,1);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glDisable(GL_DEPTH_TEST);
-  nebu_2d_Draw(gpGUIBackground);
+  nebu_2d_Draw(pBackground);
 }
   
 void displayGui(void) {
@@ -45,7 +50,7 @@ void displayConfigure(void) {
 
   rasonly(gScreen);
   glColor3f(1.0, 1.0, 1.0);
-  drawText(guiFtx, gScreen->vp_w / 6.0f, 20,
+  drawText(pFont, gScreen->vp_w / 6.0f, 20,
 	   gScreen->vp_w / (6.0f / 4.0f * strlen(message)), message);
   nebu_System_SwapBuffers();
 }
@@ -60,27 +65,28 @@ void idleGui(void) {
 }
 
 void keyboardConfigure(int state, int key, int x, int y) {
-	if(state == SYSTEM_KEYSTATE_DOWN) {
-		if(key != 27) /* don't allow escape */
+	if(state != SYSTEM_KEYSTATE_DOWN)
+		return;
+
+	if(key != 27) /* don't allow escape */
+	{
+		int i;
+		int isReserved = 0;
+		for(i = 0; i < eReservedKeys; i++)
 		{
-			int i;
-			int isReserved = 0;
-			for(i = 0; i < eReservedKeys; i++)
+			if(key == ReservedKeyCodes[i])
 			{
-				if(key == ReservedKeyCodes[i])
-				{
-					isReserved = 1;
-					break;
-				}
-			}
-			if(!isReserved)
-			{
-				scripting_RunFormat("settings.keys[ configure_player ]"
-													"[ configure_event ] = %d", key);
+				isReserved = 1;
+				break;
 			}
 		}
-		nebu_System_ExitLoop(RETURN_PROMPT_ESCAPE);
+		if(!isReserved)
+		{
+			scripting_RunFormat("settings.keys[ configure_player ]"
+												"[ configure_event ] = %d", key);
+		}
 	}
+	nebu_System_ExitLoop(eSRC_GUI_Prompt_Escape);
 }
 
 void keyboardGui(int state, int key, int x, int y) {
@@ -95,12 +101,9 @@ void keyboardGui(int state, int key, int x, int y) {
   switch(key) {
   case 27:
     if(strcmp(pMenuName, "RootMenu")) {
-			// not in the root menu -> go up one menu
       scripting_Run("MenuFunctions.GotoParent()");
     } else {
-			// is a game already in process? then resume
-			if(game->pauseflag != PAUSE_NO_GAME)
-				nebu_System_ExitLoop(RETURN_GUI_ESCAPE);
+		nebu_System_ExitLoop(eSRC_GUI_Escape);
     }
     break;
   case ' ': 
@@ -157,9 +160,27 @@ void keyboardGui(int state, int key, int x, int y) {
 }
 
 void initGui(void) {
-  nebu_Input_UnhidePointer();
+	pFont = nebu_Font_Load("data/babbage.ftx", PATH_ART);
+	{
+		char *path = nebu_FS_GetPath(PATH_ART, "gui.png");
+		if(!path)
+			return; // TODO: error handling
 
-  updateSettingsCache();
+		pBackground = nebu_2d_LoadPNG(path, 0);
+		free(path);
+	}
+
+	updateSettingsCache();
+}
+
+void exitGui(void) {
+	nebu_Font_Free(pFont);
+	pFont = NULL;
+
+	nebu_2d_Free(pBackground);
+	pBackground = NULL;
+
+	updateSettingsCache(); // GUI can change settings
 }
 
 void guiMouse(int buttons, int state, int x, int y) {
@@ -167,14 +188,139 @@ void guiMouse(int buttons, int state, int x, int y) {
 	  buttons, state, x, y); 
 
   /* fprintf(stderr, "testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
-  if (state == SYSTEM_MOUSEPRESSED) {	
-    if(getSettingi("playEffects"))
-      playMenuFX(fx_action);
-  }
 }
 
 void guiMouseMotion(int mx, int my) {
   /* TODO: add mouse cursor, highlighted areas, etc. */
+}
+
+
+void drawMenu(Visual *d) {
+  /* draw Menu pCurrent */
+
+  int i;
+  int x, y, size, lineheight;
+  int hsize, vsize;
+  int max_label = 0;
+  int max_data = 0;
+  int nEntries;
+  char pMenuName[200];
+  int iActiveItem;
+
+  rasonly(d);
+
+#define MENU_TEXT_START_X 0.08
+#define MENU_TEXT_START_Y 0.40
+
+#define MENU_WIDTH 0.80
+#define MENU_HEIGHT 0.40
+
+#define MENU_TEXT_LINEHEIGHT 1.5
+
+  x = (int) (d->vp_w * MENU_TEXT_START_X);
+  y = (int) (d->vp_h * MENU_TEXT_START_Y);
+
+  /* obtain menu name */
+  scripting_Run("return Menu.current");
+  scripting_CopyStringResult(pMenuName, 200);
+  /* obtain some information about the active menu */
+  scripting_RunFormat("return table.getn( Menu.%s.items )", pMenuName);
+  scripting_GetIntegerResult(&nEntries);
+
+  /* new stuff: calculate menu dimensions */
+  for(i = 0; i < nEntries; i++) {
+    int len_label = 0;
+    int len_data = 0;
+
+    scripting_RunFormat("return string.len( Menu[Menu.%s.items[%d]].caption )", 
+			pMenuName, i + 1);
+    scripting_GetIntegerResult(&len_label);
+    len_label += 2; /* add ': ' */
+    scripting_RunFormat("return GetMenuValueWidth( Menu.%s.items[%d] )",
+			pMenuName, i + 1);
+    scripting_GetIntegerResult(&len_data);
+
+    if(len_label > max_label) max_label = len_label;
+    if(len_data > max_data) max_data = len_data;
+  }
+
+  /* adjust size so menu fits into MENU_WIDTH/HEIGHT */
+
+  hsize = (int) ((float)d->vp_w * MENU_WIDTH / (float) (max_label + max_data));
+  vsize = (int) ((float)d->vp_h * MENU_HEIGHT / 
+		 ( (float)nEntries * MENU_TEXT_LINEHEIGHT));
+
+  size = (hsize < vsize) ? hsize : vsize;
+
+  lineheight = (int)( (float) size * MENU_TEXT_LINEHEIGHT);  
+
+  /* printf("%d %d %d %d %d\n", x, y, size, maxw, pCurrent->nEntries); */
+  /* draw the entries */
+
+  scripting_Run("return Menu.active");
+  scripting_GetIntegerResult(&iActiveItem);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  for(i = 0; i < nEntries; i++) {
+    if(i == iActiveItem - 1) {
+      float color[4];
+      float active1[4];
+      float active2[4];
+      int j;
+      float t;
+      int time = nebu_Time_GetElapsed() & 4095; 
+      t = sinf( time * M_PI / 2048.0 ) / 2.0f + 0.5f;
+
+			scripting_GetGlobal("menu_item_active1", NULL);
+      scripting_GetFloatArrayResult(active1, 4);
+			scripting_GetGlobal("menu_item_active2", NULL);
+      scripting_GetFloatArrayResult(active2, 4);
+
+      for(j = 0; j < 4; j++) {
+	color[j] = t * active1[j] + (1 - t) * active2[j];
+      }
+      glColor4fv(color);
+      /* fprintf(stderr, "%.2f: %.2f %.2f %.2f\n", 
+	 t, color[0], color[1], color[2]); */
+    } else {
+      float color[4];
+			scripting_GetGlobal("menu_item", NULL);
+      scripting_GetFloatArrayResult(color, 4);
+      glColor4fv(color);
+    }
+
+      {
+	char line_label[100];
+	char line_data[100];
+	scripting_RunFormat("return "			    
+			    "GetMenuValueString( Menu.%s.items[%d] )",
+			    pMenuName, i + 1);
+	scripting_CopyStringResult(line_data, sizeof(line_data));
+
+	if(line_data[0] != 0)
+	  scripting_RunFormat("return "
+			      "Menu[Menu.%s.items[%d]].caption .. ': '",
+			      pMenuName, i + 1);
+	else
+	  scripting_RunFormat("return "
+			      "Menu[Menu.%s.items[%d]].caption",
+			      pMenuName, i + 1);
+
+	scripting_CopyStringResult(line_label, sizeof(line_label));
+
+	drawText(pFont, (float)x, (float)y, (float)size, line_label);
+	drawText(pFont, (float)x + max_label * size, (float)y, (float)size, line_data);
+      }
+
+    /*
+    if(i == pCurrent->iHighlight) 
+      drawSoftwareHighlight(x, y, size, ((Menu*)*(pCurrent->pEntries + i))->display.szCaption);
+    */
+    y -= lineheight;
+  }
+  
+  glDisable(GL_BLEND);
 }
 
 Callbacks configureCallbacks = {
@@ -183,7 +329,7 @@ Callbacks configureCallbacks = {
 };
 
 Callbacks guiCallbacks = {
-  displayGui, idleGui, keyboardGui, initGui, NULL /* exit */,
+  displayGui, idleGui, keyboardGui, initGui, exitGui,
   guiMouse, guiMouseMotion, "gui"
 };
 

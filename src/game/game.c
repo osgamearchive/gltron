@@ -61,7 +61,7 @@ void enterGame(void) { /* called when game mode is entered */
 		for(i = 0; i < game->players; i++) {
 			game->player[i].data->boost_enabled = 0;
 			game->player[i].data->wall_buster_enabled = 0;
-			game->player[i].camera->movement[CAM_PHI_OFFSET] = 0;
+			gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = 0;
 		}
 	}
 

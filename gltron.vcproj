@@ -281,9 +281,6 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\src\game\menu.c">
-				</File>
-				<File
 					RelativePath=".\src\game\pause.c">
 				</File>
 				<File

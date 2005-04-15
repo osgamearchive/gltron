@@ -4,6 +4,7 @@
 #include "game/game_level.h"
 
 #include "base/nebu_math.h"
+#include "video/nebu_renderer_gl.h"
 
 /* draw a 2d map */
 
