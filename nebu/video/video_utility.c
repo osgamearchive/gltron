@@ -1,6 +1,6 @@
 #include "video/nebu_renderer_gl.h"
 
-#include "base/nebu_Surface.h"
+#include "base/nebu_surface.h"
 #include "video/nebu_video_system.h"
 #include "video/nebu_video_utility.h"
 

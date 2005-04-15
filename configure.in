@@ -17,7 +17,7 @@ AC_PROG_CPP
 AC_PROG_RANLIB
 
 dnl CFLAGS set-up
-CFLAGS="-DPATH_SEPARATOR=\"'/'\" -DSEPARATOR=\"'/'\"" 
+CFLAGS="-DRC_NAME='\".gltronrc\"' -DPATH_SEPARATOR=\"'/'\" -DSEPARATOR=\"'/'\"" 
 dnl CFLAGS="-ansi -pedantic"
 dnl CXXFLAGS=""
 dnl CPPFLAGS=""
