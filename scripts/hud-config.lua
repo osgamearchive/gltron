@@ -25,7 +25,7 @@ HUDConfig = {
 		Speed_Text = { x = 150, y = 60, w = 44, h = 28 }, -- that's where the digital speed number gets written to
 		Buster = { x = 776, y = 41 }, -- the wall_buster status
 		MapFrame = { x = 10, y = 10 }, -- the 2D map frame
-		Map = { x = 10, y = 10, w = 190, h = 190 }, -- the 2D map itself, relative to the frame
+		Map = { x = 14.5, y = 14, w = 187, h = 187 }, -- the 2D map itself, relative to the frame
 		ScoreFrame = { x = 220, y = 10 }, -- the frame for the score
 		Score = { x = 10, y = 4, w = 30, h = 24 }, -- the player's score number
 		AI_Status = { x = 400, y = 728, w = 228, h = 30 }, -- the 'AI' text when in splitscreen, using computer opponents

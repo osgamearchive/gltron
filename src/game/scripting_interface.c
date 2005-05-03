@@ -24,6 +24,7 @@
 int c_drawRectangle(lua_State *l);
 int c_drawCircle(lua_State *l);
 int c_translate(lua_State *l);
+int c_scale(lua_State *l);
 int c_pushMatrix(lua_State *l);
 int c_popMatrix(lua_State *l);
 int c_drawTextFitIntoRect(lua_State *l);
@@ -238,6 +239,7 @@ void init_c_interface(void) {
 	scripting_Register("c_drawCircle", c_drawCircle);
 	scripting_Register("c_drawRectangle", c_drawRectangle);
 	scripting_Register("c_translate", c_translate);
+	scripting_Register("c_scale", c_scale);
 	scripting_Register("c_pushMatrix", c_pushMatrix);
 	scripting_Register("c_popMatrix", c_popMatrix);
 	scripting_Register("c_drawTextFitIntoRect", c_drawTextFitIntoRect);

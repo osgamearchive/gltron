@@ -132,13 +132,10 @@ Menu = {
    },
 	 Map = {
 			type = MenuC.type.list, caption = "2D Map",
-			labels = { "none", "small", "medium", "huge" },
-			values = { 0, 0.333, 0.5, 0.9 },
-			read = function() return settings.map_ratio_w; end,
-			store = function(value) 
-								 settings.map_ratio_w = value;
-								 settings.map_ratio_h = value;
-							end
+			labels = { "small", "medium", "huge" },
+			values = { 1, 1.5, 2.6 },
+			read = function() return settings.map_scale; end,
+			store = function(value) settings.map_scale = value; end
    },
 
    -- Player

@@ -252,6 +252,16 @@ int c_translate(lua_State *l) {
 	return 0;
 }
 
+int c_scale(lua_State *l) {
+	float x = 0, y = 0, z = 0;
+	z = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	y = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	x = (float) lua_tonumber(l, -1);		lua_pop(l, 1);
+	glScalef(x,y,z);
+
+	return 0;
+}
+
 int c_pushMatrix(lua_State *l) {
 	glPushMatrix();
 	return 0;

@@ -19,7 +19,7 @@
 
 #include <assert.h>
 
-#define INI_VERSION 0.7110f
+#define INI_VERSION 0.7120f
 
 void initFilesystem(int argc, const char *argv[]);
 

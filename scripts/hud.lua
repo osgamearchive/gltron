@@ -77,7 +77,13 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 	if settings.show_2d == 1 then
 		c_pushMatrix()
 		c_translate(config.MapFrame.x, config.MapFrame.y, 0)
+		c_scale(settings.map_scale, settings.map_scale, settings.map_scale)
 		c_drawHUDSurface(eHUD.Map)
+		c_popMatrix()
+		
+		c_pushMatrix()
+		c_translate(config.MapFrame.x, config.MapFrame.y, 0)
+		c_scale(settings.map_scale, settings.map_scale, settings.map_scale)
 		c_translate(config.Map.x, config.Map.y, 0)
 		c_draw2D(
 			config.Map.w,
@@ -88,10 +94,14 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 	
 	-- Score
 	if(settings.show_scores == 1) then
+		-- hack, um Score neben Map zu platzieren
+		-- TODO: fix
+		local xOffset = (settings.map_scale - 1) * (config.ScoreFrame.x - config.MapFrame.x)
+
 		c_pushMatrix()
-		c_translate(config.ScoreFrame.x, config.ScoreFrame.y, 0)
+		c_translate(config.ScoreFrame.x + xOffset, config.ScoreFrame.y, 0)
 		c_drawHUDSurface(eHUD.Scores)
-		c_translate(config.Score.x, config.Score.y, 0)
+		c_translate(config.Score.x + xOffset, config.Score.y, 0)
 		c_color(HUDColors.Score.r, HUDColors.Score.g, HUDColors.Score.b, HUDColors.Score.a)
 		c_drawTextFitIntoRect(string.format("%d", score),
 			config.Score.w, config.Score.h,

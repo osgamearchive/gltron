@@ -35,7 +35,6 @@ typedef struct SettingsCache {
 	int camType;
 	float znear;
 	float clear_color[4];
-	float map_ratio_w, map_ratio_h;
 } SettingsCache;
 
 extern SettingsCache gSettingsCache;

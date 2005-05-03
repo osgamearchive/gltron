@@ -34,8 +34,7 @@ settings.ai_level = 2
 settings.current_level = "square.lua"
 settings.grid_size = 720
 settings.erase_crashed = 1
-settings.map_ratio_w = 0.333
-settings.map_ratio_h = 0.333
+settings.map_scale = 1
 
 settings.ai_player1 = 0
 settings.ai_player2 = 1
