@@ -65,7 +65,9 @@ void reshape(int x, int y) {
 
 void shutdownDisplay(Visual *d) {
   deleteTextures(d);
+  artpack_UnloadSurfaces();
   deleteFonts();
+  gui_ReleaseResources();
   nebu_Video_Destroy(d->win_id);
   // printf("[video] window destroyed\n");
 }

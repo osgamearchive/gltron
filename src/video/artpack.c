@@ -8,6 +8,7 @@
 #include "Nebu_filesystem.h"
 
 #include <string.h>
+#include <assert.h>
 
 void initArtpacks(void) {
   const char *art_path;
@@ -57,10 +58,24 @@ void artpack_LoadSurfaces(void)
 			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
 			exit(1); /* OK: critical, installation corrupt */
 		}
-		if(gpHUD[i]) { nebu_2d_Free(gpHUD[i]); gpHUD[i] = NULL; }
+		assert(!gpHUD[i]);
 		gpHUD[i] = nebu_2d_LoadPNG(path, 0);
 
 		free(path);
+	}
+}
+
+void artpack_UnloadSurfaces()
+{
+	int i;
+
+	for(i = 0; i < eHUDElementCount; i++)
+	{
+		if(gpHUD[i])
+		{
+			nebu_2d_Free(gpHUD[i]);
+			gpHUD[i] = NULL;
+		}
 	}
 }
 

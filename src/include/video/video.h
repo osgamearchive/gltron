@@ -198,6 +198,7 @@ extern void setupDisplay(Visual *d);
 extern void initFonts(void);
 extern void initTexture(Visual*);
 extern void deleteTextures(Visual*);
+void artpack_UnloadSurfaces(void);
 
 /* texture loading -> load_texture.c */
 /* uses sgi_texture.c or sdl_texture.c */
@@ -234,6 +235,7 @@ extern float getSegmentEndY(Data *data, int type);
 
 extern void initVideoData(void);
 extern void initGameScreen(void);
+extern void gui_ReleaseResources(void);
 
 extern void Video_Idle(void);
 

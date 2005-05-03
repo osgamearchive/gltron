@@ -173,13 +173,22 @@ void initGui(void) {
 	updateSettingsCache();
 }
 
+void gui_ReleaseResources()
+{
+	if(pFont)
+	{
+		nebu_Font_Free(pFont);
+		pFont = NULL;
+	}
+	if(pBackground)
+	{
+		nebu_2d_Free(pBackground);
+		pBackground = NULL;
+	}
+}
+
 void exitGui(void) {
-	nebu_Font_Free(pFont);
-	pFont = NULL;
-
-	nebu_2d_Free(pBackground);
-	pBackground = NULL;
-
+	gui_ReleaseResources();
 	updateSettingsCache(); // GUI can change settings
 }
 
