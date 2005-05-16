@@ -1,7 +1,8 @@
 #include "base/nebu_spline.h"
 
-#include <stdlib.h>
 #include <assert.h>
+
+#include "base/nebu_debug_memory.h"
 
 nebu_Spline* nebu_Spline_Create(nebu_Spline_Type type, int dimension, int length)
 {

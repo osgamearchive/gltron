@@ -114,8 +114,11 @@ void Sound_initTracks(void) {
     	scripting_RunFormat("tracks[%d] = \"%s\"", i, (char*) p->data);
         i++;
     	free( path );
+		
     }
+	free(p->data);
   }
+  nebu_List_Free(soundList);
   scripting_Run("setupSoundTrack()");
 }
 

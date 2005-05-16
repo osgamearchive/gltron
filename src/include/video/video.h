@@ -119,16 +119,22 @@ extern int* quadBufIndex;
 
 #define LC_LOD 3
 extern char *lc_lod_names[];
-extern gltron_Mesh *recognizer;
-extern gltron_Mesh *recognizer_quad;
+
+extern int gTokenRecognizer;
+extern int gTokenRecognizerQuad;
+extern int gpTokenLightcycles[LC_LOD];
+// extern gltron_Mesh *recognizer;
+// extern gltron_Mesh *recognizer_quad;
+// extern gltron_Mesh *lightcycle[];
+
 extern float rec_outline_color[3];
 extern float rec_spec_color[4];
 
-extern gltron_Mesh *lightcycle[];
 
 extern video_level *gWorld;
 
-extern nebu_Font *gameFtx;
+extern int gTokenGameFont;
+// extern nebu_Font *gameFtx;
 
 enum { 
 	eHUDSpeed = 0,
@@ -143,7 +149,7 @@ enum {
 	eHUDElementCount
 };
 
-extern nebu_2d *gpHUD[];
+extern int gpTokenHUD[];
 
 extern float camAngles[];
 
@@ -192,10 +198,9 @@ extern void updateDisplay(int vpType);
 extern void drawGame(void);
 extern void displayGame(void);
 
-extern void shutdownDisplay(Visual *d);
-extern void setupDisplay(Visual *d);
+extern void shutdownDisplay(void);
+extern void setupDisplay(void);
 
-extern void initFonts(void);
 extern void initTexture(Visual*);
 extern void deleteTextures(Visual*);
 void artpack_UnloadSurfaces(void);
@@ -233,8 +238,10 @@ extern float getSegmentEndUV(segment2 *line, Data *data);
 extern float getSegmentEndX(Data *data, int type);
 extern float getSegmentEndY(Data *data, int type);
 
+extern void freeVideoData(void);
 extern void initVideoData(void);
 extern void initGameScreen(void);
+extern void gui_LoadResources(void);
 extern void gui_ReleaseResources(void);
 
 extern void Video_Idle(void);

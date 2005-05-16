@@ -10,8 +10,9 @@
 #include <lib3ds/vector.h>
 #include <lib3ds/light.h>
 
-#include <stdlib.h>
 #include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 static void countVerticesAndTriangles(nebu_Mesh_3ds_File *pFile, 
 	int *pnVertices, int *pnTriangles, int *pnTexCoords)

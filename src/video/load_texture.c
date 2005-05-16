@@ -5,6 +5,8 @@
 #include "Nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"
 
+#include <base/nebu_debug_memory.h>
+
 void freeTextureData(texture *tex) {
   free(tex->data);
   free(tex);

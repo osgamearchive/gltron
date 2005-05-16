@@ -3,8 +3,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "zlib.h"
+
+#include "base/nebu_debug_memory.h"
 
 void loadDefaultMaterial(gltron_Mesh_Material *pMaterial) {
   float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0 };
@@ -92,7 +93,6 @@ void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh) {
     memcpy( pMesh->pMaterials + i, pMaterials + i, 
 						sizeof(gltron_Mesh_Material) );
   }
-
   free(pMaterials);
 }
 

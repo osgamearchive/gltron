@@ -14,6 +14,8 @@ extern "C" {
 #include "SDL.h"
 #include "SDL_sound.h"
 
+#include "base/nebu_debug_memory.h"
+
 static Sound::System *sound = NULL;
 static Sound::SourceMusic *music = NULL;
 static Sound::SourceSample *sample_crash = NULL;
@@ -181,7 +183,7 @@ extern "C" {
     spec->userdata = sound;
     spec->callback = sound->GetCallback();
 
-		SDL_AudioSpec obtained;
+	SDL_AudioSpec obtained;
 
     if(SDL_OpenAudio( spec, &obtained ) != 0) {
       fprintf(stderr, "[error] %s\n", SDL_GetError());
@@ -209,6 +211,26 @@ extern "C" {
     SDL_PauseAudio(1);
     Sound_Quit();
     SDL_CloseAudio();
+	if(sound)
+	{
+		delete sound;
+		sound = NULL;
+	}
+	if(sample_crash)
+	{
+		delete sample_crash;
+		sample_crash = NULL;
+	}
+	if(sample_engine)
+	{
+		delete sample_engine;
+		sample_engine = NULL;
+	}
+	if(sample_recognizer)
+	{
+		delete sample_recognizer;
+		sample_recognizer = NULL;
+	}
   }
 
   void Audio_LoadMusic(char *name) {

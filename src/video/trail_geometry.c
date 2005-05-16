@@ -8,6 +8,8 @@
 #include "base/nebu_math.h"
 #include "video/nebu_renderer_gl.h"
 
+#include <string.h>
+
 enum {
 	COLOR_TRAIL, COLOR_BRIGHT, COLOR_CYCLE
 };

@@ -1,9 +1,10 @@
-#include <stdlib.h>
-#include <string.h>
-
 #include "base/nebu_math.h"
 #include "video/nebu_mesh.h"
 #include "Nebu_video.h"
+
+#include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 static void normalize(float *v)
 {

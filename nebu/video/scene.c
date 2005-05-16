@@ -1,7 +1,7 @@
 #include "video/nebu_scene.h"
 #include "video/nebu_video_system.h"
 
-#include <stdlib.h>
+#include "base/nebu_debug_memory.h"
 
 void nebu_Scene_AddMesh(nebu_Scene *pScene, nebu_Mesh* pMesh)
 {

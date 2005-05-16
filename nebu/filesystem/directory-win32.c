@@ -3,7 +3,6 @@
 #include "base/nebu_util.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include <windows.h>
@@ -11,6 +10,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+
+#include "base/nebu_debug_memory.h"
 
 int isHiddenFile(WIN32_FIND_DATA *search)
 {
@@ -28,7 +29,6 @@ void pushFile(WIN32_FIND_DATA* pSearch, nebu_List **pL)
 {
 	char *filename;
 	int len;
-	nebu_List *l = *pL;
 
 #ifdef _DEBUG
 	if(strstr(pSearch->cFileName, "Makefile"))
@@ -40,10 +40,8 @@ void pushFile(WIN32_FIND_DATA* pSearch, nebu_List **pL)
 	len = strlen(pSearch->cFileName) + 1;
 	filename = malloc(len);
 	memcpy(filename, pSearch->cFileName, len);
-	l->data = filename;
-	l->next = malloc(sizeof(nebu_List));
-	l->next->next = NULL;
-	*pL = l->next;
+	nebu_List_AddTail(*pL, filename);
+	*pL = (*pL)->next;
 }
 
 /* FIXME: This is really broken. */

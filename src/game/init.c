@@ -1,8 +1,10 @@
 #include "filesystem/path.h"
 #include "filesystem/dirsetup.h"
+#include "game/engine.h"
 #include "game/init.h"
 #include "game/gltron.h"
 #include "game/game.h"
+#include "game/resource.h"
 #include "input/input.h"
 #include "base/util.h"
 #include "scripting/scripting.h"
@@ -22,6 +24,18 @@
 #define INI_VERSION 0.7120f
 
 void initFilesystem(int argc, const char *argv[]);
+
+void exitSubsystems(void)
+{
+	Sound_shutdown();
+	freeVideoData();
+	if(gWorld)
+		video_FreeLevel(gWorld);
+	game_FreePlayers(game, game2);
+	scripting_Quit();
+	nebu_FS_ClearAllPaths();
+	resource_FreeAll();
+}
 
 void initSubsystems(int argc, const char *argv[]) {
 	nebu_Init();
@@ -124,7 +138,7 @@ void initVideo(void) {
 
 	runScript(PATH_SCRIPTS, "menu.lua");
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
-	setupDisplay(gScreen);
+	setupDisplay();
 }
 
 void initAudio(void) {
@@ -137,7 +151,7 @@ void initAudio(void) {
 	
 void initGame(void) {
 	/* initialize the rest of the game's datastructures */
-	initGameStructures();
+	game_CreatePlayers(PLAYERS, &game, &game2);
 	initGameLevel();
 	resetScores();
 }

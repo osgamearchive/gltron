@@ -43,6 +43,7 @@ typedef enum gltron_MeshType {
 gltron_Mesh* gltron_Mesh_LoadFromFile(const char* filename, gltron_MeshType type);
 void gltron_Mesh_Draw(gltron_Mesh* pMesh, gltron_MeshType type);
 void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius);
+void gltron_Mesh_Free(gltron_Mesh* pMesh);
 
 typedef enum ColorType {
   eAmbient = 0,

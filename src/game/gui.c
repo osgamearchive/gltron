@@ -14,6 +14,11 @@
 #include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
 #include "filesystem/nebu_filesystem.h"
+
+#include <string.h>
+
+#include "base/nebu_debug_memory.h"
+
 // local resources
 nebu_2d *pBackground = NULL;
 nebu_Font *pFont = NULL;
@@ -159,7 +164,14 @@ void keyboardGui(int state, int key, int x, int y) {
   free(pMenuName);
 }
 
-void initGui(void) {
+void initGui(void)
+{
+	gui_LoadResources();
+	updateSettingsCache();
+}
+
+void gui_LoadResources(void)
+{
 	pFont = nebu_Font_Load("data/babbage.ftx", PATH_ART);
 	{
 		char *path = nebu_FS_GetPath(PATH_ART, "gui.png");
@@ -169,8 +181,6 @@ void initGui(void) {
 		pBackground = nebu_2d_LoadPNG(path, 0);
 		free(path);
 	}
-
-	updateSettingsCache();
 }
 
 void gui_ReleaseResources()

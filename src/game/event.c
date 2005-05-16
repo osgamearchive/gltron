@@ -16,6 +16,8 @@
 #include "game/camera.h"
 #include "game/engine.h"
 
+#include "base/nebu_debug_memory.h"
+
 /*! \fn int processEvent(GameEvent* e)
   handle events, e.g.
   left/right/crash/stop
@@ -507,22 +509,11 @@ void Game_Idle(void) {
 */
 
 void createEvent(int player, event_type_e eventType) {
-	GameEvent *e;
-	nebu_List *p = &(game2->events);
-
-	/* move to the end of the event list */
-	while (p->next)
-		p = p->next;
-
-	// add event to list
-	e = (GameEvent*) malloc(sizeof(GameEvent));
-	p->data = e;
-	p->next = (nebu_List*) malloc(sizeof(nebu_List));
-	p->next->next = NULL;
-
+	GameEvent *e = (GameEvent*) malloc(sizeof(GameEvent));
 	// store event information
 	e->type = eventType;
 	getPositionFromIndex(&e->x, &e->y, player);
 	e->player = player;
 	e->timestamp = game2->time.current;
+	nebu_List_AddTail(&(game2->events), e);
 }

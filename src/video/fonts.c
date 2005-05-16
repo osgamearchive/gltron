@@ -1,49 +1,25 @@
-#include "video/video.h"
 #include "filesystem/path.h"
+#include "game/resource.h"
+#include "video/video.h"
 #include "Nebu_filesystem.h"
 
+#include <base/nebu_debug_memory.h>
+
 void initFonts(void) {
-  char *path;
-  file_handle file;
-  char buf[100];
-  char gamefont[100];
-  char *game = NULL;
+	char *path;
 
-  if(gameFtx != NULL) nebu_Font_Free(gameFtx);
-
-  path = getPath(PATH_DATA, "fonts.txt");
-  if(path != NULL) {
-    file = file_open(path, "r");
-    while(file_gets(file, buf, sizeof(buf)) != NULL) {
-      if(sscanf(buf, "game: %s ", gamefont) == 1)
-		game = gamefont;
-    }
-    file_close(file);
-    free(path);
-  } else {
-    fprintf(stderr, "can't load fonts.txt\n");
-    exit(1); /* OK: critical, installation corrupt */
-  }
-
-  if(game == NULL) {
-    fprintf(stderr, "incomplete font definition in fonts.txt\n");
-    exit(1); /* OK: critical, installation corrupt */
-  }
-
-  path = getPath(PATH_DATA, game);
-  if(path != NULL) {
-	  gameFtx = nebu_Font_Load(path, PATH_ART);
-	  free(path);
-  }
-
-  if(gameFtx == NULL) {
-    fprintf(stderr, "can't load font %s\n", game);
-    exit(1); /* OK: critical, installation corrupt */
-  }
+	path = getPath(PATH_DATA, "xenotron.ftx");
+	if(!gTokenGameFont)
+		gTokenGameFont = resource_GetToken(path, eRT_Font);
+	if(!gTokenGameFont)
+	{
+		fprintf(stderr, "can't load font %s\n", path);
+		exit(1); /* OK: critical, installation corrupt */
+	}
+	free(path);
 }
 
 void deleteFonts(void) {
-  if(gameFtx != NULL)
-    nebu_Font_Free(gameFtx);
-  gameFtx = NULL;
+	resource_Release(gTokenGameFont);
+	gTokenGameFont = 0;
 }

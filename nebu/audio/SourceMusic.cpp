@@ -1,67 +1,71 @@
 #include "audio/nebu_SourceMusic.h"
 
 #include <string.h>
-#include <stdlib.h>
+
+#include "base/nebu_debug_memory.h"
 
 namespace Sound {
-  SourceMusic::SourceMusic(System *system) { 
-    _system = system;
 
-    _sample = NULL;
+SourceMusic::SourceMusic(System *system) { 
+	_system = system;
 
-		_sample_buffersize = 8192;
-    _buffersize = 20 * _sample_buffersize;
-		_buffer = (Uint8*) malloc( _buffersize );
-		memset(_buffer, 0, _buffersize);
+	_sample = NULL;
 
-		_decoded = 0;
-    _read = 0;
+	_sample_buffersize = 8192;
+	_buffersize = 20 * _sample_buffersize;
+	_buffer = new Uint8[_buffersize];
+	memset(_buffer, 0, _buffersize);
 
-    _filename = NULL;
-    _rwops = NULL;
-  }
+	_decoded = 0;
+	_read = 0;
 
-  SourceMusic::~SourceMusic() { 
-    // fprintf(stderr, "nebu_SourceMusic destructor called\n");
+	_filename = NULL;
+	_rwops = NULL;
+}
+
+SourceMusic::~SourceMusic()
+{
+	// fprintf(stderr, "nebu_SourceMusic destructor called\n");
 #ifndef macintosh
-		SDL_SemWait(_sem);
+	SDL_SemWait(_sem);
 #else
-        SDL_LockAudio();
+    SDL_LockAudio();
 #endif
-		free(_buffer);
-		
-    if(_sample) {
-      Sound_FreeSample( _sample );
-			_sample = NULL;
-		}
+	if(_buffer)
+		delete _buffer;
+	
+	if(_sample) {
+		Sound_FreeSample( _sample );
+		_sample = NULL;
+	}
 
-    if(_filename)
-      free(_filename);
+	if(_filename)
+		delete _filename;
 
 #ifndef macintosh		
-		SDL_SemPost(_sem);
+	SDL_SemPost(_sem);
 #else
-        SDL_UnlockAudio();
+    SDL_UnlockAudio();
 #endif
-  }
+}
 
-	/*! 
-		\fn void SourceMusic::CreateSample(void)
-		
-		call this function only between semaphores
-	*/
+/*! 
+	\fn void SourceMusic::CreateSample(void)
+	
+	call this function only between semaphores
+*/
 
-  void SourceMusic::CreateSample(void) {
-    _rwops = SDL_RWFromFile(_filename, "rb");
+void SourceMusic::CreateSample(void) {
+	_rwops = SDL_RWFromFile(_filename, "rb");
 	char *ext = _filename;
 	for(int i = 0; *(_filename + i); i++)
 	{
 		if(*(_filename + i) == '.')
 			ext = _filename + i + 1;
 	}
-    _sample = Sound_NewSample(_rwops, ext,
-															_system->GetAudioInfo(),
-															_sample_buffersize );
+	_sample = Sound_NewSample(_rwops, ext,
+		_system->GetAudioInfo(),
+		_sample_buffersize );
 
     if(_sample == NULL) {
 		fprintf(stderr, "[error] failed loading sample type %s, from %s: %s\n", ext,
@@ -72,14 +76,14 @@ namespace Sound {
     _read = 0;
     _decoded = 0;
     // fprintf(stderr, "created sample\n");
-  }
+}
 
-  void SourceMusic::Load(char *filename) {
-		int n = strlen(filename);
-		_filename = (char*) malloc(n + 1);
-		memcpy(_filename, filename, n + 1);
-    CreateSample();
-  }
+void SourceMusic::Load(char *filename) {
+	int n = strlen(filename);
+	_filename = new char[n+1];
+	memcpy(_filename, filename, n + 1);
+	CreateSample();
+}
 
   void SourceMusic::CleanUp(void) {
 		_read = 0;

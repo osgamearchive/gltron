@@ -30,6 +30,7 @@ namespace Sound {
   public:
 
     System(SDL_AudioSpec *spec); 
+	~System();
     typedef void(*Audio_Callback)(void *userdata, Uint8* data, int len);
     Audio_Callback GetCallback() { return c_callback; };
     void Callback(Uint8* data, int len);

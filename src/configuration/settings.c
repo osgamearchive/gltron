@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -10,6 +9,8 @@
 #include "base/util.h"
 #include "game/game.h"
 #include "filesystem/path.h"
+
+#include "base/nebu_debug_memory.h"
 
 #define BUFSIZE 100
 #define MAX_VAR_NAME_LEN 64

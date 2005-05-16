@@ -1,7 +1,7 @@
 #include "filesystem/path.h"
 #include "Nebu_scripting.h"
 
-#include <stdlib.h>
+#include "base/nebu_debug_memory.h"
 
 void runScript(int ePath, const char *name) {
         char *s;

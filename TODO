@@ -6,10 +6,20 @@ General
 
 - Reorder menu structure?
 
+- Wall buster: GUI element
+
+- Multiple listeners fuer Splitscreen
+
+- 2D map scaling
+
+- Level / Artpack loading
+  - Write resource manager
+
 Win32
 - SDL_sound: decent windows binaries with stereo mod & mp3 support
 
 Mac OS X
+- Install Tiger/X-Code 2.0 project files
 - check cycle colors on OS X
 - check cycle on startup on OS X
 - check crashes on OS X

@@ -6,7 +6,8 @@
 #include <png.h>
 
 #include <stdio.h>
-#include <stdlib.h>
+
+#include <base/nebu_debug_memory.h>
 
 #ifndef PATH_MAX
 #define PATH_MAX 255

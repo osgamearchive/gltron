@@ -1,10 +1,6 @@
 #ifndef NEBU_QUAD_H
 #define NEBU_QUAD_H
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 /* 
    this file holds datastructures for quads
    they can be stored in Quad's and QuadBuffers for later processing

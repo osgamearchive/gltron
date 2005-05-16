@@ -4,8 +4,6 @@
 #include "base/nebu_png_texture.h"
 #include "base/nebu_types.h"
 
-#include <stdlib.h>
-
 typedef struct {
 	int w, h;
 	int format;

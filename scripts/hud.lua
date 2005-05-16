@@ -50,7 +50,7 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 	pause_message, pause_color_r, pause_color_g, pause_color_b)
 	config = getConfig(width / height)
 	-- speedometer
-	if settings.show_speed == 1 then
+	if settings.show_speed == 1 and (settings.wall_accel_on == 1 or settings.booster_on == 1) then
 		c_pushMatrix()
 		c_translate(config.Speed.x, config.Speed.y, 0)
 		c_drawHUDSurface(eHUD.Speed)
@@ -64,7 +64,7 @@ function drawHUD(width, height, score, ai, speed_digital, speed_analog, booster,
 	end
 	
 	-- wallbuster
-	if settings.show_wall_buster == 1 then
+	if settings.show_wall_buster == 1 and settings.wall_buster_on == 1 then
 		c_pushMatrix()
 		c_translate(config.Buster.x, config.Buster.y, 0)
 		c_drawHUDSurface(eHUD.Buster)

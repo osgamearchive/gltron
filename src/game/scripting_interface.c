@@ -7,7 +7,7 @@
 #include "configuration/settings.h"
 #include "configuration/configuration.h"
 #include "scripting/scripting.h"
-
+#include "game/resource.h"
 #include "configuration/settings.h"
 #include "base/switchCallbacks.h"
 #include "scripting/nebu_scripting.h"
@@ -69,8 +69,8 @@ int c_resetCamera(lua_State *L) {
 
 int c_video_restart(lua_State *L) {
 	initGameScreen();
-	shutdownDisplay( gScreen );
-	setupDisplay( gScreen );
+	shutdownDisplay();
+	setupDisplay();
 	updateCallbacks();
 	changeDisplay(-1);
 	return 0;
@@ -102,13 +102,20 @@ int c_reloadTrack(lua_State *L) {
 }
 
 int c_reloadArtpack(lua_State *L) {
-	reloadArt();
+	// resource_FreeAll(); // overkill & harmful
+	artpack_UnloadSurfaces();
+	resource_ReleaseAll(); // still overkill, but harmless
+	loadArt();
+	gui_ReleaseResources(); // TODO: ugly, do this differently
+	gui_LoadResources();
 	return 0;
 }
 
 int c_reloadLevel(lua_State *L) {
+	// resource_FreeAll(); // overkill & harmful
+	resource_ReleaseAll(); // still overkill, but harmless
 	loadLevel();
-	reloadArt();
+	loadArt();
 	initGameLevel();
 	game_ResetData();
 	video_ResetData(); // already called by reloadArt()
@@ -183,8 +190,9 @@ int c_loadDirectory(lua_State *L) {
 		lua_pushstring(L, p->data);
 		lua_rawseti(L, -2, nFiles + 1);
 		nFiles++;
+		free(p->data);
 	}
-	/* FIXME: when does the list get freed */
+	nebu_List_Free(files);
 	return 1;
 }
 

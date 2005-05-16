@@ -1,5 +1,6 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "game/resource.h"
 #include "filesystem/path.h"
 #include "base/util.h"
 #include "video/video_level.h"
@@ -9,6 +10,8 @@
 
 #include <string.h>
 #include <assert.h>
+
+#include <base/nebu_debug_memory.h>
 
 void initArtpacks(void) {
   const char *art_path;
@@ -25,11 +28,11 @@ void initArtpacks(void) {
   
   i = 1;
   for(p = artList; p->next != NULL; p = p->next) {
-    if(strncmp((char*)p->data, "Makefile", 8)) {
       scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
+	  free(p->data);
       i++;
-    }
   }
+  nebu_List_Free(artList);
   scripting_Run("setupArtpacks()");
 }
 
@@ -50,17 +53,15 @@ void artpack_LoadSurfaces(void)
 	int i;
 	for(i = 0; i < eHUDElementCount; i++)
 	{
-		char *path;
-		
-		path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
-		if(!path)
+		char *path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
+		assert(!gpTokenHUD[i]);
+
+		gpTokenHUD[i] = resource_GetToken(path, eRT_2d);
+		if(!gpTokenHUD[i])
 		{
 			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
 			exit(1); /* OK: critical, installation corrupt */
 		}
-		assert(!gpHUD[i]);
-		gpHUD[i] = nebu_2d_LoadPNG(path, 0);
-
 		free(path);
 	}
 }
@@ -71,11 +72,9 @@ void artpack_UnloadSurfaces()
 
 	for(i = 0; i < eHUDElementCount; i++)
 	{
-		if(gpHUD[i])
-		{
-			nebu_2d_Free(gpHUD[i]);
-			gpHUD[i] = NULL;
-		}
+		if(gpTokenHUD[i])
+			resource_Free(gpTokenHUD[i]);
+		gpTokenHUD[i] = 0;
 	}
 }
 

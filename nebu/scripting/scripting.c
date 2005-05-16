@@ -1,3 +1,4 @@
+#include "base/nebu_debug_memory.h"
 #include "nebu_scripting.h"
 
 #include "lua.h"
@@ -6,7 +7,6 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 

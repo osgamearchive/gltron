@@ -2,9 +2,10 @@
 #include "base/nebu_matrix.h"
 
 #include <assert.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 vec4* vec4_Transform(vec4* pOut, const vec4* pV, const matrix *pM) {
   vec4 tmp;

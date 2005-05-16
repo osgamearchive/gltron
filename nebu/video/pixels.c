@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include "base/nebu_debug_memory.h"
 
 unsigned char *scalePixelBitmap(unsigned char *source, int sw, int sh, 
 			   int posx, int posy, int width, int height,

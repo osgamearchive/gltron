@@ -2,6 +2,7 @@
 
 namespace Sound {
   Source::Source() {
+	_name = NULL;
     _system = NULL;
     _isPlaying = 0;
     _loop = 0;
@@ -15,7 +16,8 @@ namespace Sound {
 	
   Source::~Source() {
     // fprintf(stderr, "nebu_Source destructor called\n");
-				
+	if(_name)
+		delete(_name);
 		SDL_DestroyMutex(_mutex);
 		SDL_DestroySemaphore(_sem);
   }

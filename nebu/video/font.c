@@ -5,8 +5,10 @@
 #include "filesystem/nebu_file_io.h"
 #include "filesystem/nebu_filesystem.h"
 
-#include "stdlib.h"
-#include "assert.h"
+#include <assert.h>
+#include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 unsigned char irc_color_codes[][3] = {
   { 255, 255,255 },
@@ -159,6 +161,7 @@ nebu_Font* nebu_Font_Load(const char *filename, int fs_tag)
 
 void nebu_Font_Free(nebu_Font* font)
 {
+	free(font->pTextures);
 	free(font);
 }
 

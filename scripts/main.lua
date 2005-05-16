@@ -73,10 +73,10 @@ while 1 do
 	else
 		if(status == EScriptingReturnCode.eSRC_Quit) then
 			io.write(string.format("[lua] clean exit\n"))
-			os.exit()
+			break
                 else
 			io.write(string.format("[lua] unhandled callback (%d)\n", status))
-			os.exit()
+			break
 		end
 	end
 end

@@ -23,7 +23,6 @@
    thing compile ( Andreas Umbach <marvin@dataway.ch> ) */
 
 #include <limits.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #ifndef macintosh
@@ -31,6 +30,8 @@
 #    include <unistd.h>
 #endif
 #endif
+
+#include "base/nebu_debug_memory.h"
 
 #ifndef PATH_MAX
 #define PATH_MAX 8192

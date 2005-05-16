@@ -5,9 +5,10 @@
 
 #include "base/nebu_math.h"
 #include "video/nebu_renderer_gl.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "zlib.h"
+#include <stdio.h>
+#include <zlib.h>
+
+#include "base/nebu_debug_memory.h"
 
 typedef struct face {
   int vertex[3];
@@ -58,6 +59,25 @@ void readQuadFace(char *buf, quadFace *pFace, int *iFace, int iGroup) {
   } else {
     fprintf(stderr, "*** failed parsing face %s\n", buf);
   }
+}
+
+void gltron_Mesh_Free(gltron_Mesh* pMesh)
+{
+	int i;
+
+	for(i = 0; i < pMesh->nMaterials; i++)
+	{
+		free(pMesh->pMaterials[i].name);
+		free(pMesh->ppIndices[i]);
+	}
+	free(pMesh->pMaterials);
+	free(pMesh->ppIndices);
+	free(pMesh->pnFaces);
+	free(pMesh->pVertices);
+	free(pMesh->pNormals);
+
+
+	free(pMesh);
 }
 
 gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iType) {
@@ -257,7 +277,11 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
     }
     // printf("[scenegraph] vertices: %d, faces: %d\n", nVertices, iFace);
 
+    for(i = 0; i < iVertex; i++) {
+		free(lookup[i]);
+	}
     free(lookup);
+
     free(pVertices);
     free(pNormals);
     switch(iType) {

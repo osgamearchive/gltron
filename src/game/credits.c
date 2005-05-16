@@ -1,5 +1,6 @@
 #include "game/gltron.h"
 #include "game/game.h"
+#include "game/resource.h"
 #include "video/video.h"
 #include "video/graphics_utility.h"
 #include "video/nebu_video_system.h"
@@ -79,7 +80,7 @@ void drawCredits(void) {
     if(credits[i] == NULL) 
       break;
     y = gScreen->vp_h - 3.0f * h * (i + 1) / 2;
-    drawText(gameFtx, x, y, h, credits[i]);
+    drawText((nebu_Font*)resource_Get(gTokenGameFont, eRT_Font), x, y, h, credits[i]);
   }
 }
 void displayCredits(void) {

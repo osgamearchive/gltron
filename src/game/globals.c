@@ -7,9 +7,7 @@
 #include "video/nebu_renderer_gl.h"
 
 /* globals */
-Game main_game;
 Game *game = NULL;
-Game2 main_game2;
 Game2 *game2 = NULL;
 Visual *gScreen = NULL;
 video_level *gWorld = NULL;
@@ -21,16 +19,16 @@ SettingsCache gSettingsCache;
 
 int viewport_content[4]; /* max. 4 individual viewports on the screen */
 
-nebu_Font *gameFtx = NULL;
+// nebu_Font *gameFtx = NULL;
+int gTokenGameFont = 0;
+int gpTokenHUD[eHUDElementCount] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int gTokenRecognizer = 0;
+int gTokenRecognizerQuad = 0;
+int gpTokenLightcycles[LC_LOD];
 
-nebu_2d *gpHUD[eHUDElementCount];
-
-gltron_Mesh* recognizer_quad;
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
 float rec_spec_color[] = {0.05f, 0.14f, 0.05f, 0.50f};
 
-gltron_Mesh* recognizer;
-gltron_Mesh* lightcycle[LC_LOD];
 char *lc_lod_names[] = {
   "lightcycle-high.obj",
   "lightcycle-med.obj",

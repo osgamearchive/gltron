@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <stdio.h>
 
 #include "filesystem/path.h"
@@ -8,6 +7,10 @@
 
 #include "Nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"
+
+#include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 nebu_Mesh* loadMesh(void);
 

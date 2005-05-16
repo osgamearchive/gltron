@@ -1,7 +1,10 @@
 #include "video/nebu_2d.h"
 #include "video/nebu_renderer_gl.h"
 #include "video/nebu_video_system.h"
-#include <stdlib.h>
+
+#include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 nebu_2d* nebu_2d_LoadPNG(const char *path, int flags)
 {

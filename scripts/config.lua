@@ -59,7 +59,7 @@ settings.lod = 1
 -- hud settings
 settings.show_fps = 0
 settings.show_speed = 1
-settings.show_wall_buster = 1
+settings.show_wall_buster = 0
 settings.show_console = 1
 settings.show_ai_status = 1
 settings.show_scores = 1

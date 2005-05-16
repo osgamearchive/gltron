@@ -2,8 +2,9 @@
 #include "base/nebu_callbacks.h"
 #include "base/nebu_system.h"
 #include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
+
+#include "base/nebu_debug_memory.h"
 
 Callbacks *last_callback = NULL;
 Callbacks *current_callback = NULL;
@@ -18,17 +19,16 @@ void initCallback(Callbacks *cb) {
     (cb->init)();
 }
 
-
-void switchCallbacks(Callbacks *new) {
+void switchCallbacks(Callbacks *pNewCallbacks) {
 	// if(current_callback)
 	// fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
   exitCallback(current_callback);
-  nebu_System_SetCallbacks(new);
+  nebu_System_SetCallbacks(pNewCallbacks);
 	// fprintf(stderr, "callbacks: initializing %s\n", new->name);
-  initCallback(new);
+  initCallback(pNewCallbacks);
 
   last_callback = current_callback;
-  current_callback = new;
+  current_callback = pNewCallbacks;
 }
   
 void updateCallbacks(void) {

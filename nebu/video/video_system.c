@@ -6,6 +6,8 @@
 
 #include <assert.h>
 
+#include "base/nebu_debug_memory.h"
+
 static SDL_Surface *screen;
 static int width = 0;
 static int height = 0;

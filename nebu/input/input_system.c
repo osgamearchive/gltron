@@ -6,8 +6,9 @@
 
 #include "SDL.h"
 #include "SDL_getenv.h"
-#include <stdlib.h>
 #include <errno.h>
+
+#include "base/nebu_debug_memory.h"
 
 static float joystick_threshold = 0;
 static int mouse_x = -1;

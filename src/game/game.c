@@ -23,6 +23,7 @@ void loadLevel(void) {
 	fprintf(stderr, "[status] loading level '%s'\n", level);
 
 	path = getPath(PATH_LEVEL, level);
+	free(level);
 	if(path) {
 		scripting_RunFile(path);
 		free(path);

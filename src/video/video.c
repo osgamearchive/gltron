@@ -1,11 +1,14 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "game/resource.h"
 #include "filesystem/path.h"
 #include "configuration/settings.h"
 
 #include "Nebu_video.h"
 #include "Nebu_input.h"
 #include "Nebu_scripting.h"
+
+#include "base/nebu_debug_memory.h"
 
 void displayGame(void) {
   drawGame();
@@ -63,18 +66,18 @@ void reshape(int x, int y) {
 	changeDisplay(-1);
 }
 
-void shutdownDisplay(Visual *d) {
-  deleteTextures(d);
+void shutdownDisplay() {
+  deleteTextures(gScreen);
   artpack_UnloadSurfaces();
   deleteFonts();
   gui_ReleaseResources();
-  nebu_Video_Destroy(d->win_id);
+  nebu_Video_Destroy(gScreen->win_id);
   // printf("[video] window destroyed\n");
 }
 
-void setupDisplay(Visual *d) {
+void setupDisplay() {
   // fprintf(stderr, "[video] trying to create window\n");
-  d->win_id = initWindow();
+  gScreen->win_id = initWindow();
   // fprintf(stderr, "[video] window created\n");
   // initRenderer();
   // printRendererInfo();
@@ -90,21 +93,19 @@ static void loadModels(void) {
 	int i;
 	/* load recognizer model */
 	path = getPath(PATH_DATA, "recognizer.obj");
-	if(path != NULL) {
-		recognizer = gltron_Mesh_LoadFromFile(path, TRI_MESH);
-		/* old code did normalize & invert normals & rescale to size = 60 */
-	} else {
+	gTokenRecognizer = resource_GetToken(path, eRT_GLtronTriMesh);
+	if(!gTokenRecognizer)
+	{
 		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
 		exit(1); /* OK: critical, installation corrupt */
 	}
 	free(path);
- 
+
 	/* load recognizer quad model (for recognizer outlines) */
 	path = getPath(PATH_DATA, "recognizer_quad.obj");
-	if(path != NULL) {
-		recognizer_quad = gltron_Mesh_LoadFromFile(path, QUAD_MESH);
-		/* old code did normalize & invert normals & rescale to size = 60 */
-	} else {
+	gTokenRecognizerQuad = resource_GetToken(path, eRT_GLtronQuadMesh);
+	if(!gTokenRecognizerQuad)
+	{
 		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
 		exit(1); /* OK: critical, installation corrupt */
 	}
@@ -113,14 +114,21 @@ static void loadModels(void) {
 	/* load lightcycle models */
 	for(i = 0; i < LC_LOD; i++) {
 		path = getPath(PATH_DATA, lc_lod_names[i]);
-		if(path != NULL) {
-			lightcycle[i] = gltron_Mesh_LoadFromFile(path, TRI_MESH);
-		} else {
+		gpTokenLightcycles[i] = resource_GetToken(path, eRT_GLtronTriMesh);
+		if(!gpTokenLightcycles[i])
+		{
 			fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
 			exit(1); /* OK: critical, installation corrupt */
 		}
+			free(path);
 	}
-	free(path);
+}
+
+void freeVideoData(void)
+{
+	free(gPlayerVisuals);
+	free(gScreen->textures);
+	free(gScreen);
 }
 
 void initVideoData(void) {
@@ -145,7 +153,7 @@ void initVideoData(void) {
 
 	for(i = 0; i < eHUDElementCount; i++)
 	{
-		gpHUD[i] = NULL;
+		gpTokenHUD[i] = 0;
 	}
 	changeDisplay(-1);
 }
@@ -188,12 +196,6 @@ void video_ResetData(void) {
 			sprintf(name, "trail_diffuse_%d", i);
 					scripting_GetGlobal(name, NULL);
 			scripting_GetFloatArrayResult(pV->pColorAlpha, 4);
-		}
-		if(game->player[i].ai->active != AI_NONE) {
-			p->data->impact_radius = 0.0;
-			p->data->exp_radius = 0;
-		} else {
-			p->data->exp_radius = EXP_RADIUS_MAX;
 		}
 	}
 }

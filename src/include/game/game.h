@@ -53,9 +53,7 @@ enum {
 	PAUSE_DEMO_RUNNING = 32,
 };
 
-extern Game main_game;
 extern Game *game;
-extern Game2 main_game2;
 extern Game2 *game2;
 
 extern int dirsX[];
@@ -78,7 +76,6 @@ void doTurn(GameEvent* e, int direction);
 void doMovement(int dt);
 void writePosition(int player);
 
-void initGameStructures(void);
 void initGameLevel(void);
 void initClientData(void);
 

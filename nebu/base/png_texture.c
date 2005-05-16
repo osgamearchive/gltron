@@ -1,16 +1,17 @@
 #include "base/nebu_png_texture.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <errno.h>
 
 #if !defined(WIN32) && !defined(macintosh)
 #include <unistd.h>
 #endif
 
-#define ERR_PREFIX "[load_png_texture] "
-
 #include <png.h>
+
+#include "base/nebu_debug_memory.h"
+
+#define ERR_PREFIX "[load_png_texture] "
 
 FILE *f;
 

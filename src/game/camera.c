@@ -10,6 +10,8 @@
 #include "video/nebu_renderer_gl.h"
 #include "video/nebu_console.h"
 
+#include <string.h>
+
 typedef enum eCamFreedom { 
 	CAM_FREE_R = 0,
 	CAM_FREE_PHI,

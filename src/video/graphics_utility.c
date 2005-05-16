@@ -6,6 +6,8 @@
 #include "video/nebu_renderer_gl.h"
 #include "base/nebu_math.h"
 
+#include <string.h>
+
 void rasonly(Visual *d) {
 	nebu_Video_rasonly(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
 }

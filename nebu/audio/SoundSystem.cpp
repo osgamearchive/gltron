@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "base/nebu_debug_memory.h"
+
 namespace Sound {
   System::System(SDL_AudioSpec *spec) { 
     _spec = spec;
@@ -15,6 +17,16 @@ namespace Sound {
     _mix_fx = 1;
 
     _status = 0; // sound system is not initialized
+  }
+  System::~System()
+  {
+	  for(nebu_List *p = &_sources; p->next; p = p->next)
+	  {
+		  delete (Source*) p->data;
+	  }
+	  if(_sources.next)
+		nebu_List_Free(_sources.next);
+	  delete _spec;
   }
 
   void System::Callback(Uint8* data, int len) {
@@ -46,11 +58,7 @@ namespace Sound {
   }
 
   void System::AddSource(Source* source) { 
-    nebu_List* p;
-    for(p = & _sources; p->next != NULL; p = p->next);
-    p->next = new nebu_List;
-    p->next->next = NULL;
-    p->data = source;
+	  nebu_List_AddTail(&_sources, source);
   }
 
   void System::Idle(void) {

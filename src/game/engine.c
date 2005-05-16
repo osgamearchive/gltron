@@ -14,6 +14,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "base/nebu_debug_memory.h"
+
 void getPositionFromIndex(float *x, float *y, int player) {
 	getPositionFromData(x, y, game->player[player].data);
 }
@@ -35,36 +37,51 @@ void initGameLevel(void) {
 	if(game2->level->scalable)
 		game_ScaleLevel(game2->level, getSettingf("grid_size"));
 }
-void initGameStructures(void) { /* called only once */
-  int i;
 
-	/* make sure this function hasn't been called before */
-	assert(game2 == NULL);
+void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
+{
+	int i;
 
-  /* initialize some global variables */
-  game2 = &main_game2;
-	memset(game2, 0, sizeof(Game2));
-	
-  game = &main_game;
-	memset(game, 0, sizeof(Game));
-
-  game->pauseflag = PAUSE_NO_GAME;
-
-  game->winner = -1;
-
-  game->players = PLAYERS;
-  game->player = (Player *) malloc(MAX_PLAYERS * sizeof(Player));
-
-  for(i = 0; i < game->players; i++) {
-		Player *p = game->player + i;
-
-    p->ai = (AI*) malloc(sizeof(AI));
-    p->data = (Data*) malloc(sizeof(Data));
-    p->data->trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
+	// Game
+	*ppGame = (Game*) malloc(sizeof(Game));
+	(*ppGame)->pauseflag = PAUSE_NO_GAME;
+	(*ppGame)->players = players;
+	(*ppGame)->running = 0;
+	(*ppGame)->winner = -1;
+	(*ppGame)->player = (Player *) malloc(players * sizeof(Player));
+	for(i = 0; i < players; i++)
+	{
+		Player *p = (*ppGame)->player + i;
+		p->ai = (AI*) malloc(sizeof(AI));
+		p->data = (Data*) malloc(sizeof(Data));
+		p->data->trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
 		p->data->trailOffset = 0;
-   }
+	}
+	// Game2
+	*ppGame2 = (Game2*) malloc(sizeof(Game2));
+	// TODO: proper member initialization
+	memset(*ppGame2, 0, sizeof(Game2));
+	(*ppGame2)->mode = GAME_SINGLE;
+}
 
-  game2->mode = GAME_SINGLE;
+void game_FreePlayers(Game *pGame, Game2 *pGame2)
+{
+	int i;
+
+	// Game
+	for(i = 0; i < pGame->players; i++)
+	{
+		Player *p = pGame->player + i;
+		free(p->ai);
+		free(p->data->trails);
+		free(p->data);
+	}
+	free(pGame->player);
+	free(pGame);
+	// Game2
+	if(game2->level)
+		game_FreeLevel(game2->level);
+	free(pGame2);
 }
 
 void resetPlayerData(void) {
@@ -85,6 +102,7 @@ void resetPlayerData(void) {
 		/* init ai */
 
 		switch(i) {
+			// TODO: this limits the number of players to 4
 		case 0: ai->active = getSettingi("ai_player1"); break;
 		case 1: ai->active = getSettingi("ai_player2"); break;
 		case 2: ai->active = getSettingi("ai_player3"); break;
@@ -137,6 +155,13 @@ void resetPlayerData(void) {
 		
 		data->trails[ data->trailOffset ].vDirection.v[0] = 0;
 		data->trails[ data->trailOffset ].vDirection.v[1] = 0;
+
+		data->impact_radius = 0.0;
+		if(ai->active != AI_NONE) {
+			data->exp_radius = 0;
+		} else {
+			data->exp_radius = EXP_RADIUS_MAX;
+		}
 
 		{
 			int camType;

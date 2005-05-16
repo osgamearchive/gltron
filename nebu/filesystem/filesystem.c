@@ -5,6 +5,8 @@
 #include <string.h>
 #include <assert.h>
 
+#include "base/nebu_debug_memory.h"
+
 int nebu_FS_Test(const char *path) {
   FILE *f = fopen(path, "r");
   if(f) {
@@ -15,6 +17,19 @@ int nebu_FS_Test(const char *path) {
 }
 
 nebu_List *path_list = NULL;
+
+void nebu_FS_ClearAllPaths(void)
+{
+	nebu_List *p;
+	if(!path_list)
+		return;
+
+	for(p = path_list; p->next; p = p->next)
+	{
+		free(p->data);
+	}
+	nebu_List_Free(path_list);
+}
 
 void nebu_FS_SetupPath(int tag, int nDirs, const char **directories)
 {

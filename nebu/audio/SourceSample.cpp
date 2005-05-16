@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "base/nebu_debug_memory.h"
+
 namespace Sound {
   SourceSample::SourceSample(System *system) { 
     _system = system;

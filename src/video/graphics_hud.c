@@ -1,11 +1,16 @@
 #include "video/video.h"
 #include "game/game.h"
+#include "game/resource.h"
 #include "filesystem/path.h"
 #include "configuration/settings.h"
 
 #include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"
+
+#include <string.h>
+
+#include "base/nebu_debug_memory.h"
 
 void getPauseString(char *buf, float* color);
 
@@ -19,7 +24,7 @@ void hud_MaskSetup(int maskId, int maskIndex) {
 	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	nebu_2d_Draw(gpHUD[maskId]);
+	nebu_2d_Draw((nebu_2d*)resource_Get(gpTokenHUD[maskId], eRT_2d));
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
 	glDisable(GL_ALPHA_TEST);
@@ -300,7 +305,7 @@ int c_drawTextFitIntoRect(lua_State *l) {
 	box.vMin.v[1] = 0;
 	box.vMax.v[0] = width;
 	box.vMax.v[1] = height;
-	nebu_Font_RenderToBox(gameFtx, text, strlen(text), &box, flags);
+	nebu_Font_RenderToBox((nebu_Font*)resource_Get(gTokenGameFont, eRT_Font), text, strlen(text), &box, flags);
 	free(text);
 
 	return 0;
@@ -322,7 +327,7 @@ int c_drawHUDSurface(lua_State* l)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	nebu_2d_Draw(gpHUD[surface]);
+	nebu_2d_Draw((nebu_2d*)resource_Get(gpTokenHUD[surface], eRT_2d));
 	glDisable(GL_BLEND);
 	return 0;
 }

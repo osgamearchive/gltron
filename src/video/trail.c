@@ -8,6 +8,8 @@
 #include "video/nebu_video_system.h"
 #include "video/nebu_renderer_gl.h"
 
+#include "base/nebu_debug_memory.h"
+
 #define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 #undef TEX_SPLIT
 

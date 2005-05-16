@@ -1,7 +1,8 @@
 #include "game/game_level.h"
 #include "filesystem/path.h"
 #include "Nebu_scripting.h"
-#include <stdlib.h>
+
+#include "base/nebu_debug_memory.h"
 
 void game_FreeLevel(game_level *l) {
 	free(l->boundaries);

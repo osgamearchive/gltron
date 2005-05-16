@@ -6,6 +6,7 @@
 #include "game/game.h"
 #include "game/camera.h"
 #include "game/game_level.h"
+#include "game/resource.h"
 #include "video/graphics_lights.h"
 #include "video/graphics_utility.h"
 #include "video/graphics_fx.h"
@@ -18,6 +19,8 @@
 #include "video/nebu_video_system.h"
 #include "video/nebu_renderer_gl.h"
 #include "base/nebu_math.h"
+
+#include "base/nebu_debug_memory.h"
 
 // static float arena[] = { 1.0, 1.2, 1, 0.0 };
 
@@ -135,7 +138,7 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   if(p->data->exp_radius != 0)
     return;
 
-  cycle = lightcycle[lod];
+  cycle = (gltron_Mesh*)resource_Get(gpTokenLightcycles[lod], eRT_GLtronTriMesh);
 
   /* states */
 
@@ -170,7 +173,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 	Player *p = game->player + player;
 	PlayerVisual *pV = gPlayerVisuals + player;
 
-	gltron_Mesh *cycle = lightcycle[lod];
+	gltron_Mesh *cycle = (gltron_Mesh*)resource_Get(gpTokenLightcycles[lod], eRT_GLtronTriMesh);
 	float x, y;
 
 	unsigned int spoke_time = game2->time.current - pV->spoke_time;
@@ -287,7 +290,7 @@ int playerVisible(int eyePlayer, int targetPlayer) {
 		v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
 		s, d);
 	*/
-	if(s < d-(lightcycle[i]->BBox.fRadius*2))
+	if(s < d-(((gltron_Mesh*)resource_Get(gpTokenLightcycles[i], eRT_GLtronTriMesh))->BBox.fRadius*2))
 		return -1;
 	else
 		return i;

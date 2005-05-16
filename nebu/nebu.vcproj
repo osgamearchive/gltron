@@ -22,7 +22,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./include;../lua5/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;VERSION=\&quot;0.71-beta\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -158,6 +158,9 @@
 				Name="base"
 				Filter="">
 				<File
+					RelativePath=".\base\debug_memory.c">
+				</File>
+				<File
 					RelativePath=".\base\matrix.c">
 				</File>
 				<File
@@ -270,6 +273,9 @@
 				</File>
 				<File
 					RelativePath=".\include\base\nebu_callbacks.h">
+				</File>
+				<File
+					RelativePath=".\include\base\nebu_debug_memory.h">
 				</File>
 				<File
 					RelativePath="include\base\nebu_math.h">

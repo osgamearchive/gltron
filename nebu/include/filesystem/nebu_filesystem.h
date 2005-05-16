@@ -4,15 +4,13 @@
 #include "base/nebu_util.h"
 #include "filesystem/nebu_file_io.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
 typedef struct {
 	int tag;
 	int nDirs;
 	const char **directories;
 } nebu_FS_PathConfig;
 
+void nebu_FS_ClearAllPaths(void);
 void nebu_FS_SetupPath(int tag, int nDirs, const char **directories);
 char* nebu_FS_GetPath(int tag, const char *filename);
 int nebu_FS_Test(const char *path);

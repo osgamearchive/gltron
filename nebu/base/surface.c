@@ -4,6 +4,8 @@
 #include <png.h>
 #include "SDL.h"
 
+#include "base/nebu_debug_memory.h"
+
 int nebu_Surface_FormatSize[] = { 0, 3, 4, 1 };
 
 nebu_Surface* nebu_Surface_Create(int width, int height, int format)

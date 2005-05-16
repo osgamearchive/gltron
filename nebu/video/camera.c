@@ -4,8 +4,10 @@
 #include "base/nebu_matrix.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
+
+#include "base/nebu_debug_memory.h"
+
 
 static void doLookAt(const float *cam, const float *target, const float *up) {
   matrix m;
