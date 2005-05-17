@@ -8,46 +8,18 @@
 
 Callbacks *last_callback = NULL;
 Callbacks *current_callback = NULL;
-
-void exitCallback(Callbacks *cb) {
-  if(cb && cb->exit)
-    (cb->exit)(); /* give them the chance to quit */
-}
-
-void initCallback(Callbacks *cb) {
-  if(cb && cb->init != NULL)
-    (cb->init)();
-}
-
-void switchCallbacks(Callbacks *pNewCallbacks) {
-	// if(current_callback)
-	// fprintf(stderr, "callbacks: exiting %s\n", current_callback->name);
-  exitCallback(current_callback);
-  nebu_System_SetCallbacks(pNewCallbacks);
-	// fprintf(stderr, "callbacks: initializing %s\n", new->name);
-  initCallback(pNewCallbacks);
-
-  last_callback = current_callback;
-  current_callback = pNewCallbacks;
-}
   
-void updateCallbacks(void) {
-  /* called when the window is recreated */
-  exitCallback(current_callback);
-  nebu_System_SetCallbacks(current_callback);
-  initCallback(current_callback);
+void game_Callbacks_ExitCurrent(void) {
+	/* called when the window is recreated */
+  if(current_callback && current_callback->exit)
+    (current_callback->exit)(); /* give them the chance to quit */
 }
 
-void restoreCallbacks(void) {
-  if(last_callback == NULL) {
-    fprintf(stderr, "fatal: no last callback present, exiting\n");
-    exit(1); // OK: programmer error, critical
-  }
-
-  exitCallback(last_callback);
-  current_callback = last_callback;
-  nebu_System_SetCallbacks(current_callback);
-  initCallback(current_callback);
+void game_Callbacks_InitCurrent(void)
+{
+	/* called when the window is recreated */
+	nebu_System_SetCallbacks(current_callback);
+	// calls init
 }
 
 #define N_CALLBACKS 7

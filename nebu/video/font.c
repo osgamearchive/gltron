@@ -161,6 +161,7 @@ nebu_Font* nebu_Font_Load(const char *filename, int fs_tag)
 
 void nebu_Font_Free(nebu_Font* font)
 {
+	glDeleteTextures(font->nTextures, font->pTextures);
 	free(font->pTextures);
 	free(font);
 }

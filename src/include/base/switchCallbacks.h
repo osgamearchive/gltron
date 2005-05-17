@@ -11,9 +11,8 @@ extern Callbacks promptCallbacks;
 extern Callbacks creditsCallbacks;
 extern Callbacks timedemoCallbacks;
 
-void restoreCallbacks(void);
-void switchCallbacks(Callbacks* callbacks);
-void updateCallbacks(void);
+void game_Callbacks_ExitCurrent(void);
+void game_Callbacks_InitCurrent(void);
 
 void setCallback(const char *name);
 

@@ -68,11 +68,12 @@ int c_resetCamera(lua_State *L) {
 }
 
 int c_video_restart(lua_State *L) {
+	game_Callbacks_ExitCurrent();
 	initGameScreen();
 	shutdownDisplay();
 	setupDisplay();
-	updateCallbacks();
 	changeDisplay(-1);
+	game_Callbacks_InitCurrent();
 	return 0;
 }
 
@@ -105,7 +106,7 @@ int c_reloadArtpack(lua_State *L) {
 	// resource_FreeAll(); // overkill & harmful
 	artpack_UnloadSurfaces();
 	resource_ReleaseAll(); // still overkill, but harmless
-	loadArt();
+	reloadArt();
 	gui_ReleaseResources(); // TODO: ugly, do this differently
 	gui_LoadResources();
 	return 0;
@@ -113,9 +114,10 @@ int c_reloadArtpack(lua_State *L) {
 
 int c_reloadLevel(lua_State *L) {
 	// resource_FreeAll(); // overkill & harmful
+	artpack_UnloadSurfaces();
 	resource_ReleaseAll(); // still overkill, but harmless
 	loadLevel();
-	loadArt();
+	reloadArt();
 	initGameLevel();
 	game_ResetData();
 	video_ResetData(); // already called by reloadArt()

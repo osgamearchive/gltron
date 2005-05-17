@@ -20,6 +20,6 @@ void initFonts(void) {
 }
 
 void deleteFonts(void) {
-	resource_Release(gTokenGameFont);
+	resource_Free(gTokenGameFont);
 	gTokenGameFont = 0;
 }
