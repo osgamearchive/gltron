@@ -4,16 +4,12 @@ General
 - Convert artpacks on gltron.org
 - Publish artpack conversion tool
 
+- Work around config bug again
 - Reorder menu structure?
-
-- Wall buster: GUI element
 
 - Multiple listeners fuer Splitscreen
 
 - 2D map scaling
-
-- Level / Artpack loading
-  - Write resource manager
 
 Win32
 - SDL_sound: decent windows binaries with stereo mod & mp3 support
@@ -33,6 +29,7 @@ Video
 
 Code (general)
 - cleanup: replace getPath() stuff with nebu calls
+- cleanup: switch to resource manager
 
 Tools
 - Level editing tools
@@ -49,11 +46,10 @@ Tools
   add artpack version to artpack.lua
 
 Homepage
-- Redo homepage a little (better news update (old/archive) system?):
-- Redo headlines
 - CSS support
 - wiki
-- blog
+- rss feed for news, include in homepage
+- rss feed for blog, include in homepage
 
 - keep developer/art/support information somewhere
 - plea for help
