@@ -11,13 +11,20 @@ settings.debug_output = 1
 -- game
 -- game rules
 settings.speed = 8.5                      -- lightcycle speed
+settings.energy = 4.8					  -- lightcycle energy
+settings.energy_increase = 0.4            -- energy increase per second
 
 settings.booster_on = 1                   -- booster option (0=off,1=on)
 settings.booster_min = 1.0                -- min. booster value so it can be activated
-settings.booster_max = 6.5                -- fully charged booster
-settings.booster_use = 1.0                -- how much speed to add per second
-settings.booster_decrease = 0.8           -- speed decrease per second after booster ran out
-settings.booster_regenerate = 0.4         -- regeneration of booster when not in use
+-- settings.booster_max = 6.5                -- fully charged booster
+settings.booster_use = 1.5                -- how much speed to add per second
+settings.booster_speed_factor = 1.1
+-- speed_factor: multiply player speed upon usage (per second)
+settings.booster_speed_increase = 1.2
+-- speed_increase: increase speed by constant value per second
+settings.booster_speed_decrease = 0.8
+-- speed decrease per second after booster ran out
+-- settings.booster_regenerate = 0.4         -- regeneration of booster when not in use
 
 settings.wall_accel_on = 0
 settings.wall_accel_max = 20.0
@@ -25,10 +32,17 @@ settings.wall_accel_use = 1.0
 settings.wall_accel_decrease = 0.8
 
 settings.wall_buster_on = 1
-settings.wall_buster_use = 0.8
-settings.wall_buster_max = 1.0
-settings.wall_buster_min = 0.9
-settings.wall_buster_regenerate = 0.2
+-- wall_buster_on:
+--   1: wall buster enabled
+--   0: wall buster disabled
+
+settings.wall_buster_use = 4.8
+-- amount of energy consumed per second of wall_buster use
+settings.wall_buster_min = 2.4
+-- amount of energy needed to trigger wall_buster usage
+
+-- settings.wall_buster_max = 1.0
+-- settings.wall_buster_regenerate = 0.2
 
 settings.ai_level = 2
 settings.current_level = "square.lua"
@@ -42,7 +56,7 @@ settings.ai_player3 = 1
 settings.ai_player4 = 1
 -- game settings
 settings.fast_finish = 1
-settings.camType = 1
+settings.camType = 4
 settings.display_type = 3
 
 -- video
