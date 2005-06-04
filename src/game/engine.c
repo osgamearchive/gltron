@@ -16,6 +16,16 @@
 
 #include "base/nebu_debug_memory.h"
 
+void Player_GetPosition(Player *pPlayer, float *pX, float *pY)
+{
+	vec2 v;
+	vec2_Add(&v,
+		&pPlayer->data->trails[pPlayer->data->trailOffset].vStart,
+		&pPlayer->data->trails[pPlayer->data->trailOffset].vDirection);
+	*pX = v.v[0];
+	*pY = v.v[1];
+}
+
 void getPositionFromIndex(float *x, float *y, int player) {
 	getPositionFromData(x, y, game->player[player].data);
 }
@@ -23,8 +33,8 @@ void getPositionFromIndex(float *x, float *y, int player) {
 void getPositionFromData(float *x, float *y, Data *data) {
 	vec2 v;
 	vec2_Add(&v,
-					&data->trails[data->trailOffset].vStart,
-					&data->trails[data->trailOffset].vDirection);
+		&data->trails[data->trailOffset].vStart,
+		&data->trails[data->trailOffset].vDirection);
 	*x = v.v[0];
 	*y = v.v[1];
 }
@@ -129,16 +139,12 @@ void resetPlayerData(void) {
 		if(ai->active != AI_NONE) {
 			data->speed = getSettingf("speed");
 
-			if(getSettingf("booster_on"))
-				data->booster = getSettingf("booster_max");
-			else
-				data->booster = 0;
+			data->energy = 0;
+			if(getSettingf("booster_on") || getSettingf("wall_buster_on"))
+			{
+				data->energy = getSettingf("energy");
+			}
 			data->boost_enabled = 0;
-
-			if(getSettingf("wall_buster_on"))
-				data->wall_buster = getSettingf("wall_buster_max");
-			else
-				data->wall_buster = 0;
 			data->wall_buster_enabled = 0;
 
 			data->trail_height = TRAIL_HEIGHT;
@@ -157,6 +163,7 @@ void resetPlayerData(void) {
 		data->trails[ data->trailOffset ].vDirection.v[1] = 0;
 
 		data->impact_radius = 0.0;
+		data->turn_time = 0;
 		if(ai->active != AI_NONE) {
 			data->exp_radius = 0;
 		} else {

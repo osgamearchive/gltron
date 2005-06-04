@@ -140,55 +140,51 @@ int crashTestWalls(int i, const segment2 *movement) {
 	return crash;
 }
 
+int regenerate(int player, int dt)
+{
+	float curEnergy = game->player[player].data->energy + getSettingf("energy_increase") * dt / 1000.0f;
+	float maxEnergy = getSettingf("energy");
+	if(curEnergy > maxEnergy) curEnergy = maxEnergy;
+	game->player[player].data->energy = curEnergy;
+	return 0;
+}
+
 int applyBooster(int player, int dt) {
+	float boost;
+	
 	Data *data = game->player[player].data;
-	if(data->booster > 0 && data->boost_enabled) {
-		float boost = getSettingf("booster_use") * dt / 1000.0f;
-		if(boost > data->booster) {
-			boost = data->booster;
-			data->boost_enabled = 0;
-		}
-		data->speed += boost;
-		data->booster -= boost;
-		return 1;
-	}
-	else {
-		float booster_max = getSettingf("booster_max");
-		if(data->booster < booster_max) {
-			data->booster += getSettingf("booster_regenerate") * dt / 1000.0f;
-			if(data->booster > booster_max)
-				data->booster = booster_max;
-		}
+	if(!data->boost_enabled)
 		return 0;
+
+	boost = getSettingf("booster_use") * dt / 1000.0f;
+	if(boost > data->energy) {
+		boost = data->energy;
+		data->boost_enabled = 0;
 	}
+	data->speed += boost * getSettingf("booster_speed_increase");
+	// TODO: this is somewhat framerate dependent:
+	// + data->speed * booster_speed_factor * dt
+	data->energy -= boost;
+	return 1;
 }
 
 int applyWallBuster(int player, int dt) {
+	float consumption;
+	
 	Data *data = game->player[player].data;
-	if(data->wall_buster_enabled) {
-		// printf("%i: wall buster enabled\n", player);
-	}
-	if(data->wall_buster > 0 && data->wall_buster_enabled) {
-		// printf("using buster: %.2f\n", data->wall_buster);
-		float wall_buster = getSettingf("wall_buster_use") * dt / 1000.0f;
-		if(wall_buster > data->wall_buster) {
-			wall_buster = data->wall_buster;
-			data->wall_buster_enabled = 0;
-		}
-		data->wall_buster -= wall_buster;
-		// printf("buster: %.2f\n\n", data->wall_buster);
-		return 1;
-	}
-	else {
-		float wall_buster_max = getSettingf("wall_buster_max");
-		if(data->wall_buster < wall_buster_max) {
-			data->wall_buster += getSettingf("wall_buster_regenerate") * dt / 1000.0f;
-			if(data->wall_buster > wall_buster_max)
-				data->wall_buster = wall_buster_max;
-		}
-		// printf("regenerating buster: %.2f\n", data->wall_buster);
+	if(!data->wall_buster_enabled) {
 		return 0;
 	}
+
+	consumption = getSettingf("wall_buster_use") * dt / 1000.0f;
+	if(consumption > data->energy)
+	{
+		consumption = 0;
+		data->wall_buster_enabled = 0;
+		return 0;
+	}
+	data->energy -= consumption;
+	return 1;
 }
 
 void applyDecceleration(int player, int dt, float factor) {
@@ -297,6 +293,9 @@ void doMovement(int dt)
 				}
 			} // wall acceleration
 
+			// recharge energy
+			regenerate(i, dt);
+
 			if(getSettingf("wall_buster_on") == 1)
 			{ // wall buster
 				// printf("applying wallbuster for player %i\n");
@@ -307,7 +306,7 @@ void doMovement(int dt)
 			{ // booster
 				if(!applyBooster(i, dt) && deccel != -1)
 				{
-					float d = getSettingf("booster_decrease");
+					float d = getSettingf("booster_speed_decrease");
 					deccel = d > deccel ? d : deccel;
 				}
 				else
@@ -320,7 +319,7 @@ void doMovement(int dt)
 				applyDecceleration(i, dt, deccel);
 
 			// if(i == 0)
-			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->booster);
+			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->energy);
 
 			fs = 1.0f - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
 				cosf(i * PI / 4.0f + 
@@ -409,23 +408,13 @@ void doMovement(int dt)
 	} // foreach player
 }
 
-/*! \fn void idleGame( void )
-  game loop:
-  run ai, process events, do physics, process events again,
-  do camera movement
-*/
-
-void Game_Idle(void) {
-	nebu_List *p;
-	int i;
-	int dt; // time since last frame
-	int t; // time for a single tick to be processed
-
+int game_ComputeTimeDelta(void)
+{
 	/* check for fast finish */
 	if (gSettingsCache.fast_finish != 1)
 	{
 		// time since last idle processing
-		dt = game2->time.dt;
+		return game2->time.dt;
 	}
 	else
 	{
@@ -434,6 +423,8 @@ void Game_Idle(void) {
 		int factors[4] = { 4, 6, 12, 25 };
 		int threshold[4] = { 0, 300, 600, 800 };
 		int factor = 1;
+		int i;
+
 		for(i = 0; i < 4; i++)
 		{
 			if(box2_Diameter(&game2->level->boundingBox) > threshold[i])
@@ -447,27 +438,56 @@ void Game_Idle(void) {
 				factor = 1;
 			}
 		}
-		dt = game2->time.dt * factor;
+		return game2->time.dt * factor;
 	} 
+}
+void game_RunAI(int dt)
+{
+	int i;
 
+	/* run AI */
+	for(i = 0; i < game->players; i++)
+	{
+		if(game->player[i].ai != NULL)
+		{
+			if(game->player[i].ai->active == AI_COMPUTER &&
+				PLAYER_IS_ACTIVE(&game->player[i]))
+			{
+				doComputer(i, 0);
+				// schedules events (e.g. turns)
+			}
+		}
+	}
+}
+
+/*! \fn void Game_Idle( void )
+  game loop:
+  run ai, process events, do physics, process events again,
+  do camera movement
+*/
+
+void Game_Idle(void) {
+	// time since last frame
+	int dt = game_ComputeTimeDelta();
+	
 	while(dt > 0) {
+		nebu_List *p;
+		int t; // time for a single tick to be processed
+
 		// chop time since last frame into ticks of maximally PHYSICS_RATE milliseconds
 		if(dt > PHYSICS_RATE) t = PHYSICS_RATE;
 		else t = dt;
 
-		/* run AI */
-		for(i = 0; i < game->players; i++)
-		{
-			if(game->player[i].ai != NULL)
-			{
-				if(game->player[i].ai->active == AI_COMPUTER &&
-					PLAYER_IS_ACTIVE(&game->player[i]))
-				{
-					doComputer(i, 0);
-					// schedules events (e.g. turns)
-				}
-			}
-		}
+		/*
+		game_ComputeMovement(dt); // compute new speed, energy levels, movement vectors
+		game_HandleMovement(dt); // handle movement based events
+		game_AdjustMovement(dt); // adjust movement vectors due to collision response
+		game_AdjustWorld(dt); // write back changes to world
+		*/
+		game_RunAI(dt);
+		/*
+		game_ProcesssInput(dt);
+		*/
 
 		/* process any outstanding events (turns, etc) */
 		for(p = &(game2->events); p->next != NULL; p = p->next) {
