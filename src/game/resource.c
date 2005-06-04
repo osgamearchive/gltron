@@ -149,7 +149,7 @@ void* resource_Get(int token, int type)
 	return pToken->data;
 }
 
-Token* findIdenticalToken(char *filename, int type)
+static Token* findIdenticalToken(char *filename, int type)
 {
 	nebu_List *p;
 	if(!pTokenList)
