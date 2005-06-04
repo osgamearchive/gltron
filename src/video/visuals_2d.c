@@ -22,7 +22,6 @@ void draw2D( nebu_Rect *pRect ) {
 	glScalef(pRect->width / grid_width, pRect->height / grid_height, 1);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0.7f, 0.7f, 0.7f, 0.3f);
 
 	glColor3f(1, 1, 1);
 	glBegin(GL_LINES);
