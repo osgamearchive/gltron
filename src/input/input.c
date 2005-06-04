@@ -119,7 +119,7 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					// printf("boost down\n");
-					if(game->player[i].data->booster > getSettingf("booster_min"))
+					if(game->player[i].data->energy > getSettingf("booster_min"))
 						game->player[i].data->boost_enabled = 1;
 				} else {
 					// printf("boost up\n");
@@ -133,7 +133,7 @@ void keyGame(int state, int k, int x, int y)
 			if(key == k) {
 				if(state == SYSTEM_KEYSTATE_DOWN) {
 					// printf("wall_buster down\n");
-					if(game->player[i].data->wall_buster > getSettingf("wall_buster_min"))
+					if(game->player[i].data->energy > getSettingf("wall_buster_min"))
 						game->player[i].data->wall_buster_enabled = 1;
 				} else {
 					// printf("wall_buster up\n");

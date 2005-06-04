@@ -109,8 +109,8 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 		(p->ai->active ? "AI_COMPUTER" : "") : "",
 		p->data->speed,
 		p->data->speed / (2 * game2->rules.speed),
-		p->data->booster / getSettingf("booster_max"),
-		p->data->wall_buster / getSettingf("wall_buster_max"),
+		p->data->energy / getSettingf("energy"),
+		0.0f, // formerly wallbuster
 		getFPS(),
 		pause_message,
 		pause_color[0],
