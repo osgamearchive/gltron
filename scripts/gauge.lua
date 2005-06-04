@@ -94,7 +94,7 @@ function drawSpeedAnalog(speed, circle, angles)
 	end
 end
 
-function drawBar(charge, clear, rect, ranges) -- between 0 and 1
+function drawBar(charge, rect, ranges) -- between 0 and 1
 	-- io.write("charge: ", charge, "\n")
 	-- io.write(string.format("rect: %.2f, %.2f, %.2f, %.2f\n", rect.top, rect.left, rect.right, rect.bottom))
 	-- Rectangle in pixel coordinates
