@@ -335,9 +335,9 @@ void drawPlanarShadows(int player) {
 	}
 
 	for(i = 0; i < game->players; i++) {
-	int lod = playerVisible(player, i);
+		int lod = playerVisible(player, i);
 		if (lod >= 0) {
-			int drawTurn = (i != player  && gSettingsCache.camType != CAM_TYPE_COCKPIT) ? 1 : 0;
+			int drawTurn = (i != player || gSettingsCache.camType != CAM_TYPE_COCKPIT) ? 1 : 0;
 			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
 		}
 		if (game->player[i].data->trail_height > 0 )
