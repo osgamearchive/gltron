@@ -85,9 +85,9 @@ void level_LoadShader(video_level_shader *shader) {
 	
 	shader->diffuse_texture_id = level_LoadTexture();
 
-	scripting_PopTable(); // diffuse
-	scripting_PopTable(); // textures
-	scripting_PopTable(); // shading
+	scripting_Pop(); // diffuse
+	scripting_Pop(); // textures
+	scripting_Pop(); // shading
 }
 
 video_level* video_CreateLevel(void) {
@@ -106,16 +106,16 @@ video_level* video_CreateLevel(void) {
 	scripting_GetValue("floor");
 	l->floor = loadMesh();
 	level_LoadShader(& l->floor_shader);
-	scripting_PopTable(); // floor
+	scripting_Pop(); // floor
 	
 	scripting_GetValue("arena");
 	l->arena = loadMesh();
 	level_LoadShader(& l->arena_shader);
-	scripting_PopTable(); // arena
+	scripting_Pop(); // arena
 		
-	scripting_PopTable(); // geometry
+	scripting_Pop(); // geometry
 
-	scripting_PopTable(); // level;
+	scripting_Pop(); // level;
 
 	return l;
 }
@@ -162,7 +162,7 @@ nebu_Mesh* loadMesh(void) {
 			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 1] );
 			scripting_GetValue("z");
 			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 2] );
-			scripting_PopTable(); // pos
+			scripting_Pop(); // pos
 		}
 		if(pMesh->vertexformat & NEBU_MESH_NORMAL) {
 			scripting_GetValue("normal");
@@ -172,7 +172,7 @@ nebu_Mesh* loadMesh(void) {
 			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 1] );
 			scripting_GetValue("z");
 			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 2] );
-			scripting_PopTable(); // pos
+			scripting_Pop(); // pos
 		}
 		if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0) {
 			scripting_GetValue("uv");
@@ -180,11 +180,11 @@ nebu_Mesh* loadMesh(void) {
 			scripting_GetFloatResult( & pMesh->pTexCoords[0][2 * i + 0] );
 			scripting_GetValue("v");
 			scripting_GetFloatResult( & pMesh->pTexCoords[0][2 * i + 1] );
-			scripting_PopTable(); // uv
+			scripting_Pop(); // uv
 		}
-		scripting_PopTable(); // index i
+		scripting_Pop(); // index i
 	}
-	scripting_PopTable(); // vertices
+	scripting_Pop(); // vertices
 	
 	scripting_GetValue("indices");
 	scripting_GetArraySize(& pMesh->nTriangles);
@@ -196,9 +196,9 @@ nebu_Mesh* loadMesh(void) {
 			scripting_GetArrayIndex(j + 1);
 			scripting_GetIntegerResult( & pMesh->pTriangles[3 * i + j] );
 		}
-		scripting_PopTable(); // index i;
+		scripting_Pop(); // index i;
 	}
-	scripting_PopTable(); // indices
+	scripting_Pop(); // indices
 
 	return pMesh;
 }
