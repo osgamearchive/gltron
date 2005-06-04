@@ -67,9 +67,9 @@ game_level* game_CreateLevel(void) {
 		scripting_GetValue("dir");
 		scripting_GetIntegerResult(& l->spawnPoints[i].dir);
 
-		scripting_PopTable(); // index i
+		scripting_Pop(); // index i
 	}
-	scripting_PopTable(); // spawn
+	scripting_Pop(); // spawn
 	
 	// get number of boundary segments
 	scripting_GetValue("boundary");
@@ -84,7 +84,7 @@ game_level* game_CreateLevel(void) {
 		scripting_GetFloatResult(& l->boundaries[i].vStart.v[0]);
 		scripting_GetValue("y");
 		scripting_GetFloatResult(& l->boundaries[i].vStart.v[1]);
-		scripting_PopTable(); // index 0
+		scripting_Pop(); // index 0
 		
 		scripting_GetArrayIndex(2);
 		{
@@ -95,13 +95,13 @@ game_level* game_CreateLevel(void) {
 			scripting_GetFloatResult(& v.v[1]);
 			vec2_Sub(& l->boundaries[i].vDirection, &v, &l->boundaries[i].vStart);
 		}
-		scripting_PopTable(); // index 1
+		scripting_Pop(); // index 1
 	
-		scripting_PopTable(); // index i
+		scripting_Pop(); // index i
 	}
-	scripting_PopTable(); // boundary
+	scripting_Pop(); // boundary
 
-	scripting_PopTable(); // level
+	scripting_Pop(); // level
 
 	computeBoundingBox(l);
 

@@ -46,10 +46,8 @@ void showStack() {
 	}
 }
 
-int scripting_IsNilResult() {
-	int result = lua_isnil(L, -1);
-	lua_pop(L, 1);
-	return result;
+int scripting_IsNil() {
+	return lua_isnil(L, -1);
 }
 
 int getGlobal(const char *s, va_list ap) {
@@ -194,7 +192,12 @@ int scripting_GetArrayIndex(int i)
 	return 0;
 }
 
-int scripting_PopTable(void)
+int scripting_IsTable(void)
+{
+	return lua_istable(L, -1);
+}
+
+int scripting_Pop(void)
 {
 	lua_pop(L, 1);
 	return 0;
@@ -228,4 +231,9 @@ void Scripting_Idle() {
 
 void scripting_Register(const char *name, int(*func) (lua_State *L)) {
 	lua_register(L, name, func);
+}
+
+void scripting_PushInteger(int iValue)
+{
+	lua_pushnumber(L, (float)iValue);
 }
