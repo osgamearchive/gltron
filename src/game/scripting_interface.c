@@ -226,6 +226,13 @@ int c_setArtPath(lua_State *l)
 	return 0;
 }
 
+int c_game_ComputeTimeDelta(lua_State *l)
+{
+	int dt = game_ComputeTimeDelta();
+	scripting_PushInteger(dt);
+	return 1;
+}
+
 void init_c_interface(void) {
 	scripting_Register("c_quitGame", c_quitGame);
 	scripting_Register("c_resetGame", c_resetGame);
@@ -257,4 +264,6 @@ void init_c_interface(void) {
 	scripting_Register("c_draw2D", c_draw2D);
 	scripting_Register("c_drawHUDSurface", c_drawHUDSurface);
 	scripting_Register("c_drawHUDMask", c_drawHUDMask);
+
+	scripting_Register("c_game_ComputeTimeDelta", c_game_ComputeTimeDelta);
 }
