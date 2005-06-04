@@ -21,7 +21,7 @@
 
 #include <assert.h>
 
-#define INI_VERSION 0.7120f
+#define INI_VERSION 0.7130f
 
 void initFilesystem(int argc, const char *argv[]);
 
@@ -107,13 +107,27 @@ void initConfiguration(int argc, const char *argv[])
 		printf("[warning] old config file found, overriding using defaults\n");
 	}
 	// check if config is valid
-	scripting_GetGlobal("save_completed", NULL);
-	if(scripting_IsNilResult()) {
-		runScript(PATH_SCRIPTS, "config.lua");
-		runScript(PATH_SCRIPTS, "artpack.lua");
-		printf("[warning] defunct config file found, overriding using defaults\n");
+	{
+		int isValid = 1;
+		scripting_GetGlobal("save_completed", NULL);
+		if(scripting_IsNil()) {
+			isValid = 0;
+		}
+		scripting_Pop();
+		scripting_GetGlobal("settings", "keys", NULL);
+		if(!scripting_IsTable())
+		{
+			isValid = 0;
+		}
+		scripting_Pop();
+		if(!isValid)
+		{
+			printf("[warning] defunct config file found, overriding using defaults\n");
+			runScript(PATH_SCRIPTS, "config.lua");
+			runScript(PATH_SCRIPTS, "artpack.lua");
+
+		}
 	}
-		
 	setSettingf("version", INI_VERSION);
 
 	/* parse any comandline switches overrinding the loaded settings */
