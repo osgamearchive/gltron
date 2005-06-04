@@ -79,6 +79,7 @@ void writePosition(int player);
 void initGameLevel(void);
 void initClientData(void);
 
+int game_ComputeTimeDelta(void);
 void Game_Idle(void);
 void enterGame(void);
 void exitGame(void);
