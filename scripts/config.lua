@@ -5,6 +5,7 @@ settings = { }
 artpacks = { }
 tracks = { }
 
+app_version = 0.714
 -- debugginb
 settings.debug_output = 1
 

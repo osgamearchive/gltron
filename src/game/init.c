@@ -21,8 +21,6 @@
 
 #include <assert.h>
 
-#define INI_VERSION 0.7130f
-
 void initFilesystem(int argc, const char *argv[]);
 
 void exitSubsystems(void)
@@ -100,13 +98,23 @@ void initConfiguration(int argc, const char *argv[])
 		}
 	}
 	
-	if(!isSetting("version") || getSettingf("version") < INI_VERSION) {
-		/* load some more defaults from config file */
-		runScript(PATH_SCRIPTS, "config.lua");
-		runScript(PATH_SCRIPTS, "artpack.lua");
-		printf("[warning] old config file found, overriding using defaults\n");
+	{
+		float ini_version = 0, app_version;
+		if(isSetting("version"))
+			ini_version = getSettingf("version");
+		scripting_GetGlobal("app_version", NULL);
+		scripting_GetFloatResult(&app_version);
+		if(ini_version < app_version)
+		{
+			/* load some more defaults from config file */
+			runScript(PATH_SCRIPTS, "config.lua");
+			runScript(PATH_SCRIPTS, "artpack.lua");
+			printf("[warning] old config file version %f found, app version is %f, overriding using defaults\n",
+				ini_version, app_version);
+			setSettingf("version", app_version);
+		}
+		// check if config is valid
 	}
-	// check if config is valid
 	{
 		int isValid = 1;
 		scripting_GetGlobal("save_completed", NULL);
@@ -128,7 +136,6 @@ void initConfiguration(int argc, const char *argv[])
 
 		}
 	}
-	setSettingf("version", INI_VERSION);
 
 	/* parse any comandline switches overrinding the loaded settings */
 	parse_args(argc, argv);
@@ -150,8 +157,8 @@ void initVideo(void) {
 	initVideoData();
 	initArtpacks();
 
-	runScript(PATH_SCRIPTS, "menu.lua");
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
+	runScript(PATH_SCRIPTS, "menu.lua");
 	setupDisplay();
 }
 
