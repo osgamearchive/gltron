@@ -19,6 +19,8 @@
 #include "video/nebu_video_system.h"
 #include "video/nebu_renderer_gl.h"
 #include "base/nebu_math.h"
+#include "base/nebu_vector.h"
+#include "base/nebu_matrix.h"
 
 #include "base/nebu_debug_memory.h"
 
@@ -230,7 +232,32 @@ void drawCycle(int player, int lod, int drawTurn) {
 		}
 		glEnable(GL_CULL_FACE);
 		gltron_Mesh_Draw(cycle, TRI_MESH);
+#if 1
+		if(p->data->wall_buster_enabled)
+		{
+			int i;
+			float fScale;
+			float gray[] = { 0.5f, 0.5f, 0.5f, 0.2f };
+			glEnable(GL_BLEND);
+			glDepthMask(GL_FALSE);
+			for(i = 0; i < 1; i++) {
+				// fScale = 1 + (float)i * 0.2f / 5.0f;
+				// gray[3] = 0.5f - 0.12f * i;
+				fScale = 1.2f;
+				gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, gray);
+				gltron_Mesh_SetMaterialAlpha(cycle, gray[3]);
+				glPushMatrix();
+				glScalef(fScale, fScale, fScale);
+				gltron_Mesh_Draw(cycle, TRI_MESH);
+				glPopMatrix();
+				gltron_Mesh_SetMaterialAlpha(cycle, 1);
+			}
+			glDepthMask(GL_TRUE);
+			glDisable(GL_BLEND);
+		}
+#endif
 		glDisable(GL_CULL_FACE);
+
 		glDisable(GL_LIGHTING);
 	} else if(p->data->exp_radius < EXP_RADIUS_MAX) {
 		glEnable(GL_BLEND);
@@ -440,7 +467,19 @@ void drawCam(int player) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	doLookAt(gPlayerVisuals[player].camera.cam, gPlayerVisuals[player].camera.target, up);
+	{
+		vec3 vLookAt;
+		vec3 vTarget;
+		matrix matRotate;
+
+		vec3_Sub(&vLookAt, (vec3*)gPlayerVisuals[player].camera.target, (vec3*)gPlayerVisuals[player].camera.cam);
+		vec3_Normalize(&vLookAt, &vLookAt);
+		matrixRotationAxis(&matRotate, 90.0f * (float) gPlayerVisuals[player].camera.bIsGlancing, (vec3*)up);
+		vec3_Transform(&vLookAt, &vLookAt, &matRotate);
+		vec3_Add(&vTarget, (vec3*)gPlayerVisuals[player].camera.cam, &vLookAt);
+		doLookAt(gPlayerVisuals[player].camera.cam, (float*)&vTarget, up);
+	}
+
 	glDisable(GL_LIGHTING); // initial config at frame start
 	glDisable(GL_BLEND); // initial config at frame start
 
