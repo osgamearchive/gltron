@@ -103,7 +103,7 @@ float getVideoSettingf(const char *name) {
 int isSetting(const char *name) {
 	int isValid;
 	scripting_GetGlobal("settings", name, NULL);
-	isValid = scripting_IsNil();
+	isValid = !scripting_IsNil();
 	scripting_Pop();
 	return isValid;
 }
