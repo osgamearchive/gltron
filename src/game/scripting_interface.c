@@ -107,6 +107,8 @@ int c_reloadArtpack(lua_State *L) {
 	artpack_UnloadSurfaces();
 	resource_ReleaseAll(); // still overkill, but harmless
 	reloadArt();
+	video_ReleaseResources();
+	video_LoadResources();
 	gui_ReleaseResources(); // TODO: ugly, do this differently
 	gui_LoadResources();
 	return 0;
