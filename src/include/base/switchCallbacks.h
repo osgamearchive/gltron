@@ -10,6 +10,7 @@ extern Callbacks configureCallbacks;
 extern Callbacks promptCallbacks;
 extern Callbacks creditsCallbacks;
 extern Callbacks timedemoCallbacks;
+extern Callbacks _32bit_warningCallbacks;
 
 void game_Callbacks_ExitCurrent(void);
 void game_Callbacks_InitCurrent(void);
