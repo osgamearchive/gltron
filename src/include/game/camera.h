@@ -15,6 +15,7 @@ typedef struct Camera {
 	float cam[3];
 	float target[3];
 	float movement[4]; /* indices CAM_R, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET */
+	int bIsGlancing;
 	CameraType type;
 } Camera;
 

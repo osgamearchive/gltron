@@ -145,6 +145,8 @@ void initCamera(Camera *cam, Data *data, int type) {
 	cam->cam[0] = x + CAM_CIRCLE_DIST;
 	cam->cam[1] = y;
 	cam->cam[2] = CAM_CIRCLE_Z;
+
+	cam->bIsGlancing = 0;
 }
 
 /* place user into recognizer */
