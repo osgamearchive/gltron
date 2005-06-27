@@ -51,6 +51,7 @@ typedef enum ColorType {
   eSpecular
 } ColorType;
 
+void gltron_Mesh_SetMaterialAlpha(gltron_Mesh *pMesh, float fAlpha);
 void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name, 
 	 ColorType eType, float pColor[4]);
 

@@ -124,6 +124,16 @@ void setMaterial(char *buf, gltron_Mesh *pMesh, int *iGroup) {
   }
 }
 
+void gltron_Mesh_SetMaterialAlpha(gltron_Mesh *pMesh, float fAlpha)
+{
+  int i;
+
+  for(i = 0; i < pMesh->nMaterials; i++)
+  {
+	  pMesh->pMaterials[i].diffuse[3] = fAlpha;
+  }
+}
+
 void gltron_Mesh_SetMaterialColor(gltron_Mesh *pMesh, char *name, ColorType eType,
 		      float pColor[4]) {
   int i;
