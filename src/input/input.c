@@ -36,7 +36,7 @@ void keyGame(int state, int k, int x, int y)
 {
   int i;
 
-	if(state == SYSTEM_KEYSTATE_DOWN) {
+	if(state == NEBU_INPUT_KEYSTATE_DOWN) {
 		switch (k) {
 			/* case 'q': SystemExit(); return; */
 		case 27:
@@ -73,7 +73,7 @@ void keyGame(int state, int k, int x, int y)
 		if(PLAYER_IS_ACTIVE(&game->player[i]) &&
 			 !game->player[i].ai->active) {
 			int key;
-			if(state == SYSTEM_KEYSTATE_DOWN) { 
+			if(state == NEBU_INPUT_KEYSTATE_DOWN) { 
 				scripting_RunFormat("return settings.keys[%d].left", i + 1);
 				scripting_GetIntegerResult( &key );
 				if(key == k) {
@@ -91,12 +91,12 @@ void keyGame(int state, int k, int x, int y)
 			scripting_RunFormat("return settings.keys[%d].glance_left", i + 1);
 			scripting_GetIntegerResult( &key );
 			if(key == k) {
-				if(state == SYSTEM_KEYSTATE_DOWN) {
+				if(state == NEBU_INPUT_KEYSTATE_DOWN) {
 					// printf("glance left down\n");
-					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = PI / 2.0f;
+					gPlayerVisuals[i].camera.bIsGlancing = 1;
 				}	else {
 					// printf("glance left up\n");
-					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = 0;
+					gPlayerVisuals[i].camera.bIsGlancing = 0;
 				}
 				return;
 			}
@@ -104,24 +104,31 @@ void keyGame(int state, int k, int x, int y)
 			scripting_RunFormat("return settings.keys[%d].glance_right", i + 1);
 			scripting_GetIntegerResult( &key );
 			if(key == k) {
-				if(state == SYSTEM_KEYSTATE_DOWN) {
+				if(state == NEBU_INPUT_KEYSTATE_DOWN) {
 					// printf("glance right down\n");
-					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = - PI / 2.0f;
+					gPlayerVisuals[i].camera.bIsGlancing = -1;
 				} else {
 					// printf("glance right up\n");
-					gPlayerVisuals[i].camera.movement[CAM_PHI_OFFSET] = 0;
+					gPlayerVisuals[i].camera.bIsGlancing = 0;
 				}
 				return;
 			}
 			// boost
 			scripting_RunFormat("return settings.keys[%d].boost", i + 1);
 			scripting_GetIntegerResult( &key );
-			if(key == k) {
-				if(state == SYSTEM_KEYSTATE_DOWN) {
+			if(key == k)
+			{
+				if(state == NEBU_INPUT_KEYSTATE_DOWN)
+				{
 					// printf("boost down\n");
-					if(game->player[i].data->energy > getSettingf("booster_min"))
+					if(getSettingi("booster_on") &&
+						game->player[i].data->energy > getSettingf("booster_min"))
+					{
 						game->player[i].data->boost_enabled = 1;
-				} else {
+					}
+				}
+				else
+				{
 					// printf("boost up\n");
 					game->player[i].data->boost_enabled = 0;
 				}
@@ -130,12 +137,19 @@ void keyGame(int state, int k, int x, int y)
 			// wallbuster
 			scripting_RunFormat("return settings.keys[%d].bust", i + 1);
 			scripting_GetIntegerResult( &key );
-			if(key == k) {
-				if(state == SYSTEM_KEYSTATE_DOWN) {
+			if(key == k)
+			{
+				if(state == NEBU_INPUT_KEYSTATE_DOWN)
+				{
 					// printf("wall_buster down\n");
-					if(game->player[i].data->energy > getSettingf("wall_buster_min"))
+					if(getSettingi("wall_buster_on") &&
+						game->player[i].data->energy > getSettingf("wall_buster_min"))
+					{
 						game->player[i].data->wall_buster_enabled = 1;
-				} else {
+					}
+				}
+				else
+				{
 					// printf("wall_buster up\n");
 					game->player[i].data->wall_buster_enabled = 0;
 				}
@@ -143,7 +157,7 @@ void keyGame(int state, int k, int x, int y)
 			}
 		}
 	}
-	if(state == SYSTEM_KEYSTATE_DOWN) {
+	if(state == NEBU_INPUT_KEYSTATE_DOWN) {
 		displayMessage(TO_STDERR, "key '%s' (%d) is not bound", 
 									 nebu_Input_GetKeyname(k), k);
 	}
