@@ -294,7 +294,8 @@ void doMovement(int dt)
 			} // wall acceleration
 
 			// recharge energy
-			regenerate(i, dt);
+			if(getSettingi("wall_buster_on") || getSettingi("booster_on"))
+				regenerate(i, dt);
 
 			if(getSettingf("wall_buster_on") == 1)
 			{ // wall buster
