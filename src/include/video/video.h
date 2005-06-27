@@ -243,6 +243,8 @@ extern void initVideoData(void);
 extern void initGameScreen(void);
 extern void gui_LoadResources(void);
 extern void gui_ReleaseResources(void);
+extern void video_LoadResources(void);
+extern void video_ReleaseResources(void);
 
 extern void Video_Idle(void);
 
