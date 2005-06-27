@@ -50,7 +50,7 @@ void mouseCredits (int buttons, int state, int x, int y)
 
 void keyCredits(int state, int k, int x, int y)
 {
-	if(state == SYSTEM_KEYSTATE_UP)
+	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 	nebu_System_Exit();
 	nebu_System_ExitLoop(eSRC_Quit);

@@ -71,7 +71,7 @@ void idleTimedemo(void) {
 }
 
 void keyTimedemo(int state, int key, int x, int y) {
-	if(state == SYSTEM_KEYSTATE_UP)
+	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
 	if(key == 27)

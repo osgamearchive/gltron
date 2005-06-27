@@ -37,7 +37,7 @@ void idlePause(void) {
 }
 
 void keyboardPause(int state, int key, int x, int y) {
-	if(state == SYSTEM_KEYSTATE_UP)
+	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
 	switch(key) {
@@ -105,7 +105,7 @@ Callbacks pauseCallbacks = {
 };
 
 void keyboardPrompt(int state, int key, int x, int y) {
-	if(state == SYSTEM_KEYSTATE_UP)
+	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
 	switch(key) {
