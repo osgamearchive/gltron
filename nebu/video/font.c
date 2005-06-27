@@ -66,7 +66,7 @@ int getTextLength(const char *text, int len)
 	int i;
 	int textLength = 0;
 
-	for(i = 0; i < len; i++)
+	for(i = 0; !len || i < len; i++)
 	{
 		if(text[i] == 0) // end of text reached?
 			break; 
@@ -178,7 +178,7 @@ void nebu_Font_Render(nebu_Font* font, const char *text, int len)
 
 	nebu_Video_CheckErrors("before font render");
 
-	for(i = 0; i < len; i++)
+	for(i = 0; !len || i < len; i++)
 	{
 		int index;
 		int texture;
