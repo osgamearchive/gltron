@@ -15,6 +15,14 @@ void displayGame(void) {
   nebu_System_SwapBuffers();
 }
 
+void video_LoadResources(void)
+{
+}
+
+void video_ReleaseResources(void)
+{
+}
+
 int initWindow(void) {
 	int win_id;
 	int flags;
@@ -31,6 +39,17 @@ int initWindow(void) {
 	nebu_Video_SetDisplayMode(flags);
 
 	win_id = nebu_Video_Create("gltron");      
+	// check if we have destination alpha,
+	// if not, display warning
+	{
+		int r, g, b, a;
+		nebu_Video_GetDisplayDepth(&r, &g, &b, &a);
+		if(a == 0)
+		{
+			scripting_Run("gui_hide_background = 1");
+			scripting_Run("Menu = WarningMenu");
+		}
+	}
 
 	if (win_id < 0) { 
 		if( getSettingi("use_stencil") ) {

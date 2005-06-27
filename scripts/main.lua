@@ -15,7 +15,8 @@ EScriptingReturnCode =
 	eSRC_GUI_Escape = 11,
 	eSRC_GUI_Prompt = 12,
 	eSRC_GUI_Prompt_Escape = 13,
-	eSRC_Pause_Escape = 14
+	eSRC_Pause_Escape = 14,
+	eSRC_32bitWarning_OK = 15,
 }
 
 -- enable below to run in timedemo-only mode
@@ -27,7 +28,13 @@ if(timedemo) then
 	os.exit()
 end
 
-callback = "gui"
+if callback == nil then
+	callback = "gui"
+end
+
+if Menu == nil then
+	Menu = MainGameMenu
+end
 
 game_initialized = 0;
 
@@ -59,7 +66,7 @@ next_callback[ EScriptingReturnCode.eSRC_GUI_Prompt ] = function() return "confi
 next_callback[ EScriptingReturnCode.eSRC_Timedemo ] = nil
 next_callback[ EScriptingReturnCode.eSRC_Timedemo_Abort ] = nil
 next_callback[ EScriptingReturnCode.eSRC_Quit ] = nil
-
+-- next_callback[ EScriptingReturnCode.eSRC_32bitWarning_OK ] = function() return "gui"; end
 
 while 1 do
 	c_setCallback(callback)

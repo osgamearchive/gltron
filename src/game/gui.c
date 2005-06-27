@@ -6,6 +6,7 @@
 #include "configuration/settings.h"
 #include "filesystem/path.h"
 #include "scripting/scripting.h"
+#include "game/32bit_warning.h"
 
 #include "video/nebu_2d.h"
 #include "video/nebu_renderer_gl.h"
@@ -28,8 +29,6 @@ void drawMenu(Visual *d);
 void drawGuiBackground(void) {
   nebu_Video_CheckErrors("gui background start");
 
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // rasonly(gScreen);
   glMatrixMode(GL_PROJECTION);
@@ -42,6 +41,18 @@ void drawGuiBackground(void) {
 }
   
 void displayGui(void) {
+  scripting_GetGlobal("gui_hide_background", NULL);
+  if(!scripting_IsNil())
+  {
+	  scripting_Pop();
+	  _32bit_warning_Display();
+	  return;
+  }
+
+  scripting_Pop();
+	
+  glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   drawGuiBackground();
   drawMenu(gScreen);
 
@@ -70,7 +81,7 @@ void idleGui(void) {
 }
 
 void keyboardConfigure(int state, int key, int x, int y) {
-	if(state != SYSTEM_KEYSTATE_DOWN)
+	if(state != NEBU_INPUT_KEYSTATE_DOWN)
 		return;
 
 	if(key != 27) /* don't allow escape */
@@ -97,7 +108,7 @@ void keyboardConfigure(int state, int key, int x, int y) {
 void keyboardGui(int state, int key, int x, int y) {
   char *pMenuName;
 
-	if(state == SYSTEM_KEYSTATE_UP)
+	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
   scripting_Run("return Menu.current");

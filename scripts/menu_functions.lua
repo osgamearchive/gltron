@@ -1,3 +1,21 @@
+MenuC = {
+   type = {
+      menu = 1,
+      list = 2,
+      slider = 3,
+      key = 4,
+      string = 5, -- not used yet
+      number = 6, -- not used yet
+      action = 7
+   },
+   keys = {
+      player1 = {},
+      player2 = {},
+      player3 = {},
+      player4 = {}
+   }
+}
+	
 GetMenuValue = {}
 MenuAction = {}
 MenuLeft = {} 
@@ -29,6 +47,7 @@ end
 
 MenuAction[ MenuC.type.menu ] = function ( menu )
 	Menu.current = menu 
+	io.write("Menu.current is '", menu, "'"); io.flush();
 	Menu.active = 1
 	-- io.write(string.format("setting %s (%d items) as active menu\n", menu, table.getn(Menu[menu].items) ))
 	local i
@@ -121,25 +140,25 @@ GetMenuValueString = function ( menu )
 	end
 end
 
-MenuFunctions.SetParent = function ( menu )
-	-- script_print("processing menu '" .. menu .. "'")
+MenuFunctions.SetParent = function ( main, sub )
+	-- script_print("processing menu '" .. sub .. "'")
 	local _,entry
-	for _,entry in Menu[menu].items do
-		if Menu[entry] == nil then
+	for _,entry in main[sub].items do
+		if main[entry] == nil then
 			script_print("menu '" .. entry .. "' does not exist")
 		else 
-			Menu[entry].parent = menu
+			main[entry].parent = sub
 			-- script_print("processing item '" .. entry .. "'")
-			if Menu[entry].type == MenuC.type.menu then
-				MenuFunctions.SetParent( entry )
+			if main[entry].type == MenuC.type.menu then
+				MenuFunctions.SetParent( main, entry )
 			end
 		end
 	end
 end
 
-MenuFunctions.SetNames = function ()
+MenuFunctions.SetNames = function (menu)
 	local name,v
-	for name,v in Menu do
+	for name,v in menu do
 		if type(v) == "table" then
 			v.name = name
 		end
@@ -148,6 +167,7 @@ end
 
 MenuFunctions.GotoParent = function ()
 	Menu.current = Menu[Menu.current].parent
+	io.write("Menu.current is '", menu, "'"); io.flush();
 	Menu.active = 1
 end
 
@@ -190,7 +210,3 @@ MenuFunctions.Previous = function ()
 		Menu.active = table.getn(Menu[Menu.current].items)
 	end
 end
-
--- initialization code
-MenuFunctions.SetNames()
-MenuFunctions.SetParent( "RootMenu" )

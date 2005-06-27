@@ -1,22 +1,4 @@
-MenuC = {
-   type = {
-      menu = 1,
-      list = 2,
-      slider = 3,
-      key = 4,
-      string = 5, -- not used yet
-      number = 6, -- not used yet
-      action = 7
-   },
-   keys = {
-      player1 = {},
-      player2 = {},
-      player3 = {},
-      player4 = {}
-   }
-}
-
-Menu = { 
+MainGameMenu = { 
    -- menu after startup
    current = "RootMenu",
    active = 1,
@@ -581,54 +563,54 @@ Menu = {
    },
 }
 -- Menu entries
-Menu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "ControlsMenu", "Quit" }
+MainGameMenu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "ControlsMenu", "Quit" }
 
-Menu.ControlsMenu.items = {
+MainGameMenu.ControlsMenu.items = {
 	"KeyConfigMenu", "JoyConfigMenu", "MouseLockIngame",
 	"MouseInvertX", "MouseInvertY"
 }
 
-Menu.GameMenu.items = { 
+MainGameMenu.GameMenu.items = { 
    "StartGame", "ResetScores", "GameRulesMenu", 
    "GameSettingsMenu", "PlayerConfigMenu",
 }
 
-Menu.GameRulesMenu.items = { 
+MainGameMenu.GameRulesMenu.items = { 
    "Booster", "WallAccell", "WallBuster", "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
 }
 
-Menu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports", "Map" }
-Menu.PlayerConfigMenu.items = { "Player1", "Player2", "Player3", "Player4" }
-Menu.KeyConfigMenu.items = { 
+MainGameMenu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports", "Map" }
+MainGameMenu.PlayerConfigMenu.items = { "Player1", "Player2", "Player3", "Player4" }
+MainGameMenu.KeyConfigMenu.items = { 
    "Player1_KeyMenu", "Player2_KeyMenu", "Player3_KeyMenu", "Player4_KeyMenu"
 }
-Menu.JoyConfigMenu.items = { "Joy_Threshold" }
-Menu.Player1_KeyMenu.items = { 
+MainGameMenu.JoyConfigMenu.items = { "Joy_Threshold" }
+MainGameMenu.Player1_KeyMenu.items = { 
 	"Player1_Left", "Player1_Right",
 	"Player1_GlanceLeft", "Player1_GlanceRight",
 	"Player1_Booster",
 	"Player1_WallBuster",
 }
-Menu.Player2_KeyMenu.items = { 
+MainGameMenu.Player2_KeyMenu.items = { 
 	"Player2_Left", "Player2_Right",
 	"Player2_GlanceLeft", "Player2_GlanceRight",
 	"Player2_Booster",
 	"Player2_WallBuster",
 }
-Menu.Player3_KeyMenu.items = { 
+MainGameMenu.Player3_KeyMenu.items = { 
 	"Player3_Left", "Player3_Right",
 	"Player3_GlanceLeft", "Player3_GlanceRight",
 	"Player3_Booster",
 	"Player3_WallBuster",
 }
-Menu.Player4_KeyMenu.items = { 
+MainGameMenu.Player4_KeyMenu.items = { 
 	"Player4_Left", "Player4_Right",
 	"Player4_GlanceLeft", "Player4_GlanceRight",
 	"Player4_Booster",
 	"Player4_WallBuster",
 }
 
-Menu.VideoMenu.items = {
+MainGameMenu.VideoMenu.items = {
    	 "HudMenu",
 	 "DetailsMenu",
 	 "Level", "Artpack", 
@@ -636,16 +618,43 @@ Menu.VideoMenu.items = {
 	 --, "TimeDemo" 
 }
 
-Menu.DetailsMenu.items = {
+MainGameMenu.DetailsMenu.items = {
    "Filtering", "AlphaTrails", "Halos", "Reflections",
     -- "Lightcycles",
     "Recognizer", "Lod", "Fov"
 }
 
-Menu.HudMenu.items = {
+MainGameMenu.HudMenu.items = {
    "HUD_Speed", "HUD_Console", "HUD_2d", "FPS_Counter", "AI_Status", "Scores"
 }
 
-Menu.AudioMenu.items = { 
+MainGameMenu.AudioMenu.items = { 
 	 "Music", "FX", "Music_Volume", "FX_Volume", "Song", "LoopMusic"
 }
+
+WarningMenu = {
+	current = "RootMenu",
+	active = 1,
+	RootMenu = { type = MenuC.type.menu, caption = "" },
+	Continue = { type = MenuC.type.action, caption = "Continue",
+      action = function() 
+	  		Menu = MainGameMenu
+			gui_hide_background = nil
+		end
+   },
+	Quit = { type = MenuC.type.action, caption = "Quit",
+      action = function() c_quitGame(); end
+   },
+}
+
+WarningMenu.RootMenu.items = { "Continue", "Quit" }
+
+-- initialization code
+
+MenuFunctions.SetNames( WarningMenu )
+MenuFunctions.SetParent( WarningMenu, "RootMenu" )
+
+MenuFunctions.SetNames( MainGameMenu )
+MenuFunctions.SetParent( MainGameMenu, "RootMenu" )
+
+
