@@ -236,6 +236,9 @@
 				Name="game"
 				Filter="">
 				<File
+					RelativePath=".\src\game\32bit_warning.c">
+				</File>
+				<File
 					RelativePath=".\src\game\camera.c">
 				</File>
 				<File
@@ -334,6 +337,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
+			<File
+				RelativePath=".\src\include\game\32bit_warning.h">
+			</File>
 			<File
 				RelativePath=".\src\include\game\ai.h">
 			</File>
