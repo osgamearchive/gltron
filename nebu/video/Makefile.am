@@ -7,4 +7,5 @@ libvideo_a_SOURCES= \
 AM_CFLAGS= \
 	-I$(top_srcdir)/nebu/include \
 	-I$(top_srcdir)/lua5/include \
+	-I$(top_srcdir)/glew/include \
 	-I$(top_srcdir)
