@@ -168,6 +168,9 @@ int resource_GetToken(char *filename, int type)
 {
 	Token *pToken;
 
+	if(filename == NULL || *filename == 0)
+		return 0;
+
 	assert(!findIdenticalToken(filename, type));
 
 	pToken = (Token*)malloc(sizeof(Token));

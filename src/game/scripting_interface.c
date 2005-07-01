@@ -216,8 +216,8 @@ int c_setArtPath(lua_State *l)
 	scripting_GetStringResult(&artpack);
 	fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
 
-	sprintf(art_dir_default, "%s%c%s", "art", SEPARATOR, "default");
-	sprintf(art_dir_artpack, "%s%c%s", "art", SEPARATOR, artpack);
+	sprintf(art_dir_default, "%s%c%s", getDirectory(PATH_ART), SEPARATOR, "default");
+	sprintf(art_dir_artpack, "%s%c%s", getDirectory(PATH_ART), SEPARATOR, artpack);
 
 	free(artpack);
 
