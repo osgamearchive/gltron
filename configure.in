@@ -4,7 +4,7 @@ dnl initialisation
 AC_INIT(src/gltron.c)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE(gltron, 0.71-beta-6)
+AM_INIT_AUTOMAKE(gltron, 0.71-beta-1015)
 
 AC_PREFIX_DEFAULT("/usr/local")
 
@@ -61,7 +61,6 @@ dnl library checks
 AM_PATH_SDL(1.1.0, CFLAGS="$CFLAGS $SDL_CFLAGS"; CXXFLAGS="$CXXFLAGS $SDL_CFLAGS"; LIBS="$LIBS $SDL_LIBS",
 	AC_MSG_ERROR(SDL is not installed))
 AC_CHECK_LIB(GL, glBegin,, AC_MSG_ERROR(OpenGL is not installed))
-AC_CHECK_LIB(GLEW, glewInit,, AC_MSG_ERROR(OpenGL is not installed))
 dnl AC_CHECK_LIB(opengl32, main,, AC_MSG_ERROR(OpenGL is not installed))
 AC_CHECK_LIB(z, gzopen,, AC_MSG_ERROR(libz is not installed))
 AC_CHECK_LIB(png, png_read_info,, AC_MSG_ERROR(libpng is not installed))
@@ -151,6 +150,9 @@ AC_OUTPUT([Makefile \
 	lua5/Makefile \
 	lua5/include/Makefile \
 	lua5/lib/Makefile \
+	glew/Makefile \
+	glew/include/Makefile \
+	glew/include/GL/Makefile \
 	nebu/Makefile \
 	nebu/include/Makefile \
 	nebu/include/audio/Makefile \
@@ -184,6 +186,8 @@ AC_OUTPUT([Makefile \
 	src/game/Makefile \
 	art/Makefile \
 	art/default/Makefile \
+	art/classic/Makefile \
+	art/metalTron/Makefile \
 	data/Makefile \
 	music/Makefile \
 	scripts/Makefile \

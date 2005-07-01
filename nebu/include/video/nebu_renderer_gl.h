@@ -2,6 +2,7 @@
 #define NEBU_RENDERER_GL_H
 
 // #include "SDL_opengl.h"
+#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <stdio.h>
