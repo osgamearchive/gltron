@@ -1,5 +1,5 @@
 #include "base/nebu_debug_memory.h"
-#include "nebu_scripting.h"
+#include "scripting/nebu_scripting.h"
 
 #include "lua.h"
 #include "lualib.h"
