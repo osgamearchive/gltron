@@ -30,25 +30,23 @@ static void writeCamDefaults(Camera *cam, int type) {
 	cam_defaults[cam->type.type][type] = cam->movement[type];
 }
 
-
-#define CLAMP_R_MIN 6
-#define CLAMP_R_MAX 45
-#define CLAMP_CHI_MIN PI / 8
-#define CLAMP_CHI_MAX 3 * PI / 8
-
 static void clampCam(Camera *cam) {
 	if(cam->type.freedom[CAM_FREE_R]) {
-		if(cam->movement[CAM_R] < CLAMP_R_MIN)
-			cam->movement[CAM_R] = CLAMP_R_MIN;
-		if(cam->movement[CAM_R] > CLAMP_R_MAX)
-			cam->movement[CAM_R] = CLAMP_R_MAX;
+		float clamp_cam_r_min = getSettingf("clamp_cam_r_min");
+		float clamp_cam_r_max = getSettingf("clamp_cam_r_min");
+		if(cam->movement[CAM_R] < clamp_cam_r_min)
+			cam->movement[CAM_R] = clamp_cam_r_min;
+		if(cam->movement[CAM_R] > clamp_cam_r_max)
+			cam->movement[CAM_R] = clamp_cam_r_max;
 	}
 
 	if(cam->type.freedom[CAM_FREE_CHI]) {
-		if(cam->movement[CAM_CHI] < CLAMP_CHI_MIN)
-			cam->movement[CAM_CHI] = CLAMP_CHI_MIN;
-		if(cam->movement[CAM_CHI] > CLAMP_CHI_MAX)
-			cam->movement[CAM_CHI] = CLAMP_CHI_MAX;
+		float clamp_cam_chi_min = getSettingf("clamp_cam_r_min");
+		float clamp_cam_chi_max = getSettingf("clamp_cam_r_min");
+		if(cam->movement[CAM_CHI] < clamp_cam_chi_min)
+			cam->movement[CAM_CHI] = clamp_cam_chi_min;
+		if(cam->movement[CAM_CHI] > clamp_cam_chi_max)
+			cam->movement[CAM_CHI] = clamp_cam_chi_max;
 	}
 }
 
@@ -195,9 +193,9 @@ void playerCamera(Player *p, int player) {
 		if(cam->type.freedom[CAM_FREE_R]) {
 			// mouse buttons let you zoom in/out
 			if(gInput.mouse1 == 1)
-				cam->movement[CAM_R] += (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0f;
+				cam->movement[CAM_R] += (cam->movement[CAM_R]-getSettingf("clamp_cam_r_min")+1) * dt / 300.0f;
 			if(gInput.mouse2 == 1)
-				cam->movement[CAM_R] -= (cam->movement[CAM_R]-CLAMP_R_MIN+1) * dt / 300.0f;
+				cam->movement[CAM_R] -= (cam->movement[CAM_R]-getSettingf("clamp_cam_r_min")+1) * dt / 300.0f;
 			writeCamDefaults(cam, CAM_R);
 		}
 		nebu_Input_Mouse_GetDelta(&mouse_dx, &mouse_dy);
