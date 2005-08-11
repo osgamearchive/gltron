@@ -155,6 +155,12 @@ settings.keys = {
    }
 }
 
+-- camera
+settings.clamp_cam_r_min = 6
+settings.clamp_cam_r_max =  45
+settings.clamp_cam_chi_min =  3.141 / 8
+settings.clamp_cam_chi_max =  3 * 3.141 / 8
+
 -- these tables are not serialized to RCNAME (yet)
 -- some values are set in artpack.lua
 video = {} 
