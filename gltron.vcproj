@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="opengl32.lib SDLmaind.lib sdl.lib libpng.lib libz.lib sdl_sound.lib glew32.lib msvcrtd.lib"
+				AdditionalDependencies="opengl32.lib SDLmaind.lib sdl.lib libpng.lib libz.lib sdl_sound.lib msvcrtd.lib"
 				OutputFile=".\Debug/gltron.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -105,7 +105,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="opengl32.lib SDLmain.lib sdl.lib libpng.lib libz.lib sdl_sound.lib glew32.lib msvcrt.lib"
+				AdditionalDependencies="opengl32.lib SDLmain.lib sdl.lib libpng.lib libz.lib sdl_sound.lib msvcrt.lib"
 				OutputFile=".\Release\gltron.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

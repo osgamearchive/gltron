@@ -33,7 +33,7 @@ static void writeCamDefaults(Camera *cam, int type) {
 static void clampCam(Camera *cam) {
 	if(cam->type.freedom[CAM_FREE_R]) {
 		float clamp_cam_r_min = getSettingf("clamp_cam_r_min");
-		float clamp_cam_r_max = getSettingf("clamp_cam_r_min");
+		float clamp_cam_r_max = getSettingf("clamp_cam_r_max");
 		if(cam->movement[CAM_R] < clamp_cam_r_min)
 			cam->movement[CAM_R] = clamp_cam_r_min;
 		if(cam->movement[CAM_R] > clamp_cam_r_max)
@@ -42,7 +42,7 @@ static void clampCam(Camera *cam) {
 
 	if(cam->type.freedom[CAM_FREE_CHI]) {
 		float clamp_cam_chi_min = getSettingf("clamp_cam_r_min");
-		float clamp_cam_chi_max = getSettingf("clamp_cam_r_min");
+		float clamp_cam_chi_max = getSettingf("clamp_cam_r_max");
 		if(cam->movement[CAM_CHI] < clamp_cam_chi_min)
 			cam->movement[CAM_CHI] = clamp_cam_chi_min;
 		if(cam->movement[CAM_CHI] > clamp_cam_chi_max)

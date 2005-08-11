@@ -3,11 +3,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gltron", "gltron.vcproj", "
 	ProjectSection(ProjectDependencies) = postProject
 		{38D75F90-55A2-4BA3-AB68-9A42194EC420} = {38D75F90-55A2-4BA3-AB68-9A42194EC420}
 		{77B12E9E-0359-46ED-92F1-00740DF8545F} = {77B12E9E-0359-46ED-92F1-00740DF8545F}
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F} = {0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nebu", "nebu\nebu.vcproj", "{77B12E9E-0359-46ED-92F1-00740DF8545F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{38D75F90-55A2-4BA3-AB68-9A42194EC420} = {38D75F90-55A2-4BA3-AB68-9A42194EC420}
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F} = {0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nebutest", "nebutest\nebutest.vcproj", "{70BE3487-7FC7-4C0A-967D-40E9972E8E82}"
@@ -23,6 +25,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artpack-conversion", "tools\artpack-conversion\artpack-conversion.vcproj", "{66B22897-69D6-47A4-A450-F8DF409572B3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77B12E9E-0359-46ED-92F1-00740DF8545F} = {77B12E9E-0359-46ED-92F1-00740DF8545F}
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F} = {0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glew", "glew\glew.vcproj", "{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}"
+	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -51,6 +58,10 @@ Global
 		{66B22897-69D6-47A4-A450-F8DF409572B3}.Debug.Build.0 = Debug|Win32
 		{66B22897-69D6-47A4-A450-F8DF409572B3}.Release.ActiveCfg = Release|Win32
 		{66B22897-69D6-47A4-A450-F8DF409572B3}.Release.Build.0 = Release|Win32
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}.Debug.ActiveCfg = Debug|Win32
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}.Debug.Build.0 = Debug|Win32
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}.Release.ActiveCfg = Release|Win32
+		{0AF4AEB7-447F-418F-B6A1-E05F8DCC8D0F}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
