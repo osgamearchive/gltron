@@ -447,6 +447,63 @@ static float getReflectivity() {
 	return reflectivity;
 }
 
+/*	draw's a GLtron scene, which consists of the following step:
+	- setup up a perspective projection matrix
+	- setup the view matrix
+	- draw the skybox
+	- draw the floor geometry, possible with blended world & skybox reflections
+	- draw projected shadows of the trails, lightcycles & recognizer to the
+	  floor geometry (darkening pass)
+	- draw world geometry (recognizer, arena walls, lightcycles,
+	  cycle trails (back-to-front)
+*/
+
+/*	TODO: with engine style rendering, that's
+	- old style rendering
+		- foreach object in the scene
+			- find geometry
+			- find shader
+			- draw shader
+		- objects consist of:
+			- multiple sets of:
+				- mesh (vertex & perhaps index buffer)  
+				- world transformation
+		- example 1 (without reflections or shadows):
+			skybox:
+				- 6 objects (quaads, i.e. two triangles)
+				- 6 shaders of the same type (but with a different texture each)
+			floor:
+				- 1 object & shader (one texture)
+			walls:
+				- 1 object & shader (one texture)
+			lightcycles & recognizer (not finalized):
+				- 1 object per material & shader (no texture, but with special lighting,
+					wheel spoke stuff, explosions, recognizer outlines,
+					etc.)
+			lightcycle trail:
+				- TODO
+			special effects:
+				- lightcycle trail glow
+				- trail lines
+		- example 2 (without reflections, but with projected shadows)
+			- same as example 2, but add after floor:
+				- all object geometry that casts a drop-shadow (careful!
+				 what about objects that rely on alpha-transparency?)
+				- drop shadow shader (setup projection matrix, darkening)
+
+	2D post processing happens after all viewports are drawn (i.e.
+	at the end of the drawGame() function, and consists of
+	- HUD
+	- full screen effects
+*/
+
+/* plan for the transition:
+	move objects 1-by-1 into the 'scenegraph' (temporarily screws up
+	drawing order, but so what)
+	traverse scenegraph each frame, and build object & shader lists
+*/
+
+
 void drawCam(int player) {
 	int i;
 	float up[3] = { 0, 0, 1 };
@@ -457,13 +514,13 @@ void drawCam(int player) {
 	for(i = 0; i < 4; i++) 
 		gCurrentShadowColor[i] = gShadowColor[i] * (1 - reflectivity);
 
-	glColor3f(0.0, 1.0, 0.0);
-
+	// setup up a perspective projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	doPerspective(gSettingsCache.fov, (float) d->vp_w / (float) d->vp_h,
 		gSettingsCache.znear, box2_Diameter(& game2->level->boundingBox) * 6.5f);
 
+	// setup the view matrix
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
