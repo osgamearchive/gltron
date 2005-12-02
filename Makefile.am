@@ -37,4 +37,4 @@ AM_CXXFLAGS = \
 	-I@top_srcdir@/nebu/include
 
 tags:
-	etags `find -name '*.c' -or -name '*.cpp' -or -name '*.h' -or -name '*.lua'`
+	etags `find . -name '*.c' -or -name '*.cpp' -or -name '*.h' -or -name '*.lua'`
