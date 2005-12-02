@@ -18,13 +18,16 @@ enum {
 	NEBU_MESH_FLAGS = 10
 };
 
-typedef struct {
+typeder struct {
 	int nVertices;
 	float *pVertices;
 	float *pNormals;
 	float *pTexCoords[NEBU_MESH_TEXCOORD_MAXCOUNT];
 	int vertexformat;
+} nebu_Mesh_VB;
 
+typedef struct {
+	nebu_Mesh_VB vb;
 	int nTriangles;
 	int *pTriangles;
 
