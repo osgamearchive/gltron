@@ -75,6 +75,15 @@ void nebu_Camera_Roll(nebu_Camera *pCamera, float d) {
 	vec3_Transform(&pCamera->vUp, &pCamera->vUp, &m);
 }
 
+/*!
+	\param pCamera
+	\param flags
+	\param dx
+	\param dy
+
+	Rotates the camera around the target specified by flags
+*/
+
 void nebu_Camera_Rotate(nebu_Camera *pCamera, int flags,
 	float dx, float dy)
 {
