@@ -190,6 +190,17 @@ float vec2_Length(const vec2 *pV) {
 	return l;
 }
 
+int vec3_Cmp(const vec3 *pV1, const vec3 *pV2)
+{
+	int i;
+	for(i = 0; i < 3; i++)
+	{
+		if(pV1->v[i] < pV2->v[i]) return -1;
+		if(pV1->v[i] > pV2->v[i]) return 1;
+	}
+	return 0;
+}
+
 int segment2_findT(float *t, const segment2 *s, const vec2 *v) {
 	float epsilon = 0.001f;
 	if( fabs(s->vDirection.v[0]) > fabs(s->vDirection.v[1]) ) {

@@ -30,6 +30,8 @@ vec4* vec4_FromVec3(vec4 *pOut, const vec3 *pV);
 
 vec3* vec3_Copy(vec3 *pOut, const vec3 *pV);
 vec3* vec3_Scale(vec3 *pOut, const vec3 *pV, float f);
+int vec3_Cmp(const vec3 *pV1, const vec3 *pV2);
+
 void vec4_Print(const vec4 *pV);
 void vec3_Print(const vec3 *pV);
 vec3* vec3_Zero(vec3 *pV);
