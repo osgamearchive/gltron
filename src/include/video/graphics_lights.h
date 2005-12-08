@@ -2,7 +2,8 @@
 #define GRAPHICS_LIGHTS_H
 
 typedef enum eLightEnvironment {
-	eCycles = 0,
+	eCyclesAmbient = 0,
+	eCyclesWorld,
 	eRecognizer,
 	eWorld
 } eLightEnvironment;

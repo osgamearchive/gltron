@@ -142,6 +142,9 @@
 					RelativePath=".\video\mesh_3ds.c">
 				</File>
 				<File
+					RelativePath=".\video\mesh_shadow.c">
+				</File>
+				<File
 					RelativePath=".\video\pixels.c">
 				</File>
 				<File
@@ -395,20 +398,20 @@
 					RelativePath=".\include\filesystem\nebu_file_io.h">
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h">
+					RelativePath=".\include\filesystem\nebu_filesystem.h">
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h">
+					RelativePath=".\include\Nebu_filesystem.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="scripting"
 				Filter="">
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h">
+					RelativePath=".\include\Nebu_scripting.h">
 				</File>
 				<File
-					RelativePath=".\include\Nebu_scripting.h">
+					RelativePath=".\include\scripting\nebu_scripting.h">
 				</File>
 			</Filter>
 			<Filter

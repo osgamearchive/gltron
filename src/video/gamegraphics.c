@@ -109,25 +109,55 @@ float getDirAngle(int time, Player *p) {
   return dirAngle;
 }
 
-void doCycleTurnRotation(PlayerVisual *pV, Player *p) {
-  int neigung_dir = -1;
-	int time = game2->time.current - p->data->turn_time;
-  float dirAngle = getDirAngle(time, p);
+void getCycleTransformation(nebu_Matrix4D *pM, Player *p, int lod)
+{
+	nebu_Matrix4D matTranslate;
+	nebu_Matrix4D matRotate;
+	vec3 vTranslate;
+	vec3 vUp = { { 0, 0, 1 } };
+	vec3 vForward = { { 0, 1, 0 } };
 
-  glRotatef(dirAngle, 0, 0, 1);
+	gltron_Mesh *cycle = (gltron_Mesh*)resource_Get(gpTokenLightcycles[lod], eRT_GLtronTriMesh);
 
-#define neigung 25
-  if(time < TURN_LENGTH && p->data->last_dir != p->data->dir) {
-    float axis = 1.0f;
-    if(p->data->dir < p->data->last_dir && p->data->last_dir != 3)
-      axis = -1.0;
-    else if((p->data->last_dir == 3 && p->data->dir == 2) ||
-	    (p->data->last_dir == 0 && p->data->dir == 3))
-      axis = -1.0;
-    glRotated(neigung * sin(PI * time / TURN_LENGTH),
-	      0.0, axis * neigung_dir, 0.0);
-  }
-#undef neigung
+	matrixIdentity(pM);
+	vec3_Zero(&vTranslate);
+
+	getPositionFromData(&vTranslate.v[0], &vTranslate.v[1], p->data);
+	
+	matrixTranslation(&matTranslate, &vTranslate);
+	matrixMultiply(pM, pM, &matTranslate);
+
+	if (p->data->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
+		matrixRotationAxis(&matRotate, dirangles[p->data->dir] * (float)M_PI / 180.0f, &vUp);
+		matrixMultiply(pM, pM, &matRotate);
+	}
+
+	if (gSettingsCache.turn_cycle) { 
+		int neigung_dir = -1;
+			int time = game2->time.current - p->data->turn_time;
+		float dirAngle = getDirAngle(time, p);
+		matrixRotationAxis(&matRotate, dirAngle * (float)M_PI / 180.0f, &vUp);
+		matrixMultiply(pM, pM, &matRotate);
+
+		#define neigung 25
+		if(time < TURN_LENGTH && p->data->last_dir != p->data->dir) {
+			float axis = 1.0f;
+			if(p->data->dir < p->data->last_dir && p->data->last_dir != 3)
+			axis = -1.0;
+			else if((p->data->last_dir == 3 && p->data->dir == 2) ||
+				(p->data->last_dir == 0 && p->data->dir == 3))
+			axis = -1.0;
+			matrixRotationAxis(&matRotate,
+				neigung * sinf(PI * time / TURN_LENGTH) * (float)M_PI / 180.0f,
+				&vForward);
+			matrixMultiply(pM, pM, &matRotate);
+		}
+		#undef neigung
+	}
+	vec3_Zero(&vTranslate);
+	vTranslate.v[2] = cycle->BBox.vSize.v[2] / 2;
+	matrixTranslation(&matTranslate, &vTranslate);
+	matrixMultiply(pM, pM, &matTranslate);
 }
 
 void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
@@ -149,18 +179,14 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   /* transformations */
 
   glPushMatrix();
-	{
-		float x, y;
-		getPositionFromData(&x, &y, p->data);
-		glTranslatef(x,y, 0.0);
-	}
   glMultMatrixf(shadow_matrix);
-  if (gSettingsCache.turn_cycle) {
-    doCycleTurnRotation(pV, p);
-  } else if (p->data->exp_radius == 0) {
-    glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
-  }
-  glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
+
+	{
+		nebu_Matrix4D matTransform;
+		getCycleTransformation(&matTransform, p, lod);
+		glMultMatrixf(matTransform.m);
+	}
+
 
   /* render */
 
@@ -171,12 +197,12 @@ void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
   glPopMatrix();
 }
 
+
 void drawCycle(int player, int lod, int drawTurn) {
 	Player *p = game->player + player;
 	PlayerVisual *pV = gPlayerVisuals + player;
 
 	gltron_Mesh *cycle = (gltron_Mesh*)resource_Get(gpTokenLightcycles[lod], eRT_GLtronTriMesh);
-	float x, y;
 
 	unsigned int spoke_time = game2->time.current - pV->spoke_time;
 	int turn_time = game2->time.current - p->data->turn_time;
@@ -184,17 +210,14 @@ void drawCycle(int player, int lod, int drawTurn) {
 	if(turn_time < TURN_LENGTH && !drawTurn)
 		return;
 
-	getPositionFromData(&x, &y, p->data);
 	glPushMatrix();
-	glTranslatef(x, y, 0.0);
 
-	if (p->data->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
-		glRotatef(dirangles[p->data->dir], 0.0, 0.0, 1.0);
+	{
+		nebu_Matrix4D matTransform;
+		getCycleTransformation(&matTransform, p, lod);
+		glMultMatrixf(matTransform.m);
 	}
 
-	if (gSettingsCache.turn_cycle) { 
-		doCycleTurnRotation(pV, p);
-	}
 
 	if(p->data->wall_buster_enabled) {
 		float black[] = { 0, 0, 0, 1};
@@ -209,8 +232,6 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 	if (p->data->exp_radius == 0) {
 		glEnable(GL_NORMALIZE);
-
-		glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
 		/* draw spoke animation */
 		if (spoke_time > 140 - (p->data->speed * 10) 
@@ -230,8 +251,37 @@ void drawCycle(int player, int lod, int drawTurn) {
 		if (gSettingsCache.light_cycles) {
 			glEnable(GL_LIGHTING); // enable OpenGL lighting for lightcycles
 		}
+
 		glEnable(GL_CULL_FACE);
+
+		// clear stencil buffer
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 0, 255);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+
+		// draw cycle with ambient (including camera) lighting
+		setupLights(eCyclesAmbient);
+		// glColor3f(0,0,0);
+		// glDisable(GL_LIGHTING);
 		gltron_Mesh_Draw(cycle, TRI_MESH);
+
+		// TODO: draw shadow volume to mask out shadowed areas
+
+		// draw cycle where stencil is still 0
+		glStencilFunc(GL_EQUAL, 0, 255);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+		glDepthFunc(GL_LEQUAL);
+		setupLights(eCyclesWorld);
+		// glEnable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		gltron_Mesh_Draw(cycle, TRI_MESH);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_BLEND);
+
+		glDisable(GL_STENCIL_TEST);
+
 #if 1
 		if(p->data->wall_buster_enabled)
 		{
@@ -263,12 +313,13 @@ void drawCycle(int player, int lod, int drawTurn) {
 		glEnable(GL_BLEND);
 
 		if (gSettingsCache.show_impact) {
+			glPushMatrix();
+			glTranslatef(0, 0, - cycle->BBox.vSize.v[2] / 2);
 			drawImpact(player);
+			glPopMatrix();
 		}
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glTranslatef(0, 0, cycle->BBox.vSize.v[2] / 2);
 
 		if (gSettingsCache.light_cycles) {
 			glEnable(GL_LIGHTING); // enable OpenGL lighting for lightcycles
@@ -394,10 +445,11 @@ void drawWorld(int player) {
 		drawWalls();
 	}
 
-	setupLights(eCycles);
-
+	// setupLights(eCycles);
+	// drawPlayers sets up its own lighting
 	drawPlayers(player);
 
+	// restore lighting to world light
 	setupLights(eWorld);
 
 	{

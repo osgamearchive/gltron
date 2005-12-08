@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 #include "filesystem/path.h"
 #include "video/nebu_mesh.h"
@@ -136,50 +137,52 @@ enum {
 nebu_Mesh* loadMesh(void) {
 	nebu_Mesh *pMesh;
 	int i, j;
-	
-	pMesh = (nebu_Mesh*) malloc( sizeof(nebu_Mesh) );
-	memset(pMesh, 0, sizeof(nebu_Mesh));
 
-	scripting_GetValue("vertexformat");
-	scripting_GetIntegerResult(& pMesh->vertexformat);
+	{
+		int nPrimitives, nVertices, vertexformat;
+
+		scripting_GetValue("indices");
+		scripting_GetArraySize(&nPrimitives);
+		scripting_Pop(); // indices
+
+		scripting_GetValue("vertexformat");
+		scripting_GetIntegerResult(&vertexformat);
+		scripting_GetValue("vertices");
+		scripting_GetArraySize(&nVertices);
+		scripting_Pop(); // vertices
+
+		pMesh = nebu_Mesh_Create(vertexformat, nVertices, nPrimitives);
+	}
+
 	scripting_GetValue("vertices");
-	scripting_GetArraySize(& pMesh->nVertices);
-
-	if(pMesh->vertexformat & NEBU_MESH_POSITION)
-		pMesh->pVertices = malloc( pMesh->nVertices * 3 * sizeof(float) );
-	if(pMesh->vertexformat & NEBU_MESH_NORMAL)
-		pMesh->pNormals = malloc( pMesh->nVertices * 3 * sizeof(float) );
-	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0)
-		pMesh->pTexCoords[0] = malloc( pMesh->nVertices * 2 * sizeof(float) );
-
-	for(i = 0; i < pMesh->nVertices; i++) {
+	for(i = 0; i < pMesh->pVB->nVertices; i++) {
 		scripting_GetArrayIndex(i + 1);
-		if(pMesh->vertexformat & NEBU_MESH_POSITION) {
+		if(pMesh->pVB->vertexformat & NEBU_MESH_POSITION) {
 			scripting_GetValue("pos");
 			scripting_GetValue("x");
-			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 0] );
+			scripting_GetFloatResult( & pMesh->pVB->pVertices[3 * i + 0] );
 			scripting_GetValue("y");
-			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 1] );
+			scripting_GetFloatResult( & pMesh->pVB->pVertices[3 * i + 1] );
 			scripting_GetValue("z");
-			scripting_GetFloatResult( & pMesh->pVertices[3 * i + 2] );
+			scripting_GetFloatResult( & pMesh->pVB->pVertices[3 * i + 2] );
 			scripting_Pop(); // pos
 		}
-		if(pMesh->vertexformat & NEBU_MESH_NORMAL) {
+		if(pMesh->pVB->vertexformat & NEBU_MESH_NORMAL) {
 			scripting_GetValue("normal");
 			scripting_GetValue("x");
-			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 0] );
+			scripting_GetFloatResult( & pMesh->pVB->pNormals[3 * i + 0] );
 			scripting_GetValue("y");
-			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 1] );
+			scripting_GetFloatResult( & pMesh->pVB->pNormals[3 * i + 1] );
 			scripting_GetValue("z");
-			scripting_GetFloatResult( & pMesh->pNormals[3 * i + 2] );
+			scripting_GetFloatResult( & pMesh->pVB->pNormals[3 * i + 2] );
 			scripting_Pop(); // pos
 		}
-		if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0) {
+		if(pMesh->pVB->vertexformat & NEBU_MESH_TEXCOORD0) {
 			scripting_GetValue("uv");
 			scripting_GetValue("u");
-			scripting_GetFloatResult( & pMesh->pTexCoords[0][2 * i + 0] );
+			scripting_GetFloatResult( & pMesh->pVB->pTexCoords[0][2 * i + 0] );
 			scripting_GetValue("v");
-			scripting_GetFloatResult( & pMesh->pTexCoords[0][2 * i + 1] );
+			scripting_GetFloatResult( & pMesh->pVB->pTexCoords[0][2 * i + 1] );
 			scripting_Pop(); // uv
 		}
 		scripting_Pop(); // index i
@@ -187,14 +190,12 @@ nebu_Mesh* loadMesh(void) {
 	scripting_Pop(); // vertices
 	
 	scripting_GetValue("indices");
-	scripting_GetArraySize(& pMesh->nTriangles);
-	pMesh->pTriangles = malloc( pMesh->nTriangles * 3 * sizeof(int) );
-	for(i = 0; i < pMesh->nTriangles; i++) {
+	for(i = 0; i < pMesh->pIB->nPrimitives; i++) {
 		scripting_GetArrayIndex(i + 1);
 		for(j = 0; j < 3; j++)
 		{
 			scripting_GetArrayIndex(j + 1);
-			scripting_GetIntegerResult( & pMesh->pTriangles[3 * i + j] );
+			scripting_GetIntegerResult( & pMesh->pIB->pIndices[3 * i + j] );
 		}
 		scripting_Pop(); // index i;
 	}

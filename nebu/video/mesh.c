@@ -18,36 +18,40 @@ static void normalize(float *v)
 	}
 }
 
-void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
+void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB)
 {
 	int i;
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, pMesh->vb.pVertices);
+	glVertexPointer(3, GL_FLOAT, 0, pVB->pVertices);
 
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
-		if(pMesh->vb.vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
+		if(pVB->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
 			glClientActiveTexture(GL_TEXTURE0_ARB + i);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			if(pMesh->vb.pTexCoords[i])
-				glTexCoordPointer(2, GL_FLOAT, 0, pMesh->vb.pTexCoords[i]);
+			if(pVB->pTexCoords[i])
+				glTexCoordPointer(2, GL_FLOAT, 0, pVB->pTexCoords[i]);
 			else
-				glTexCoordPointer(2, GL_FLOAT, 0, pMesh->vb.pTexCoords[0]);
+				glTexCoordPointer(2, GL_FLOAT, 0, pVB->pTexCoords[0]);
 		}
 	}
 
-	if(pMesh->vb.vertexformat & NEBU_MESH_NORMAL) {
+	if(pVB->vertexformat & NEBU_MESH_NORMAL) {
 		glEnableClientState(GL_NORMAL_ARRAY);
-		glNormalPointer(GL_FLOAT, 0, pMesh->vb.pNormals);
+		glNormalPointer(GL_FLOAT, 0, pVB->pNormals);
 	}
-	glDrawElements(GL_TRIANGLES, 3 * pMesh->nTriangles, GL_UNSIGNED_INT, pMesh->pTriangles);
+}
+
+void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
+{
+	int i;
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
-		if(pMesh->vb.vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
+		if(pVB->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
 			glClientActiveTexture(GL_TEXTURE0_ARB + i);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
@@ -55,18 +59,25 @@ void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 	glClientActiveTexture(GL_TEXTURE0_ARB);
 }
 
+void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
+{
+	nebu_Mesh_VB_Enable(pMesh->pVB);
+	glDrawElements(GL_TRIANGLES, 3 * pMesh->pIB->nPrimitives, GL_UNSIGNED_INT, pMesh->pIB->pIndices);
+	nebu_Mesh_VB_Disable(pMesh->pVB);
+}
+
 void nebu_Mesh_ComputeTriangleNormal(nebu_Mesh *pMesh, int triangle, float* normal)
 {
 	float v1[3], v2[3];
 	int a, b, c, i;
 
-	a = pMesh->pTriangles[3 * triangle + 0];
-	b = pMesh->pTriangles[3 * triangle + 1];
-	c = pMesh->pTriangles[3 * triangle + 2];
+	a = pMesh->pIB->pIndices[3 * triangle + 0];
+	b = pMesh->pIB->pIndices[3 * triangle + 1];
+	c = pMesh->pIB->pIndices[3 * triangle + 2];
 	for(i = 0; i < 3; i++)
 	{
-		v1[i] = pMesh->vb.pVertices[3 * b + i] - pMesh->vb.pVertices[3 * a + i];
-		v2[i] = pMesh->vb.pVertices[3 * c + i] - pMesh->vb.pVertices[3 * a + i];
+		v1[i] = pMesh->pVB->pVertices[3 * b + i] - pMesh->pVB->pVertices[3 * a + i];
+		v2[i] = pMesh->pVB->pVertices[3 * c + i] - pMesh->pVB->pVertices[3 * a + i];
 	}
 	normal[0] = v1[1] * v2[2] - v1[2] * v2[1];
 	normal[1] = v1[2] * v2[0] - v1[0] * v2[2];
@@ -77,92 +88,120 @@ void nebu_Mesh_ComputeNormals(nebu_Mesh *pMesh)
 {
 	int i, j;
 
-	if(!pMesh->vb.pNormals)
-		pMesh->vb.pNormals = (float*) malloc( 3 * sizeof(float) * pMesh->vb.nVertices );
-	pMesh->vb.vertexformat |= NEBU_MESH_NORMAL;
+	if(!pMesh->pVB->pNormals)
+		pMesh->pVB->pNormals = (float*) malloc( 3 * sizeof(float) * pMesh->pVB->nVertices );
+	pMesh->pVB->vertexformat |= NEBU_MESH_NORMAL;
 
-	memset(pMesh->vb.pNormals, 0, 3 * sizeof(float) * pMesh->vb.nVertices);
-	for(i = 0; i < pMesh->nTriangles; i++)
+	memset(pMesh->pVB->pNormals, 0, 3 * sizeof(float) * pMesh->pVB->nVertices);
+	for(i = 0; i < pMesh->pIB->nPrimitives; i++)
 	{
 		float normal[3];
 		nebu_Mesh_ComputeTriangleNormal(pMesh, i, normal);
 
 		for(j = 0; j < 3; j++)
 		{
-			int vertex = pMesh->pTriangles[3 * i + j];
-			pMesh->vb.pNormals[3 * vertex + 0] += normal[0];
-			pMesh->vb.pNormals[3 * vertex + 1] += normal[1];
-			pMesh->vb.pNormals[3 * vertex + 2] += normal[2];
+			int vertex = pMesh->pIB->pIndices[3 * i + j];
+			pMesh->pVB->pNormals[3 * vertex + 0] += normal[0];
+			pMesh->pVB->pNormals[3 * vertex + 1] += normal[1];
+			pMesh->pVB->pNormals[3 * vertex + 2] += normal[2];
 		}
 	}
-	for(i = 0; i < pMesh->vb.nVertices; i++)
+	for(i = 0; i < pMesh->pVB->nVertices; i++)
 	{
-		normalize(pMesh->vb.pNormals + 3 * i);
+		normalize(pMesh->pVB->pNormals + 3 * i);
 	}
 }
 
 void nebu_Mesh_Scale(nebu_Mesh *pMesh, float fScale)
 {
 	int i, j;
-	for(i = 0; i < pMesh->vb.nVertices; i++)
+	for(i = 0; i < pMesh->pVB->nVertices; i++)
 	{
 		for(j = 0; j < 3; j++)
 		{
-			pMesh->vb.pVertices[3 * i + j] *= fScale;
+			pMesh->pVB->pVertices[3 * i + j] *= fScale;
 		}
 	}
 }
 
-void nebu_Mesh_Free(nebu_Mesh *pMesh)
+nebu_Mesh_IB* nebu_Mesh_IB_Create(int nPrimitives, int nPrimitivesPerIndex)
+{
+	nebu_Mesh_IB *pIB = (nebu_Mesh_IB*) malloc(sizeof(nebu_Mesh_IB));
+	pIB->pIndices = (int*) malloc(nPrimitives * nPrimitivesPerIndex * sizeof(int));
+	pIB->nPrimitives = nPrimitives;
+	pIB->nPrimitivesPerIndex = nPrimitivesPerIndex;
+	return pIB;
+}
+
+void nebu_Mesh_IB_Free(nebu_Mesh_IB *pIB)
+{
+	free(pIB->pIndices);
+	free(pIB);
+}
+
+void nebu_Mesh_VB_Free(nebu_Mesh_VB *pVB)
 {
 	int i;
 
-	free(pMesh->pTriangles);
-	if(pMesh->vb.vertexformat & NEBU_MESH_POSITION)
-		free(pMesh->vb.pVertices);
-	if(pMesh->vb.vertexformat & NEBU_MESH_NORMAL)
-		free(pMesh->vb.pNormals);
+	if(pVB->vertexformat & NEBU_MESH_POSITION)
+		free(pVB->pVertices);
+	if(pVB->vertexformat & NEBU_MESH_NORMAL)
+		free(pVB->pNormals);
 
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
-		if(pMesh->vb.vertexformat & (NEBU_MESH_TEXCOORD0 << i) &&
-			pMesh->vb.pTexCoords[i])
-			free(pMesh->vb.pTexCoords[i]);
+		if(pVB->vertexformat & (NEBU_MESH_TEXCOORD0 << i) &&
+			pVB->pTexCoords[i])
+			free(pVB->pTexCoords[i]);
 	}
+	free(pVB);
+}
+
+void nebu_Mesh_Free(nebu_Mesh *pMesh)
+{
+	nebu_Mesh_IB_Free(pMesh->pIB);
+	nebu_Mesh_VB_Free(pMesh->pVB);
 	free(pMesh);
 }
-nebu_Mesh* nebu_Mesh_Create(int flags, int nVertices, int nTriangles)
+
+nebu_Mesh_VB* nebu_Mesh_VB_Create(int flags, int nVertices)
 {
 	// TODO: add error checking
 	int i;
 
-	nebu_Mesh *pMesh = (nebu_Mesh*) malloc(sizeof(nebu_Mesh));
-	pMesh->vb.nVertices = nVertices;
-	pMesh->nTriangles = nTriangles;
+	nebu_Mesh_VB* pVB = (nebu_Mesh_VB*) malloc(sizeof(nebu_Mesh_VB));
+	pVB->nVertices = nVertices;
+	pVB->vertexformat = flags;
 
 	if(flags & NEBU_MESH_POSITION)
-		pMesh->vb.pVertices = (float*) malloc(3 * sizeof(float) * nVertices);
+		pVB->pVertices = (float*) malloc(3 * sizeof(float) * nVertices);
 	else
-		pMesh->vb.pVertices = NULL;
+		pVB->pVertices = NULL;
 
 	if(flags & NEBU_MESH_NORMAL)
-		pMesh->vb.pNormals = (float*) malloc(3 * sizeof(float) * nVertices);
+		pVB->pNormals = (float*) malloc(3 * sizeof(float) * nVertices);
 	else
-		pMesh->vb.pNormals = NULL;
+		pVB->pNormals = NULL;
 
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
 		if(flags & (NEBU_MESH_TEXCOORD0 << i))
-			pMesh->vb.pTexCoords[i] = (float*) malloc(2 * sizeof(float) * nVertices);
+			pVB->pTexCoords[i] = (float*) malloc(2 * sizeof(float) * nVertices);
 		else
-			pMesh->vb.pTexCoords[i] = NULL;
+			pVB->pTexCoords[i] = NULL;
 	}
+	return pVB;
+}
 
-	pMesh->pTriangles = (int*) malloc(3 * sizeof(int) * nTriangles);
+nebu_Mesh* nebu_Mesh_Create(int flags, int nVertices, int nTriangles)
+{
+	nebu_Mesh *pMesh = (nebu_Mesh*) malloc(sizeof(nebu_Mesh));
+	pMesh->pVB = nebu_Mesh_VB_Create(flags, nVertices);
+	pMesh->pIB = nebu_Mesh_IB_Create(nTriangles, 3);
 	return pMesh;
 }
 
 void nebu_Mesh_ComputeBBox(nebu_Mesh *pMesh, box3* box)
 {
-	box3_Compute(box, (vec3*)pMesh->vb.pVertices, pMesh->vb.nVertices);
+	box3_Compute(box, (vec3*)pMesh->pVB->pVertices, pMesh->pVB->nVertices);
 }

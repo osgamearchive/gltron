@@ -36,16 +36,16 @@ static void addToMesh(nebu_Mesh *pMesh, int *pCurVertex, int *pCurTri, Lib3dsMes
 	unsigned int i, j;
 
 	// add vertices & triangles of this node to mesh
-	memcpy(pMesh->pVertices + 3 * *pCurVertex, pLib3dsMesh->pointL, pLib3dsMesh->points * 3 * sizeof(float));
+	memcpy(pMesh->pVB->pVertices + 3 * *pCurVertex, pLib3dsMesh->pointL, pLib3dsMesh->points * 3 * sizeof(float));
 
-	if(pMesh->vertexformat & NEBU_MESH_TEXCOORD0)
-		memcpy(pMesh->pTexCoords[0] + 2 * *pCurVertex, pLib3dsMesh->texelL, pLib3dsMesh->texels * 2 * sizeof(float));
+	if(pMesh->pVB->vertexformat & NEBU_MESH_TEXCOORD0)
+		memcpy(pMesh->pVB->pTexCoords[0] + 2 * *pCurVertex, pLib3dsMesh->texelL, pLib3dsMesh->texels * 2 * sizeof(float));
 
 	for(i = 0; i < pLib3dsMesh->faces; i++)
 	{
 		for(j = 0; j < 3; j++)
 		{
-			pMesh->pTriangles[3 * (i + *pCurTri) + j] = pLib3dsMesh->faceL[i].points[j] + *pCurVertex;
+			pMesh->pIB->pIndices[3 * (i + *pCurTri) + j] = pLib3dsMesh->faceL[i].points[j] + *pCurVertex;
 		}
 	}
 	*pCurVertex += pLib3dsMesh->points;
