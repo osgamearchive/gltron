@@ -49,16 +49,19 @@ typedef struct {
 	// private information
 	nebu_Mesh_Adjacency *pAdjacency;
 	int *pDotsigns;
-	const nebu_Mesh_VB *pVB;
-	const nebu_Mesh_IB *pIB;
+	vec3* pFaceNormals;
+	nebu_Mesh_VB *pVB;
+	nebu_Mesh_VB *pVB_Extruded;
+	nebu_Mesh_IB *pIB;
 	vec3 vLight;
 } nebu_Mesh_ShadowInfo;
 
 nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const nebu_Mesh_IB *pIB);
 void nebu_Mesh_Adjacency_Free(nebu_Mesh_Adjacency *pAdjacency);
-nebu_Mesh_ShadowInfo* nebu_Mesh_Shadow_Create(const nebu_Mesh_VB *pVB, const nebu_Mesh_IB *pIB);
+nebu_Mesh_ShadowInfo* nebu_Mesh_Shadow_Create(nebu_Mesh_VB *pVB, nebu_Mesh_IB *pIB);
 void nebu_Mesh_Shadow_Free(nebu_Mesh_ShadowInfo* pShadowInfo);
 void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pShadowInfo, const vec3* vLight);
+vec3* nebu_Mesh_ComputeFaceNormals(const nebu_Mesh_VB *pVB, const nebu_Mesh_IB *pIB);
 
 nebu_Mesh_IB* nebu_Mesh_IB_Create(int nPrimitives, int nPrimitivesPerIndex);
 nebu_Mesh_VB* nebu_Mesh_VB_Create(int flags, int nVertices);

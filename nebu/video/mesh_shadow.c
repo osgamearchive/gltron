@@ -7,6 +7,23 @@
 
 #include "base/nebu_debug_memory.h"
 
+vec3* nebu_Mesh_ComputeFaceNormals(const nebu_Mesh_VB *pVB, const nebu_Mesh_IB *pIB)
+{
+	int i;
+
+	vec3 *pNormals = (vec3*) malloc( pIB->nPrimitives * sizeof(vec3) );
+
+	for(i = 0; i < pIB->nPrimitives; i++)
+	{
+		vec3_TriNormalDirection(pNormals + i,
+			(vec3*) (pVB->pVertices + 3 * pIB->pIndices[ 3 * i + 0 ]),
+			(vec3*) (pVB->pVertices + 3 * pIB->pIndices[ 3 * i + 1 ]),
+			(vec3*) (pVB->pVertices + 3 * pIB->pIndices[ 3 * i + 2 ]) );
+		vec3_Normalize(pNormals + i, pNormals + i);
+	}
+	return pNormals;
+}
+
 nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const nebu_Mesh_IB *pIB)
 {
 	int i, j, k, l, iCurrentTriangle;
@@ -70,7 +87,7 @@ nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const n
 			for(k = 0; k < pVertexOrder[iCurVertex]; k++)
 			{
 				int iTriangle = ppTriangles[iCurVertex][k];
-				for(l = 0; l > 3; l++)
+				for(l = 0; l < 3; l++)
 				{
 					if(pIB->pIndices[3 * iTriangle + (l + 1)%3] == iCurVertex &&
 						pIB->pIndices[3 * iTriangle + l] == iNextVertex)
@@ -81,7 +98,7 @@ nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const n
 						pAdjacency->pAdjacency[3 * i + j] = iTriangle;
 						// break out of outer loop too, but then we won't detect inconsitencies
 						// k = pVertexOrder[iCurVertex];
-						// TODO: Set Adjacency for the other triangle too
+						// TODO (performance enhancement): Set Adjacency for the other triangle too
 						break;
 					}
 				}
@@ -102,16 +119,18 @@ void nebu_Mesh_Adjacency_Free(nebu_Mesh_Adjacency *pAdjacency)
 	free(pAdjacency);
 }
 
-nebu_Mesh_ShadowInfo* nebu_Mesh_Shadow_Create(const nebu_Mesh_VB *pVB, const nebu_Mesh_IB *pIB)
+nebu_Mesh_ShadowInfo* nebu_Mesh_Shadow_Create(nebu_Mesh_VB *pVB, nebu_Mesh_IB *pIB)
 {
 	nebu_Mesh_ShadowInfo *pSI = (nebu_Mesh_ShadowInfo*) malloc(sizeof(nebu_Mesh_ShadowInfo));
 	pSI->pFrontfaces = NULL;
 	pSI->pBackfaces = NULL;
 	pSI->pEdges = NULL;
 	pSI->pAdjacency = NULL;
+	pSI->pFaceNormals = NULL;
 	pSI->pDotsigns = NULL;
 	vec3_Zero(&pSI->vLight);
 	pSI->pVB = pVB;
+	pSI->pVB_Extruded = NULL;
 	pSI->pIB = pIB;
 	
 	return pSI;
@@ -127,9 +146,15 @@ void nebu_Mesh_Shadow_Free(nebu_Mesh_ShadowInfo* pSI)
 		nebu_Mesh_IB_Free(pSI->pBackfaces);
 	if(pSI->pEdges)
 		nebu_Mesh_IB_Free(pSI->pEdges);
+	if(pSI->pFaceNormals)
+		free(pSI->pFaceNormals);
 	if(pSI->pDotsigns)
 		free(pSI->pDotsigns);
-	// don't touch pVB & pIB, they're freed with the mesh
+	nebu_Mesh_VB_Free(pSI->pVB);
+	if(pSI->pVB_Extruded)
+		nebu_Mesh_VB_Free(pSI->pVB_Extruded);
+	nebu_Mesh_IB_Free(pSI->pIB);
+	free(pSI);
 }
 
 void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
@@ -140,4 +165,141 @@ void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
 	pSI->vLight = *pvLight;
 
 	// recompute dotsigns, front faces, back faces & edges
+
+	if(!pSI->pAdjacency)
+		pSI->pAdjacency = nebu_Mesh_Adjacency_Create(pSI->pVB, pSI->pIB);
+	if(!pSI->pFaceNormals)
+	{
+		pSI->pFaceNormals = nebu_Mesh_ComputeFaceNormals(pSI->pVB, pSI->pIB);
+	}
+	if(!pSI->pDotsigns)
+	{
+		pSI->pDotsigns = (int*) malloc( pSI->pIB->nPrimitives * sizeof(int) );
+	}
+
+	// compute dotsigns && build front & back list
+	{
+		int i;
+		int nFront = 0, nBack = 0;
+		int iBackPos = 0, iFrontPos = 0;
+
+		for(i = 0; i < pSI->pIB->nPrimitives; i++)
+		{
+			vec3 vNormal;
+			vec3_TriNormalDirection(&vNormal,
+				(vec3*) (pSI->pVB->pVertices + 3 * pSI->pIB->pIndices[ 3 * i + 0 ]),
+				(vec3*) (pSI->pVB->pVertices + 3 * pSI->pIB->pIndices[ 3 * i + 1 ]),
+				(vec3*) (pSI->pVB->pVertices + 3 * pSI->pIB->pIndices[ 3 * i + 2 ]) );
+			if(vec3_Dot(&vNormal, &pSI->vLight) < 0)
+			{
+				pSI->pDotsigns[i] = -1;
+				nBack++;
+			}
+			else
+			{
+				pSI->pDotsigns[i] = 1;
+				nFront++;
+			}
+		}
+
+
+		if(pSI->pFrontfaces && pSI->pFrontfaces->nPrimitives != nFront)
+		{
+			nebu_Mesh_IB_Free(pSI->pFrontfaces);
+			pSI->pFrontfaces = NULL;
+		}
+		if(!pSI->pFrontfaces)
+		{
+			pSI->pFrontfaces = nebu_Mesh_IB_Create(nFront, 3);
+		}
+		if(pSI->pBackfaces && pSI->pBackfaces->nPrimitives != nBack)
+		{
+			nebu_Mesh_IB_Free(pSI->pBackfaces);
+			pSI->pBackfaces = NULL;
+		}
+		if(!pSI->pBackfaces)
+		{
+			pSI->pBackfaces = nebu_Mesh_IB_Create(nBack, 3);
+		}
+
+		for(i = 0; i < pSI->pIB->nPrimitives; i++)
+		{
+			if(pSI->pDotsigns[i] == 1)
+			{
+				assert(iFrontPos < nFront);
+				memcpy(pSI->pFrontfaces->pIndices + 3 * iFrontPos, pSI->pIB->pIndices + 3 * i, 3 * sizeof(int));
+				iFrontPos++;
+			}
+			else
+			{
+				int j;
+				assert(iBackPos < nBack);
+				// memcpy(pSI->pBackfaces->pIndices[3 * iBackPos], pSI->pIB->pIndices[i], 3 * sizeof(int));
+				for(j = 0; j < 3; j++)
+				{
+					// pSI->pBackfaces->pIndices[3 * iBackPos + j] = pSI->pIB->pIndices[3 * i + j] + pSI->pVB->nVertices;
+					pSI->pBackfaces->pIndices[3 * iBackPos + j] = pSI->pIB->pIndices[3 * i + j];
+				}
+				iBackPos++;
+			}
+		}
+		assert(iFrontPos == pSI->pFrontfaces->nPrimitives);
+		assert(iBackPos == pSI->pBackfaces->nPrimitives);
+	}
+	// compute edge list
+	{
+		int i, j;
+		int nEdge = 0;
+		int iCurEdge = 0;
+
+		for(i = 0; i < pSI->pIB->nPrimitives; i++)
+		{
+			for(j = 0; j < 3; j++)
+			{
+				int neighbor = pSI->pAdjacency->pAdjacency[3 * i + j];
+				if(neighbor != -1 && pSI->pDotsigns[neighbor] != pSI->pDotsigns[i]
+					&& i < neighbor)
+				{
+					nEdge++;
+				}
+			}
+		}
+		if(pSI->pEdges && pSI->pEdges->nPrimitives != nEdge)
+		{
+			nebu_Mesh_IB_Free(pSI->pEdges);
+			pSI->pEdges = NULL;
+		}
+		if(!pSI->pEdges)
+			pSI->pEdges = nebu_Mesh_IB_Create(nEdge, 2);
+
+		for(i = 0; i < pSI->pIB->nPrimitives; i++)
+		{
+			for(j = 0; j < 3; j++)
+			{
+				int neighbor = pSI->pAdjacency->pAdjacency[3 * i + j];
+				if(neighbor != -1 && i < neighbor &&
+					pSI->pDotsigns[neighbor] != pSI->pDotsigns[i])
+				{
+					int v1, v2;
+					v1 = pSI->pIB->pIndices[3 * i + j];
+					v2 = pSI->pIB->pIndices[3 * i + (j + 1) % 3];
+					assert(v1 < pSI->pVB->nVertices);
+					assert(v2 < pSI->pVB->nVertices);
+					assert(iCurEdge < nEdge);
+					if(pSI->pDotsigns[i] == 1)
+					{
+						pSI->pEdges->pIndices[2 * iCurEdge + 0] = v1;
+						pSI->pEdges->pIndices[2 * iCurEdge + 1] = v2;
+					}
+					else
+					{
+						pSI->pEdges->pIndices[2 * iCurEdge + 0] = v2;
+						pSI->pEdges->pIndices[2 * iCurEdge + 1] = v1;
+					}
+					iCurEdge++;
+				}
+			}
+		}
+		assert(iCurEdge == nEdge);
+	}
 }
