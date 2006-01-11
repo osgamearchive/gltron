@@ -6,6 +6,7 @@ void setupLights(eLightEnvironment eType)
 {
 	float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// float gray22[] = { 0.22f, 0.22f, 0.22f, 1.0f };
+	float gray88[] = { 0.88f, 0.88f, 0.88f, 1.0f };
 	float gray66[] = { 0.66f, 0.66f, 0.66f, 1.0f };
 	float gray50[] = { 0.50f, 0.50f, 0.50f, 1.0f };
 	float gray10[] = { 0.1f, 0.1f, 0.1f, 1.0f };
@@ -15,11 +16,13 @@ void setupLights(eLightEnvironment eType)
 	float posWorld1[] = { -1, -.8f, 0, 0 };
 
 	float posCycles0[] = { 0, 0, 1, 0 };
+	float posCycles1[] = { .5, .5, 1, 0 };
 	
 	int i;
 
-	if(isRenderingReflection) {
+	if(gIsRenderingReflection) {
 		posCycles0[2] *= -1;
+		vec3_Scale( (vec3*)posCycles1, (vec3*)posCycles1, -1);
 	}
 
 	// turn global ambient lighting off
@@ -43,7 +46,9 @@ void setupLights(eLightEnvironment eType)
 
 		if(eType == eCyclesWorld)
 		{
+			glLightfv(GL_LIGHT0, GL_POSITION, posCycles1);
 			glDisable(GL_LIGHT1);
+			glLightfv(GL_LIGHT0, GL_DIFFUSE, gray88);
 		}
 		else
 		{
