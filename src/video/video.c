@@ -86,25 +86,25 @@ void reshape(int x, int y) {
 }
 
 void shutdownDisplay() {
-  deleteTextures(gScreen);
-  artpack_UnloadSurfaces();
-  deleteFonts();
-  gui_ReleaseResources();
-  nebu_Video_Destroy(gScreen->win_id);
-  // printf("[video] window destroyed\n");
+	deleteTextures(gScreen);
+	artpack_UnloadSurfaces();
+	deleteFonts();
+	gui_ReleaseResources();
+	nebu_Video_Destroy(gScreen->win_id);
+	// printf("[video] window destroyed\n");
 }
 
 void setupDisplay() {
-  // fprintf(stderr, "[video] trying to create window\n");
-  gScreen->win_id = initWindow();
-  // fprintf(stderr, "[video] window created\n");
-  // initRenderer();
-  // printRendererInfo();
-  // printf("win_id is %d\n", d->win_id);
-  // fprintf(stderr, "[status] loading art\n");
-  loadArt();
+	// fprintf(stderr, "[video] trying to create window\n");
+	gScreen->win_id = initWindow();
+	// fprintf(stderr, "[video] window created\n");
+	// initRenderer();
+	// printRendererInfo();
+	// printf("win_id is %d\n", d->win_id);
+	// fprintf(stderr, "[status] loading art\n");
+	loadArt();
 
-  SystemReshapeFunc(reshape);
+	SystemReshapeFunc(reshape);
 }
 
 static void loadModels(void) {
