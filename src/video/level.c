@@ -46,6 +46,7 @@ int level_LoadTexture() {
 									 GL_LINEAR_MIPMAP_LINEAR };
 	int wrap[] = { GL_CLAMP, GL_CLAMP_TO_EDGE, GL_REPEAT };
 	int result;
+	int iAnisotropy;
 
 	// FIXME: error checking
 
@@ -73,7 +74,26 @@ int level_LoadTexture() {
 	scripting_GetValue("wrap_t");
 	scripting_GetIntegerResult(&result);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap[result]);
-	
+
+	scripting_GetValue("anisotropic_filtering");
+	if(scripting_IsNil())
+	{
+		scripting_Pop();
+	}
+	else
+	{
+		scripting_GetIntegerResult(&iAnisotropy);
+		if(GLEW_EXT_texture_filter_anisotropic)
+		{
+            // TODO: add a global value to limit the filtering
+            // (for performance reasons, e.g. on the gf fx 5200)
+			int iMaxAnisotropy;
+			glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &iMaxAnisotropy);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+				iAnisotropy < iMaxAnisotropy ?
+				iAnisotropy : iMaxAnisotropy);
+		}
+	}
 	return id;
 }
 
