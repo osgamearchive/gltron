@@ -110,23 +110,31 @@ int scripting_SetFloat(float f, const char *name, const char *global, const char
 	return 0;
 }
 
-int scripting_GetFloatResult(float *f) {
-	if(lua_isnumber(L, -1)) {
-    *f = (float) lua_tonumber(L, -1);
+int scripting_GetFloatResult(float *f)
+{
+	if(lua_isnumber(L, -1))
+	{
+		*f = (float) lua_tonumber(L, -1);
 		lua_pop(L, 1); /* restore stack */
 		return 0;
-	} else {
+	}
+	else
+	{
 		showStack();
-    return 1;
+		return 1;
 	}
 }  
 
-int scripting_GetIntegerResult(int *i) {
-	if(lua_isnumber(L, -1)) {
-    *i = (int)lua_tonumber(L, -1);
+int scripting_GetIntegerResult(int *i)
+{
+	if(lua_isnumber(L, -1))
+	{
+		*i = (int)lua_tonumber(L, -1);
 		lua_pop(L, 1); /* restore stack */
 		return 0;
-	} else {
+	}
+	else
+	{
 		showStack();
 		return 1;
 	}
