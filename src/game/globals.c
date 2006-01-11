@@ -55,7 +55,7 @@ float camAngles[] = { PI / 2, 0, 3 * PI / 2, PI, 2 * PI };
    double dt; */
 /* milliseconds since last frame */
 
-int isRenderingReflection = 0;
+int gIsRenderingReflection = 0;
 
 unsigned char debugcolors[6][4] = {
   { 0, 0, 0, 0 },
@@ -89,6 +89,7 @@ Quad *quadBuf;
 int *quadBufIndex;
 #endif
 
+// TODO: move these into the level/scene description
 TextureInfo textures[TEX_COUNT] = {
   { 1, "gltron_trail.png", GL_RGBA, 
     GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, TEX_TRAIL, 1 },
