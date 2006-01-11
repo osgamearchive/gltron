@@ -20,7 +20,8 @@ void hud_MaskSetup(int maskId, int maskIndex) {
 	glAlphaFunc(GL_GREATER, 0.1f);
 
 	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_ALWAYS, maskIndex, 255);
+	glStencilMask(~0);
+	glStencilFunc(GL_ALWAYS, maskIndex, ~0);
 	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
@@ -31,7 +32,7 @@ void hud_MaskSetup(int maskId, int maskIndex) {
 	glDisable(GL_BLEND);
 
 	// draw gauge where stencil is set
-	glStencilFunc(GL_EQUAL, maskIndex, 255);
+	glStencilFunc(GL_EQUAL, maskIndex, ~0);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 }
 
