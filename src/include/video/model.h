@@ -33,6 +33,7 @@ typedef struct gltron_Mesh {
 	int nVertices, nNormals;
 	*/
 	nebu_Mesh_VB *pVB;
+	nebu_Mesh_ShadowInfo *pSI;
 	unsigned short **ppIndices;
 	int *pnFaces;
 	int nMaterials;

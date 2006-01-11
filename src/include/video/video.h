@@ -153,7 +153,7 @@ extern int gpTokenHUD[];
 
 extern float camAngles[];
 
-extern int isRenderingReflection;
+extern int gIsRenderingReflection;
 
 extern float colors_trail_diffuse[][4];
 extern float colors_model_diffuse[][4];
