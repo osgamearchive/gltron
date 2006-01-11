@@ -45,15 +45,17 @@ geometry = {
             mag_filter = 1,
             -- 0: clamp, 1: clamp to edge, 2: repeat
             wrap_s = 2,
-            wrap_t = 2
+            wrap_t = 2,
+            -- 1: no filtering, 64: a lot of filtering
+            anisotropic_filtering = 64,
          }
       }
     },
     vertices = {
       { pos = { x = 0, y = 0, z = 0 }, uv = { u = 0, v = 0 } },
-      { pos = { x = 1, y = 0, z = 0 }, uv = { u = 40, v = 0 } },
-      { pos = { x = 1, y = 1, z = 0 }, uv = { u = 40, v = 40 } },
-      { pos = { x = 0, y = 1, z = 0 }, uv = { u = 0, v = 40 } }
+      { pos = { x = 1, y = 0, z = 0 }, uv = { u = 65, v = 0 } },
+      { pos = { x = 1, y = 1, z = 0 }, uv = { u = 65, v = 65 } },
+      { pos = { x = 0, y = 1, z = 0 }, uv = { u = 0, v = 65 } }
     },
     indices = { 
       { 0, 1, 2 },
