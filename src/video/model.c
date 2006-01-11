@@ -7,6 +7,8 @@
 #include "video/nebu_renderer_gl.h"
 #include <stdio.h>
 #include <zlib.h>
+#include <string.h>
+#include <assert.h>
 
 #include "base/nebu_debug_memory.h"
 
@@ -88,6 +90,10 @@ void gltron_Mesh_Free(gltron_Mesh* pMesh)
 	free(pMesh->ppIndices);
 	free(pMesh->pnFaces);
 	nebu_Mesh_VB_Free(pMesh->pVB);
+	if(pMesh->pSI)
+	{
+		nebu_Mesh_Shadow_Free(pMesh->pSI);
+	}
 	free(pMesh);
 }
 
@@ -103,7 +109,8 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 	face *pFaces = NULL;
 	int iFaceSize = 0;
 
-	gltron_Mesh *pMesh = malloc( sizeof(gltron_Mesh) );
+	gltron_Mesh *pMesh;
+
 	int iGroup = 0;
 	int iVertex = 0, iNormal = 0, iFace = 0;
 
@@ -111,6 +118,9 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 	char buf[BUF_SIZE];
 
 	int i, j, k;
+
+	pMesh = malloc( sizeof(gltron_Mesh) );
+	memset(pMesh, 0, sizeof(gltron_Mesh));
 
 	switch(iType)
 	{
@@ -197,7 +207,33 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 		break;
 	}
 
+	// ok, now we have the mesh data in memory
+	// let's build a vertex & index buffer we can use for shadow volume calculations
+	if(iType == TRI_MESH && 
+		(strstr(filename, "ultra") ||
+		0) // strstr(filename, "high"))
+		)
+	{
+		nebu_Mesh_VB *pVB;
+		nebu_Mesh_IB *pIB;
 
+		pVB = nebu_Mesh_VB_Create( NEBU_MESH_POSITION, iVertex );
+		pIB = nebu_Mesh_IB_Create( iFace, 3 );
+	
+		for(i = 0; i < iFace; i++)
+		{
+			for(j = 0; j < 3; j++)
+			{
+				pIB->pIndices[3 * i + j] = pFaces[i].vertex[j] - 1;
+				assert(pIB->pIndices[3 * i + j] != -1);
+			}
+		}
+		for(i = 0; i < iVertex; i++)
+		{
+			vec3_Copy( (vec3*)(pVB->pVertices + 3 * i), pVertices + i);
+		}
+		pMesh->pSI = nebu_Mesh_Shadow_Create(pVB, pIB);
+	}
 	// combine vectors & normals for each vertex, doubling where necessary
 
 	// initialize lookup[ vertex ][ normal ] table
