@@ -658,7 +658,37 @@ void drawPlanarShadows(int player) {
 	glDisable(GL_BLEND);
 }
 
-void drawWorld(int player) {
+void drawCam2(int player)
+{
+	// TODO: build the scene
+	// static elements:
+	// - arena
+	// - skybox
+	// dynamic elements:
+	// - 4 lightcycles (different LODs), with 4 diffent transformation matrices
+	//	 and different materials
+	// - 4 lightcycle trails
+	// - recognizer
+	// - special effects:
+	//   - crash effect
+	//   - lightcycle glow
+	//   - trail lines
+
+	// TODO: first version
+	// procedural:
+	// - crash effect
+	// - lightcycle glow
+	// - skybox
+	// scenegraph:
+	// - arena
+	// - lightcycle
+	// - lightcycle trails
+	// - recognizer
+}
+
+
+void drawWorld(int player)
+{
 	int i;
 
 	nebu_Video_CheckErrors("before world");
@@ -785,16 +815,10 @@ static float getReflectivity() {
 	traverse scenegraph each frame, and build object & shader lists
 */
 
-
-void drawCam(int player) {
-	int i;
+void setupCamera(int player)
+{
 	float up[3] = { 0, 0, 1 };
 	Visual *d = & gPlayerVisuals[player].display;
-	
-	float reflectivity = getReflectivity();
-	// compute shadow color based on glocal constant & reflectivity
-	for(i = 0; i < 4; i++) 
-		gCurrentShadowColor[i] = gShadowColor[i] * (1 - reflectivity);
 
 	// setup up a perspective projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -817,6 +841,18 @@ void drawCam(int player) {
 		vec3_Add(&vTarget, (vec3*)gPlayerVisuals[player].camera.cam, &vLookAt);
 		doLookAt(gPlayerVisuals[player].camera.cam, (float*)&vTarget, up);
 	}
+
+}
+
+void drawCam(int player) {
+	int i;
+	float up[3] = { 0, 0, 1 };
+	Visual *d = & gPlayerVisuals[player].display;
+	
+	float reflectivity = getReflectivity();
+	// compute shadow color based on glocal constant & reflectivity
+	for(i = 0; i < 4; i++) 
+		gCurrentShadowColor[i] = gShadowColor[i] * (1 - reflectivity);
 
 	glDisable(GL_LIGHTING); // initial config at frame start
 	glDisable(GL_BLEND); // initial config at frame start
