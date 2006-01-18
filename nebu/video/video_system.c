@@ -2,8 +2,6 @@
 #include "video/nebu_video_system.h"
 #include "base/nebu_system.h"
 
-#include "SDL.h"
-
 #include <assert.h>
 
 #include "base/nebu_debug_memory.h"
