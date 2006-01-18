@@ -4,7 +4,7 @@
 #include "video/nebu_video_system.h"
 #include "scripting/nebu_scripting.h"
 
-#include "SDL.h"
+#include "base/nebu_system.h"
 #include "SDL_getenv.h"
 #include <errno.h>
 

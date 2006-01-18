@@ -2,7 +2,7 @@
 #include "base/nebu_png_texture.h"
 
 #include <png.h>
-#include "SDL.h"
+#include "base/nebu_system.h"
 
 #include "base/nebu_debug_memory.h"
 

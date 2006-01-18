@@ -3,7 +3,7 @@
 
 #include "nebu_Sound.h"
 
-#include "SDL.h"
+#include "base/nebu_system.h"
 
 namespace Sound {
   enum {

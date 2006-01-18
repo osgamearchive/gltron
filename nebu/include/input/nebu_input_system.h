@@ -1,8 +1,7 @@
 #ifndef NEBU_INPUT_SYSTEM_H
 #define NEBU_INPUT_SYSTEM_H
 
-#include <SDL.h>
-#include <SDL_types.h>
+#include "base/nebu_system.h"
 
 #define SYSTEM_KEY_DOWN SDLK_DOWN
 #define SYSTEM_KEY_UP SDLK_UP
