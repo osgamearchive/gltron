@@ -104,4 +104,9 @@ void goto_installpath(const char *argv0)
         exit(1); /* OK: critical, installation corrupt */
     }
 }
+#else
+void goto_installpath(const char *argv0)
+{
+}
 #endif
+
