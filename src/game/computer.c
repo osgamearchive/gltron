@@ -15,7 +15,7 @@
 #define SAVE_SPEED_DIFF 1.0f
 #define HOPELESS_T 0.80f
 
-static AI_Parameters ai_params = {
+AI_Parameters ai_params = {
 	// minTurnTime, time to pass between turns, in milliseconds
 	{ 600, 400, 200, 100 },
 	// maxSegLength 
