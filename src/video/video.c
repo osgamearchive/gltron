@@ -139,8 +139,18 @@ static void loadModels(void) {
 			fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
 			exit(1); /* OK: critical, installation corrupt */
 		}
-			free(path);
+		free(path);
 	}
+	// /* DEBUG
+	path = getPath(PATH_DATA, "arena.obj");
+	gpTokenCurrentLevel = resource_GetToken(path, eRT_GLtronTriMesh);
+	if(!gpTokenCurrentLevel)
+	{
+		fprintf(stderr, "fatal: could not load arena - exiting...\n");
+		exit(1); // OK: critical, installation corrupt
+	}
+	free(path);
+	// */
 }
 
 void freeVideoData(void)

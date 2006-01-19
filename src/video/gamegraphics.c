@@ -710,8 +710,10 @@ void drawWorld(int player)
 	drawPlayers(player);
 
 	// restore lighting to world light
-	setupLights(eWorld);
-
+	// DEBUG: 
+	// setupLights(eWorld);
+	setupLights(eCyclesWorld);
+	glEnable(GL_LIGHTING);
 	{
 		TrailMesh mesh;
 		mesh.pVertices = (vec3*) malloc(1000 * sizeof(vec3));
@@ -740,6 +742,7 @@ void drawWorld(int player)
 		free(mesh.pTexCoords);
 		free(mesh.pIndices);
 	}
+	glDisable(GL_LIGHTING);
 
 	for(i = 0; i < game->players; i++)
 		if (game->player[i].data->trail_height > 0 )
@@ -859,6 +862,8 @@ void drawCam(int player) {
 
 	// disable writes to alpha
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+
+	setupCamera(player);
 
 	/* skybox */
 	glDepthMask(GL_FALSE);
