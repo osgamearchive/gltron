@@ -97,6 +97,155 @@ void gltron_Mesh_Free(gltron_Mesh* pMesh)
 	free(pMesh);
 }
 
+	// what we want is to
+	// 1) compute the order of each vertex
+	// 2) allocate the max. amount of necessary memory (i.e. if all vertices need doubling
+	// 3) create the vertices as needed, keeping track of how often vertices are doubled
+	// 4) finally compact the vertex array again, and compute the 'new' triangle indices
+
+	// this also creates an index-remapping
+void createVertices(
+	nebu_Mesh_VB **ppVB,
+	face *pFaces, int nFaces,
+	vec3 *pVertices, int nVertices,
+	vec3 *pNormals, int nNormals)
+{
+	int i, j, k;
+
+	// 1) compute the order of each vertex
+	// 2) allocate the max. amount of necessary memory (i.e. if all vertices need doubling)
+	// 3) create the vertices as needed, keeping track of how often vertices are doubled
+	// 4) finally compact the vertex array again, and compute the 'new' triangle indices
+
+	// this also creates an index-remapping
+	int *piVertexOrder; // stores the order for each vertex
+	int *piUsedVertexCount; // stores how many times each vertex is 'instanced' (used)
+	unsigned char *pVertexData; // actual (uncompacted) vertex buffer	
+	int *piVertexPosition;
+	int iCurIndex;
+	unsigned char *pTmpVertex;
+	int *pIndices;
+
+	int iVertexSize = 6 * sizeof(float);
+	
+	pIndices = malloc( 3 * nFaces * sizeof(int) );
+	piVertexOrder = (int*) malloc( nVertices * sizeof(int) );
+	memset(piVertexOrder, 0, nVertices * sizeof(int));
+	
+	// 1) compute the order of each vertex
+	for(i = 0; i < nFaces; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			// TODO: subtract 1 from the index in the reading routine
+			piVertexOrder[ pFaces[i].vertex[j] - 1 ] += 1;
+		}
+	}
+	
+	// 2) allocate the max. amount of necessary memory (i.e. if all vertices need doubling)
+	pVertexData = malloc( 3 * nFaces * iVertexSize );
+
+	piVertexPosition = (int*) malloc( nVertices * sizeof(int) );
+	iCurIndex = 0;
+	for(i = 0; i < nVertices; i++)
+	{
+		piVertexPosition[i] = iCurIndex;
+		iCurIndex += piVertexOrder[i];
+	}
+
+	piUsedVertexCount = (int*) malloc( nVertices * sizeof(int) );
+	memset(piUsedVertexCount, 0, nVertices * sizeof(int));
+	
+	// 3) create the vertices as needed, keeping track of how often vertices are doubled
+	// store the computed indices in the temporary index array
+
+	pTmpVertex = (unsigned char*) malloc( iVertexSize );
+
+	for(i = 0; i < nFaces; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			// TODO: subtract 1 from the index in the reading routine
+			int iVertex = pFaces[i].vertex[j] - 1;
+			int iNormal = pFaces[i].normal[j] - 1;
+
+			int offset = 0;
+			int index = -1;
+			
+			// build vertex
+			memcpy(pTmpVertex, pVertices + iVertex, sizeof(vec3));
+			offset += sizeof(vec3);
+			memcpy(pTmpVertex + offset, pNormals + iNormal, sizeof(vec3));
+			offset += sizeof(vec3);
+
+			assert(piVertexOrder[iVertex] > 0);
+
+			for(k = 0; i < piUsedVertexCount[iVertex]; i++)
+			{
+				if(memcmp(pTmpVertex, pVertexData + (piVertexPosition[iVertex] + k) * iVertexSize, iVertexSize) == 0)
+				{
+					// vertex schon vorhanden
+					index = piVertexPosition[iVertex] + k;
+				}
+			}
+			if(index == -1)
+			{
+				// create new vertex
+				assert(piUsedVertexCount[iVertex] < piVertexOrder[iVertex]);
+				index = piVertexPosition[iVertex] + piUsedVertexCount[iVertex];
+				memcpy(pVertexData + index * iVertexSize,
+					pTmpVertex, iVertexSize);
+				piUsedVertexCount[iVertex] += 1;
+			}
+			// store the 'new' triangle index
+			pIndices[3 * i + j] = index;
+		}
+	}
+
+	free(pTmpVertex);
+
+	// 4) finally compact the vertex array again
+	{
+		int iVertexCount = 0;
+		int iUsedVertex = 0;
+		for(i = 0; i < nVertices; i++)
+		{
+			iVertexCount += piUsedVertexCount[i];
+		}
+		*ppVB = nebu_Mesh_VB_Create(NEBU_MESH_POSITION | NEBU_MESH_NORMAL, iVertexCount);
+
+		iCurIndex = 0;
+		for(i = 0; i < nVertices; i++)
+		{
+			for(j = 0; j < piUsedVertexCount[i]; j++)
+			{
+				assert(iUsedVertex < iVertexCount);
+				memcpy((*ppVB)->pVertices + 3 * iUsedVertex,
+					pVertexData + (iCurIndex + j) * iVertexSize, 3 * sizeof(float));
+				memcpy((*ppVB)->pNormals + 3 * iUsedVertex,
+					pVertexData + (iCurIndex + j) * iVertexSize + 3 * sizeof(float), 3 * sizeof(float));
+				iUsedVertex++;
+			}
+			iCurIndex += piVertexOrder[i];
+		}
+	}
+	free(piUsedVertexCount);
+	free(piVertexPosition);
+	free(pVertexData);
+	free(piVertexOrder);
+	
+	// store new indices in face list, and invalidate normals
+	for(i = 0; i < nFaces; i++)
+	{
+		for(j = 0; j < 3; j++)
+		{
+			pFaces[i].vertex[j] = pIndices[3 * i + j];
+			pFaces[j].normal[j] = -1;
+		}
+	}
+	free(pIndices);
+}
+
 gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iType)
 {
 	// allocate some buffers
@@ -234,8 +383,40 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 		}
 		pMesh->pSI = nebu_Mesh_Shadow_Create(pVB, pIB);
 	}
-	// combine vectors & normals for each vertex, doubling where necessary
+	// combine vectors & normals for each vertex, doubling verticees where necessary
 
+	// the old implementation (see QUAD_MESH) is extremly inefficient and eats too much memory!
+	if(iType == TRI_MESH)
+	{
+		createVertices(
+			&pMesh->pVB,
+			pFaces, iFace,
+			pVertices, iVertex,
+			pNormals, iNormal);
+
+		// build indices (per Material)
+		{
+			int *face;
+			face = malloc( sizeof(int) * pMesh->nMaterials );
+			pMesh->ppIndices = malloc( sizeof(GLshort*) * pMesh->nMaterials );
+			for(i = 0; i < pMesh->nMaterials; i++) {
+				pMesh->ppIndices[i] = 
+				malloc( sizeof(GLshort) * 3 * pMesh->pnFaces[i] );
+				face[i] = 0;
+			}
+
+			for(i = 0; i < iFace; i++) {
+				int material = pFaces[i].material;
+				for(j = 0; j < 3; j++) {
+					pMesh->ppIndices[ material ][ 3 * face[ material ] + j ] = 
+						pFaces[i].vertex[j];
+				}
+				face[ material ] += 1;
+			}
+			free(face);
+		}
+	}
+	else
 	// initialize lookup[ vertex ][ normal ] table
 	{
 		int nVertices = 0;
@@ -249,34 +430,17 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 				lookup[i][j] = -1;
 			}
 		}
-	  
-		switch(iType)
-		{
-		case TRI_MESH:
-			for(i = 0; i < iFace; i++) {
-				for(j = 0; j < iFaceSize; j++) {
-					int vertex = pFaces[i].vertex[j] - 1;
-					int normal = pFaces[i].normal[j] - 1;
-					if( lookup[ vertex ][ normal ] == -1 ) {
-						lookup[ vertex ][ normal ] = nVertices;
-						nVertices++;
-					}
+		assert(iType == QUAD_MESH);	  
+		for(i = 0; i < iFace; i++) {
+			for(j = 0; j < iFaceSize; j++) {
+				int vertex = pqFaces[i].vertex[j] - 1;
+				int normal = pqFaces[i].normal[j] - 1;
+				if( lookup[ vertex ][ normal ] == -1 )
+				{
+					lookup[ vertex ][ normal ] = nVertices;
+					nVertices++;
 				}
 			}
-			break;
-		case QUAD_MESH:
-			for(i = 0; i < iFace; i++) {
-				for(j = 0; j < iFaceSize; j++) {
-					int vertex = pqFaces[i].vertex[j] - 1;
-					int normal = pqFaces[i].normal[j] - 1;
-					if( lookup[ vertex ][ normal ] == -1 )
-					{
-						lookup[ vertex ][ normal ] = nVertices;
-						nVertices++;
-					}
-				}
-			}
-			break;
 		}
 	  
 		// now that we know everything, build vertexarray based mesh
@@ -293,7 +457,6 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 				}
 			}
 		}
-
 		// build indices (per Material)
 		{
 			int *face;
@@ -304,31 +467,18 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 				malloc( sizeof(GLshort) * iFaceSize * pMesh->pnFaces[i] );
 				face[i] = 0;
 			}
-			switch(iType) {
-			case TRI_MESH:
-				for(i = 0; i < iFace; i++) {
-					int material = pFaces[i].material;
-					for(j = 0; j < iFaceSize; j++) {
-						int vertex = pFaces[i].vertex[j] - 1;
-						int normal = pFaces[i].normal[j] - 1;
-						pMesh->ppIndices[ material ][ iFaceSize * face[ material ] + j ] = 
-						lookup[ vertex ][ normal ];
-					}
-					face[ material ] = face[ material] + 1;
+
+			assert(iType == QUAD_MESH);
+
+			for(i = 0; i < iFace; i++) {
+				int material = pqFaces[i].material;
+				for(j = 0; j < iFaceSize; j++) {
+					int vertex = pqFaces[i].vertex[j] - 1;
+					int normal = pqFaces[i].normal[j] - 1;
+					pMesh->ppIndices[ material ][ iFaceSize * face[ material ] + j ] = 
+					lookup[ vertex ][ normal ];
 				}
-				break;
-			case QUAD_MESH:
-				for(i = 0; i < iFace; i++) {
-					int material = pqFaces[i].material;
-					for(j = 0; j < iFaceSize; j++) {
-						int vertex = pqFaces[i].vertex[j] - 1;
-						int normal = pqFaces[i].normal[j] - 1;
-						pMesh->ppIndices[ material ][ iFaceSize * face[ material ] + j ] = 
-						lookup[ vertex ][ normal ];
-					}
-					face[ material ] = face[ material] + 1;
-				}
-				break;
+				face[ material ] = face[ material] + 1;
 			}
 			free(face);
 		}
@@ -338,17 +488,17 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 			free(lookup[i]);
 		}
 		free(lookup);
+	}
+	free(pVertices);
+	free(pNormals);
 
-		free(pVertices);
-		free(pNormals);
-		switch(iType) {
-		case TRI_MESH:
-			free(pFaces);
-			break;
-		case QUAD_MESH:
-			free(pqFaces);
-			break;
-		}
+	switch(iType) {
+	case TRI_MESH:
+		free(pFaces);
+		break;
+	case QUAD_MESH:
+		free(pqFaces);
+		break;
 	}
 	gltron_Mesh_ComputeBBox(pMesh);
 
