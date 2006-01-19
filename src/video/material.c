@@ -32,6 +32,7 @@ void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh) {
 
   int i;
 
+  // TODO: read mtl file from any directory (e.g. the current level directory)
   path = getPath(PATH_DATA, filename);
   if(path == NULL) {
     fprintf(stderr, "** could not optain path to file '%s'\n", filename);
