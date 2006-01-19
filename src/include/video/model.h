@@ -1,9 +1,9 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#define MAX_VERTICES 30000
-#define MAX_FACES 20000
-#define MAX_NORMALS 30000
+#define MAX_VERTICES 60000
+#define MAX_FACES 120000
+#define MAX_NORMALS 60000
 #define MAX_MATERIALS 200
 
 #define BUF_SIZE 120
