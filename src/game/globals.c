@@ -25,6 +25,7 @@ int gpTokenHUD[eHUDElementCount] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 int gTokenRecognizer = 0;
 int gTokenRecognizerQuad = 0;
 int gpTokenLightcycles[LC_LOD];
+int gpTokenCurrentLevel = 0;
 
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
 float rec_spec_color[] = {0.05f, 0.14f, 0.05f, 0.50f};

@@ -123,6 +123,7 @@ extern char *lc_lod_names[];
 extern int gTokenRecognizer;
 extern int gTokenRecognizerQuad;
 extern int gpTokenLightcycles[LC_LOD];
+extern int gpTokenCurrentLevel;
 // extern gltron_Mesh *recognizer;
 // extern gltron_Mesh *recognizer_quad;
 // extern gltron_Mesh *lightcycle[];
