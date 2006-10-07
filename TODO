@@ -1,21 +1,32 @@
+- Move Video Resolution to seperate menu
+- Add 'Apply' Button
+
+- Move Level to game menu
+- Add 'Apply' Button
+
+- Update Wiki:
+	- Describe changes in menu structure
+	- Update bugs 
+	- Describe gltron.ini
+		- performance tweaks
+		- arena outlines
+
 Immediate:
 
 General
-- Convert artpacks on gltron.org
+- Convert artpacks on Load
 - Publish artpack conversion tool
+- Document artpack.lua
+- support older artpack revisions (4 walls, non-unified GUI),
+  add artpack version to artpack.lua
 
 - Work around config bug again
 - Reorder menu structure?
 
+Audio
 - Multiple listeners fuer Splitscreen
 
-- 2D map scaling
-
-Win32
-- SDL_sound: decent windows binaries with stereo mod & mp3 support
-
 Mac OS X
-- Install Tiger/X-Code 2.0 project files
 - check cycle colors on OS X
 - check cycle on startup on OS X
 - check crashes on OS X
@@ -41,9 +52,6 @@ Tools
   - ??
 - Level & artpack packaging tools (consistency check, uploading, etc)
 - Level & artpack browsing for webpage
-- Document artpack.lua
-- support older artpack revisions (4 walls, non-unified GUI),
-  add artpack version to artpack.lua
 
 Homepage
 - CSS support
@@ -57,7 +65,6 @@ Homepage
 Audio:
 - own cycle: increase volume upon acceeleration, decrease default sound volume
   for own cycle
-- multiple listeners for split-screen
 
 Project:
 - compile clean TODO list
