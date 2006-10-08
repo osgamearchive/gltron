@@ -14,6 +14,9 @@
 
 #include <base/nebu_debug_memory.h>
 
+int isAltLeftPressed = 0;
+int isAltRightPressed = 0;
+
 int ReservedKeyCodes[eReservedKeys] = {
   27,
   ' ',
@@ -28,17 +31,30 @@ int ReservedKeyCodes[eReservedKeys] = {
   SYSTEM_KEY_F9,
   SYSTEM_KEY_F10,
   SYSTEM_KEY_F11,
-  SYSTEM_KEY_F12
+  SYSTEM_KEY_F12,
+  SYSTEM_KEY_ALT_LEFT
 };
 
 
 void keyGame(int state, int k, int x, int y)
 {
-  int i;
+	int i;
 
-	if(state == NEBU_INPUT_KEYSTATE_DOWN) {
-		switch (k) {
-			/* case 'q': SystemExit(); return; */
+	// detect modifier states (at least those we care about
+	switch (k)
+	{
+	case SYSTEM_KEY_ALT_LEFT:
+		isAltLeftPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 :0;
+		break;
+	case SYSTEM_KEY_ALT_RIGHT:
+		isAltRightPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 :0;
+		break;
+	}
+
+	if(state == NEBU_INPUT_KEYSTATE_DOWN)
+	{
+		switch (k)
+		{
 		case 27:
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
 			nebu_System_ExitLoop(eSRC_Game_Escape);
@@ -62,6 +78,12 @@ void keyGame(int state, int k, int x, int y)
 
 		case SYSTEM_KEY_F6: console_Seek(-1); return;
 		case SYSTEM_KEY_F7: console_Seek(1); return;
+
+		case SYSTEM_KEY_F8:
+			// toggle wireframe setting
+			setSettingi("wireframe", getSettingi("wireframe") ? 0 : 1);
+			return;
+
     /* toggle lighting
   case SYSTEM_KEY_F6: 
       setSettingi("light_cycles", !game->settings->light_cycles);
