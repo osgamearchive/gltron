@@ -1,6 +1,6 @@
 #include "audio/nebu_SourceCopy.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 namespace Sound {
   int SourceCopy::Mix(Uint8 *data, int len) {
@@ -11,7 +11,7 @@ namespace Sound {
     int buffersize = _source->_buffersize;
     Uint8* buffer = (Uint8*) _source->_buffer;
     
-    assert(len < buffersize);
+    nebu_assert(len < buffersize);
       
     if(len < buffersize - _position) {
       SDL_MixAudio(data, buffer + _position, len, volume);
