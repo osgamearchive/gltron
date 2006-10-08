@@ -4,7 +4,7 @@
 #include "base/nebu_matrix.h"
 
 #include <stdio.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "base/nebu_debug_memory.h"
 
@@ -104,7 +104,7 @@ void nebu_Camera_Rotate(nebu_Camera *pCamera, int flags,
 		pvMoving = &pCamera->vEye;
 		break;
 	default:
-		assert(0);
+		nebu_assert(0);
 		return;
 	}
 	
