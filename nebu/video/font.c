@@ -5,7 +5,7 @@
 #include "filesystem/nebu_file_io.h"
 #include "filesystem/nebu_filesystem.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 #include <string.h>
 
 #include "base/nebu_debug_memory.h"
@@ -137,7 +137,7 @@ nebu_Font* nebu_Font_Load(const char *filename, int fs_tag)
 		{
 			nebu_Surface* p2d = nebu_Surface_LoadPNG(path);
 			// TODO: add mipmapping
-			// TODO: assert that p2d->w, p2d->h are valid texture dimensions
+			// TODO: nebu_assert that p2d->w, p2d->h are valid texture dimensions
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, p2d->w, p2d->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, p2d->data);
 			nebu_Surface_Free(p2d);
 		}
@@ -202,7 +202,7 @@ void nebu_Font_Render(nebu_Font* font, const char *text, int len)
 		if(index >= font->nChars)
 		{
 			// font doesn't contain this char
-			assert(0);
+			nebu_assert(0);
 			continue;
 		}
 		nebu_Font_GetCharsPerTexture(font, &wx, &wy);
