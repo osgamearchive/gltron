@@ -1,6 +1,6 @@
-- Draw Object to fb & z, using (weaker) cameralight, and clear stencil
+- (done) Draw Object to fb & z, using (weaker) cameralight, and clear stencil
 - Draw Shadow Volume to stencil buffer (using z-fail or z-pass)
-- Draw Object with sky light, but only where stencil is 0
+- (done) Draw Object with sky light, but only where stencil is 0
 
 z-pass: find edge polygons, and extrude from light until z <= 0 (e.g. project
 to floor)
