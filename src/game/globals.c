@@ -26,6 +26,7 @@ int gTokenRecognizer = 0;
 int gTokenRecognizerQuad = 0;
 int gpTokenLightcycles[LC_LOD];
 int gpTokenCurrentLevel = 0;
+int gpTokenCurrentFloor = 0;
 
 float rec_outline_color[] = {0.8f, 0.0, 0.0};
 float rec_spec_color[] = {0.05f, 0.14f, 0.05f, 0.50f};
@@ -83,12 +84,6 @@ float vp_y[4][4] = { { 0 },    { 0.5f, 12.5f },   { 1, 1, 12.5f, 12.5f }, { 4.5 
 /* the width/height of the view, in virtual units */
 float vp_w[4][4] = { { 32 },   { 30, 30 }, { 14, 14, 14, 14 }, { 20 } };
 float vp_h[4][4] = { { 24 }, { 11.5f, 11.5f }, { 10.5f, 10.5f, 10.5f, 10.5f }, { 15 } };
-
-#ifdef DEPTH_SORT
-int quadBufSize = 100;
-Quad *quadBuf;
-int *quadBufIndex;
-#endif
 
 // TODO: move these into the level/scene description
 TextureInfo textures[TEX_COUNT] = {
