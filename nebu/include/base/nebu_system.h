@@ -6,7 +6,7 @@
 #include "nebu_callbacks.h"
 extern Callbacks* current;
 
-/* basically, an SDL/glut wrapper */
+/* basically, an SDL/glut wrapper, with a few useful things added */
 void nebu_Init(void); // test ok
 
 void nebu_System_SetCallbacks(Callbacks* callbacks);
