@@ -1,3 +1,5 @@
+// review: 64bit ok
+
 /* Textbook standard linear congruent pseudo-random number generator  
    (say that ten times quick) */
 
