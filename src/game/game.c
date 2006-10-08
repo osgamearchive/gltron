@@ -15,25 +15,9 @@
 #include "configuration/settings.h"
 #include "configuration/configuration.h"
 
-void loadLevel(void) {
-	char *path, *level;
+#include "base/nebu_debug_memory.h"
 
-	scripting_GetGlobal("settings", "current_level", NULL);
-	scripting_GetStringResult(&level);
-	fprintf(stderr, "[status] loading level '%s'\n", level);
-
-	path = getPath(PATH_LEVEL, level);
-	free(level);
-	if(path) {
-		scripting_RunFile(path);
-		free(path);
-	}
-	else
-	{
-		printf("[fatal] can't get valid path for level\n");
-		exit(1); // fatal
-	}
-}
+#include "base/nebu_assert.h"
 
 void GameMode_Idle(void) {
 	Sound_idle();
