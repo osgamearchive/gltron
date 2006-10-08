@@ -19,7 +19,7 @@
 #include "input/nebu_input_system.h"
 #include "video/video.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 void initFilesystem(int argc, const char *argv[]);
 
@@ -39,26 +39,31 @@ void initSubsystems(int argc, const char *argv[]) {
 	nebu_Init();
 
 	initFilesystem(argc, argv);
-	scripting_Init();
-	init_c_interface();
 	initScripting();
 
 	initConfiguration(argc, argv);
-	
-	loadLevel();
+	// game_LoadLevel(); // loads the lua level description
 
 	initGame();
 	initVideo();
 	initAudio();
 	initInput();
+
+	game_LoadLevel(); // loads the lua level description
+	video_LoadLevel();
+	initLevels();
+	fprintf(stderr, "[status] done loading level...\n");
 }
 
 void initFilesystem(int argc, const char *argv[]) {
 	dirSetup(argv[0]);
-	assert(argc == 1);
+	nebu_assert(argc == 1);
 }
 
 void initScripting(void) {
+	scripting_Init(NEBU_SCRIPTING_DEBUG);
+	init_c_interface();
+
   /* load basic scripting services */
 	runScript(PATH_SCRIPTS, "basics.lua");
 	runScript(PATH_SCRIPTS, "joystick.lua");
@@ -94,10 +99,12 @@ void initConfiguration(int argc, const char *argv[])
 		}
 		else {
 			printf("[fatal] can't get valid pref path for %s\n", RC_NAME);
-			exit(1); // something is seriously wrong
+			nebu_assert(0); exit(1); // something is seriously wrong
 		}
 	}
 	
+	// check if the config file is from the same version
+	// if not, override using defaults
 	{
 		float ini_version = 0, app_version;
 		if(isSetting("version"))
@@ -113,8 +120,8 @@ void initConfiguration(int argc, const char *argv[])
 				ini_version, app_version);
 			setSettingf("version", app_version);
 		}
-		// check if config is valid
 	}
+	// check if config is valid
 	{
 		int isValid = 1;
 		scripting_GetGlobal("save_completed", NULL);
@@ -143,7 +150,7 @@ void initConfiguration(int argc, const char *argv[])
 	/* sanity check some settings */
 	checkSettings();
 
-	scripting_Run("setupArtpacks()");
+	scripting_Run("setupArtpackPaths()");
 	scripting_Run("setupLevels()");
 		
 	/* intialize the settings cache, remember to do that everytime you
@@ -155,11 +162,15 @@ void initVideo(void) {
 	nebu_Video_Init();
 
 	initVideoData();
-	initArtpacks();
-
+	// FIXME: move this somewhere else
+	initArtpacks(); // stores the artpack directory names in a lua table
+	// FIXME: move this somewhere else
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
 	runScript(PATH_SCRIPTS, "menu.lua");
 	setupDisplay();
+
+	loadArt();
+	loadModels();
 }
 
 void initAudio(void) {
@@ -173,7 +184,6 @@ void initAudio(void) {
 void initGame(void) {
 	/* initialize the rest of the game's datastructures */
 	game_CreatePlayers(PLAYERS, &game, &game2);
-	initGameLevel();
 	resetScores();
 }
 
