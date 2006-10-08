@@ -1,63 +1,107 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="lua5"
 	ProjectGUID="{38D75F90-55A2-4BA3-AB68-9A42194EC420}"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="4"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				MinimalRebuild="TRUE"
+				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="4"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/lua5.lib"/>
+				OutputFile="$(OutDir)/lua5.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="4"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="include"
@@ -65,31 +109,37 @@
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/lua5.lib"/>
+				OutputFile="$(OutDir)/lua5.lib"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -98,170 +148,224 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath=".\lapi.c">
+				RelativePath=".\lapi.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\lauxlib.c">
+				RelativePath=".\lib\lauxlib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\include\lauxlib.h">
+				RelativePath=".\include\lauxlib.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\lbaselib.c">
+				RelativePath=".\lib\lbaselib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lcode.c">
+				RelativePath=".\lcode.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\ldblib.c">
+				RelativePath=".\lib\ldblib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\ldebug.c">
+				RelativePath=".\ldebug.c"
+				>
 			</File>
 			<File
-				RelativePath=".\ldo.c">
+				RelativePath=".\ldo.c"
+				>
 			</File>
 			<File
-				RelativePath=".\ldump.c">
+				RelativePath=".\ldump.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lfunc.c">
+				RelativePath=".\lfunc.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lgc.c">
+				RelativePath=".\lgc.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\liolib.c">
+				RelativePath=".\lib\liolib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\llex.c">
+				RelativePath=".\llex.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\lmathlib.c">
+				RelativePath=".\lib\lmathlib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lmem.c">
+				RelativePath=".\lmem.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\loadlib.c">
+				RelativePath=".\lib\loadlib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lobject.c">
+				RelativePath=".\lobject.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lopcodes.c">
+				RelativePath=".\lopcodes.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lparser.c">
+				RelativePath=".\lparser.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lstate.c">
+				RelativePath=".\lstate.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lstring.c">
+				RelativePath=".\lstring.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\lstrlib.c">
+				RelativePath=".\lib\lstrlib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\ltable.c">
+				RelativePath=".\ltable.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lib\ltablib.c">
+				RelativePath=".\lib\ltablib.c"
+				>
 			</File>
 			<File
-				RelativePath=".\ltests.c">
+				RelativePath=".\ltests.c"
+				>
 			</File>
 			<File
-				RelativePath=".\ltm.c">
+				RelativePath=".\ltm.c"
+				>
 			</File>
 			<File
-				RelativePath=".\include\lua.h">
+				RelativePath=".\include\lua.h"
+				>
 			</File>
 			<File
-				RelativePath=".\include\lualib.h">
+				RelativePath=".\include\lualib.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lundump.c">
+				RelativePath=".\lundump.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lvm.c">
+				RelativePath=".\lvm.c"
+				>
 			</File>
 			<File
-				RelativePath=".\lzio.c">
+				RelativePath=".\lzio.c"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath=".\lapi.h">
+				RelativePath=".\lapi.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lcode.h">
+				RelativePath=".\lcode.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ldebug.h">
+				RelativePath=".\ldebug.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ldo.h">
+				RelativePath=".\ldo.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lfunc.h">
+				RelativePath=".\lfunc.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lgc.h">
+				RelativePath=".\lgc.h"
+				>
 			</File>
 			<File
-				RelativePath=".\llex.h">
+				RelativePath=".\llex.h"
+				>
 			</File>
 			<File
-				RelativePath=".\llimits.h">
+				RelativePath=".\llimits.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lmem.h">
+				RelativePath=".\lmem.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lobject.h">
+				RelativePath=".\lobject.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lopcodes.h">
+				RelativePath=".\lopcodes.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lparser.h">
+				RelativePath=".\lparser.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lstate.h">
+				RelativePath=".\lstate.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lstring.h">
+				RelativePath=".\lstring.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ltable.h">
+				RelativePath=".\ltable.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ltm.h">
+				RelativePath=".\ltm.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lundump.h">
+				RelativePath=".\lundump.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lvm.h">
+				RelativePath=".\lvm.h"
+				>
 			</File>
 			<File
-				RelativePath=".\lzio.h">
+				RelativePath=".\lzio.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt">
+			RelativePath=".\ReadMe.txt"
+			>
 		</File>
 	</Files>
 	<Globals>
