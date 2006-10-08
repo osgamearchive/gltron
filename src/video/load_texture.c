@@ -5,7 +5,9 @@
 #include "Nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"
 
-#include <base/nebu_debug_memory.h>
+#include "base/nebu_debug_memory.h"
+
+#include "base/nebu_assert.h"
 
 void freeTextureData(texture *tex) {
   free(tex->data);
@@ -23,7 +25,7 @@ texture* loadTextureData(const char *filename) {
 
 	if(tex == NULL) {    
 		fprintf(stderr, "fatal: failed loading %s, exiting...\n", filename);
-		exit(1); /* OK: critical, installation corrupt */
+		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	return tex;
 }
