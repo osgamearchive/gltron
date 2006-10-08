@@ -5,7 +5,7 @@ settings = { }
 artpacks = { }
 tracks = { }
 
-app_version = 0.715
+app_version = 0.716
 -- debugginb
 settings.debug_output = 1
 
@@ -46,7 +46,8 @@ settings.wall_buster_min = 2.4
 -- settings.wall_buster_regenerate = 0.2
 
 settings.ai_level = 2
-settings.current_level = "square.lua"
+-- settings.current_level = "square.lua"
+settings.current_level = "movie.lua"
 settings.grid_size = 720
 settings.erase_crashed = 1
 settings.map_scale = 1
@@ -57,11 +58,11 @@ settings.ai_player3 = 1
 settings.ai_player4 = 1
 -- game settings
 settings.fast_finish = 1
-settings.camType = 4
+settings.camType = 1
 settings.display_type = 3
 
 -- video
--- settings.artpacks = { }
+settings.artpacks = { }
 settings.current_artpack = "classic"
 -- detail settings
 settings.mipmap_filter = 3
@@ -102,6 +103,12 @@ settings.mouse_warp = 0
 settings.model_backwards = 0
 settings.screenSaver = 0
 
+settings.shadow_volumes_walls = 0
+settings.shadow_volumes_cycle = 1
+settings.shadow_projective_cycle_on_floor = 1
+settings.shadow_projective_trails_on_floor = 1
+settings.shadow_projective_recognizer_on_floor = 1
+
 settings.joy_threshold = 0.10
 
 -- audio
@@ -109,8 +116,11 @@ settings.joy_threshold = 0.10
 settings.current_track = "revenge_of_cats.it"
 -- music & fx settings
 settings.loopMusic = 0
-settings.playEffects = 1
-settings.playMusic = 1
+-- TODO: debug setting 
+settings.playEffects = 0
+settings.playMusic = 0
+-- settings.playEffects = 1
+-- settings.playMusic = 1
 settings.fxVolume = 0.2
 settings.musicVolume = 0.5
 
@@ -161,6 +171,7 @@ settings.clamp_cam_r_max =  45
 settings.clamp_cam_chi_min =  3.141 / 8
 settings.clamp_cam_chi_max =  3 * 3.141 / 8
 
+settings.wireframe = 0
 -- these tables are not serialized to RCNAME (yet)
 -- some values are set in artpack.lua
 video = {} 
