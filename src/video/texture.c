@@ -1,17 +1,23 @@
 #include "video/video.h"
 #include "configuration/settings.h"
-
+#include "game/resource.h"
 #include "base/nebu_surface.h"
 #include "video/nebu_2d.h"
+#include "video/nebu_texture2d.h"
 #include "video/nebu_video_system.h"
 #include "video/nebu_renderer_gl.h"
 
+// TODO (resource): move this stuff into level & gui loading code
+/*!
+	load skybox, trail & explosion texture
+*/
 void initTexture(Visual *d) {
-  GLint min_filter;
+	GLint min_filter, mag_filter;
 
-  int i, j;
+	int i, j;
 
-  switch(getSettingi("mipmap_filter")) {
+	switch(getSettingi("mipmap_filter"))
+	{
 	case NEAREST:
 		min_filter = GL_NEAREST;
 		break;
@@ -27,44 +33,33 @@ void initTexture(Visual *d) {
 	default:
 		min_filter = GL_LINEAR_MIPMAP_LINEAR;
 	}
+
+	mag_filter = GL_LINEAR;
+
+	if(getSettingi("softwareRendering"))
+	{
+		min_filter = GL_NEAREST;
+		mag_filter = GL_NEAREST;
+	}
+
 	printf("using min_filter: %d (setting: %d)\n", min_filter,
-				 getSettingi("mipmap_filter"));
+		getSettingi("mipmap_filter"));
 
-  nebu_Video_CheckErrors("texture.c initTexture - start");
-  /* todo: move that somewhere else */
-  glGenTextures(TEX_COUNT, d->textures);
-  nebu_Video_CheckErrors("texture.c initTexture - creating textures");
-  for(i = 0; i < TEX_COUNT; i++) {
-    for( j = 0; j < textures[i].count; j++) {
-      glBindTexture(GL_TEXTURE_2D, d->textures[ textures[i].id + j ]);
-      loadTexture(textures[i].name, textures[i].type);
+	for(i = 0; i < TEX_COUNT; i++)
+	{
+		for( j = 0; j < textures[i].count; j++)
+		{
+			nebu_Texture2D_meta meta;
+			meta.format = textures[i].type;
+			meta.mag_filter = mag_filter;
+			meta.min_filter = min_filter;
+			meta.wrap_s = textures[i].wrap_s;
+			meta.wrap_t = textures[i].wrap_t;
+			meta.anisotropy = textures[i].anisotropy;
 
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textures[i].wrap_s);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textures[i].wrap_t);
-
-      if(getSettingi("softwareRendering")) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-      } else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
-
-				if(GLEW_EXT_texture_filter_anisotropic) {
-					/* fprintf(stderr, "enabling anisotropic filtering\n"); */
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-													textures[i].anisotropy);
-				}
-      }
-      nebu_Video_CheckErrors("texture.c initTextures");
-    }
-  }
+			d->ridTextures[ textures[i].id + j ] =
+				resource_GetTokenMeta(textures[i].name, eRT_Texture, &meta, sizeof(nebu_Texture2D_meta));
+		}
+	}
 }
-
-void deleteTextures(Visual *d) {
-  glDeleteTextures(TEX_COUNT, d->textures);
-  nebu_Video_CheckErrors("texture.c deleted textures");
-}
-
-
-
 
