@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 
 #include <stdio.h>
-#include "video/nebu_quad.h"
 
 #define POLY_COUNT
 
@@ -19,8 +18,6 @@
 
 extern void initRenderer();
 extern void printRendererInfo();
-extern void renderQuad(Quad *q);
-extern void renderTris(Tris *q);
 extern void clearState();
 
 typedef struct GLstate {
