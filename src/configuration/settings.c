@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "configuration/settings.h"
 #include "configuration/configuration.h"
@@ -73,12 +73,12 @@ float getSettingf(const char *name) {
   if( scripting_GetGlobal("settings", name, NULL) ) {
     /* does not exit, return default */
     fprintf(stderr, "error accessing setting '%s'!\n", name);
-    assert(0);
+    nebu_assert(0);
     return 0;
   }
 	if( scripting_GetFloatResult(&value) ) {
 		fprintf(stderr, "error reading setting '%s'!\n", name);
-		assert(0);
+		nebu_assert(0);
 		return 0;
 	}
 	return value;
@@ -89,12 +89,12 @@ float getVideoSettingf(const char *name) {
   if( scripting_GetGlobal("video", "settings", name, NULL) ) {
     /* does not exit, return default */
     fprintf(stderr, "error accessing setting '%s'!\n", name);
-    assert(0);
+    nebu_assert(0);
     return 0;
   }
 	if( scripting_GetFloatResult(&value) ) {
 		fprintf(stderr, "error reading setting '%s'!\n", name);
-		assert(0);
+		nebu_assert(0);
 		return 0;
 	}
 	return value;
