@@ -72,10 +72,10 @@ void nebu_Mesh_VB_Free(nebu_Mesh_VB *pVB);
 void nebu_Mesh_IB_Free(nebu_Mesh_IB *pIB);
 void nebu_Mesh_ComputeNormals(nebu_Mesh *pMesh);
 void nebu_Mesh_ComputeTriangleNormal(nebu_Mesh *pMesh, int triangle, float* normal);
-void nebu_Mesh_Scale(nebu_Mesh *pMesh, float fScale);
-void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pMesh);
-void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pMesh);
+void nebu_Mesh_VB_Scale(nebu_Mesh_VB *pVB, float fScale);
+void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB);
+void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB);
 void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh);
-void nebu_Mesh_ComputeBBox(nebu_Mesh *pMesh, box3* box3);
+void nebu_Mesh_VB_ComputeBBox(nebu_Mesh_VB *pVB, box3* box3);
 
 #endif
