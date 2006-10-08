@@ -14,8 +14,11 @@
 #include "filesystem/path.h"
 #include "filesystem/nebu_filesystem.h"
 #include "input/nebu_input_system.h"
-
 #include "audio/audio.h"
+
+#include "base/nebu_debug_memory.h"
+
+#include "base/nebu_assert.h"
 
 #include "lua.h"
 #include "lualib.h"
@@ -102,27 +105,25 @@ int c_reloadTrack(lua_State *L) {
 	return 0;
 }
 
-int c_reloadArtpack(lua_State *L) {
-	// resource_FreeAll(); // overkill & harmful
-	artpack_UnloadSurfaces();
-	resource_ReleaseAll(); // still overkill, but harmless
-	reloadArt();
-	video_ReleaseResources();
-	video_LoadResources();
+int c_reloadArtpack(lua_State *L)  {
+	resource_ReleaseType(eRT_2d);
+	resource_ReleaseType(eRT_Font);
+	resource_ReleaseType(eRT_Texture);
+
 	gui_ReleaseResources(); // TODO: ugly, do this differently
 	gui_LoadResources();
 	return 0;
 }
 
 int c_reloadLevel(lua_State *L) {
-	// resource_FreeAll(); // overkill & harmful
-	artpack_UnloadSurfaces();
-	resource_ReleaseAll(); // still overkill, but harmless
-	loadLevel();
-	reloadArt();
-	initGameLevel();
+	game_UnloadLevel();
+
+	game_LoadLevel();
+	video_LoadLevel();
+	initLevels();
+
 	game_ResetData();
-	video_ResetData(); // already called by reloadArt()
+	video_ResetData();
 	return 0;
 }
   
@@ -156,7 +157,7 @@ int c_SetCallback(lua_State *L) {
 	}
 	else {
 		fprintf(stderr, "[fatal] invalid callback set\n");
-		exit(1);
+		nebu_assert(0); exit(1);
 	}
 	return 0;
 }
@@ -269,3 +270,12 @@ void init_c_interface(void) {
 
 	scripting_Register("c_game_ComputeTimeDelta", c_game_ComputeTimeDelta);
 }
+
+/*
+	resource management:
+	- memory resource
+		- 
+	- context dependent resources (e.g. OpenGL-context)
+		- OpenGL texture ids
+		- Nebu-2D surfaces (basically OpenGL textures)
+*/
