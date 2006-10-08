@@ -3,7 +3,7 @@
 
 #include "Nebu_filesystem.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
@@ -82,7 +82,7 @@ char* getPath( ePathLocation eLocation, const char *filename) {
 
   fprintf(stderr, "*** failed to locate file '%s' at '%s' (type %d)\n",
 	  filename, path, eLocation);
-  assert(0);
+  nebu_assert(0);
 
   free(path);
   return NULL;
@@ -105,7 +105,7 @@ const char* getDirectory( ePathLocation eLocation ) {
 	case PATH_LEVEL: return level_dir; break;
   default:
     fprintf(stderr, "invalid path type\n");
-    assert(0);
+    nebu_assert(0);
   }
   return NULL;
 }
