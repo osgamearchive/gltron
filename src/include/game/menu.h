@@ -28,7 +28,7 @@ typedef struct node {
   void* next;
 } node;
 
-/* fixme: this variable is a hack */
+/* TODO: this variable is a hack */
 extern int menutime;
 
 #endif
