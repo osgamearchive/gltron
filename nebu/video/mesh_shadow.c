@@ -3,7 +3,7 @@
 #include "Nebu_video.h"
 
 #include <string.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "base/nebu_debug_memory.h"
 
@@ -34,7 +34,7 @@ nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const n
 
 	nebu_Mesh_Adjacency *pAdjacency = (nebu_Mesh_Adjacency*) malloc( sizeof(nebu_Mesh_Adjacency) );	
 
-	assert(pIB->nPrimitivesPerIndex == 3);
+	nebu_assert(pIB->nPrimitivesPerIndex == 3);
 	pAdjacency->nTriangles = pIB->nPrimitives;
 	pAdjacency->pAdjacency = (int*) malloc( 3 * pAdjacency->nTriangles * sizeof(int) );
 	memset(pAdjacency->pAdjacency, 0xff /* -1 */, 3 * pAdjacency->nTriangles * sizeof(int));
@@ -74,7 +74,7 @@ nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const n
 			pVertexTriCount[iVertex]++;
 		}
 	}
-	assert( memcmp(pVertexOrder, pVertexTriCount, pVB->nVertices * sizeof(int)) == 0 );
+	nebu_assert( memcmp(pVertexOrder, pVertexTriCount, pVB->nVertices * sizeof(int)) == 0 );
 	free(pVertexTriCount);
 
 	// now, ppTriangles contains a list of pVertexOrder[vertex] triangles, which the vertex is part of
@@ -93,7 +93,7 @@ nebu_Mesh_Adjacency* nebu_Mesh_Adjacency_Create(const nebu_Mesh_VB *pVB, const n
 						pIB->pIndices[3 * iTriangle + l] == iNextVertex)
 					{
 						// we found an adjacency
-						assert(pAdjacency->pAdjacency[3 * i + j] == -1 ||
+						nebu_assert(pAdjacency->pAdjacency[3 * i + j] == -1 ||
 							pAdjacency->pAdjacency[3 * i + j] == iTriangle);
 						pAdjacency->pAdjacency[3 * i + j] = iTriangle;
 						// break out of outer loop too, but then we won't detect inconsitencies
@@ -226,14 +226,14 @@ void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
 		{
 			if(pSI->pDotsigns[i] == 1)
 			{
-				assert(iFrontPos < nFront);
+				nebu_assert(iFrontPos < nFront);
 				memcpy(pSI->pFrontfaces->pIndices + 3 * iFrontPos, pSI->pIB->pIndices + 3 * i, 3 * sizeof(int));
 				iFrontPos++;
 			}
 			else
 			{
 				int j;
-				assert(iBackPos < nBack);
+				nebu_assert(iBackPos < nBack);
 				// memcpy(pSI->pBackfaces->pIndices[3 * iBackPos], pSI->pIB->pIndices[i], 3 * sizeof(int));
 				for(j = 0; j < 3; j++)
 				{
@@ -243,8 +243,8 @@ void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
 				iBackPos++;
 			}
 		}
-		assert(iFrontPos == pSI->pFrontfaces->nPrimitives);
-		assert(iBackPos == pSI->pBackfaces->nPrimitives);
+		nebu_assert(iFrontPos == pSI->pFrontfaces->nPrimitives);
+		nebu_assert(iBackPos == pSI->pBackfaces->nPrimitives);
 	}
 	// compute edge list
 	{
@@ -283,9 +283,9 @@ void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
 					int v1, v2;
 					v1 = pSI->pIB->pIndices[3 * i + j];
 					v2 = pSI->pIB->pIndices[3 * i + (j + 1) % 3];
-					assert(v1 < pSI->pVB->nVertices);
-					assert(v2 < pSI->pVB->nVertices);
-					assert(iCurEdge < nEdge);
+					nebu_assert(v1 < pSI->pVB->nVertices);
+					nebu_assert(v2 < pSI->pVB->nVertices);
+					nebu_assert(iCurEdge < nEdge);
 					if(pSI->pDotsigns[i] == 1)
 					{
 						pSI->pEdges->pIndices[2 * iCurEdge + 0] = v1;
@@ -300,6 +300,6 @@ void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
 				}
 			}
 		}
-		assert(iCurEdge == nEdge);
+		nebu_assert(iCurEdge == nEdge);
 	}
 }
