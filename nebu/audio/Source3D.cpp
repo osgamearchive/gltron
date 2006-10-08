@@ -1,6 +1,6 @@
 #include "audio/nebu_Source3D.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 #include <string.h>
 
 Uint8 tmp[65536];
@@ -172,7 +172,7 @@ namespace Sound {
       shifted_len = 4 * fxComputeShiftLen( shift, len / 4 );
       clen = MAX(len, shifted_len) + 32; // safety distance
 
-      assert(clen < _source->_buffersize);
+      nebu_assert(clen < _source->_buffersize);
 
       if(vol > SOUND_VOL_THRESHOLD) {
 				// copy clen bytes from the buffer to a temporary buffer
