@@ -2,7 +2,7 @@
 #include "video/nebu_video_system.h"
 #include "base/nebu_system.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "base/nebu_debug_memory.h"
 
@@ -17,7 +17,7 @@ static int window_id = 0;
 void nebu_Video_Init(void) {
   if(SDL_Init(SDL_INIT_VIDEO) < 0 ) {
     fprintf(stderr, "Couldn't initialize SDL video: %s\n", SDL_GetError());
-    exit(1); /* OK: critical, no visual */
+    nebu_assert(0); exit(1); /* OK: critical, no visual */
   } else
 		video_initialized = 1;
 }
@@ -41,7 +41,7 @@ void nebu_Video_SetDisplayMode(int f) {
   if(!video_initialized) {
     if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
       fprintf(stderr, "[system] can't initialize Video: %s\n", SDL_GetError());
-      exit(1); /* OK: critical, no visual */
+      nebu_assert(0); exit(1); /* OK: critical, no visual */
     }
   }
   if(flags & SYSTEM_DOUBLE)
@@ -94,7 +94,7 @@ void createWindow(void)
   if( (screen = SDL_SetVideoMode( width, height, bitdepth, 
 	  ((flags & SYSTEM_FULLSCREEN) ? SDL_FULLSCREEN : 0) | SDL_OPENGL)) == NULL ) {
     fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
-    exit(1); /* OK: critical, no visual */
+    nebu_assert(0); exit(1); /* OK: critical, no visual */
   }
   window_id = 1;
 }
@@ -108,8 +108,8 @@ void nebu_Video_GetDisplayDepth(int *r, int *g, int *b, int *a)
 }
 
 int nebu_Video_Create(char *name) {
-	assert (window_id == 0);  // only single window allowed for now
-	assert (width != 0 && height != 0);
+	nebu_assert (window_id == 0);  // only single window allowed for now
+	nebu_assert (width != 0 && height != 0);
 
 	createWindow();
 	glewInit();
@@ -129,7 +129,7 @@ int nebu_Video_Create(char *name) {
 		{
 			printOpenGLDebugInfo();
 			fprintf(stderr, "multitexturing is not available\n");
-			exit(1);
+			nebu_assert(0); exit(1);
 		}
 	}
 	SDL_WM_SetCaption(name, NULL);
@@ -152,7 +152,7 @@ void nebu_Video_Destroy(int id) {
   if(id == window_id)
 	  SDL_QuitSubSystem(SDL_INIT_VIDEO);
   else
-	  assert(0);
+	  nebu_assert(0);
   video_initialized = 0;
   window_id = 0;
 }
