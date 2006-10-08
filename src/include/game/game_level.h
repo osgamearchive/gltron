@@ -10,9 +10,11 @@ typedef struct game_spawnpoint {
 
 typedef struct game_level {
 	int scalable;
+	float default_scale;
 	int nBoundaries;
 	segment2 *boundaries;
 	int nSpawnPoints;
+	int spawnIsRelative;
 	game_spawnpoint *spawnPoints;
 	box2 boundingBox;
 } game_level;
