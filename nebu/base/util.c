@@ -3,9 +3,11 @@
 #include "base/nebu_random.h"
 #include "base/nebu_util.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "base/nebu_debug_memory.h"
+
+// review: 64bit ok
 
 void nebu_RandomPermutation( int N, int *nodes )
 {
@@ -66,7 +68,7 @@ void nebu_List_RemoveAt(nebu_List *pItem, nebu_List *pPrevItem)
 {
 	if(!pItem->next)
 	{
-		assert(0);
+		nebu_assert(0);
 		return;
 		// don't free the empty list tail
 	}
