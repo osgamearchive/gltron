@@ -31,15 +31,15 @@ float getRecognizerAngle(vec2 *velocity)
   }
   return (phi + PI / 2) * 180 / PI;
 }
-  
-void getRecognizerPositionVelocity(vec2 *p, vec2 *v) {
-  float max = ((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh))->BBox.vSize.v[0] * rec_scale_factor;
-  float rec_boundry = box2_Diameter(& game2->level->boundingBox) - max;
-  box2_Center(p, & game2->level->boundingBox);
-  p->v[0] += x() * rec_boundry / 2.0f;
-  p->v[1] += y() * rec_boundry / 2.0f;
-  v->v[0] = dx() * rec_boundry / 100.f;
-  v->v[1] = dy() * rec_boundry / 100.f;
+
+void getRecognizerPositionVelocity(vec2 *p, vec2 *v)
+{
+	float rec_boundry = box2_Diameter(& game2->level->boundingBox) * (1-rec_scale_factor);
+	box2_Center(p, & game2->level->boundingBox);
+	p->v[0] += x() * rec_boundry / 2.0f;
+	p->v[1] += y() * rec_boundry / 2.0f;
+	v->v[0] = dx() * rec_boundry / 100.f;
+	v->v[1] = dy() * rec_boundry / 100.f;
 }
 
 void drawRecognizerShadow(void) {
@@ -98,26 +98,20 @@ void drawRecognizer(void) {
 	glEnable(GL_LIGHTING);
   }
   
-  glEnable(GL_POLYGON_OFFSET_FILL);
-  glPolygonOffset(1,1);
-
   glEnable(GL_NORMALIZE);
   glColor3f(0.0, 0.0, 0.0);
-  gltron_Mesh_Draw(((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh)), TRI_MESH);
-
-  glDisable(GL_POLYGON_OFFSET_FILL);
+  gltron_Mesh_Draw((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh), TRI_MESH);
 
   glDisable(GL_LIGHT2);
   glEnable(GL_LIGHT1);
   glDisable(GL_LIGHTING);
 
   glColor3fv(rec_outline_color);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glEnable(GL_BLEND);
-  glEnable(GL_LINE_SMOOTH);
-  gltron_Mesh_Draw(((gltron_Mesh*)resource_Get(gTokenRecognizerQuad, eRT_GLtronQuadMesh)), QUAD_MESH);
-  glDisable(GL_LINE_SMOOTH);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+  glPolygonOffset(1,8);
+  glEnable(GL_POLYGON_OFFSET_LINE);
+  drawSharpEdges((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh));
+  glDisable(GL_POLYGON_OFFSET_LINE);
 
   glDisable(GL_CULL_FACE);
   
