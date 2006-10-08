@@ -112,14 +112,14 @@ void nebu_Mesh_ComputeNormals(nebu_Mesh *pMesh)
 	}
 }
 
-void nebu_Mesh_Scale(nebu_Mesh *pMesh, float fScale)
+void nebu_Mesh_VB_Scale(nebu_Mesh_VB *pVB, float fScale)
 {
 	int i, j;
-	for(i = 0; i < pMesh->pVB->nVertices; i++)
+	for(i = 0; i < pVB->nVertices; i++)
 	{
 		for(j = 0; j < 3; j++)
 		{
-			pMesh->pVB->pVertices[3 * i + j] *= fScale;
+			pVB->pVertices[3 * i + j] *= fScale;
 		}
 	}
 }
@@ -201,7 +201,7 @@ nebu_Mesh* nebu_Mesh_Create(int flags, int nVertices, int nTriangles)
 	return pMesh;
 }
 
-void nebu_Mesh_ComputeBBox(nebu_Mesh *pMesh, box3* box)
+void nebu_Mesh_VB_ComputeBBox(nebu_Mesh_VB *pVB, box3* box)
 {
-	box3_Compute(box, (vec3*)pMesh->pVB->pVertices, pMesh->pVB->nVertices);
+	box3_Compute(box, (vec3*)pVB->pVertices, pVB->nVertices);
 }
