@@ -62,9 +62,10 @@ extern int dirsY[];
 extern float default_speeds[];
 extern int default_arena_sizes[];
 
-/* ai -> computer.c */
+void game_UnloadLevel(void);
+void game_LoadLevel(void);
 
-void loadLevel(void);
+/* ai -> computer.c */
 
 void initGameAI(int level);
 void doComputer(int player, int target);
@@ -76,7 +77,7 @@ void doTurn(GameEvent* e, int direction);
 void doMovement(int dt);
 void writePosition(int player);
 
-void initGameLevel(void);
+void initLevels(void);
 void initClientData(void);
 
 int game_ComputeTimeDelta(void);
