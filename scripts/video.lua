@@ -1,6 +1,6 @@
 -- very similiar to setupSoundTracks() in audio.lua
 
-function setupArtpacks()
+function setupArtpackPaths()
 	artpacks = c_loadDirectory(ePath.ART);
 	local i,name
 	for i,name in artpacks do
@@ -26,6 +26,10 @@ function nextArtpack()
 		current_artpack_index = 1
 	end
 	tmp.current_artpack = artpacks[ current_artpack_index ]
+	-- let's see if this impacts performance too much...
+	settings.current_artpack = tmp.current_artpack
+	c_setArtPath()
+	c_reloadArtpack()
 end
 
 function previousArtpack()
@@ -35,6 +39,10 @@ function previousArtpack()
 		current_artpack_index = table.getn(artpacks) 
 	end
 	tmp.current_artpack = artpacks[ current_artpack_index ]
+	-- let's see if this impacts performance too much...
+	settings.current_artpack = tmp.current_artpack
+	c_setArtPath()
+	c_reloadArtpack()
 end
 
 -- copy-paste from setup/next/previous Artpack
