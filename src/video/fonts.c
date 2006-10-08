@@ -3,7 +3,9 @@
 #include "video/video.h"
 #include "Nebu_filesystem.h"
 
-#include <base/nebu_debug_memory.h>
+#include "base/nebu_debug_memory.h"
+
+#include "base/nebu_assert.h"
 
 void initFonts(void) {
 	char *path;
@@ -14,7 +16,7 @@ void initFonts(void) {
 	if(!gTokenGameFont)
 	{
 		fprintf(stderr, "can't load font %s\n", path);
-		exit(1); /* OK: critical, installation corrupt */
+		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	free(path);
 }
