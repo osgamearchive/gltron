@@ -4,7 +4,9 @@
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
+
+// review: 64bit ok
 
 vec4* vec4_Add(vec4 *pOut, const vec4 *pV1, const vec4 *pV2) {
   pOut->v[0] = pV1->v[0] + pV2->v[0];
@@ -137,9 +139,10 @@ vec3* vec3_Zero(vec3 *pV) {
 }
 
 vec3* vec3_TriNormalDirection(vec3* pOut, 
-														 const vec3* pV1, 
-														 const vec3* pV2, 
-														 const vec3 *pV3) {
+	 const vec3* pV1, 
+	 const vec3* pV2, 
+	 const vec3 *pV3)
+{
 	vec3 v1, v2;
 	vec3_Sub(&v1, pV2, pV1);
 	vec3_Sub(&v2, pV3, pV1);
@@ -253,7 +256,7 @@ vec2* segment2_IntersectParallel(vec2 *pOut, float *t1, float *t2,
 	vec2_Add(&v, &s2->vStart, &s2->vDirection);
 	if(segment2_findT(&t, s1, &v))
 		return NULL;
-	assert(t >= 0);
+	nebu_assert(t >= 0);
 	
 	if(*t1 > 1 && t > 1)
 		return NULL;
@@ -312,7 +315,8 @@ vec2* segment2_IntersectNonParallel(vec2 *pOut, float *t1, float *t2,
 }
 
 vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
-												 const segment2 *s1, const segment2 *s2) {
+	const segment2 *s1, const segment2 *s2)
+{
 	// check if s1, s2 are parallel
 	vec2 tmp;
 	if( fabs(vec2_Dot(&s1->vDirection, 
