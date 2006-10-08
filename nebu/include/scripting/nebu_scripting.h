@@ -3,7 +3,13 @@
 
 #include "lua.h"
 
-extern void scripting_Init();
+enum {
+	NEBU_SCRIPTING_DEBUG = 1,
+	NEBU_SCRIPTING_NOCRLF = 0,
+	NEBU_SCRIPTING_CRLF = 1
+};
+
+extern void scripting_Init(int flags);
 extern void scripting_Quit();
 extern void Scripting_Idle();
 
@@ -22,6 +28,9 @@ extern int scripting_CopyStringResult(char *s, int len);
 extern int scripting_GetArraySize(int *i);
 extern int scripting_GetArrayIndex(int i);
 extern int scripting_Pop(void);
+
+extern int scripting_StackGuardStart(void);
+extern void scripting_StackGuardEnd(int iPos);
 
 extern void scripting_PushInteger(int iValue);
 
