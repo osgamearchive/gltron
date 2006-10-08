@@ -8,7 +8,8 @@
 
 /* draw a 2d map */
 
-void draw2D( nebu_Rect *pRect ) {
+void draw2D( nebu_Rect *pRect )
+{
 	// TODO: modify for nebu_rect
 	// get rid of the viewport requirement
 	// assume rasonly is set, push/pop matrices
@@ -20,6 +21,10 @@ void draw2D( nebu_Rect *pRect ) {
 	glPushMatrix();
 	glTranslatef( (float)pRect->x, (float)pRect->y, 0);
 	glScalef(pRect->width / grid_width, pRect->height / grid_height, 1);
+	glTranslatef(
+		-game2->level->boundingBox.vMin.v[0],
+		-game2->level->boundingBox.vMin.v[1],
+		0);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -40,9 +45,6 @@ void draw2D( nebu_Rect *pRect ) {
 		segment2* trail;
 		float x, y;
 
-		getPositionFromData(&x, &y, p->data);
-		
-		// fixme: check if trails vanish
 		if (p->data->trail_height <= 0) {
 			continue;
 		}
@@ -61,6 +63,8 @@ void draw2D( nebu_Rect *pRect ) {
 			glColor3fv(pV->pColorAlpha);
 		}
 
+		getPositionFromData(&x, &y, p->data);
+		
 		glPointSize(2);
 		glBegin(GL_POINTS);
 		glVertex2f( x, y );
