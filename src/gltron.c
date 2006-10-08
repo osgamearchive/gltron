@@ -8,8 +8,11 @@
 #include "base/util.h"
 #include "base/nebu_debug_memory.h"
 
+#include "base/nebu_assert.h"
+
 int main(int argc, char *argv[] ) {
 	nebu_debug_memory_CheckLeaksOnExit();
+	// nebu_assert_config(NEBU_ASSERT_PRINT_STDERR);
 	initSubsystems(argc, argv);
 	runScript(PATH_SCRIPTS, "main.lua");
 	exitSubsystems();
