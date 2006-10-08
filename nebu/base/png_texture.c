@@ -13,6 +13,7 @@
 
 #define ERR_PREFIX "[load_png_texture] "
 
+// review: 64bit ok
 FILE *f;
 
 void user_read_data(png_structp png_ptr,
