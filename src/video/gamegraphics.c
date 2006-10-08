@@ -16,13 +16,14 @@
 #include "video/recognizer.h"
 #include "video/explosion.h"
 
+#include "video/nebu_texture2d.h"
 #include "video/nebu_video_system.h"
 #include "video/nebu_renderer_gl.h"
 #include "base/nebu_math.h"
 #include "base/nebu_vector.h"
 #include "base/nebu_matrix.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "base/nebu_debug_memory.h"
 
@@ -64,14 +65,42 @@ void clearScreen() {
 	}
 }
 
+void initFrameResources(void)
+{
+	int i;
+
+	for(i = 0; i < TEX_COUNT; i++)
+	{
+		nebu_Texture2D *pTexture = NULL;
+		if(gScreen->ridTextures[i])
+			pTexture = (nebu_Texture2D*)resource_Get(gScreen->ridTextures[i], eRT_Texture);
+		if(pTexture)
+		{
+			gScreen->textures[i] = pTexture->id;
+		}
+		else
+			gScreen->textures[i] = 0;
+	}
+
+	video_shader_InitResources(&gWorld->arena_shader);
+	video_shader_InitResources(&gWorld->floor_shader);
+}
+
 void drawGame(void) {
 	GLint i;
+
+	initFrameResources();
 
 	clearScreen();
 
 	glShadeModel( GL_SMOOTH );
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
+
+	if(getSettingi("wireframe"))
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
 
 	for(i = 0; i < vp_max[gViewportType]; i++) {
 		Visual *d = &gPlayerVisuals[viewport_content[i]].display;
@@ -85,6 +114,8 @@ void drawGame(void) {
 				gPlayerVisuals + viewport_content[i]);
 		}
 	}
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 /* 
@@ -166,8 +197,9 @@ void getCycleTransformation(nebu_Matrix4D *pM, Player *p, int lod)
 		}
 		#undef neigung
 	}
-	vec3_Zero(&vTranslate);
-	vTranslate.v[2] = cycle->BBox.vSize.v[2] / 2;
+	vTranslate.v[0] = 0;
+	vTranslate.v[1] = 0;
+	vTranslate.v[2] = (- cycle->BBox.vMin.v[2]);
 	matrixTranslation(&matTranslate, &vTranslate);
 	matrixMultiply(pM, pM, &matTranslate);
 }
@@ -265,7 +297,7 @@ void drawSharpEdges(gltron_Mesh *pMesh)
 							nCount++;
 							break;
 						default:
-							assert(0);
+							nebu_assert(0);
 							break;
 						}
 					}
@@ -278,18 +310,15 @@ void drawSharpEdges(gltron_Mesh *pMesh)
 			pIndices = malloc(2 * nEdges * sizeof(int));
 			break;
 		case 1:
-			assert(nCount == nEdges);
-			glColor3f(.5,.5,.5);
-			glDisable(GL_LIGHTING);
+			nebu_assert(nCount == nEdges);
 			nebu_Mesh_VB_Enable(pMesh->pSI->pVB);
 			glDrawElements(GL_LINES, 2 * nCount, GL_UNSIGNED_INT, pIndices);
 			nebu_Mesh_VB_Disable(pMesh->pSI->pVB);
-			glEnable(GL_LIGHTING);
 
 			free(pIndices);
 			break;
 		default:
-			assert(0);
+			nebu_assert(0);
 		}
 	}
 }
@@ -314,12 +343,12 @@ void drawCycle(int player, int lod, int drawTurn) {
 	if(p->data->wall_buster_enabled) {
 		float black[] = { 0, 0, 0, 1};
 		float white[] = { 1, 1, 1, 1};
-		gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, black);
-		// gltron_Mesh_SetMaterialColor(cycle, "Hull", eAmbient, black);
-		gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, white); 
+		gltron_Mesh_Material_SetColor(cycle, "Hull", eDiffuse, black);
+		// gltron_Mesh_Material_SetColor(cycle, "Hull", eAmbient, black);
+		gltron_Mesh_Material_SetColor(cycle, "Hull", eSpecular, white); 
 	} else {
-		gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
-		gltron_Mesh_SetMaterialColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
+		gltron_Mesh_Material_SetColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
+		gltron_Mesh_Material_SetColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
 	}
 
 	if (p->data->exp_radius == 0)
@@ -331,12 +360,12 @@ void drawCycle(int player, int lod, int drawTurn) {
 			&& game->pauseflag == PAUSE_GAME_RUNNING) {
 			if (pV->spoke_state == 1) {
 			pV->spoke_state = 0;
-			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, SpokeColor);
-			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, SpokeColor);
+			gltron_Mesh_Material_SetColor(cycle, "Spoke", eSpecular, SpokeColor);
+			gltron_Mesh_Material_SetColor(cycle, "Spoke", eAmbient, SpokeColor);
 			} else {
 			pV->spoke_state = 1;
-			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eSpecular, NoSpokeColor);
-			gltron_Mesh_SetMaterialColor(cycle, "Spoke", eAmbient, NoSpokeColor);
+			gltron_Mesh_Material_SetColor(cycle, "Spoke", eSpecular, NoSpokeColor);
+			gltron_Mesh_Material_SetColor(cycle, "Spoke", eAmbient, NoSpokeColor);
 			}
 			pV->spoke_time = game2->time.current;
 		}
@@ -373,7 +402,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 		// draw shadow volume to mask out shadowed areas
 		// TODO: combine with reflections
 		// if(!gIsRenderingReflection && cycle->pSI)
-		if(cycle->pSI)
+		if(cycle->pSI && getSettingi("shadow_volumes_cycle"))
 		{
 			vec3 vLightDirWorld = { { -.5, -.5, -1 } };
 			vec3 vLightDirModel;
@@ -445,19 +474,30 @@ void drawCycle(int player, int lod, int drawTurn) {
 				glCullFace(front);
 				drawExtruded(cycle->pSI->pEdges, cycle->pSI->pVB, &vLightDirModel);
 				glCullFace(back);
+				// glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
 				if(gIsRenderingReflection)
 					glEnable(GL_CLIP_PLANE0);
 				
 				glDisable(GL_CULL_FACE);
 			}
-			
 			// restore color buffer access
 			glDepthMask(GL_TRUE);
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
+			/* // DEBUG
+
+			// lighting is disabled per default
+			// glDisable(GL_LIGHTING);
+			glColor3f(.5,.5,.5);
+
+			glPolygonOffset(1,1);
+			glEnable(GL_POLYGON_OFFSET_FILL);
 			// drawSharpEdges(cycle);
+			glDisable(GL_POLYGON_OFFSET_FILL);
 			
+			// */
+
 			/* // debug code			
 			nebu_Mesh_VB_Enable(cycle->pSI->pVB);
 			glDisable(GL_LIGHTING);
@@ -471,9 +511,9 @@ void drawCycle(int player, int lod, int drawTurn) {
 			glColor3f(0,.7f,0);
 			// glDrawElements(GL_TRIANGLES, 3 * cycle->pSI->pBackfaces->nPrimitives, GL_UNSIGNED_INT, cycle->pSI->pBackfaces->pIndices);
 			nebu_Mesh_VB_Disable(cycle->pSI->pVB);
+			glEnable(GL_LIGHTING);
 			// */
 
-			glEnable(GL_LIGHTING);
 
 			if(gIsRenderingReflection)
 			{
@@ -521,13 +561,13 @@ void drawCycle(int player, int lod, int drawTurn) {
 				// fScale = 1 + (float)i * 0.2f / 5.0f;
 				// gray[3] = 0.5f - 0.12f * i;
 				fScale = 1.2f;
-				gltron_Mesh_SetMaterialColor(cycle, "Hull", eDiffuse, gray);
-				gltron_Mesh_SetMaterialAlpha(cycle, gray[3]);
+				gltron_Mesh_Material_SetColor(cycle, "Hull", eDiffuse, gray);
+				gltron_Mesh_Material_SetAlpha(cycle, gray[3]);
 				glPushMatrix();
 				glScalef(fScale, fScale, fScale);
 				gltron_Mesh_Draw(cycle, TRI_MESH);
 				glPopMatrix();
-				gltron_Mesh_SetMaterialAlpha(cycle, 1);
+				gltron_Mesh_Material_SetAlpha(cycle, 1);
 			}
 			glDepthMask(GL_TRUE);
 			glDisable(GL_BLEND);
@@ -543,7 +583,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 		if (gSettingsCache.show_impact) {
 			glPushMatrix();
-			glTranslatef(0, 0, - cycle->BBox.vSize.v[2] / 2);
+			glTranslatef(0, 0, - (cycle->BBox.vMax.v[2] - cycle->BBox.vMin.v[2]) / 2);
 			drawImpact(player);
 			glPopMatrix();
 		}
@@ -597,7 +637,10 @@ int playerVisible(int eyePlayer, int targetPlayer) {
 		v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
 		s, d);
 	*/
-	if(s < d-(((gltron_Mesh*)resource_Get(gpTokenLightcycles[i], eRT_GLtronTriMesh))->BBox.fRadius*2))
+	
+	// TODO: find out if this check is useful / necessary
+	// if(s < d-(((gltron_Mesh*)resource_Get(gpTokenLightcycles[i], eRT_GLtronTriMesh))->BBox.fRadius*2))
+	if(0)
 		return -1;
 	else
 		return i;
@@ -638,17 +681,20 @@ void drawPlanarShadows(int player) {
 	}
 
 	/* shadows on the floor: cycle, recognizer, trails */
-	if (gSettingsCache.show_recognizer) {
+	if (gSettingsCache.show_recognizer &&
+		getSettingi("shadow_projective_recognizer_on_floor"))
+	{
 		drawRecognizerShadow();
 	}
 
 	for(i = 0; i < game->players; i++) {
 		int lod = playerVisible(player, i);
-		if (lod >= 0) {
+		if (lod >= 0 && getSettingi("shadow_projective_cycle_on_floor")) {
 			int drawTurn = (i != player || gSettingsCache.camType != CAM_TYPE_COCKPIT) ? 1 : 0;
 			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
 		}
-		if (game->player[i].data->trail_height > 0 )
+		if (game->player[i].data->trail_height > 0 &&
+			getSettingi("shadow_projective_trails_on_floor"))
 			drawTrailShadow(game->player + i, gPlayerVisuals + i);
 	}
 
@@ -700,7 +746,7 @@ void drawWorld(int player)
 		drawRecognizer();
 	}
 
-	if (gSettingsCache.show_wall == 1) {
+	if (gSettingsCache.show_wall == 1 && gWorld->arena) {
 		glColor3f(1,1,1);
 		drawWalls();
 	}
@@ -880,7 +926,7 @@ void drawCam(int player) {
 		// draw floor to fb, z and stencil,
 		// using alpha-blending
 		// TODO: draw floor alpha to fb
-		video_Shader_Setup(& gWorld->floor_shader);
+		video_Shader_Setup(& gWorld->floor_shader, 0);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilMask(gFloorStencilRef);
 		glStencilFunc(GL_ALWAYS, gFloorStencilRef, ~0);
@@ -891,18 +937,20 @@ void drawCam(int player) {
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.1f);
 
-		nebu_Mesh_DrawGeometry( gWorld->floor );
+		gltron_Mesh_Draw( gWorld->floor, TRI_MESH );
 
 		glDisable(GL_ALPHA_TEST);
 		glDisable(GL_BLEND);
 		glDisable(GL_STENCIL_TEST);
-		video_Shader_Cleanup(& gWorld->floor_shader);
+		video_Shader_Cleanup(& gWorld->floor_shader, 0);
 	}
 	else
 	{
 		/* reflections */
 		/* first draw reflector to stencil */
 		/* and reflector alpha to fb */
+
+		// TODO: the following comments are outdated
 
 		// this doesn't work well with shadow volmes used in the reflections, those also use the stencil buffer
 		// possible solutions:
@@ -922,7 +970,7 @@ void drawCam(int player) {
 		//    - blend drop shadows
 				
 
-		video_Shader_Setup(& gWorld->floor_shader);
+		video_Shader_Setup(& gWorld->floor_shader, 0);
 
 		// store only reflector alpha in framebuffer
 		glDepthMask(GL_FALSE);
@@ -934,7 +982,7 @@ void drawCam(int player) {
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.1f);
 
-		nebu_Mesh_DrawGeometry( gWorld->floor );
+		gltron_Mesh_Draw( gWorld->floor, TRI_MESH );
 		
 		glDisable(GL_ALPHA_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -943,7 +991,7 @@ void drawCam(int player) {
 		glStencilMask(~0); // mask doesn't actually matter, because we're using GL_KEEP
 		glStencilFunc(GL_EQUAL, gFloorStencilRef, gFloorStencilRef);
 
-		video_Shader_Cleanup(& gWorld->floor_shader);
+		video_Shader_Cleanup(& gWorld->floor_shader, 0);
 		
 		/* then draw world & skybox reflected, where stencil is set */
 		/* protect the alpha buffer */
@@ -987,9 +1035,9 @@ void drawCam(int player) {
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		glStencilFunc(GL_ALWAYS, 0, ~0);
 
-		video_Shader_Setup(& gWorld->floor_shader);
-		nebu_Mesh_DrawGeometry( gWorld->floor );
-		video_Shader_Cleanup(& gWorld->floor_shader);
+		video_Shader_Setup(& gWorld->floor_shader, 0);
+		gltron_Mesh_Draw( gWorld->floor, TRI_MESH );
+		video_Shader_Cleanup(& gWorld->floor_shader, 0);
 
 		glDisable(GL_STENCIL_TEST);
 		glDisable(GL_BLEND);
