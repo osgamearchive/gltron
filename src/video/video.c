@@ -8,7 +8,11 @@
 #include "Nebu_input.h"
 #include "Nebu_scripting.h"
 
+#include <string.h>
+
 #include "base/nebu_debug_memory.h"
+
+#include "base/nebu_assert.h"
 
 void displayGame(void) {
   drawGame();
@@ -62,7 +66,7 @@ int initWindow(void) {
 			}
 		}
 		printf("[fatal] could not create window...exiting\n");
-		exit(1); /* OK: critical, no visual */
+		nebu_assert(0); exit(1); /* OK: critical, no visual */
 	}
 
 	SKIP:
@@ -86,7 +90,6 @@ void reshape(int x, int y) {
 }
 
 void shutdownDisplay() {
-	deleteTextures(gScreen);
 	artpack_UnloadSurfaces();
 	deleteFonts();
 	gui_ReleaseResources();
@@ -102,21 +105,30 @@ void setupDisplay() {
 	// printRendererInfo();
 	// printf("win_id is %d\n", d->win_id);
 	// fprintf(stderr, "[status] loading art\n");
-	loadArt();
 
 	SystemReshapeFunc(reshape);
 }
 
-static void loadModels(void) {
+void loadModels(void)
+{
 	char *path;
 	int i;
+
+	nebu_assert(!gTokenRecognizer);
+	nebu_assert(!gTokenRecognizerQuad);
+
+	for(i = 0; i < LC_LOD; i++)
+	{
+		nebu_assert(!gpTokenLightcycles[i]);
+	}
+
 	/* load recognizer model */
 	path = getPath(PATH_DATA, "recognizer.obj");
 	gTokenRecognizer = resource_GetToken(path, eRT_GLtronTriMesh);
 	if(!gTokenRecognizer)
 	{
 		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
-		exit(1); /* OK: critical, installation corrupt */
+		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	free(path);
 
@@ -126,7 +138,7 @@ static void loadModels(void) {
 	if(!gTokenRecognizerQuad)
 	{
 		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
-		exit(1); /* OK: critical, installation corrupt */
+		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	free(path);
 
@@ -137,26 +149,17 @@ static void loadModels(void) {
 		if(!gpTokenLightcycles[i])
 		{
 			fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
-			exit(1); /* OK: critical, installation corrupt */
+			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
 		free(path);
 	}
-	// /* DEBUG
-	path = getPath(PATH_DATA, "arena.obj");
-	gpTokenCurrentLevel = resource_GetToken(path, eRT_GLtronTriMesh);
-	if(!gpTokenCurrentLevel)
-	{
-		fprintf(stderr, "fatal: could not load arena - exiting...\n");
-		exit(1); // OK: critical, installation corrupt
-	}
-	free(path);
-	// */
 }
 
 void freeVideoData(void)
 {
 	free(gPlayerVisuals);
 	free(gScreen->textures);
+	free(gScreen->ridTextures);
 	free(gScreen);
 }
 
@@ -173,12 +176,13 @@ void initVideoData(void) {
 		d->vp_x = 0; d->vp_y = 0;
 		d->vp_w = d->w; d->vp_h = d->h;
 		d->onScreen = -1;
+		d->ridTextures = (int*) malloc(TEX_COUNT * sizeof(int));
+		memset(d->ridTextures, 0, TEX_COUNT * sizeof(int));
 		d->textures = (unsigned int*) malloc(TEX_COUNT * sizeof(unsigned int));
+		memset(d->textures, 0, TEX_COUNT * sizeof(unsigned int));
 	}
 
 	gPlayerVisuals = (PlayerVisual*) malloc(MAX_PLAYERS * sizeof(PlayerVisual));
-
-	loadModels();
 
 	for(i = 0; i < eHUDElementCount; i++)
 	{
@@ -187,7 +191,8 @@ void initVideoData(void) {
 	changeDisplay(-1);
 }
 
-void initGameScreen(void) {
+void initGameScreen(void)
+{
 	Visual *d;
 	d = gScreen;
 	d->w = getSettingi("width");
@@ -196,14 +201,18 @@ void initGameScreen(void) {
 	d->vp_w = d->w; d->vp_h = d->h;
 }
 
+void video_UnloadLevel(void)
+{
+	if(gWorld)
+		video_FreeLevel(gWorld);
+	gWorld = NULL;
+}
+
 void video_LoadLevel(void) {
 	printf("[status] load/reload video data\n");
 
-	if(gWorld)
-		video_FreeLevel(gWorld);
+	nebu_assert(!gWorld);
 	gWorld = video_CreateLevel();
-	if(gWorld->scalable)
-		video_ScaleLevel(gWorld, getSettingf("grid_size"));
 }
 	
 void video_ResetData(void) {
