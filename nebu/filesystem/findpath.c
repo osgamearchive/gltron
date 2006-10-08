@@ -101,7 +101,7 @@ void goto_installpath(const char *argv0)
     }
     if ( ! *datapath || (chdir(datapath) < 0) ) {
         fprintf(stderr, "Couldn't change to install directory\n");
-        exit(1); /* OK: critical, installation corrupt */
+        nebu_assert(0); exit(1); /* OK: critical, installation corrupt */
     }
 }
 #else
