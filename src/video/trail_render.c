@@ -49,7 +49,8 @@ void trailStatesRestore(void) {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if(!getSettingi("wireframe"))
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void trailRender(TrailMesh *pMesh) {
