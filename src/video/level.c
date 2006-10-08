@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "filesystem/path.h"
 #include "video/nebu_mesh.h"
+#include "video/nebu_texture2d.h"
 #include "video/video_level.h"
 #include "video/video.h"
+#include "video/model.h"
+#include "game/resource.h"
 
 #include "Nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"
@@ -13,130 +16,278 @@
 
 #include "base/nebu_debug_memory.h"
 
-nebu_Mesh* loadMesh(void);
+gltron_Mesh* loadMesh(void);
 
 void video_FreeLevel(video_level *l) {
-	nebu_Mesh_Free(l->floor);
-	nebu_Mesh_Free(l->arena);
-	glDeleteTextures(1, & l->floor_shader.diffuse_texture_id);
-	glDeleteTextures(1, & l->arena_shader.diffuse_texture_id);
+	// TODO (important): change texture handling
+	if(gpTokenCurrentFloor)
+	{
+		resource_Free(gpTokenCurrentFloor);
+		gpTokenCurrentFloor = 0;
+	}
+	else
+	{
+		if(l->floor)
+			gltron_Mesh_Free(l->floor);
+	}
+	if(gpTokenCurrentLevel)
+	{
+		resource_Free(gpTokenCurrentLevel);
+		gpTokenCurrentLevel = 0;
+	}
+	else
+	{
+		if(l->arena)
+			gltron_Mesh_Free(l->arena);
+	}
+	resource_Free(l->arena_shader.ridTexture);
+	resource_Free(l->floor_shader.ridTexture);
 	free(l);
 }
 
 void video_ScaleLevel(video_level *l, float fSize)
 {
-	nebu_Mesh_Scale(l->floor, fSize);
-	nebu_Mesh_Scale(l->arena, fSize);
+	nebu_assert(l->floor);
+	gltron_Mesh_Scale(l->floor, fSize);
+
+	if(l->arena)
+		gltron_Mesh_Scale(l->arena, fSize);
 }
 
-void video_Shader_Setup(video_level_shader* shader) {
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, shader->diffuse_texture_id);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+void video_Shader_Geometry(gltron_Mesh *pMesh, gltron_MeshType eType, int pass)
+{
+	switch(pass)
+	{
+	case 0:
+		gltron_Mesh_Draw(pMesh, eType);
+		break;
+	case 1:
+		drawSharpEdges(pMesh);
+		break;
+	}
 }
 
-void video_Shader_Cleanup(video_level_shader* shader) {
-	glDisable(GL_TEXTURE_2D);
+void video_Shader_Setup(video_level_shader* shader, int pass) {
+	switch(pass)
+	{
+	case 0:
+		if(shader->idTexture)
+		{
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, shader->idTexture);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glMatrixMode(GL_TEXTURE);
+			glLoadIdentity();
+			glScalef(shader->fDiffuseTextureScale, shader->fDiffuseTextureScale, shader->fDiffuseTextureScale);
+			glMatrixMode(GL_MODELVIEW);
+		}
+		else
+		{
+			glDisable(GL_TEXTURE_2D);
+		}
+		if(shader->lit)
+		{
+			glEnable(GL_LIGHTING);
+		}
+		break;
+	case 1:
+		glColor3f(.5, .5, .5);
+		glPolygonOffset(1,4);
+		glEnable(GL_POLYGON_OFFSET_LINE);
+		break;
+	}
+}
+
+void video_Shader_Cleanup(video_level_shader* shader, int pass)
+{
+	switch(pass)
+	{
+	case 0:
+		if(shader->idTexture)
+		{
+			glMatrixMode(GL_TEXTURE);
+			glLoadIdentity();
+			glMatrixMode(GL_MODELVIEW);
+			glDisable(GL_TEXTURE_2D);
+		}
+		if(shader->lit)
+		{
+			glDisable(GL_LIGHTING);
+		}
+		break;
+	case 1:
+		glDisable(GL_POLYGON_OFFSET_LINE);
+		break;
+	}
+}
+
+void video_shader_InitResources(video_level_shader *shader)
+{
+	nebu_Texture2D *pTexture = NULL;
+	if(shader->ridTexture)
+		pTexture = (nebu_Texture2D*)resource_Get(shader->ridTexture, eRT_Texture);
+	if(pTexture)
+	{
+		shader->idTexture = pTexture->id;
+	}
+	else
+		shader->idTexture = 0;
 }
 
 int level_LoadTexture() {
-	int id;
+	int rid;
 	char *filename;
 	int filter[] = { GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_NEAREST, 
 									 GL_LINEAR_MIPMAP_LINEAR };
 	int wrap[] = { GL_CLAMP, GL_CLAMP_TO_EDGE, GL_REPEAT };
+	nebu_Texture2D_meta meta;
 	int result;
-	int iAnisotropy;
+	// int iAnisotropy;
 
-	// FIXME: error checking
-
-	glGenTextures(1, & id);
-	glBindTexture(GL_TEXTURE_2D, id);
-	// printf("binding texture %d\n", id);
-
-	scripting_GetValue("file");
-	scripting_GetStringResult(& filename);
-	loadTexture(filename, GL_RGBA);
-	free(filename);
+	meta.format = GL_RGBA;
 
 	scripting_GetValue("min_filter");
 	scripting_GetIntegerResult(&result);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter[result]);
+	meta.min_filter = filter[result];
 
 	scripting_GetValue("mag_filter");
 	scripting_GetIntegerResult(&result);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter[result]);
-	
+	meta.mag_filter = filter[result];
+
 	scripting_GetValue("wrap_s");
 	scripting_GetIntegerResult(&result);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap[result]);
-	
+	meta.wrap_s = wrap[result];
+
 	scripting_GetValue("wrap_t");
 	scripting_GetIntegerResult(&result);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap[result]);
+	meta.wrap_t = wrap[result];
 
 	scripting_GetValue("anisotropic_filtering");
 	if(scripting_IsNil())
 	{
+		meta.anisotropy = 1.0f;
 		scripting_Pop();
 	}
 	else
 	{
-		scripting_GetIntegerResult(&iAnisotropy);
-		if(GLEW_EXT_texture_filter_anisotropic)
-		{
-            // TODO: add a global value to limit the filtering
-            // (for performance reasons, e.g. on the gf fx 5200)
-			int iMaxAnisotropy;
-			glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &iMaxAnisotropy);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-				iAnisotropy < iMaxAnisotropy ?
-				iAnisotropy : iMaxAnisotropy);
-		}
+		scripting_GetFloatResult(&meta.anisotropy);
 	}
-	return id;
+
+	scripting_GetValue("file");
+	scripting_GetStringResult(& filename);
+	rid = resource_GetTokenMeta(filename, eRT_Texture, &meta, sizeof(nebu_Texture2D_meta));
+	free(filename);
+
+	return rid;
 }
 
 void level_LoadShader(video_level_shader *shader) {
 	scripting_GetValue("shading");
 	scripting_GetValue("lit");
 	scripting_GetIntegerResult(& shader->lit);
+	scripting_GetValue("passes");
+	if(scripting_IsNil())
+	{
+		shader->passes = 1;
+		scripting_Pop();
+	}
+	else
+	{
+		scripting_GetIntegerResult(&shader->passes);
+	}
 	scripting_GetValue("textures");
-	scripting_GetValue("diffuse");
-	
-	shader->diffuse_texture_id = level_LoadTexture();
+	if(scripting_IsNil())
+	{
+		shader->ridTexture = 0;
+		shader->idTexture = 0;
+		shader->fDiffuseTextureScale = 1;
+	}
+	else
+	{
+		scripting_GetValue("diffuse");
+		
+		shader->idTexture = 0;
+		shader->ridTexture = level_LoadTexture();
 
-	scripting_Pop(); // diffuse
+		scripting_GetValue("texture_scale");
+		if(!scripting_IsNil())
+		{
+			scripting_GetFloatResult(& shader->fDiffuseTextureScale);
+		}
+		else
+		{
+			shader->fDiffuseTextureScale = 1;
+			scripting_Pop(); // texture_scale
+		}
+
+		scripting_Pop(); // diffuse
+	}
 	scripting_Pop(); // textures
 	scripting_Pop(); // shading
+}
+
+void loadModel(gltron_Mesh **ppMesh, int *pToken)
+{
+	nebu_assert(!*pToken);
+	nebu_assert(!*ppMesh);
+
+	scripting_GetValue("model");
+	if(scripting_IsNil())
+	{
+		scripting_Pop(); // model
+		*ppMesh = loadMesh();
+	}
+	else
+	{
+		char *pFilename, *path;
+		scripting_GetStringResult(&pFilename);
+		path = getPath(PATH_DATA, pFilename);
+		free(pFilename);
+		if(!path)
+		{
+			fprintf(stderr, "fatal: could not find model - exiting...\n");
+			nebu_assert(0); exit(1); // OK: critical, installation corrupt
+		}
+		*pToken = resource_GetToken(path, eRT_GLtronTriMesh);
+		free(path);
+		if(!*pToken)
+		{
+			fprintf(stderr, "fatal: could not load arena - exiting...\n");
+			nebu_assert(0); exit(1); // OK: critical, installation corrupt
+		}
+		*ppMesh = resource_Get(*pToken, eRT_GLtronTriMesh);
+	}
 }
 
 video_level* video_CreateLevel(void) {
 	video_level *l;
 
+	int iPos = scripting_StackGuardStart();
+
 	l = malloc( sizeof(video_level) );
+	memset(l, 0, sizeof(video_level));
 
 	scripting_GetGlobal("level", NULL);
-	// get scalability flag
-	scripting_GetValue("scalable");
-	scripting_GetIntegerResult(& l->scalable);
-
-	scripting_GetValue("geometry");
+	nebu_assert(!scripting_IsNil());
 
 	// get floor & arena meshes
 	scripting_GetValue("floor");
-	l->floor = loadMesh();
+	nebu_assert(!scripting_IsNil());
+	loadModel(&l->floor, &gpTokenCurrentFloor);
 	level_LoadShader(& l->floor_shader);
 	scripting_Pop(); // floor
 	
 	scripting_GetValue("arena");
-	l->arena = loadMesh();
-	level_LoadShader(& l->arena_shader);
+	if(!scripting_IsNil())
+	{
+		loadModel(&l->arena, &gpTokenCurrentLevel);
+		level_LoadShader(& l->arena_shader);
+	}
 	scripting_Pop(); // arena
 		
-	scripting_Pop(); // geometry
-
 	scripting_Pop(); // level;
+
+	scripting_StackGuardEnd(iPos);
 
 	return l;
 }
@@ -153,26 +304,28 @@ enum {
 	V_TEXCOORD0
 };
 	
-
-nebu_Mesh* loadMesh(void) {
-	nebu_Mesh *pMesh;
+gltron_Mesh* loadMesh(void) {
+	gltron_Mesh *pMesh;
 	int i, j;
+	int nPrimitives, nVertices, vertexformat;
 
-	{
-		int nPrimitives, nVertices, vertexformat;
+	int iPos = scripting_StackGuardStart();
 
-		scripting_GetValue("indices");
-		scripting_GetArraySize(&nPrimitives);
-		scripting_Pop(); // indices
+	scripting_GetValue("indices");
+	nebu_assert(!scripting_IsNil());
+	scripting_GetArraySize(&nPrimitives);
+	scripting_Pop(); // indices
 
-		scripting_GetValue("vertexformat");
-		scripting_GetIntegerResult(&vertexformat);
-		scripting_GetValue("vertices");
-		scripting_GetArraySize(&nVertices);
-		scripting_Pop(); // vertices
+	scripting_GetValue("vertexformat");
+	nebu_assert(!scripting_IsNil());
+	scripting_GetIntegerResult(&vertexformat);
 
-		pMesh = nebu_Mesh_Create(vertexformat, nVertices, nPrimitives);
-	}
+	scripting_GetValue("vertices");
+	nebu_assert(!scripting_IsNil());
+	scripting_GetArraySize(&nVertices);
+	scripting_Pop(); // vertices
+
+	pMesh = gltron_Mesh_Create(vertexformat, nVertices, &nPrimitives, 1); // Only one Material
 
 	scripting_GetValue("vertices");
 	for(i = 0; i < pMesh->pVB->nVertices; i++) {
@@ -210,16 +363,18 @@ nebu_Mesh* loadMesh(void) {
 	scripting_Pop(); // vertices
 	
 	scripting_GetValue("indices");
-	for(i = 0; i < pMesh->pIB->nPrimitives; i++) {
+	for(i = 0; i < pMesh->ppIB[0]->nPrimitives; i++) {
 		scripting_GetArrayIndex(i + 1);
 		for(j = 0; j < 3; j++)
 		{
 			scripting_GetArrayIndex(j + 1);
-			scripting_GetIntegerResult( & pMesh->pIB->pIndices[3 * i + j] );
+			scripting_GetIntegerResult( & pMesh->ppIB[0]->pIndices[3 * i + j] );
 		}
 		scripting_Pop(); // index i;
 	}
 	scripting_Pop(); // indices
+
+	scripting_StackGuardEnd(iPos);
 
 	return pMesh;
 }
