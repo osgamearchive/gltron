@@ -45,7 +45,7 @@ extern TextureInfo textures[];
 
 void initArtpacks(void);
 void loadArt(void);
-void reloadArt(void);
+void loadModels(void);
 
 enum {
 	NEAREST = 0,
@@ -111,12 +111,6 @@ extern float cam_r_mouse;
 extern float cam_r_follow;
 extern float cam_r_circle;
 
-#ifdef DEPTH_SORT
-extern int quadBufSize;
-extern Quad* quadBuf;
-extern int* quadBufIndex;
-#endif
-
 #define LC_LOD 3
 extern char *lc_lod_names[];
 
@@ -124,6 +118,7 @@ extern int gTokenRecognizer;
 extern int gTokenRecognizerQuad;
 extern int gpTokenLightcycles[LC_LOD];
 extern int gpTokenCurrentLevel;
+extern int gpTokenCurrentFloor;
 // extern gltron_Mesh *recognizer;
 // extern gltron_Mesh *recognizer_quad;
 // extern gltron_Mesh *lightcycle[];
@@ -203,7 +198,6 @@ extern void shutdownDisplay(void);
 extern void setupDisplay(void);
 
 extern void initTexture(Visual*);
-extern void deleteTextures(Visual*);
 void artpack_UnloadSurfaces(void);
 
 /* texture loading -> load_texture.c */
@@ -228,6 +222,7 @@ extern void drawDebugTex(Visual *d);
 /* extern void drawHelp(Visual *d); */
 extern void drawPlayers(int player);
 extern void drawCam(int player);
+extern void drawSharpEdges(gltron_Mesh *pMesh);
 
 extern void draw2D( nebu_Rect *pRect );
 		
