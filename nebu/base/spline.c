@@ -1,8 +1,10 @@
 #include "base/nebu_spline.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include "base/nebu_debug_memory.h"
+
+// review: 64bit ok
 
 nebu_Spline* nebu_Spline_Create(nebu_Spline_Type type, int dimension, int length)
 {
@@ -29,7 +31,7 @@ void nebu_Spline_Eval(nebu_Spline* pSpline, int segment, float t, float **ppVert
 		nebu_Spline_Eval_Catmull3(pSpline, segment, t, ppVertex, ppTangent);
 		break;
 	default:
-		assert(0);
+		nebu_assert(0);
 	}
 }
 
