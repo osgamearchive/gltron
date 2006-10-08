@@ -11,7 +11,7 @@
 #include "audio/sound_glue.h"
 
 #include "base/nebu_math.h"
-#include <assert.h>
+#include "base/nebu_assert.h"
 #include <string.h>
 
 #include "base/nebu_debug_memory.h"
@@ -39,19 +39,23 @@ void getPositionFromData(float *x, float *y, Data *data) {
 	*y = v.v[1];
 }
 
-void initGameLevel(void) {
+void initLevels(void) {
 	if(game2->level)
 		game_FreeLevel(game2->level);
 	game2->level = game_CreateLevel();
 
 	if(game2->level->scalable)
+	{
 		game_ScaleLevel(game2->level, getSettingf("grid_size"));
+		video_ScaleLevel(gWorld, getSettingf("grid_size"));
+	}
 }
 
 void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
 {
 	int i;
 
+	// TODO: provide constructors
 	// Game
 	*ppGame = (Game*) malloc(sizeof(Game));
 	(*ppGame)->pauseflag = PAUSE_NO_GAME;
@@ -59,6 +63,8 @@ void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
 	(*ppGame)->running = 0;
 	(*ppGame)->winner = -1;
 	(*ppGame)->player = (Player *) malloc(players * sizeof(Player));
+	// TODO: make ai & data static members of Player
+	// TODO: make data->trails growable
 	for(i = 0; i < players; i++)
 	{
 		Player *p = (*ppGame)->player + i;
@@ -128,6 +134,13 @@ void resetPlayerData(void) {
 		/* randomize position on the grid */
 		x = game2->level->spawnPoints[ startIndex[i] ].v.v[0];
 		y = game2->level->spawnPoints[ startIndex[i] ].v.v[1];
+		if(game2->level->spawnIsRelative)
+		{
+			x *= box2_Width(&game2->level->boundingBox);
+			x += game2->level->boundingBox.vMin.v[0];
+			y *= box2_Height(&game2->level->boundingBox);
+			y += game2->level->boundingBox.vMin.v[1];
+		}
 		/* randomize starting direction */
 		data->dir = game2->level->spawnPoints[ startIndex[i] ].dir;
 		if(data->dir == -1) 
