@@ -1,6 +1,6 @@
 #include "audio/nebu_SourceSample.h"
 
-#include <assert.h>
+#include "base/nebu_assert.h"
 #include <string.h>
 
 #include "base/nebu_debug_memory.h"
@@ -55,7 +55,7 @@ namespace Sound {
       return 0;
 
     int volume = (int)(_volume * SDL_MIX_MAXVOLUME);
-    assert(len < _buffersize);
+    nebu_assert(len < _buffersize);
 
     if(len < _buffersize - _position) {
       SDL_MixAudio(data, _buffer + _position, len, volume);
