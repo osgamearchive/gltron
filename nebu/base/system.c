@@ -1,7 +1,11 @@
 #include "base/nebu_system.h"
+#include "base/nebu_argv.h"
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+// review: 64bit ok
 
 Callbacks *current = 0;
 Callbacks default_callbacks;
@@ -11,6 +15,60 @@ static int redisplay = 0;
 static int idle = 1;
 static int fps_last = 0;
 static int fps_dt = 1;
+
+// TODO: move argv stuff to its own argv.c
+nebu_argv* nebu_argv_Parse(int argc, const char *argv[])
+{
+	nebu_argv *pArguments = NULL;
+	int nArgs = 0;
+	int iArg = 0;
+	int i;
+
+	for(i = 0; i < argc; i++)
+	{
+		if(argv[i][0] == '-' && argv[i][1] == '-' && strstr(argv[i], "=") != NULL)
+			nArgs++;
+	}
+	pArguments = (nebu_argv*) malloc(sizeof(nebu_argv));
+	if(nArgs == 0)
+	{
+		pArguments->nArguments = 0;
+		pArguments->pKeys = NULL;
+		pArguments->pValues = NULL;
+		return pArguments;
+	}
+	pArguments->nArguments = nArgs;
+	pArguments->pKeys = (unsigned char**) malloc(pArguments->nArguments * sizeof(unsigned char*));
+	pArguments->pValues = (unsigned char**) malloc(pArguments->nArguments * sizeof(unsigned char*));
+
+	for(i = 0; i < argc; i++)
+	{
+		if(argv[i][0] == '-' && argv[i][1] == '-' && strstr(argv[i], "=") != NULL)
+		{
+			unsigned char* pEq = strstr(argv[i], "=");
+			int keyLen = pEq - argv[i] - 2; // "--" subtracted
+			int valLen = strlen(argv[i]) - keyLen - 3; // "--" and "=" subtracted 
+			pArguments->pKeys[iArg] = (unsigned char*) malloc((keyLen + 1) * sizeof(unsigned char));
+			pArguments->pValues[iArg] = (unsigned char*) malloc((valLen + 1) * sizeof(unsigned char));
+			strncpy(pArguments->pKeys[iArg], argv[i] + 2, keyLen);
+			pArguments->pKeys[iArg][keyLen] = 0;
+			strncpy(pArguments->pValues[iArg], argv[i] + 2 + keyLen + 1, valLen);
+			pArguments->pValues[iArg][valLen] = 0;
+
+			iArg++;
+		}
+	}
+	return pArguments;
+}
+
+void nebu_argv_Debug_Print(nebu_argv *pArguments, FILE* output)
+{
+	int i;
+	for(i = 0; i < pArguments->nArguments; i++)
+	{
+		fprintf(output, "'%s' ==> '%s'\n", pArguments->pKeys[i], pArguments->pValues[i]);
+	}
+}
 
 void nebu_Init(void) {
 	memset(&default_callbacks, 0, sizeof(Callbacks));
