@@ -27,6 +27,7 @@ typedef enum ReservedKeys {
   eF10,
   eF11,
   eF12,
+  eAltLeft,
   eReservedKeys,
 } ReservedKeys;
 
