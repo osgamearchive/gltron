@@ -1,5 +1,5 @@
 /*
-** $Id: ldo.c,v 1.1 2005/01/01 21:31:48 andi75 Exp $
+** $Id$
 ** Stack and Call structure of Lua
 ** See Copyright Notice in lua.h
 */
@@ -8,6 +8,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define ldo_c
 
@@ -74,6 +75,7 @@ void luaD_throw (lua_State *L, int errcode) {
   }
   else {
     G(L)->panic(L);
+	assert(0);
     exit(EXIT_FAILURE);
   }
 }
