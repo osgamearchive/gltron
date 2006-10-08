@@ -6,6 +6,8 @@
 
 #include "base/nebu_debug_memory.h"
 
+// review: 64bit ok
+
 int nebu_Surface_FormatSize[] = { 0, 3, 4, 1 };
 
 nebu_Surface* nebu_Surface_Create(int width, int height, int format)
@@ -29,7 +31,7 @@ nebu_Surface* nebu_Surface_LoadPNG(const char *filename)
 	nebu_Surface *pSurface;
 
 	/* use old code to load texture, do format conversion */
-	/* TODO: clean this up, throw away old format */
+	/* TODO (would be nice): clean this up, throw away old format */
 	
 	png_texture *pTex;
 	pTex = load_png_texture(filename);
