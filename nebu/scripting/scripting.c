@@ -8,19 +8,24 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 // static lua_State *L;
 lua_State *L;
-
+FILE* scripting_debug = NULL;
 extern void init_c_interface(lua_State *L);
 
-void scripting_Init() {
+void scripting_Init(int flags) {
   L = lua_open();
   luaopen_base(L);
   luaopen_table(L);
   luaopen_string(L);
   luaopen_io(L);
+
+  if(flags | NEBU_SCRIPTING_DEBUG)
+  {
+	  scripting_debug = fopen("scripting.txt", "w");
+  }
 
   // init_c_interface(L);
 }
@@ -69,7 +74,7 @@ int scripting_GetValue(const char *name) {
 	int top = lua_gettop(L);
 	lua_pushstring(L, name);
 	lua_gettable(L, -2);
-	assert( lua_gettop(L) == top + 1 );
+	nebu_assert( lua_gettop(L) == top + 1 );
 
 	return 0;
 }
@@ -146,7 +151,7 @@ void scripting_GetFloatArrayResult(float *f, int n) {
   for(i = 0; i < n; i++) {
     lua_rawgeti(L, -1, i + 1);
     if(lua_isnumber(L, -1)) {
-      *(f + i) = (float)lua_tonumber(L, 2);
+      *(f + i) = (float)lua_tonumber(L, -1);
     } else {
       fprintf(stderr, "element %d is not number!\n", i);
     }
@@ -156,6 +161,10 @@ void scripting_GetFloatArrayResult(float *f, int n) {
 	lua_pop(L, 1); /* remove table from stack */
 }
 
+/*!
+	allocates a string, copies the result from the stack into it
+	and pops the value from the stack
+*/
 int scripting_GetStringResult(char **s) {
   int status;
   if(lua_isstring(L, -1)) {
@@ -171,6 +180,11 @@ int scripting_GetStringResult(char **s) {
   lua_pop(L, 1);
   return status;
 }
+
+/*!
+	copies the value from the stack into the supplied buffer
+	(at most len bytes) and pops the value from the stack
+*/
 
 int scripting_CopyStringResult(char *s, int len) {
   int status;
@@ -211,13 +225,56 @@ int scripting_Pop(void)
 	return 0;
 }
 
+int run(const char *command, int crlf)
+{
+	int status;
+	if(scripting_debug)
+	{
+		fwrite(command, strlen(command), 1, scripting_debug);
+		if(crlf)
+		{
+			fputc('\n', scripting_debug);
+		}
+		fflush(scripting_debug);
+	}
+	status = lua_dostring(L, command);
+	nebu_assert(!status);
+	return status;
+}
+
 int scripting_RunFile(const char *name) {
-  return lua_dofile(L, name);
+	int status;
+	if(scripting_debug)
+	{
+		FILE *f;
+		char buf[65536];
+		int line = 0;
+
+		f = fopen(name, "r");
+		if(f)
+			fprintf(scripting_debug, "-- [SCRIPTING DEBUG RUNTINE] opening '%s' succesful\n", name);
+		else
+			fprintf(scripting_debug, "-- [SCRIPTING DEBUG RUNTINE] opening '%s' failed\n", name);
+		while(f)
+		{
+			char *tmp = fgets(buf, sizeof(buf), f);
+			if(tmp != NULL)
+				fwrite(buf, strlen(buf), 1, scripting_debug);
+			else
+			{
+				fclose(f);
+				f = NULL;
+			}	
+		}
+		fflush(scripting_debug);
+	}
+	status = lua_dofile(L, name);
+	nebu_assert(!status);
+	return status;
 }
 
 int scripting_Run(const char *command) {
-  /* fprintf(stderr, "[command] %s\n", command); */
-  return lua_dostring(L, command);
+	return run(command, NEBU_SCRIPTING_CRLF);
 }
 
 int scripting_RunFormat(const char *format, ... ) {
@@ -226,7 +283,7 @@ int scripting_RunFormat(const char *format, ... ) {
   va_start(ap, format);
   vsprintf(buf, format, ap);
   va_end(ap);
-  return scripting_Run(buf);
+  return run(buf, NEBU_SCRIPTING_CRLF);
 }
 
 void scripting_RunGC() {
@@ -244,4 +301,34 @@ void scripting_Register(const char *name, int(*func) (lua_State *L)) {
 void scripting_PushInteger(int iValue)
 {
 	lua_pushnumber(L, (float)iValue);
+}
+
+static int piStackGuard[256];
+static int iStackGuardPosition = -1;
+
+int scripting_StackGuardStart(void)
+{
+	if(iStackGuardPosition == 255)
+	{
+		nebu_assert(0);
+		return -1;
+	}
+
+	iStackGuardPosition++;
+	piStackGuard[iStackGuardPosition] = lua_gettop(L);
+
+	return iStackGuardPosition;
+}
+
+void scripting_StackGuardEnd(int iPos)
+{
+	if(iStackGuardPosition == -1)
+	{
+		nebu_assert(0);
+		return;
+	}
+
+	nebu_assert(iPos == iStackGuardPosition);
+	nebu_assert(piStackGuard[iPos] == lua_gettop(L));
+	iStackGuardPosition--;
 }
