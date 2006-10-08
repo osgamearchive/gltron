@@ -10,15 +10,28 @@
 
 #define PI ((float) M_PI)
 
-#ifdef WIN32
+#ifndef floorf
 #define floorf (float)floor
+#endif
+#ifndef fabsf
 #define fabsf (float)fabs
+#endif
+#ifndef sqrtf
 #define sqrtf (float)sqrt
+#endif
+#ifndef cosf
 #define cosf (float) cos
+#endif
+#ifndef sinf
 #define sinf (float) sin
+#endif
+#ifndef acosf
 #define acosf (float) acos
+#endif
+#ifndef tanf
 #define tanf (float) tan
 #endif
+
 
 #define nebu_cosf_deg(X)	cosf( (X) * M_PI/180.0 )
 #define nebu_sinf_deg(X)	sinf( (X) * M_PI/180.0 )
