@@ -7,6 +7,7 @@
 #include "base/nebu_system.h"
 #include "base/nebu_vector.h"
 #include "base/nebu_math.h"
+#include "base/nebu_argv.h"
 #include "input/nebu_input_system.h"
 
 extern void display(void);
@@ -113,7 +114,11 @@ void doPerspective(float fov, float ratio, float znear, float zfar) {
 int main(int argc, char *argv[])
 {
 	int window_id = 0;
+	nebu_argv* pArguments = NULL;
+
 	nebu_Init();
+	pArguments = nebu_argv_Parse(argc, argv);
+	nebu_argv_Debug_Print(pArguments, stdout);
 	nebu_Video_Init();
 	nebu_Video_SetWindowMode(0, 0, 800, 600);
 	nebu_Video_SetDisplayMode(SYSTEM_32_BIT | SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_STENCIL | SYSTEM_DEPTH);
