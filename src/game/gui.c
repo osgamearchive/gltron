@@ -16,6 +16,7 @@
 #include "scripting/nebu_scripting.h"
 #include "filesystem/nebu_filesystem.h"
 
+#include "base/nebu_assert.h"
 #include <string.h>
 
 #include "base/nebu_debug_memory.h"
@@ -188,7 +189,7 @@ void gui_LoadResources(void)
 	{
 		fprintf(stderr, "[fata]: can't find babbage.ftx!\n");
 		// installation corrupt
-		exit(1);
+		nebu_assert(0); exit(1);
 	}
 	pFont = nebu_Font_Load(fontPath, PATH_ART);
 	free(fontPath);
