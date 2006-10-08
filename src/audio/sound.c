@@ -6,6 +6,10 @@
 #include "audio/sound_glue.h"
 #include "configuration/settings.h"
 
+#include "base/nebu_debug_memory.h"
+
+#include "base/nebu_assert.h"
+
 #define NUM_GAME_FX 3
 
 static char *game_fx_names[] = {
@@ -34,7 +38,7 @@ void Sound_loadFX(void) {
     } else {
       fprintf(stderr, "[error] can't load sound fx file %s\n",
 	     game_fx_names[i]);
-      exit(1); // FIXME: handle missing fx somewhere else
+      nebu_assert(0); exit(1); // TODO: handle missing fx somewhere else
     }
   }
 }
@@ -49,7 +53,7 @@ void Sound_reloadTrack(void) {
   free(song);
   if(path == NULL) {
     fprintf(stderr, "[sound] can't find song...exiting\n");
-    exit(1); // FIXME: handle missing song somewhere else
+    nebu_assert(0); exit(1); // TODO: handle missing song somewhere else
   }
   Sound_load(path);
   Sound_play();
@@ -102,7 +106,7 @@ void Sound_initTracks(void) {
 	soundList = readDirectoryContents(music_path, NULL);
   if(soundList->next == NULL) {
     fprintf(stderr, "[sound] no music files found...exiting\n");
-    exit(1); // FIXME: handle missing songs somewhere else
+    nebu_assert(0); exit(1); // TODO: handle missing songs somewhere else
   }
     
   i = 1;
