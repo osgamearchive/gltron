@@ -9,33 +9,40 @@
 #include "Nebu_filesystem.h"
 
 #include <string.h>
-#include <assert.h>
+#include "base/nebu_assert.h"
 
 #include <base/nebu_debug_memory.h>
 
-void initArtpacks(void) {
-  const char *art_path;
-  nebu_List *artList;
-  nebu_List *p;
-  int i;
+/*!
+	scan the artpack's directory's ( art/ ) contents and store the
+	file/directory names in a lua list
+*/
 
-  art_path = getDirectory( PATH_ART );
-  artList = readDirectoryContents(art_path, NULL);
-  if(artList->next == NULL) {
-    fprintf(stderr, "[fatal] no art files found...exiting\n");
-    exit(1); /* OK: critical, installation corrupt */
-  }
-  
-  i = 1;
-  for(p = artList; p->next != NULL; p = p->next) {
-      scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
+void initArtpacks(void)
+{
+	const char *art_path;
+	nebu_List *artList;
+	nebu_List *p;
+	int i;
+
+	art_path = getDirectory( PATH_ART );
+	artList = readDirectoryContents(art_path, NULL);
+	if(artList->next == NULL) {
+	fprintf(stderr, "[fatal] no art files found...exiting\n");
+	nebu_assert(0); exit(1); // OK: critical, installation corrupt
+	}
+
+	i = 1;
+	for(p = artList; p->next != NULL; p = p->next) {
+	  scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
 	  free(p->data);
-      i++;
-  }
-  nebu_List_Free(artList);
-  scripting_Run("setupArtpacks()");
+	  i++;
+	}
+	nebu_List_Free(artList);
+	scripting_Run("setupArtpackPaths()");
 }
 
+/*! load the HUD surfaces */
 void artpack_LoadSurfaces(void)
 {
 	// char *pHUDNames[eHUDElementCount] = {
@@ -54,18 +61,19 @@ void artpack_LoadSurfaces(void)
 	for(i = 0; i < eHUDElementCount; i++)
 	{
 		char *path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
-		assert(!gpTokenHUD[i]);
+		nebu_assert(!gpTokenHUD[i]);
 
 		gpTokenHUD[i] = resource_GetToken(path, eRT_2d);
 		if(!gpTokenHUD[i])
 		{
 			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
-			exit(1); /* OK: critical, installation corrupt */
+			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
 		free(path);
 	}
 }
 
+/*! unload the HUD surfaces, but don't completely destroy the resource */
 void artpack_UnloadSurfaces()
 {
 	int i;
@@ -73,11 +81,14 @@ void artpack_UnloadSurfaces()
 	for(i = 0; i < eHUDElementCount; i++)
 	{
 		if(gpTokenHUD[i])
-			resource_Free(gpTokenHUD[i]);
-		gpTokenHUD[i] = 0;
+			resource_Release(gpTokenHUD[i]);
 	}
 }
 
+/*!
+	parse global & customized artpack.lua files
+	
+*/
 void loadArt(void) {
 	char *path;
 
@@ -91,21 +102,13 @@ void loadArt(void) {
 		free(path);
 	}
 
-	initTexture(gScreen);
+	initTexture(gScreen); // load skybox, trail & crash texture
 	fprintf(stderr, "[status] done loading textures...\n");
 	initFonts();
 	fprintf(stderr, "[status] done loading fonts...\n");
 	
 	artpack_LoadSurfaces();
-
-	video_LoadLevel();
-	fprintf(stderr, "[status] done loading level...\n");
 }
 
-void reloadArt(void) {
-  printf("[status] reloading art\n");
-  deleteTextures(gScreen);
-  loadArt();
-}
     
 
