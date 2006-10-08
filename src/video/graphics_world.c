@@ -5,34 +5,20 @@
 #include "video/graphics_lights.h"
 
 void drawWalls(void) {
-	// DEBUG
-	gltron_Mesh *arena = (gltron_Mesh*)resource_Get(gpTokenCurrentLevel, eRT_GLtronTriMesh);
+	int i;
 
-	
 	setupLights(eCyclesWorld);
-	glEnable(GL_LIGHTING);
-
-	glPushMatrix();
-	glTranslatef(arena->BBox.vSize.v[0] / 2, arena->BBox.vSize.v[1] / 2, arena->BBox.vSize.v[2] / 2);
-	
-	gltron_Mesh_Draw(arena, TRI_MESH);
-	glPopMatrix();
-
-	glDisable(GL_LIGHTING);
-	// */ 
-	/* 
-	video_Shader_Setup(& gWorld->arena_shader);
-
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	nebu_Mesh_DrawGeometry(gWorld->arena);
-	video_Shader_Cleanup(& gWorld->arena_shader);
-
+	for(i = 0; i < gWorld->arena_shader.passes; i++)
+	{
+		video_Shader_Setup(& gWorld->arena_shader, i);
+		video_Shader_Geometry(gWorld->arena, TRI_MESH, i);
+		video_Shader_Cleanup(& gWorld->arena_shader, i);
+	}
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
-	// */
 }
 
