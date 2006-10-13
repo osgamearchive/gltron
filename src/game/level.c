@@ -16,24 +16,29 @@ void game_FreeLevel(game_level *l) {
 	free(l);
 }
 
-void game_ScaleLevel(game_level *l, float fSize)
+/*! Scales the level by the factor fScale
+
+	- The boundary segments are scaled
+	- The boundingbox is scaled
+	- If the spawn coordinates are not relative to the bounding box, they
+	  are scaled along accordingly
+*/
+void game_ScaleLevel(game_level *l, float fScale)
 {
 	int i;
 	for(i = 0; i < l->nBoundaries; i++)
 	{
-		vec2_Scale(& l->boundaries[i].vStart, &l->boundaries[i].vStart, fSize);
-		vec2_Scale(& l->boundaries[i].vDirection, &l->boundaries[i].vDirection, fSize);
+		segment2_Scale(&l->boundaries[i], fScale);
 	}
 	if(!l->spawnIsRelative)
 	{
 		for(i = 0; i < l->nSpawnPoints; i++)
 		{
-			vec2_Scale(& l->spawnPoints[i].v, & l->spawnPoints[i].v, fSize);
+			vec2_Scale(& l->spawnPoints[i].v, & l->spawnPoints[i].v, fScale);
 		}
 	}
 
-	vec2_Scale(& l->boundingBox.vMin, & l->boundingBox.vMin, fSize);
-	vec2_Scale(& l->boundingBox.vMax, & l->boundingBox.vMax, fSize);
+	box2_Scale(&l->boundingBox, fScale);
 }
 
 void computeBoundingBox(game_level *l)

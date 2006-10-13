@@ -337,6 +337,12 @@ float segment2_Length(const segment2 *s) {
 	return vec2_Length(&s->vDirection);
 }
 
+void segment2_Scale(segment2* pSegment, float fScale)
+{
+	vec2_Scale(&pSegment->vStart, &pSegment->vStart, fScale);
+	vec2_Scale(&pSegment->vDirection, &pSegment->vDirection, fScale);
+}
+
 float box2_Width(const box2 *pBox) {
 	return pBox->vMax.v[0] - pBox->vMin.v[0];
 }
@@ -371,6 +377,12 @@ void box2_Extend(box2 *pBox, const vec2 *pV)
 	if(pBox->vMin.v[1] > pV->v[1]) pBox->vMin.v[1] = pV->v[1];
 	if(pBox->vMax.v[0] < pV->v[0]) pBox->vMax.v[0] = pV->v[0];
 	if(pBox->vMax.v[1] < pV->v[1]) pBox->vMax.v[1] = pV->v[1];
+}
+
+void box2_Scale(box2 *pBox, float fScale)
+{
+	vec2_Scale(&pBox->vMin, &pBox->vMin, fScale);
+	vec2_Scale(&pBox->vMax, &pBox->vMax, fScale);
 }
 
 void box3_Init(box3 *pBox)

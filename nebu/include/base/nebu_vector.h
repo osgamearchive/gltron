@@ -43,7 +43,7 @@ unsigned int uintFromVec3(vec3 *pV);
 vec2* segment2_Intersect(vec2 *pOut, float *t1, float *t2,
 												 const segment2 *s1, const segment2 *s2);
 float segment2_Length(const segment2 *s);
-
+void segment2_Scale(segment2* pSegment, float fScale);
 
 vec2* vec2_Orthogonal(vec2 *pOut, const vec2 *pV);
 vec2* vec2_Copy(vec2 *pOut, const vec2 *pV);
@@ -60,5 +60,6 @@ float box2_Diameter(const box2* pBox);
 void box2_Center(vec2 *pOut, const box2* pBox);
 void box2_Init(box2 *pBox);
 void box2_Extend(box2 *pBox, const vec2 *pV);
+void box2_Scale(box2 *pBox, float fScale);
 void box3_Compute(box3 *pBox, const vec3 *pVertices, int nVertices);
 #endif
