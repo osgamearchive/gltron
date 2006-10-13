@@ -38,18 +38,18 @@ nebu_argv* nebu_argv_Parse(int argc, const char *argv[])
 		return pArguments;
 	}
 	pArguments->nArguments = nArgs;
-	pArguments->pKeys = (unsigned char**) malloc(pArguments->nArguments * sizeof(unsigned char*));
-	pArguments->pValues = (unsigned char**) malloc(pArguments->nArguments * sizeof(unsigned char*));
+	pArguments->pKeys = (char**) malloc(pArguments->nArguments * sizeof(char*));
+	pArguments->pValues = (char**) malloc(pArguments->nArguments * sizeof(char*));
 
 	for(i = 0; i < argc; i++)
 	{
 		if(argv[i][0] == '-' && argv[i][1] == '-' && strstr(argv[i], "=") != NULL)
 		{
-			unsigned char* pEq = strstr(argv[i], "=");
+			char* pEq = strstr(argv[i], "=");
 			int keyLen = pEq - argv[i] - 2; // "--" subtracted
 			int valLen = strlen(argv[i]) - keyLen - 3; // "--" and "=" subtracted 
-			pArguments->pKeys[iArg] = (unsigned char*) malloc((keyLen + 1) * sizeof(unsigned char));
-			pArguments->pValues[iArg] = (unsigned char*) malloc((valLen + 1) * sizeof(unsigned char));
+			pArguments->pKeys[iArg] = (char*) malloc((keyLen + 1) * sizeof(char));
+			pArguments->pValues[iArg] = (char*) malloc((valLen + 1) * sizeof(char));
 			strncpy(pArguments->pKeys[iArg], argv[i] + 2, keyLen);
 			pArguments->pKeys[iArg][keyLen] = 0;
 			strncpy(pArguments->pValues[iArg], argv[i] + 2 + keyLen + 1, valLen);
