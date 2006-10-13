@@ -6,7 +6,7 @@
 typedef struct {
 	int w, h;
 	int tex_w, tex_h;
-	int tex_id;
+	unsigned int tex_id;
 } nebu_2d;
 
 nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags);

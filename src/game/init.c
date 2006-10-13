@@ -19,6 +19,8 @@
 #include "input/nebu_input_system.h"
 #include "video/video.h"
 
+#include <stdlib.h>
+
 #include "base/nebu_assert.h"
 
 void initFilesystem(int argc, const char *argv[]);

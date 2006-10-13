@@ -2,7 +2,7 @@
 #define NEBU_TEXTURE2D_H
 
 typedef struct {
-	int id;
+	unsigned int id;
 } nebu_Texture2D;
 
 typedef struct {

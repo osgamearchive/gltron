@@ -11,7 +11,7 @@ typedef struct {
 
 typedef struct {
 	int nTextures; // number of textures used
-	int *pTextures; // OpenGL texture id's
+	unsigned int *pTextures; // OpenGL texture id's
 	int nChars; // number of characters in this font
 	int firstChar; // ascii code for the first character
 	nebu_Font_Metrics metrics;

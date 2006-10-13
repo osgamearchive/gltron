@@ -13,7 +13,7 @@
 int main(int argc, char *argv[] ) {
 	nebu_debug_memory_CheckLeaksOnExit();
 	// nebu_assert_config(NEBU_ASSERT_PRINT_STDERR);
-	initSubsystems(argc, argv);
+	initSubsystems(argc, (const char**) argv);
 	runScript(PATH_SCRIPTS, "main.lua");
 	exitSubsystems();
   return 0;

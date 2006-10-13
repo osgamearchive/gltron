@@ -118,7 +118,7 @@ nebu_Font* nebu_Font_Load(const char *filename, int fs_tag)
 	nebu_Video_CheckErrors("before font load");
 
 	/* prepare space for texture IDs  */
-	font->pTextures = (int*) malloc(font->nTextures * sizeof(int));
+	font->pTextures = (unsigned int*) malloc(font->nTextures * sizeof(unsigned int));
 	glGenTextures(font->nTextures, (GLuint*) font->pTextures);
 
 	/* the individual textures */
