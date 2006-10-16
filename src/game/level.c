@@ -34,7 +34,7 @@ void game_ScaleLevel(game_level *l, float fScale)
 	{
 		for(i = 0; i < l->nSpawnPoints; i++)
 		{
-			vec2_Scale(& l->spawnPoints[i].v, fSize);
+			vec2_Scale(& l->spawnPoints[i].v, fScale);
 		}
 	}
 
