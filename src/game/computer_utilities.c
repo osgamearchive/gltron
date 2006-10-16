@@ -63,8 +63,7 @@ void ai_getDistances(int player, AI_Distances *distances) {
 	segments[eRight].vDirection.v[1] = (float) dirsY[dirRight];
 	segments[eBackleft].vDirection.v[0] = (float) dirsX[dirLeft] - dirsX[data->dir];
 	segments[eBackleft].vDirection.v[1] = (float) dirsY[dirLeft] - dirsY[data->dir];
-	vec2_Normalize(&segments[eBackleft].vDirection,
-								&segments[eBackleft].vDirection);
+	vec2_Normalize(&segments[eBackleft].vDirection);
 	*front = FLT_MAX;
 	*left = FLT_MAX;
 	*right = FLT_MAX;
@@ -128,11 +127,8 @@ void ai_getDistances(int player, AI_Distances *distances) {
 		ai->right.vDirection.v[1] = *right * dirsY[dirRight];
 		ai->backleft.vDirection.v[0] = (float) (dirsX[dirLeft] - dirsX[data->dir]);
 		ai->backleft.vDirection.v[1] = (float) (dirsY[dirLeft] - dirsY[data->dir]);
-		vec2_Normalize(&ai->backleft.vDirection,
-									&ai->backleft.vDirection);
-		vec2_Scale(&ai->backleft.vDirection, 
-							&ai->backleft.vDirection,
-							*backleft);
+		vec2_Normalize(&ai->backleft.vDirection);
+		vec2_Scale(&ai->backleft.vDirection,*backleft);
 	}
 		
 	// printf("%.2f, %.2f, %.2f\n", *front, *right, *left);
@@ -205,11 +201,8 @@ void ai_getConfig(int player, int target,
 		seg1.vDirection = config->opponent.vDirection;
 		seg2.vStart = config->player.vStart;
 		vec2_Orthogonal( &seg2.vDirection, &config->opponent.vDirection );
-		vec2_Normalize( &seg2.vDirection, &seg2.vDirection );
-		vec2_Scale( &seg2.vDirection, 
-							 &seg2.vDirection,
-							 vec2_Length( &config->player.vDirection )
-							 );
+		vec2_Normalize( &seg2.vDirection );
+		vec2_Scale( &seg2.vDirection, vec2_Length( &config->player.vDirection ) );
 							 
 		segment2_Intersect( &config->intersection, 
 												&config->t_opponent, &config->t_player,
