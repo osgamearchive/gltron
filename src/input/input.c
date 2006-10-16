@@ -16,6 +16,7 @@
 
 int isAltLeftPressed = 0;
 int isAltRightPressed = 0;
+int isCapsLockPressed = 0;
 
 int ReservedKeyCodes[eReservedKeys] = {
   27,
@@ -48,6 +49,9 @@ void keyGame(int state, int k, int x, int y)
 		break;
 	case SYSTEM_KEY_ALT_RIGHT:
 		isAltRightPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 :0;
+		break;
+	case SYSTEM_KEY_CAPS_LOCK:
+		isCapsLockPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 : 0;
 		break;
 	}
 
@@ -91,6 +95,9 @@ void keyGame(int state, int k, int x, int y)
     */
 		}
 	}
+	// foreach player, check if the player's movement keys are pressed
+	// TODO: This is ugly as else, better create a mapping for each 
+	// key to each action
 	for( i = 0; i < game->players; i++) {
 		if(PLAYER_IS_ACTIVE(&game->player[i]) &&
 			 !game->player[i].ai->active) {
