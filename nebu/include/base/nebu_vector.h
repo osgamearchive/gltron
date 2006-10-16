@@ -49,8 +49,8 @@ vec2* vec2_Orthogonal(vec2 *pOut, const vec2 *pV);
 vec2* vec2_Copy(vec2 *pOut, const vec2 *pV);
 vec2* vec2_Add(vec2 *pOut, const vec2 *pV1, const vec2 *pV2);
 vec2* vec2_Sub(vec2 *pOut, const vec2 *pV1, const vec2 *pV2);
-vec2* vec2_Scale(vec2 *pOut, const vec2 *pV, float fScale);
-vec2* vec2_Normalize(vec2 *pOut, const vec2 *pV);
+vec2* vec2_Scale(vec2 *pV, float fScale);
+vec2* vec2_Normalize(vec2 *pV);
 float vec2_Dot(const vec2 *pV1, const vec2 *pV2);
 float vec2_Length(const vec2 *pV);
 

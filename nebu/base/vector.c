@@ -173,14 +173,14 @@ vec2* vec2_Sub(vec2 *pOut, const vec2 *pV1, const vec2 *pV2) {
 	return pOut; 
 }
 
-vec2* vec2_Scale(vec2 *pOut, const vec2 *pV, float fScale) { 
-	pOut->v[0] = pV->v[0] * fScale;
-	pOut->v[1] = pV->v[1] * fScale;
-	return pOut; 
+vec2* vec2_Scale(vec2 *pV, float fScale) { 
+	pV->v[0] *= fScale;
+	pV->v[1] *= fScale;
+	return pV; 
 }
 
-vec2* vec2_Normalize(vec2 *pOut, const vec2 *pV) {
-	return vec2_Scale(pOut, pV, 1 / vec2_Length(pV));
+vec2* vec2_Normalize(vec2 *pV) {
+	return vec2_Scale(pV, 1 / vec2_Length(pV));
 }
 
 float vec2_Dot(const vec2 *pV1, const vec2 *pV2) {
@@ -360,7 +360,7 @@ float box2_Diameter(const box2 *pBox) {
 void box2_Center(vec2 *pOut, const box2* pBox)
 {
 	vec2_Add(pOut, &pBox->vMin, &pBox->vMax);
-	vec2_Scale(pOut, pOut, 0.5f);
+	vec2_Scale(pOut, 0.5f);
 }
 
 void box2_Init(box2 *pBox)
