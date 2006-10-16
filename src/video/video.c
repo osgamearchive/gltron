@@ -90,8 +90,9 @@ void reshape(int x, int y) {
 }
 
 void shutdownDisplay() {
-	artpack_UnloadSurfaces();
-	deleteFonts();
+	resource_ReleaseType(eRT_Font);
+	resource_ReleaseType(eRT_Texture);
+	resource_ReleaseType(eRT_2d);
 	gui_ReleaseResources();
 	nebu_Video_Destroy(gScreen->win_id);
 	// printf("[video] window destroyed\n");

@@ -59,6 +59,7 @@ void initSubsystems(int argc, const char *argv[]) {
 
 void initFilesystem(int argc, const char *argv[]) {
 	dirSetup(argv[0]);
+	// FIXME: why should argc be 1
 	nebu_assert(argc == 1);
 }
 
@@ -73,11 +74,7 @@ void initScripting(void) {
 
 	runScript(PATH_SCRIPTS, "video.lua");
 
-	/* not so basic scripting stuff */
 	runScript(PATH_SCRIPTS, "console.lua");
-	runScript(PATH_SCRIPTS, "hud-config.lua");
-	runScript(PATH_SCRIPTS, "hud.lua");
-	runScript(PATH_SCRIPTS, "gauge.lua");
 }
 
 void initConfiguration(int argc, const char *argv[])
@@ -164,11 +161,6 @@ void initVideo(void) {
 	nebu_Video_Init();
 
 	initVideoData();
-	// FIXME: move this somewhere else
-	initArtpacks(); // stores the artpack directory names in a lua table
-	// FIXME: move this somewhere else
-	runScript(PATH_SCRIPTS, "menu_functions.lua");
-	runScript(PATH_SCRIPTS, "menu.lua");
 	setupDisplay();
 
 	loadArt();
@@ -186,6 +178,17 @@ void initAudio(void) {
 void initGame(void) {
 	/* initialize the rest of the game's datastructures */
 	game_CreatePlayers(PLAYERS, &game, &game2);
+
+	// gui stuff
+	initArtpacks(); // stores the artpack directory names in a lua table, so we can display it in the menu later on
+	runScript(PATH_SCRIPTS, "menu_functions.lua");
+	runScript(PATH_SCRIPTS, "menu.lua");
+
+	// hud stuff
+	runScript(PATH_SCRIPTS, "hud-config.lua");
+	runScript(PATH_SCRIPTS, "hud.lua");
+	runScript(PATH_SCRIPTS, "gauge.lua");
+
 	resetScores();
 }
 

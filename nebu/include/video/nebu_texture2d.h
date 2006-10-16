@@ -14,6 +14,6 @@ typedef struct {
 	float anisotropy;
 } nebu_Texture2D_meta;
 
-nebu_Texture2D* nebu_Texture2D_Load(const char *filename, int fs_tag, const nebu_Texture2D_meta* meta);
+nebu_Texture2D* nebu_Texture2D_Load(const char *path, const nebu_Texture2D_meta* meta);
 void nebu_Texture2D_Free(nebu_Texture2D* pTexture);
 #endif

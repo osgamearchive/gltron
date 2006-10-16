@@ -184,22 +184,32 @@ void initGui(void)
 
 void gui_LoadResources(void)
 {
-	char *fontPath = getPath(PATH_DATA, "babbage.ftx");
-	if(!fontPath)
+	char *path;
+		
+	path = getPath(PATH_DATA, "babbage.ftx");
+	if(path)
+	{
+		pFont = nebu_Font_Load(path, PATH_ART);
+		free(path);
+	}
+	else
 	{
 		fprintf(stderr, "[fata]: can't find babbage.ftx!\n");
 		// installation corrupt
 		nebu_assert(0); exit(1);
 	}
-	pFont = nebu_Font_Load(fontPath, PATH_ART);
-	free(fontPath);
-	{
-		char *path = nebu_FS_GetPath(PATH_ART, "gui.png");
-		if(!path)
-			return; // TODO: error handling
 
+	path = nebu_FS_GetPath(PATH_ART, "gui.png");
+	if(path)
+	{
 		pBackground = nebu_2d_LoadPNG(path, 0);
 		free(path);
+	}
+	else
+	{
+		fprintf(stderr, "[fata]: can't gui.png!\n");
+		// installation corrupt
+		nebu_assert(0); exit(1);
 	}
 }
 

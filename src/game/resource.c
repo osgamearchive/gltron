@@ -2,6 +2,7 @@
 #include "base/nebu_util.h"
 #include "video/nebu_font.h"
 #include "video/nebu_texture2d.h"
+#include "filesystem/nebu_filesystem.h"
 #include "base/nebu_assert.h"
 #include <string.h>
 
@@ -144,6 +145,8 @@ void resource_FreeAll(void)
 
 void* resource_Get(int token, int type)
 {
+	char *path;
+
 	ResourceToken *pToken = findToken(token);
 	nebu_assert(pToken);
 	if(!pToken)
@@ -161,13 +164,33 @@ void* resource_Get(int token, int type)
 		pToken->data = gltron_Mesh_LoadFromFile(pToken->filename, QUAD_MESH);
 		break;
 	case eRT_2d:
-		pToken->data = nebu_2d_LoadPNG(pToken->filename, 0);
+		path = nebu_FS_GetPath(PATH_ART, pToken->filename);
+		if(path)
+		{
+			pToken->data = nebu_2d_LoadPNG(path, 0);
+			free(path);
+		}
+		else
+		{
+			fprintf(stderr, "failed to locate %s", pToken->filename);
+			nebu_assert(0); exit(1); // installation corrupt
+		}
 		break;
 	case eRT_Font:
 		pToken->data = nebu_Font_Load(pToken->filename, PATH_ART);
 		break;
 	case eRT_Texture:
-		pToken->data = nebu_Texture2D_Load(pToken->filename, PATH_ART, (nebu_Texture2D_meta*) pToken->metadata);
+		path = nebu_FS_GetPath(PATH_ART, pToken->filename);
+		if(path)
+		{
+			pToken->data = nebu_Texture2D_Load(path, (nebu_Texture2D_meta*) pToken->metadata);
+			free(path);
+		}
+		else
+		{
+			fprintf(stderr, "failed to locate %s", pToken->filename);
+			nebu_assert(0); exit(1); // installation corrupt
+		}
 		break;
 	default:
 		nebu_assert(0);

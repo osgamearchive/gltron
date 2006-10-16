@@ -9,8 +9,8 @@
 #include "base/nebu_debug_memory.h"
 #include "base/nebu_assert.h"
 
-static void loadTexture(const char *filename, int fs_tag, int format);
-static png_texture* loadTextureData(const char *filename, int fs_tag);
+static void loadTexture(const char *path, int format);
+static png_texture* loadTextureData(const char *path);
 static void freeTextureData(png_texture *tex);
 
 void nebu_Texture2D_Free(nebu_Texture2D* pTexture)
@@ -19,7 +19,7 @@ void nebu_Texture2D_Free(nebu_Texture2D* pTexture)
 	free(pTexture);
 }
 
-nebu_Texture2D* nebu_Texture2D_Load(const char *filename, int fs_tag, const nebu_Texture2D_meta* meta)
+nebu_Texture2D* nebu_Texture2D_Load(const char *path, const nebu_Texture2D_meta* meta)
 {
 	nebu_Texture2D *pTexture;
 	pTexture = (nebu_Texture2D*)malloc(sizeof(nebu_Texture2D));
@@ -27,7 +27,7 @@ nebu_Texture2D* nebu_Texture2D_Load(const char *filename, int fs_tag, const nebu
 	glGenTextures(1, & pTexture->id);
 	glBindTexture(GL_TEXTURE_2D, pTexture->id);
 
-	loadTexture(filename, fs_tag, meta->format);
+	loadTexture(path, meta->format);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, meta->min_filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, meta->mag_filter);
@@ -47,64 +47,63 @@ void freeTextureData(png_texture *tex) {
   free(tex);
 }
 
-png_texture* loadTextureData(const char *filename, int fs_tag) {
-	png_texture *tex = NULL;
-	char *path;
-	path = nebu_FS_GetPath(fs_tag, filename);
-	if(path != NULL) {
-		tex = load_png_texture(path);
-		free(path);
-	}
+png_texture* loadTextureData(const char *path) {
+	png_texture *tex = load_png_texture(path);
 
 	if(tex == NULL) {    
-		fprintf(stderr, "fatal: failed loading %s, exiting...\n", filename);
+		fprintf(stderr, "fatal: failed loading %s, exiting...\n", path);
 		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	return tex;
 }
 
-void loadTexture(const char *filename, int fs_tag, int format) {
-  png_texture *tex;
-  GLint internal;
+void loadTexture(const char *path, int format) {
+	png_texture *tex;
+	GLint internal;
 	int maxSize;
-	
+
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxSize);
-	
-  tex = loadTextureData(filename, fs_tag);
-  if(tex->channels == 3) internal = GL_RGB;
-  else internal = GL_RGBA;
-  if(format == GL_DONT_CARE) {
-    if(tex->channels == 3) format = GL_RGB;
-    if(tex->channels == 4) format = GL_RGBA;
-  }
-  /* TODO: build mipmaps the proper way, box filters suck */
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	
+
+	tex = loadTextureData(path);
+	if(tex->channels == 3)
+		internal = GL_RGB;
+	else
+		internal = GL_RGBA;
+	if(format == GL_DONT_CARE)
+	{
+		if(tex->channels == 3) format = GL_RGB;
+		if(tex->channels == 4) format = GL_RGBA;
+	}
+	/* TODO: build mipmaps the proper way, box filters suck */
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
 	{
 		png_texture *newtex;
 		int level = 0;
-    while (tex->width > 1 || tex->height > 1) {
-			if(tex->width <= maxSize && tex->height <= maxSize) {
-					glTexImage2D(GL_TEXTURE_2D, level, format, 
-											 tex->width, tex->height,
-											 0, internal, GL_UNSIGNED_BYTE, tex->data);
+		while (tex->width > 1 || tex->height > 1)
+		{
+			if(tex->width <= maxSize && tex->height <= maxSize)
+			{
+				glTexImage2D(GL_TEXTURE_2D, level, format, 
+					 tex->width, tex->height,
+					 0, internal, GL_UNSIGNED_BYTE, tex->data);
 #ifdef PRINTF_VERBOSE
-					printf("uploading level %d, %dx%d texture\n", 
-						 level, tex->width, tex->height);
+				printf("uploading level %d, %dx%d texture\n", 
+					 level, tex->width, tex->height);
 #endif
-					level++;
+				level++;
 			}
-      newtex = mipmap_png_texture(tex, 1, 0, 0);
-      freeTextureData(tex);
-      tex = newtex;
+			newtex = mipmap_png_texture(tex, 1, 0, 0);
+			freeTextureData(tex);
+			tex = newtex;
 		}
 		/* upload 1x1 mip level */
 		glTexImage2D(GL_TEXTURE_2D, level, format, 
-								 tex->width, tex->height,
-								 0, internal, GL_UNSIGNED_BYTE, tex->data);
+			 tex->width, tex->height,
+			 0, internal, GL_UNSIGNED_BYTE, tex->data);
 #ifdef PRINTF_VERBOSE
 		printf("uploading level %d, %dx%d texture\n", 
-					 level, tex->width, tex->height);
+			level, tex->width, tex->height);
 #endif
 		freeTextureData(tex);
 	}

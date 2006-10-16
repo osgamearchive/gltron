@@ -177,7 +177,6 @@ extern unsigned char* scalePixels(const unsigned char *source,
 
 /* font stuff ->fonts.c */
 extern void initFonts(void);
-extern void deleteFonts(void);
 extern void draw( void );
 
 extern texture* loadTextureData(const char *filename);
@@ -198,7 +197,6 @@ extern void shutdownDisplay(void);
 extern void setupDisplay(void);
 
 extern void initTexture(Visual*);
-void artpack_UnloadSurfaces(void);
 
 /* texture loading -> load_texture.c */
 /* uses sgi_texture.c or sdl_texture.c */

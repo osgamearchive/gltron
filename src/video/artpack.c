@@ -32,6 +32,7 @@ void initArtpacks(void)
 	nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 
+	scripting_Run("artpacks = {}");
 	i = 1;
 	for(p = artList; p->next != NULL; p = p->next) {
 	  scripting_RunFormat("artpacks[%d] = \"%s\"", i, (char*) p->data);
@@ -60,28 +61,14 @@ void artpack_LoadSurfaces(void)
 	int i;
 	for(i = 0; i < eHUDElementCount; i++)
 	{
-		char *path = nebu_FS_GetPath(PATH_ART, pHUDNames[i]);
 		nebu_assert(!gpTokenHUD[i]);
 
-		gpTokenHUD[i] = resource_GetToken(path, eRT_2d);
+		gpTokenHUD[i] = resource_GetToken(pHUDNames[i], eRT_2d);
 		if(!gpTokenHUD[i])
 		{
 			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
 			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
-		free(path);
-	}
-}
-
-/*! unload the HUD surfaces, but don't completely destroy the resource */
-void artpack_UnloadSurfaces()
-{
-	int i;
-
-	for(i = 0; i < eHUDElementCount; i++)
-	{
-		if(gpTokenHUD[i])
-			resource_Release(gpTokenHUD[i]);
 	}
 }
 
