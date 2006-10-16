@@ -2,7 +2,6 @@
 tmp = {}
 
 settings = { }
-artpacks = { }
 tracks = { }
 
 app_version = 0.716
