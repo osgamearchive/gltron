@@ -353,6 +353,8 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 	if (p->data->exp_radius == 0)
 	{
+		nebu_Video_CheckErrors("before bike drawing");
+
 		glEnable(GL_NORMALIZE);
 
 		/* draw spoke animation */
@@ -409,6 +411,8 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 			GLint front = (gIsRenderingReflection) ? GL_BACK : GL_FRONT;
 			GLint back = (gIsRenderingReflection) ? GL_FRONT : GL_BACK;
+
+			nebu_Video_CheckErrors("before shadow volume");
 
 			matrixTranspose(&matCycleToWorldInvInvT, &matCycleToWorld);
 			vec3_Transform(&vLightDirModel, &vLightDirWorld, &matCycleToWorldInvInvT);
@@ -485,17 +489,17 @@ void drawCycle(int player, int lod, int drawTurn) {
 			glDepthMask(GL_TRUE);
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-			/* // DEBUG
-
-			// lighting is disabled per default
-			// glDisable(GL_LIGHTING);
-			glColor3f(.5,.5,.5);
-
-			glPolygonOffset(1,1);
-			glEnable(GL_POLYGON_OFFSET_FILL);
-			// drawSharpEdges(cycle);
-			glDisable(GL_POLYGON_OFFSET_FILL);
 			
+			if(getSettingi("cycle_sharp_edges"))
+			{
+				// lighting is disabled per default
+				// glDisable(GL_LIGHTING);
+				glColor3f(.5,.5,.5);
+				glPolygonOffset(1,1);
+				glEnable(GL_POLYGON_OFFSET_FILL);
+				drawSharpEdges(cycle);
+				glDisable(GL_POLYGON_OFFSET_FILL);
+			}
 			// */
 
 			/* // debug code			
@@ -525,6 +529,8 @@ void drawCycle(int player, int lod, int drawTurn) {
 				glStencilFunc(GL_EQUAL, 0, gShadowVolStencilMask);
 			}
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+			nebu_Video_CheckErrors("after shadow volume");
 		}
 
 		glDepthFunc(GL_LEQUAL);
@@ -576,12 +582,22 @@ void drawCycle(int player, int lod, int drawTurn) {
 		glDisable(GL_CULL_FACE);
 
 		glDisable(GL_LIGHTING);
+
+		glPopMatrix();
+
+		nebu_Video_CheckErrors("after bike drawing");
 	}
 	else if(p->data->exp_radius < EXP_RADIUS_MAX)
 	{
+		nebu_Video_CheckErrors("before explosion");
+
+		glPushMatrix();
+		glMultMatrixf(matCycleToWorld.m);
+
 		glEnable(GL_BLEND);
 
-		if (gSettingsCache.show_impact) {
+		if (gSettingsCache.show_impact)
+		{
 			glPushMatrix();
 			glTranslatef(0, 0, - (cycle->BBox.vMax.v[2] - cycle->BBox.vMin.v[2]) / 2);
 			drawImpact(player);
@@ -596,8 +612,11 @@ void drawCycle(int player, int lod, int drawTurn) {
 		gltron_Mesh_DrawExplosion(cycle, p->data->exp_radius);
 		glDisable(GL_LIGHTING); // disable ligthing after lightcycles
 		glDisable(GL_BLEND);
+
+		glPopMatrix();
+
+		nebu_Video_CheckErrors("after explosion");
 	}
-	glPopMatrix();
 }
  
 int playerVisible(int eyePlayer, int targetPlayer) {
@@ -753,7 +772,9 @@ void drawWorld(int player)
 
 	// setupLights(eCycles);
 	// drawPlayers sets up its own lighting
+	nebu_Video_CheckErrors("before players");
 	drawPlayers(player);
+	nebu_Video_CheckErrors("after players");
 
 	// restore lighting to world light
 	// DEBUG: 
@@ -773,10 +794,13 @@ void drawWorld(int player)
 				int vOffset = 0;
 				int iOffset = 0;
 				mesh.iUsed = 0;
+				nebu_Video_CheckErrors("before trail geometry");
 				trailGeometry(game->player + i, gPlayerVisuals + i,
 					&mesh, &vOffset, &iOffset);
+				nebu_Video_CheckErrors("after trail geometry");
 				bowGeometry(game->player + i, gPlayerVisuals + i,
 					&mesh, &vOffset, &iOffset);
+				nebu_Video_CheckErrors("after bow geometry");
 				trailStatesNormal(game->player + i, gScreen->textures[TEX_DECAL]);
 				trailRender(&mesh);
 				trailStatesRestore();
