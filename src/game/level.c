@@ -121,7 +121,7 @@ void game_UnloadLevel(void)
 	scripting_Run("level = nil");
 }
 
-void game_LoadLevel(void)
+int game_LoadLevel(void)
 {
 	// Load the selected level into the (global) lua table
 	char *path; 
@@ -132,6 +132,12 @@ void game_LoadLevel(void)
 	// make sure there's no level already loaded
 	scripting_GetGlobal("level", NULL);
 	nebu_assert(scripting_IsNil());
+	if(!scripting_IsNil())
+	{
+		scripting_Pop();
+		scripting_StackGuardEnd(iPos);
+		return GAME_ERROR_LEVEL_ALREADYLOADED;
+	}
 	scripting_Pop();
 
 	scripting_GetGlobal("settings", "current_level", NULL);
@@ -146,16 +152,29 @@ void game_LoadLevel(void)
 	}
 	else
 	{
-		printf("[fatal] can't get valid path for level\n");
-		nebu_assert(0); exit(1); // fatal
+		// fail silently, unloaded lvl will be caught later
 	}
 
 	scripting_GetGlobal("level", NULL);
 	nebu_assert(!scripting_IsNil());
+	if(scripting_IsNil())
+	{
+		scripting_Pop();
+		scripting_StackGuardEnd(iPos);
+		return GAME_ERROR_LEVEL_NOTLOADED;
+	}
 	scripting_Pop(); // level
 
 	scripting_StackGuardEnd(iPos);
+
+	return GAME_SUCCESS;
 }
+
+/*!
+	parses the lua description of the current level, computes the level's
+	boundingbox and, if necessary, computers a boundary using the level's
+	floor's adjacency data
+*/
 
 game_level* game_CreateLevel(void)
 {
@@ -166,18 +185,15 @@ game_level* game_CreateLevel(void)
 	l = malloc( sizeof(game_level) );
 	scripting_GetGlobal("level", NULL);
 	nebu_assert(!scripting_IsNil());
-	// get scalability flag
-	scripting_GetValue("scalable");
-	scripting_GetIntegerResult(& l->scalable);
-	// get default scale
-	scripting_GetValue("default_scale");
+	// get scale factor, if present
+	scripting_GetValue("scale_factor");
 	if(!scripting_IsNil())
 	{
-		scripting_GetFloatResult(& l->default_scale);
+		scripting_GetFloatResult(& l->scale_factor);
 	}
 	else
 	{
-		l->default_scale = 1;
+		l->scale_factor = 1;
 		scripting_Pop();
 	}
 	// are spawn points relative?

@@ -58,7 +58,6 @@ spawn = {
   { x = .75, y = .5, dir = directions.random }
 },
 
-geometry = {
   -- floor geometry is used to generate reflections, and
   -- as a background for the 2d map
   floor = {
@@ -138,6 +137,5 @@ geometry = {
       { 12, 13, 14 }, { 12, 14, 15 }
     }
   }
-}
 
 }

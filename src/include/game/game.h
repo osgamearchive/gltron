@@ -62,9 +62,6 @@ extern int dirsY[];
 extern float default_speeds[];
 extern int default_arena_sizes[];
 
-void game_UnloadLevel(void);
-void game_LoadLevel(void);
-
 /* ai -> computer.c */
 
 void initGameAI(int level);

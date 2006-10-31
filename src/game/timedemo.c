@@ -80,7 +80,7 @@ void keyTimedemo(int state, int key, int x, int y) {
 
 struct saveRules {
 	float speed;
-	int eraseCrashed, grid_size;
+	int eraseCrashed;
 } saveRules;
 
 extern int c_resetCamera();
@@ -108,11 +108,9 @@ void initTimedemo(void) {
 
 	saveRules.speed = getSettingf("speed");
 	saveRules.eraseCrashed = getSettingi("erase_crashed");
-	saveRules.grid_size = getSettingi("grid_size");
 
 	setSettingf("speed", 12);
 	setSettingi("erase_crashed", 1);
-	setSettingi("grid_size", 200);
 		
 	game2->mode = GAME_SINGLE;
 	game_ResetData();
@@ -142,7 +140,6 @@ void exitTimedemo(void) {
 
 	setSettingf("speed", saveRules.speed);
 	setSettingi("eraseCrashed", saveRules.eraseCrashed);
-	setSettingi("grid_size", saveRules.grid_size);
 }
 
 Callbacks timedemoCallbacks = {

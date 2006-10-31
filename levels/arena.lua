@@ -38,7 +38,7 @@ floor = {
 				wrap_t = 2,
 				-- 1: no filtering, 64: a lot of filtering
 				anisotropic_filtering = 8,
-				texture_scale = 40,
+				texture_scale = 240,
 			}
 		}
 	},

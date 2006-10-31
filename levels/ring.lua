@@ -4,10 +4,8 @@ level = {
 
 version = 71,
 
--- the sizes in the level are all in the [0,1] range and can be
--- scaled to the appropriate arena size
-
-scalable = 1,
+-- scale the level after loading by
+scale_factor = 600,
 
 -- collision detection takes place against these lines
 boundary = {
@@ -31,7 +29,6 @@ spawn = {
   { x = .75, y = .5, dir = directions.random }
 },
 
-geometry = {
   -- floor geometry is used to generate reflections, and
   -- as a background for the 2d map
   floor = {
@@ -121,6 +118,5 @@ geometry = {
       { 12, 13, 14 }, { 12, 14, 15 }
     }
   }
-}
 
 }

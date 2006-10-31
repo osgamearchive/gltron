@@ -44,10 +44,10 @@ void initLevels(void) {
 		game_FreeLevel(game2->level);
 	game2->level = game_CreateLevel();
 
-	if(game2->level->scalable)
+	if(game2->level->scale_factor != 1)
 	{
-		game_ScaleLevel(game2->level, getSettingf("grid_size"));
-		video_ScaleLevel(gWorld, getSettingf("grid_size"));
+		game_ScaleLevel(game2->level, game2->level->scale_factor);
+		video_ScaleLevel(gWorld, game2->level->scale_factor);
 	}
 }
 

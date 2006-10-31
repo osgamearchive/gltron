@@ -116,9 +116,21 @@ int c_reloadArtpack(lua_State *L)  {
 }
 
 int c_reloadLevel(lua_State *L) {
+	int status;
+
 	game_UnloadLevel();
 
-	game_LoadLevel();
+	status = game_LoadLevel();
+	if(status != GAME_SUCCESS)
+	{
+		// scrap current level
+		scripting_Run("levels[ current_level_index] = \"\"");
+		// and revert to last level
+		scripting_Run("current_level_index = last_level_index");
+		scripting_Run("settings.current_level = levels[ current_level_index ]");
+		game_LoadLevel(); // if you can't reload last level, fail silently
+	}
+
 	video_LoadLevel();
 	initLevels();
 

@@ -37,7 +37,6 @@ typedef struct RuleSet {
 
 typedef struct Game2 {
 	game_level *level;
-	float level_scale;
 	RuleSet rules;
 	int mode;
 	int players;

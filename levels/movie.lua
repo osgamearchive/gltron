@@ -4,11 +4,8 @@ level = {
 
 version = 71,
 
--- the sizes in the level are all in the [0,1] range and can be
--- scaled to the appropriate arena size
-
-scalable = 1,
-default_scale = 1 / 2000,
+-- scale the level after loading by
+scale_factor = 1,
 
 -- spawn points
 -- (they don't have to be sorted, they will be randomized anyway)

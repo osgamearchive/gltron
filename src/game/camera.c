@@ -271,7 +271,7 @@ void playerCamera(Player *p, int player) {
 			static float py[4] = { 0, 0, 0, 0 };
 			float dx,dy,tx,ty,gs,d;
 	
-			gs=getSettingf("grid_size");
+			gs= box2_Width(&game2->level->boundingBox);
 			tx=(x-gs/2)*(1+15/gs)+gs/2; /* Scale position of cycle */
 			ty=(y-gs/2)*(1+15/gs)+gs/2;
 
