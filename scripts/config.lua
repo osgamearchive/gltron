@@ -4,7 +4,7 @@ tmp = {}
 settings = { }
 tracks = { }
 
-app_version = 0.716
+app_version = 0.717
 -- debugginb
 settings.debug_output = 1
 
@@ -47,7 +47,6 @@ settings.wall_buster_min = 2.4
 settings.ai_level = 2
 -- settings.current_level = "square.lua"
 settings.current_level = "movie.lua"
-settings.grid_size = 720
 settings.erase_crashed = 1
 settings.map_scale = 1
 
@@ -71,6 +70,7 @@ settings.reflection = -1
 settings.show_recognizer = 1
 settings.show_impact = 1
 settings.lod = 1
+settings.cycle_sharp_edges = 0
 -- hud settings
 settings.show_fps = 0
 settings.show_speed = 1

@@ -16,10 +16,10 @@ MainGameMenu = {
    Player3_KeyMenu = { type = MenuC.type.menu, caption = "Player 3" },
    Player4_KeyMenu = { type = MenuC.type.menu, caption = "Player 4" },
    VideoMenu = { type = MenuC.type.menu, caption = "Video" },
+   ResolutionMenu = { type = MenuC.type.menu, caption = "Screen" },
    TextureMenu = { type = MenuC.type.menu, caption = "Texture Options" },
-   DetailsMenu = { type = MenuC.type.menu, caption = "Detail Options" },
-   HudMenu = { type = MenuC.type.menu, caption = "HUD Options" },
-   ScreenMenu = { type = MenuC.type.menu, caption = "Screen Options" },
+   DetailsMenu = { type = MenuC.type.menu, caption = "Details" },
+   HudMenu = { type = MenuC.type.menu, caption = "HUD" },
    AudioMenu = { type = MenuC.type.menu, caption = "Audio" },
 
    -- Item definitions
@@ -74,13 +74,6 @@ MainGameMenu = {
       values = { 0, 1, 2, 3 },
       read = function() return settings.ai_level; end,
       store = function (value) settings.ai_level = value; end
-   },
-   ArenaSize = {
-      type = MenuC.type.list, caption = "Arena Size",
-      labels = { "tiny", "medium", "big", "vast", "extreme" },
-      values = { 160, 240, 480, 720, 1200 },
-      read = function() return settings.grid_size; end,
-      store = function (value) settings.grid_size = value; c_reloadLevel(); end
    },
    EraseDeadPlayers = {    
       type = MenuC.type.list, caption = "Erase dead players",
@@ -284,27 +277,25 @@ MainGameMenu = {
 	-- Video
 	Level = {
 		type = MenuC.type.slider, caption = "Level",
-		init = function() tmp.current_level = settings.current_level; end,
 		right = nextLevel,
 		left = previousLevel,
 		action = nextLevel,
 		read = function()
-			_,_,name = string.find(tmp.current_level, "(.*)%..+")
+			_,_,name = string.find(settings.current_level, "(.*)%..+")
 			if name then
 				return name
 			else
-				return tmp.current_level
+				return settings.current_level
 			end
 		end
 	},
 
 	Artpack = {
 		type = MenuC.type.slider, caption = "Artpack",
-		init = function() tmp.current_artpack = settings.current_artpack; end,
 		right = nextArtpack,
 		left = previousArtpack,
 		action = nextArtpack,
-		read = function() return tmp.current_artpack; end
+		read = function() return settings.current_artpack; end
 	},
 	 -- Details
    Filtering = {
@@ -331,6 +322,13 @@ MainGameMenu = {
       read = function() return settings.show_glow; end,
       store = function(value) settings.show_glow = value; end
    },
+   CycleEdges = {
+      type = MenuC.type.list, caption = "Cycle Edges",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.cycle_sharp_edges; end,
+      store = function(value) settings.cycle_sharp_edges = value; end
+   },   
 	 Reflections = {
 			type = MenuC.type.list, caption = "Reflections",
 			labels = { 
@@ -467,8 +465,6 @@ MainGameMenu = {
 		type = MenuC.type.action, caption = "Apply Changes",
 		action = function()
 			local restart = 0
-			local reload_art = 0
-			local reload_level = 0
 			
 			if settings.windowMode ~= tmp.windowMode then restart = 1; end
 			if settings.width ~= Menu.Resolution.widths[tmp.resolution] then restart = 1; end
@@ -477,22 +473,8 @@ MainGameMenu = {
 			settings.height = Menu.Resolution.heights[tmp.resolution]
 			settings.windowMode = tmp.windowMode
 			
-			if settings.current_level ~= tmp.current_level then reload_level = 1; end
-			settings.current_level = tmp.current_level
-			
-			if settings.current_artpack ~= tmp.current_artpack then reload_art = 1; end
-			settings.current_artpack = tmp.current_artpack
-			
 			if restart == 1 then
 				c_video_restart()
-			else 
-				if reload_art == 1 then
-					c_setArtPath()
-					c_reloadArtpack()
-				end
-				if reload_level == 1 then
-					c_reloadLevel()
-				end
 			end
 		end
 	},
@@ -571,12 +553,13 @@ MainGameMenu.ControlsMenu.items = {
 }
 
 MainGameMenu.GameMenu.items = { 
-   "StartGame", "ResetScores", "GameRulesMenu", 
-   "GameSettingsMenu", "PlayerConfigMenu",
+   "StartGame", "GameRulesMenu", 
+   "GameSettingsMenu", "ResetScores", 
+   "PlayerConfigMenu",
 }
 
 MainGameMenu.GameRulesMenu.items = { 
-   "Booster", "WallAccell", "WallBuster", "GameSpeed", "BotSkill", "ArenaSize", "EraseDeadPlayers" 
+	"Level", "Booster", "GameSpeed", "BotSkill", "EraseDeadPlayers", "WallAccell", "WallBuster" 
 }
 
 MainGameMenu.GameSettingsMenu.items = { "FastFinish", "CameraMode", "Viewports", "Map" }
@@ -611,15 +594,18 @@ MainGameMenu.Player4_KeyMenu.items = {
 }
 
 MainGameMenu.VideoMenu.items = {
-   	 "HudMenu",
-	 "DetailsMenu",
-	 "Level", "Artpack", 
-	 "Resolution", "WindowMode", "Apply",
-	 --, "TimeDemo" 
+	"ResolutionMenu", "HudMenu", "DetailsMenu", "Artpack", 
+	 -- "TimeDemo" 
+}
+
+MainGameMenu.ResolutionMenu.items = {
+	"Resolution",
+	"WindowMode",
+	"Apply"
 }
 
 MainGameMenu.DetailsMenu.items = {
-   "Filtering", "AlphaTrails", "Halos", "Reflections",
+   "Filtering", "AlphaTrails", "Halos", "Reflections", "CycleEdges",
     -- "Lightcycles",
     "Recognizer", "Lod", "Fov"
 }

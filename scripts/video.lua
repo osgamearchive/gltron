@@ -19,17 +19,19 @@ function setupArtpackPaths()
 	c_setArtPath()
 end
 
+function updateArtpack()
+	settings.current_artpack = artpacks[ current_artpack_index ]
+	c_setArtPath()
+	c_reloadArtpack()
+end
+
 function nextArtpack()
 	if current_artpack_index < table.getn(artpacks) then
 		current_artpack_index = current_artpack_index + 1
 	else
 		current_artpack_index = 1
 	end
-	tmp.current_artpack = artpacks[ current_artpack_index ]
-	-- let's see if this impacts performance too much...
-	settings.current_artpack = tmp.current_artpack
-	c_setArtPath()
-	c_reloadArtpack()
+	updateArtpack()
 end
 
 function previousArtpack()
@@ -38,11 +40,7 @@ function previousArtpack()
 	else
 		current_artpack_index = table.getn(artpacks) 
 	end
-	tmp.current_artpack = artpacks[ current_artpack_index ]
-	-- let's see if this impacts performance too much...
-	settings.current_artpack = tmp.current_artpack
-	c_setArtPath()
-	c_reloadArtpack()
+	updateArtpack()
 end
 
 -- copy-paste from setup/next/previous Artpack
@@ -64,21 +62,33 @@ function setupLevels()
 end
 
 function nextLevel()
-	if current_level_index < table.getn(levels) then
-		current_level_index = current_level_index + 1
-	else
-		current_level_index = 1
+	last_level_index = current_level_index
+	last_level = levels[ last_level_index ]
+	while last_level_index == current_level_index or
+		levels[ current_level_index ] == "" do	
+		if current_level_index < table.getn(levels) then
+			current_level_index = current_level_index + 1
+		else
+			current_level_index = 1
+		end
 	end
-	tmp.current_level = levels[ current_level_index ]
+	settings.current_level = levels[ current_level_index ]
+	c_reloadLevel()
 end
 
 function previousLevel()
-	if current_level_index > 1 then
-		current_level_index = current_level_index - 1
-	else
-		current_level_index = table.getn(levels) 
+	last_level_index = current_level_index
+	last_level = levels[ last_level_index ]
+	while last_level_index == current_level_index or
+		levels[ current_level_index ] == "" do
+		if current_level_index > 1 then
+			current_level_index = current_level_index - 1
+		else
+			current_level_index = table.getn(levels) 
+		end
 	end
-	tmp.current_level = levels[ current_level_index ]
+	settings.current_level = levels[ current_level_index ]
+	c_reloadLevel()
 end
 
 
