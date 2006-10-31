@@ -1,8 +1,8 @@
-- Move Video Resolution to seperate menu
-- Add 'Apply' Button
+- Investigate texture scaling & general scaling on movie level
+- Debug auto-camera
 
-- Move Level to game menu
-- Add 'Apply' Button
+- Increase AI player limit
+- Change player/AI configuration menu
 
 - Update Wiki:
 	- Describe changes in menu structure
