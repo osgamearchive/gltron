@@ -21,8 +21,95 @@ typedef struct {
 	int token; // the (unique) identifier for this resource
 } ResourceToken;
 
+typedef struct {
+	int type;
+	void* (*get)(char*,void*);
+	void (*release)(void*);
+} ResourceHandler;
+
 static nebu_List *pTokenList = NULL;
+static nebu_List handlerList;
 static int nextToken = 1;
+
+void* getTriMesh(char *filename, void *dummy)
+{
+	return gltron_Mesh_LoadFromFile(filename, TRI_MESH);
+}
+
+void* getQuadMesh(char *filename, void *dummy)
+{
+	return gltron_Mesh_LoadFromFile(filename, QUAD_MESH);
+}
+
+void* get2d(char *filename, void *dummy)
+{
+	char *path;
+	path = nebu_FS_GetPath(PATH_ART, filename);
+	if(path)
+	{
+		void *pData = nebu_2d_LoadPNG(path, 0);
+		free(path);
+		return pData;
+	}
+	else
+	{
+		fprintf(stderr, "failed to locate %s", filename);
+		nebu_assert(0); exit(1); // installation corrupt
+	}
+}
+
+void* getFont(char *filename, void *dummy)
+{
+	return nebu_Font_Load(filename, PATH_ART);
+}
+
+void* getTexture(char *filename, void *meta)
+{
+	char *path;
+	path = nebu_FS_GetPath(PATH_ART, filename);
+	if(path)
+	{
+		void *pData = nebu_Texture2D_Load(path, (nebu_Texture2D_meta*) meta);
+		free(path);
+		return pData;
+	}
+	else
+	{
+		fprintf(stderr, "failed to locate %s", filename);
+		nebu_assert(0); exit(1); // installation corrupt
+	}
+}
+
+void releaseMesh(void *data)
+{
+	gltron_Mesh_Free((gltron_Mesh*)data);
+}
+
+void resource_Init()
+{
+	resource_RegisterHandler(eRT_GLtronTriMesh, getTriMesh, releaseMesh);
+	resource_RegisterHandler(eRT_GLtronQuadMesh, getQuadMesh, releaseMesh);
+	resource_RegisterHandler(eRT_2d, get2d, NULL);
+	resource_RegisterHandler(eRT_Font, getFont, NULL);
+	resource_RegisterHandler(eRT_Texture, getTexture, NULL);
+}
+
+void resource_RegisterHandler(int type, void* (*get)(char*,void*), void (*release)(void*))
+{
+	ResourceHandler *pHandler;
+
+	pHandler = (ResourceHandler*) malloc(sizeof(ResourceHandler));
+	pHandler->type = type;
+	pHandler->get = get;
+	pHandler->release = release;
+	nebu_List_AddTail(&handlerList, pHandler);
+}
+
+void resource_UnregisterHandler(int type)
+{
+	// FIXME: not implemented
+}
+
 
 static ResourceToken* findToken(int token)
 {
@@ -40,16 +127,24 @@ static ResourceToken* findToken(int token)
 
 static void release(ResourceToken *pToken)
 {
+	nebu_List *p;
+
 	nebu_assert(pToken);
 	if(!pToken->data)
 		return;
 
+	for(p = &handlerList; p->next; p = p->next)
+	{
+		ResourceHandler *pHandler = (ResourceHandler*) p->data;
+		if(pToken->type == pHandler->type && pHandler->release)
+		{
+			pHandler->release(pToken->data);
+			return;
+		}
+	}
+
 	switch(pToken->type)
 	{
-	case eRT_GLtronTriMesh:
-	case eRT_GLtronQuadMesh:
-		gltron_Mesh_Free((gltron_Mesh*)pToken->data);
-		break;
 	case eRT_2d:
 		nebu_2d_Free((nebu_2d*)pToken->data);
 		break;
@@ -145,7 +240,7 @@ void resource_FreeAll(void)
 
 void* resource_Get(int token, int type)
 {
-	char *path;
+	nebu_List *p;
 
 	ResourceToken *pToken = findToken(token);
 	nebu_assert(pToken);
@@ -155,48 +250,24 @@ void* resource_Get(int token, int type)
 	if(pToken->data)
 		return pToken->data;
 
+	for(p = &handlerList; p->next; p = p->next)
+	{
+		ResourceHandler *pHandler = (ResourceHandler*) p->data;
+		if(pToken->type == pHandler->type)
+		{
+			pToken->data = pHandler->get(pToken->filename, pToken->metadata);
+			nebu_assert(pToken->data);
+			return pToken->data;
+		}
+	}
+
+	// no suitable registred handler has been found
+	// here are some default handlers
+
 	switch(pToken->type)
 	{
-	case eRT_GLtronTriMesh:
-		pToken->data = gltron_Mesh_LoadFromFile(pToken->filename, TRI_MESH);
-		break;
-	case eRT_GLtronQuadMesh:
-		pToken->data = gltron_Mesh_LoadFromFile(pToken->filename, QUAD_MESH);
-		break;
-	case eRT_2d:
-		path = nebu_FS_GetPath(PATH_ART, pToken->filename);
-		if(path)
-		{
-			pToken->data = nebu_2d_LoadPNG(path, 0);
-			free(path);
-		}
-		else
-		{
-			fprintf(stderr, "failed to locate %s", pToken->filename);
-			nebu_assert(0); exit(1); // installation corrupt
-		}
-		break;
-	case eRT_Font:
-		pToken->data = nebu_Font_Load(pToken->filename, PATH_ART);
-		break;
-	case eRT_Texture:
-		path = nebu_FS_GetPath(PATH_ART, pToken->filename);
-		if(path)
-		{
-			pToken->data = nebu_Texture2D_Load(path, (nebu_Texture2D_meta*) pToken->metadata);
-			free(path);
-		}
-		else
-		{
-			fprintf(stderr, "failed to locate %s", pToken->filename);
-			nebu_assert(0); exit(1); // installation corrupt
-		}
-		break;
 	default:
-		nebu_assert(0);
 		break;
-
-		// custom load function
 	}
 	nebu_assert(pToken->data);
 	return pToken->data;

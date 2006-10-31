@@ -40,6 +40,8 @@ void exitSubsystems(void)
 void initSubsystems(int argc, const char *argv[]) {
 	nebu_Init();
 
+	resource_Init();
+
 	initFilesystem(argc, argv);
 	initScripting();
 

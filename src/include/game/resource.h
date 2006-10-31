@@ -17,6 +17,10 @@ typedef enum EResourceUserTypes {
 	eRT_GLtronQuadMesh
 } EResourceUserTypes;
 
+void resource_Init(void);
+void resource_RegisterHandler(int type, void* (*get)(char*,void*), void (*release)(void *));
+void resource_UnregisterHandler(int type);
+
 void resource_Release(int token);
 void resource_ReleaseAll(void);
 void resource_ReleaseType(int type);
