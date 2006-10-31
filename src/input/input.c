@@ -98,20 +98,25 @@ void keyGame(int state, int k, int x, int y)
 	// foreach player, check if the player's movement keys are pressed
 	// TODO: This is ugly as else, better create a mapping for each 
 	// key to each action
-	for( i = 0; i < game->players; i++) {
+	for( i = 0; i < game->players; i++)
+	{
 		if(PLAYER_IS_ACTIVE(&game->player[i]) &&
-			 !game->player[i].ai->active) {
+			 !game->player[i].ai->active)
+		{
 			int key;
-			if(state == NEBU_INPUT_KEYSTATE_DOWN) { 
+			if(state == NEBU_INPUT_KEYSTATE_DOWN)
+			{ 
 				scripting_RunFormat("return settings.keys[%d].left", i + 1);
 				scripting_GetIntegerResult( &key );
-				if(key == k) {
+				if(key == k)
+				{
 					createEvent(i, EVENT_TURN_LEFT);
 					return;
 				}
 				scripting_RunFormat("return settings.keys[%d].right", i + 1);
 				scripting_GetIntegerResult( &key );
-				if(key == k) {
+				if(key == k)
+				{
 					createEvent(i, EVENT_TURN_RIGHT);
 					return;
 				}
@@ -119,11 +124,15 @@ void keyGame(int state, int k, int x, int y)
 			// deal with glance keys
 			scripting_RunFormat("return settings.keys[%d].glance_left", i + 1);
 			scripting_GetIntegerResult( &key );
-			if(key == k) {
-				if(state == NEBU_INPUT_KEYSTATE_DOWN) {
+			if(key == k)
+			{
+				if(state == NEBU_INPUT_KEYSTATE_DOWN)
+				{
 					// printf("glance left down\n");
 					gPlayerVisuals[i].camera.bIsGlancing = 1;
-				}	else {
+				}
+				else
+				{
 					// printf("glance left up\n");
 					gPlayerVisuals[i].camera.bIsGlancing = 0;
 				}
@@ -132,8 +141,10 @@ void keyGame(int state, int k, int x, int y)
 			// deal with glance keys
 			scripting_RunFormat("return settings.keys[%d].glance_right", i + 1);
 			scripting_GetIntegerResult( &key );
-			if(key == k) {
-				if(state == NEBU_INPUT_KEYSTATE_DOWN) {
+			if(key == k)
+			{
+				if(state == NEBU_INPUT_KEYSTATE_DOWN)
+				{
 					// printf("glance right down\n");
 					gPlayerVisuals[i].camera.bIsGlancing = -1;
 				} else {

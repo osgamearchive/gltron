@@ -123,8 +123,8 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 		/* the current line is not drawn */
 		/* compute distance from line to eye point */
 		dist = getDist(s, cam->cam);
-		// alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
 		alpha = (400 - dist / 2) / 400;
+		// TODO: compute the 'magic' 400 somehow
 		if(alpha < 0)
 			alpha = 0;
 		// trail_top[3] = alpha;
@@ -147,7 +147,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 
 	/* compute distance from line to eye point */
 	dist = getDist(s, cam->cam);
-	// alpha = (game2->rules.grid_size - dist / 2) / game2->rules.grid_size;
+	// TODO: compute the 'magic' 400 somehow
 	alpha = (400 - dist / 2) / 400;
 	if(alpha < 0)
 		alpha = 0;

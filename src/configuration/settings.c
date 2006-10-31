@@ -24,15 +24,6 @@ void checkSettings(void) {
     fprintf(stderr, "[gltron] reset speed: speed = %.2f\n",
 	    getSettingf("speed"));
   }
-#ifndef NEW_LEVEL
-  if(getSettingi("grid_size") % 8) {
-    fprintf(stderr, "[gltron] sanity check failed: grid_size %% 8 != 0: "
-	    "grid_size = %d\n", getSettingi("grid_size"));
-    setSettingi("grid_size", 240);
-    fprintf(stderr, "[gltron] reset grid_size: grid_size = %d\n",
-	    getSettingi("grid_size"));
-  }
-#endif
 }
 
 void saveSettings(void) {
