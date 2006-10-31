@@ -166,8 +166,11 @@ void nebu_Video_WarpPointer(int x, int y) {
 }
 
 void nebu_Video_CheckErrors(const char *where) {
-  int error;
-  error = glGetError();
-  if(error != GL_NO_ERROR)
-    printf("[glError: %s] - %d\n", where, error);
+	int error;
+	error = glGetError();
+	if(error != GL_NO_ERROR)
+	{
+		fprintf(stderr, "[glError: %s] - %d\n", where, error);
+		nebu_assert(0);
+	}
 }
