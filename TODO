@@ -1,7 +1,14 @@
-- Investigate texture scaling & general scaling on movie level
+- Create levels with different scales
+- Spread the script-callable code through the modules
 - Debug auto-camera
 
 - Increase AI player limit
+	- limiting factors are:
+		- only 4 spawn points
+		- only 4 3d sound sources
+		- only 4 playerVisuals
+		- only 4 ai paramater-sets
+		- only 4 ai settings
 - Change player/AI configuration menu
 
 - Update Wiki:
