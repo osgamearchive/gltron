@@ -1,6 +1,7 @@
 #include "game/gltron.h"
 #include "game/game.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "video/video.h"
 #include "video/graphics_utility.h"
 #include "video/nebu_video_system.h"

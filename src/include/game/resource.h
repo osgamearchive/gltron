@@ -9,25 +9,12 @@ typedef enum EResourceType
 	eRT_2d,
 	eRT_Texture,
 	eRT_Font,
-	eRT_UserTypes
+	eRT_GLtronTriMesh,
+	eRT_GLtronQuadMesh
 } EResourceType;
 
-typedef enum EResourceUserTypes {
-	eRT_GLtronTriMesh = eRT_UserTypes,
-	eRT_GLtronQuadMesh
-} EResourceUserTypes;
-
 void resource_Init(void);
-void resource_RegisterHandler(int type, void* (*get)(char*,void*), void (*release)(void *));
-void resource_UnregisterHandler(int type);
+void resource_Shutdown(void);
 
-void resource_Release(int token);
-void resource_ReleaseAll(void);
-void resource_ReleaseType(int type);
-void resource_FreeAll(void);
-void resource_Free(int token);
-void* resource_Get(int token, int type);
-int resource_GetToken(char *filename, int type);
-int resource_GetTokenMeta(char *filename, int type, void *metadata, int metasize);
 
 #endif /* RESOURCE_H */

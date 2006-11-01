@@ -1,6 +1,7 @@
 #include "video/video.h"
 #include "game/game.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "filesystem/path.h"
 #include "configuration/settings.h"
 

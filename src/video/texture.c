@@ -1,6 +1,7 @@
 #include "video/video.h"
 #include "configuration/settings.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "base/nebu_surface.h"
 #include "video/nebu_2d.h"
 #include "video/nebu_texture2d.h"

@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="nebu"
 	ProjectGUID="{77B12E9E-0359-46ED-92F1-00740DF8545F}"
+	RootNamespace="nebu"
 	>
 	<Platforms>
 		<Platform
@@ -242,6 +243,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\base\resource.c"
+					>
+				</File>
+				<File
 					RelativePath=".\base\spline.c"
 					>
 				</File>
@@ -399,6 +404,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\base\nebu_resource.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\base\nebu_spline.h"
 					>
 				</File>
@@ -539,11 +548,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h"
+					RelativePath=".\include\filesystem\nebu_filesystem.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h"
+					RelativePath=".\include\Nebu_filesystem.h"
 					>
 				</File>
 			</Filter>
@@ -551,11 +560,11 @@
 				Name="scripting"
 				>
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h"
+					RelativePath=".\include\Nebu_scripting.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_scripting.h"
+					RelativePath=".\include\scripting\nebu_scripting.h"
 					>
 				</File>
 			</Filter>

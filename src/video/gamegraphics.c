@@ -7,6 +7,7 @@
 #include "game/camera.h"
 #include "game/game_level.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "video/graphics_lights.h"
 #include "video/graphics_utility.h"
 #include "video/graphics_fx.h"

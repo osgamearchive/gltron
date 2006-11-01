@@ -2,6 +2,7 @@
 #include "game/game.h"
 #include "video/nebu_renderer_gl.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "video/graphics_lights.h"
 
 void drawWalls(void) {

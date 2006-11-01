@@ -7,6 +7,7 @@
 
 #include "video/video.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 
 extern nebu_Font *pFont;
 extern void drawMenu(Visual *d);

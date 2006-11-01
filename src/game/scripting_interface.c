@@ -8,6 +8,7 @@
 #include "configuration/configuration.h"
 #include "scripting/scripting.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "configuration/settings.h"
 #include "base/switchCallbacks.h"
 #include "scripting/nebu_scripting.h"

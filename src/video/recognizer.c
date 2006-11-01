@@ -2,6 +2,7 @@
 #include "game/game.h"
 #include "game/game_level.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "configuration/settings.h"
 
 #include "base/nebu_math.h"

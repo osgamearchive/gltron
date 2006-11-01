@@ -8,6 +8,7 @@
 #include "video/video.h"
 #include "video/model.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 
 #include "Nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"

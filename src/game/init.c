@@ -5,6 +5,7 @@
 #include "game/gltron.h"
 #include "game/game.h"
 #include "game/resource.h"
+#include "base/nebu_resource.h"
 #include "input/input.h"
 #include "base/util.h"
 #include "scripting/scripting.h"
@@ -35,6 +36,7 @@ void exitSubsystems(void)
 	scripting_Quit();
 	nebu_FS_ClearAllPaths();
 	resource_FreeAll();
+	resource_Shutdown();
 }
 
 void initSubsystems(int argc, const char *argv[]) {
@@ -161,7 +163,7 @@ void initConfiguration(int argc, const char *argv[])
 
 void initVideo(void) {
 	nebu_Video_Init();
-
+	// this requuires the player data
 	initVideoData();
 	setupDisplay();
 
@@ -179,7 +181,7 @@ void initAudio(void) {
 	
 void initGame(void) {
 	/* initialize the rest of the game's datastructures */
-	game_CreatePlayers(PLAYERS, &game, &game2);
+	game_CreatePlayers(MAX_PLAYERS, &game, &game2);
 
 	// gui stuff
 	initArtpacks(); // stores the artpack directory names in a lua table, so we can display it in the menu later on
@@ -191,6 +193,7 @@ void initGame(void) {
 	runScript(PATH_SCRIPTS, "hud.lua");
 	runScript(PATH_SCRIPTS, "gauge.lua");
 
+	// this requires the player data
 	resetScores();
 }
 
