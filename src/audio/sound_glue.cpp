@@ -22,7 +22,7 @@ static Sound::SourceSample *sample_crash = NULL;
 static Sound::SourceSample *sample_engine = NULL;
 static Sound::SourceSample *sample_recognizer = NULL;
 
-static Sound::Source3D *players[PLAYERS];
+static Sound::Source3D *players[MAX_PLAYERS];
 static Sound::Source3D *recognizerEngine;
 
 #define TURNLENGTH 250.0f
@@ -73,7 +73,7 @@ extern "C" {
   void Audio_Idle(void) { 
     // iterate over all the players and update the engines
     if(sample_engine->IsPlaying()) {
-      for(int i = 0; i < PLAYERS; i++) {
+      for(int i = 0; i < MAX_PLAYERS; i++) {
 				Player *p;
 				Sound::Source3D *p3d;
 				float x, y;
@@ -280,7 +280,7 @@ extern "C" {
   }
  
   void Audio_LoadPlayers(void) {
-    for(int i = 0; i < PLAYERS; i++) {
+    for(int i = 0; i < MAX_PLAYERS; i++) {
       if(i != 0) {
 				players[i] = new Sound::Source3D(sound, sample_engine);
 				players[i]->SetType(Sound::eSoundFX);

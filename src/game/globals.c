@@ -17,7 +17,7 @@ Input gInput;
 
 SettingsCache gSettingsCache;
 
-int viewport_content[4]; /* max. 4 individual viewports on the screen */
+int viewport_content[MAX_PLAYERS]; /* max. 4 individual viewports on the screen */
 
 // nebu_Font *gameFtx = NULL;
 int gTokenGameFont = 0;

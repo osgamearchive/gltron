@@ -1,8 +1,7 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
-#define NEW_LEVEL_DRAW
-
+#include "game/game.h"
 #include "game/game_data.h" // Player
 #include "game/camera.h" // Camera
 #include "video/texture.h" // Texture
@@ -12,11 +11,6 @@
 #include "video/video_level.h"
 #include "video/model.h" // gltron_Mesh
 #include "base/nebu_png_texture.h" // png_texture
-
-/* dropped support for anything else than libpng */
-typedef png_texture texture;
-#define LOAD_TEX(x) load_png_texture(x)
-#define TEX_SUFFIX ".png"
 
 typedef struct Artpack {
   char *path;
@@ -100,8 +94,7 @@ enum {
 
 extern int gl_error;
 
-
-extern int viewport_content[4];
+extern int viewport_content[MAX_PLAYERS];
 
 
 extern float camAngle;
@@ -178,10 +171,6 @@ extern unsigned char* scalePixels(const unsigned char *source,
 /* font stuff ->fonts.c */
 extern void initFonts(void);
 extern void draw( void );
-
-extern texture* loadTextureData(const char *filename);
-extern void freeTextureData(texture *tex);
-extern void loadTexture(const char *filename, int format);
 
 extern void doTrail(segment2 *t, int value);
 

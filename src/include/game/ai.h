@@ -1,6 +1,7 @@
 #ifndef GAME_AI_H
 #define GAME_AI_H
 
+#include "game/game.h"
 #include "base/nebu_vector.h"
 
 typedef struct AI_Configuration {
@@ -16,11 +17,11 @@ typedef struct AI_Distances {
 } AI_Distances;
 
 typedef struct AI_Parameters {
-	unsigned int minTurnTime[4];
-	float maxSegLength[4];
-	float critical[4];
-	int  spiral[4];
-	int rlDelta[4];
+	unsigned int minTurnTime[MAX_PLAYERS];
+	float maxSegLength[MAX_PLAYERS];
+	float critical[MAX_PLAYERS];
+	int  spiral[MAX_PLAYERS];
+	int rlDelta[MAX_PLAYERS];
 } AI_Parameters;
 
 extern AI_Parameters ai_params;

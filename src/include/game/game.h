@@ -5,8 +5,6 @@
 #include "game/event.h" // GameEvent
 #include "configuration/settings.h" // SettingsCache
 
-#define NEW_LEVEL
-
 /* use enums, not magic */
 enum {
 	TURN_LEFT = 3,
@@ -24,7 +22,6 @@ enum {
 #define PHYSICS_RATE 20
 
 
-#define PLAYERS 4
 #define MAX_PLAYERS 4
 #define MAX_TRAIL 1000
 
