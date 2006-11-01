@@ -262,10 +262,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\video\load_texture.c"
-					>
-				</File>
-				<File
 					RelativePath=".\src\video\material.c"
 					>
 				</File>
