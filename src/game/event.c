@@ -55,7 +55,7 @@ int processEvent(GameEvent* e) {
 			game2->mode = GAME_SINGLE;
 		}
 #endif
-		if(e->player<PLAYERS && game->player[e->player].ai->active != AI_NONE) {
+		if(e->player < game->players && game->player[e->player].ai->active != AI_NONE) {
 			game->winner = e->player;
 			displayMessage(TO_CONSOLE, "winner: %d", game->winner + 1);
 		} else {
