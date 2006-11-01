@@ -54,6 +54,11 @@ void nebu_List_Free(nebu_List *l)
 	}
 }
 
+int nebu_List_IsEmpty(const nebu_List *l)
+{
+	return (l->next == NULL);
+}
+
 void nebu_List_AddTail(nebu_List *l, void* data)
 {
 	nebu_List *p;
