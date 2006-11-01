@@ -16,7 +16,7 @@ int main(int argc, char *argv[] ) {
 	initSubsystems(argc, (const char**) argv);
 	runScript(PATH_SCRIPTS, "main.lua");
 	exitSubsystems();
-  return 0;
+	return 0;
 }
 
 
