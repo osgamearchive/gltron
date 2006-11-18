@@ -7,7 +7,8 @@ libaudio_a_SOURCES= \
 	audio_system.c
 
 AM_CXXFLAGS = \
-	-I$(top_srcdir)/nebu/include
+	-I$(top_srcdir)/nebu/include \
+	-I/usr/local/include/SDL
 
 AM_CFLAGS= \
 	-I$(top_srcdir)/nebu/include

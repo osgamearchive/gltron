@@ -11,5 +11,6 @@ AM_CFLAGS = \
 AM_CXXFLAGS = \
 	-I$(top_srcdir)/lua5/include \
 	-I$(top_srcdir)/nebu/include \
-	-I$(top_srcdir)/src/include
+	-I$(top_srcdir)/src/include \
+	-I/usr/local/include/SDL
 
