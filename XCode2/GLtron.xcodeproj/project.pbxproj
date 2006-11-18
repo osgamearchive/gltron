@@ -64,10 +64,6 @@
 		E17D744B0AF90AFC006DCD12 /* Makefile.am in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73940AF90AAB006DCD12 /* Makefile.am */; };
 		E17D744C0AF90AFC006DCD12 /* Makefile.am in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73A60AF90AAB006DCD12 /* Makefile.am */; };
 		E17D744D0AF90AFC006DCD12 /* Makefile.am in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73A00AF90AAB006DCD12 /* Makefile.am */; };
-		E17D744E0AF90AFC006DCD12 /* Makefile.in in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73A70AF90AAB006DCD12 /* Makefile.in */; };
-		E17D744F0AF90AFC006DCD12 /* Makefile.in in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73730AF90AAB006DCD12 /* Makefile.in */; };
-		E17D74500AF90AFC006DCD12 /* Makefile.in in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73A10AF90AAB006DCD12 /* Makefile.in */; };
-		E17D74510AF90AFC006DCD12 /* Makefile.in in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73950AF90AAB006DCD12 /* Makefile.in */; };
 		E17D74520AF90AFC006DCD12 /* readme.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73740AF90AAB006DCD12 /* readme.txt */; };
 		E17D74530AF90AFC006DCD12 /* skybox0.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73A80AF90AAB006DCD12 /* skybox0.png */; };
 		E17D74540AF90AFC006DCD12 /* skybox0.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17D73960AF90AAB006DCD12 /* skybox0.png */; };
@@ -346,10 +342,6 @@
 				E17D744B0AF90AFC006DCD12 /* Makefile.am in CopyFiles */,
 				E17D744C0AF90AFC006DCD12 /* Makefile.am in CopyFiles */,
 				E17D744D0AF90AFC006DCD12 /* Makefile.am in CopyFiles */,
-				E17D744E0AF90AFC006DCD12 /* Makefile.in in CopyFiles */,
-				E17D744F0AF90AFC006DCD12 /* Makefile.in in CopyFiles */,
-				E17D74500AF90AFC006DCD12 /* Makefile.in in CopyFiles */,
-				E17D74510AF90AFC006DCD12 /* Makefile.in in CopyFiles */,
 				E17D74520AF90AFC006DCD12 /* readme.txt in CopyFiles */,
 				E17D74530AF90AFC006DCD12 /* skybox0.png in CopyFiles */,
 				E17D74540AF90AFC006DCD12 /* skybox0.png in CopyFiles */,
