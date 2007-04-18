@@ -548,11 +548,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h"
+					RelativePath=".\include\Nebu_filesystem.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h"
+					RelativePath=".\include\filesystem\nebu_filesystem.h"
 					>
 				</File>
 			</Filter>
@@ -560,11 +560,11 @@
 				Name="scripting"
 				>
 				<File
-					RelativePath=".\include\Nebu_scripting.h"
+					RelativePath=".\include\scripting\nebu_scripting.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h"
+					RelativePath=".\include\Nebu_scripting.h"
 					>
 				</File>
 			</Filter>
