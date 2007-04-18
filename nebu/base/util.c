@@ -69,6 +69,17 @@ void nebu_List_AddTail(nebu_List *l, void* data)
 	p->data = data;
 }
 
+// debug code to track down memory leaks
+void nebu_List_AddTail2(nebu_List *l, void* data)
+{
+	nebu_List *p;
+
+	for(p = l; p->next != NULL; p = p->next);
+	p->next = (nebu_List*) malloc(sizeof(nebu_List));
+	p->next->next = NULL;
+	p->data = data;
+}
+
 void nebu_List_RemoveAt(nebu_List *pItem, nebu_List *pPrevItem)
 {
 	if(!pItem->next)
