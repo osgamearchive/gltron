@@ -6,10 +6,7 @@
 namespace Sound {
   class SourceEngine : public Source3D {
   public:
-    SourceEngine(System *system, SourceSample *source) {
-      _system = system;
-      _source = source;
-
+	  SourceEngine(System *system, SourceSample *source) : Source3D(system, source) {
       _speedShift = 1.0f;
       _pitchShift = 1.0f;
     };
