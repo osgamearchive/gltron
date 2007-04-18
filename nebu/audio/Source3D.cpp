@@ -98,6 +98,12 @@ namespace Sound {
     Vector3& vSourceVelocity = _velocity;
 
     Listener listener = _system->GetListener();
+	if(!listener._isValid)
+	{
+		fPan = 0;
+		fVolume = 0;
+		fShift = 1;
+	}
     Vector3& vListenerLocation = listener._location;
     Vector3 vListenerVelocity = listener._velocity;
     Vector3 vListenerDirection = listener._direction;
