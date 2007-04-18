@@ -1,5 +1,7 @@
 #include "audio/nebu_Source.h"
 
+#include <string.h>
+
 namespace Sound {
   Source::Source() {
 	_name = NULL;
@@ -17,9 +19,9 @@ namespace Sound {
   Source::~Source() {
     // fprintf(stderr, "nebu_Source destructor called\n");
 	if(_name)
-		delete(_name);
-		SDL_DestroyMutex(_mutex);
-		SDL_DestroySemaphore(_sem);
+		delete[] _name;
+	SDL_DestroyMutex(_mutex);
+	SDL_DestroySemaphore(_sem);
   }
 
   void Source::Reset() { }
@@ -38,6 +40,11 @@ namespace Sound {
   Uint8 Source::GetLoop() { return _loop; }
   void Source::SetType(int type) { _type = type; }
   int Source::GetType(void) { return _type; }
-  void Source::SetName(char* name) { _name = name; }
-  char* Source::GetName(void) { return _name; }
+  const char* Source::GetName(void) { return _name; }
+
+	void Source::SetName(const char* name)
+	{
+		_name = new char[strlen(name) + 1];
+		strncpy(_name, name, strlen(name) + 1);
+	}
 }
