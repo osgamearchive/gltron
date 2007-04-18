@@ -9,6 +9,8 @@ enum {
 	NEBU_SCRIPTING_CRLF = 1
 };
 
+typedef char *scripting_StringResult;
+
 extern void scripting_Init(int flags);
 extern void scripting_Quit();
 extern void Scripting_Idle();
@@ -23,7 +25,8 @@ extern int scripting_IsTable();
 extern int scripting_GetIntegerResult(int *i);
 extern int scripting_GetFloatResult(float *f);
 extern void scripting_GetFloatArrayResult(float *f, int n);
-extern int scripting_GetStringResult(char **s);
+extern int scripting_GetStringResult(scripting_StringResult *s);
+extern void scripting_StringResult_Free(scripting_StringResult);
 extern int scripting_CopyStringResult(char *s, int len);
 extern int scripting_GetArraySize(int *i);
 extern int scripting_GetArrayIndex(int i);

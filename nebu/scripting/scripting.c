@@ -165,8 +165,10 @@ void scripting_GetFloatArrayResult(float *f, int n) {
 	allocates a string, copies the result from the stack into it
 	and pops the value from the stack
 */
-int scripting_GetStringResult(char **s) {
+int scripting_GetStringResult(scripting_StringResult *s)
+{
   int status;
+
   if(lua_isstring(L, -1)) {
     int size;
     status = 0;
@@ -179,6 +181,11 @@ int scripting_GetStringResult(char **s) {
 
   lua_pop(L, 1);
   return status;
+}
+
+void scripting_StringResult_Free(scripting_StringResult s)
+{
+	free(s);
 }
 
 /*!
