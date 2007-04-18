@@ -33,8 +33,8 @@ namespace Sound {
     virtual Uint8 GetLoop();
     virtual void SetType(int type);
     virtual int GetType(void);
-    void SetName(char *name);
-    char* GetName(void);
+    void SetName(const char *name);
+    const char* GetName(void);
 
   protected:
     virtual void Reset();
