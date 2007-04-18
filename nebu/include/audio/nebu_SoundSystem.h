@@ -17,11 +17,12 @@ namespace Sound {
 
   class Listener {
   public:
-    Listener() { };
+    Listener() { _isValid = 0; };
     Vector3 _location;
     Vector3 _velocity;
     Vector3 _direction;
     Vector3 _up;
+	int _isValid; 
   };
 
   enum { eUninitialized, eInitialized };
@@ -36,17 +37,18 @@ namespace Sound {
     void Callback(Uint8* data, int len);
     void Idle(); /* remove dead sound sources */
     void AddSource(Source* source);
+	void RemoveSource(Source* source);
     Sound_AudioInfo* GetAudioInfo() { return &_info; };
     Listener& GetListener() { return _listener; };
     void SetMixMusic(int value) { _mix_music = value; };
     void SetMixFX(int value) { _mix_fx = value; };
     void SetStatus(int eStatus) { _status = eStatus; };
 
-  protected:
+  private:
     SDL_AudioSpec *_spec;
     Sound_AudioInfo _info;
     Listener _listener;
-    nebu_List _sources;
+    nebu_List *_sources;
     int _mix_music;
     int _mix_fx;
     int _status;
