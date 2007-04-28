@@ -10,12 +10,7 @@
 
 #include "base/nebu_assert.h"
 #include <math.h>
-
-void game_FreeLevel(game_level *l) {
-	free(l->boundaries);
-	free(l->spawnPoints);
-	free(l);
-}
+#include <string.h>
 
 /*! Scales the level by the factor fScale
 
@@ -26,16 +21,20 @@ void game_FreeLevel(game_level *l) {
 */
 void game_ScaleLevel(game_level *l, float fScale)
 {
-	int i;
+	int i, j;
 	for(i = 0; i < l->nBoundaries; i++)
 	{
 		segment2_Scale(&l->boundaries[i], fScale);
 	}
 	if(!l->spawnIsRelative)
 	{
-		for(i = 0; i < l->nSpawnPoints; i++)
+		for(j = 0; j < l->nSpawnSets; j++)
 		{
-			vec2_Scale(& l->spawnPoints[i].v, fScale);
+			for(i = 0; i < l->ppSpawnSets[j]->nPoints; i++)
+			{
+				vec2_Scale(& l->ppSpawnSets[j]->pSpawnPoints[i].vStart, fScale);
+				vec2_Scale(& l->ppSpawnSets[j]->pSpawnPoints[i].vEnd, fScale);
+			}
 		}
 	}
 
@@ -114,9 +113,6 @@ void computeBoundaries(game_level *l)
 
 void game_UnloadLevel(void)
 {
-	// free all loaded mesh resources & textures
-	video_UnloadLevel();
-
 	// delete the current (global) lua table
 	// delete global 'level' table (garbage collected)
 	scripting_Run("level = nil");
@@ -145,7 +141,7 @@ int game_LoadLevel(void)
 	scripting_GetStringResult(&pFilename);
 	fprintf(stderr, "[status] loading level '%s'\n", pFilename);
 	path = getPath(PATH_LEVEL, pFilename);
-	free(pFilename);
+	scripting_StringResult_Free(pFilename);
 
 	if(path) {
 		scripting_RunFile(path);
@@ -171,6 +167,117 @@ int game_LoadLevel(void)
 	return GAME_SUCCESS;
 }
 
+void game_spawnset_Free(game_spawnset* pSpawnSet)
+{
+	if(pSpawnSet->nPoints)
+	{
+		nebu_assert(pSpawnSet->pSpawnPoints);
+		free(pSpawnSet->pSpawnPoints);
+	}
+	free(pSpawnSet);
+}
+
+game_spawnset* game_spawnset_Create(void)
+{
+	scripting_StringResult s;
+	int i;
+
+	game_spawnset* pSpawnSet = (game_spawnset*) malloc(sizeof(game_spawnset));
+
+	int iPos = scripting_StackGuardStart();
+
+	// get spawnset type
+	scripting_GetValue("type");
+	nebu_assert(!scripting_IsNil());
+	scripting_GetStringResult(&s);
+	if(strcmp(s, "list") == 0) { pSpawnSet->type = eGameSpawnPoint; }
+	else if(strcmp(s, "lines") == 0) { pSpawnSet->type = eGameSpawnLine; }
+	else { pSpawnSet->type = eGameSpawnUndef; }
+	scripting_StringResult_Free(s);
+
+	scripting_GetValue("set");
+	nebu_assert(!scripting_IsNil());
+
+	scripting_GetArraySize(& pSpawnSet->nPoints);
+	nebu_assert(pSpawnSet->nPoints);
+
+	pSpawnSet->pSpawnPoints = malloc(pSpawnSet->nPoints * sizeof(game_spawnpoint));
+
+	// Spawn points are relative to the bounding box of the floor
+	for(i = 0; i < pSpawnSet->nPoints; i++)
+	{
+		game_spawnpoint *pSpawnPoint = pSpawnSet->pSpawnPoints + i;
+
+		scripting_GetArrayIndex(i + 1);
+
+		switch(pSpawnSet->type)
+		{
+		case eGameSpawnPoint:
+			scripting_GetValue("x");
+			scripting_GetFloatResult(& pSpawnPoint->vStart.v[0]);
+			scripting_GetValue("y");
+			scripting_GetFloatResult(& pSpawnPoint->vStart.v[1]);
+			scripting_GetValue("dir");
+			scripting_GetIntegerResult(& pSpawnPoint->dir);
+			break;
+		case eGameSpawnLine:
+			scripting_GetValue("vStart");
+			scripting_GetValue("x");
+			scripting_GetFloatResult(& pSpawnPoint->vStart.v[0]);
+			scripting_GetValue("y");
+			scripting_GetFloatResult(& pSpawnPoint->vStart.v[1]);
+			scripting_Pop(); // vStart
+
+			scripting_GetValue("vEnd");
+			scripting_GetValue("x");
+			scripting_GetFloatResult(& pSpawnPoint->vEnd.v[0]);
+			scripting_GetValue("y");
+			scripting_GetFloatResult(& pSpawnPoint->vEnd.v[1]);
+			scripting_Pop(); // vEnd
+
+			scripting_GetValue("n");
+			scripting_GetIntegerResult(& pSpawnPoint->n);
+			if(pSpawnPoint->n == 0)
+			{
+				// TODO: find a different limit somehow?
+				pSpawnPoint->n = 999;
+			}
+
+			scripting_GetValue("dir");
+			scripting_GetIntegerResult(& pSpawnPoint->dir);
+			break;
+		default:
+			nebu_assert(0);
+			break;
+		}
+
+		scripting_Pop(); // index i
+	}
+
+	scripting_Pop(); // set
+
+	scripting_StackGuardEnd(iPos);
+
+	return pSpawnSet;
+}
+
+void game_FreeLevel(game_level *l) {
+	int i;
+
+	if(l->nBoundaries)
+	{
+		nebu_assert(l->boundaries);
+		free(l->boundaries);
+	}
+	nebu_assert(l->nSpawnSets);
+	for(i = 0; i < l->nSpawnSets; i++)
+	{
+		game_spawnset_Free(l->ppSpawnSets[i]);
+	}
+	free(l->ppSpawnSets);
+	free(l);
+}
+
 /*!
 	parses the lua description of the current level, computes the level's
 	boundingbox and, if necessary, computers a boundary using the level's
@@ -187,45 +294,21 @@ game_level* game_CreateLevel(void)
 	scripting_GetGlobal("level", NULL);
 	nebu_assert(!scripting_IsNil());
 	// get scale factor, if present
-	scripting_GetValue("scale_factor");
-	if(!scripting_IsNil())
-	{
-		scripting_GetFloatResult(& l->scale_factor);
-	}
-	else
-	{
-		l->scale_factor = 1;
-		scripting_Pop();
-	}
+	scripting_GetOptional_Float("scale_factor", &l->scale_factor, 1);
 	// are spawn points relative?
-	scripting_GetValue("spawn_is_relative");
-	if(scripting_IsNil())
-	{
-		scripting_Pop();
-		l->spawnIsRelative = 1;
-	}
-	else
-	{
-		scripting_GetIntegerResult(& l->spawnIsRelative);
-	}
+	scripting_GetOptional_Int("spawn_is_relative", &l->spawnIsRelative, 1);
+
 	// get number of spawnpoints
 	scripting_GetValue("spawn");
-	scripting_GetArraySize(& l->nSpawnPoints);
-	// copy spawnpoints into vec2's
-	l->spawnPoints = malloc(l->nSpawnPoints * sizeof(game_spawnpoint));
+	scripting_GetArraySize(& l->nSpawnSets);
 
-	// Spawn points are relative to the bounding box of the fllor
-	for(i = 0; i < l->nSpawnPoints; i++) {
+	l->ppSpawnSets = malloc(l->nSpawnSets * sizeof(game_spawnset*));
+
+	for(i = 0; i < l->nSpawnSets; i++)
+	{
 		scripting_GetArrayIndex(i + 1);
-
-		scripting_GetValue("x");
-		scripting_GetFloatResult(& l->spawnPoints[i].v.v[0]);
-		scripting_GetValue("y");
-		scripting_GetFloatResult(& l->spawnPoints[i].v.v[1]);
-		scripting_GetValue("dir");
-		scripting_GetIntegerResult(& l->spawnPoints[i].dir);
-
-		scripting_Pop(); // index i
+		l->ppSpawnSets[i] = game_spawnset_Create();
+		scripting_Pop(); // index
 	}
 	scripting_Pop(); // spawn
 	
