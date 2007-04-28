@@ -23,22 +23,22 @@ void float2ubyte(unsigned char* pubColor, float *pfColor) {
 	pubColor[3] = (unsigned char)(pfColor[3] * 255.0f);
 }
 		 
-void storeColor(TrailMesh *pMesh, int offset, PlayerVisual *pV, int type) {
+void storeColor(TrailMesh *pMesh, int offset, Player_Profile* pProfile, int type) {
   float color[] = { 0, 0, 0, 1 };
 	float white[] = { 1, 1, 1, 1 };
 
 	switch(type) {
 	case COLOR_TRAIL:
 		if(gSettingsCache.alpha_trails)
-			memcpy(color, pV->pColorAlpha, 4 * sizeof(float));
+			memcpy(color, pProfile->pColorAlpha, 4 * sizeof(float));
 		else
-			memcpy(color, pV->pColorAlpha, 3 * sizeof(float));
+			memcpy(color, pProfile->pColorAlpha, 3 * sizeof(float));
 		break;
 	case COLOR_BRIGHT:
 		memcpy(color, white, 3 * sizeof(float));
 		break;
 	case COLOR_CYCLE:
-		memcpy(color, pV->pColorDiffuse, 3 * sizeof(float));
+		memcpy(color, pProfile->pColorDiffuse, 3 * sizeof(float));
 		break;
 	}
 	float2ubyte(pMesh->pColors + 4 * offset, color);
@@ -118,10 +118,10 @@ int cmpdir(segment2 *s1, segment2 *s2) {
 	return 1;
 }
 
-void trailGeometry(Player *pPlayer, PlayerVisual* pV,
+void trailGeometry(Player *pPlayer, Player_Profile *pProfile,
 									 TrailMesh *pMesh,
 									 int *pvOffset, int *piOffset) {
-	Data *pData = pPlayer->data;
+	Data *pData = &pPlayer->data;
 	int curVertex = *pvOffset, curIndex = *piOffset;
 	int i;
 	float fTotalLength = 0;
@@ -132,14 +132,14 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 			storeVertex(pMesh, curVertex, pData->trails + i, 0, 
 									0, pData->trail_height, 
 									fSegLength, fTotalLength);
-			storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
+			storeColor(pMesh, curVertex, pProfile, COLOR_TRAIL);
 			curVertex += 2;
 		}
 			
 		storeVertex(pMesh, curVertex, pData->trails + i, 1,
 								0, pData->trail_height,
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pProfile, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
@@ -159,13 +159,13 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 		storeVertex(pMesh, curVertex, &s, 0,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pProfile, COLOR_TRAIL);
 		curVertex += 2;
 		
 		storeVertex(pMesh, curVertex, &s, 1,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pProfile, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
@@ -181,13 +181,13 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 		storeVertex(pMesh, curVertex, &s, 0,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pV, COLOR_TRAIL);
+		storeColor(pMesh, curVertex, pProfile, COLOR_TRAIL);
 		curVertex += 2;
 
 		storeVertex(pMesh, curVertex, &s, 1,
 								0, pData->trail_height, 
 								fSegLength, fTotalLength);
-		storeColor(pMesh, curVertex, pV, COLOR_BRIGHT);
+		storeColor(pMesh, curVertex, pProfile, COLOR_BRIGHT);
 		curVertex += 2;
 
 		storeIndices(pMesh, curIndex, curVertex - 4);
@@ -199,9 +199,9 @@ void trailGeometry(Player *pPlayer, PlayerVisual* pV,
 	*pvOffset = curVertex;
 }
 
-void bowGeometry(Player *pPlayer, PlayerVisual *pV,
+void bowGeometry(Player *pPlayer, Player_Profile *pProfile,
 								 TrailMesh *pMesh, int *pvOffset, int *piOffset) {
-	Data *pData = pPlayer->data;
+	Data *pData = &pPlayer->data;
 	segment2 s;
 	int bdist = PLAYER_IS_ACTIVE(pPlayer) ? 2 : 3;
 	int i;
@@ -219,10 +219,10 @@ void bowGeometry(Player *pPlayer, PlayerVisual *pV,
 		if(fTop < 0.3f) fTop = 0.3f;
 		
 		storeVertex(pMesh, vOffset, &s, t, 
-								fFloor * pPlayer->data->trail_height, 
-								fTop * pPlayer->data->trail_height, 
+								fFloor * pPlayer->data.trail_height, 
+								fTop * pPlayer->data.trail_height, 
 								DECAL_WIDTH, 0);
-		storeColor(pMesh, vOffset, pV, COLOR_BRIGHT);
+		storeColor(pMesh, vOffset, pProfile, COLOR_BRIGHT);
 		vOffset += 2;
 		if(i) {
 			storeIndices(pMesh, iOffset, vOffset - 4);
@@ -232,7 +232,7 @@ void bowGeometry(Player *pPlayer, PlayerVisual *pV,
 	storeVertex(pMesh, vOffset, &s, 1, 
 							0.2f * pData->trail_height, 0.3f * pData->trail_height, 
 							DECAL_WIDTH, 0);
-	storeColor(pMesh, vOffset, pV, COLOR_CYCLE);
+	storeColor(pMesh, vOffset, pProfile, COLOR_CYCLE);
 	vOffset += 2;
 	storeIndices(pMesh, iOffset, vOffset - 4);
 
