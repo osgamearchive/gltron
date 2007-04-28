@@ -4,7 +4,7 @@ tmp = {}
 settings = { }
 tracks = { }
 
-app_version = 0.717
+app_version = 0.718
 -- debugginb
 settings.debug_output = 1
 
@@ -44,16 +44,14 @@ settings.wall_buster_min = 2.4
 -- settings.wall_buster_max = 1.0
 -- settings.wall_buster_regenerate = 0.2
 
+settings.players = 1
+settings.ai_opponents = 3
 settings.ai_level = 2
 -- settings.current_level = "square.lua"
 settings.current_level = "movie.lua"
 settings.erase_crashed = 1
 settings.map_scale = 1
 
-settings.ai_player1 = 0
-settings.ai_player2 = 1
-settings.ai_player3 = 1
-settings.ai_player4 = 1
 -- game settings
 settings.fast_finish = 1
 settings.camType = 1
@@ -107,6 +105,8 @@ settings.shadow_volumes_cycle = 1
 settings.shadow_projective_cycle_on_floor = 1
 settings.shadow_projective_trails_on_floor = 1
 settings.shadow_projective_recognizer_on_floor = 1
+
+settings.arena_outlines = 0
 
 settings.joy_threshold = 0.10
 

@@ -103,7 +103,7 @@ MainGameMenu = {
       labels = { "single", "split", "4 player", "auto" },
       values = { 0, 1, 2, 3 },
       read = function() return settings.display_type; end,
-      store = function(value) settings.display_type = value; end
+      store = function(value) settings.display_type = value; c_updateUI(); end
    },
 	 Map = {
 			type = MenuC.type.list, caption = "2D Map",
@@ -112,8 +112,33 @@ MainGameMenu = {
 			read = function() return settings.map_scale; end,
 			store = function(value) settings.map_scale = value; end
    },
-
    -- Player
+   Players = {
+		type = MenuC.type.slider, caption = "Players",
+		right = function()
+			if(settings.players < 4) then
+				settings.players = settings.players + 1
+			end
+		end,
+		left = function()
+			if(settings.players ~= 0) then
+				settings.players = settings.players - 1;
+			end
+		end,
+		read = function() return settings.players; end,
+		store = function(value) settings.players = value; end
+	}, 
+   AIPlayers = {
+		type = MenuC.type.slider, caption = "AI opponents",
+		right = function() settings.ai_opponents = settings.ai_opponents + 1; end,
+		left = function()
+			if(settings.ai_opponents ~= 0) then
+				settings.ai_opponents = settings.ai_opponents - 1;
+			end
+		end,
+		read = function() return settings.ai_opponents; end,
+		store = function(value) settings.ai_opponents = value; end
+	}, 
    Player1 = {    
       type = MenuC.type.list, caption = "Player 1", 
       labels = { "Human", "Computer", "None" },
@@ -346,6 +371,20 @@ MainGameMenu = {
       read = function() return settings.show_model; end,
       store = function(value) settings.show_model = value; end
    },
+   LightcycleShadows = {
+    type = MenuC.type.list, caption = "Self-Shadowing",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.shadow_volumes_cycle; end,
+      store = function(value) settings.shadow_volumes_cycle = value; end
+   },
+   ArenaOutlines = {
+    type = MenuC.type.list, caption = "Arena outlines",
+      labels = { "off", "on" },
+      values = { 0, 1 },
+      read = function() return settings.arena_outlines; end,
+      store = function(value) settings.arena_outlines = value; end
+   },
    Recognizer = {
       type = MenuC.type.list, caption = "Recognizers",
       labels = { "off", "on" },
@@ -555,7 +594,8 @@ MainGameMenu.ControlsMenu.items = {
 MainGameMenu.GameMenu.items = { 
    "StartGame", "GameRulesMenu", 
    "GameSettingsMenu", "ResetScores", 
-   "PlayerConfigMenu",
+   -- "PlayerConfigMenu",
+   "Players", "AIPlayers"
 }
 
 MainGameMenu.GameRulesMenu.items = { 
@@ -606,6 +646,7 @@ MainGameMenu.ResolutionMenu.items = {
 
 MainGameMenu.DetailsMenu.items = {
    "Filtering", "AlphaTrails", "Halos", "Reflections", "CycleEdges",
+   "LightcycleShadows",
     -- "Lightcycles",
     "Recognizer", "Lod", "Fov"
 }
