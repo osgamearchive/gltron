@@ -3,6 +3,7 @@
 #include "game/game_data.h"
 #include "game/camera.h"
 #include "game/engine.h"
+#include "audio/sound_glue.h"
 #include "video/video.h"
 #include "configuration/settings.h"
 #include "configuration/configuration.h"
@@ -46,6 +47,7 @@ int c_quitGame(lua_State *L) {
 int c_resetGame(lua_State *L) {
 	game_ResetData();
 	video_ResetData();
+	Audio_ResetData();
 	return 0;
 }
 
@@ -55,19 +57,7 @@ int c_resetScores(lua_State *L) {
 }
 
 int c_resetCamera(lua_State *L) {
-	int i;
-	int camType;
-	Camera *cam;
-	Data *data;
-
-	for(i = 0; i < game->players; i++) {
-		cam = & gPlayerVisuals[i].camera;
-		data = game->player[i].data;
-
-		camType = (game->player[i].ai->active == AI_COMPUTER) ? 
-			0 : getSettingi("camType");
-		initCamera(cam, data, camType);
-	}
+	camera_ResetAll();
 	return 0;
 }
 
@@ -92,11 +82,24 @@ int c_update_audio_volume(lua_State *L) {
 	return 0;
 }
 
+int c_updateUI(lua_State *L)
+{
+	changeDisplay(-1);
+	return 0;
+}
 int c_startGame(lua_State *L) { 
-	game2->mode = GAME_SINGLE;
+	/* initialize the rest of the game's datastructures */
+	game_CreatePlayers(getSettingi("players") + getSettingi("ai_opponents"), &game, &game2);
+	changeDisplay(-1);
+
+	if(!game2->level)
+	{
+		initLevels();
+	}
 	game_ResetData();
 	video_ResetData();
-	changeDisplay(-1);
+	Audio_ResetData();
+
 	nebu_System_ExitLoop(eSRC_Game_Launch);
 	return 0;
 }
@@ -119,6 +122,8 @@ int c_reloadArtpack(lua_State *L)  {
 int c_reloadLevel(lua_State *L) {
 	int status;
 
+	// free all loaded mesh resources & textures
+	video_UnloadLevel();
 	game_UnloadLevel();
 
 	status = game_LoadLevel();
@@ -233,7 +238,7 @@ int c_setArtPath(lua_State *l)
 	sprintf(art_dir_default, "%s%c%s", getDirectory(PATH_ART), SEPARATOR, "default");
 	sprintf(art_dir_artpack, "%s%c%s", getDirectory(PATH_ART), SEPARATOR, artpack);
 
-	free(artpack);
+	scripting_StringResult_Free(artpack);
 
 	art_dirs[0] = art_dir_artpack;
 	art_dirs[1] = art_dir_default;
@@ -282,6 +287,7 @@ void init_c_interface(void) {
 	scripting_Register("c_draw2D", c_draw2D);
 	scripting_Register("c_drawHUDSurface", c_drawHUDSurface);
 	scripting_Register("c_drawHUDMask", c_drawHUDMask);
+	scripting_Register("c_updateUI", c_updateUI);
 
 	scripting_Register("c_game_ComputeTimeDelta", c_game_ComputeTimeDelta);
 }
