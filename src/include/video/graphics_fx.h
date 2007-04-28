@@ -7,7 +7,6 @@
 #include "video/nebu_video_types.h" // Visual
 
 void drawImpact(int player);
-void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV, 
-	Visual *d, float dim);
+void drawGlow(PlayerVisual *pV, Player *pTarget, float dim);
 
 #endif
