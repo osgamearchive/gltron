@@ -50,7 +50,7 @@ void Sound_reloadTrack(void) {
   scripting_GetStringResult(&song);
   fprintf(stderr, "[sound] loading song %s\n", song);
   path = getPath( PATH_MUSIC, song );
-  free(song);
+  scripting_StringResult_Free(song);
   if(path == NULL) {
     fprintf(stderr, "[sound] can't find song...exiting\n");
     nebu_assert(0); exit(1); // TODO: handle missing song somewhere else
@@ -62,7 +62,8 @@ void Sound_reloadTrack(void) {
 }
 
 void Sound_shutdown(void) {
-  Audio_Quit();
+	Audio_UnloadPlayers();
+	Audio_Quit();
 }
   
 
@@ -131,7 +132,6 @@ void Sound_setup(void) {
 
   Audio_Init();
   Sound_loadFX();
-  Audio_LoadPlayers();
   Sound_setFxVolume(getSettingf("fxVolume"));
   Sound_reloadTrack();
   Sound_setMusicVolume(getSettingf("musicVolume"));
