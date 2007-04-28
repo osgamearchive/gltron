@@ -19,10 +19,10 @@ void storeVertex(TrailMesh *pMesh, int offset,
 								 segment2 *s, float t, float fFloor, float fTop,
 								 float fSegLength, float fTotalLength);
 void storeIndices(TrailMesh *pMesh, int indexOffset, int vertexOffset);
-void trailGeometry(Player *pPlayer, PlayerVisual *pV,
+void trailGeometry(Player *pPlayer, Player_Profile *pProfile,
 									 TrailMesh *pMesh,
 								 int *pVertexOffset, int *pIndexOffset);
-void bowGeometry(Player *pPlayer, PlayerVisual *pV,
+void bowGeometry(Player *pPlayer, Player_Profile *pProfile,
 								 TrailMesh *pMesh,
 								 int *pVertexOffset, int *pIndexOffset);
 void trailRender(TrailMesh *pMesh);

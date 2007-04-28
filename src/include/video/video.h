@@ -19,16 +19,10 @@ typedef struct Artpack {
 
 typedef struct PlayerVisual {
 	Camera camera;
+	Player *pPlayer;
 
 	Visual display;
-
-	float pColorDiffuse[4];
-	float pColorSpecular[4];
-	float pColorAlpha[4];
-
   // unsigned int turn_time; /* for cycle animation */
-  unsigned int spoke_time; /* for cycle wheel animation */
-  int spoke_state; /* showing spoke or not */
 } PlayerVisual;
 
 enum { VP_SINGLE = 0, VP_SPLIT = 1, VP_FOURWAY = 2 }; // Viewport Type;
@@ -55,6 +49,7 @@ enum {
 
 /* global constants */
 
+#define CAM_TYPE_DEFAULT 4
 #define CAM_TYPE_CIRCLING 0
 #define CAM_TYPE_FOLLOW 1
 #define CAM_TYPE_COCKPIT 2
@@ -94,8 +89,6 @@ enum {
 
 extern int gl_error;
 
-extern int viewport_content[MAX_PLAYERS];
-
 
 extern float camAngle;
 extern float cam_phi;
@@ -106,6 +99,9 @@ extern float cam_r_circle;
 
 #define LC_LOD 3
 extern char *lc_lod_names[];
+
+extern unsigned int gSpoke_time; /* for cycle wheel animation */
+extern int gSpoke_state; /* showing spoke or not */
 
 extern int gTokenRecognizer;
 extern int gTokenRecognizerQuad;
@@ -147,8 +143,7 @@ extern int gIsRenderingReflection;
 extern float colors_trail_diffuse[][4];
 extern float colors_model_diffuse[][4];
 extern float colors_model_specular[][4];
-extern int vps;
-extern int vp_max[];
+extern int vp_max[MAX_PLAYER_VISUALS];
 // viewports, in virtual units
 extern float vp_x[4][4];
 extern float vp_y[4][4];
@@ -207,15 +202,15 @@ extern void rebuildDebugTex(void);
 extern void drawDebugLines(Visual *d);
 extern void drawDebugTex(Visual *d);
 /* extern void drawHelp(Visual *d); */
-extern void drawPlayers(int player);
-extern void drawCam(int player);
+extern void drawPlayers(Camera *pCamera);
+extern void drawCam(PlayerVisual *pV);
 extern void drawSharpEdges(gltron_Mesh *pMesh);
 
 extern void draw2D( nebu_Rect *pRect );
 		
 /* trail.c */
-extern void drawTrailLines(Player *p, PlayerVisual *pV);
-extern void drawTrailShadow(Player *p, PlayerVisual *pV);
+extern void drawTrailLines(Camera *pCamra, Player *p);
+extern void drawTrailShadow(Player *p);
 extern float getSegmentUV(segment2 *line);
 extern float getSegmentEndUV(segment2 *line, Data *data);
 extern float getSegmentEndX(Data *data, int type);
@@ -235,6 +230,8 @@ extern Visual *gScreen;
 extern int gViewportType;
 extern int video_initialized;
 
-extern PlayerVisual *gPlayerVisuals;
+extern PlayerVisual **gppPlayerVisuals;
+extern int gnPlayerVisuals;
+
 
 #endif
