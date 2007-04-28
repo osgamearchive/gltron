@@ -69,6 +69,7 @@ void keyboardPause(int state, int key, int x, int y) {
 		if(game->pauseflag == PAUSE_GAME_FINISHED) {
 			game_ResetData();
 			video_ResetData();
+			Audio_ResetData();
 		}
 		else
 		{
