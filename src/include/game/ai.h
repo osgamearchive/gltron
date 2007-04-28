@@ -16,12 +16,14 @@ typedef struct AI_Distances {
 	float front, left, right, backleft;
 } AI_Distances;
 
+#define MAX_AI_LEVEL 3
+
 typedef struct AI_Parameters {
-	unsigned int minTurnTime[MAX_PLAYERS];
-	float maxSegLength[MAX_PLAYERS];
-	float critical[MAX_PLAYERS];
-	int  spiral[MAX_PLAYERS];
-	int rlDelta[MAX_PLAYERS];
+	unsigned int minTurnTime[MAX_AI_LEVEL + 1];
+	float maxSegLength[MAX_AI_LEVEL + 1];
+	float critical[MAX_AI_LEVEL + 1];
+	int  spiral[MAX_AI_LEVEL + 1];
+	int rlDelta[MAX_AI_LEVEL + 1];
 } AI_Parameters;
 
 extern AI_Parameters ai_params;
