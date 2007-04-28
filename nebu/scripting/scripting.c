@@ -339,3 +339,35 @@ void scripting_StackGuardEnd(int iPos)
 	nebu_assert(piStackGuard[iPos] == lua_gettop(L));
 	iStackGuardPosition--;
 }
+
+int scripting_GetOptional_Float(const char *name, float *f, float fValue)
+{
+	int retValue = 0;
+	scripting_GetValue(name);
+	if(!scripting_IsNil())
+	{
+		retValue = scripting_GetFloatResult(f);
+	}
+	else
+	{
+		*f = fValue;
+		scripting_Pop();
+	}
+	return retValue;
+}
+
+int scripting_GetOptional_Int(const char *name, int *i, int iValue)
+{
+	int retValue = 0;
+	scripting_GetValue(name);
+	if(!scripting_IsNil())
+	{
+		retValue = scripting_GetIntegerResult(i);
+	}
+	else
+	{
+		*i = iValue;
+		scripting_Pop();
+	}
+	return retValue;
+}

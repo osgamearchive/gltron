@@ -20,6 +20,9 @@ extern int scripting_GetValue(const char *name);
 
 extern int scripting_SetFloat(float f, const char *name, const char *global, const char *s, ...);
 
+extern int scripting_GetOptional_Float(const char *name, float *f, float fValue);
+extern int scripting_GetOptional_Int(const char *name, int *i, int iValue);
+
 extern int scripting_IsNil();
 extern int scripting_IsTable();
 extern int scripting_GetIntegerResult(int *i);
