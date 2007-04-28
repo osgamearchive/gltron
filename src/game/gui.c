@@ -173,7 +173,7 @@ void keyboardGui(int state, int key, int x, int y) {
     // printf("got key %d\n", key);
 		break;
   }
-  free(pMenuName);
+  scripting_StringResult_Free(pMenuName);
 }
 
 void initGui(void)

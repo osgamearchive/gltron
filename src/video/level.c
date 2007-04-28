@@ -177,7 +177,7 @@ int level_LoadTexture() {
 	scripting_GetValue("file");
 	scripting_GetStringResult(& filename);
 	rid = resource_GetTokenMeta(filename, eRT_Texture, &meta, sizeof(nebu_Texture2D_meta));
-	free(filename);
+	scripting_StringResult_Free(filename);
 
 	return rid;
 }
@@ -243,7 +243,7 @@ void loadModel(gltron_Mesh **ppMesh, int *pToken)
 		char *pFilename, *path;
 		scripting_GetStringResult(&pFilename);
 		path = getPath(PATH_DATA, pFilename);
-		free(pFilename);
+		scripting_StringResult_Free(pFilename);
 		if(!path)
 		{
 			fprintf(stderr, "fatal: could not find model - exiting...\n");
