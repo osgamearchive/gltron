@@ -12,8 +12,6 @@
 void nebu_RandomPermutation( int N, int *nodes )
 {
   int i;
-  for(i = 0; i < N; i++)
-    nodes[i] = i;
 
   for(i = 0; i < N - 1; i++) {
     int s, t;
