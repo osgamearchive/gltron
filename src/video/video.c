@@ -159,7 +159,12 @@ void loadModels(void)
 
 void freeVideoData(void)
 {
-	free(gPlayerVisuals);
+	int i;
+	for(i = 0; i < gnPlayerVisuals; i++)
+	{
+		free(gppPlayerVisuals[i]);
+	}
+	free(gppPlayerVisuals);
 	free(gScreen->textures);
 	free(gScreen->ridTextures);
 	free(gScreen);
@@ -184,14 +189,19 @@ void initVideoData(void) {
 		memset(d->textures, 0, TEX_COUNT * sizeof(unsigned int));
 	}
 
-	gPlayerVisuals = (PlayerVisual*) malloc(MAX_PLAYERS * sizeof(PlayerVisual));
+	gnPlayerVisuals = MAX_PLAYER_VISUALS;
+	gppPlayerVisuals = (PlayerVisual**) malloc(gnPlayerVisuals * sizeof(PlayerVisual*));
+
+	for(i = 0; i < gnPlayerVisuals; i++)
+	{
+		gppPlayerVisuals[i] = (PlayerVisual*) malloc(sizeof(PlayerVisual));
+		gppPlayerVisuals[i]->pPlayer = NULL;
+	}
 
 	for(i = 0; i < eHUDElementCount; i++)
 	{
 		gpTokenHUD[i] = 0;
 	}
-	// this requires the player data
-	changeDisplay(-1);
 }
 
 void initGameScreen(void)
@@ -224,19 +234,18 @@ void video_ResetData(void) {
 	printf("[status] reset video data\n");
 
 	for(i = 0; i < game->players; i++) {
-		PlayerVisual *pV = gPlayerVisuals + i;
 		Player *p = game->player + i;
 		{
 			char name[32];
-			sprintf(name, "model_diffuse_%d", i);
+			sprintf(name, "model_diffuse_%d", i % MAX_PLAYER_COLORS);
 					scripting_GetGlobal(name, NULL);
-			scripting_GetFloatArrayResult(pV->pColorDiffuse, 4);
-			sprintf(name, "model_specular_%d", i);
+			scripting_GetFloatArrayResult(p->profile.pColorDiffuse, 4);
+			sprintf(name, "model_specular_%d", i % MAX_PLAYER_COLORS);
 					scripting_GetGlobal(name, NULL);
-			scripting_GetFloatArrayResult(pV->pColorSpecular, 4);
-			sprintf(name, "trail_diffuse_%d", i);
+			scripting_GetFloatArrayResult(p->profile.pColorSpecular, 4);
+			sprintf(name, "trail_diffuse_%d", i % MAX_PLAYER_COLORS);
 					scripting_GetGlobal(name, NULL);
-			scripting_GetFloatArrayResult(pV->pColorAlpha, 4);
+			scripting_GetFloatArrayResult(p->profile.pColorAlpha, 4);
 		}
 	}
 }
@@ -254,10 +263,12 @@ void initDisplay(Visual *d, int type, int p, int onScreen) {
 }  
 
 static void defaultViewportPositions(void) {
-	viewport_content[0] = 0;
-	viewport_content[1] = 1;
-	viewport_content[2] = 2;
-	viewport_content[3] = 3;
+	int i;
+
+	for(i = 0; i < gnPlayerVisuals; i++)
+	{
+		gppPlayerVisuals[i]->pPlayer = &game->player[i % game->players];
+	}
 }
 
 /*
@@ -268,12 +279,15 @@ static void autoConfigureDisplay(void) {
 	int i;
 	int vp;
 
+	nebu_assert(gnPlayerVisuals <= game->players);
+
 	defaultViewportPositions();
 
 	/* loop thru players and find the humans */
 	for (i=0; i < game->players; i++) {
-		if (game->player[i].ai->active == AI_HUMAN) {
-			viewport_content[n_humans] = i;
+		if (game->player[i].ai.active == AI_HUMAN)
+		{
+			gppPlayerVisuals[n_humans]->pPlayer = &game->player[i];
 			n_humans++;
 		}    
 	}
@@ -321,12 +335,11 @@ void updateDisplay(int vpType) {
 
 	gViewportType = vpType;
 
-	for (i = 0; i < game->players; i++) {
-		gPlayerVisuals[i].display.onScreen = 0;
+	for (i = 0; i < gnPlayerVisuals; i++) {
+		gppPlayerVisuals[i]->display.onScreen = 0;
 	}
 	for (i = 0; i < vp_max[vpType]; i++) {
-		initDisplay(& gPlayerVisuals[ viewport_content[i] ].display, 
-			vpType, i, 1);
+		initDisplay(& gppPlayerVisuals[i]->display, vpType, i, 1);
 	}
 
 }
