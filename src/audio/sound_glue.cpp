@@ -7,6 +7,7 @@ extern "C" {
 #include "game/camera.h"
 #include "game/game_data.h"
 #include "configuration/settings.h"
+#include "base/nebu_assert.h"
 }
 
 #include "Nebu_audio.h"
@@ -22,7 +23,8 @@ static Sound::SourceSample *sample_crash = NULL;
 static Sound::SourceSample *sample_engine = NULL;
 static Sound::SourceSample *sample_recognizer = NULL;
 
-static Sound::Source3D *players[MAX_PLAYERS];
+static int nPlayerSources;
+static Sound::SourceEngine **ppPlayerSources;
 static Sound::Source3D *recognizerEngine;
 
 #define TURNLENGTH 250.0f
@@ -56,7 +58,7 @@ extern "C" {
   void Audio_EnableEngine(void) {
 		int i;
 		for(i = 0; i < game->players; i++)
-			if( game->player[i].data->speed > 0)
+			if( game->player[i].data.speed > 0)
 				Audio_StartEngine(i);
     sample_engine->Start();
     if (gSettingsCache.show_recognizer)
@@ -73,38 +75,39 @@ extern "C" {
   void Audio_Idle(void) { 
     // iterate over all the players and update the engines
     if(sample_engine->IsPlaying()) {
-      for(int i = 0; i < MAX_PLAYERS; i++) {
-				Player *p;
-				Sound::Source3D *p3d;
+      for(int i = 0; i < game->players; i++) {
+				if(!ppPlayerSources || !ppPlayerSources[i])
+					continue;
+
+				Player *p = game->player + i;
+				Sound::SourceEngine *p3d = ppPlayerSources[i];
+
 				float x, y;
-				p3d = players[i];
-				p = game->player + i;
 				getPositionFromIndex(&x, &y, i);
 				p3d->_location = Vector3(x, y, 0);
-				float V = p->data->speed;
+				float V = p->data.speed;
 
-				int dt = game2->time.current - p->data->turn_time;
+				int dt = game2->time.current - p->data.turn_time;
 				if(dt < TURN_LENGTH) {
 					float t = (float)dt / TURNLENGTH;
 
-					float vx = (1 - t) * dirsX[p->data->last_dir] +
-						t * dirsX[p->data->dir];
-					float vy = (1 - t) * dirsY[p->data->last_dir] +
-						t * dirsY[p->data->dir];
+					float vx = (1 - t) * dirsX[p->data.last_dir] +
+						t * dirsX[p->data.dir];
+					float vy = (1 - t) * dirsY[p->data.last_dir] +
+						t * dirsY[p->data.dir];
 					p3d->_velocity = Vector3(V * vx, V * vy, 0);
 				} else {
-					p3d->_velocity = Vector3(V * dirsX[p->data->dir], 
-																	 V * dirsY[p->data->dir], 
+					p3d->_velocity = Vector3(V * dirsX[p->data.dir], 
+																	 V * dirsY[p->data.dir], 
 																	 0);
 				}
 				if(i == 0) {
-					if(p->data->boost_enabled) {
-						( (Sound::SourceEngine*) p3d )->_speedShift = 1.2f;
+					if(p->data.boost_enabled) {
+						p3d->_speedShift = 1.2f;
 					} else {
-						( (Sound::SourceEngine*) p3d )->_speedShift = 1.0f;
+						p3d->_speedShift = 1.0f;
 					}
-					( (Sound::SourceEngine*) p3d )->_pitchShift =
-						p->data->speed / getSettingf("speed");
+					p3d->_pitchShift = p->data.speed / getSettingf("speed");
 				}
 						
 #if 0
@@ -134,25 +137,41 @@ extern "C" {
       }
     }
 
-		if(music && !music->IsPlaying()) {
-			// check if music is enabled. if it is, advance to
-			// next song
-			if(gSettingsCache.playMusic) {
-				scripting_Run("nextTrack()");
-			}
+	if(music && !music->IsPlaying()) {
+		// check if music is enabled. if it is, advance to
+		// next song
+		if(gSettingsCache.playMusic) {
+			scripting_Run("nextTrack()");
 		}
+	}
 
+	// TODO: add support for multiple listeners here
+	// Problem/Constraint:
+	// Each listener MUST consume exactly the same amount of samples
+	// from each source (that means the pitch shift can't just be
+	// done by speeding up playback)
     Sound::Listener& listener = sound->GetListener();
-
-    listener._location = Vector3(gPlayerVisuals[0].camera.cam);
-		Vector3 v1 = Vector3(gPlayerVisuals[0].camera.target);
-		Vector3 v2 = Vector3(gPlayerVisuals[0].camera.cam);
-    listener._direction = v1 - v2;
-      
-    // listener._location = players[0]->_location;
-    // listener._direction = players[0]->_velocity;
-    listener._velocity = players[0]->_velocity;
-
+	if(gnPlayerVisuals == 0 || gppPlayerVisuals[0]->pPlayer == NULL)
+	{
+		listener._isValid = 0;
+	}
+	else
+	{
+		nebu_assert(gppPlayerVisuals);
+		nebu_assert(gppPlayerVisuals[0]);
+		listener._isValid = 1;
+		listener._location = Vector3(gppPlayerVisuals[0]->camera.cam);
+			Vector3 v1 = Vector3(gppPlayerVisuals[0]->camera.target);
+			Vector3 v2 = Vector3(gppPlayerVisuals[0]->camera.cam);
+		listener._direction = v1 - v2;
+	      
+		// listener._location = players[0]->_location;
+		// listener._direction = players[0]->_velocity;
+		if(ppPlayerSources)
+			listener._velocity = ppPlayerSources[0]->_velocity;
+		else
+		listener._velocity = Vector3(0, 0, 0);
+	}
     listener._up = Vector3(0, 0, 1);
 
     sound->SetMixMusic(gSettingsCache.playMusic);
@@ -165,6 +184,7 @@ extern "C" {
     copy->Start();
     copy->SetRemovable();
     copy->SetType(Sound::eSoundFX);
+	copy->SetName("crash (copy)");
     sound->AddSource(copy);
   }
 
@@ -244,9 +264,7 @@ extern "C" {
 			music->SetLoop(255);
     music->SetType(Sound::eSoundMusic);
 
-    char *sname = new char[32];
-    sprintf(sname, "music");
-    music->SetName(sname);
+    music->SetName("music");
     sound->AddSource(music);
   }
 
@@ -272,43 +290,69 @@ extern "C" {
   }
 
   void Audio_StartEngine(int iPlayer) {
-    players[iPlayer]->Start();
+	  if(ppPlayerSources && ppPlayerSources[iPlayer])
+		ppPlayerSources[iPlayer]->Start();
   }
 
   void Audio_StopEngine(int iPlayer) {
-    players[iPlayer]->Stop();
+	  if(ppPlayerSources && ppPlayerSources[iPlayer])
+	ppPlayerSources[iPlayer]->Stop();
   }
  
+  void Audio_ResetData(void)
+  {
+	  if(ppPlayerSources)
+	  {
+		  Audio_UnloadPlayers();
+	  }
+	  Audio_LoadPlayers();
+  }
+
+  void Audio_UnloadPlayers(void)
+  {
+	  if(ppPlayerSources)
+	  {
+		  for(int i = 0; i < nPlayerSources; i++)
+		  {
+			  sound->RemoveSource(ppPlayerSources[i]);
+			  nebu_assert(ppPlayerSources[i]);
+			  delete ppPlayerSources[i];
+		  }
+		  delete[] ppPlayerSources;
+		  ppPlayerSources = NULL;
+		  nPlayerSources = 0;
+	  }
+	  if(recognizerEngine)
+	  {
+		  sound->RemoveSource(recognizerEngine);
+		  delete recognizerEngine;
+		  recognizerEngine = NULL;
+	  }
+  }
+
   void Audio_LoadPlayers(void) {
-    for(int i = 0; i < MAX_PLAYERS; i++) {
-      if(i != 0) {
-				players[i] = new Sound::Source3D(sound, sample_engine);
-				players[i]->SetType(Sound::eSoundFX);
-				sound->AddSource(players[i]);
+	  nebu_assert(!ppPlayerSources);
+	  nPlayerSources = game->players;
+	ppPlayerSources = new Sound::SourceEngine*[nPlayerSources];
+    for(int i = 0; i < nPlayerSources; i++)
+	{
+		ppPlayerSources[i] = new Sound::SourceEngine(sound, sample_engine);
+		ppPlayerSources[i]->SetType(Sound::eSoundFX);
+		sound->AddSource(ppPlayerSources[i]);
 
-				char *name = new char[32];
-				sprintf(name, "player %d", i);
-				players[i]->SetName(name);
+		char *name = new char[32];
+		sprintf(name, "player %d", i);
+		ppPlayerSources[i]->SetName(name);
+		delete[] name;
+	}
 
-      } else {
-				players[i] = new Sound::SourceEngine(sound, sample_engine);
-				players[i]->SetType(Sound::eSoundFX);
-				sound->AddSource(players[i]);
-
-				char *name = new char[32];
-				sprintf(name, "player %d", i);
-				players[i]->SetName(name);
-      }
-    }
+	nebu_assert(!recognizerEngine);
     recognizerEngine = new Sound::Source3D(sound, sample_recognizer);
     recognizerEngine->SetType(Sound::eSoundFX);
     recognizerEngine->Start();
     sound->AddSource(recognizerEngine);
 
-    char *name = new char[32];
-    sprintf(name, "recognizer");
-    recognizerEngine->SetName(name);
-
+    recognizerEngine->SetName("recognizer");
   }
 
   void Audio_LoadSample(char *name, int number) {
@@ -316,14 +360,17 @@ extern "C" {
     case 0:
       sample_engine = new Sound::SourceSample(sound);
       sample_engine->Load(name);
+	  sample_engine->SetName("sample: engine");
       break;
     case 1:
       sample_crash = new Sound::SourceSample(sound);
       sample_crash->Load(name);
+	  sample_crash->SetName("sample: crash");
       break;
     case 2:
       sample_recognizer = new Sound::SourceSample(sound);
       sample_recognizer->Load(name);
+	  sample_recognizer->SetName("sample: recognizer");
       break;
     default:
       /* programmer error, but non-critical */
