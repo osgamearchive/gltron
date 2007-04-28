@@ -13,8 +13,9 @@ void Audio_LoadPlayers(void);
 void Audio_Init(void);
 void Audio_Start(void);
 void Audio_Quit(void);
-
+void Audio_ResetData(void);
 void Audio_LoadPlayers(void);
+void Audio_UnloadPlayers(void);
 void Audio_LoadSample(char *name, int number);
 void Audio_LoadMusic(char *name);
 void Audio_PlayMusic(void);
