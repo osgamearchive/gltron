@@ -11,7 +11,7 @@
 // #include "game/camera.h"
 #include "game/game_level.h"
 
-#define PLAYER_IS_ACTIVE(x) ((x)->data->speed > 0)
+#define PLAYER_IS_ACTIVE(x) ((x)->data.speed > 0)
 
 typedef enum eGameType {
 	GAME_SINGLE = 1
@@ -38,9 +38,6 @@ typedef struct RuleSet {
 typedef struct Game2 {
 	game_level *level;
 	RuleSet rules;
-	int mode;
-	int players;
-	int *startPositions;
 	SystemTime time;
 	nebu_List events;
 	FILE *record;
@@ -78,9 +75,16 @@ typedef struct AI {
 	segment2 left, right, front, backleft;
 } AI;
 
+typedef struct Player_Profile {
+	float pColorDiffuse[4];
+	float pColorSpecular[4];
+	float pColorAlpha[4];
+} Player_Profile;
+
 typedef struct Player {
-	Data *data;
-	AI *ai;
+	Data data;
+	AI ai;
+	Player_Profile profile;
 } Player;
 
 typedef struct Game {
