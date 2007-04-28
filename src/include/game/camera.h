@@ -3,6 +3,8 @@
 
 #include "game/game_data.h" // Data
 
+typedef struct PlayerVisual PlayerVisual;
+
 typedef struct CameraType {
 	int interpolated_cam;
 	int interpolated_target;
@@ -15,6 +17,8 @@ typedef struct Camera {
 	float cam[3];
 	float target[3];
 	float movement[4]; /* indices CAM_R, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET */
+	float pUser[16]; // static user data
+	void *pUserData; // dynamic user data
 	int bIsGlancing;
 	CameraType type;
 } Camera;
@@ -28,7 +32,8 @@ typedef enum eCamType {
 
 typedef enum ECamAxis { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET } ECamAxis;
 
-void initCamera(Camera *cam, Data *data, int type);
+void camera_ResetAll(void);
+void initCamera(PlayerVisual *pV, int type);
 void nextCameraType(void);
 void doCameraMovement(void);
 
