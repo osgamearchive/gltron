@@ -3,17 +3,32 @@
 
 #include "base/nebu_vector.h"
 
+enum {
+	eGameSpawnUndef,
+	eGameSpawnPoint,
+	eGameSpawnLine
+};
+
 typedef struct game_spawnpoint {
-	vec2 v;
+	int type;
+	vec2 vStart;
+	vec2 vEnd; // unused for eGameSpawnLine
+	int n;
 	int dir;
 } game_spawnpoint;
+
+typedef struct game_spawnset {
+	int type;
+	int nPoints;
+	game_spawnpoint *pSpawnPoints;
+} game_spawnset;
 
 typedef struct game_level {
 	int nBoundaries;
 	segment2 *boundaries;
-	int nSpawnPoints;
+	int nSpawnSets;
 	int spawnIsRelative;
-	game_spawnpoint *spawnPoints;
+	game_spawnset **ppSpawnSets;
 	box2 boundingBox;
 	float scale_factor;
 } game_level;
