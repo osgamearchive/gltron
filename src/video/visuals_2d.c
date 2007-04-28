@@ -41,29 +41,28 @@ void draw2D( nebu_Rect *pRect )
 
 	for(i = 0; i < game->players; i++) {
 		Player *p = &game->player[i];
-		PlayerVisual *pV = gPlayerVisuals + i;
 		segment2* trail;
 		float x, y;
 
-		if (p->data->trail_height <= 0) {
+		if (p->data.trail_height <= 0) {
 			continue;
 		}
 
-		if (p->data->trail_height < TRAIL_HEIGHT) {
+		if (p->data.trail_height < TRAIL_HEIGHT) {
 			/* 
 				if player crashed but the trail hasn't disappeared yet, fade
 				the trail on the 2d map as it disappears.
 			*/
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-			glColor4f(pV->pColorAlpha[0], pV->pColorAlpha[1], pV->pColorAlpha[2],
-					p->data->trail_height / TRAIL_HEIGHT);
+			glColor4f(p->profile.pColorAlpha[0], p->profile.pColorAlpha[1], p->profile.pColorAlpha[2],
+					p->data.trail_height / TRAIL_HEIGHT);
 		} else {
 			glBlendFunc(GL_ONE, GL_ONE);
-			glColor3fv(pV->pColorAlpha);
+			glColor3fv(p->profile.pColorAlpha);
 		}
 
-		getPositionFromData(&x, &y, p->data);
+		getPositionFromData(&x, &y, &p->data);
 		
 		glPointSize(2);
 		glBegin(GL_POINTS);
@@ -71,7 +70,7 @@ void draw2D( nebu_Rect *pRect )
 		glEnd();
 
 		glBegin(GL_LINES);
-		for(trail = p->data->trails; trail != p->data->trails + p->data->trailOffset; trail++)
+		for(trail = p->data.trails; trail != p->data.trails + p->data.trailOffset; trail++)
 		{
 			glVertex2f(trail->vStart.v[0], 
 				trail->vStart.v[1]
@@ -80,7 +79,7 @@ void draw2D( nebu_Rect *pRect )
 				trail->vStart.v[1] + trail->vDirection.v[1]
 				);
 		}
-		if(trail != p->data->trails)
+		if(trail != p->data.trails)
 		{
 			trail--;
 			glVertex2f(trail->vStart.v[0] + trail->vDirection.v[0], 
@@ -99,27 +98,27 @@ void draw2D( nebu_Rect *pRect )
 	#if 0
 		// draw AI debug lines
 		glColor3f(1,1,1);
-		glVertex2f(p->ai->front.vStart.v[0],
-			p->ai->front.vStart.v[1]);
-		glVertex2f(p->ai->front.vStart.v[0] + p->ai->front.vDirection.v[0],
-			p->ai->front.vStart.v[1] + p->ai->front.vDirection.v[1]);
+		glVertex2f(p->ai.front.vStart.v[0],
+			p->ai.front.vStart.v[1]);
+		glVertex2f(p->ai.front.vStart.v[0] + p->ai.front.vDirection.v[0],
+			p->ai.front.vStart.v[1] + p->ai.front.vDirection.v[1]);
 		glColor3f(0,1,0);
-		glVertex2f(p->ai->left.vStart.v[0],
-			p->ai->left.vStart.v[1]);
-		glVertex2f(p->ai->left.vStart.v[0] + p->ai->left.vDirection.v[0],
-			p->ai->left.vStart.v[1] + p->ai->left.vDirection.v[1]);
+		glVertex2f(p->ai.left.vStart.v[0],
+			p->ai.left.vStart.v[1]);
+		glVertex2f(p->ai.left.vStart.v[0] + p->ai.left.vDirection.v[0],
+			p->ai.left.vStart.v[1] + p->ai.left.vDirection.v[1]);
 		glColor3f(0,0,1);
-		glVertex2f(p->ai->right.vStart.v[0],
-			p->ai->right.vStart.v[1]);
-		glVertex2f(p->ai->right.vStart.v[0] + p->ai->right.vDirection.v[0],
-			p->ai->right.vStart.v[1] + p->ai->right.vDirection.v[1]);
+		glVertex2f(p->ai.right.vStart.v[0],
+			p->ai.right.vStart.v[1]);
+		glVertex2f(p->ai.right.vStart.v[0] + p->ai.right.vDirection.v[0],
+			p->ai.right.vStart.v[1] + p->ai.right.vDirection.v[1]);
 		glColor3f(0,1,1);
-		glVertex2f(p->ai->backleft.vStart.v[0],
-			p->ai->backleft.vStart.v[1]);
-		glVertex2f(p->ai->backleft.vStart.v[0] + 
-			p->ai->backleft.vDirection.v[0],
-			p->ai->backleft.vStart.v[1] + 
-			p->ai->backleft.vDirection.v[1]);
+		glVertex2f(p->ai.backleft.vStart.v[0],
+			p->ai.backleft.vStart.v[1]);
+		glVertex2f(p->ai.backleft.vStart.v[0] + 
+			p->ai.backleft.vDirection.v[0],
+			p->ai.backleft.vStart.v[1] + 
+			p->ai.backleft.vDirection.v[1]);
 	#endif
 		glEnd();
 	}

@@ -101,7 +101,7 @@ void keyGame(int state, int k, int x, int y)
 	for( i = 0; i < game->players; i++)
 	{
 		if(PLAYER_IS_ACTIVE(&game->player[i]) &&
-			 !game->player[i].ai->active)
+			 !game->player[i].ai.active)
 		{
 			int key;
 			if(state == NEBU_INPUT_KEYSTATE_DOWN)
@@ -129,12 +129,12 @@ void keyGame(int state, int k, int x, int y)
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
 					// printf("glance left down\n");
-					gPlayerVisuals[i].camera.bIsGlancing = 1;
+					gppPlayerVisuals[i]->camera.bIsGlancing = 1;
 				}
 				else
 				{
 					// printf("glance left up\n");
-					gPlayerVisuals[i].camera.bIsGlancing = 0;
+					gppPlayerVisuals[i]->camera.bIsGlancing = 0;
 				}
 				return;
 			}
@@ -146,10 +146,10 @@ void keyGame(int state, int k, int x, int y)
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
 					// printf("glance right down\n");
-					gPlayerVisuals[i].camera.bIsGlancing = -1;
+					gppPlayerVisuals[i]->camera.bIsGlancing = -1;
 				} else {
 					// printf("glance right up\n");
-					gPlayerVisuals[i].camera.bIsGlancing = 0;
+					gppPlayerVisuals[i]->camera.bIsGlancing = 0;
 				}
 				return;
 			}
@@ -162,15 +162,15 @@ void keyGame(int state, int k, int x, int y)
 				{
 					// printf("boost down\n");
 					if(getSettingi("booster_on") &&
-						game->player[i].data->energy > getSettingf("booster_min"))
+						game->player[i].data.energy > getSettingf("booster_min"))
 					{
-						game->player[i].data->boost_enabled = 1;
+						game->player[i].data.boost_enabled = 1;
 					}
 				}
 				else
 				{
 					// printf("boost up\n");
-					game->player[i].data->boost_enabled = 0;
+					game->player[i].data.boost_enabled = 0;
 				}
 				return;
 			}
@@ -183,15 +183,15 @@ void keyGame(int state, int k, int x, int y)
 				{
 					// printf("wall_buster down\n");
 					if(getSettingi("wall_buster_on") &&
-						game->player[i].data->energy > getSettingf("wall_buster_min"))
+						game->player[i].data.energy > getSettingf("wall_buster_min"))
 					{
-						game->player[i].data->wall_buster_enabled = 1;
+						game->player[i].data.wall_buster_enabled = 1;
 					}
 				}
 				else
 				{
 					// printf("wall_buster up\n");
-					game->player[i].data->wall_buster_enabled = 0;
+					game->player[i].data.wall_buster_enabled = 0;
 				}
 				return;
 			}

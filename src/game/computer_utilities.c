@@ -19,7 +19,7 @@ void ai_getClosestOpponent(int player, int* opponent, float *distance) {
 	for(i = 0; i < game->players; i++) {
 		if(i == player)
 			continue;
-		if(game->player[i].data->speed > 0) {
+		if(game->player[i].data.speed > 0) {
 			vec2 diff;
 			float d;
 
@@ -40,7 +40,7 @@ void ai_getDistances(int player, AI_Distances *distances) {
 	enum { eFront = 0, eLeft, eRight, eBackleft, eMax };
 	segment2 segments[eMax];
 	vec2 v, vPos;
-	Data *data = game->player[player].data;
+	Data *data = &game->player[player].data;
 	int dirLeft = (data->dir + 3) % 4;
 	int dirRight = (data->dir + 1) % 4;
 	int i, j;
@@ -71,13 +71,13 @@ void ai_getDistances(int player, AI_Distances *distances) {
 
 	// loop over all segment
 	for(i = 0; i < game->players; i++) {
-		segment2 *wall = game->player[i].data->trails;
-		if(game->player[i].data->trail_height < TRAIL_HEIGHT)
+		segment2 *wall = game->player[i].data.trails;
+		if(game->player[i].data.trail_height < TRAIL_HEIGHT)
 			continue;
 
-		for(j = 0; j < game->player[i].data->trailOffset + 1; j++) {
+		for(j = 0; j < game->player[i].data.trailOffset + 1; j++) {
 			float t1, t2;
-			if(i == player && j == game->player[i].data->trailOffset)
+			if(i == player && j == game->player[i].data.trailOffset)
 				break;
 			if(segment2_Intersect(&v, &t1, &t2, segments + eFront, wall) &&
 				 t1 > 0 && t1 < *front && t2 >= 0 && t2 <= 1)
@@ -113,7 +113,7 @@ void ai_getDistances(int player, AI_Distances *distances) {
 	
 	// update debug render segments
 	{
-		AI *ai = game->player[player].ai;
+		AI *ai = &game->player[player].ai;
 		vec2_Copy(&ai->front.vStart, &vPos);
 		vec2_Copy(&ai->left.vStart, &vPos);
 		vec2_Copy(&ai->right.vStart, &vPos);
@@ -147,11 +147,11 @@ void ai_getConfig(int player, int target,
 											 config->opponent.vStart.v + 1,
 											 target);
 	
-	data = game->player[player].data;
+	data = &game->player[player].data;
 	config->player.vDirection.v[0] = dirsX[ data->dir ] * data->speed;
 	config->player.vDirection.v[1] = dirsY[ data->dir ] * data->speed;
 
-	data = game->player[target].data;
+	data = &game->player[target].data;
 	config->opponent.vDirection.v[0] = dirsX[ data->dir ] * data->speed;
 	config->opponent.vDirection.v[1] = dirsY[ data->dir ] * data->speed;
 	
@@ -215,12 +215,15 @@ void ai_getConfig(int player, int target,
 
 void ai_left(int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
 	// printf("trying left turn...");
-	AI *ai = game->player[player].ai;
-	Data *data = game->player[player].data;
-	int level = gSettingsCache.ai_level;
+	AI *ai = &game->player[player].ai;
+	Data *data = &game->player[player].data;
+	float save_distance;
 
-	float save_distance = 
-		(pAIParameters->minTurnTime[level] * data->speed / 1000.0f) + 20;
+	int level = gSettingsCache.ai_level;
+	if(level > MAX_AI_LEVEL)
+		level = MAX_AI_LEVEL;
+	
+	save_distance = (pAIParameters->minTurnTime[level] * data->speed / 1000.0f) + 20;
 	
 	if(distances->left > save_distance) {
 		createEvent(player, EVENT_TURN_LEFT);
@@ -234,13 +237,16 @@ void ai_left(int player, AI_Distances *distances, AI_Parameters *pAIParameters) 
 
 void ai_right(int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
 	// printf("trying right turn...");
-	AI *ai = game->player[player].ai;
-	Data *data = game->player[player].data;
-	int level = gSettingsCache.ai_level;
+	AI *ai = &game->player[player].ai;
+	Data *data = &game->player[player].data;
+	float save_distance;
 
-	float save_distance = 
-		(pAIParameters->minTurnTime[level] * data->speed / 1000.0f) + 20;
-	
+	int level = gSettingsCache.ai_level;
+	if(level > MAX_AI_LEVEL)
+		level = MAX_AI_LEVEL;
+
+	save_distance = (pAIParameters->minTurnTime[level] * data->speed / 1000.0f) + 20;
+
 	if(distances->right > save_distance) {
 		createEvent(player, EVENT_TURN_RIGHT);
 		ai->tdiff--;
@@ -285,8 +291,8 @@ void ai_action(int action, int player, AI_Distances *distances, AI_Parameters *p
 void ai_aggressive(int player, int target, int location,
 									 AI_Distances *distances, AI_Parameters *pAIParameters) {
 	int dirdiff = (4 + 
-								 game->player[player].data->dir -
-								 game->player[target].data->dir) % 4;
+								 game->player[player].data.dir -
+								 game->player[target].data.dir) % 4;
 	
 	// printf("aggressive mode (%d, %d)\n", player, target, location, dirdiff);
 
@@ -296,8 +302,8 @@ void ai_aggressive(int player, int target, int location,
 void ai_evasive(int player, int target, int location, 
 								AI_Distances *distances, AI_Parameters *pAIParameters) {
 	int dirdiff = (4 + 
-								 game->player[player].data->dir -
-								 game->player[target].data->dir) % 4;
+								 game->player[player].data.dir -
+								 game->player[target].data.dir) % 4;
 	// printf("evasive mode (%d,%d,%d)\n", player, target, location);
 	
 	ai_action(evasive_action[location][dirdiff], player, distances, pAIParameters);

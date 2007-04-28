@@ -6,15 +6,32 @@
 #include "base/nebu_math.h"
 #include "video/nebu_renderer_gl.h"
 
-void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
-							Visual *d, float dim) {
-  float mat[4*4];
-  float alpha, dist;
+void drawGlow(PlayerVisual *pV, Player *pTarget, float dim)
+{
+	float mat[4*4];
+	float alpha, dist;
 	float x, y;
+	vec3 v;
+	const float fMin = 30;
+	const float fMax = 100;
 
-  glPushMatrix();
+	Camera *pCamera = &pV->camera;
+	Visual *d = &pV->display;
+
+	getPositionFromData(&x, &y, &pTarget->data);
+
+	v.v[0] = x - pCamera->cam[0];
+	v.v[1] = y - pCamera->cam[1];
+	v.v[2] = 0 - pCamera->cam[2];
+	dist = vec3_Length(&v);
+	if(dist < fMin)
+		return;
+	if(dist > fMax) alpha = 1.0f;
+	else alpha = (dist - fMin) / (fMax - fMin);
+	// printf("dist: %.2f, alpha: %.2f\n", dist, alpha);
+
+	glPushMatrix();
 	
-	getPositionFromData(&x, &y, pTarget->data);
   glTranslatef(x, y, 0);
 
   glDepthMask(GL_FALSE);
@@ -30,25 +47,11 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
   mat[8] = mat[9] = 0.0;
   glLoadMatrixf(mat);
 
-	{
-		vec3 v;
-		v.v[0] = x - pCam->cam[0];
-		v.v[1] = y - pCam->cam[1];
-		v.v[2] = 0 - pCam->cam[2];
-		dist = vec3_Length(&v);
-	}
-	{
-	  const float fMin = 30;
-		const float fMax = 100;
-		if(dist < fMin) alpha = 0.0f;
-		else if(dist > fMax) alpha = 1.0f;
-		else alpha = (dist - fMin) / (fMax - fMin);
-		// printf("dist: %.2f, alpha: %.2f\n", dist, alpha);
-	}
+
   glBegin(GL_TRIANGLE_FAN);
-  glColor4f(pV->pColorDiffuse[0], 
-						pV->pColorDiffuse[1], 
-						pV->pColorDiffuse[2],
+  glColor4f(pTarget->profile.pColorDiffuse[0], 
+						pTarget->profile.pColorDiffuse[1], 
+						pTarget->profile.pColorDiffuse[2],
 						alpha);
 
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
@@ -68,9 +71,9 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
   glEnd();
 
   glBegin(GL_TRIANGLES);
-  glColor4f(pV->pColorDiffuse[0], 
-						pV->pColorDiffuse[1], 
-						pV->pColorDiffuse[2],
+  glColor4f(pTarget->profile.pColorDiffuse[0], 
+						pTarget->profile.pColorDiffuse[1], 
+						pTarget->profile.pColorDiffuse[2],
 						alpha);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
@@ -78,9 +81,9 @@ void drawGlow(Camera *pCam, Player *pTarget, PlayerVisual *pV,
   glVertex3d(dim*cos(-0.2f*3.1415/5.0),
 	     TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0);
 
-  glColor4f(pV->pColorDiffuse[0], 
-						pV->pColorDiffuse[1], 
-						pV->pColorDiffuse[2],
+  glColor4f(pTarget->profile.pColorDiffuse[0], 
+						pTarget->profile.pColorDiffuse[1], 
+						pTarget->profile.pColorDiffuse[2],
 						alpha);
   glVertex3f(0,TRAIL_HEIGHT/2, 0);
   glColor4f(0,0,0,0.0);
@@ -105,7 +108,7 @@ void drawImpact(int player) {
 	*/
 	glTranslatef(0.0, -0.5, -0.5);
 	glColor3f(0.68f, 0, 0);
-	drawExplosion(game->player[player].data->exp_radius);
+	drawExplosion(game->player[player].data.exp_radius);
 	glPopMatrix();
 }
 

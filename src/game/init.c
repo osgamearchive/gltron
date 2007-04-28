@@ -25,6 +25,7 @@
 #include "base/nebu_assert.h"
 
 void initFilesystem(int argc, const char *argv[]);
+void initGUIs(void);
 
 void exitSubsystems(void)
 {
@@ -48,16 +49,15 @@ void initSubsystems(int argc, const char *argv[]) {
 	initScripting();
 
 	initConfiguration(argc, argv);
-	// game_LoadLevel(); // loads the lua level description
+	initArtpacks(); // stores the artpack directory names in a lua table, so we can display it in the menu later on
 
-	initGame();
+	initGUIs();
 	initVideo();
 	initAudio();
 	initInput();
 
 	game_LoadLevel(); // loads the lua level description
 	video_LoadLevel();
-	initLevels();
 	fprintf(stderr, "[status] done loading level...\n");
 }
 
@@ -179,12 +179,9 @@ void initAudio(void) {
 	Sound_setup();
 }
 	
-void initGame(void) {
-	/* initialize the rest of the game's datastructures */
-	game_CreatePlayers(MAX_PLAYERS, &game, &game2);
-
-	// gui stuff
-	initArtpacks(); // stores the artpack directory names in a lua table, so we can display it in the menu later on
+void initGUIs(void)
+{
+	// menu
 	runScript(PATH_SCRIPTS, "menu_functions.lua");
 	runScript(PATH_SCRIPTS, "menu.lua");
 
@@ -192,9 +189,6 @@ void initGame(void) {
 	runScript(PATH_SCRIPTS, "hud-config.lua");
 	runScript(PATH_SCRIPTS, "hud.lua");
 	runScript(PATH_SCRIPTS, "gauge.lua");
-
-	// this requires the player data
-	resetScores();
 }
 
 void initInput(void) {

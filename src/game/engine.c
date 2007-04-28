@@ -20,14 +20,14 @@ void Player_GetPosition(Player *pPlayer, float *pX, float *pY)
 {
 	vec2 v;
 	vec2_Add(&v,
-		&pPlayer->data->trails[pPlayer->data->trailOffset].vStart,
-		&pPlayer->data->trails[pPlayer->data->trailOffset].vDirection);
+		&pPlayer->data.trails[pPlayer->data.trailOffset].vStart,
+		&pPlayer->data.trails[pPlayer->data.trailOffset].vDirection);
 	*pX = v.v[0];
 	*pY = v.v[1];
 }
 
 void getPositionFromIndex(float *x, float *y, int player) {
-	getPositionFromData(x, y, game->player[player].data);
+	getPositionFromData(x, y, &game->player[player].data);
 }
 
 void getPositionFromData(float *x, float *y, Data *data) {
@@ -63,21 +63,17 @@ void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
 	(*ppGame)->running = 0;
 	(*ppGame)->winner = -1;
 	(*ppGame)->player = (Player *) malloc(players * sizeof(Player));
-	// TODO: make ai & data static members of Player
 	// TODO: make data->trails growable
 	for(i = 0; i < players; i++)
 	{
 		Player *p = (*ppGame)->player + i;
-		p->ai = (AI*) malloc(sizeof(AI));
-		p->data = (Data*) malloc(sizeof(Data));
-		p->data->trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
-		p->data->trailOffset = 0;
+		p->data.trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
+		p->data.trailOffset = 0;
 	}
 	// Game2
 	*ppGame2 = (Game2*) malloc(sizeof(Game2));
 	// TODO: proper member initialization
 	memset(*ppGame2, 0, sizeof(Game2));
-	(*ppGame2)->mode = GAME_SINGLE;
 }
 
 void game_FreePlayers(Game *pGame, Game2 *pGame2)
@@ -88,9 +84,7 @@ void game_FreePlayers(Game *pGame, Game2 *pGame2)
 	for(i = 0; i < pGame->players; i++)
 	{
 		Player *p = pGame->player + i;
-		free(p->ai);
-		free(p->data->trails);
-		free(p->data);
+		free(p->data.trails);
 	}
 	free(pGame->player);
 	free(pGame);
@@ -100,52 +94,137 @@ void game_FreePlayers(Game *pGame, Game2 *pGame2)
 	free(pGame2);
 }
 
+int getSpawnPosition(int iPlayer, int iTeamSize, int iBaseset, float *x, float *y, int *dir)
+{
+	// FIXME: find out why pIndices is ignored, and what it actually is...
+
+	/* randomize position on the grid */
+	int i, j;
+	int iSubPos; // only used for line position
+
+	for(i = iBaseset; i < game2->level->nSpawnSets; i++)
+	{
+		if(game2->level->ppSpawnSets[i]->type == eGameSpawnPoint)
+		{
+			iSubPos = iPlayer;
+			if(iTeamSize < game2->level->ppSpawnSets[i]->nPoints)
+				goto setIsFound; // break
+		}
+		else if(game2->level->ppSpawnSets[i]->type == eGameSpawnLine)
+		{
+			for(j = 0; j < game2->level->ppSpawnSets[i]->nPoints; j++)
+			{
+				if(iTeamSize < game2->level->ppSpawnSets[i]->pSpawnPoints[j].n)
+				{
+					iSubPos = j;
+					goto setIsFound;
+					// no need for cumbersome breaking out of two loops here
+				}
+			}
+		}
+	}
+
+setIsFound:
+
+	nebu_assert(i < game2->level->nSpawnSets);
+	nebu_assert(iSubPos < game2->level->ppSpawnSets[i]->nPoints);
+			
+	if(game2->level->ppSpawnSets[i]->type == eGameSpawnPoint)
+	{
+		*x = game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vStart.v[0];
+		*y = game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vStart.v[1];
+	}
+	else if(game2->level->ppSpawnSets[i]->type == eGameSpawnLine)
+	{
+		vec2 v, tmp;
+		vec2_Sub(&tmp,
+			&game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vEnd,
+			&game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vStart);
+		// FIXME: diving by nPoints doesn't work. we need to divide by
+		// the amount of players we want to put on that line
+		vec2_Scale(&tmp, (iPlayer + 0.5f) / iTeamSize);
+		vec2_Add(&v, &tmp, &game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vStart);
+
+		*x = v.v[0];
+		*y = v.v[1];
+	}
+	else
+	{
+		nebu_assert(0);
+	}
+		
+	if(game2->level->spawnIsRelative)
+	{
+		*x *= box2_Width(&game2->level->boundingBox);
+		*x += game2->level->boundingBox.vMin.v[0];
+		*y *= box2_Height(&game2->level->boundingBox);
+		*y += game2->level->boundingBox.vMin.v[1];
+	}
+	/* randomize starting direction */
+	// FIXME: there may be a different set of directions rather than four...
+
+	*dir = game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].dir;
+	if(*dir == -1) 
+		*dir = nebu_rand() & 3;
+
+	return i;
+}
+
 void resetPlayerData(void) {
 	int i;
 	Data *data;
 	AI *ai;
 	int not_playing = 0;
 
-	int *startIndex;
-	startIndex = malloc( game->players * sizeof(int) );
-	nebu_RandomPermutation(game->players, startIndex);
+	int *pIndicesHumans;
+	int *pIndicesAI;
 
-	for(i = 0; i < game->players; i++) {
+	int nAI;
+	int nHumans;
+
+	int spawnSet;
+
+	nHumans = game->players - getSettingi("ai_opponents");
+	nAI = game->players - nHumans;
+
+	pIndicesHumans = malloc( nHumans * sizeof(int) );
+	pIndicesAI = malloc( nAI * sizeof(int) );
+	
+	for(i = 0; i < nHumans; i++)
+	{
+		pIndicesHumans[i] = i;
+	}
+	for(i = 0; i < nAI; i++)
+	{
+		// pIndicesAI[i] = i + nHumans;
+		pIndicesAI[i] = i;
+	}
+	nebu_RandomPermutation( nHumans, pIndicesHumans );
+	nebu_RandomPermutation( nAI, pIndicesAI );
+
+	for(i = 0; i < game->players; i++)
+	{
 		float x, y;
 
-		data = game->player[i].data;
-		ai = game->player[i].ai;
+		data = &game->player[i].data;
+		ai = &game->player[i].ai;
 		/* init ai */
 
-		switch(i) {
-			// TODO: this limits the number of players to 4
-		case 0: ai->active = getSettingi("ai_player1"); break;
-		case 1: ai->active = getSettingi("ai_player2"); break;
-		case 2: ai->active = getSettingi("ai_player3"); break;
-		case 3: ai->active = getSettingi("ai_player4"); break;
-		default:
-			fprintf(stderr, "[error] player index #%d not caught!\n", i);
-			ai->active = AI_NONE;
+		if(i < nHumans)
+		{
+			spawnSet = getSpawnPosition(pIndicesHumans[i], nHumans, 0, &x, &y, &data->dir);
+			ai->active = AI_HUMAN;
+		}
+		else
+		{
+			getSpawnPosition(pIndicesAI[i - nHumans], nAI, spawnSet + 1, &x, &y, &data->dir);
+			ai->active = AI_COMPUTER;
 		}
 		ai->tdiff = 0;
 
-		/* arrange players in circle around center */
+		/* put players on spawn points */
+		
 
-		/* randomize position on the grid */
-		x = game2->level->spawnPoints[ startIndex[i] ].v.v[0];
-		y = game2->level->spawnPoints[ startIndex[i] ].v.v[1];
-		if(game2->level->spawnIsRelative)
-		{
-			x *= box2_Width(&game2->level->boundingBox);
-			x += game2->level->boundingBox.vMin.v[0];
-			y *= box2_Height(&game2->level->boundingBox);
-			y += game2->level->boundingBox.vMin.v[1];
-		}
-		/* randomize starting direction */
-		data->dir = game2->level->spawnPoints[ startIndex[i] ].dir;
-		if(data->dir == -1) 
-			data->dir = nebu_rand() & 3;
-		/* data->dir = startdir[i]; */
 		data->last_dir = data->dir;
 
 		/* if player is playing... */
@@ -182,16 +261,10 @@ void resetPlayerData(void) {
 		} else {
 			data->exp_radius = EXP_RADIUS_MAX;
 		}
-
-		{
-			int camType;
-			camType = (game->player[i].ai->active == AI_COMPUTER) ? 
-				CAM_CIRCLE : gSettingsCache.camType;
-			initCamera(&gPlayerVisuals[i].camera, data, camType);
-		}
 	}
 
-	free(startIndex);
+	free(pIndicesAI);
+	free(pIndicesHumans);
 
 	game->running = game->players - not_playing; /* not everyone is alive */
 	/* printf("starting game with %d players\n", game->running); */
@@ -208,8 +281,6 @@ void game_ResetData(void) {
 	game2->time.lastFrame = 0;
 	game2->time.current = 0;
 	game2->time.offset = nebu_Time_GetElapsed();
-	/* TODO: fix that */
-	game2->players = game->players;
 	/* event management */
 	game2->events.next = NULL;
 	/* TODO: free any old events that might have gotten left */
@@ -217,6 +288,7 @@ void game_ResetData(void) {
 	scripting_Run("console_Clear()");
 
 	resetPlayerData();
+	camera_ResetAll();
 }
 
 void Time_Idle(void) {
@@ -229,7 +301,7 @@ void Time_Idle(void) {
 void resetScores(void) {
 	int i;
 	for(i = 0; i < game->players; i++)
-		game->player[i].data->score = 0;
+		game->player[i].data.score = 0;
 }
 
 void doCrashPlayer(GameEvent *e) {
@@ -240,9 +312,9 @@ void doCrashPlayer(GameEvent *e) {
 
 	for(j = 0; j < game->players; j++) 
 		if(j != e->player && PLAYER_IS_ACTIVE(&(game->player[j])))
-			game->player[j].data->score++;
+			game->player[j].data.score++;
 
-	game->player[e->player].data->speed = SPEED_CRASHED;
+	game->player[e->player].data.speed = SPEED_CRASHED;
 }
 
 void newTrail(Data* data) {
@@ -262,7 +334,7 @@ void newTrail(Data* data) {
 }
       
 void doTurn(GameEvent *e, int direction) {
-	Data *data = game->player[e->player].data;
+	Data *data = &game->player[e->player].data;
 	newTrail(data);
 	data->last_dir = data->dir;
 	data->dir = (data->dir + direction) % 4;

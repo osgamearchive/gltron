@@ -12,12 +12,11 @@ Game2 *game2 = NULL;
 Visual *gScreen = NULL;
 video_level *gWorld = NULL;
 int gViewportType;
-PlayerVisual *gPlayerVisuals = NULL;
+PlayerVisual **gppPlayerVisuals = NULL;
+int gnPlayerVisuals = 0;
 Input gInput;
 
 SettingsCache gSettingsCache;
-
-int viewport_content[MAX_PLAYERS]; /* max. 4 individual viewports on the screen */
 
 // nebu_Font *gameFtx = NULL;
 int gTokenGameFont = 0;
@@ -56,6 +55,8 @@ float camAngles[] = { PI / 2, 0, 3 * PI / 2, PI, 2 * PI };
 /* int lasttime; 
    double dt; */
 /* milliseconds since last frame */
+unsigned int gSpoke_time = 0; /* for cycle wheel animation */
+int gSpoke_state = 0; /* showing spoke or not */
 
 int gIsRenderingReflection = 0;
 
@@ -68,8 +69,7 @@ unsigned char debugcolors[6][4] = {
   { 255, 255, 255, 255 }
 };
 
-int vps = 4;
-int vp_max[] = { 1, 2, 4, 1 }; /* windows in this display setting */
+int vp_max[MAX_PLAYER_VISUALS] = { 1, 2, 4, 1 }; /* windows in this display setting */
 
 /* currently, the screen is partitioned into 32 units horizontally,
    and 24 units vertically */

@@ -28,11 +28,6 @@
 int processEvent(GameEvent* e) {
 	int value = 0;
 
-#ifdef RECORD
-	if(game2->mode == GAME_SINGLE_RECORD) {
-		writeEvent(e);
-	}
-#endif
 	switch(e->type) {
 	case EVENT_TURN_LEFT:
 		doTurn(e, TURN_LEFT);
@@ -46,16 +41,7 @@ int processEvent(GameEvent* e) {
 		break;
 	case EVENT_STOP:
 		// displayMessage(TO_STDOUT, "game stopped");
-#ifdef RECORD
-		if(game2->mode == GAME_SINGLE_RECORD) {
-			stopRecording();
-			game2->mode = GAME_SINGLE;
-		} else if(game2->mode == GAME_PLAY) {
-			stopPlaying();
-			game2->mode = GAME_SINGLE;
-		}
-#endif
-		if(e->player < game->players && game->player[e->player].ai->active != AI_NONE) {
+		if(e->player < game->players && game->player[e->player].ai.active != AI_NONE) {
 			game->winner = e->player;
 			displayMessage(TO_CONSOLE, "winner: %d", game->winner + 1);
 		} else {
@@ -74,7 +60,7 @@ int processEvent(GameEvent* e) {
 int crashTestPlayers(int i, const segment2 *movement) {
 	int j, k;
 	int crash = 0;
-	Data *data = game->player[i].data;
+	Data *data = &game->player[i].data;
 	segment2 *current = data->trails + data->trailOffset;
 	// debug: only test player0 against himself
 	// j = 0; 
@@ -82,18 +68,18 @@ int crashTestPlayers(int i, const segment2 *movement) {
 	for(j = 0; j < game->players; j++) {
 		int crash = 0;
 
-		if(game->player[j].data->trail_height < TRAIL_HEIGHT)
+		if(game->player[j].data.trail_height < TRAIL_HEIGHT)
 			continue;
 
-		for(k = 0; k < game->player[j].data->trailOffset + 1; k++) {
+		for(k = 0; k < game->player[j].data.trailOffset + 1; k++) {
 			segment2 *wall;
 			vec2 v;
 			float t1, t2;
 						
-			if(j == i && k >= game->player[j].data->trailOffset - 1)
+			if(j == i && k >= game->player[j].data.trailOffset - 1)
 				break;
 
-			wall = game->player[j].data->trails + k;
+			wall = game->player[j].data.trails + k;
 						
 			if(segment2_Intersect(&v, &t1, &t2, movement, wall)) {
 #if 0
@@ -123,7 +109,7 @@ int crashTestWalls(int i, const segment2 *movement) {
 	float t1, t2;
 	int crash = 0;
 
-	Data *data = game->player[i].data;
+	Data *data = &game->player[i].data;
 	segment2 *current = data->trails + data->trailOffset;
 	
 	for(j = 0; j < game2->level->nBoundaries; j++) {
@@ -142,17 +128,17 @@ int crashTestWalls(int i, const segment2 *movement) {
 
 int regenerate(int player, int dt)
 {
-	float curEnergy = game->player[player].data->energy + getSettingf("energy_increase") * dt / 1000.0f;
+	float curEnergy = game->player[player].data.energy + getSettingf("energy_increase") * dt / 1000.0f;
 	float maxEnergy = getSettingf("energy");
 	if(curEnergy > maxEnergy) curEnergy = maxEnergy;
-	game->player[player].data->energy = curEnergy;
+	game->player[player].data.energy = curEnergy;
 	return 0;
 }
 
 int applyBooster(int player, int dt) {
 	float boost;
 	
-	Data *data = game->player[player].data;
+	Data *data = &game->player[player].data;
 	if(!data->boost_enabled)
 		return 0;
 
@@ -171,7 +157,7 @@ int applyBooster(int player, int dt) {
 int applyWallBuster(int player, int dt) {
 	float consumption;
 	
-	Data *data = game->player[player].data;
+	Data *data = &game->player[player].data;
 	if(!data->wall_buster_enabled) {
 		return 0;
 	}
@@ -188,7 +174,7 @@ int applyWallBuster(int player, int dt) {
 }
 
 void applyDecceleration(int player, int dt, float factor) {
-	Data *data = game->player[player].data;
+	Data *data = &game->player[player].data;
 	if(data->speed > game2->rules.speed) {
 		float decrease = factor * dt / 1000.0f;
 		data->speed -= decrease;
@@ -202,7 +188,7 @@ int applyWallAcceleration(int player, int dt) {
 	enum { eLeft, eRight, eMax };
 	segment2 segments[eMax];
 
-	Data *data = game->player[player].data;
+	Data *data = &game->player[player].data;
 	int dirLeft = (data->dir + 3) % 4;
 	int dirRight = (data->dir + 1) % 4;
 
@@ -230,14 +216,14 @@ int applyWallAcceleration(int player, int dt) {
 	right = FLT_MAX;
 
 	for(i = 0; i < game->players; i++) {
-		segment2 *wall = game->player[i].data->trails;
+		segment2 *wall = game->player[i].data.trails;
 
 		if(i == player)
 			continue;
-		if(game->player[i].data->trail_height < TRAIL_HEIGHT)
+		if(game->player[i].data.trail_height < TRAIL_HEIGHT)
 			continue;
 		
-		for(j = 0; j < game->player[i].data->trailOffset + 1; j++) {
+		for(j = 0; j < game->player[i].data.trailOffset + 1; j++) {
 			float t1, t2;
 			vec2 v;
 			if(segment2_Intersect(&v, &t1, &t2, segments + eLeft, wall) &&
@@ -274,7 +260,7 @@ void doMovement(int dt)
 
 	for(i = 0; i < game->players; i++)
 	{ // foreach player
-		Data *data = game->player[i].data;
+		Data *data = &game->player[i].data;
 		if(data->speed > 0)
 		{ // still alive
 			float fs;
@@ -394,10 +380,10 @@ void doMovement(int dt)
 					float maxSpeed = SPEED_GONE;
 					for(i = 0; i < game->players; i++)
 					{
-						if(game->player[i].data->speed >= maxSpeed)
+						if(game->player[i].data.speed >= maxSpeed)
 						{
 							winner = i;
-							maxSpeed = game->player[i].data->speed;
+							maxSpeed = game->player[i].data.speed;
 						}
 					}
 					createEvent(winner, EVENT_STOP);
@@ -433,8 +419,8 @@ int game_ComputeTimeDelta(void)
 		}
 		for (i = 0; i < game->players; i++)
 		{
-			if (game->player[i].ai->active != AI_COMPUTER &&
-				game->player[i].data->exp_radius < EXP_RADIUS_MAX)
+			if (game->player[i].ai.active != AI_COMPUTER &&
+				game->player[i].data.exp_radius < EXP_RADIUS_MAX)
 			{
 				factor = 1;
 			}
@@ -449,14 +435,11 @@ void game_RunAI(int dt)
 	/* run AI */
 	for(i = 0; i < game->players; i++)
 	{
-		if(game->player[i].ai != NULL)
+		if(game->player[i].ai.active == AI_COMPUTER &&
+			PLAYER_IS_ACTIVE(&game->player[i]))
 		{
-			if(game->player[i].ai->active == AI_COMPUTER &&
-				PLAYER_IS_ACTIVE(&game->player[i]))
-			{
-				doComputer(i, 0);
-				// schedules events (e.g. turns)
-			}
+			doComputer(i, 0);
+			// schedules events (e.g. turns)
 		}
 	}
 }
@@ -536,5 +519,6 @@ void createEvent(int player, event_type_e eventType) {
 	getPositionFromIndex(&e->x, &e->y, player);
 	e->player = player;
 	e->timestamp = game2->time.current;
-	nebu_List_AddTail(&(game2->events), e);
+	// TODO: This sometimes creates a memory leak
+	nebu_List_AddTail2(&(game2->events), e);
 }

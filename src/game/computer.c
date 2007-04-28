@@ -41,13 +41,12 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 
   me = &(game->player[ player ]);
   him = &(game->player[ target ]);
-  if(me->ai == NULL) {
-    printf("This player has no AI data!\n");
-    return;
-  }
-  data = me->data;
-  ai = me->ai;
+  data = &me->data;
+  ai = &me->ai;
+  
   level = gSettingsCache.ai_level;
+  if(level > MAX_AI_LEVEL)
+	level = MAX_AI_LEVEL;
 
 	// turn off booster
 	data->boost_enabled = 0;
@@ -107,8 +106,8 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 
 // play against the other player, either cut him off, or take evasive action
 void doComputerActive(int player, int target, AI_Distances *distances) {
-	Data *data = game->player[player].data;
-	AI *ai = game->player[player].ai;
+	Data *data = &game->player[player].data;
+	AI *ai = &game->player[player].ai;
 
 	AI_Configuration config;
 
@@ -128,8 +127,8 @@ void doComputerActive(int player, int target, AI_Distances *distances) {
 			// printf("I'm ahead: %.2f, %.2f\n", config.t_player, config.t_opponent);
 			if(config.t_player - config.t_opponent < SAVE_T_DIFF)
 				data->boost_enabled = 1;
-			if(game->player[player].data->speed -
-				 game->player[target].data->speed < SAVE_SPEED_DIFF)
+			if(game->player[player].data.speed -
+				 game->player[target].data.speed < SAVE_SPEED_DIFF)
 				data->boost_enabled = 1;
 			// aggressive
 			ai_aggressive(player, target, config.location, distances, &ai_params);
@@ -165,8 +164,7 @@ void doComputer(int player, int target) {
 	ai_getDistances(player, &distances);
 	ai_getClosestOpponent(player, &opponent, &d);
 	if(opponent == -1 || d > OPP_MAX_DIST || distances.front < d ||
-		 game->player[opponent].ai == NULL ||
-		 game->player[opponent].ai->active == 1 ||
+		 game->player[opponent].ai.active == 1 ||
 		 gSettingsCache.ai_level == 0 /* dumb setting */) { 
 		// only fight humans
 		// printf("inactive, closest opponent: %d, distance %.2f, front %.2f\n", 

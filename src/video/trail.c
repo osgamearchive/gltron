@@ -85,7 +85,7 @@ float getSegmentUV(segment2 *s) {
    the alpha value is reduced with increasing distance to the player
 */
 
-void drawTrailLines(Player *p, PlayerVisual *pV) {
+void drawTrailLines(Camera *pCamera, Player *p) {
 	segment2 *s;
 	float height;
 
@@ -93,12 +93,10 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 	float dist;
 	float alpha;
 	Data *data;
-	Camera *cam;
 
 	float trail_top[] = { 1.0, 1.0, 1.0, 1.0 };
 
-	data = p->data;
-	cam = & pV->camera;
+	data = & p->data;
 
 	height = data->trail_height;
 	if(height <= 0)
@@ -122,7 +120,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 	while(s != data->trails + data->trailOffset) { 
 		/* the current line is not drawn */
 		/* compute distance from line to eye point */
-		dist = getDist(s, cam->cam);
+		dist = getDist(s, pCamera->cam);
 		alpha = (400 - dist / 2) / 400;
 		// TODO: compute the 'magic' 400 somehow
 		if(alpha < 0)
@@ -146,7 +144,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 	glEnd();
 
 	/* compute distance from line to eye point */
-	dist = getDist(s, cam->cam);
+	dist = getDist(s, pCamera->cam);
 	// TODO: compute the 'magic' 400 somehow
 	alpha = (400 - dist / 2) / 400;
 	if(alpha < 0)
@@ -181,7 +179,7 @@ void drawTrailLines(Player *p, PlayerVisual *pV) {
 	at (-1,-1,1,0) (I hope that's correct)
 */
 
-void drawTrailShadow(Player* p, PlayerVisual *pV) {
+void drawTrailShadow(Player* p) {
 	int vOffset = 0;
 	int iOffset = 0;
 	TrailMesh mesh;
@@ -200,8 +198,8 @@ void drawTrailShadow(Player* p, PlayerVisual *pV) {
 	mesh.pIndices = (unsigned short*) malloc(1000 * 2);
 	mesh.iUsed = 0;
 	
-	trailGeometry(p, pV, &mesh, &vOffset, &iOffset);
-	bowGeometry(p, pV, &mesh, &vOffset, &iOffset);
+	trailGeometry(p, &p->profile, &mesh, &vOffset, &iOffset);
+	bowGeometry(p, &p->profile, &mesh, &vOffset, &iOffset);
 	trailStatesShadowed();
 	trailRender(&mesh);
 	// no states restore, because we're drawing shadowed geometry

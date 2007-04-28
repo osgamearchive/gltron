@@ -33,11 +33,9 @@ void idleTimedemo(void) {
 		game2->time.dt = 10;
 		
 		for(i = 0; i < game->players; i++) {
-			if(game->player[i].ai != NULL) {
-				if(game->player[i].ai->active == AI_COMPUTER &&
-					 PLAYER_IS_ACTIVE(&game->player[i])) {
-					doComputer(i, 0);
-				}
+			if(game->player[i].ai.active == AI_COMPUTER &&
+				 PLAYER_IS_ACTIVE(&game->player[i])) {
+				doComputer(i, 0);
 			}
 		}
 
@@ -83,8 +81,6 @@ struct saveRules {
 	int eraseCrashed;
 } saveRules;
 
-extern int c_resetCamera();
-
 void initTimedemo(void) {
 	int i = 0;
 
@@ -112,12 +108,11 @@ void initTimedemo(void) {
 	setSettingf("speed", 12);
 	setSettingi("erase_crashed", 1);
 		
-	game2->mode = GAME_SINGLE;
 	game_ResetData();
 	changeDisplay(-1);
 
 	for(i = 0; i < game->players; i++) {
-		game->player[i].ai->active = AI_COMPUTER;
+		game->player[i].ai.active = AI_COMPUTER;
 	}
 
 	nebu_Input_HidePointer();

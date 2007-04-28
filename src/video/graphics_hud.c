@@ -106,12 +106,12 @@ void drawHUD(Player *p, PlayerVisual *pV) {
 
 	sprintf(temp, "drawHUD(%d, %d, %d, \"%s\", %f, %f, %f, %f, %d, \"%s\", %f, %f, %f)",
 		pV->display.vp_w, pV->display.vp_h,
-		gSettingsCache.show_scores ? p->data->score : -1,
+		gSettingsCache.show_scores ? p->data.score : -1,
 		gSettingsCache.show_ai_status ?
-		(p->ai->active ? "AI_COMPUTER" : "") : "",
-		p->data->speed,
-		p->data->speed / (2 * game2->rules.speed),
-		p->data->energy / getSettingf("energy"),
+		(p->ai.active ? "AI_COMPUTER" : "") : "",
+		p->data.speed,
+		p->data.speed / (2 * game2->rules.speed),
+		p->data.energy / getSettingf("energy"),
 		0.0f, // formerly wallbuster
 		getFPS(),
 		pause_message,
@@ -150,7 +150,7 @@ void getPauseString(char *buf, float* color) {
   if ((game->pauseflag & PAUSE_GAME_FINISHED) && game->winner != -1) {
     if (game->winner >= -1) {
 
-      float* player_color = gPlayerVisuals[game->winner].pColorAlpha;
+      float* player_color = game->player[game->winner].profile.pColorAlpha;
 
       /* 
          make the 'Player wins' message oscillate between 
@@ -308,7 +308,7 @@ int c_drawTextFitIntoRect(lua_State *l) {
 	box.vMax.v[0] = width;
 	box.vMax.v[1] = height;
 	nebu_Font_RenderToBox((nebu_Font*)resource_Get(gTokenGameFont, eRT_Font), text, strlen(text), &box, flags);
-	free(text);
+	scripting_StringResult_Free(text);
 
 	return 0;
 }

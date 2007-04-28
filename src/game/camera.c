@@ -121,11 +121,24 @@ static void initOffsetCamera(Camera *cam) {
 	cam->type.freedom[CAM_FREE_CHI] = 1;
 }
 
+void camera_ResetAll(void)
+{
+	int i;
+	int camType;
 
-void initCamera(Camera *cam, Data *data, int type) {
+	for(i = 0; i < gnPlayerVisuals; i++) {
+		Player *pPlayer = gppPlayerVisuals[i]->pPlayer;
+		camType = (pPlayer->ai.active == AI_COMPUTER) ? 
+			0 : getSettingi("camType");
+		initCamera(gppPlayerVisuals[i], camType);
+	}
+}
+
+void initCamera(PlayerVisual *pV, int type) {
 	float x,y;
+	Camera *cam = &pV->camera;
 
-	getPositionFromData(&x, &y, data);
+	getPositionFromData(&x, &y, &pV->pPlayer->data);
 
 	cam->type.type = type;
 
@@ -145,11 +158,15 @@ void initCamera(Camera *cam, Data *data, int type) {
 	cam->cam[2] = CAM_CIRCLE_Z;
 
 	cam->bIsGlancing = 0;
+
+	memset(cam->pUser, 0, sizeof(cam->pUser));
+	cam->pUserData = NULL;
 }
 
 /* place user into recognizer */
-void observerCamera(Camera *cam) {
+void observerCamera(PlayerVisual *pV) {
 	vec2 p, v;
+	Camera *cam = &pV->camera;
 	getRecognizerPositionVelocity(&p, &v);
 
 	cam->cam[0] = p.v[0];
@@ -160,7 +177,7 @@ void observerCamera(Camera *cam) {
 	cam->target[2] = RECOGNIZER_HEIGHT - 2;
 }  
 
-void playerCamera(Player *p, int player) {
+void playerCamera(PlayerVisual *pV) {
 	float dest[3];
 	float tdest[3];
 	float phi, chi, r;
@@ -183,9 +200,8 @@ void playerCamera(Player *p, int player) {
 		dt = game2->time.dt;
 	}
 
-
-	cam = &gPlayerVisuals[player].camera;
-	data = p->data;
+	cam = &pV->camera;
+	data = &pV->pPlayer->data;
 	getPositionFromData(&x, &y, data);
 
 	if(game->pauseflag != PAUSE_GAME_RUNNING || !getSettingi("mouse_lock_ingame"))
@@ -221,11 +237,11 @@ void playerCamera(Player *p, int player) {
 
 	/* if the cam is coupled to player movement, change the phi accordingly */
 	if(cam->type.coupled) {
-		int time = game2->time.current - p->data->turn_time;
+		int time = game2->time.current - data->turn_time;
 		if(time < TURN_LENGTH) {
 			int dir, ldir;
-			dir = p->data->dir;
-			ldir = p->data->last_dir;
+			dir = data->dir;
+			ldir = data->last_dir;
 			if(dir == 1 && ldir == 2)
 				dir = 4;
 			if(dir == 2 && ldir == 1)
@@ -234,7 +250,7 @@ void playerCamera(Player *p, int player) {
 				time * camAngles[dir]) / TURN_LENGTH;
 		}
 		else
-			phi += camAngles[p->data->dir];
+			phi += camAngles[data->dir];
 	}
 
 	/* position the camera */
@@ -258,11 +274,11 @@ void playerCamera(Player *p, int player) {
 		tdest[2] = B_HEIGHT;
 		break;
 	case CAM_TYPE_COCKPIT: /* 1st person */
-		tdest[0] = x + 4.0f * dirsX[ p->data->dir ] + 2.0f * cosf(phi);
-		tdest[1] = y + 4.0f * dirsY[ p->data->dir ] + 2.0f * sinf(phi);
+		tdest[0] = x + 4.0f * dirsX[ data->dir ] + 2.0f * cosf(phi);
+		tdest[1] = y + 4.0f * dirsY[ data->dir ] + 2.0f * sinf(phi);
 		tdest[2] = CAM_COCKPIT_Z;
-		dest[0] = x + 4.0f * dirsX[ p->data->dir ] + 0.1f * cosf(phi);
-		dest[1] = y + 4.0f * dirsY[ p->data->dir ] + 0.1f * sinf(phi);
+		dest[0] = x + 4.0f * dirsX[ data->dir ] + 0.1f * cosf(phi);
+		dest[1] = y + 4.0f * dirsY[ data->dir ] + 0.1f * sinf(phi);
 		dest[2] = CAM_COCKPIT_Z + 0.1f;
 		break;
 	case CAM_TYPE_OFFSET: /* AMR-cam */
@@ -275,11 +291,11 @@ void playerCamera(Player *p, int player) {
 			tx=(x-gs/2)*(1+15/gs)+gs/2; /* Scale position of cycle */
 			ty=(y-gs/2)*(1+15/gs)+gs/2;
 
-			dx=px[player]-tx;
-			dy=py[player]-ty;
+			dx=cam->pUser[0]-tx;
+			dy=cam->pUser[1]-ty;
 			d=1.3f * sqrtf(dx*dx+dy*dy); /* Find distance between old viewpoint and scaled cycle pos */
-			px[player] = dest[0] = tx + CAM_CIRCLE_DIST * dx/d; /* Set viewpoint a fixed distance from */
-			py[player] = dest[1] = ty + CAM_CIRCLE_DIST * dy/d; /* scaled pos, preserving angle */
+			cam->pUser[0] = dest[0] = tx + CAM_CIRCLE_DIST * dx/d; /* Set viewpoint a fixed distance from */
+			cam->pUser[1] = dest[1] = ty + CAM_CIRCLE_DIST * dy/d; /* scaled pos, preserving angle */
 
 			dx=(tx-x)*(tx-x); /* find distance between scaled and actual */
 			dy=(ty-y)*(ty-y); /* cycle positions... */
@@ -298,15 +314,12 @@ void playerCamera(Player *p, int player) {
 
 void doCameraMovement(void) {
 	int i;
-	Player *p;
 
-	for(i = 0; i < game->players; i++) {
-		p = game->player + i;
-
-		if(p->data->speed == SPEED_GONE)
-			observerCamera(&gPlayerVisuals[i].camera);
+	for(i = 0; i < gnPlayerVisuals; i++) {
+		if(gppPlayerVisuals[i]->pPlayer->data.speed == SPEED_GONE)
+			observerCamera(gppPlayerVisuals[i]);
 		else
-			playerCamera(p, i);
+			playerCamera(gppPlayerVisuals[i]);
 	}
 }
 
@@ -320,12 +333,10 @@ void nextCameraType(void) {
 	/* update the cached setting */
 	gSettingsCache.camType = new_cam_type;
 	  
-	for (i = 0; i < game->players; i++) {
-		if (game->player[i].ai->active == AI_HUMAN) {
-			initCamera(&gPlayerVisuals[i].camera, game->player[i].data, new_cam_type);
-		}
+	for(i = 0; i  < gnPlayerVisuals; i++)
+	{
+		initCamera(gppPlayerVisuals[i], new_cam_type);
 	}
-
 	if (getSettingi("debug_output")) {
 		switch (new_cam_type) {
 		case 0 :

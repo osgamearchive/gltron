@@ -104,15 +104,15 @@ void drawGame(void) {
 	}
 
 	for(i = 0; i < vp_max[gViewportType]; i++) {
-		Visual *d = &gPlayerVisuals[viewport_content[i]].display;
+		Visual *d = &gppPlayerVisuals[i]->display;
 
 		if(d->onScreen == 1) {
 			glViewport(d->vp_x, d->vp_y, d->vp_w, d->vp_h);
-			drawCam(viewport_content[i]);
+			drawCam(gppPlayerVisuals[i]);
 
 			/* hud stuff for every player */
-			drawHUD(game->player + viewport_content[i],
-				gPlayerVisuals + viewport_content[i]);
+			drawHUD(gppPlayerVisuals[i]->pPlayer,
+				gppPlayerVisuals[i]);
 		}
 	}
 
@@ -140,15 +140,15 @@ float getDirAngle(int time, Player *p) {
   float dirAngle;
 
   if(time < TURN_LENGTH) {
-    last_dir = p->data->last_dir;
-    if(p->data->dir == 3 && last_dir == 2)
+    last_dir = p->data.last_dir;
+    if(p->data.dir == 3 && last_dir == 2)
       last_dir = 4;
-    if(p->data->dir == 2 && last_dir == 3)
+    if(p->data.dir == 2 && last_dir == 3)
       last_dir = 5;
     dirAngle = ((TURN_LENGTH - time) * dirangles[last_dir] +
-		time * dirangles[p->data->dir]) / TURN_LENGTH;
+		time * dirangles[p->data.dir]) / TURN_LENGTH;
   } else
-    dirAngle = dirangles[p->data->dir];
+    dirAngle = dirangles[p->data.dir];
 
   return dirAngle;
 }
@@ -166,30 +166,30 @@ void getCycleTransformation(nebu_Matrix4D *pM, Player *p, int lod)
 	matrixIdentity(pM);
 	vec3_Zero(&vTranslate);
 
-	getPositionFromData(&vTranslate.v[0], &vTranslate.v[1], p->data);
+	getPositionFromData(&vTranslate.v[0], &vTranslate.v[1], &p->data);
 	
 	matrixTranslation(&matTranslate, &vTranslate);
 	matrixMultiply(pM, pM, &matTranslate);
 
-	if (p->data->exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
-		matrixRotationAxis(&matRotate, dirangles[p->data->dir] * (float)M_PI / 180.0f, &vUp);
+	if (p->data.exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
+		matrixRotationAxis(&matRotate, dirangles[p->data.dir] * (float)M_PI / 180.0f, &vUp);
 		matrixMultiply(pM, pM, &matRotate);
 	}
 
 	if (gSettingsCache.turn_cycle) { 
 		int neigung_dir = -1;
-			int time = game2->time.current - p->data->turn_time;
+			int time = game2->time.current - p->data.turn_time;
 		float dirAngle = getDirAngle(time, p);
 		matrixRotationAxis(&matRotate, dirAngle * (float)M_PI / 180.0f, &vUp);
 		matrixMultiply(pM, pM, &matRotate);
 
 		#define neigung 25
-		if(time < TURN_LENGTH && p->data->last_dir != p->data->dir) {
+		if(time < TURN_LENGTH && p->data.last_dir != p->data.dir) {
 			float axis = 1.0f;
-			if(p->data->dir < p->data->last_dir && p->data->last_dir != 3)
+			if(p->data.dir < p->data.last_dir && p->data.last_dir != 3)
 			axis = -1.0;
-			else if((p->data->last_dir == 3 && p->data->dir == 2) ||
-				(p->data->last_dir == 0 && p->data->dir == 3))
+			else if((p->data.last_dir == 3 && p->data.dir == 2) ||
+				(p->data.last_dir == 0 && p->data.dir == 3))
 			axis = -1.0;
 			matrixRotationAxis(&matRotate,
 				neigung * sinf(PI * time / TURN_LENGTH) * (float)M_PI / 180.0f,
@@ -205,14 +205,14 @@ void getCycleTransformation(nebu_Matrix4D *pM, Player *p, int lod)
 	matrixMultiply(pM, pM, &matTranslate);
 }
 
-void drawCycleShadow(PlayerVisual *pV, Player *p, int lod, int drawTurn) {
+void drawCycleShadow(Player *p, int lod, int drawTurn) {
 	gltron_Mesh *cycle;
-	int turn_time = game2->time.current - p->data->turn_time;
+	int turn_time = game2->time.current - p->data.turn_time;
 	      
 	if(turn_time < TURN_LENGTH && !drawTurn)
 		return;
 
-	if(p->data->exp_radius != 0)
+	if(p->data.exp_radius != 0)
 		return;
 
 	cycle = (gltron_Mesh*)resource_Get(gpTokenLightcycles[lod], eRT_GLtronTriMesh);
@@ -326,51 +326,50 @@ void drawSharpEdges(gltron_Mesh *pMesh)
 
 void drawCycle(int player, int lod, int drawTurn) {
 	Player *p = game->player + player;
-	PlayerVisual *pV = gPlayerVisuals + player;
 
 	gltron_Mesh *cycle = (gltron_Mesh*)resource_Get(gpTokenLightcycles[lod], eRT_GLtronTriMesh);
 
 	nebu_Matrix4D matCycleToWorld; // from the cycle's model-space to world space
 	nebu_Matrix4D matCycleToWorldInvInvT; // light from world space to model space
 
-	unsigned int spoke_time = game2->time.current - pV->spoke_time;
-	int turn_time = game2->time.current - p->data->turn_time;
+	unsigned int spoke_time = game2->time.current - gSpoke_time;
+	int turn_time = game2->time.current - p->data.turn_time;
 
 	if(turn_time < TURN_LENGTH && !drawTurn)
 		return;
 
 	getCycleTransformation(&matCycleToWorld, p, lod);
 
-	if(p->data->wall_buster_enabled) {
+	if(p->data.wall_buster_enabled) {
 		float black[] = { 0, 0, 0, 1};
 		float white[] = { 1, 1, 1, 1};
 		gltron_Mesh_Material_SetColor(cycle, "Hull", eDiffuse, black);
 		// gltron_Mesh_Material_SetColor(cycle, "Hull", eAmbient, black);
 		gltron_Mesh_Material_SetColor(cycle, "Hull", eSpecular, white); 
 	} else {
-		gltron_Mesh_Material_SetColor(cycle, "Hull", eDiffuse, pV->pColorDiffuse); 
-		gltron_Mesh_Material_SetColor(cycle, "Hull", eSpecular, pV->pColorSpecular); 
+		gltron_Mesh_Material_SetColor(cycle, "Hull", eDiffuse, p->profile.pColorDiffuse); 
+		gltron_Mesh_Material_SetColor(cycle, "Hull", eSpecular, p->profile.pColorSpecular); 
 	}
 
-	if (p->data->exp_radius == 0)
+	if (p->data.exp_radius == 0)
 	{
 		nebu_Video_CheckErrors("before bike drawing");
 
 		glEnable(GL_NORMALIZE);
 
 		/* draw spoke animation */
-		if (spoke_time > 140 - (p->data->speed * 10) 
+		if (gSpoke_time > 140 - (p->data.speed * 10) 
 			&& game->pauseflag == PAUSE_GAME_RUNNING) {
-			if (pV->spoke_state == 1) {
-			pV->spoke_state = 0;
+			if (gSpoke_state == 1) {
+			gSpoke_state = 0;
 			gltron_Mesh_Material_SetColor(cycle, "Spoke", eSpecular, SpokeColor);
 			gltron_Mesh_Material_SetColor(cycle, "Spoke", eAmbient, SpokeColor);
 			} else {
-			pV->spoke_state = 1;
+			gSpoke_state = 1;
 			gltron_Mesh_Material_SetColor(cycle, "Spoke", eSpecular, NoSpokeColor);
 			gltron_Mesh_Material_SetColor(cycle, "Spoke", eAmbient, NoSpokeColor);
 			}
-			pV->spoke_time = game2->time.current;
+			gSpoke_time = game2->time.current;
 		}
 
 		if (gSettingsCache.light_cycles) {
@@ -557,7 +556,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 			glDisable(GL_STENCIL_TEST);
 
 		// draw wall buster 'special effect'
-		if(p->data->wall_buster_enabled)
+		if(p->data.wall_buster_enabled)
 		{
 			int i;
 			float fScale;
@@ -588,7 +587,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 		nebu_Video_CheckErrors("after bike drawing");
 	}
-	else if(p->data->exp_radius < EXP_RADIUS_MAX)
+	else if(p->data.exp_radius < EXP_RADIUS_MAX)
 	{
 		nebu_Video_CheckErrors("before explosion");
 
@@ -610,7 +609,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 		if (gSettingsCache.light_cycles) {
 			glEnable(GL_LIGHTING); // enable OpenGL lighting for lightcycles
 		}
-		gltron_Mesh_DrawExplosion(cycle, p->data->exp_radius);
+		gltron_Mesh_DrawExplosion(cycle, p->data.exp_radius);
 		glDisable(GL_LIGHTING); // disable ligthing after lightcycles
 		glDisable(GL_BLEND);
 
@@ -620,7 +619,17 @@ void drawCycle(int player, int lod, int drawTurn) {
 	}
 }
  
-int playerVisible(int eyePlayer, int targetPlayer) {
+/*! Returns the level of detail to be used for drawing the player mesh */
+
+// int playerVisible(int eyePlayer, int targetPlayer) {
+int playerVisible(Camera *cam, Player *pTarget)
+{
+	// Compute view vector
+	// Compute eye-to-object vector
+	// Check 1: Is the target in the field of view
+	// Check 2: Compute LOD from distance
+	return 0;
+#if 0
 	vec3 v1, v2, tmp;
 		
 	float s;
@@ -629,6 +638,7 @@ int playerVisible(int eyePlayer, int targetPlayer) {
 	int lod_level;
 	float x, y;
 
+	// BUG?: the target player's camera position shouldn't matter at all
 	vec3_Sub(&v1, (vec3*) gPlayerVisuals[eyePlayer].camera.target, (vec3*) gPlayerVisuals[eyePlayer].camera.cam);
 	vec3_Normalize(&v1, &v1);
 	
@@ -664,27 +674,31 @@ int playerVisible(int eyePlayer, int targetPlayer) {
 		return -1;
 	else
 		return i;
+#endif
 }
 
-void drawPlayers(int player) {
+void drawPlayers(Camera *pCamera) {
   int i;
 
   for(i = 0; i < game->players; i++) {
 		int lod;
 		int drawTurn = 1;
 
+		// TODO: disable turning your own cycle while in cockpit mode
+		/*
 		if (i == player &&
 			gSettingsCache.camType == CAM_TYPE_COCKPIT)
 			drawTurn = 0;
+		*/
 
-		lod = playerVisible(player, i);
+		lod = playerVisible(pCamera, &game->player[i]);
 		if (lod >= 0) { 
 			drawCycle(i, lod, drawTurn);
 		}
 	}
 }
 
-void drawPlanarShadows(int player) {
+void drawPlanarShadows(Camera *pCamera) {
 	int i;
 
 	if(gSettingsCache.use_stencil) {
@@ -708,14 +722,16 @@ void drawPlanarShadows(int player) {
 	}
 
 	for(i = 0; i < game->players; i++) {
-		int lod = playerVisible(player, i);
+		int lod = playerVisible(pCamera, &game->player[i]);
 		if (lod >= 0 && getSettingi("shadow_projective_cycle_on_floor")) {
-			int drawTurn = (i != player || gSettingsCache.camType != CAM_TYPE_COCKPIT) ? 1 : 0;
-			drawCycleShadow(gPlayerVisuals + i, game->player + i, lod, drawTurn);
+			// TODO: disable own cycle's shadow turning when in cockpit mode
+			// int drawTurn = (i != player || gSettingsCache.camType != CAM_TYPE_COCKPIT) ? 1 : 0;
+			int drawTurn = 1;
+			drawCycleShadow(game->player + i, lod, drawTurn);
 		}
-		if (game->player[i].data->trail_height > 0 &&
+		if (game->player[i].data.trail_height > 0 &&
 			getSettingi("shadow_projective_trails_on_floor"))
-			drawTrailShadow(game->player + i, gPlayerVisuals + i);
+			drawTrailShadow(game->player + i);
 	}
 
 	if(gSettingsCache.use_stencil)
@@ -724,7 +740,7 @@ void drawPlanarShadows(int player) {
 	glDisable(GL_BLEND);
 }
 
-void drawCam2(int player)
+void drawCam2(Camera *pCamera)
 {
 	// TODO: build the scene
 	// static elements:
@@ -753,18 +769,13 @@ void drawCam2(int player)
 }
 
 
-void drawWorld(int player)
+void drawWorld(Camera *pCamera)
 {
 	int i;
 
 	nebu_Video_CheckErrors("before world");
 
 	setupLights(eWorld);
-
-	if (gSettingsCache.show_recognizer &&
-		game->player[player].data->speed != SPEED_GONE) {
-		drawRecognizer();
-	}
 
 	if (gSettingsCache.show_wall == 1 && gWorld->arena) {
 		glColor3f(1,1,1);
@@ -774,7 +785,7 @@ void drawWorld(int player)
 	// setupLights(eCycles);
 	// drawPlayers sets up its own lighting
 	nebu_Video_CheckErrors("before players");
-	drawPlayers(player);
+	drawPlayers(pCamera);
 	nebu_Video_CheckErrors("after players");
 
 	// restore lighting to world light
@@ -791,15 +802,15 @@ void drawWorld(int player)
 		mesh.pIndices = (unsigned short*) malloc(1000 * 2);
 
 		for(i = 0; i < game->players; i++) {
-			if (game->player[i].data->trail_height > 0 ) {
+			if (game->player[i].data.trail_height > 0 ) {
 				int vOffset = 0;
 				int iOffset = 0;
 				mesh.iUsed = 0;
 				nebu_Video_CheckErrors("before trail geometry");
-				trailGeometry(game->player + i, gPlayerVisuals + i,
+				trailGeometry(game->player + i, &game->player[i].profile,
 					&mesh, &vOffset, &iOffset);
 				nebu_Video_CheckErrors("after trail geometry");
-				bowGeometry(game->player + i, gPlayerVisuals + i,
+				bowGeometry(game->player + i, &game->player[i].profile,
 					&mesh, &vOffset, &iOffset);
 				nebu_Video_CheckErrors("after bow geometry");
 				trailStatesNormal(game->player + i, gScreen->textures[TEX_DECAL]);
@@ -816,8 +827,8 @@ void drawWorld(int player)
 	glDisable(GL_LIGHTING);
 
 	for(i = 0; i < game->players; i++)
-		if (game->player[i].data->trail_height > 0 )
-			drawTrailLines(game->player + i, gPlayerVisuals + i);
+		if (game->player[i].data.trail_height > 0 )
+			drawTrailLines(pCamera, &game->player[i]);
 
 	nebu_Video_CheckErrors("after world");
 }
@@ -889,10 +900,11 @@ static float getReflectivity() {
 	traverse scenegraph each frame, and build object & shader lists
 */
 
-void setupCamera(int player)
+void setupCamera(PlayerVisual *pV)
 {
 	float up[3] = { 0, 0, 1 };
-	Visual *d = & gPlayerVisuals[player].display;
+	Visual *d = &pV->display;
+	Camera *pCamera = &pV->camera;
 
 	// setup up a perspective projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -908,20 +920,22 @@ void setupCamera(int player)
 		vec3 vTarget;
 		matrix matRotate;
 
-		vec3_Sub(&vLookAt, (vec3*)gPlayerVisuals[player].camera.target, (vec3*)gPlayerVisuals[player].camera.cam);
+		vec3_Sub(&vLookAt, (vec3*)pCamera->target, (vec3*)pCamera->cam);
 		vec3_Normalize(&vLookAt, &vLookAt);
-		matrixRotationAxis(&matRotate, 90.0f * (float) gPlayerVisuals[player].camera.bIsGlancing, (vec3*)up);
+		matrixRotationAxis(&matRotate, 90.0f * (float) pCamera->bIsGlancing, (vec3*)up);
 		vec3_Transform(&vLookAt, &vLookAt, &matRotate);
-		vec3_Add(&vTarget, (vec3*)gPlayerVisuals[player].camera.cam, &vLookAt);
-		doLookAt(gPlayerVisuals[player].camera.cam, (float*)&vTarget, up);
+		vec3_Add(&vTarget, (vec3*)pCamera->cam, &vLookAt);
+		doLookAt(pCamera->cam, (float*)&vTarget, up);
 	}
 
 }
 
-void drawCam(int player) {
+void drawCam(PlayerVisual *pV) {
 	int i;
 	float up[3] = { 0, 0, 1 };
-	Visual *d = & gPlayerVisuals[player].display;
+
+	Camera *pCamera = &pV->camera;
+	// Visual *d = & gPlayerVisuals[player].display;
 	
 	float reflectivity = getReflectivity();
 	// compute shadow color based on glocal constant & reflectivity
@@ -934,7 +948,7 @@ void drawCam(int player) {
 	// disable writes to alpha
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 
-	setupCamera(player);
+	setupCamera(pV);
 
 	/* skybox */
 	glDepthMask(GL_FALSE);
@@ -1034,7 +1048,7 @@ void drawCam(int player) {
 		}
 
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
-		drawWorld(player);
+		drawWorld(pCamera);
 
 		glDisable(GL_CLIP_PLANE0);
 		glCullFace(GL_BACK);
@@ -1091,13 +1105,13 @@ void drawCam(int player) {
 
 	if(// 0 && // DEBUG: no drop shadows
 		reflectivity != 1) // there are no shadows on perfect mirrors
-		drawPlanarShadows(player);
+		drawPlanarShadows(pCamera);
 
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
 	/* planar shadows done */
 
-	drawWorld(player);
+	drawWorld(pCamera);
 
 	/* transparent stuff */
 	/* draw the glow around the other players: */
@@ -1107,10 +1121,9 @@ void drawCam(int player) {
 
 		for (i = 0; i < game->players; i++)
 		{
-			if (i != player && PLAYER_IS_ACTIVE(game->player + i))
+			if (PLAYER_IS_ACTIVE(game->player + i))
 			{
-				drawGlow(&gPlayerVisuals[player].camera, game->player + i, gPlayerVisuals + i,
-					d, TRAIL_HEIGHT * 4);
+				drawGlow(pV, game->player + i, TRAIL_HEIGHT * 4);
 			}
 		}
 		glDisable(GL_BLEND);
