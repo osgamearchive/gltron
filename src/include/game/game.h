@@ -23,6 +23,8 @@ enum {
 
 
 #define MAX_PLAYERS 4
+#define MAX_PLAYER_COLORS 4
+#define MAX_PLAYER_VISUALS 4
 #define MAX_TRAIL 1000
 
 
