@@ -22,6 +22,7 @@ matrix* matrixAdjoint(matrix *pOut, float* pDet, const matrix *pM);
 matrix* matrixRotationAxis(matrix *pOut, float fAngle, const vec3 *vAxis);
 matrix* matrixTranslation(matrix *pOut, const vec3 *vTranslation);
 matrix* matrixScale(matrix *pOut, const vec3 *vScale);
+matrix* matrixCopy(matrix *pOut, const matrix *pM);
 
 void matrixPrint(matrix *m);
 

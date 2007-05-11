@@ -199,3 +199,9 @@ matrix* matrixScale(matrix *pOut, const vec3 *vScale)
 	
 	return pOut;
 }
+
+matrix* matrixCopy(matrix *pOut, const matrix *pM)
+{
+	memcpy(pOut, pM, sizeof(matrix));
+	return pOut;
+}
