@@ -13,6 +13,8 @@ enum {
 	NEBU_MESH_TEXCOORD5   = 0x0080,
 	NEBU_MESH_TEXCOORD6   = 0x0100,
 	NEBU_MESH_TEXCOORD7   = 0x0200,
+	NEBU_MESH_COLOR0      = 0x0400,
+	NEBU_MESH_COLOR1      = 0x0800,
 	NEBU_MESH_TEXCOORD_MAXCOUNT = 8,
 
 	NEBU_MESH_FLAGS = 10
@@ -23,6 +25,8 @@ typedef struct {
 	float *pVertices;
 	float *pNormals;
 	float *pTexCoords[NEBU_MESH_TEXCOORD_MAXCOUNT];
+	int *pColor0;
+	int *pColor1;
 	int vertexformat;
 } nebu_Mesh_VB;
 
@@ -77,5 +81,6 @@ void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB);
 void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB);
 void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh);
 void nebu_Mesh_VB_ComputeBBox(nebu_Mesh_VB *pVB, box3* box3);
+int nebu_Mesh_Validate(nebu_Mesh *pMesh);
 
 #endif

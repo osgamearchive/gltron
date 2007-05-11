@@ -1,6 +1,7 @@
 #include "base/nebu_math.h"
 #include "video/nebu_mesh.h"
 #include "Nebu_video.h"
+#include "base/nebu_assert.h"
 
 #include <string.h>
 
@@ -41,6 +42,16 @@ void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB)
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glNormalPointer(GL_FLOAT, 0, pVB->pNormals);
 	}
+	if(pVB->vertexformat & NEBU_MESH_COLOR0)
+	{
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_UNSIGNED_BYTE, 0, pVB->pColor0);
+	}
+	if(pVB->vertexformat & NEBU_MESH_COLOR1)
+	{
+		glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
+		glSecondaryColorPointer(4, GL_UNSIGNED_BYTE, 0, pVB->pColor1);
+	}
 }
 
 void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
@@ -49,6 +60,8 @@ void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
 		if(pVB->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
@@ -59,8 +72,21 @@ void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
 	glClientActiveTexture(GL_TEXTURE0_ARB);
 }
 
+int nebu_Mesh_Validate(nebu_Mesh *pMesh)
+{
+	int i;
+	for(i = 0; i < pMesh->pIB->nPrimitives * pMesh->pIB->nPrimitivesPerIndex; i++)
+	{
+		if(pMesh->pIB->pIndices[i] > pMesh->pVB->nVertices - 1)
+			return 1;
+	}
+	return 0;
+}
+
 void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 {
+	nebu_assert(!nebu_Mesh_Validate(pMesh));
+
 	nebu_Mesh_VB_Enable(pMesh->pVB);
 	glDrawElements(GL_TRIANGLES, 3 * pMesh->pIB->nPrimitives, GL_UNSIGNED_INT, pMesh->pIB->pIndices);
 	nebu_Mesh_VB_Disable(pMesh->pVB);
@@ -147,6 +173,10 @@ void nebu_Mesh_VB_Free(nebu_Mesh_VB *pVB)
 		free(pVB->pVertices);
 	if(pVB->vertexformat & NEBU_MESH_NORMAL)
 		free(pVB->pNormals);
+	if(pVB->vertexformat & NEBU_MESH_COLOR0)
+		free(pVB->pColor0);
+	if(pVB->vertexformat & NEBU_MESH_COLOR1)
+		free(pVB->pColor1);
 
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
@@ -182,6 +212,22 @@ nebu_Mesh_VB* nebu_Mesh_VB_Create(int flags, int nVertices)
 		pVB->pNormals = (float*) malloc(3 * sizeof(float) * nVertices);
 	else
 		pVB->pNormals = NULL;
+
+	if(flags & NEBU_MESH_COLOR0)
+	{
+		nebu_assert(sizeof(int) == 4);
+		pVB->pColor0 = (int*) malloc( sizeof(int) * nVertices);
+	}
+	else
+		pVB->pColor0 = NULL;
+
+	if(flags & NEBU_MESH_COLOR1)
+	{
+		nebu_assert(sizeof(int) == 4);
+		pVB->pColor1 = (int*) malloc( sizeof(int) * nVertices);
+	}
+	else
+		pVB->pColor1 = NULL;
 
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
