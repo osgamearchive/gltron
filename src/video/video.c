@@ -279,7 +279,9 @@ static void autoConfigureDisplay(void) {
 	int i;
 	int vp;
 
-	nebu_assert(gnPlayerVisuals <= game->players);
+	// nebu_assert(gnPlayerVisuals <= game->players);
+	// the other way round makes more sense
+	nebu_assert(getSettingi("players") <= gnPlayerVisuals);
 
 	defaultViewportPositions();
 
