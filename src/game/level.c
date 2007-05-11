@@ -300,6 +300,7 @@ game_level* game_CreateLevel(void)
 
 	// get number of spawnpoints
 	scripting_GetValue("spawn");
+	nebu_assert(!scripting_IsNil());
 	scripting_GetArraySize(& l->nSpawnSets);
 
 	l->ppSpawnSets = malloc(l->nSpawnSets * sizeof(game_spawnset*));
