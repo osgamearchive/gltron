@@ -51,47 +51,58 @@ void initLevels(void) {
 	}
 }
 
-void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
+Game* game_CreateGame(int players)
 {
+	Game *pGame;
 	int i;
 
-	// TODO: provide constructors
-	// Game
-	*ppGame = (Game*) malloc(sizeof(Game));
-	(*ppGame)->pauseflag = PAUSE_NO_GAME;
-	(*ppGame)->players = players;
-	(*ppGame)->running = 0;
-	(*ppGame)->winner = -1;
-	(*ppGame)->player = (Player *) malloc(players * sizeof(Player));
+	pGame = (Game*) malloc(sizeof(Game));
+	pGame->pauseflag = PAUSE_NO_GAME;
+	pGame->players = players;
+	pGame->running = 0;
+	pGame->winner = -1;
+	pGame->player = (Player *) malloc(players * sizeof(Player));
 	// TODO: make data->trails growable
 	for(i = 0; i < players; i++)
 	{
-		Player *p = (*ppGame)->player + i;
+		Player *p = pGame->player + i;
 		p->data.trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
 		p->data.trailOffset = 0;
 	}
-	// Game2
-	*ppGame2 = (Game2*) malloc(sizeof(Game2));
-	// TODO: proper member initialization
-	memset(*ppGame2, 0, sizeof(Game2));
+	return pGame;
 }
 
-void game_FreePlayers(Game *pGame, Game2 *pGame2)
+void game_FreeGame(Game *pGame)
 {
 	int i;
 
-	// Game
-	for(i = 0; i < pGame->players; i++)
+	for(i = 0; i < game->players; i++)
 	{
-		Player *p = pGame->player + i;
-		free(p->data.trails);
+		free(pGame->player[i].data.trails);
 	}
 	free(pGame->player);
 	free(pGame);
+}
+
+void game_FreeGame2(Game2 *pGame2)
+{
+	if(pGame2->level)
+		game_FreeLevel(pGame2->level);
+}
+
+void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
+{
+	// Game
+	if(*ppGame)
+		game_FreeGame(*ppGame);
+	*ppGame = game_CreateGame(players);
 	// Game2
-	if(game2->level)
-		game_FreeLevel(game2->level);
-	free(pGame2);
+	// TODO: provide constructors
+	if(*ppGame2)
+		game_FreeGame2(*ppGame2);
+	*ppGame2 = (Game2*) malloc(sizeof(Game2));
+	// TODO: proper member initialization
+	memset(*ppGame2, 0, sizeof(Game2));
 }
 
 int getSpawnPosition(int iPlayer, int iTeamSize, int iBaseset, float *x, float *y, int *dir)

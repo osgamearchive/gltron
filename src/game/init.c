@@ -30,10 +30,21 @@ void initGUIs(void);
 void exitSubsystems(void)
 {
 	Sound_shutdown();
+
 	freeVideoData();
+
 	if(gWorld)
 		video_FreeLevel(gWorld);
-	game_FreePlayers(game, game2);
+	gWorld = NULL;
+
+	if(game)
+		game_FreeGame(game);
+	game = NULL;
+
+	if(game2)
+		game_FreeGame2(game2);
+	game2 = NULL;
+
 	scripting_Quit();
 	nebu_FS_ClearAllPaths();
 	resource_FreeAll();
@@ -56,8 +67,6 @@ void initSubsystems(int argc, const char *argv[]) {
 	initAudio();
 	initInput();
 
-	game_LoadLevel(); // loads the lua level description
-	video_LoadLevel();
 	fprintf(stderr, "[status] done loading level...\n");
 }
 

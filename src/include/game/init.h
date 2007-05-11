@@ -8,7 +8,6 @@ extern void initConfiguration(int argc, const char *argv[]);
 extern void initVideo(void);
 extern void initAudio(void);
 extern void initInput(void);
-extern void initGame(void);
 
 /* platform stuff */
 #endif
