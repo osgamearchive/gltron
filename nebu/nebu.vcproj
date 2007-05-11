@@ -191,6 +191,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\video\geometry.c"
+					>
+				</File>
+				<File
 					RelativePath="video\mesh.c"
 					>
 				</File>
@@ -492,6 +496,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\video\nebu_geometry.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\video\nebu_light.h"
 					>
 				</File>
@@ -504,11 +512,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\base\nebu_png_texture.h"
+					RelativePath=".\include\video\nebu_png_texture.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\video\nebu_png_texture.h"
+					RelativePath=".\include\base\nebu_png_texture.h"
 					>
 				</File>
 				<File
@@ -548,11 +556,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h"
+					RelativePath=".\include\filesystem\nebu_filesystem.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h"
+					RelativePath=".\include\Nebu_filesystem.h"
 					>
 				</File>
 			</Filter>
@@ -560,11 +568,11 @@
 				Name="scripting"
 				>
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h"
+					RelativePath=".\include\Nebu_scripting.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_scripting.h"
+					RelativePath=".\include\scripting\nebu_scripting.h"
 					>
 				</File>
 			</Filter>
