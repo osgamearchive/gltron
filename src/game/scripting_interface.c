@@ -88,6 +88,12 @@ int c_updateUI(lua_State *L)
 	return 0;
 }
 int c_startGame(lua_State *L) { 
+	video_UnloadLevel();
+	game_UnloadLevel();
+
+	game_LoadLevel(); // loads the lua level description
+	video_LoadLevel();
+
 	/* initialize the rest of the game's datastructures */
 	game_CreatePlayers(getSettingi("players") + getSettingi("ai_opponents"), &game, &game2);
 	changeDisplay(-1);
