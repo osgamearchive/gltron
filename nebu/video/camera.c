@@ -93,6 +93,8 @@ void nebu_Camera_Rotate(nebu_Camera *pCamera, int flags,
 	vec3 vdx, vdy;
 	vec3 *pvCenter, *pvMoving;
 
+	vec3 vBackup;
+
 	switch(flags & NEBU_CAMERA_ROTATE_MASK)
 	{
 	case NEBU_CAMERA_ROTATE_AROUND_EYE:
@@ -107,6 +109,7 @@ void nebu_Camera_Rotate(nebu_Camera *pCamera, int flags,
 		nebu_assert(0);
 		return;
 	}
+	vec3_Copy(&vBackup, pvCenter);
 	
 	vec3_Sub(&vDiff, pvCenter, pvMoving);
 	vec3_Normalize(&vView, &vDiff);
@@ -156,6 +159,7 @@ void nebu_Camera_Rotate(nebu_Camera *pCamera, int flags,
 		vec3_Add(pvMoving, &v, pvCenter);
 
 	}
+	nebu_assert( !memcmp( &vBackup, pvCenter, sizeof(vec3) ) );
 }
 
 void nebu_Camera_Print(const nebu_Camera *pCamera) {
@@ -212,4 +216,11 @@ void nebu_Camera_Slide(nebu_Camera *pCamera, float dx, float dy, float dz)
 	vec3_Add(&vMovement, &vMovement, &vLook); 
 	vec3_Add(&pCamera->vEye, &pCamera->vEye, &vMovement);
 	vec3_Add(&pCamera->vLookAt, &pCamera->vLookAt, &vMovement);
+}
+
+float nebu_Camera_GetDistance(const nebu_Camera *pCamera)
+{
+	vec3 v;
+	vec3_Sub(&v, &pCamera->vLookAt, &pCamera->vEye);
+	return vec3_Length(&v);
 }

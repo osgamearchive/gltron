@@ -24,5 +24,7 @@ void nebu_Camera_Roll(nebu_Camera *pCamera, float d);
 void nebu_Camera_Slide(nebu_Camera *pCamera, float dx, float dy, float dz);
 void nebu_Camera_GetRotationMatrix(nebu_Matrix4D *matrix, const nebu_Camera *pCamera);
 
+float nebu_Camera_GetDistance(const nebu_Camera *pCamera);
+
 void nebu_Camera_Print(const nebu_Camera *pCamera);
 #endif
