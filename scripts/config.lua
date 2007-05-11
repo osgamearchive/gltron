@@ -47,8 +47,8 @@ settings.wall_buster_min = 2.4
 settings.players = 1
 settings.ai_opponents = 3
 settings.ai_level = 2
--- settings.current_level = "square.lua"
-settings.current_level = "movie.lua"
+settings.current_level = "square.lua"
+-- settings.current_level = "movie.lua"
 settings.erase_crashed = 1
 settings.map_scale = 1
 
