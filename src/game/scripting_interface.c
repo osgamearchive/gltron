@@ -64,6 +64,7 @@ int c_resetCamera(lua_State *L) {
 int c_video_restart(lua_State *L) {
 	game_Callbacks_ExitCurrent();
 	initGameScreen();
+	
 	shutdownDisplay();
 	setupDisplay();
 	changeDisplay(-1);
@@ -148,6 +149,22 @@ int c_reloadLevel(lua_State *L) {
 
 	game_ResetData();
 	video_ResetData();
+	return 0;
+}
+
+int c_cancelGame(lua_State *L)
+{
+	if(game)
+	{
+		game_FreeGame(game);
+		game = NULL;
+	}
+	if(game2)
+	{
+		game_FreeGame2(game2);
+		game2 = NULL;
+	}
+	scripting_Run("game_initialized = 0");
 	return 0;
 }
   
@@ -281,6 +298,7 @@ void init_c_interface(void) {
 	scripting_Register("c_mainLoop", c_mainLoop);
 	scripting_Register("c_setCallback", c_SetCallback);
 	scripting_Register("c_setArtPath", c_setArtPath);
+	scripting_Register("c_cancelGame", c_cancelGame);
 
 	scripting_Register("c_drawCircle", c_drawCircle);
 	scripting_Register("c_drawRectangle", c_drawRectangle);
@@ -294,7 +312,7 @@ void init_c_interface(void) {
 	scripting_Register("c_drawHUDSurface", c_drawHUDSurface);
 	scripting_Register("c_drawHUDMask", c_drawHUDMask);
 	scripting_Register("c_updateUI", c_updateUI);
-
+	
 	scripting_Register("c_game_ComputeTimeDelta", c_game_ComputeTimeDelta);
 }
 

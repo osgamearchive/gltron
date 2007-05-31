@@ -73,7 +73,7 @@ function nextLevel()
 		end
 	end
 	settings.current_level = levels[ current_level_index ]
-	c_reloadLevel()
+	c_cancelGame()
 end
 
 function previousLevel()
@@ -88,7 +88,7 @@ function previousLevel()
 		end
 	end
 	settings.current_level = levels[ current_level_index ]
-	c_reloadLevel()
+	c_cancelGame()
 end
 
 
