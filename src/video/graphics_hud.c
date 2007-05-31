@@ -42,43 +42,53 @@ void hud_MaskFinish(void)
 	glDisable(GL_STENCIL_TEST);
 }
 
-int getFPS(void) {
 #define FPS_HSIZE 20
-  /* draws FPS in upper left corner of Display d */
-  static int fps_h[FPS_HSIZE];
-  static int pos = -FPS_HSIZE;
-  static int fps_min = 0;
-  static int fps_avg = 0;
 
-  int dt = nebu_Time_GetTimeForLastFrame();
-  if(dt <= 0)
-	  dt = 1;
 
-  if(pos < 0) {
-    fps_avg = 1000 / dt;
-    fps_min = 1000 / dt;
-    fps_h[pos + FPS_HSIZE] = 1000 / dt;
-    pos++;
-  } else {
-    fps_h[pos] = 1000 / dt;
-    pos = (pos + 1) % FPS_HSIZE;
-    if(pos % 10 == 0) {
-      int i;
-      int sum = 0;
-      int min = 1000;
-      for(i = 0; i < FPS_HSIZE; i++) {
-	sum += fps_h[i];
-	if(fps_h[i] < min)
-	  min = fps_h[i];
-      }
-      fps_min = min;
-      fps_avg = sum / FPS_HSIZE;
-    }
-  }
-  return fps_avg;
+int getFPS(void)
+{
+	/* draws FPS in upper left corner of Display d */
+	static int fps_h[FPS_HSIZE];
+	static int pos = -FPS_HSIZE;
+	static int fps_min = 0;
+	static int fps_avg = 0;
+
+	int dt = nebu_Time_GetTimeForLastFrame();
+	if(dt <= 0)
+		dt = 1;
+
+	if(pos < 0)
+	{
+		fps_avg = 1000 / dt;
+		fps_min = 1000 / dt;
+		fps_h[pos + FPS_HSIZE] = 1000 / dt;
+		pos++;
+	}
+	else
+	{
+		fps_h[pos] = 1000 / dt;
+		pos = (pos + 1) % FPS_HSIZE;
+		if(pos % 10 == 0)
+		{
+			int i;
+			int sum = 0;
+			int min = 1000;
+			for(i = 0; i < FPS_HSIZE; i++)
+			{
+				sum += fps_h[i];
+				if(fps_h[i] < min)
+					min = fps_h[i];
+			}
+			fps_min = min;
+			fps_avg = sum / FPS_HSIZE;
+			printf("FPS: min = %d, avg = %d\n", fps_min, fps_avg);
+		}
+	}
+	return fps_avg;
 }
 
-void drawHUD(Player *p, PlayerVisual *pV) {
+void drawHUD(Player *p, PlayerVisual *pV)
+{
 	char temp[1024];
 	char pause_message[128];
 	float pause_color[3];
