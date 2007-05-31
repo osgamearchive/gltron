@@ -1,14 +1,26 @@
-- Create levels with different scales
-- Spread the script-callable code through the modules
-- Debug auto-camera
+Project:
+- compile clean TODO list
+- compile priority list
+- revise release schedule
 
-- Increase AI player limit
-	- limiting factors are:
-		- only 4 spawn points
-		- only 4 3d sound sources
-		- only 4 playerVisuals
-		- only 4 ai paramater-sets
-		- only 4 ai settings
+RANDOM STUFF:
+
+- add support for arbitrary movement directions
+	- rewrite AI for more than 4 directions
+	
+- add support for zones
+  - check for zone transitions
+  - zone dependent variables:
+	- collision sets
+	- speed
+	- movement directions
+	- turbo recharge options
+
+- Try to remember what this is about
+  - Create levels with different scales
+  - Debug auto-camera
+- Spread the script-callable code through the modules
+
 - Change player/AI configuration menu
 
 - Update Wiki:
@@ -73,7 +85,3 @@ Audio:
 - own cycle: increase volume upon acceeleration, decrease default sound volume
   for own cycle
 
-Project:
-- compile clean TODO list
-- compile priority list
-- revise release schedule
