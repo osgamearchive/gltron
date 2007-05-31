@@ -7,7 +7,7 @@
 
 /* use enums, not magic */
 enum {
-	TURN_LEFT = 3,
+	TURN_LEFT = -1,
 	TURN_RIGHT = 1
 };
 
@@ -54,9 +54,6 @@ enum {
 
 extern Game *game;
 extern Game2 *game2;
-
-extern int dirsX[];
-extern int dirsY[];
 
 extern float default_speeds[];
 extern int default_arena_sizes[];
