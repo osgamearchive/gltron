@@ -91,15 +91,15 @@ extern "C" {
 				if(dt < TURN_LENGTH) {
 					float t = (float)dt / TURNLENGTH;
 
-					float vx = (1 - t) * dirsX[p->data.last_dir] +
-						t * dirsX[p->data.dir];
-					float vy = (1 - t) * dirsY[p->data.last_dir] +
-						t * dirsY[p->data.dir];
+					float vx = (1 - t) * game2->level->pAxis[p->data.last_dir].v[0] +
+						t * game2->level->pAxis[p->data.dir].v[0];
+					float vy = (1 - t) * game2->level->pAxis[p->data.last_dir].v[1] +
+						t * game2->level->pAxis[p->data.dir].v[1];
 					p3d->_velocity = Vector3(V * vx, V * vy, 0);
 				} else {
-					p3d->_velocity = Vector3(V * dirsX[p->data.dir], 
-																	 V * dirsY[p->data.dir], 
-																	 0);
+					p3d->_velocity = Vector3(V * game2->level->pAxis[p->data.dir].v[0], 
+					 V * game2->level->pAxis[p->data.dir].v[1], 
+					 0);
 				}
 				if(i == 0) {
 					if(p->data.boost_enabled) {

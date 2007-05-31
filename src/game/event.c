@@ -188,9 +188,9 @@ int applyWallAcceleration(int player, int dt) {
 	enum { eLeft, eRight, eMax };
 	segment2 segments[eMax];
 
-	Data *data = &game->player[player].data;
-	int dirLeft = (data->dir + 3) % 4;
-	int dirRight = (data->dir + 1) % 4;
+	Data *pData = &game->player[player].data;
+	int dirLeft = (pData->dir - 1 + game2->level->nAxis) % game2->level->nAxis;
+	int dirRight = (pData->dir + 1) % game2->level->nAxis;
 
 	float left, right;
 
@@ -207,10 +207,10 @@ int applyWallAcceleration(int player, int dt) {
 		vec2_Copy(&segments[i].vStart, &vPos);
 	}
 
-	segments[eLeft].vDirection.v[0] = (float) dirsX[dirLeft];
-	segments[eLeft].vDirection.v[1] = (float) dirsY[dirLeft];
-	segments[eRight].vDirection.v[0] = (float) dirsX[dirRight];
-	segments[eRight].vDirection.v[1] = (float) dirsY[dirRight];
+	segments[eLeft].vDirection.v[0] = (float) game2->level->pAxis[dirLeft].v[0];
+	segments[eLeft].vDirection.v[1] = (float) game2->level->pAxis[dirLeft].v[1];
+	segments[eRight].vDirection.v[0] = (float) game2->level->pAxis[dirRight].v[0];
+	segments[eRight].vDirection.v[1] = (float) game2->level->pAxis[dirRight].v[1];
 
 	left = FLT_MAX;
 	right = FLT_MAX;
@@ -240,7 +240,7 @@ int applyWallAcceleration(int player, int dt) {
 		float accell_max = getSettingf("wall_accel_max");
 		if(left < accell_max || right < accell_max) {
 			float boost = getSettingf("wall_accel_use") * dt / 1000.0f;
-			data->speed += boost;
+			pData->speed += boost;
 			return 1;
 		} else {
 			return 0;
@@ -260,8 +260,8 @@ void doMovement(int dt)
 
 	for(i = 0; i < game->players; i++)
 	{ // foreach player
-		Data *data = &game->player[i].data;
-		if(data->speed > 0)
+		Data *pData = &game->player[i].data;
+		if(pData->speed > 0)
 		{ // still alive
 			float fs;
 			float t;
@@ -306,31 +306,31 @@ void doMovement(int dt)
 				applyDecceleration(i, dt, deccel);
 
 			// if(i == 0)
-			// printf("speed: %.2f, boost: %.2f\n", data->speed, data->energy);
+			// printf("speed: %.2f, boost: %.2f\n", pData->speed, pData->energy);
 
 			fs = 1.0f - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
 				cosf(i * PI / 4.0f + 
 				(game2->time.current % SPEED_OZ_FREQ) * 
 				2.0f * PI / SPEED_OZ_FREQ);
 
-			t = dt / 100.0f * data->speed * fs;
+			t = dt / 100.0f * pData->speed * fs;
 
 			{	// movement
-				segment2 *current = data->trails + data->trailOffset;
+				segment2 *current = pData->trails + pData->trailOffset;
 				segment2 movement;
 				int crash = 0;
 				float x, y;
 
-				getPositionFromData(&x, &y, data);
+				getPositionFromData(&x, &y, pData);
 				movement.vStart.v[0] = x;
 				movement.vStart.v[1] = y;
-				movement.vDirection.v[0] = t * dirsX[data->dir];
-				movement.vDirection.v[1] = t * dirsY[data->dir];
+				movement.vDirection.v[0] = t * game2->level->pAxis[pData->dir].v[0];
+				movement.vDirection.v[1] = t * game2->level->pAxis[pData->dir].v[1];
 
-				current->vDirection.v[0] += t * dirsX[data->dir];
-				current->vDirection.v[1] += t * dirsY[data->dir];
+				current->vDirection.v[0] += t * game2->level->pAxis[pData->dir].v[0];
+				current->vDirection.v[1] += t * game2->level->pAxis[pData->dir].v[1];
 
-				if(!data->wall_buster_enabled)
+				if(!pData->wall_buster_enabled)
 				{ // collision detection against players
 					crash = crashTestPlayers(i, &movement);
 					if(crash)
@@ -360,18 +360,18 @@ void doMovement(int dt)
 		} // still alive
 		else
 		{ // already crashed
-			if(data->impact_radius < IMPACT_MAX_RADIUS)
-				data->impact_radius += game2->time.dt * IMPACT_RADIUS_DELTA;
+			if(pData->impact_radius < IMPACT_MAX_RADIUS)
+				pData->impact_radius += game2->time.dt * IMPACT_RADIUS_DELTA;
 
-			if(game2->rules.eraseCrashed == 1 && data->trail_height > 0)
-				data->trail_height -= (dt * TRAIL_HEIGHT) / 1000.0f;
-			if(data->exp_radius < EXP_RADIUS_MAX)
-				data->exp_radius += dt * EXP_RADIUS_DELTA;
-			else if (data->speed == SPEED_CRASHED)
+			if(game2->rules.eraseCrashed == 1 && pData->trail_height > 0)
+				pData->trail_height -= (dt * TRAIL_HEIGHT) / 1000.0f;
+			if(pData->exp_radius < EXP_RADIUS_MAX)
+				pData->exp_radius += dt * EXP_RADIUS_DELTA;
+			else if (pData->speed == SPEED_CRASHED)
 			{ // done exploding
 				int winner = -1;
 
-				data->speed = SPEED_GONE;
+				pData->speed = SPEED_GONE;
 				game->running--;
 				if(game->running <= 1)
 				{ // all dead

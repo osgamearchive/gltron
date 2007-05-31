@@ -43,28 +43,28 @@ float getSegmentEndX(Data *data, int dist) {
 	float tlength, blength;
 	segment2 *s = data->trails + data->trailOffset;
 
-	if(dirsX[data->dir] == 0) 
+	if(game2->level->pAxis[data->dir].v[0] == 0) 
 		return s->vStart.v[0] + s->vDirection.v[0];
 
 	tlength = segment2_Length(s);
 	blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
 	return 
 		s->vStart.v[0] + s->vDirection.v[0] -
-		dists[dist] * blength * dirsX[ data->dir ];
+		dists[dist] * blength * game2->level->pAxis[data->dir].v[0];
 }
 
 float getSegmentEndY(Data *data, int dist) {
 	float tlength, blength;
 	segment2 *s = data->trails + data->trailOffset;
 
-	if(dirsY[data->dir] == 0)
+	if(game2->level->pAxis[data->dir].v[1] == 0)
 		return s->vStart.v[1] + s->vDirection.v[1];
 
 	tlength = segment2_Length(s);
 	blength = (tlength < 2 * BOW_LENGTH) ? tlength / 2 : BOW_LENGTH;
 	return 
 		s->vStart.v[1] + s->vDirection.v[1] -
-		dists[dist] * blength * dirsY[ data->dir ];
+		dists[dist] * blength * game2->level->pAxis[data->dir].v[1];
 }
 
 /* getSegmentEndUV() calculates the texture coordinates for the last segment */
