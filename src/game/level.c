@@ -264,6 +264,12 @@ game_spawnset* game_spawnset_Create(void)
 void game_FreeLevel(game_level *l) {
 	int i;
 
+	if(l->nAxis)
+	{
+		nebu_assert(l->pAxis);
+		free(l->pAxis);
+	}
+
 	if(l->nBoundaries)
 	{
 		nebu_assert(l->boundaries);
@@ -371,6 +377,27 @@ game_level* game_CreateLevel(void)
 		// compute boundaries from level model
 		computeBoundaries(l);
 	}
+
+	// load movement directions
+	// store boundary from lua
+	scripting_GetValue("axis");
+
+	// get number of movement directions
+	scripting_GetArraySize(& l->nAxis);
+	// copy movement directions
+	l->pAxis = malloc(l->nAxis * sizeof(vec2));
+	for(i = 0; i < l->nAxis; i++)
+	{
+		scripting_GetArrayIndex(i + 1);
+		
+		scripting_GetValue("x");
+		scripting_GetFloatResult(& l->pAxis[i].v[0]);
+		scripting_GetValue("y");
+		scripting_GetFloatResult(& l->pAxis[i].v[1]);
+			
+		scripting_Pop(); // index i
+	}
+	scripting_Pop(); // axis
 
 	scripting_Pop(); // level
 
