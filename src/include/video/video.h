@@ -136,8 +136,6 @@ enum {
 
 extern int gpTokenHUD[];
 
-extern float camAngles[];
-
 extern int gIsRenderingReflection;
 
 extern float colors_trail_diffuse[][4];
