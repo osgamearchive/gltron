@@ -167,6 +167,7 @@ extern void draw( void );
 
 extern void doTrail(segment2 *t, int value);
 
+extern void initCamera(PlayerVisual *pV, int type);
 extern void initDisplay(Visual *d, int type, int p, int onScreen);
 extern void changeDisplay(int view);
 extern void updateDisplay(int vpType); 

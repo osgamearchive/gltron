@@ -1,10 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "game/game_data.h" // Data
-
-typedef struct PlayerVisual PlayerVisual;
-
 typedef struct CameraType {
 	int interpolated_cam;
 	int interpolated_target;
@@ -33,7 +29,6 @@ typedef enum eCamType {
 typedef enum ECamAxis { CAM_R = 0, CAM_CHI, CAM_PHI, CAM_PHI_OFFSET } ECamAxis;
 
 void camera_ResetAll(void);
-void initCamera(PlayerVisual *pV, int type);
 void nextCameraType(void);
 void doCameraMovement(void);
 
