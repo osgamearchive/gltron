@@ -26,6 +26,8 @@ typedef struct game_spawnset {
 typedef struct game_level {
 	int nBoundaries;
 	segment2 *boundaries;
+	int nAxis;
+	vec2 *pAxis;
 	int nSpawnSets;
 	int spawnIsRelative;
 	game_spawnset **ppSpawnSets;
