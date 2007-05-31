@@ -37,4 +37,7 @@ void initCamera(PlayerVisual *pV, int type);
 void nextCameraType(void);
 void doCameraMovement(void);
 
+float getAngle(int dir);
+float getInterpolatedAngle(float t, float last, float now);
+
 #endif

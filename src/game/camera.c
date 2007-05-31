@@ -177,6 +177,30 @@ void observerCamera(PlayerVisual *pV) {
 	cam->target[2] = RECOGNIZER_HEIGHT - 2;
 }  
 
+float getAngle(int dir)
+{
+	float fAngle;
+	vec2 *v = &game2->level->pAxis[dir];
+
+	fAngle = (float) atan2(- v->v[1], - v->v[0]);
+	if(fAngle < 0) fAngle += (float) (2 * M_PI);
+	// if(v->v[1] < 0) fAngle += (float) M_PI; // atan2 makes this unnecessary
+
+	return fAngle;
+}
+
+float getInterpolatedAngle(float t, float phiLast, float phiNow)
+{
+	// e.g. phiLast == 3/2 PI and phiNow = 0, interpolate from 3/2 PI to 2 PI
+	if( phiLast > phiNow && phiNow + 2 * M_PI - phiLast < phiLast - phiNow)
+		phiNow += (float)(2 * M_PI);
+
+	// e.g. phiLast == 0 and phiNow == 3/2 PI, interpolate from 2PI to 3/2 PI
+	if( phiNow > phiLast && phiLast + 2 * M_PI - phiNow < phiNow - phiLast)
+		phiLast += (float) (2 * M_PI);
+	return (1 - t) * phiLast + t * phiNow;
+}
+
 void playerCamera(PlayerVisual *pV) {
 	float dest[3];
 	float tdest[3];
@@ -238,19 +262,16 @@ void playerCamera(PlayerVisual *pV) {
 	/* if the cam is coupled to player movement, change the phi accordingly */
 	if(cam->type.coupled) {
 		int time = game2->time.current - data->turn_time;
-		if(time < TURN_LENGTH) {
-			int dir, ldir;
-			dir = data->dir;
-			ldir = data->last_dir;
-			if(dir == 1 && ldir == 2)
-				dir = 4;
-			if(dir == 2 && ldir == 1)
-				ldir = 4;
-			phi += ((TURN_LENGTH - time) * camAngles[ldir] + 
-				time * camAngles[dir]) / TURN_LENGTH;
+		if(time < TURN_LENGTH)
+		{
+			phi += 
+				getInterpolatedAngle(
+					1 - (float)(TURN_LENGTH - time) / TURN_LENGTH,
+					getAngle(data->last_dir),
+					getAngle(data->dir));
 		}
 		else
-			phi += camAngles[data->dir];
+			phi += getAngle(data->dir);
 	}
 
 	/* position the camera */
@@ -274,17 +295,15 @@ void playerCamera(PlayerVisual *pV) {
 		tdest[2] = B_HEIGHT;
 		break;
 	case CAM_TYPE_COCKPIT: /* 1st person */
-		tdest[0] = x + 4.0f * dirsX[ data->dir ] + 2.0f * cosf(phi);
-		tdest[1] = y + 4.0f * dirsY[ data->dir ] + 2.0f * sinf(phi);
+		tdest[0] = x + 4.0f * game2->level->pAxis[data->dir].v[0] + 2.0f * cosf(phi);
+		tdest[1] = y + 4.0f * game2->level->pAxis[data->dir].v[1] + 2.0f * sinf(phi);
 		tdest[2] = CAM_COCKPIT_Z;
-		dest[0] = x + 4.0f * dirsX[ data->dir ] + 0.1f * cosf(phi);
-		dest[1] = y + 4.0f * dirsY[ data->dir ] + 0.1f * sinf(phi);
+		dest[0] = x + 4.0f * game2->level->pAxis[data->dir].v[0] + 0.1f * cosf(phi);
+		dest[1] = y + 4.0f * game2->level->pAxis[data->dir].v[1] + 0.1f * sinf(phi);
 		dest[2] = CAM_COCKPIT_Z + 0.1f;
 		break;
 	case CAM_TYPE_OFFSET: /* AMR-cam */
 		{
-			static float px[4]= { 0, 0, 0, 0 };
-			static float py[4] = { 0, 0, 0, 0 };
 			float dx,dy,tx,ty,gs,d;
 	
 			gs= box2_Width(&game2->level->boundingBox);
