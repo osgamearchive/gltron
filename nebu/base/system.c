@@ -1,5 +1,6 @@
 #include "base/nebu_system.h"
 #include "base/nebu_argv.h"
+#include "base/nebu_assert.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -106,8 +107,9 @@ unsigned int nebu_Time_GetElapsedSinceLastFrame() {
 
 void nebu_Time_FrameDelay(unsigned int delay)
 {
-	if(nebu_Time_GetElapsedSinceLastFrame() < delay)
-		nebu_System_Sleep(delay - nebu_Time_GetElapsedSinceLastFrame());
+	unsigned int timeSinceLastFrame = nebu_Time_GetElapsedSinceLastFrame();
+	if(timeSinceLastFrame < delay)
+		nebu_System_Sleep(delay - timeSinceLastFrame);
 	// nebu_Time_SetCurrentFrameTime( nebu_Time_GetElapsed() );
 }
 
@@ -192,5 +194,7 @@ void nebu_System_SetCallback_Idle( void(*idle)(void) ) {
 }
 
 void nebu_System_Sleep(int ms) {
+	nebu_assert(ms >= 0);
+	printf("sleeping for %d ms\n", ms);
 	SDL_Delay(ms);
 }
