@@ -48,10 +48,6 @@ unsigned char* debugtex = NULL;
 int ogl_debugtex;
 int colwidth;
 
-int dirsX[] = { 0, -1, 0, 1 };
-int dirsY[] = { -1, 0, 1, 0 };
-float camAngles[] = { PI / 2, 0, 3 * PI / 2, PI, 2 * PI };
-
 /* int lasttime; 
    double dt; */
 /* milliseconds since last frame */
