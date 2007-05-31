@@ -72,6 +72,14 @@ Game* game_CreateGame(int players)
 	return pGame;
 }
 
+Game2* game_CreateGame2(void)
+{
+	Game2 *pGame2 = (Game2*) malloc(sizeof(Game2));
+	// TODO: proper initialization
+	memset(pGame2, 0, sizeof(Game2));
+	return pGame2;
+}
+
 void game_FreeGame(Game *pGame)
 {
 	int i;
@@ -88,6 +96,7 @@ void game_FreeGame2(Game2 *pGame2)
 {
 	if(pGame2->level)
 		game_FreeLevel(pGame2->level);
+	free(pGame2);
 }
 
 void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
@@ -97,18 +106,13 @@ void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
 		game_FreeGame(*ppGame);
 	*ppGame = game_CreateGame(players);
 	// Game2
-	// TODO: provide constructors
 	if(*ppGame2)
 		game_FreeGame2(*ppGame2);
-	*ppGame2 = (Game2*) malloc(sizeof(Game2));
-	// TODO: proper member initialization
-	memset(*ppGame2, 0, sizeof(Game2));
+	*ppGame2 = game_CreateGame2();
 }
 
 int getSpawnPosition(int iPlayer, int iTeamSize, int iBaseset, float *x, float *y, int *dir)
 {
-	// FIXME: find out why pIndices is ignored, and what it actually is...
-
 	/* randomize position on the grid */
 	int i, j;
 	int iSubPos; // only used for line position
@@ -151,8 +155,6 @@ setIsFound:
 		vec2_Sub(&tmp,
 			&game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vEnd,
 			&game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vStart);
-		// FIXME: diving by nPoints doesn't work. we need to divide by
-		// the amount of players we want to put on that line
 		vec2_Scale(&tmp, (iPlayer + 0.5f) / iTeamSize);
 		vec2_Add(&v, &tmp, &game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].vStart);
 
@@ -172,11 +174,10 @@ setIsFound:
 		*y += game2->level->boundingBox.vMin.v[1];
 	}
 	/* randomize starting direction */
-	// FIXME: there may be a different set of directions rather than four...
 
 	*dir = game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].dir;
 	if(*dir == -1) 
-		*dir = nebu_rand() & 3;
+		*dir = nebu_rand() & game2->level->nAxis;
 
 	return i;
 }
@@ -348,6 +349,6 @@ void doTurn(GameEvent *e, int direction) {
 	Data *data = &game->player[e->player].data;
 	newTrail(data);
 	data->last_dir = data->dir;
-	data->dir = (data->dir + direction) % 4;
+	data->dir = (data->dir + direction + game2->level->nAxis) % (game2->level->nAxis);
 	data->turn_time = game2->time.current;
 }
