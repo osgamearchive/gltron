@@ -7,9 +7,6 @@
 
 #include "base/nebu_math.h"
 
-#define LEFT(x) ((x + 3) % 4)
-#define RIGHT(x) ((x + 1) % 4)
-
 #define OPP_MAX_DIST (0.2f * criticalDistance())
 #define SAVE_T_DIFF 0.500f
 #define SAVE_SPEED_DIFF 1.0f
