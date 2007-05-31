@@ -20,6 +20,8 @@
 #include "video/nebu_texture2d.h"
 #include "video/nebu_video_system.h"
 #include "video/nebu_renderer_gl.h"
+#include "video/nebu_console.h"
+
 #include "base/nebu_math.h"
 #include "base/nebu_vector.h"
 #include "base/nebu_matrix.h"
@@ -133,24 +135,27 @@ float GetDistance(float *v, float *p, float *d) {
 }
 */
 
-static float dirangles[] = { 0, -90, -180, 90, 180, -270 };
-
 float getDirAngle(int time, Player *p) {
-  int last_dir;
-  float dirAngle;
+	float fAngle;
 
-  if(time < TURN_LENGTH) {
-    last_dir = p->data.last_dir;
-    if(p->data.dir == 3 && last_dir == 2)
-      last_dir = 4;
-    if(p->data.dir == 2 && last_dir == 3)
-      last_dir = 5;
-    dirAngle = ((TURN_LENGTH - time) * dirangles[last_dir] +
-		time * dirangles[p->data.dir]) / TURN_LENGTH;
-  } else
-    dirAngle = dirangles[p->data.dir];
+	if(time < TURN_LENGTH)
+	{
+		fAngle = getInterpolatedAngle( 1 - (float)(TURN_LENGTH - time) / TURN_LENGTH,
+			getAngle(p->data.last_dir),
+			getAngle(p->data.dir));
+	}
+	else
+	{
+		fAngle = getAngle(p->data.dir);
+	}
 
-  return dirAngle;
+	/* result is now in radians
+	// convert radians to regrees and get result into the [0,360) range
+	fAngle *= 180 / (float) M_PI;
+	while(fAngle >= 360)
+		fAngle -= 360;
+	*/
+	return fAngle;
 }
 
 void getCycleTransformation(nebu_Matrix4D *pM, Player *p, int lod)
@@ -171,28 +176,32 @@ void getCycleTransformation(nebu_Matrix4D *pM, Player *p, int lod)
 	matrixTranslation(&matTranslate, &vTranslate);
 	matrixMultiply(pM, pM, &matTranslate);
 
-	if (p->data.exp_radius == 0 && gSettingsCache.turn_cycle == 0) {
-		matrixRotationAxis(&matRotate, dirangles[p->data.dir] * (float)M_PI / 180.0f, &vUp);
+	if (p->data.exp_radius == 0 && gSettingsCache.turn_cycle == 0)
+	{
+		matrixRotationAxis(&matRotate, - getAngle(p->data.dir), &vUp);
 		matrixMultiply(pM, pM, &matRotate);
 	}
 
 	if (gSettingsCache.turn_cycle) { 
 		int neigung_dir = -1;
-			int time = game2->time.current - p->data.turn_time;
-		float dirAngle = getDirAngle(time, p);
-		matrixRotationAxis(&matRotate, dirAngle * (float)M_PI / 180.0f, &vUp);
+		int time = game2->time.current - p->data.turn_time;
+
+		matrixRotationAxis(&matRotate, getDirAngle(time, p) - (float) M_PI / 2, &vUp);
 		matrixMultiply(pM, pM, &matRotate);
 
 		#define neigung 25
 		if(time < TURN_LENGTH && p->data.last_dir != p->data.dir) {
-			float axis = 1.0f;
-			if(p->data.dir < p->data.last_dir && p->data.last_dir != 3)
-			axis = -1.0;
-			else if((p->data.last_dir == 3 && p->data.dir == 2) ||
-				(p->data.last_dir == 0 && p->data.dir == 3))
-			axis = -1.0;
+			
+			float axis;
+			if(p->data.dir > p->data.last_dir)
+				axis = (p->data.dir - p->data.last_dir == 1) ? -1.0f : 1.0f;
+
+			if(p->data.dir < p->data.last_dir)
+				axis = (p->data.last_dir - p->data.dir == 1) ? 1.0f : -1.0f; 
+			
+
 			matrixRotationAxis(&matRotate,
-				neigung * sinf(PI * time / TURN_LENGTH) * (float)M_PI / 180.0f,
+				axis * neigung * sinf(PI * time / TURN_LENGTH) * (float)M_PI / 180.0f,
 				&vForward);
 			matrixMultiply(pM, pM, &matRotate);
 		}
@@ -622,59 +631,58 @@ void drawCycle(int player, int lod, int drawTurn) {
 /*! Returns the level of detail to be used for drawing the player mesh */
 
 // int playerVisible(int eyePlayer, int targetPlayer) {
-int playerVisible(Camera *cam, Player *pTarget)
+int playerVisible(Camera *pCamera, Player *pTarget)
 {
 	// Compute view vector
 	// Compute eye-to-object vector
 	// Check 1: Is the target in the field of view
 	// Check 2: Compute LOD from distance
-	return 0;
-#if 0
-	vec3 v1, v2, tmp;
+	// return 0;
+
+	vec3 vView, vCycle, v;
 		
-	float s;
-	float d;
+	float s, d;
+	float fSafety = 20;
+	float fDistance;
 	int i;
 	int lod_level;
 	float x, y;
 
-	// BUG?: the target player's camera position shouldn't matter at all
-	vec3_Sub(&v1, (vec3*) gPlayerVisuals[eyePlayer].camera.target, (vec3*) gPlayerVisuals[eyePlayer].camera.cam);
-	vec3_Normalize(&v1, &v1);
+	vec3_Sub(&vView, (vec3*)pCamera->target, (vec3*)pCamera->cam);
+	vec3_Normalize(&vView, &vView);
 	
-	getPositionFromData(&x, &y, game->player[targetPlayer].data);
-	tmp.v[0] = x;
-	tmp.v[1] = y;
-	tmp.v[2] = 0;
+	getPositionFromData(&x, &y, &pTarget->data);
+	v.v[0] = x;
+	v.v[1] = y;
+	v.v[2] = 0;
 		
+	vec3_Sub(&vCycle, &v, (vec3*)pCamera->cam);
+	fDistance = vec3_Length(&vCycle);
+	vec3_Normalize(&vCycle, &vCycle);
+
 	lod_level = (gSettingsCache.lod > MAX_LOD_LEVEL) ? 
 		MAX_LOD_LEVEL : gSettingsCache.lod;
 
 	/* calculate lod */
-	vec3_Sub(&v2, (vec3*) &gPlayerVisuals[eyePlayer].camera.cam, &tmp);
-	d = vec3_Length(&v2);
-	for(i = 0; i < LC_LOD && d >= lod_dist[lod_level][i]; i++);
+	
+	for(i = 0; i < LC_LOD && fDistance >= lod_dist[lod_level][i]; i++);
 	if(i >= LC_LOD)
 		return -1;
 
-	vec3_Sub(&v2, &tmp, (vec3*) gPlayerVisuals[eyePlayer].camera.cam);
-	vec3_Normalize(&v2, &v2);
-	s = vec3_Dot(&v1, &v2);
+	s = vec3_Dot(&vCycle, &vView);
 	/* maybe that's not exactly correct, but I didn't notice anything */
-	d = cosf((gSettingsCache.fov / 2) * 2 * PI / 360.0);
+	d = cosf( (gSettingsCache.fov / 2 + fSafety) * 2 * PI / 360.0 );
 	/*
 		printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
 		v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
 		s, d);
 	*/
 	
-	// TODO: find out if this check is useful / necessary
-	// if(s < d-(((gltron_Mesh*)resource_Get(gpTokenLightcycles[i], eRT_GLtronTriMesh))->BBox.fRadius*2))
-	if(0)
+	// TODO: take bounding box of lightcycle into account
+	if(s < d)
 		return -1;
 	else
 		return i;
-#endif
 }
 
 void drawPlayers(Camera *pCamera) {
@@ -692,6 +700,11 @@ void drawPlayers(Camera *pCamera) {
 		*/
 
 		lod = playerVisible(pCamera, &game->player[i]);
+		{
+			char buf[128];
+			sprintf(buf, "lod %d: %d", i, lod);
+			displayMessage(TO_CONSOLE, buf);
+		}
 		if (lod >= 0) { 
 			drawCycle(i, lod, drawTurn);
 		}
