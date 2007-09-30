@@ -52,12 +52,13 @@ int c_resetGame(lua_State *L) {
 }
 
 int c_resetScores(lua_State *L) {
-	resetScores();
+	// if(game) resetScores();
 	return 0;
 }
 
 int c_resetCamera(lua_State *L) {
-	camera_ResetAll();
+	// if(game)
+		camera_ResetAll();
 	return 0;
 }
 
@@ -67,7 +68,8 @@ int c_video_restart(lua_State *L) {
 	
 	shutdownDisplay();
 	setupDisplay();
-	changeDisplay(-1);
+	if(game)
+		changeDisplay(-1);
 	game_Callbacks_InitCurrent();
 	return 0;
 }
@@ -85,7 +87,8 @@ int c_update_audio_volume(lua_State *L) {
 
 int c_updateUI(lua_State *L)
 {
-	changeDisplay(-1);
+	if(game)
+		changeDisplay(-1);
 	return 0;
 }
 int c_startGame(lua_State *L) { 

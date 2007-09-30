@@ -2,6 +2,7 @@
 #include "video/nebu_mesh.h"
 #include "Nebu_video.h"
 #include "base/nebu_assert.h"
+#include "video/nebu_renderer_gl.h"
 
 #include <string.h>
 

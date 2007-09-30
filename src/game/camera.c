@@ -9,6 +9,7 @@
 #include "input/nebu_input_system.h"
 #include "video/nebu_renderer_gl.h"
 #include "video/nebu_console.h"
+#include "base/nebu_assert.h"
 
 #include <string.h>
 
@@ -125,6 +126,8 @@ void camera_ResetAll(void)
 {
 	int i;
 	int camType;
+
+	nebu_assert(game);
 
 	for(i = 0; i < gnPlayerVisuals; i++) {
 		Player *pPlayer = gppPlayerVisuals[i]->pPlayer;

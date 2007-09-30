@@ -87,7 +87,8 @@ void reshape(int x, int y) {
 		gScreen->vp_x = (x - getSettingi("width")) / 2;
 	if(y > getSettingi("height") )
 		gScreen->vp_y = (y - getSettingi("height")) / 2;
-	changeDisplay(-1);
+	if(game)
+		changeDisplay(-1);
 }
 
 void shutdownDisplay() {
@@ -316,6 +317,8 @@ static void autoConfigureDisplay(void) {
 }
 
 void changeDisplay(int view) {
+	nebu_assert(game);
+
 	/* passing -1 to changeDisplay tells it to use the view from settings */
 	if (view == -1) {
 		view = getSettingi("display_type");
