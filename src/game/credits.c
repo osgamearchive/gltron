@@ -77,7 +77,11 @@ void drawCredits(void) {
 
   rasonly(gScreen);
   for(i = 0; i < time / 250; i++) {
-    glColor3fv(colors[i % 2]);
+    glColor4f(
+		colors[i % 2][0],
+		colors[i % 2][1],
+		colors[i % 2][2],
+		1);
     if(credits[i] == NULL) 
       break;
     y = gScreen->vp_h - 3.0f * h * (i + 1) / 2;

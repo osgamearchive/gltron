@@ -107,7 +107,11 @@ void drawRecognizer(void) {
   glEnable(GL_LIGHT1);
   glDisable(GL_LIGHTING);
 
-  glColor3fv(rec_outline_color);
+  glColor4f(
+	  rec_outline_color[0],
+	  rec_outline_color[1],
+	  rec_outline_color[2],
+	  1);
 
   glPolygonOffset(1,8);
   glEnable(GL_POLYGON_OFFSET_LINE);

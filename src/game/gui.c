@@ -327,16 +327,14 @@ void drawMenu(Visual *d) {
       scripting_GetFloatArrayResult(active2, 4);
 
       for(j = 0; j < 4; j++) {
-	color[j] = t * active1[j] + (1 - t) * active2[j];
+			color[j] = t * active1[j] + (1 - t) * active2[j];
       }
-      glColor4fv(color);
-      /* fprintf(stderr, "%.2f: %.2f %.2f %.2f\n", 
-	 t, color[0], color[1], color[2]); */
+      glColor4f(color[0], color[1], color[2], color[3]);
     } else {
       float color[4];
-			scripting_GetGlobal("menu_item", NULL);
+      scripting_GetGlobal("menu_item", NULL);
       scripting_GetFloatArrayResult(color, 4);
-      glColor4fv(color);
+      glColor4f(color[0], color[1], color[2], color[3]);
     }
 
       {
