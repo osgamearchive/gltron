@@ -127,7 +127,8 @@ void camera_ResetAll(void)
 	int i;
 	int camType;
 
-	nebu_assert(game);
+	if(!game)
+		return;
 
 	for(i = 0; i < gnPlayerVisuals; i++) {
 		Player *pPlayer = gppPlayerVisuals[i]->pPlayer;

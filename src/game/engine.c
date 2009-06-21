@@ -313,7 +313,8 @@ void Time_Idle(void) {
 void resetScores(void) {
 	int i;
 
-	nebu_assert(game);
+	if(!game)
+		return;
 
 	for(i = 0; i < game->players; i++)
 		game->player[i].data.score = 0;

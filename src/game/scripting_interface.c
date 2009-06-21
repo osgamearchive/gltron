@@ -52,13 +52,12 @@ int c_resetGame(lua_State *L) {
 }
 
 int c_resetScores(lua_State *L) {
-	// if(game) resetScores();
+	resetScores();
 	return 0;
 }
 
 int c_resetCamera(lua_State *L) {
-	// if(game)
-		camera_ResetAll();
+	camera_ResetAll();
 	return 0;
 }
 
