@@ -20,7 +20,7 @@ nebu_Shader *pShader = NULL;
 
 float fLeafAngle = 65;
 float fLeafRotation = 200;
-float fLeafTranslation = 0.3;
+float fLeafTranslation = 0.3f;
 
 int nLeafSubcount = 6;
 
@@ -28,8 +28,8 @@ float fTrunkRotation = 207;
 float fTrunkAngle = 75;
 int nLeafCount = 25;
 float fTrunkTranslation = 0.05f;
-float fTrunkScale = 0.95;
-float fLeafScale = 0.85;
+float fTrunkScale = 0.95f;
+float fLeafScale = 0.85f;
 
 void testMesh(void)
 {
