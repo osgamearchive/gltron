@@ -10,7 +10,8 @@
 
 #include "base/nebu_debug_memory.h"
 
-unsigned char irc_color_codes[][3] = {
+#define SUPPORTED_IRC_COLORS 8
+unsigned char irc_color_codes[8][3] = {
   { 255, 255,255 },
   { 0, 0, 0 },
   { 255, 0, 0 },
@@ -147,8 +148,8 @@ nebu_Font* nebu_Font_Load(const char *filename, int fs_tag)
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		// glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	}
@@ -190,11 +191,19 @@ void nebu_Font_Render(nebu_Font* font, const char *text, int len)
 			return;
 		if(text[i] == 0x03)
 		{
-			if(text[i+1] == 0)
+			i++;
+
+			if(text[i] == 0)
 				return;
 
-			glColor3ubv(irc_color_codes[text[i+1] - '0']);
-			i++;
+			if(text[i] - '0' >= SUPPORTED_IRC_COLORS)
+				continue;
+
+			glColor4ub(
+				irc_color_codes[text[i] - '0'][0],
+				irc_color_codes[text[i] - '0'][1],
+				irc_color_codes[text[i] - '0'][2],
+				255);
 			continue;
 		}
 

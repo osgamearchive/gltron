@@ -70,8 +70,8 @@ nebu_2d* nebu_2d_Create(nebu_Surface* pSurface, int flags) {
 	glBindTexture(GL_TEXTURE_2D, p2d->tex_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, target_format, p2d->tex_w, p2d->tex_h,
 							 0, source_format, GL_UNSIGNED_BYTE, pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -95,7 +95,7 @@ void nebu_2d_Draw(const nebu_2d *p2d) {
 		1, 1, 0,
 		0, 1, 0
 	};
-	unsigned int indices[] = { 0, 1, 2, 0, 2, 3 };
+	unsigned short indices[] = { 0, 1, 2, 0, 2, 3 };
 	float uv[] = { 
 		0, 0,
 		1, 0,
@@ -121,8 +121,8 @@ void nebu_2d_Draw(const nebu_2d *p2d) {
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-	glColor3f(1,1,1);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indices);
+	glColor4f(1,1,1,1);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 	glDisable(GL_TEXTURE_2D);
 
 	glDisableClientState(GL_VERTEX_ARRAY);

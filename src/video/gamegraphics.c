@@ -251,7 +251,7 @@ void drawExtruded(nebu_Mesh_IB *pIB, nebu_Mesh_VB *pVB, vec3 *pvLightDirModel)
 	int i;
 	vec3 vExtrusion;
 	glBegin(GL_QUADS);
-	glColor3f(1,1,1);
+	glColor4f(1,1,1, 1.0f);
 	vec3_Scale(&vExtrusion, pvLightDirModel, 100);
 	// vec3_Scale(&vExtrusion, pvLightDirModel, 1);
 	for(i = 0; i < pIB->nPrimitives; i++)
@@ -399,7 +399,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 		// draw cycle with ambient (including camera) lighting
 		setupLights(eCyclesAmbient);
-		glColor3f(0,0,0);
+		glColor4f(0,0,0, 1.0f);
 		glDisable(GL_LIGHTING);
 
 		glPushMatrix();
@@ -503,7 +503,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 			{
 				// lighting is disabled per default
 				// glDisable(GL_LIGHTING);
-				glColor3f(.5,.5,.5);
+				glColor4f(.5,.5,.5, 1.0f);
 				glPolygonOffset(1,1);
 				glEnable(GL_POLYGON_OFFSET_FILL);
 				drawSharpEdges(cycle);
@@ -514,14 +514,14 @@ void drawCycle(int player, int lod, int drawTurn) {
 			/* // debug code			
 			nebu_Mesh_VB_Enable(cycle->pSI->pVB);
 			glDisable(GL_LIGHTING);
-			glColor3f(1,1,1);
+			glColor4f(1,1,1, 1.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			drawExtruded(cycle->pSI->pEdges, cycle->pSI->pVB, &vLightDirModel);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			// glDrawElements(GL_LINES, 2 * cycle->pSI->pEdges->nPrimitives, GL_UNSIGNED_INT, cycle->pSI->pEdges->pIndices);
-			glColor3f(1,0,0);
+			glColor4f(1,0,0, 1.0f);
 			// glDrawElements(GL_TRIANGLES, 3 * cycle->pSI->pFrontfaces->nPrimitives, GL_UNSIGNED_INT, cycle->pSI->pFrontfaces->pIndices);
-			glColor3f(0,.7f,0);
+			glColor4f(0,.7f,0, 1.0f);
 			// glDrawElements(GL_TRIANGLES, 3 * cycle->pSI->pBackfaces->nPrimitives, GL_UNSIGNED_INT, cycle->pSI->pBackfaces->pIndices);
 			nebu_Mesh_VB_Disable(cycle->pSI->pVB);
 			glEnable(GL_LIGHTING);
@@ -723,7 +723,7 @@ void drawPlanarShadows(Camera *pCamera) {
 		glColor4fv(gCurrentShadowColor);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	} else {
-		glColor3f(0, 0, 0);
+		glColor4f(0, 0, 0, 1.0f);
 		glDisable(GL_BLEND);
 	}
 
@@ -791,7 +791,7 @@ void drawWorld(Camera *pCamera)
 	setupLights(eWorld);
 
 	if (gSettingsCache.show_wall == 1 && gWorld->arena) {
-		glColor3f(1,1,1);
+		glColor4f(1,1,1, 1.0f);
 		drawWalls();
 	}
 
@@ -1109,7 +1109,7 @@ void drawCam(PlayerVisual *pV) {
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	glStencilFunc(GL_EQUAL, 0, ~0);
 	glStencilMask(~0);
-	glColor3f(0,1,0);
+	glColor4f(0,1,0, 1.0f);
 	nebu_Mesh_DrawGeometry( gWorld->floor );
 	glDisable(GL_STENCIL_TEST);
 	glEnable(GL_LIGHTING);

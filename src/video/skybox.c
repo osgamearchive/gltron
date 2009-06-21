@@ -38,7 +38,7 @@ void drawSkybox(float d) {
 		return;
 
 	glEnable(GL_TEXTURE_2D);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor4f(1.0, 1.0, 1.0, 1.0f);
 	for(i = 0; i < 6; i++) {
 		bindSkyboxTexture(i);
 		glBegin(GL_QUADS);

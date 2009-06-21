@@ -92,7 +92,7 @@ void video_Shader_Setup(video_level_shader* shader, int pass) {
 		}
 		break;
 	case 1:
-		glColor3f(.5, .5, .5);
+		glColor4f(.5, .5, .5, 1.0f);
 		glPolygonOffset(1,4);
 		glEnable(GL_POLYGON_OFFSET_LINE);
 		break;
@@ -140,7 +140,7 @@ int level_LoadTexture() {
 	char *filename;
 	int filter[] = { GL_NEAREST, GL_LINEAR, GL_LINEAR_MIPMAP_NEAREST, 
 									 GL_LINEAR_MIPMAP_LINEAR };
-	int wrap[] = { GL_CLAMP, GL_CLAMP_TO_EDGE, GL_REPEAT };
+	int wrap[] = { GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_REPEAT };
 	nebu_Texture2D_meta meta;
 	int result;
 	// int iAnisotropy;

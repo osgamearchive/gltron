@@ -1,4 +1,3 @@
-#include "video/nebu_video_system.h"
 #include "video/nebu_mesh_3ds.h"
 #include "video/nebu_scene.h"
 #include "video/nebu_camera.h"
@@ -167,12 +166,12 @@ void lightShaderEnd(void)
 }
 
 void solidShaderStart(void) {
-	glColor3f(1,1,1);
+	glColor4f(1,1,1, 1.0f);
 }
 
 void wireFrameSetup(void)
 {
-	glColor3f(1,0,0);
+	glColor4f(1,0,0, 1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 void wireFrameCleaup(void)

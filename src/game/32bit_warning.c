@@ -50,7 +50,7 @@ void _32bit_warning_Display(void)
 
 		for(i = 0; i < 5; i++)
 		{
-			glColor3f(1,1,1);
+			glColor4f(1,1,1, 1.0f);
 			nebu_Font_RenderToBox(ppFont[i], text[i], 0, &box, 0);
 			box.vMin.v[1] -= 1.5f * lineheight;
 			box.vMax.v[1] -= 1.5f * lineheight;

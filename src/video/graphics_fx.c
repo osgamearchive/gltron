@@ -107,7 +107,7 @@ void drawImpact(int player) {
 	* trail/wall that's hit.
 	*/
 	glTranslatef(0.0, -0.5, -0.5);
-	glColor3f(0.68f, 0, 0);
+	glColor4f(0.68f, 0, 0, 1.0f);
 	drawExplosion(game->player[player].data.exp_radius);
 	glPopMatrix();
 }

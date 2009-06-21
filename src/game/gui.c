@@ -66,7 +66,7 @@ void displayConfigure(void) {
   drawMenu(gScreen);
 
   rasonly(gScreen);
-  glColor3f(1.0, 1.0, 1.0);
+  glColor4f(1.0, 1.0, 1.0, 1.0f);
   drawText(pFont, gScreen->vp_w / 6.0f, 20,
 	   gScreen->vp_w / (6.0f / 4.0f * strlen(message)), message);
   nebu_System_SwapBuffers();

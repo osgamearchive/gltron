@@ -39,7 +39,7 @@ static void drawWave(double radius) {
 static void drawShockwaves(float radius) {
   int waves;
   
-  glColor3f(1,0,0);
+  glColor4f(1,0,0, 1.0f);
 
   for(waves = 0; waves < NUM_SHOCKWAVES; waves++) {
     if (radius > SHOCKWAVE_MIN_RADIUS && radius < SHOCKWAVE_MAX_RADIUS) {
@@ -83,7 +83,7 @@ static void drawSpires(float radius) {
     { { -1.00f,  0.20f,  0.00f  } }
   };
 
-  glColor3f(1, 1, 1);
+  glColor4f(1, 1, 1, 1.0f);
   glVertex3f(0, 0, 0);
  
   glBlendFunc(GL_ONE, GL_ONE);

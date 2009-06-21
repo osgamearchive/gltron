@@ -1,4 +1,3 @@
-#include "video/nebu_gl.h"
 
 float vertices[] = { 
   -.5, -.5, 0, 1,
@@ -34,7 +33,7 @@ void fill_plain() {
   glDisableClientState( GL_TEXTURE_COORD_ARRAY );
   glEnableClientState( GL_VERTEX_ARRAY );
 
-  glColor3f(1, 1, 1);
+  glColor4f(1, 1, 1, 1.0f);
   glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, indices);
   glDisableClientState( GL_VERTEX_ARRAY );
 }

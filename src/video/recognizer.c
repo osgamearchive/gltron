@@ -100,7 +100,7 @@ void drawRecognizer(void) {
   }
   
   glEnable(GL_NORMALIZE);
-  glColor3f(0.0, 0.0, 0.0);
+  glColor4f(0.0, 0.0, 0.0, 1.0f);
   gltron_Mesh_Draw((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh), TRI_MESH);
 
   glDisable(GL_LIGHT2);
