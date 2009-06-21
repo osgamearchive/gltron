@@ -126,7 +126,10 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 		if(alpha < 0)
 			alpha = 0;
 		// trail_top[3] = alpha;
-		glColor4fv(trail_top);
+		glColor4f(trail_top[0],
+			trail_top[1],
+			trail_top[2],
+			trail_top[3]);
 
 		if(s->vDirection.v[1] == 0)
 			normal = normal1;

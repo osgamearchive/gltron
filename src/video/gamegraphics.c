@@ -720,7 +720,10 @@ void drawPlanarShadows(Camera *pCamera) {
 		glStencilMask(gFloorStencilRef);
 		glStencilFunc(GL_EQUAL, gFloorStencilRef, gFloorStencilRef);
 		glEnable(GL_BLEND);
-		glColor4fv(gCurrentShadowColor);
+		glColor4fv(gCurrentShadowColor[0],
+			gCurrentShadowColor[1],
+			gCurrentShadowColor[2],
+			gCurrentShadowColor[3]);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	} else {
 		glColor4f(0, 0, 0, 1.0f);

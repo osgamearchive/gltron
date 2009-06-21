@@ -59,7 +59,10 @@ void draw2D( nebu_Rect *pRect )
 					p->data.trail_height / TRAIL_HEIGHT);
 		} else {
 			glBlendFunc(GL_ONE, GL_ONE);
-			glColor3fv(p->profile.pColorAlpha);
+			glColor4f(p->profile.pColorAlpha[0],
+				p->profile.pColorAlpha[1],
+				p->profile.pColorAlpha[2],
+				p->profile.pColorAlpha[3]);
 		}
 
 		getPositionFromData(&x, &y, &p->data);
