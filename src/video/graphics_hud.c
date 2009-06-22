@@ -374,7 +374,7 @@ void drawCircle(float phiStart, float phiEnd,
 								float *c1, float *c2, float *c3, float *c4) {
 	float *pVertices;
 	float *pColors;
-	unsigned int* pIndices;
+	unsigned short* pIndices;
 
 	int i;
 
@@ -399,8 +399,8 @@ void drawCircle(float phiStart, float phiEnd,
 		rgb_interpolate(pColors + 3 * (2 * i + 1), t, c3, c4);
 	}
 	
-	pIndices = (unsigned int*) 
-		malloc( (nSegments) * 2 * 3 * sizeof(unsigned int) );
+	pIndices = (unsigned short*) 
+		malloc( (nSegments) * 2 * 3 * sizeof(unsigned short) );
 
 	for(i = 0; i < nSegments; i++) {
 		pIndices[3 * (2 * i + 0) + 0] = (i + 0) * 2 + 0;
@@ -417,7 +417,7 @@ void drawCircle(float phiStart, float phiEnd,
 	glColorPointer(3, GL_FLOAT, 0, pColors);
 	glEnableClientState(GL_COLOR_ARRAY);
 	
-	glDrawElements(GL_TRIANGLES, 3 * 2 * nSegments, GL_UNSIGNED_INT, pIndices);
+	glDrawElements(GL_TRIANGLES, 3 * 2 * nSegments, GL_UNSIGNED_SHORT, pIndices);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
@@ -437,7 +437,7 @@ void drawRect(float width, float height,
 		width, 0, 0
 	};
 		
-	unsigned int indices[] = { 
+	unsigned short indices[] = { 
 		0, 1, 2, 0, 2, 3
 	};
 
@@ -446,7 +446,7 @@ void drawRect(float width, float height,
 	glColorPointer(3, GL_FLOAT, 0, colors);
 	glEnableClientState(GL_COLOR_ARRAY);
 	
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indices);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);

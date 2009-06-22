@@ -171,12 +171,16 @@ void solidShaderStart(void) {
 
 void wireFrameSetup(void)
 {
+#ifndef OPENGL_ES
 	glColor4f(1,0,0, 1.0f);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 }
 void wireFrameCleaup(void)
 {
+#ifndef OPENGL_ES
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
 }
 
 void testSolidShader(void)

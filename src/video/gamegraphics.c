@@ -102,7 +102,9 @@ void drawGame(void) {
 
 	if(getSettingi("wireframe"))
 	{
+#ifndef OPENGL_ES
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 	}
 
 	for(i = 0; i < vp_max[gViewportType]; i++) {
@@ -118,7 +120,9 @@ void drawGame(void) {
 		}
 	}
 
+#ifndef OPENGL_ES
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
 }
 
 /* 
@@ -248,6 +252,7 @@ void drawCycleShadow(Player *p, int lod, int drawTurn) {
 
 void drawExtruded(nebu_Mesh_IB *pIB, nebu_Mesh_VB *pVB, vec3 *pvLightDirModel)
 {
+	// TODO: port to OpenGL ES
 	int i;
 	vec3 vExtrusion;
 	glBegin(GL_QUADS);
@@ -271,7 +276,7 @@ void drawSharpEdges(gltron_Mesh *pMesh)
 {
 	int iPass, i, j;
 	int nEdges = 0, nCount = 0;
-	int *pIndices = NULL;
+	short *pIndices = NULL;
 
 	if(!pMesh->pSI)
 		return;
@@ -322,7 +327,7 @@ void drawSharpEdges(gltron_Mesh *pMesh)
 		case 1:
 			nebu_assert(nCount == nEdges);
 			nebu_Mesh_VB_Enable(pMesh->pSI->pVB);
-			glDrawElements(GL_LINES, 2 * nCount, GL_UNSIGNED_INT, pIndices);
+			glDrawElements(GL_LINES, 2 * nCount, GL_UNSIGNED_SHORT, pIndices);
 			nebu_Mesh_VB_Disable(pMesh->pSI->pVB);
 
 			free(pIndices);
@@ -437,6 +442,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 			glEnable(GL_STENCIL_TEST);
 			// TODO: make sure reflection bit is untouched
+#ifndef OPENGL_ES
 			if(0 && // DEBUG: disabled two-sided stencil
 				!gIsRenderingReflection && GLEW_EXT_stencil_two_side && GLEW_EXT_stencil_wrap)
 			{
@@ -467,6 +473,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 				drawExtruded(cycle->pSI->pEdges, cycle->pSI->pVB, &vLightDirModel);
 			}
 			else
+#endif
 			{
 				// older hardware needs two passes
 				glStencilMask(gShadowVolStencilMask);
@@ -1059,8 +1066,8 @@ void drawCam(PlayerVisual *pV) {
 		// clip skybox & world to floor plane
 		glEnable(GL_CLIP_PLANE0);
 		{
-			double plane[] = { 0, 0, 1, 0 };
-			glClipPlane(GL_CLIP_PLANE0, plane);
+			float plane[] = { 0, 0, 1, 0 };
+			glClipPlanef(GL_CLIP_PLANE0, plane);
 		}
 
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );

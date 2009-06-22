@@ -27,8 +27,7 @@ void setupLights(eLightEnvironment eType)
 
 	// turn global ambient lighting off
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1);
 
 	switch(eType) {
 	case eWorld:
