@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="nebu"
 	ProjectGUID="{77B12E9E-0359-46ED-92F1-00740DF8545F}"
 	RootNamespace="nebu"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -42,7 +43,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="./include;../lua5/include"
+				AdditionalIncludeDirectories="./include;../lua5/include;../glew/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE;VERSION=\&quot;0.71-beta\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -115,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include;../lua5/include"
+				AdditionalIncludeDirectories="./include;../lua5/include;../glew/include"
 				PreprocessorDefinitions="_LIB;WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -188,10 +189,6 @@
 				</File>
 				<File
 					RelativePath=".\video\font.c"
-					>
-				</File>
-				<File
-					RelativePath=".\video\geometry.c"
 					>
 				</File>
 				<File
@@ -556,11 +553,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h"
+					RelativePath=".\include\Nebu_filesystem.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h"
+					RelativePath=".\include\filesystem\nebu_filesystem.h"
 					>
 				</File>
 			</Filter>
@@ -568,11 +565,11 @@
 				Name="scripting"
 				>
 				<File
-					RelativePath=".\include\Nebu_scripting.h"
+					RelativePath=".\include\scripting\nebu_scripting.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h"
+					RelativePath=".\include\Nebu_scripting.h"
 					>
 				</File>
 			</Filter>

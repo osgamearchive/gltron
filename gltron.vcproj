@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="gltron"
 	ProjectGUID="{995222E4-590D-45C2-B998-D94BFF6AA391}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -46,7 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include"
+				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include;glew/include"
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;RC_NAME=\&quot;gltron.ini\&quot;;PREF_DIR=\&quot;.\&quot;;SNAP_DIR=\&quot;\&quot;;DATA_DIR=\&quot;\&quot;;LOCAL_DATA=\&quot;\&quot;;SEPARATOR=&apos;\\&apos;;WIN32;VERSION=\&quot;0.63alpha1\&quot;;SEPERATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -83,6 +84,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/gltron.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -101,9 +104,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include"
+				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include;glew/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;RC_NAME=\&quot;gltron.ini\&quot;;PREF_DIR=\&quot;.\&quot;;SNAP_DIR=\&quot;\&quot;;DATA_DIR=\&quot;\&quot;;LOCAL_DATA=\&quot;\&quot;;SEPARATOR=&apos;\\&apos;;VERSION=\&quot;0.71-beta\&quot;;SEPERATOR=&apos;\\&apos;"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -174,17 +174,17 @@
 				OutputFile=".\Release\gltron.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				GenerateManifest="false"
 				IgnoreAllDefaultLibraries="true"
 				ProgramDatabaseFile=".\Release/gltron.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
 			/>
 			<Tool
 				Name="VCManifestTool"
-				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -197,9 +197,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
