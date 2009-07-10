@@ -1,9 +1,14 @@
 #ifndef NEBU_RENDERER_GL_H
 #define NEBU_RENDERER_GL_H
 
-// #include "SDL_opengl.h"
+// #define OPENGL_ES
+
+#ifdef OPENGL_ES
+#include <OpenGLES/ES1/gl.h>
+#else // OPENGL_ES
 #define GLEW_STATIC
-#include <GL/glew.h>
+#include "../../glew/include/GL/glew.h"
+#endif // !OPENGL_ES
 
 #include <stdio.h>
 

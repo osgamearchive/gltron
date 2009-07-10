@@ -1066,8 +1066,13 @@ void drawCam(PlayerVisual *pV) {
 		// clip skybox & world to floor plane
 		glEnable(GL_CLIP_PLANE0);
 		{
+#ifdef OPENGL_ES
 			float plane[] = { 0, 0, 1, 0 };
 			glClipPlanef(GL_CLIP_PLANE0, plane);
+#else
+			double plane[] = { 0, 0, 1, 0 };
+			glClipPlane(GL_CLIP_PLANE0, plane);
+#endif
 		}
 
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
