@@ -75,9 +75,9 @@ void ai_getDistances(int player, AI_Distances *distances) {
 		if(game->player[i].data.trail_height < TRAIL_HEIGHT)
 			continue;
 
-		for(j = 0; j < game->player[i].data.trailOffset + 1; j++) {
+		for(j = 0; j < game->player[i].data.nTrails; j++) {
 			float t1, t2;
-			if(i == player && j == game->player[i].data.trailOffset)
+			if(i == player && j == game->player[i].data.nTrails - 1)
 				break;
 			if(segment2_Intersect(&v, &t1, &t2, segments + eFront, wall) &&
 				 t1 > 0 && t1 < *front && t2 >= 0 && t2 <= 1)

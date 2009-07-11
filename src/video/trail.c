@@ -41,7 +41,7 @@ float dists[] = { BOW_DIST2, BOW_DIST3, BOW_DIST1, 0 };
 
 float getSegmentEndX(Data *data, int dist) {
 	float tlength, blength;
-	segment2 *s = data->trails + data->trailOffset;
+	segment2 *s = data->trails + data->nTrails - 1;
 
 	if(game2->level->pAxis[data->dir].v[0] == 0) 
 		return s->vStart.v[0] + s->vDirection.v[0];
@@ -55,7 +55,7 @@ float getSegmentEndX(Data *data, int dist) {
 
 float getSegmentEndY(Data *data, int dist) {
 	float tlength, blength;
-	segment2 *s = data->trails + data->trailOffset;
+	segment2 *s = data->trails + data->nTrails - 1;
 
 	if(game2->level->pAxis[data->dir].v[1] == 0)
 		return s->vStart.v[1] + s->vDirection.v[1];
@@ -87,6 +87,7 @@ float getSegmentUV(segment2 *s) {
 
 void drawTrailLines(Camera *pCamera, Player *p) {
 	segment2 *s;
+	int i;
 	float height;
 
 	float *normal;
@@ -116,9 +117,10 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 
 	glBegin(GL_LINES);
 
-	s = data->trails;
-	while(s != data->trails + data->trailOffset) { 
-		/* the current line is not drawn */
+	/* the current line is not drawn */
+	for(i = 0; i < data->nTrails - 1; i++)
+	{
+		s = data->trails + i;
 		/* compute distance from line to eye point */
 		dist = getDist(s, pCamera->cam);
 		alpha = (400 - dist / 2) / 400;
@@ -142,10 +144,11 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 		glVertex3f(s->vStart.v[0] + s->vDirection.v[0],
 			s->vStart.v[1] + s->vDirection.v[1],
 			height);
-		s++;
 	}
 	glEnd();
 
+	// current line now
+	s = data->trails + data->nTrails - 1;
 	/* compute distance from line to eye point */
 	dist = getDist(s, pCamera->cam);
 	// TODO: compute the 'magic' 400 somehow

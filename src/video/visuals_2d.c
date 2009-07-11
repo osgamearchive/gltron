@@ -48,6 +48,8 @@ void draw2D( nebu_Rect *pRect )
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glDrawArrays(GL_LINES, 0, nVertices);
 		glDisableClientState(GL_VERTEX_ARRAY);
+
+		free(pVertices);
 	}
 
 	// find out number of trails to draw into the 2d map
@@ -64,13 +66,13 @@ void draw2D( nebu_Rect *pRect )
 				continue;
 			}
 			// TODO: get vertex count
-			nVertices += 2 * (p->data.trailOffset + 1);
+			nVertices += 2 * p->data.nTrails;
 		}
 	}
 
 	for(i = 0; i < game->players; i++) {
 		Player *p = &game->player[i];
-		segment2* trail;
+		int i;
 		float x, y;
 
 		if (p->data.trail_height <= 0) {
@@ -102,8 +104,9 @@ void draw2D( nebu_Rect *pRect )
 		glEnd();
 
 		glBegin(GL_LINES);
-		for(trail = p->data.trails; trail != p->data.trails + p->data.trailOffset; trail++)
+		for(i = 0; i < p->data.nTrails; i++)
 		{
+			segment2* trail = p->data.trails + i;
 			glVertex2f(trail->vStart.v[0], 
 				trail->vStart.v[1]
 				);
@@ -111,6 +114,9 @@ void draw2D( nebu_Rect *pRect )
 				trail->vStart.v[1] + trail->vDirection.v[1]
 				);
 		}
+		// I have no idea what the following was necessary for
+		// TODO: figure it out and rewrite or remove
+		/*
 		if(trail != p->data.trails)
 		{
 			trail--;
@@ -126,6 +132,7 @@ void draw2D( nebu_Rect *pRect )
 				);
 			glVertex2f( floorf(x), floorf(y));
 		}
+		*/
 			
 	#if 0
 		// draw AI debug lines

@@ -59,7 +59,7 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 	 */
 
   if(distances->front > ai_params.critical[level] * criticalDistance() &&
-		 segment2_Length(data->trails + data->trailOffset) <
+		 segment2_Length(data->trails + data->nTrails - 1) <
 		 ai_params.maxSegLength[level] * criticalDistance())
 		return;
 		

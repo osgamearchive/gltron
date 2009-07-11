@@ -126,7 +126,8 @@ void trailGeometry(Player *pPlayer, Player_Profile *pProfile,
 	int i;
 	float fTotalLength = 0;
 	float fSegLength;
-	for(i = 0; i < pData->trailOffset; i++) {
+	// draw all trails except for the last one
+	for(i = 0; i < pData->nTrails - 1; i++) {
 		fSegLength = segment2_Length(pData->trails + i);
 		if(i == 0 || cmpdir(pData->trails + i - 1, pData->trails + i)) {
 			storeVertex(pMesh, curVertex, pData->trails + i, 0, 
@@ -149,8 +150,9 @@ void trailGeometry(Player *pPlayer, Player_Profile *pProfile,
 
 	}
 	{
+		// the last trail
 		segment2 s;
-		vec2_Copy(&s.vStart, & pData->trails[pData->trailOffset].vStart);
+		vec2_Copy(&s.vStart, & pData->trails[pData->nTrails - 1].vStart);
 		s.vDirection.v[0] = getSegmentEndX( pData, 1 ) - s.vStart.v[0];
 		s.vDirection.v[1] = getSegmentEndY( pData, 1 ) - s.vStart.v[1];
 

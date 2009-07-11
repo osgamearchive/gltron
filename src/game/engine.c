@@ -20,8 +20,8 @@ void Player_GetPosition(Player *pPlayer, float *pX, float *pY)
 {
 	vec2 v;
 	vec2_Add(&v,
-		&pPlayer->data.trails[pPlayer->data.trailOffset].vStart,
-		&pPlayer->data.trails[pPlayer->data.trailOffset].vDirection);
+		&pPlayer->data.trails[pPlayer->data.nTrails - 1].vStart,
+		&pPlayer->data.trails[pPlayer->data.nTrails - 1].vDirection);
 	*pX = v.v[0];
 	*pY = v.v[1];
 }
@@ -33,8 +33,8 @@ void getPositionFromIndex(float *x, float *y, int player) {
 void getPositionFromData(float *x, float *y, Data *data) {
 	vec2 v;
 	vec2_Add(&v,
-		&data->trails[data->trailOffset].vStart,
-		&data->trails[data->trailOffset].vDirection);
+		&data->trails[data->nTrails - 1].vStart,
+		&data->trails[data->nTrails - 1].vDirection);
 	*x = v.v[0];
 	*y = v.v[1];
 }
@@ -62,12 +62,13 @@ Game* game_CreateGame(int players)
 	pGame->running = 0;
 	pGame->winner = -1;
 	pGame->player = (Player *) malloc(players * sizeof(Player));
-	// TODO: make data->trails growable
+
 	for(i = 0; i < players; i++)
 	{
 		Player *p = pGame->player + i;
-		p->data.trails = (segment2*) malloc(MAX_TRAIL * sizeof(segment2));
-		p->data.trailOffset = 0;
+		p->data.trails = (segment2*) malloc(INITIAL_TRAIL_COUNT * sizeof(segment2));
+		p->data.maxTrails = INITIAL_TRAIL_COUNT;
+		p->data.nTrails = 0;
 	}
 	return pGame;
 }
@@ -257,14 +258,13 @@ void resetPlayerData(void) {
 			data->trail_height = 0;
 			not_playing++;
 		}
-		// data->trail = data->trails;
-		data->trailOffset = 0;
+		data->nTrails = 1;
 
-		data->trails[ data->trailOffset ].vStart.v[0] = x;
-		data->trails[ data->trailOffset ].vStart.v[1] = y;
+		data->trails[ 0 ].vStart.v[0] = x;
+		data->trails[ 0 ].vStart.v[1] = y;
 		
-		data->trails[ data->trailOffset ].vDirection.v[0] = 0;
-		data->trails[ data->trailOffset ].vDirection.v[1] = 0;
+		data->trails[ 0 ].vDirection.v[0] = 0;
+		data->trails[ 0 ].vDirection.v[1] = 0;
 
 		data->impact_radius = 0.0;
 		data->turn_time = 0;
@@ -339,14 +339,20 @@ void newTrail(Data* data) {
 
 	getPositionFromData(&x, &y, data);
 
-	data->trailOffset++;
-	s = data->trails + data->trailOffset;
+	if(data->nTrails == data->maxTrails)
+	{
+		data->trails = (segment2*) realloc(data->trails, data->maxTrails * 2 * sizeof(segment2));
+		data->maxTrails *= 2;
+		printf("reallocating trails, new maxtrails: %d\n", data->maxTrails);
+	}
 
+	s = data->trails + data->nTrails;
 	s->vStart.v[0] = x;
 	s->vStart.v[1] = y;
 	s->vDirection.v[0] = 0;
 	s->vDirection.v[1] = 0;
-	
+
+	data->nTrails++;
 }
       
 void doTurn(GameEvent *e, int direction) {

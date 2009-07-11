@@ -61,24 +61,23 @@ int crashTestPlayers(int i, const segment2 *movement) {
 	int j, k;
 	int crash = 0;
 	Data *data = &game->player[i].data;
-	segment2 *current = data->trails + data->trailOffset;
-	// debug: only test player0 against himself
-	// j = 0; 
-	// if(i == 0) { 
+
 	for(j = 0; j < game->players; j++) {
 		int crash = 0;
 
 		if(game->player[j].data.trail_height < TRAIL_HEIGHT)
 			continue;
 
-		for(k = 0; k < game->player[j].data.trailOffset + 1; k++) {
+		for(k = 0; k < game->player[j].data.nTrails; k++) {
 			segment2 *wall;
 			vec2 v;
 			float t1, t2;
-						
-			if(j == i && k >= game->player[j].data.trailOffset - 1)
+				
+			// don't test against your own current segment, or your last segment before that
+			if(j == i && k >= game->player[j].data.nTrails - 2)
 				break;
 
+			// segment to test against
 			wall = game->player[j].data.trails + k;
 						
 			if(segment2_Intersect(&v, &t1, &t2, movement, wall)) {
@@ -89,8 +88,9 @@ int crashTestPlayers(int i, const segment2 *movement) {
 							 t1, t2); 
 #endif
 				if(t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
-					current->vDirection.v[0] = v.v[0] - current->vStart.v[0];
-					current->vDirection.v[1] = v.v[1] - current->vStart.v[1];
+					// set current trail end to crash location
+					data->trails[data->nTrails - 1].vDirection.v[0] = v.v[0] - data->trails[data->nTrails - 1].vStart.v[0];
+					data->trails[data->nTrails - 1].vDirection.v[1] = v.v[1] - data->trails[data->nTrails - 1].vStart.v[1];
 					createEvent(i, EVENT_CRASH);
 					crash = 1;
 					break;
@@ -110,10 +110,11 @@ int crashTestWalls(int i, const segment2 *movement) {
 	int crash = 0;
 
 	Data *data = &game->player[i].data;
-	segment2 *current = data->trails + data->trailOffset;
+	segment2 *current = data->trails + data->nTrails ;
 	
 	for(j = 0; j < game2->level->nBoundaries; j++) {
-		if(segment2_Intersect(&v, &t1, &t2, current, game2->level->boundaries + j)) {
+		if(segment2_Intersect(&v, &t1, &t2, movement, game2->level->boundaries + j)) {
+		// if(segment2_Intersect(&v, &t1, &t2, current, game2->level->boundaries + j)) {
 			if(t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) {
 				current->vDirection.v[0] = v.v[0] - current->vStart.v[0];
 				current->vDirection.v[1] = v.v[1] - current->vStart.v[1];
@@ -207,6 +208,7 @@ int applyWallAcceleration(int player, int dt) {
 		vec2_Copy(&segments[i].vStart, &vPos);
 	}
 
+	// TODO: this might not work corretly for wall acceleration
 	segments[eLeft].vDirection.v[0] = (float) game2->level->pAxis[dirLeft].v[0];
 	segments[eLeft].vDirection.v[1] = (float) game2->level->pAxis[dirLeft].v[1];
 	segments[eRight].vDirection.v[0] = (float) game2->level->pAxis[dirRight].v[0];
@@ -218,12 +220,15 @@ int applyWallAcceleration(int player, int dt) {
 	for(i = 0; i < game->players; i++) {
 		segment2 *wall = game->player[i].data.trails;
 
+		// can't ride your own walls
 		if(i == player)
 			continue;
+		// can't ride vanishing walls
 		if(game->player[i].data.trail_height < TRAIL_HEIGHT)
 			continue;
 		
-		for(j = 0; j < game->player[i].data.trailOffset + 1; j++) {
+		// find the closest wall left or right of the current player location
+		for(j = 0; j < game->player[i].data.nTrails; j++) {
 			float t1, t2;
 			vec2 v;
 			if(segment2_Intersect(&v, &t1, &t2, segments + eLeft, wall) &&
@@ -316,7 +321,7 @@ void doMovement(int dt)
 			t = dt / 100.0f * pData->speed * fs;
 
 			{	// movement
-				segment2 *current = pData->trails + pData->trailOffset;
+				segment2 *current = pData->trails + pData->nTrails - 1;
 				segment2 movement;
 				int crash = 0;
 				float x, y;
@@ -519,6 +524,6 @@ void createEvent(int player, event_type_e eventType) {
 	getPositionFromIndex(&e->x, &e->y, player);
 	e->player = player;
 	e->timestamp = game2->time.current;
-	// TODO: This sometimes creates a memory leak
+	// TODO: This sometimes creates a (trivial) memory leak
 	nebu_List_AddTail2(&(game2->events), e);
 }

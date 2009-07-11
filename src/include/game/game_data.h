@@ -64,8 +64,10 @@ typedef struct Data {
 	float impact_radius;
 	float exp_radius;
 
-	segment2 *trails;
-	int trailOffset;
+	segment2 *trails; // light cycle trail segments
+	int nTrails; // segments currently in use
+	int maxTrails; // segments where memory is allocated for
+	// maxTrails is set to INITIAL_TRAIL_COUNT on creation
 } Data;
 
 typedef struct AI {
