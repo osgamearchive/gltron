@@ -9,6 +9,7 @@
 #include "base/nebu_argv.h"
 #include "input/nebu_input_system.h"
 #include "video/nebu_geometry.h"
+#include "video/nebu_video_system.h"
 
 extern void display(void);
 extern void idle(void);
