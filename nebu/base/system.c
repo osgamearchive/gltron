@@ -195,6 +195,6 @@ void nebu_System_SetCallback_Idle( void(*idle)(void) ) {
 
 void nebu_System_Sleep(int ms) {
 	nebu_assert(ms >= 0);
-	printf("sleeping for %d ms\n", ms);
+	// printf("sleeping for %d ms\n", ms);
 	SDL_Delay(ms);
 }
