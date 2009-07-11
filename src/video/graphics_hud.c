@@ -81,7 +81,7 @@ int getFPS(void)
 			}
 			fps_min = min;
 			fps_avg = sum / FPS_HSIZE;
-			printf("FPS: min = %d, avg = %d\n", fps_min, fps_avg);
+			// printf("FPS: min = %d, avg = %d\n", fps_min, fps_avg);
 		}
 	}
 	return fps_avg;
