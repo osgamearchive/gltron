@@ -6,6 +6,7 @@
 #include "base/nebu_math.h"
 #include "video/nebu_renderer_gl.h"
 
+#include "base/nebu_debug_memory.h"
 /* draw a 2d map */
 
 void draw2D( nebu_Rect *pRect )
@@ -29,15 +30,43 @@ void draw2D( nebu_Rect *pRect )
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glColor4f(1, 1, 1, 1.0f);
-	glBegin(GL_LINES);
-	for(i = 0; i < game2->level->nBoundaries; i++) {
-		vec2 v;
-		segment2 *s = game2->level->boundaries + i;
-		vec2_Add(&v, & s->vStart, & s->vDirection);
-		glVertex2fv(s->vStart.v);
-		glVertex2fv(v.v);
+	{
+		int nVertices = game2->level->nBoundaries * 2;
+		float *pVertices = (float*) malloc(3 * nVertices * sizeof(float));
+		for(i = 0; i < game2->level->nBoundaries; i++) {
+			vec2 v;
+			segment2 *s = game2->level->boundaries + i;
+			vec2_Add(&v, & s->vStart, & s->vDirection);
+			pVertices[6 * i + 0] = s->vStart.v[0];
+			pVertices[6 * i + 1] = s->vStart.v[1];
+			pVertices[6 * i + 2] = 0;
+			pVertices[6 * i + 3] = v.v[0];
+			pVertices[6 * i + 4] = v.v[1];
+			pVertices[6 * i + 5] = 0;
+		}
+		glVertexPointer(3, GL_FLOAT, 0, pVertices);
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glDrawArrays(GL_LINES, 0, nVertices);
+		glDisableClientState(GL_VERTEX_ARRAY);
 	}
-	glEnd();
+
+	// find out number of trails to draw into the 2d map
+	// create vertex & color arrays
+	// fill in data
+	// draw everything in one go
+
+	{
+		int nVertices = 0;
+
+		for(i = 0; i < game->players; i++) {
+			Player *p = &game->player[i];
+			if (p->data.trail_height <= 0) {
+				continue;
+			}
+			// TODO: get vertex count
+			nVertices += 2 * (p->data.trailOffset + 1);
+		}
+	}
 
 	for(i = 0; i < game->players; i++) {
 		Player *p = &game->player[i];
