@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./include;../lua5/include;../glew/include"
+				AdditionalIncludeDirectories="./include;../lua5/include;../glew/include;../win32/include;../"
 				PreprocessorDefinitions="_LIB;WIN32;_DEBUG;_CRT_SECURE_NO_DEPRECATE;VERSION=\&quot;0.71beta1\&quot;;PATH_SEPARATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -553,11 +553,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_filesystem.h"
+					RelativePath=".\include\filesystem\nebu_filesystem.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\filesystem\nebu_filesystem.h"
+					RelativePath=".\include\Nebu_filesystem.h"
 					>
 				</File>
 			</Filter>
@@ -565,11 +565,11 @@
 				Name="scripting"
 				>
 				<File
-					RelativePath=".\include\scripting\nebu_scripting.h"
+					RelativePath=".\include\Nebu_scripting.h"
 					>
 				</File>
 				<File
-					RelativePath=".\include\Nebu_scripting.h"
+					RelativePath=".\include\scripting\nebu_scripting.h"
 					>
 				</File>
 			</Filter>

@@ -47,7 +47,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include;glew/include"
+				AdditionalIncludeDirectories="src/include;lua5/include;nebu/include;glew/include;win32/include;."
 				PreprocessorDefinitions="_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;RC_NAME=\&quot;gltron.ini\&quot;;PREF_DIR=\&quot;.\&quot;;SNAP_DIR=\&quot;\&quot;;DATA_DIR=\&quot;\&quot;;LOCAL_DATA=\&quot;\&quot;;SEPARATOR=&apos;\\&apos;;WIN32;VERSION=\&quot;0.63alpha1\&quot;;SEPERATOR=&apos;\\&apos;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -80,6 +80,7 @@
 				OutputFile=".\Debug/gltron.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="win32/lib"
 				IgnoreAllDefaultLibraries="true"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/gltron.pdb"
