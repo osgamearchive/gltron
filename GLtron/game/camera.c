@@ -23,7 +23,8 @@ float cam_defaults[][3] =  {
   { CAM_CIRCLE_DIST, PI / 3, 0 }, /* circle */
   { CAM_FOLLOW_DIST, PI / 4, PI / 72 }, /* follow */
   { CAM_COCKPIT_Z, PI / 8, 0 }, /* cockpit */
-  { CAM_CIRCLE_DIST, PI / 3, 0 } /* free */
+  { CAM_CIRCLE_DIST, PI / 3, 0 }, /* free */
+  { CAM_CIRCLE_DIST, PI / 4, PI / 72 } /* offset */
 };
 
 

@@ -314,6 +314,8 @@ static int iStackGuardPosition = -1;
 
 int scripting_StackGuardStart(void)
 {
+    // fprintf(stderr, "[stackguard] start %d\n", iStackGuardPosition);
+    
 	if(iStackGuardPosition == 255)
 	{
 		nebu_assert(0);
@@ -337,6 +339,8 @@ void scripting_StackGuardEnd(int iPos)
 	nebu_assert(iPos == iStackGuardPosition);
 	nebu_assert(piStackGuard[iPos] == lua_gettop(L));
 	iStackGuardPosition--;
+    
+    // fprintf(stderr, "[stackguard] end %d\n", iStackGuardPosition);
 }
 
 int scripting_GetOptional_Float(const char *name, float *f, float fValue)

@@ -263,7 +263,7 @@ void loadModel(gltron_Mesh **ppMesh, int *pToken)
 video_level* video_CreateLevel(void) {
 	video_level *l;
 
-	int iPos = scripting_StackGuardStart();
+	const int iPos = scripting_StackGuardStart();
 
 	l = malloc( sizeof(video_level) );
 	memset(l, 0, sizeof(video_level));
@@ -310,7 +310,7 @@ gltron_Mesh* loadMesh(void) {
 	int i, j;
 	int nPrimitives, nVertices, vertexformat;
 
-	int iPos = scripting_StackGuardStart();
+	const int iPos = scripting_StackGuardStart();
 
 	scripting_GetValue("indices");
 	nebu_assert(!scripting_IsNil());

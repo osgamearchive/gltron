@@ -124,7 +124,7 @@ int game_LoadLevel(void)
 	char *path; 
 	char *pFilename;
 
-	int iPos = scripting_StackGuardStart();
+	const int iPos = scripting_StackGuardStart();
 
 	// make sure there's no level already loaded
 	scripting_GetGlobal("level", NULL);
@@ -184,7 +184,7 @@ game_spawnset* game_spawnset_Create(void)
 
 	game_spawnset* pSpawnSet = (game_spawnset*) malloc(sizeof(game_spawnset));
 
-	int iPos = scripting_StackGuardStart();
+	const int iPos = scripting_StackGuardStart();
 
 	// get spawnset type
 	scripting_GetValue("type");
