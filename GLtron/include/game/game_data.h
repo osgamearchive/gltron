@@ -96,6 +96,7 @@ typedef struct Game {
 	int pauseflag; 
 	//!< if the game is finished: the PAUSE_GAME_FINISHED flag is set
 	int running; //!< the number of players that are still alive
+    int isValid;
 } Game;
 
 #endif

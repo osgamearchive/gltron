@@ -45,28 +45,28 @@ MainGameMenu = {
       labels = { "off", "on" },
       values = { 0, 1 },
       read = function() return settings.booster_on; end,
-      store = function(value) settings.booster_on = value; c_resetGame(); end
+      store = function(value) settings.booster_on = value; c_invalidateGame(); end
    },
    WallAccell = {    
       type = MenuC.type.list, caption = "Wall Acceleration",
       labels = { "off", "on" },
       values = { 0, 1 },
       read = function() return settings.wall_accel_on; end,
-      store = function(value) settings.wall_accel_on = value; c_resetGame(); end
+      store = function(value) settings.wall_accel_on = value; c_invalidateGame(); end
    },
    WallBuster = {    
       type = MenuC.type.list, caption = "Wall Buster",
       labels = { "off", "on" },
       values = { 0, 1 },
       read = function() return settings.wall_buster_on; end,
-      store = function(value) settings.wall_buster_on = value; c_resetGame(); end
+      store = function(value) settings.wall_buster_on = value; c_invalidateGame(); end
    },
    GameSpeed = { 
       type = MenuC.type.list, caption = "Game speed",
       labels = { "boring", "normal", "fast", "crazy" },
       values = { 5.0, 6.5, 8.5, 12.0 },
       read = function() return settings.speed; end, 
-      store = function (value) settings.speed = value; c_resetGame(); end
+      store = function (value) settings.speed = value; c_invalidateGame(); end
    },
    BotSkill = {
       type = MenuC.type.list, caption = "Bot Skill",
@@ -80,7 +80,7 @@ MainGameMenu = {
       labels = { "off", "on" },
       values = { 0, 1 },
       read = function() return settings.erase_crashed; end,
-      store = function(value) settings.erase_crashed = value; c_resetGame(); end
+      store = function(value) settings.erase_crashed = value; c_invalidateGame(); end
    },
 
    -- GameSettings
@@ -117,34 +117,39 @@ MainGameMenu = {
 		type = MenuC.type.slider, caption = "Players",
 		right = function()
 			if(settings.players < 4) then
-				settings.players = settings.players + 1
+                settings.players = settings.players + 1;
+                c_invalidateGame();
 			end
 		end,
 		left = function()
 			if(settings.players ~= 0) then
 				settings.players = settings.players - 1;
+                c_invalidateGame();
 			end
 		end,
 		read = function() return settings.players; end,
-		store = function(value) settings.players = value; end
-	}, 
+	},
    AIPlayers = {
 		type = MenuC.type.slider, caption = "AI opponents",
-		right = function() settings.ai_opponents = settings.ai_opponents + 1; end,
+		right = function()
+            settings.ai_opponents = settings.ai_opponents + 1;
+            c_invalidateGame();
+        end,
 		left = function()
 			if(settings.ai_opponents ~= 0) then
 				settings.ai_opponents = settings.ai_opponents - 1;
+                c_invalidateGame();
 			end
 		end,
 		read = function() return settings.ai_opponents; end,
-		store = function(value) settings.ai_opponents = value; end
-	}, 
-   Player1 = {    
+	},
+   -- these entries are not used at the moment
+   Player1 = {
       type = MenuC.type.list, caption = "Player 1", 
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
       read = function() return settings.ai_player1; end,
-      store = function(value) settings.ai_player1 = value; c_resetGame(); end
+      store = function(value) settings.ai_player1 = value; c_invalidateGame(); end
    },
 
    Player2 = {    
@@ -152,7 +157,7 @@ MainGameMenu = {
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
       read = function() return settings.ai_player2; end,
-      store = function(value) settings.ai_player2 = value; c_resetGame(); end
+      store = function(value) settings.ai_player2 = value; c_invalidateGame(); end
    },
 
    Player3 = {    
@@ -160,7 +165,7 @@ MainGameMenu = {
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
       read = function() return settings.ai_player3; end,
-      store = function(value) settings.ai_player3 = value; c_resetGame(); end
+      store = function(value) settings.ai_player3 = value; c_invalidateGame(); end
    },
 
    Player4 = {    
@@ -168,7 +173,7 @@ MainGameMenu = {
       labels = { "Human", "Computer", "None" },
       values = { 0, 1, 2 },
       read = function() return settings.ai_player4; end,
-      store = function(value) settings.ai_player4 = value; c_resetGame(); end
+      store = function(value) settings.ai_player4 = value; c_invalidateGame(); end
    },
    MouseLockIngame = {
 	type = MenuC.type.list, caption = "Lock Mouse in Game",

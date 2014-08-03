@@ -32,7 +32,31 @@ void GameMode_Idle(void) {
 	nebu_System_PostRedisplay();
 }
 
+void newGame(void)
+{
+    video_UnloadLevel();
+	game_UnloadLevel();
+    
+	game_LoadLevel(); // loads the lua level description
+	video_LoadLevel();
+    
+	/* initialize the rest of the game's datastructures */
+	game_CreatePlayers(getSettingi("players") + getSettingi("ai_opponents"), &game, &game2);
+	changeDisplay(-1);
+    
+	if(!game2->level)
+	{
+		initLevels();
+	}
+	game_ResetData();
+	video_ResetData();
+	Audio_ResetData();
+}
+
 void enterGame(void) { /* called when game mode is entered */
+    if(game && !game->isValid)
+        newGame();
+    
 	updateSettingsCache();
 
 	nebu_Input_HidePointer();

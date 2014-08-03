@@ -16,6 +16,7 @@
 #include "game/camera.h"
 #include "game/engine.h"
 
+#include "base/nebu_assert.h"
 #include "base/nebu_debug_memory.h"
 
 #include <math.h>
@@ -458,6 +459,8 @@ void game_RunAI(int dt)
 */
 
 void Game_Idle(void) {
+    nebu_assert(game->isValid);
+    
 	// time since last frame
 	int dt = game_ComputeTimeDelta();
 	

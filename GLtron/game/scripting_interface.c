@@ -44,11 +44,15 @@ int c_quitGame(lua_State *L) {
 	return 0;
 }
 
-int c_resetGame(lua_State *L) {
-	game_ResetData();
-	video_ResetData();
-	Audio_ResetData();
-	return 0;
+int c_invalidateGame(lua_State *L) {
+    // fprintf(stderr, "[callback] c_invalidateGame\n");
+    
+    // TODO: Is it a good idea to guard here against this?
+    if(game != NULL) // don't reset anything if it doesn't exist yet
+    {
+        game->isValid = 0;
+	}
+    return 0;
 }
 
 int c_resetScores(lua_State *L) {
@@ -90,24 +94,9 @@ int c_updateUI(lua_State *L)
 		changeDisplay(-1);
 	return 0;
 }
+
 int c_startGame(lua_State *L) { 
-	video_UnloadLevel();
-	game_UnloadLevel();
-
-	game_LoadLevel(); // loads the lua level description
-	video_LoadLevel();
-
-	/* initialize the rest of the game's datastructures */
-	game_CreatePlayers(getSettingi("players") + getSettingi("ai_opponents"), &game, &game2);
-	changeDisplay(-1);
-
-	if(!game2->level)
-	{
-		initLevels();
-	}
-	game_ResetData();
-	video_ResetData();
-	Audio_ResetData();
+    newGame();
 
 	nebu_System_ExitLoop(eSRC_Game_Launch);
 	return 0;
@@ -283,7 +272,7 @@ int c_game_ComputeTimeDelta(lua_State *l)
 
 void init_c_interface(void) {
 	scripting_Register("c_quitGame", c_quitGame);
-	scripting_Register("c_resetGame", c_resetGame);
+	scripting_Register("c_invalidateGame", c_invalidateGame);
 	scripting_Register("c_resetScores", c_resetScores);
 	scripting_Register("c_resetCamera", c_resetCamera);
 	scripting_Register("c_video_restart", c_video_restart);

@@ -83,7 +83,7 @@ void keyboardPause(int state, int key, int x, int y) {
 
 void initPause(void) {
 	nebu_Input_HidePointer();
-	// nebu_Input_Mouse_WarpToOrigin();
+	nebu_Input_Mouse_WarpToOrigin();
 
 	/* disable game sound effects */
 	Audio_DisableEngine();

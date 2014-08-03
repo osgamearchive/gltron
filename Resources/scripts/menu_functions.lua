@@ -47,7 +47,7 @@ end
 
 MenuAction[ MenuC.type.menu ] = function ( menu )
 	Menu.current = menu 
-	io.write("Menu.current is '", menu, "'"); io.flush();
+	io.write("Menu.current is '", menu, "'\n"); io.flush();
 	Menu.active = 1
 	-- io.write(string.format("setting %s (%d items) as active menu\n", menu, table.getn(Menu[menu].items) ))
 	local i

@@ -178,6 +178,8 @@ void keyboardGui(int state, int key, int x, int y) {
 
 void initGui(void)
 {
+    nebu_Input_UnhidePointer();
+    
 	gui_LoadResources();
 	updateSettingsCache();
 }
