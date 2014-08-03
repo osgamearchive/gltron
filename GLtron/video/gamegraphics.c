@@ -810,6 +810,7 @@ void drawWorld(Camera *pCamera)
 	// drawPlayers sets up its own lighting
 	nebu_Video_CheckErrors("before players");
 	drawPlayers(pCamera);
+    drawRecognizer();
 	nebu_Video_CheckErrors("after players");
 
 	// restore lighting to world light
