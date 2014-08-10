@@ -147,7 +147,7 @@ extern float vp_x[4][4];
 extern float vp_y[4][4];
 extern float vp_w[4][4];
 extern float vp_h[4][4];
-extern unsigned char debugcolors[6][4];
+extern float debug_colors[][4];
 
 extern float gShadowColor[4];
 extern float gCurrentShadowColor[4];

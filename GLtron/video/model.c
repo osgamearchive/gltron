@@ -533,13 +533,18 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
   }
 
   nebu_Mesh_VB_Enable(pMesh->pVB);
-
+    
   for(i = 0; i < pMesh->nMaterials; i++) {
 	  if(pMesh->ppMaterials[i])
 		gltron_Mesh_Material_Set(pMesh->ppMaterials[i]);
 
+      // glDisable(GL_LIGHTING);
+      // glColor4fv(debug_colors[i % 7]);
+      
 		glDrawElements(primitive,  iFaceSize * pMesh->ppIB[i]->nPrimitives,
 		   GL_UNSIGNED_INT, pMesh->ppIB[i]->pIndices);
+      
+      // glEnable(GL_LIGHTING);
   }
 	nebu_Mesh_VB_Disable(pMesh->pVB);
 }
