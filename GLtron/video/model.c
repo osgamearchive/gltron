@@ -533,13 +533,18 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
   }
 
   nebu_Mesh_VB_Enable(pMesh->pVB);
-
+    
   for(i = 0; i < pMesh->nMaterials; i++) {
 	  if(pMesh->ppMaterials[i])
 		gltron_Mesh_Material_Set(pMesh->ppMaterials[i]);
 
+      // glDisable(GL_LIGHTING);
+      // glColor4fv(debug_colors[i % 7]);
+      
 		glDrawElements(primitive,  iFaceSize * pMesh->ppIB[i]->nPrimitives,
 		   GL_UNSIGNED_INT, pMesh->ppIB[i]->pIndices);
+      
+      // glEnable(GL_LIGHTING);
   }
 	nebu_Mesh_VB_Disable(pMesh->pVB);
 }
@@ -560,6 +565,7 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 		{ 0.01f, -0.01f, -0.09f }, 
 		{ -0.04f, 0.04f, 0.02f }
 	};
+    
 
     
     // alloc memory for the required amount of primitives
@@ -583,7 +589,7 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 	{
 		if(pMesh->ppMaterials[i])
 			gltron_Mesh_Material_Set(pMesh->ppMaterials[i]);
-
+        
 		for(int j = 0; j < pMesh->ppIB[i]->nPrimitives; j++)
 		{
 			float *main_normal = pMesh->pVB->pNormals + 3 * pMesh->ppIB[i]->pIndices[3 * j];
@@ -596,8 +602,7 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
                 for(int l = 0; l < 3; l++)
                 {
                     normals[9 * j + 3 * k + l] = normal[l];
-                    vertices[9 * j + 3 * k + l] = vertex[l] + 0
-                    *
+                    vertices[9 * j + 3 * k + l] = vertex[l] +
                     (
                     (l < 2) ?
                         ( fRadius * (*(main_normal + l) + vectors[j % EXP_VECTORS][l]) ) :
@@ -606,7 +611,12 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
                 }
             }
 		}
-        glDrawArrays(GL_TRIANGLES, 0, pMesh->ppIB[i]->nPrimitives);
+        // glDisable(GL_LIGHTING);
+        // glColor4fv(debug_colors[i % 7]);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3 * pMesh->ppIB[i]->nPrimitives);
+        
+        // glEnable(GL_LIGHTING);
         fprintf(stderr, "explosion triangles: %d\n", pMesh->ppIB[i]->nPrimitives);
     }
     
