@@ -56,13 +56,14 @@ int gSpoke_state = 0; /* showing spoke or not */
 
 int gIsRenderingReflection = 0;
 
-unsigned char debugcolors[6][4] = {
-  { 0, 0, 0, 0 },
-  { 255, 0, 0, 255 },
-  { 0, 255, 255, 255 },
-  { 0, 255, 0, 255 },
-  { 0, 0, 255, 255 },
-  { 255, 255, 255, 255 }
+float debug_colors[][4] = {
+    { 0, 0, 1, 1 },
+    { 0, 1, 0, 1 },
+    { 0, 1, 1, 1 },
+    { 1, 0, 0, 1 },
+    { 1, 0, 1, 1 },
+    { 1, 1, 0, 1 },
+    { 1, 1, 1, 1 }
 };
 
 int vp_max[MAX_PLAYER_VISUALS] = { 1, 2, 4, 1 }; /* windows in this display setting */
