@@ -566,12 +566,16 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 		{ 0.01f, -0.01f, -0.09f }, 
 		{ -0.04f, 0.04f, 0.02f }
 	};
+    
 
 	for(i = 0; i < pMesh->nMaterials; i++)
 	{
 		if(pMesh->ppMaterials[i])
 			gltron_Mesh_Material_Set(pMesh->ppMaterials[i]);
 
+        // glDisable(GL_LIGHTING);
+        // glColor4fv(debug_colors[i % 7]);
+        
 		for(j = 0; j < pMesh->ppIB[i]->nPrimitives; j++)
 		{
 			float *normal, *vertex;
@@ -594,6 +598,7 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 			glEnd();
 			glPopMatrix();
 		}
+        // glEnable(GL_LIGHTING);
 	}
 }
 
