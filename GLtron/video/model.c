@@ -551,7 +551,6 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
 
 void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 {
-	int i, j, k;
 #define EXP_VECTORS 10
 	float vectors[EXP_VECTORS][3] =
 	{
@@ -568,38 +567,64 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 	};
     
 
-	for(i = 0; i < pMesh->nMaterials; i++)
+    
+    // alloc memory for the required amount of primitives
+    int nMaxPrimitives = 0;
+    for(int i = 0; i < pMesh->nMaterials; i++)
+    {
+        if(nMaxPrimitives < pMesh->ppIB[i]->nPrimitives)
+            nMaxPrimitives = pMesh->ppIB[i]->nPrimitives;
+    }
+    float *vertices = malloc( 9 * nMaxPrimitives * sizeof(float) );
+    float *normals = malloc( 9 * nMaxPrimitives * sizeof(float) );
+	
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glNormalPointer(GL_FLOAT, 0, normals);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+    
+    for(int i = 0; i < pMesh->nMaterials; i++)
+    // int i = 4;
 	{
 		if(pMesh->ppMaterials[i])
 			gltron_Mesh_Material_Set(pMesh->ppMaterials[i]);
-
+        
+		for(int j = 0; j < pMesh->ppIB[i]->nPrimitives; j++)
+		{
+			float *main_normal = pMesh->pVB->pNormals + 3 * pMesh->ppIB[i]->pIndices[3 * j];
+            
+			for(int k = 0; k < 3; k++)
+			{
+				float *normal = pMesh->pVB->pNormals + 3 * pMesh->ppIB[i]->pIndices[3 * j + k];
+				float *vertex = pMesh->pVB->pVertices + 3 * pMesh->ppIB[i]->pIndices[3 * j + k];
+                
+                for(int l = 0; l < 3; l++)
+                {
+                    normals[9 * j + 3 * k + l] = normal[l];
+                    vertices[9 * j + 3 * k + l] = vertex[l] +
+                    (
+                    (l < 2) ?
+                        ( fRadius * (*(main_normal + l) + vectors[j % EXP_VECTORS][l]) ) :
+                        fabsf( fRadius * (*(main_normal + l) + vectors[j % EXP_VECTORS][l]) )
+                     );
+                }
+            }
+		}
         // glDisable(GL_LIGHTING);
         // glColor4fv(debug_colors[i % 7]);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3 * pMesh->ppIB[i]->nPrimitives);
         
-		for(j = 0; j < pMesh->ppIB[i]->nPrimitives; j++)
-		{
-			float *normal, *vertex;
-
-			normal = pMesh->pVB->pNormals + 3 * pMesh->ppIB[i]->pIndices[3 * j];
-
-			glPushMatrix();
-			glTranslatef(fRadius * (*(normal + 0) + vectors[j % EXP_VECTORS][0]),
-				fRadius * (*(normal + 1) + vectors[j % EXP_VECTORS][1]),
-				fabsf(fRadius * (*(normal + 2) + vectors[j % EXP_VECTORS][2]) ));
-			glBegin(GL_TRIANGLES);
-			for(k = 0; k < 3; k++)
-			{
-				normal = pMesh->pVB->pNormals + 3 * pMesh->ppIB[i]->pIndices[3 * j + k];
-				vertex = pMesh->pVB->pVertices + 3 * pMesh->ppIB[i]->pIndices[3 * j + k];
-
-				glNormal3fv(normal);
-				glVertex3fv(vertex);
-			}
-			glEnd();
-			glPopMatrix();
-		}
         // glEnable(GL_LIGHTING);
-	}
+        fprintf(stderr, "explosion triangles: %d\n", pMesh->ppIB[i]->nPrimitives);
+    }
+    
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+    
+    free(vertices);
+    free(normals);
 }
 
 void gltron_Mesh_ComputeBBox(gltron_Mesh *pMesh) {
