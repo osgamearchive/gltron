@@ -3,6 +3,8 @@
 #include "configuration/settings.h"
 #include "game/game_level.h"
 
+#include "video/recognizer.h"
+
 #include "base/nebu_math.h"
 #include "video/nebu_renderer_gl.h"
 
@@ -69,7 +71,19 @@ void draw2D( nebu_Rect *pRect )
 			nVertices += 2 * p->data.nTrails;
 		}
 	}
-
+    
+    // debug recognizer position
+    /*
+    glBlendFunc(GL_ONE, GL_ONE);
+    glColor3f(1, 1, 1);
+    vec2 p, v;
+    getRecognizerPositionVelocity(&p, &v);
+    glPointSize(4);
+    glBegin(GL_POINTS);
+    glVertex2f( p.v[0], p.v[1] );
+    glEnd();
+    */
+    
 	for(i = 0; i < game->players; i++) {
 		Player *p = &game->player[i];
 		int i;
