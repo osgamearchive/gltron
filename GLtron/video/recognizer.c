@@ -10,21 +10,23 @@
 
 static float alpha = 0;
 
+static float phase = 26.13;
+static float a = 2;
+static float b = 3;
+
 const static float rec_scale_factor = 0.25f;
+const static float rec_area_edge_factor = 0.85;
 
-static float xv[] = { 0.5f, 0.3245f, 0.6f, 0.5f, 0.68f, -0.3f };
-static float yv[] = { 0.8f, 1.0f, 0.0f, 0.2f, 0.2f, 0.0f };
+static float x(void) { return sinf(a * alpha + M_PI / 2 + phase); }
+static float y(void) { return sinf(b * alpha + phase); }
 
-static float x(void) { return xv[0] * sinf(xv[1] * alpha + xv[2]) - xv[3] * sinf(xv[4] * alpha + xv[5]); }
-static float y(void) { return yv[0] * cosf(yv[1] * alpha + yv[2]) - yv[3] * sinf(yv[4] * alpha + yv[5]); }
-
-static float dx(void) { return xv[1] * xv[0] * cosf(xv[1] * alpha + xv[2]) - xv[4] * xv[3] * cosf(xv[4] * alpha + xv[5]); }
-static float dy(void) { return - yv[1] * yv[0] * sinf(yv[1] * alpha + yv[2]) - yv[4] * yv[3] * sinf(yv[4] * alpha + yv[5]); }
+static float dx(void) { return a * cosf(a * alpha + M_PI / 2 + phase); }
+static float dy(void) { return b * cosf(b * alpha + phase); }
 
 float getRecognizerAngle(vec2 *velocity)
 {
   float dxval = velocity->v[0];
-  float dyval = velocity->v[0];
+  float dyval = velocity->v[1];
   
   float phi = acosf ( dxval / sqrtf( dxval * dxval + dyval * dyval ) );
   if (dyval < 0) {
@@ -35,12 +37,14 @@ float getRecognizerAngle(vec2 *velocity)
 
 void getRecognizerPositionVelocity(vec2 *p, vec2 *v)
 {
-	float rec_boundry = box2_Diameter(& game2->level->boundingBox) * (1-rec_scale_factor);
+	float rec_width = box2_Width(& game2->level->boundingBox) * rec_area_edge_factor;
+    float rec_height = box2_Height(& game2->level->boundingBox) * rec_area_edge_factor;
 	box2_Center(p, & game2->level->boundingBox);
-	p->v[0] += x() * rec_boundry / 2.0f;
-	p->v[1] += y() * rec_boundry / 2.0f;
-	v->v[0] = dx() * rec_boundry / 100.f;
-	v->v[1] = dy() * rec_boundry / 100.f;
+    // it's += because we add the x/y to the bounding box center
+	p->v[0] += x() * rec_width / 2.0f;
+	p->v[1] += y() * rec_height / 2.0f;
+	v->v[0] = dx();
+	v->v[1] = dy();
 }
 
 void drawRecognizerShadow(void) {
@@ -124,7 +128,7 @@ void drawRecognizer(void) {
 }  
 
 void doRecognizerMovement(void) {
-  alpha += game2->time.dt / 2000.0f;
+  alpha += game2->time.dt / 5000.0f;
 }
 
 void resetRecognizer(void) {
