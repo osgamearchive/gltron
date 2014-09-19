@@ -33,7 +33,7 @@ typedef struct {
 typedef struct {
 	int nPrimitivesPerIndex;
 	int nPrimitives;
-	int *pIndices;
+	unsigned short *pIndices;
 } nebu_Mesh_IB;
 
 typedef struct {

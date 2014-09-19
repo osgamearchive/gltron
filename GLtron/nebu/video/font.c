@@ -230,16 +230,15 @@ void nebu_Font_Render(nebu_Font* font, const char *text, int len)
 		glEnable(GL_TEXTURE_2D);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-		glBegin(GL_QUADS);
-		glTexCoord2f(u1, v1);
-		glVertex3f(0, 0, 0);
-		glTexCoord2f(u2, v1);
-		glVertex3f(1, 0, 0);
-		glTexCoord2f(u2, v2);
-		glVertex3f(1, 1, 0);
-		glTexCoord2f(u1, v2);
-		glVertex3f(0, 1, 0);
-		glEnd();
+        float vertices[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
+        float texcoords[] = { u1, v1, u2, v1, u2, v2, u1, v2 };
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
 
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);

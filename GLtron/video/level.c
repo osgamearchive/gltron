@@ -93,8 +93,10 @@ void video_Shader_Setup(video_level_shader* shader, int pass) {
 		break;
 	case 1:
 		glColor4f(.5, .5, .5, 1.0f);
+#ifndef OPENGL_ES
 		glPolygonOffset(1,4);
 		glEnable(GL_POLYGON_OFFSET_LINE);
+#endif
 		break;
 	}
 }
@@ -117,7 +119,9 @@ void video_Shader_Cleanup(video_level_shader* shader, int pass)
 		}
 		break;
 	case 1:
+#ifndef OPENGL_ES
 		glDisable(GL_POLYGON_OFFSET_LINE);
+#endif
 		break;
 	}
 }
@@ -369,7 +373,10 @@ gltron_Mesh* loadMesh(void) {
 		for(j = 0; j < 3; j++)
 		{
 			scripting_GetArrayIndex(j + 1);
-			scripting_GetIntegerResult( & pMesh->ppIB[0]->pIndices[3 * i + j] );
+            int index;
+			scripting_GetIntegerResult( &index);
+            nebu_assert(index <= 65535); // unsigned short range
+            pMesh->ppIB[0]->pIndices[3 * i + j] = (unsigned short)index;
 		}
 		scripting_Pop(); // index i;
 	}

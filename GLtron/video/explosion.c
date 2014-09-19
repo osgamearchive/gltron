@@ -22,18 +22,25 @@ static void drawWave(double radius) {
   double delta_angle = (180.0 / SHOCKWAVE_SEGMENTS) * (PI/180);
   double start_angle = 270.0 * (PI/180);
   
-  for (i = 0; i < SHOCKWAVE_SEGMENTS; i++) {
-    glBegin(GL_QUAD_STRIP);
-    angle = start_angle;
-    for (j = 0; j <= SHOCKWAVE_SEGMENTS; j++) {
-      glVertex2d((radius + delta_radius) * sin(angle),
-          (radius + delta_radius) * cos(angle));
-      glVertex2d(radius * sin(angle), radius * cos(angle));
-      angle += delta_angle;
+    float vertices[(SHOCKWAVE_SEGMENTS + 1)* 4];
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    
+    for (i = 0; i < SHOCKWAVE_SEGMENTS; i++) {
+        angle = start_angle;
+        for (j = 0; j <= SHOCKWAVE_SEGMENTS; j++) {
+            vertices[4 * j + 0] = (radius + delta_radius) * sin(angle);
+            vertices[4 * j + 1] = (radius + delta_radius) * cos(angle);
+            vertices[4 * j + 2] = (radius + 0) * sin(angle);
+            vertices[4 * j + 3] = (radius + 0) * cos(angle);
+            
+            angle += delta_angle;
+        }
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 2 * (SHOCKWAVE_SEGMENTS + 1));
+        radius += delta_radius;
     }
-    glEnd();
-    radius += delta_radius;
-  }
+    glDisableClientState(GL_VERTEX_ARRAY);
+    
 }
 
 static void drawShockwaves(float radius) {
@@ -84,12 +91,20 @@ static void drawSpires(float radius) {
   };
 
   glColor4f(1, 1, 1, 1.0f);
-  glVertex3f(0, 0, 0);
+    // this is probably a bug: glVertex3f outside glBegin/glEnd
+  // glVertex3f(0, 0, 0);
+
  
   glBlendFunc(GL_ONE, GL_ONE);
 
+#ifndef OPENGL_ES
   glBegin(GL_TRIANGLES);
-  
+    
+    float vertices[(NUMSPIRES + 1) * 3];
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    
   for (i=0; i < NUM_SPIRES; i++) {
 		vec3_Cross(&right, vectors + i, &zUnit);
 		vec3_Normalize(&right, &right);
@@ -106,6 +121,8 @@ static void drawSpires(float radius) {
   } 
   
   glEnd();
+#endif
+    
 }
 
 #define GLOW_START_OPACITY 1.2f
@@ -126,12 +143,16 @@ static void drawImpactGlow(float glow_radius) {
 
   glColor4f(GLOW_INTENSITY, GLOW_INTENSITY, GLOW_INTENSITY, opacity);
   glDepthMask(0);
-  glBegin(GL_POLYGON);
+    
+#ifndef OPENGL_ES
+  glBegin(GL_TRIANGLE_FAN);
   glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
   glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
   glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
   glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
   glEnd();
+#endif
+    
   glDepthMask(1);
   glDisable(GL_TEXTURE_2D);
   glPopMatrix();

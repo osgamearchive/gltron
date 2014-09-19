@@ -7,7 +7,7 @@
 #include <unistd.h>
 #endif
 
-#include <png.h>
+#include "png.h"
 #include <string.h>
 
 #include "base/nebu_debug_memory.h"

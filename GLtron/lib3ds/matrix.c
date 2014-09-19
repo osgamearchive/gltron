@@ -12,6 +12,7 @@
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
  * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public  
  * License for more details.
+ 
  *
  * You should  have received  a copy of the GNU Lesser General Public License
  * along with  this program;  if not, write to the  Free Software Foundation,
@@ -20,9 +21,9 @@
  * $Id: matrix.c 1651 2004-05-31 08:01:30Z andi75 $
  */
 #define LIB3DS_EXPORT
-#include <lib3ds/matrix.h>
-#include <lib3ds/quat.h>
-#include <lib3ds/vector.h>
+#include "lib3ds/matrix.h"
+#include "lib3ds/quat.h"
+#include "lib3ds/vector.h"
 #include <string.h>
 #include <math.h>
 

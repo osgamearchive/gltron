@@ -3,7 +3,6 @@
 
 #include "video/nebu_renderer_gl.h"
 #include "video/nebu_quad.h"
-#include "
 
 int getTrailCount() {
   int i;

@@ -1,5 +1,5 @@
 #include "video/nebu_camera.h"
-#include "video/nebu_gl.h"
+#include "video/nebu_renderer_gl.h"
 #include "base/nebu_math.h"
 #include "base/nebu_matrix.h"
 

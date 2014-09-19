@@ -118,10 +118,14 @@ void drawRecognizer(void) {
 	  1);
 
   glPolygonOffset(1,8);
+#ifndef OPENGL_ES
   glEnable(GL_POLYGON_OFFSET_LINE);
   drawSharpEdges((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh));
   glDisable(GL_POLYGON_OFFSET_LINE);
-
+#else
+    drawSharpEdges((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh));
+#endif
+    
   glDisable(GL_CULL_FACE);
   
   glPopMatrix();

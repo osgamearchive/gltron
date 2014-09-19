@@ -1,7 +1,7 @@
 #include "base/nebu_surface.h"
 #include "base/nebu_png_texture.h"
 
-#include <png.h>
+#include "png.h"
 #include "base/nebu_system.h"
 
 #include "base/nebu_debug_memory.h"
@@ -54,7 +54,7 @@ nebu_Surface* nebu_Surface_LoadPNG(const char *filename)
 
 static FILE *fp;
 
-
+#ifndef __IPHONEOS__
 static void user_write_data(png_structp png_ptr,
 		     png_bytep data, png_size_t length) {
   fwrite(data, length, 1, fp);
@@ -63,6 +63,7 @@ static void user_write_data(png_structp png_ptr,
 static void user_flush_data(png_structp png_ptr) {
   fflush(fp);
 }
+#endif
 
 int nebu_Surface_SaveBMP(nebu_Surface *pSurface, const char *filename)
 {
@@ -102,6 +103,7 @@ int nebu_Surface_SaveBMP(nebu_Surface *pSurface, const char *filename)
 
 int nebu_Surface_SavePNG(nebu_Surface *pSurface, const char *filename)
 {
+#ifndef __IPHONEOS__
 	png_structp png_ptr;
 	png_infop info_ptr;
 	png_byte **row_ptrs;
@@ -171,7 +173,8 @@ int nebu_Surface_SavePNG(nebu_Surface *pSurface, const char *filename)
 
 	free(row_ptrs);
 	fclose(fp);
-	return 0;	
+#endif
+	return 0;
 }
 
 void nebu_Surface_Blit(nebu_Surface *pSrcSurface, nebu_Rect *pSrcRect, nebu_Surface* pDstSurface, nebu_Rect *pDstRect)

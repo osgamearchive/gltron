@@ -4,10 +4,11 @@
 // #define OPENGL_ES
 
 #ifdef OPENGL_ES
-#include <OpenGLES/ES1/gl.h>
-#else // OPENGL_ES
-#include <SDL/SDL_OpenGL.h>
-#endif // !OPENGL_ES
+#include "SDL_opengles.h"
+// #include <OpenGLES/ES1/gl.h>
+#else
+#include "SDL_opengl.h"
+#endif
 
 #include <stdio.h>
 

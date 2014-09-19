@@ -108,7 +108,10 @@ void goto_installpath(const char *argv0)
 #else
 void goto_installpath(const char *argv0)
 {
+#ifndef __IPHONEOS__
     chdir("GLtron.app/Contents/Resources/Resources");
+#endif
+    
     char buf[1024];
     fprintf(stderr, "current directory: %s\n", getwd(buf));
 

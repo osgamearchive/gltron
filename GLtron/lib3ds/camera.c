@@ -20,13 +20,13 @@
  * $Id: camera.c 1651 2004-05-31 08:01:30Z andi75 $
  */
 #define LIB3DS_EXPORT
-#include <lib3ds/camera.h>
-#include <lib3ds/chunk.h>
-#include <lib3ds/io.h>
+#include "lib3ds/camera.h"
+#include "lib3ds/chunk.h"
+#include "lib3ds/io.h"
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <config.h>
+#include "config.h"
 #ifdef WITH_DMALLOC
 #include <dmalloc.h>
 #endif

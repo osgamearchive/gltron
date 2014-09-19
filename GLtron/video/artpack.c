@@ -12,7 +12,7 @@
 #include <string.h>
 #include "base/nebu_assert.h"
 
-#include <base/nebu_debug_memory.h>
+#include "base/nebu_debug_memory.h"
 
 /*!
 	scan the artpack's directory's ( art/ ) contents and store the

@@ -1,14 +1,13 @@
 #include "video/nebu_mesh_3ds.h"
 #include "video/nebu_mesh.h"
 
-#include <lib3ds/file.h>                        
-#include <lib3ds/camera.h>
-#include <lib3ds/mesh.h>
-#include <lib3ds/node.h>
-#include <lib3ds/material.h>
-#include <lib3ds/matrix.h>
-#include <lib3ds/vector.h>
-#include <lib3ds/light.h>
+#include "lib3ds/file.h"
+#include "lib3ds/camera.h"
+#include "lib3ds/mesh.h"
+#include "lib3ds/node.h"
+#include "lib3ds/matrix.h"
+#include "lib3ds/vector.h"
+#include "lib3ds/light.h"
 
 #include <string.h>
 

@@ -12,7 +12,7 @@
 #include "input/input.h"
 #include "video/nebu_console.h"
 
-#include <base/nebu_debug_memory.h>
+#include "base/nebu_debug_memory.h"
 
 int isAltLeftPressed = 0;
 int isAltRightPressed = 0;

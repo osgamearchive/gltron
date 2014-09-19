@@ -113,21 +113,24 @@ void draw2D( nebu_Rect *pRect )
 		getPositionFromData(&x, &y, &p->data);
 		
 		glPointSize(2);
-		glBegin(GL_POINTS);
-		glVertex2f( x, y );
-		glEnd();
+        glEnableClientState(GL_VERTEX_ARRAY);
+        float point[] = { x, y };
+        glVertexPointer(2, GL_FLOAT, 0, point);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glDisableClientState(GL_VERTEX_ARRAY);
 
-		glBegin(GL_LINES);
+        float *vertices = (float*)malloc(p->data.nTrails * 4 * sizeof(float));
 		for(i = 0; i < p->data.nTrails; i++)
 		{
 			segment2* trail = p->data.trails + i;
-			glVertex2f(trail->vStart.v[0], 
-				trail->vStart.v[1]
-				);
-			glVertex2f(trail->vStart.v[0] + trail->vDirection.v[0], 
-				trail->vStart.v[1] + trail->vDirection.v[1]
-				);
+            vertices[4 * i + 0] = trail->vStart.v[0];
+            vertices[4 * i + 1] = trail->vStart.v[1];
+            vertices[4 * i + 2] = trail->vStart.v[0] + trail->vDirection.v[0];
+            vertices[4 * i + 3] = trail->vStart.v[1] + trail->vDirection.v[1];
 		}
+        glDrawArrays(GL_LINES, 0, 2 * p->data.nTrails);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        
 		// I have no idea what the following was necessary for
 		// TODO: figure it out and rewrite or remove
 		/*
@@ -173,7 +176,6 @@ void draw2D( nebu_Rect *pRect )
 			p->ai.backleft.vStart.v[1] + 
 			p->ai.backleft.vDirection.v[1]);
 	#endif
-		glEnd();
 	}
 	glDisable(GL_BLEND);
 

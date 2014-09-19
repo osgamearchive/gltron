@@ -9,7 +9,7 @@ void nebu_Video_rasonly(int x, int y, int width, int height)
 	/* do rasterising only (in local display d) */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0f, (GLfloat) width, 0.0f, (GLfloat) height, 0.0f, 1.0f);
+	glOrthof(0.0f, (GLfloat) width, 0.0f, (GLfloat) height, 0.0f, 1.0f);
 	nebu_Video_CheckErrors("rasonly");
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

@@ -5,11 +5,11 @@
 
 #include "game/gltron.h"
 
-#include <png.h>
+#include "png.h"
 
 #include <stdio.h>
 
-#include <base/nebu_debug_memory.h>
+#include "base/nebu_debug_memory.h"
 
 #ifndef PATH_MAX
 #define PATH_MAX 255

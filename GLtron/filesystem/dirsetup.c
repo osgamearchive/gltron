@@ -9,9 +9,7 @@ const char* getHome() {
 }
 
 void dirSetup(const char *executable) {
-#ifdef LOCAL_DATA
-	goto_installpath(executable);
-#endif
-  initDirectories();
+    goto_installpath(executable);
+    initDirectories();
 }
 

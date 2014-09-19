@@ -193,11 +193,11 @@ void SystemReshapeFunc(void(*reshape)(int w, int h)) {
 	fprintf(stderr, "can't set reshape function (%p) - feature not supported\n", reshape);
 }
 
-#ifndef SDL2
 void nebu_Video_WarpPointer(int x, int y) {
+#ifndef SDL2
     SDL_WarpMouse( (Uint16)x, (Uint16)y);
-}
 #endif
+}
 
 void nebu_Video_CheckErrors(const char *where) {
 	int error;

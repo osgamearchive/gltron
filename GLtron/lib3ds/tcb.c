@@ -20,8 +20,8 @@
  * $Id: tcb.c 1651 2004-05-31 08:01:30Z andi75 $
  */
 #define LIB3DS_EXPORT
-#include <lib3ds/tcb.h>
-#include <lib3ds/io.h>
+#include "lib3ds/tcb.h"
+#include "lib3ds/io.h"
 #include <math.h>
 
 

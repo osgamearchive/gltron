@@ -6,11 +6,18 @@
 //  Copyright (c) 2014 Andreas Umbach. All rights reserved.
 //
 
+#ifndef __IPHONEOS__
 #include "Cocoa/Cocoa.h"
+#else
+#import "UIKit/UIKit.h"
+#endif
 
 void goto_installpath(const char *argv0)
 {
     NSString *resourceDir = [NSString stringWithFormat:@"%@/Resources", [[NSBundle mainBundle] resourcePath]];
     NSLog(@"%@", resourceDir);
+    NSLog(@"%@", [NSString stringWithContentsOfFile:@"basics.lua"
+                                           encoding:NSUTF8StringEncoding
+                                              error:NULL]);
     chdir([resourceDir cStringUsingEncoding:NSUTF8StringEncoding]);
 }

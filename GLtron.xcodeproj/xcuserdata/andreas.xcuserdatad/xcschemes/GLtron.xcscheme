@@ -38,6 +38,16 @@
                ReferencedContainer = "container:GLtron.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E170A64019A69B0F00E4EA7F"
+               BuildableName = "GLtronIOSTests.xctest"
+               BlueprintName = "GLtronIOSTests"
+               ReferencedContainer = "container:GLtron.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

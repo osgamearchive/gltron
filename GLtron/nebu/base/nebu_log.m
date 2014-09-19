@@ -8,7 +8,11 @@
 
 #include "base/nebu_debug_memory.h"
 
+#ifndef __IPHONEOS__
 #include "Cocoa/Cocoa.h"
+#else
+#include "UIKit/UIKit.h"
+#endif
 
 void nebu_Log(const char* message)
 {

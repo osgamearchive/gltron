@@ -46,7 +46,9 @@ void drawGlow(PlayerVisual *pV, Player *pTarget, float dim)
   mat[8] = mat[9] = 0.0;
   glLoadMatrixf(mat);
 
-
+    
+    // TODO: OPENGL_ES
+#ifndef OPENGL_ES
   glBegin(GL_TRIANGLE_FAN);
   glColor4f(pTarget->profile.pColorDiffuse[0], 
 						pTarget->profile.pColorDiffuse[1], 
@@ -68,6 +70,7 @@ void drawGlow(PlayerVisual *pV, Player *pTarget, float dim)
   glVertex3d(dim*cos(5.2*3.1415/5.0),
 	     TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0);
   glEnd();
+    
 
   glBegin(GL_TRIANGLES);
   glColor4f(pTarget->profile.pColorDiffuse[0], 
@@ -90,6 +93,7 @@ void drawGlow(PlayerVisual *pV, Player *pTarget, float dim)
 	     TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0);
   glVertex3f(0,-TRAIL_HEIGHT/4,0);
   glEnd();
+#endif
 
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);

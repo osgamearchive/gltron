@@ -34,7 +34,7 @@ void drawGuiBackground(void) {
   // rasonly(gScreen);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0,pBackground->w,0,pBackground->h,0,1);
+  glOrthof(0,pBackground->w,0,pBackground->h,0,1);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glDisable(GL_DEPTH_TEST);

@@ -115,6 +115,7 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+#ifndef OPENGL_ES
 	glBegin(GL_LINES);
 
 	/* the current line is not drawn */
@@ -146,7 +147,7 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 			height);
 	}
 	glEnd();
-
+    
 	// current line now
 	s = data->trails + data->nTrails - 1;
 	/* compute distance from line to eye point */
@@ -172,6 +173,7 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 		height );
 
 	glEnd();
+#endif
 
 	glDisable(GL_BLEND);
 	glDisable(GL_LINE_SMOOTH); /* disable line antialiasing */

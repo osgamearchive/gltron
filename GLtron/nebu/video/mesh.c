@@ -30,7 +30,7 @@ void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB)
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
 		if(pVB->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
-			glClientActiveTexture(GL_TEXTURE0_ARB + i);
+			glClientActiveTexture(GL_TEXTURE0 + i);
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			if(pVB->pTexCoords[i])
 				glTexCoordPointer(2, GL_FLOAT, 0, pVB->pTexCoords[i]);
@@ -48,11 +48,13 @@ void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB)
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, pVB->pColor0);
 	}
+#ifndef OPENGL_ES
 	if(pVB->vertexformat & NEBU_MESH_COLOR1)
 	{
 		glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
 		glSecondaryColorPointer(4, GL_UNSIGNED_BYTE, 0, pVB->pColor1);
 	}
+#endif
 }
 
 void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
@@ -62,15 +64,17 @@ void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
+#ifndef OPENGL_ES
 	glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
+#endif
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)
 	{
 		if(pVB->vertexformat & (NEBU_MESH_TEXCOORD0 << i)) {
-			glClientActiveTexture(GL_TEXTURE0_ARB + i);
+			glClientActiveTexture(GL_TEXTURE0 + i);
 			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
 	}
-	glClientActiveTexture(GL_TEXTURE0_ARB);
+	glClientActiveTexture(GL_TEXTURE0);
 }
 
 int nebu_Mesh_Validate(nebu_Mesh *pMesh)
@@ -89,7 +93,7 @@ void nebu_Mesh_DrawGeometry(nebu_Mesh *pMesh)
 	nebu_assert(!nebu_Mesh_Validate(pMesh));
 
 	nebu_Mesh_VB_Enable(pMesh->pVB);
-	glDrawElements(GL_TRIANGLES, 3 * pMesh->pIB->nPrimitives, GL_UNSIGNED_INT, pMesh->pIB->pIndices);
+	glDrawElements(GL_TRIANGLES, 3 * pMesh->pIB->nPrimitives, GL_UNSIGNED_SHORT, pMesh->pIB->pIndices);
 	nebu_Mesh_VB_Disable(pMesh->pVB);
 }
 
@@ -154,7 +158,7 @@ void nebu_Mesh_VB_Scale(nebu_Mesh_VB *pVB, float fScale)
 nebu_Mesh_IB* nebu_Mesh_IB_Create(int nPrimitives, int nPrimitivesPerIndex)
 {
 	nebu_Mesh_IB *pIB = (nebu_Mesh_IB*) malloc(sizeof(nebu_Mesh_IB));
-	pIB->pIndices = (int*) malloc(nPrimitives * nPrimitivesPerIndex * sizeof(int));
+	pIB->pIndices = (unsigned short*) malloc(nPrimitives * nPrimitivesPerIndex * sizeof(unsigned short));
 	pIB->nPrimitives = nPrimitives;
 	pIB->nPrimitivesPerIndex = nPrimitivesPerIndex;
 	return pIB;

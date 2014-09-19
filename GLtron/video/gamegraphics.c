@@ -256,6 +256,8 @@ void drawExtruded(nebu_Mesh_IB *pIB, nebu_Mesh_VB *pVB, vec3 *pvLightDirModel)
 	// TODO: port to OpenGL ES
 	int i;
 	vec3 vExtrusion;
+    
+#ifndef OPENGL_ES
 	glBegin(GL_QUADS);
 	glColor4f(1,1,1, 1.0f);
 	vec3_Scale(&vExtrusion, pvLightDirModel, 100);
@@ -271,6 +273,7 @@ void drawExtruded(nebu_Mesh_IB *pIB, nebu_Mesh_VB *pVB, vec3 *pvLightDirModel)
 		glVertex3fv(v.v);
 	}
 	glEnd();
+#endif
 }
 
 void drawSharpEdges(gltron_Mesh *pMesh)

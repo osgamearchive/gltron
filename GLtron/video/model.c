@@ -523,10 +523,12 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
     primitive = GL_TRIANGLES;
     iFaceSize = 3;
     break;
+#ifndef OPENGL_ES
   case QUAD_MESH:
     primitive = GL_QUADS;
     iFaceSize = 4;
     break;
+#endif
   default:
     fprintf(stderr, "[fatal]: illegal mesh type\n");
     nebu_assert(0); exit(1);
@@ -542,7 +544,7 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
       // glColor4fv(debug_colors[i % 7]);
       
 		glDrawElements(primitive,  iFaceSize * pMesh->ppIB[i]->nPrimitives,
-		   GL_UNSIGNED_INT, pMesh->ppIB[i]->pIndices);
+		   GL_UNSIGNED_SHORT, pMesh->ppIB[i]->pIndices);
       
       // glEnable(GL_LIGHTING);
   }
