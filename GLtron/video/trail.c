@@ -13,9 +13,6 @@
 #define TEX_SPLIT (1.0 - BOW_DIST2) / (1 - BOW_DIST1)
 #undef TEX_SPLIT
 
-static float normal1[] = { 1.0, 0.0, 0.0 };
-static float normal2[] = { 0.0, 1.0, 0.0 };
-
 /* 
    getDists returns the minimum distance from (the wall) *line to the
    specified (eye) point
@@ -90,12 +87,13 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 	int i;
 	float height;
 
-	float *normal;
 	float dist;
 	float alpha;
 	Data *data;
 
 	float trail_top[] = { 1.0, 1.0, 1.0, 1.0 };
+    float normal1[] = { 1.0, 0.0, 0.0 };
+    float normal2[] = { 0.0, 1.0, 0.0 };
 
 	data = & p->data;
 
@@ -115,11 +113,20 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#ifndef OPENGL_ES
-	glBegin(GL_LINES);
+    float normals[3 * 2 * data->nTrails];
+    float vertices[3 * 2 * data->nTrails];
+    float colors[4 * 2 * data->nTrails];
+    
+    // TODO: Buffer data
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glNormalPointer(GL_FLOAT, 0, normals);
+    glColorPointer(4, GL_FLOAT, 0, colors);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
 
 	/* the current line is not drawn */
-	for(i = 0; i < data->nTrails - 1; i++)
+	for(i = 0; i < data->nTrails; i++)
 	{
 		s = data->trails + i;
 		/* compute distance from line to eye point */
@@ -128,53 +135,61 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 		// TODO: compute the 'magic' 400 somehow
 		if(alpha < 0)
 			alpha = 0;
-		// trail_top[3] = alpha;
-		glColor4f(trail_top[0],
-			trail_top[1],
-			trail_top[2],
-			trail_top[3]);
+		trail_top[3] = alpha;
 
+        colors[4 * 2 * i + 0] = trail_top[0];
+        colors[4 * 2 * i + 1] = trail_top[1];
+        colors[4 * 2 * i + 2] = trail_top[2];
+        colors[4 * 2 * i + 3] = trail_top[3];
+        colors[4 * 2 * i + 4] = trail_top[0];
+        colors[4 * 2 * i + 5] = trail_top[1];
+        colors[4 * 2 * i + 6] = trail_top[2];
+        colors[4 * 2 * i + 7] = trail_top[3];
+        
 		if(s->vDirection.v[1] == 0)
-			normal = normal1;
-		else
-			normal = normal2;
-		glNormal3fv(normal);
-		glVertex3f(s->vStart.v[0],
-			s->vStart.v[1],
-			height);
-		glVertex3f(s->vStart.v[0] + s->vDirection.v[0],
-			s->vStart.v[1] + s->vDirection.v[1],
-			height);
+        {
+            normals[3 * 2 * i + 0] = normal1[0];
+            normals[3 * 2 * i + 1] = normal1[1];
+            normals[3 * 2 * i + 2] = normal1[2];
+            normals[3 * 2 * i + 3] = normal1[0];
+            normals[3 * 2 * i + 4] = normal1[1];
+            normals[3 * 2 * i + 5] = normal1[2];
+        }
+        else
+        {
+            normals[3 * 2 * i + 0] = normal2[0];
+            normals[3 * 2 * i + 1] = normal2[1];
+            normals[3 * 2 * i + 2] = normal2[2];
+            normals[3 * 2 * i + 3] = normal2[0];
+            normals[3 * 2 * i + 4] = normal2[1];
+            normals[3 * 2 * i + 5] = normal2[2];
+        }
+        vertices[3 * 2 * i + 0] =  s->vStart.v[0];
+        vertices[3 * 2 * i + 1] =  s->vStart.v[1];
+        vertices[3 * 2 * i + 2] =  height;
+        
+        if(i < data->nTrails - 1)
+        {
+            vertices[3 * 2 * i + 3] =  s->vStart.v[0] + s->vDirection.v[0];
+            vertices[3 * 2 * i + 4] =  s->vStart.v[1] + s->vDirection.v[1];
+            vertices[3 * 2 * i + 5] =  height;
+        }
+        else
+        {
+            vertices[3 * 2 * i + 3] =  getSegmentEndX(data, 0);
+            vertices[3 * 2 * i + 4] =  getSegmentEndY(data, 0);
+            vertices[3 * 2 * i + 5] =  height;
+        }
 	}
-	glEnd();
     
-	// current line now
-	s = data->trails + data->nTrails - 1;
-	/* compute distance from line to eye point */
-	dist = getDist(s, pCamera->cam);
-	// TODO: compute the 'magic' 400 somehow
-	alpha = (400 - dist / 2) / 400;
-	if(alpha < 0)
-		alpha = 0;
-	// trail_top[3] = alpha;
-	glColor4f(
-		trail_top[0],
-		trail_top[1],
-		trail_top[2],
-		1);
+    // glColor4f(trail_top[0], trail_top[1], trail_top[2], trail_top[3]);
+    glDrawArrays(GL_LINES, 0, 2 * data->nTrails);
+    glColor4f(1, 1, 1, 1);
 
-	glBegin(GL_LINES);
-
-	glVertex3f(s->vStart.v[0],
-		s->vStart.v[1],
-		height);
-	glVertex3f( getSegmentEndX(data, 0),
-		getSegmentEndY(data, 0),
-		height );
-
-	glEnd();
-#endif
-
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    
 	glDisable(GL_BLEND);
 	glDisable(GL_LINE_SMOOTH); /* disable line antialiasing */
 

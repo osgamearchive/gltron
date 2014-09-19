@@ -56,12 +56,13 @@ settings.map_scale = 1
 
 -- game settings
 settings.fast_finish = 1
-settings.camType = 1
+settings.camType = 4
 settings.display_type = 0
 
 -- video
 settings.artpacks = { }
 settings.current_artpack = "classic"
+-- settings.current_artpack = "the_cage"
 -- detail settings
 settings.mipmap_filter = 3
 settings.alpha_trails = 0
@@ -81,10 +82,13 @@ settings.show_scores = 0
 settings.show_2d = 1
 
 -- screen options
-settings.width = 1280
-settings.height = 720
+-- iPhone 5
+settings.width = 1136
+-- iPhone 4
+-- settings.width = 960
+settings.height = 640
 settings.resolution = 3 -- 1280x720
-settings.windowMode = 1
+settings.windowMode = 0
 
 -- other settings (not available via menu)
 settings.show_gl_logo = 1
@@ -114,7 +118,7 @@ settings.joy_threshold = 0.10
 
 -- audio
 -- settings.tracks = { }
-settings.current_track = "revenge_of_cats.it"
+settings.current_track = "revenge_of_cats.mp3"
 -- music & fx settings
 settings.loopMusic = 1
 -- TODO: debug setting 

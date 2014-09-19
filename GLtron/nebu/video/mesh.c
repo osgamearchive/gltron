@@ -48,7 +48,7 @@ void nebu_Mesh_VB_Enable(nebu_Mesh_VB *pVB)
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, pVB->pColor0);
 	}
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, GL_SECONDARY_COLOR_ARRAY
 	if(pVB->vertexformat & NEBU_MESH_COLOR1)
 	{
 		glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
@@ -64,7 +64,7 @@ void nebu_Mesh_VB_Disable(nebu_Mesh_VB *pVB)
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, GL_SECONDARY_COLOR_ARRAY
 	glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
 #endif
 	for(i = 0; i < NEBU_MESH_TEXCOORD_MAXCOUNT; i++)

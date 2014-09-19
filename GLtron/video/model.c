@@ -523,7 +523,7 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
     primitive = GL_TRIANGLES;
     iFaceSize = 3;
     break;
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, QUAD_MESH
   case QUAD_MESH:
     primitive = GL_QUADS;
     iFaceSize = 4;
@@ -613,13 +613,14 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
                 }
             }
 		}
+        // debut output:
         // glDisable(GL_LIGHTING);
         // glColor4fv(debug_colors[i % 7]);
 
         glDrawArrays(GL_TRIANGLES, 0, 3 * pMesh->ppIB[i]->nPrimitives);
         
         // glEnable(GL_LIGHTING);
-        fprintf(stderr, "explosion triangles: %d\n", pMesh->ppIB[i]->nPrimitives);
+        // fprintf(stderr, "explosion triangles: %d\n", pMesh->ppIB[i]->nPrimitives);
     }
     
 	glDisableClientState(GL_VERTEX_ARRAY);

@@ -25,6 +25,7 @@ static void drawWave(double radius) {
     float vertices[(SHOCKWAVE_SEGMENTS + 1)* 4];
     glVertexPointer(2, GL_FLOAT, 0, vertices);
     glEnableClientState(GL_VERTEX_ARRAY);
+    glColor4f(1,0,0, 1.0f);
     
     for (i = 0; i < SHOCKWAVE_SEGMENTS; i++) {
         angle = start_angle;
@@ -46,8 +47,6 @@ static void drawWave(double radius) {
 static void drawShockwaves(float radius) {
   int waves;
   
-  glColor4f(1,0,0, 1.0f);
-
   for(waves = 0; waves < NUM_SHOCKWAVES; waves++) {
     if (radius > SHOCKWAVE_MIN_RADIUS && radius < SHOCKWAVE_MAX_RADIUS) {
       drawWave(radius);
@@ -90,39 +89,57 @@ static void drawSpires(float radius) {
     { { -1.00f,  0.20f,  0.00f  } }
   };
 
-  glColor4f(1, 1, 1, 1.0f);
-    // this is probably a bug: glVertex3f outside glBegin/glEnd
-  // glVertex3f(0, 0, 0);
 
- 
-  glBlendFunc(GL_ONE, GL_ONE);
-
-#ifndef OPENGL_ES
-  glBegin(GL_TRIANGLES);
+    float vertices[3 * 3 * NUM_SPIRES]; // each spire is three vertices
+    // float colors[4 * 3 * NUM_SPIRES];
     
-    float vertices[(NUMSPIRES + 1) * 3];
-    glVertexPointer(2, GL_FLOAT, 0, vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    
-  for (i=0; i < NUM_SPIRES; i++) {
+    for (i=0; i < NUM_SPIRES; i++) {
 		vec3_Cross(&right, vectors + i, &zUnit);
 		vec3_Normalize(&right, &right);
 		vec3_Scale(&right, &right, SPIRE_WIDTH);
-
+        
 		vec3_Cross(&left, &zUnit, vectors + i);
 		vec3_Normalize(&left, &left);
 		vec3_Scale(&left, &left, SPIRE_WIDTH);
-
-    glColor4f(1,1,1,0.0);
-    glVertex3fv(right.v);
-    glVertex3f(radius * vectors[i].v[0], radius * vectors[i].v[1], 0.0);
-    glVertex3fv(left.v);
-  } 
-  
-  glEnd();
-#endif
+        
+        vertices[9 * i + 0] = right.v[0];
+        vertices[9 * i + 1] = right.v[1];
+        vertices[9 * i + 2] = right.v[2];
+        
+        vertices[9 * i + 3] = radius * vectors[i].v[0];
+        vertices[9 * i + 4] = radius * vectors[i].v[1];
+        vertices[9 * i + 5] = 0;
+        
+        vertices[9 * i + 6] = left.v[0];
+        vertices[9 * i + 7] = left.v[1];
+        vertices[9 * i + 8] = left.v[2];
+        
+        /*
+        colors[12 * i + 0] = 1.0;
+        colors[12 * i + 1] = 1.0;
+        colors[12 * i + 2] = 1.0;
+        colors[12 * i + 3] = 1.0;
+        
+        colors[12 * i + 4] = 1.0;
+        colors[12 * i + 5] = 1.0;
+        colors[12 * i + 6] = 1.0;
+        colors[12 * i + 7] = 1.0;
+        
+        colors[12 * i + 8] = 1.0;
+        colors[12 * i + 9] = 1.0;
+        colors[12 * i + 10] = 1.0;
+        colors[12 * i + 11] = 1.0;
+         */
+    }
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    // glColorPointer(4, GL_FLOAT, 0, colors);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    // glEnableClientState(GL_COLOR_ARRAY);
+    glDrawArrays(GL_TRIANGLES, 0, 3 * NUM_SPIRES);
+    // glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 #define GLOW_START_OPACITY 1.2f
@@ -141,17 +158,21 @@ static void drawImpactGlow(float glow_radius) {
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glEnable(GL_TEXTURE_2D);
 
-  glColor4f(GLOW_INTENSITY, GLOW_INTENSITY, GLOW_INTENSITY, opacity);
   glDepthMask(0);
     
-#ifndef OPENGL_ES
-  glBegin(GL_TRIANGLE_FAN);
-  glTexCoord2f(0.0, 0.0); glVertex2f(-1.0, -1.0);
-  glTexCoord2f(1.0, 0.0); glVertex2f(1.0, -1.0);
-  glTexCoord2f(1.0, 1.0); glVertex2f(1.0, 1.0);
-  glTexCoord2f(0.0, 1.0); glVertex2f(-1.0, 1.0);
-  glEnd();
-#endif
+    
+    float vertices[] = { -1, -1, 1, -1, 1, 1, -1, 1 };
+    float texcoords[] = { 0, 0, 1, 0, 1, 1, 0, 1 };
+    
+    glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+    glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glColor4f(GLOW_INTENSITY, GLOW_INTENSITY, GLOW_INTENSITY, opacity);
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
     
   glDepthMask(1);
   glDisable(GL_TEXTURE_2D);
@@ -162,11 +183,17 @@ void drawExplosion(float radius) {
 
   float shockwave_radius = (radius * SHOCKWAVE_SPEED);
 
+    glPolygonOffset(1, 8);
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    
   drawShockwaves(shockwave_radius);
 
   if (radius < IMPACT_MAX_RADIUS) {
     drawImpactGlow(radius);
     drawSpires(radius);
   }
+    
+    glPolygonOffset(0, 0);
+    glDisable(GL_POLYGON_OFFSET_FILL);
 }
 

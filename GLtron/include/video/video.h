@@ -49,14 +49,6 @@ enum {
 
 /* global constants */
 
-#define CAM_TYPE_DEFAULT 4
-#define CAM_TYPE_CIRCLING 0
-#define CAM_TYPE_FOLLOW 1
-#define CAM_TYPE_COCKPIT 2
-#define CAM_TYPE_MOUSE 3
-#define CAM_TYPE_OFFSET 4
-
-#define CAM_COUNT 5
 #define CAM_CIRCLE_DIST 17
 #define CAM_CIRCLE_Z 8.0f
 

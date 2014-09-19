@@ -8,6 +8,7 @@
 #include "base/nebu_math.h"
 #include "scripting/nebu_scripting.h"
 #include "video/nebu_renderer_gl.h"
+#include "video/nebu_video_system.h"
 
 #include <string.h>
 
@@ -17,6 +18,7 @@ void getPauseString(char *buf, float* color);
 
 void hud_MaskSetup(int maskId, int maskIndex) {
 	glEnable(GL_BLEND);
+    // doesn't exist on IOS
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.1f);
 
@@ -349,6 +351,7 @@ int c_drawHUDSurface(lua_State* l)
 
 int c_drawHUDMask(lua_State* l)
 {
+    nebu_Video_CheckErrors("before c_drawHUDMask()");
 	int maskId, maskIndex;
 	scripting_GetIntegerResult(&maskIndex);
 	scripting_GetIntegerResult(&maskId);
@@ -360,6 +363,7 @@ int c_drawHUDMask(lua_State* l)
 	{
 		hud_MaskSetup(maskId, maskIndex);
 	}
+    nebu_Video_CheckErrors("after c_drawHUDMask()");
 	return 0;
 }
 		

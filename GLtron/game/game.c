@@ -73,6 +73,7 @@ void enterGame(void) { /* called when game mode is entered */
 		}
 	}
 	/* fprintf(stderr, "init game\n"); */
+	nebu_Video_CheckErrors("after enterGame");
 }
 
 void exitGame(void) {

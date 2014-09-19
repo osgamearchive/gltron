@@ -21,18 +21,28 @@ void nebu_Texture2D_Free(nebu_Texture2D* pTexture)
 
 nebu_Texture2D* nebu_Texture2D_Load(const char *path, const nebu_Texture2D_meta* meta)
 {
+    char buf[1024];
+    snprintf(buf, 1024, "before texture %s", path);
+    nebu_Video_CheckErrors(buf);
+
 	nebu_Texture2D *pTexture;
 	pTexture = (nebu_Texture2D*)malloc(sizeof(nebu_Texture2D));
 
 	glGenTextures(1, & pTexture->id);
 	glBindTexture(GL_TEXTURE_2D, pTexture->id);
 
+    snprintf(buf, 1024, "before texture load %s", path);
+    nebu_Video_CheckErrors(buf);
 	loadTexture(path, meta->format);
-
+    snprintf(buf, 1024, "after texture load %s", path);
+    nebu_Video_CheckErrors(buf);
+    
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, meta->min_filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, meta->mag_filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, meta->wrap_s);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, meta->wrap_t);
+    snprintf(buf, 1024, "after texture %s", path);
+    nebu_Video_CheckErrors(buf);
     /*
 	if(GLEW_EXT_texture_filter_anisotropic)
 	{

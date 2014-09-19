@@ -18,7 +18,7 @@ void doPerspective(float fov, float ratio, float znear, float zfar) {
 
 	top = tanf( fov * PI / 360.0 ) * znear;
 	left = - top * ratio;
-	glFrustumf(left, -left, -top, top, znear, zfar);
+	glFrustum(left, -left, -top, top, znear, zfar);
 }
 
 void doLookAt(float *cam, float *target, float *up) {

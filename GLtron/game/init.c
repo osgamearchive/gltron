@@ -96,6 +96,7 @@ void initConfiguration(int argc, const char *argv[])
 	runScript(PATH_SCRIPTS, "config.lua");
 	runScript(PATH_SCRIPTS, "artpack.lua");
 	
+#ifndef __IPHONEOS__
 	/* go for .gltronrc (or whatever is defined in RC_NAME) */
 	{
 		char *path;
@@ -138,12 +139,14 @@ void initConfiguration(int argc, const char *argv[])
 		int isValid = 1;
 		scripting_GetGlobal("save_completed", NULL);
 		if(scripting_IsNil()) {
+            printf("[warning] defunct config file (save_completed missing)\n");
 			isValid = 0;
 		}
 		scripting_Pop();
 		scripting_GetGlobal("settings", "keys", NULL);
 		if(!scripting_IsTable())
 		{
+            printf("[warning] defunct config file (keys table missing)\n");
 			isValid = 0;
 		}
 		scripting_Pop();
@@ -155,6 +158,7 @@ void initConfiguration(int argc, const char *argv[])
 
 		}
 	}
+#endif
 
 	/* parse any comandline switches overrinding the loaded settings */
 	// TODO: fix for mac version

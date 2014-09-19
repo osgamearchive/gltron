@@ -76,7 +76,8 @@ void video_Shader_Setup(video_level_shader* shader, int pass) {
 		{
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, shader->idTexture);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			// glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 			glMatrixMode(GL_TEXTURE);
 			glLoadIdentity();
 			glScalef(shader->fDiffuseTextureScale, shader->fDiffuseTextureScale, shader->fDiffuseTextureScale);
@@ -93,7 +94,7 @@ void video_Shader_Setup(video_level_shader* shader, int pass) {
 		break;
 	case 1:
 		glColor4f(.5, .5, .5, 1.0f);
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, GL_POLYGON_OFFSET_LINE
 		glPolygonOffset(1,4);
 		glEnable(GL_POLYGON_OFFSET_LINE);
 #endif
@@ -119,7 +120,8 @@ void video_Shader_Cleanup(video_level_shader* shader, int pass)
 		}
 		break;
 	case 1:
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, GL_POLYGON_OFFSET_LINE
+        glPolygonOffset(0, 0);
 		glDisable(GL_POLYGON_OFFSET_LINE);
 #endif
 		break;

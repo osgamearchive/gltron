@@ -99,6 +99,12 @@ void createWindow(char *name)
 {
 #ifdef SDL2
     // TODO: where did bitdepth go?
+#ifdef __IPHONEOS__
+    SDL_DisplayMode mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
+    SDL_GetDisplayMode(0, 0, &mode);
+    fprintf(stderr, "[window size] (%d, %d)\n", mode.w, mode.h);
+#endif
+    
   if( (screen = SDL_CreateWindow( name,
                                  SDL_WINDOWPOS_UNDEFINED,
                                  SDL_WINDOWPOS_UNDEFINED,
@@ -107,6 +113,9 @@ void createWindow(char *name)
     fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
     nebu_assert(0); exit(1); /* OK: critical, no visual */
   }
+    char message[1024];
+    sprintf(message, "window size: (%d, %d)\n", width, height);
+    nebu_Log(message);
     SDL_GLContext glcontext = SDL_GL_CreateContext(screen);
 #else
     if( (screen = SDL_SetVideoMode(width, height, bitdepth,
@@ -204,7 +213,12 @@ void nebu_Video_CheckErrors(const char *where) {
 	error = glGetError();
 	if(error != GL_NO_ERROR)
 	{
-		fprintf(stderr, "[glError: %s] - %d\n", where, error);
-		nebu_assert(0);
+#ifndef OPENGL_ES // OK, no gluErrorString
+		fprintf(stderr, "[glError: %s] - %d: %s\n", where, error, gluErrorString(error));
+#else
+        fprintf(stderr, "[glError: %s] - %d\n", where, error);
+#endif
+        // TODO: assertion gets triggered atm.
+        // nebu_assert(0);
 	}
 }

@@ -47,54 +47,73 @@ void drawGlow(PlayerVisual *pV, Player *pTarget, float dim)
   glLoadMatrixf(mat);
 
     
-    // TODO: OPENGL_ES
-#ifndef OPENGL_ES
-  glBegin(GL_TRIANGLE_FAN);
-  glColor4f(pTarget->profile.pColorDiffuse[0], 
-						pTarget->profile.pColorDiffuse[1], 
-						pTarget->profile.pColorDiffuse[2],
-						alpha);
-
-  glVertex3f(0,TRAIL_HEIGHT/2, 0);
-  glColor4f(0,0,0,0.0);
-  glVertex3d(dim*cos(-0.2*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0);
-  glVertex3d(dim*cos(1.0*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(1.0*3.1415/5.0), 0);
-  glVertex3d(dim*cos(2.0*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(2.0*3.1415/5.0), 0);
-  glVertex3d(dim*cos(3.0*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(3.0*3.1415/5.0), 0);
-  glVertex3d(dim*cos(4.0*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(4.0*3.1415/5.0), 0);
-  glVertex3d(dim*cos(5.2*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0);
-  glEnd();
+    float fanColors[] = {
+        pTarget->profile.pColorDiffuse[0],
+        pTarget->profile.pColorDiffuse[1],
+        pTarget->profile.pColorDiffuse[2],
+        alpha,
+        
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+    };
     
-
-  glBegin(GL_TRIANGLES);
-  glColor4f(pTarget->profile.pColorDiffuse[0], 
-						pTarget->profile.pColorDiffuse[1], 
-						pTarget->profile.pColorDiffuse[2],
-						alpha);
-  glVertex3f(0,TRAIL_HEIGHT/2, 0);
-  glColor4f(0,0,0,0.0);
-  glVertex3f(0,-TRAIL_HEIGHT/4,0);
-  glVertex3d(dim*cos(-0.2f*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0);
-
-  glColor4f(pTarget->profile.pColorDiffuse[0], 
-						pTarget->profile.pColorDiffuse[1], 
-						pTarget->profile.pColorDiffuse[2],
-						alpha);
-  glVertex3f(0,TRAIL_HEIGHT/2, 0);
-  glColor4f(0,0,0,0.0);
-  glVertex3d(dim*cos(5.2*3.1415/5.0),
-	     TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0);
-  glVertex3f(0,-TRAIL_HEIGHT/4,0);
-  glEnd();
-#endif
-
+    float fanVertices[] = {
+        0, TRAIL_HEIGHT/2, 0,
+        dim*cos(-0.2*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0,
+        dim*cos(1.0*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(1.0*3.1415/5.0), 0,
+        dim*cos(2.0*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(2.0*3.1415/5.0), 0,
+        dim*cos(3.0*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(3.0*3.1415/5.0), 0,
+        dim*cos(4.0*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(4.0*3.1415/5.0), 0,
+        dim*cos(5.2*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0
+    };
+    
+    glColorPointer(4, GL_FLOAT, 0, fanColors);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, fanVertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 7);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    
+    
+    float triColors[] =
+    {
+        pTarget->profile.pColorDiffuse[0],
+        pTarget->profile.pColorDiffuse[1],
+        pTarget->profile.pColorDiffuse[2],
+        alpha,
+        0,0,0,0,
+        0,0,0,0,
+        
+        pTarget->profile.pColorDiffuse[0],
+        pTarget->profile.pColorDiffuse[1],
+        pTarget->profile.pColorDiffuse[2],
+        alpha,
+        0,0,0,0,
+        0,0,0,0,
+    };
+    
+    float triVertices[] = {
+        0, TRAIL_HEIGHT / 2, 0,
+        0, -TRAIL_HEIGHT / 4, 0,
+        dim*cos(-0.2f*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(-0.2*3.1415/5.0), 0,
+        0,TRAIL_HEIGHT/2, 0,
+        dim*cos(5.2*3.1415/5.0), TRAIL_HEIGHT/2+dim*sin(5.2*3.1415/5.0), 0,
+        0,-TRAIL_HEIGHT/4,0
+    };
+    
+    glColorPointer(4, GL_FLOAT, 0, triColors);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, triVertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+        
   glDepthMask(GL_TRUE);
   glEnable(GL_DEPTH_TEST);
 

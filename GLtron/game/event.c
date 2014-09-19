@@ -116,8 +116,8 @@ int crashTestWalls(int i, const segment2 *movement) {
 	segment2 *current = data->trails + data->nTrails ;
 	
 	for(j = 0; j < game2->level->nBoundaries; j++) {
+        
 		if(segment2_Intersect(&v, &t1, &t2, movement, game2->level->boundaries + j)) {
-		// if(segment2_Intersect(&v, &t1, &t2, current, game2->level->boundaries + j)) {
 			if(t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) {
 				current->vDirection.v[0] = v.v[0] - current->vStart.v[0];
 				current->vDirection.v[1] = v.v[1] - current->vStart.v[1];
@@ -356,6 +356,12 @@ void doMovement(int dt)
 					crash = crashTestWalls(i, &movement);
 					if(crash)
 					{
+                        // hack: slightly adjust player position
+                        float x = roundf(movement.vStart.v[0] + movement.vDirection.v[0]);
+                        float y = roundf(movement.vStart.v[1] + movement.vDirection.v[1]);
+                        movement.vDirection.v[0] = x - movement.vStart.v[0];
+                        movement.vDirection.v[1] = y - movement.vStart.v[1];
+                        
 						printf("player %d crashed into the walls\n", i);
 						printf("%f %f %f %f\n",
 							movement.vStart.v[0],

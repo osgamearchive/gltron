@@ -103,8 +103,26 @@ void nebu_Input_UnhidePointer(void) {
 }
 
 void SystemMouse(int buttons, int state, int x, int y) {
+#ifndef __IPHONEOS__
 	if(current && current->mouse)
 		current->mouse(buttons, state, x, y);
+#else
+    // nebu_Log("emulating joystick\n");
+    if(state == 0)
+        return;
+    
+    if(x < 100)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, 97, 0, 0);
+    else if(x > 800)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, 115, 0, 0);
+    else if(y > 540)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_DOWN, 0, 0);
+    else if(y < 100)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_UP, 0, 0);
+    else
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_BUTTON_0, 0, 0);
+#endif
+
 }
 
 

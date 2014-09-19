@@ -8,9 +8,9 @@
 void runScript(int ePath, const char *name) {
     char *s;
     s = getPath(ePath, name);
-	fprintf(stderr, "[script] start running script '%s' from '%s'\n", name, s);
+	// fprintf(stderr, "[script] start running script '%s' from '%s'\n", name, s);
     scripting_RunFile(s);
-	fprintf(stderr, "[script] finished running script '%s'\n", name);
+	// fprintf(stderr, "[script] finished running script '%s'\n", name);
     free(s);
 }
 

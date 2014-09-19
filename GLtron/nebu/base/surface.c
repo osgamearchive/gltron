@@ -52,9 +52,10 @@ nebu_Surface* nebu_Surface_LoadPNG(const char *filename)
 	return pSurface;
 }
 
+#ifndef __IPHONEOS__
+
 static FILE *fp;
 
-#ifndef __IPHONEOS__
 static void user_write_data(png_structp png_ptr,
 		     png_bytep data, png_size_t length) {
   fwrite(data, length, 1, fp);

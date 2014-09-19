@@ -12,7 +12,7 @@ void drawWalls(void) {
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    
 	for(i = 0; i < gWorld->arena_shader.passes; i++)
 	{
 		video_Shader_Setup(& gWorld->arena_shader, i);

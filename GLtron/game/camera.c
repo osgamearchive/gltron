@@ -27,6 +27,20 @@ float cam_defaults[][3] =  {
   { CAM_CIRCLE_DIST, PI / 4, PI / 72 } /* offset */
 };
 
+char *eCamAxisNames[] = { "CAM_R", "CAM_CHI", "CAM_PHI", "CAM_PHI_OFFSET" };
+char *eCamTypeNames[] = { "Circling", "Follow", "Cockpit", "Free", "Offset" };
+
+static void initCamDefaults()
+{
+    // TODO:
+    for(int i = 0; i < eCamTypeCount; i++)
+    {
+        for(int j = 0; j < eCamAxisCount; j++)
+        {
+            // cam_defaults[i][j] = // TODO: get setting variable from Lua
+        }
+    }
+}
 
 static void writeCamDefaults(Camera *cam, int type) {
 	cam_defaults[cam->type.type][type] = cam->movement[type];
@@ -43,8 +57,8 @@ static void clampCam(Camera *cam) {
 	}
 
 	if(cam->type.freedom[CAM_FREE_CHI]) {
-		float clamp_cam_chi_min = getSettingf("clamp_cam_r_min");
-		float clamp_cam_chi_max = getSettingf("clamp_cam_r_max");
+		float clamp_cam_chi_min = getSettingf("clamp_cam_chi_min");
+		float clamp_cam_chi_max = getSettingf("clamp_cam_chi_max");
 		if(cam->movement[CAM_CHI] < clamp_cam_chi_min)
 			cam->movement[CAM_CHI] = clamp_cam_chi_min;
 		if(cam->movement[CAM_CHI] > clamp_cam_chi_max)
@@ -158,6 +172,20 @@ void initCamera(PlayerVisual *pV, int type) {
 	cam->target[1] = y;
 	cam->target[2] = 0;
 
+    /* TODO: new camera code
+    float phi, float chi, float r;
+    
+    phi = cam->movement[CAM_PHI] + cam->movement[CAM_PHI_OFFSET];
+    chi = cam->movement[CAM_CHI];
+    r = cam->movement[CAM_R];
+
+    //
+    
+    cam->cam[[0] = x + r * cosf(phi) * sinf(chi);
+    cam->cam[[1] = y + r * sinf(phi) * sinf(chi);
+    cam->cam[[2] = r * cosf(chi);
+    */
+             
 	cam->cam[0] = x + CAM_CIRCLE_DIST;
 	cam->cam[1] = y;
 	cam->cam[2] = CAM_CIRCLE_Z;
@@ -350,7 +378,7 @@ void doCameraMovement(void) {
 void nextCameraType(void) {
 	int i;
 	int current_cam_type = getSettingi("camType");
-	int new_cam_type = (current_cam_type + 1) % CAM_COUNT;
+	int new_cam_type = (current_cam_type + 1) % eCamTypeCount;
 	  
 	setSettingi("camType", new_cam_type);
 

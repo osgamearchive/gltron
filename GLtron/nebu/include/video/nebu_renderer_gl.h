@@ -1,11 +1,17 @@
 #ifndef NEBU_RENDERER_GL_H
 #define NEBU_RENDERER_GL_H
 
-// #define OPENGL_ES
-
-#ifdef OPENGL_ES
+#ifdef OPENGL_ES // OK, include file + macros
 #include "SDL_opengles.h"
 // #include <OpenGLES/ES1/gl.h>
+
+#define glClipPlane glClipPlanef
+#define glOrtho glOrthof
+#define glFrustum glFrustumf
+
+// a bit scary, but this makes some #ifdefs unnecessary
+#define GLdouble GLfloat
+
 #else
 #include "SDL_opengl.h"
 #endif

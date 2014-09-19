@@ -13,17 +13,35 @@
 
 #define ERR_PREFIX "[load_png_texture] "
 
-#include <UIKit/UIKit.h>
+#ifdef __IPHONEOS__
+#import <UIKit/UIKit.h>
+#else
+// #import <CoreImage/CoreImage.h>
+#import <Cocoa/Cocoa.h>
+#import <QuartzCore/QuartzCore.h>
+#endif
 
 png_texture* load_png_texture(const char *filename) {
 
+#ifdef __IPHONEOS__
     UIImage* image = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:filename]];
-    
     CGImageRef imageRef = [image CGImage];
     int width = CGImageGetWidth(imageRef);
     int height = CGImageGetHeight(imageRef);
+    NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
+#else
+
+    CIImage* image = [CIImage imageWithData:[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename]]];
+    
+    int width = (int) image.extent.size.width;
+    int height = (int) image.extent.size.height;
+    
+    NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
+#endif
+    
     
     GLubyte* textureData = (GLubyte *)malloc(width * height * 4); // if 4 components per pixel (RGBA)
+    memset(textureData, 0, width * height * 4);
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     NSUInteger bytesPerPixel = 4;
@@ -34,6 +52,15 @@ png_texture* load_png_texture(const char *filename) {
                                                  kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
     CGColorSpaceRelease(colorSpace);
     
+    CGContextTranslateCTM(context, 0, height);
+    CGContextScaleCTM(context, 1.0f, -1.0f);
+    
+#ifndef __IPHONEOS__
+    CIContext *ciContext = [CIContext contextWithCGContext:context options:nil];
+    CGImageRef imageRef = [ciContext createCGImage:image fromRect:image.extent];
+#endif
+    
+    // [image drawInRect:CGRectMake(0, 0, width, height)];
     CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
     CGContextRelease(context);
 

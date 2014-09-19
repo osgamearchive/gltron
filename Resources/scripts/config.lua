@@ -131,6 +131,14 @@ settings.mouse_lock_ingame = 0
 settings.mouse_invert_x = 0
 settings.mouse_invert_y = 0
 
+settings.camera = {
+    Circling = {
+        CAM_R = 17,
+        -- TODO: add the other variables
+    }
+    -- TODO: add the other cameras
+}
+
 settings.keys = { 
    { -- player 1
       left = 97, -- lower case 'a'

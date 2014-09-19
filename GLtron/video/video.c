@@ -16,7 +16,9 @@
 #include "base/nebu_assert.h"
 
 void displayGame(void) {
+    nebu_Video_CheckErrors("before frame");
   drawGame();
+    nebu_Video_CheckErrors("after frame");
   nebu_Video_SwapBuffers();
 }
 

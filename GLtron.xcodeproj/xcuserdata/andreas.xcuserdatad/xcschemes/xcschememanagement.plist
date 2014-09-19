@@ -9,9 +9,24 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>GLtronIOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>E170A62719A69B0F00E4EA7F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E170A64019A69B0F00E4EA7F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>E183FFC2198430DD00774FBC</key>
 		<dict>
 			<key>primary</key>

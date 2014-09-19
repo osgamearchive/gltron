@@ -16,13 +16,14 @@ void trailStatesNormal(Player *pPlayer, int texture) {
 	glEnable(GL_TEXTURE_2D);
 	// glDisable(GL_TEXTURE_2D);
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
 	{ 
 		float black[] = { 0, 0, 0, 1 };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, black);
-#ifndef OPENGL_ES // This is actually fine, OpenGL ES always uses GL_AMBMENT_AND_DIFFUSE
+#ifndef OPENGL_ES // OK, OpenGL ES always uses GL_AMBMENT_AND_DIFFUSE
 		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 #endif
 		glEnable(GL_COLOR_MATERIAL);
@@ -51,7 +52,7 @@ void trailStatesRestore(void) {
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, wireframe mode disabled
 	if(!getSettingi("wireframe"))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif

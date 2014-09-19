@@ -117,11 +117,12 @@ void drawRecognizer(void) {
 	  rec_outline_color[2],
 	  1);
 
-  glPolygonOffset(1,8);
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, GL_POLYGON_OFFSET_LINE
+    glPolygonOffset(1,8);
   glEnable(GL_POLYGON_OFFSET_LINE);
   drawSharpEdges((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh));
   glDisable(GL_POLYGON_OFFSET_LINE);
+    glPolygonOffset(0, 0);
 #else
     drawSharpEdges((gltron_Mesh*)resource_Get(gTokenRecognizer, eRT_GLtronTriMesh));
 #endif

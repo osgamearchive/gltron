@@ -102,7 +102,7 @@ void drawGame(void) {
 
 	if(getSettingi("wireframe"))
 	{
-#ifndef OPENGL_ES
+#ifndef OPENGL_ES // OK, wireframe mode disabled
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 #endif
 	}
@@ -115,14 +115,15 @@ void drawGame(void) {
 			drawCam(gppPlayerVisuals[i]);
 
 			/* hud stuff for every player */
+#ifndef OPENGL_ES // TODO: HUD
 			drawHUD(gppPlayerVisuals[i]->pPlayer,
 				gppPlayerVisuals[i]);
-		}
-	}
-
-#ifndef OPENGL_ES
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif
+		}
+#ifndef OPENGL_ES // OK, wireframe mode disabled
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
+	}
 }
 
 /* 
@@ -253,11 +254,10 @@ void drawCycleShadow(Player *p, int lod, int drawTurn) {
 
 void drawExtruded(nebu_Mesh_IB *pIB, nebu_Mesh_VB *pVB, vec3 *pvLightDirModel)
 {
-	// TODO: port to OpenGL ES
+#ifndef OPENGL_ES // TODO OPENGLES port shadow volumes
 	int i;
 	vec3 vExtrusion;
     
-#ifndef OPENGL_ES
 	glBegin(GL_QUADS);
 	glColor4f(1,1,1, 1.0f);
 	vec3_Scale(&vExtrusion, pvLightDirModel, 100);
@@ -446,7 +446,7 @@ void drawCycle(int player, int lod, int drawTurn) {
 
 			glEnable(GL_STENCIL_TEST);
 			// TODO: make sure reflection bit is untouched
-#if 0 // #ifndef OPENGL_ES
+#if 0 // #ifndef OPENGL_ES // TODO it's a mess
 			if(0 && // DEBUG: disabled two-sided stencil
 				!gIsRenderingReflection && GLEW_EXT_stencil_two_side && GLEW_EXT_stencil_wrap)
 			{
@@ -515,10 +515,11 @@ void drawCycle(int player, int lod, int drawTurn) {
 				// lighting is disabled per default
 				// glDisable(GL_LIGHTING);
 				glColor4f(.5,.5,.5, 1.0f);
-				glPolygonOffset(1,1);
+				glPolygonOffset(1,2);
 				glEnable(GL_POLYGON_OFFSET_FILL);
 				drawSharpEdges(cycle);
 				glDisable(GL_POLYGON_OFFSET_FILL);
+                glPolygonOffset(0, 0);
 			}
 			// */
 
@@ -805,15 +806,16 @@ void drawWorld(Camera *pCamera)
 	setupLights(eWorld);
 
 	if (gSettingsCache.show_wall == 1 && gWorld->arena) {
-		glColor4f(1,1,1, 1.0f);
 		drawWalls();
 	}
 
 	// setupLights(eCycles);
 	// drawPlayers sets up its own lighting
 	nebu_Video_CheckErrors("before players");
+    
 	drawPlayers(pCamera);
     drawRecognizer();
+    
 	nebu_Video_CheckErrors("after players");
 
 	// restore lighting to world light
@@ -974,8 +976,10 @@ void drawCam(PlayerVisual *pV) {
 	glDisable(GL_BLEND); // initial config at frame start
 
 	// disable writes to alpha
+    // TODO: is that necessary in OpenGL ES?
+#ifndef OPENGL_ES // TODO? (Colormask/Alpha)
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-
+#endif
 	setupCamera(pV);
 
 	/* skybox */
@@ -988,7 +992,7 @@ void drawCam(PlayerVisual *pV) {
 	glEnable(GL_DEPTH_TEST);
 	/* skybox done */
 
-	/* floor */ 
+	/* floor */
 	if(reflectivity == 0) {
 		// draw floor to fb, z and stencil,
 		// using alpha-blending
@@ -1068,17 +1072,11 @@ void drawCam(PlayerVisual *pV) {
 		glPushMatrix();
 		glScalef(1,1,-1);
 		glCullFace(GL_FRONT); // reverse culling
+        
 		// clip skybox & world to floor plane
 		glEnable(GL_CLIP_PLANE0);
-		{
-#ifdef OPENGL_ES
-			float plane[] = { 0, 0, 1, 0 };
-			glClipPlanef(GL_CLIP_PLANE0, plane);
-#else
-			double plane[] = { 0, 0, 1, 0 };
-			glClipPlane(GL_CLIP_PLANE0, plane);
-#endif
-		}
+		GLdouble plane[] = { 0, 0, 1, 0 };
+		glClipPlane(GL_CLIP_PLANE0, plane);
 
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
 		drawWorld(pCamera);
