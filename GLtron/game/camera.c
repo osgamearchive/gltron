@@ -27,7 +27,7 @@ float cam_defaults[][3] =  {
   { CAM_CIRCLE_DIST, PI / 4, PI / 72 } /* offset */
 };
 
-char *eCamAxisNames[] = { "CAM_R", "CAM_CHI", "CAM_PHI", "CAM_PHI_OFFSET" };
+char *eCamAxisNames[] = { "r", "chi", "phi" };
 char *eCamTypeNames[] = { "Circling", "Follow", "Cockpit", "Free", "Offset" };
 
 static void initCamDefaults()
@@ -37,7 +37,9 @@ static void initCamDefaults()
     {
         for(int j = 0; j < eCamAxisCount; j++)
         {
-            // cam_defaults[i][j] = // TODO: get setting variable from Lua
+            char buf[1024];
+            sprintf(buf, "Camera.%s.%s", eCamTypeNames[i], eCamAxisNames[i]);
+            cam_defaults[i][j] = getSettingf(buf);
         }
     }
 }
@@ -144,6 +146,9 @@ void camera_ResetAll(void)
 
 	if(!game)
 		return;
+    
+    // TODO: Is that really what we want?
+    initCamDefaults();
 
 	for(i = 0; i < gnPlayerVisuals; i++) {
 		Player *pPlayer = gppPlayerVisuals[i]->pPlayer;

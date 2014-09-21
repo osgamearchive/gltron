@@ -131,13 +131,40 @@ settings.mouse_lock_ingame = 0
 settings.mouse_invert_x = 0
 settings.mouse_invert_y = 0
 
-settings.camera = {
-    Circling = {
-        CAM_R = 17,
-        -- TODO: add the other variables
-    }
-    -- TODO: add the other cameras
+-- #define CAM_CIRCLE_DIST 17
+-- #define CAM_CIRCLE_Z 8.0f
+--
+-- #define CAM_FOLLOW_DIST 18
+-- #define CAM_FOLLOW_Z 6.0f
+-- #define CAM_FOLLOW_SPEED 0.05f
+-- #define CAM_FOLLOW_SPEED_FACTOR 1.0f / 82.0f
+-- #define CAM_SPEED 0.000349f
+--
+-- #define CAM_COCKPIT_Z 4
+--
+-- #define CAM_R_MIN 2.0
+-- #define CAM_R_MAX 100
+-- #define CAM_CHI_MIN PI / 6
+-- #define CAM_CHI_MAX PI / 2 - PI / 6
+--
+-- #define CAM_DR 6.4f
+
+PI = 3.141592654
+
+settings.Camera = {
+    CIRCLE_DIST = 17,
+    Circling = { r = 17, phi = PI / 3, chi = 0, phi_offset = 0 },
+    Follow = { r = 18, phi = PI / 4, chi = PI / 72, phi_offset = 0 },
+    Cockpit = { r = 4, phi = PI / 8, chi = 0, phi_offset = 0 },
+    Free = { r = 17, phi = PI / 3, chi = 0, phi_offset = 0 },
+    Offset = { r = 17, phi = PI / 4, chi = PI / 72, phi_offset = 0 }
 }
+-- camera
+settings.clamp_cam_r_min = 6
+settings.clamp_cam_r_max =  45
+settings.clamp_cam_chi_min =  PI / 8
+settings.clamp_cam_chi_max =  3 * PI / 8 -- PI/3 in the C code
+
 
 settings.keys = { 
    { -- player 1
@@ -174,11 +201,7 @@ settings.keys = {
    }
 }
 
--- camera
-settings.clamp_cam_r_min = 6
-settings.clamp_cam_r_max =  45
-settings.clamp_cam_chi_min =  3.141 / 8
-settings.clamp_cam_chi_max =  3 * 3.141 / 8
+
 
 settings.wireframe = 0
 -- these tables are not serialized to RCNAME (yet)
