@@ -76,12 +76,15 @@ void keyGame(int state, int k, int x, int y)
 		// at the end of the game fails
 		// case SYSTEM_KEY_F5: saveSettings(); return;
 
-		case SYSTEM_KEY_F10: nextCameraType(); return;
-		case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); return;
+        case SYSTEM_KEY_F6: toggleCameraLock(); return;
+		// case SYSTEM_KEY_F10: nextCameraType(); return;
+        case SYSTEM_KEY_F5: nextCameraType(); return;
+            
+        case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); return;
 		case SYSTEM_KEY_F12: doPngScreenShot(gScreen); return;
 
-		case SYSTEM_KEY_F6: console_Seek(-1); return;
-		case SYSTEM_KEY_F7: console_Seek(1); return;
+		// case SYSTEM_KEY_F6: console_Seek(-1); return;
+		// case SYSTEM_KEY_F7: console_Seek(1); return;
 
 		case SYSTEM_KEY_F8:
 			// toggle wireframe setting

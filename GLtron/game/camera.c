@@ -5,47 +5,87 @@
 #include "input/input.h"
 #include "configuration/settings.h"
 
+#include "scripting/nebu_scripting.h"
 #include "base/nebu_math.h"
 #include "input/nebu_input_system.h"
 #include "video/nebu_renderer_gl.h"
 #include "video/nebu_console.h"
 #include "base/nebu_assert.h"
+#include "base/nebu_debug_memory.h"
 
 #include <string.h>
+
+typedef enum eCamType {
+    CAM_CIRCLE = 0,
+    CAM_FOLLOW,
+    CAM_COCKPIT,
+    CAM_MANUAL,
+    CAM_OFFSET,
+    eCamTypeCount,
+} eCamType;
+
+#define CAM_TYPE_CIRCLING 0
+#define CAM_TYPE_FOLLOW 1
+#define CAM_TYPE_COCKPIT 2
+#define CAM_TYPE_MANUAL 3
+#define CAM_TYPE_OFFSET 4
+
+#define CAM_COUNT 5
+
 
 typedef enum eCamFreedom { 
 	CAM_FREE_R = 0,
 	CAM_FREE_PHI,
-	CAM_FREE_CHI 
+	CAM_FREE_CHI,
+    eCamFreedomCount
 } eCamFreedom;
 
-float cam_defaults[][3] =  { 
-  { CAM_CIRCLE_DIST, PI / 3, 0 }, /* circle */
-  { CAM_FOLLOW_DIST, PI / 4, PI / 72 }, /* follow */
-  { CAM_COCKPIT_Z, PI / 8, 0 }, /* cockpit */
-  { CAM_CIRCLE_DIST, PI / 3, 0 }, /* free */
-  { CAM_CIRCLE_DIST, PI / 4, PI / 72 } /* offset */
-};
+float cam_defaults[5][4];
 
-char *eCamAxisNames[] = { "r", "chi", "phi" };
-char *eCamTypeNames[] = { "Circling", "Follow", "Cockpit", "Free", "Offset" };
+char *eCamAxisNames[] = { "r", "chi", "phi", "phi_offset" };
+char *eCamTypeNames[] = { "Circling", "Follow", "Cockpit", "Manual", "Offset" };
+char *eCamFreedomNames[] = { "free_r", "free_phi", "free_chi" };
+
+static int camDefaultsNeedWriting = 0;
 
 static void initCamDefaults()
 {
-    // TODO:
+    // nebu_Log("initCamDefaults() called, %s\n", camDefaultsNeedWriting ? "loading" : "saving");
+
     for(int i = 0; i < eCamTypeCount; i++)
     {
         for(int j = 0; j < eCamAxisCount; j++)
         {
-            char buf[1024];
-            sprintf(buf, "Camera.%s.%s", eCamTypeNames[i], eCamAxisNames[i]);
-            cam_defaults[i][j] = getSettingf(buf);
+            if(camDefaultsNeedWriting)
+            {
+                scripting_RunFormat("settings.Camera.%s.%s = %f", eCamTypeNames[i], eCamAxisNames[j], cam_defaults[i][j]);
+                // nebu_Log("settings.Camera.%s.%s = %f", eCamTypeNames[i], eCamAxisNames[j], cam_defaults[i][j]);
+
+            }
+            else
+            {
+                scripting_RunFormat("return settings.Camera.%s.%s", eCamTypeNames[i], eCamAxisNames[j]);
+                scripting_GetFloatResult(&cam_defaults[i][j]);
+            }
+            // fprintf(stderr, "[camera] %s.%s: %.4f\n", eCamTypeNames[i], eCamAxisNames[j], cam_defaults[i][j]);
         }
     }
+    camDefaultsNeedWriting = 0;
 }
 
 static void writeCamDefaults(Camera *cam, int type) {
+    // TODO: This is called FAAAR too much, find out why
+    // nebu_Log("writeCamDefaults() called\n");
+
 	cam_defaults[cam->type.type][type] = cam->movement[type];
+    
+    camDefaultsNeedWriting = 1;
+}
+
+void toggleCameraLock()
+{
+    int camIsLocked = getSettingi("camIsLocked");
+    setSettingi("camIsLocked", camIsLocked = camIsLocked ? 0 : 1);
 }
 
 static void clampCam(Camera *cam) {
@@ -68,77 +108,6 @@ static void clampCam(Camera *cam) {
 	}
 }
 
-static void initCircleCamera(Camera *cam) {
-	cam->movement[CAM_R] = cam_defaults[CAM_CIRCLE][CAM_R];
-	cam->movement[CAM_CHI] = cam_defaults[CAM_CIRCLE][CAM_CHI];
-	cam->movement[CAM_PHI] = cam_defaults[CAM_CIRCLE][CAM_PHI];
-	cam->movement[CAM_PHI_OFFSET] = 0;
-
-	cam->type.interpolated_cam = 0;
-	cam->type.interpolated_target = 0;
-	cam->type.coupled = 0;
-	cam->type.freedom[CAM_FREE_R] = 1;
-	cam->type.freedom[CAM_FREE_PHI] = 0;
-	cam->type.freedom[CAM_FREE_CHI] = 1;
-}
-
-
-static void initFollowCamera(Camera *cam) {
-	cam->movement[CAM_R] = cam_defaults[CAM_FOLLOW][CAM_R];
-	cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
-	cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
-	cam->movement[CAM_PHI_OFFSET] = 0;
-
-	cam->type.interpolated_cam = 1;
-	cam->type.interpolated_target = 0;
-	cam->type.coupled = 1;
-	cam->type.freedom[CAM_FREE_R] = 1;
-	cam->type.freedom[CAM_FREE_PHI] = 1;
-	cam->type.freedom[CAM_FREE_CHI] = 1;
-}
-
-static void initCockpitCamera(Camera *cam) {
-	cam->movement[CAM_R] = cam_defaults[CAM_COCKPIT][CAM_R];
-	cam->movement[CAM_CHI] = cam_defaults[CAM_COCKPIT][CAM_CHI];
-	cam->movement[CAM_PHI] = PI; // cam_defaults ignored
-	cam->movement[CAM_PHI_OFFSET] = 0;
-
-	cam->type.interpolated_cam = 0;
-	cam->type.interpolated_target = 1;
-	cam->type.coupled = 1;
-	cam->type.freedom[CAM_FREE_R] = 0;
-	cam->type.freedom[CAM_FREE_PHI] = 1;
-	cam->type.freedom[CAM_FREE_CHI] = 0;
-}
-
-
-static void initFreeCamera(Camera *cam) {
-	cam->movement[CAM_R] = cam_defaults[CAM_FREE][CAM_R];
-	cam->movement[CAM_CHI] = cam_defaults[CAM_FREE][CAM_CHI];
-	cam->movement[CAM_PHI] = cam_defaults[CAM_FREE][CAM_PHI];
-	cam->movement[CAM_PHI_OFFSET] = 0;
-
-	cam->type.interpolated_cam = 0;
-	cam->type.interpolated_target = 0;
-	cam->type.coupled = 0;
-	cam->type.freedom[CAM_FREE_R] = 1;
-	cam->type.freedom[CAM_FREE_PHI] = 1;
-	cam->type.freedom[CAM_FREE_CHI] = 1;
-}
-
-static void initOffsetCamera(Camera *cam) {
-	cam->movement[CAM_R] = cam_defaults[CAM_FOLLOW][CAM_R];
-	cam->movement[CAM_CHI] = cam_defaults[CAM_FOLLOW][CAM_CHI];
-	cam->movement[CAM_PHI] = cam_defaults[CAM_FOLLOW][CAM_PHI];
-
-	cam->type.interpolated_cam = 0;
-	cam->type.interpolated_target = 0;
-	cam->type.coupled = 0;
-	cam->type.freedom[CAM_FREE_R] = 1;
-	cam->type.freedom[CAM_FREE_PHI] = 1;
-	cam->type.freedom[CAM_FREE_CHI] = 1;
-}
-
 void camera_ResetAll(void)
 {
 	int i;
@@ -147,6 +116,7 @@ void camera_ResetAll(void)
 	if(!game)
 		return;
     
+    // nebu_Log("camera_ResetAll() called\n");
     // TODO: Is that really what we want?
     initCamDefaults();
 
@@ -159,42 +129,50 @@ void camera_ResetAll(void)
 }
 
 void initCamera(PlayerVisual *pV, int type) {
+    nebu_Log("initCamera(%d) called\n", type);
+
 	float x,y;
 	Camera *cam = &pV->camera;
 
 	getPositionFromData(&x, &y, &pV->pPlayer->data);
 
 	cam->type.type = type;
+    
+    for(int i = 0; i < eCamFreedomCount; i++)
+    {
+        scripting_RunFormat("return settings.Camera.%s.%s", eCamTypeNames[type], eCamFreedomNames[i]);
+        // nebu_Log("return settings.Camera.%s.%s", eCamTypeNames[type], eCamFreedomNames[i]);
+        scripting_GetIntegerResult(&cam->type.freedom[i]);
+    }
+    
+    scripting_RunFormat("return settings.Camera.%s.interpolated_cam", eCamTypeNames[type]);
+    // nebu_Log("return settings.Camera.%s.interpolated_cam", eCamTypeNames[type]);
+    scripting_GetIntegerResult(&cam->type.interpolated_cam);
 
-	switch(cam->type.type) {
-	case CAM_TYPE_CIRCLING: initCircleCamera(cam); break;
-	case CAM_TYPE_FOLLOW: initFollowCamera(cam); break;
-	case CAM_TYPE_COCKPIT: initCockpitCamera(cam); break;
-	case CAM_TYPE_MOUSE: initFreeCamera(cam); break;
-	case CAM_TYPE_OFFSET: initOffsetCamera(cam); break;
-	}
+    scripting_RunFormat("return settings.Camera.%s.interpolated_target", eCamTypeNames[type]);
+    scripting_GetIntegerResult(&cam->type.interpolated_target);
+    
+    scripting_RunFormat("return settings.Camera.%s.coupled", eCamTypeNames[type]);
+    scripting_GetIntegerResult(&cam->type.coupled);
+    
+    for(int i = 0; i < eCamAxisCount; i++)
+    {
+        cam->movement[i] = cam_defaults[type][i];
+    }
 	cam->target[0] = x;
 	cam->target[1] = y;
 	cam->target[2] = 0;
 
-    /* TODO: new camera code
-    float phi, float chi, float r;
+    float phi, chi, r;
     
     phi = cam->movement[CAM_PHI] + cam->movement[CAM_PHI_OFFSET];
     chi = cam->movement[CAM_CHI];
     r = cam->movement[CAM_R];
-
-    //
     
-    cam->cam[[0] = x + r * cosf(phi) * sinf(chi);
-    cam->cam[[1] = y + r * sinf(phi) * sinf(chi);
-    cam->cam[[2] = r * cosf(chi);
-    */
+    cam->cam[0] = x + r * cos(phi) * sin(chi);
+    cam->cam[1] = y + r * sin(phi) * sin(chi);
+    cam->cam[2] = r * cos(chi);
              
-	cam->cam[0] = x + CAM_CIRCLE_DIST;
-	cam->cam[1] = y;
-	cam->cam[2] = CAM_CIRCLE_Z;
-
 	cam->bIsGlancing = 0;
 
 	memset(cam->pUser, 0, sizeof(cam->pUser));
@@ -266,15 +244,20 @@ void playerCamera(PlayerVisual *pV) {
 	data = &pV->pPlayer->data;
 	getPositionFromData(&x, &y, data);
 
-	if(game->pauseflag != PAUSE_GAME_RUNNING || !getSettingi("mouse_lock_ingame"))
+	if(!getSettingi("camIsLocked"))
 	{
 		if(cam->type.freedom[CAM_FREE_R]) {
 			// mouse buttons let you zoom in/out
 			if(gInput.mouse1 == 1)
+            {
 				cam->movement[CAM_R] += (cam->movement[CAM_R]-getSettingf("clamp_cam_r_min")+1) * dt / 300.0f;
+                writeCamDefaults(cam, CAM_R);
+            }
 			if(gInput.mouse2 == 1)
+            {
 				cam->movement[CAM_R] -= (cam->movement[CAM_R]-getSettingf("clamp_cam_r_min")+1) * dt / 300.0f;
-			writeCamDefaults(cam, CAM_R);
+                writeCamDefaults(cam, CAM_R);
+            }
 		}
 		nebu_Input_Mouse_GetDelta(&mouse_dx, &mouse_dy);
 		if(cam->type.freedom[CAM_FREE_PHI] && mouse_dx != 0) {
@@ -327,7 +310,7 @@ void playerCamera(PlayerVisual *pV) {
 		tdest[2] = B_HEIGHT;
 		break;
 	case CAM_TYPE_FOLLOW: /* Mike-cam */
-	case CAM_TYPE_MOUSE: /* mouse camera */
+	case CAM_TYPE_MANUAL: /* mouse camera */
 		tdest[0] = x;
 		tdest[1] = y;
 		tdest[2] = B_HEIGHT;
@@ -406,7 +389,7 @@ void nextCameraType(void) {
 			displayMessage(TO_CONSOLE, "[camera] Cockpit Camera");
 			break;
 		case 3 :
-			displayMessage(TO_CONSOLE, "[camera] Mouse Camera");
+			displayMessage(TO_CONSOLE, "[camera] Manual Camera");
 			break;
 		case 4 :
 			displayMessage(TO_CONSOLE, "[camera] Offset Camera");

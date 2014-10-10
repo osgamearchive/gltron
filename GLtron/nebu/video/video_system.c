@@ -113,9 +113,7 @@ void createWindow(char *name)
     fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
     nebu_assert(0); exit(1); /* OK: critical, no visual */
   }
-    char message[1024];
-    sprintf(message, "window size: (%d, %d)\n", width, height);
-    nebu_Log(message);
+    nebu_Log("window size: (%d, %d)\n", width, height);
     SDL_GLContext glcontext = SDL_GL_CreateContext(screen);
 #else
     if( (screen = SDL_SetVideoMode(width, height, bitdepth,

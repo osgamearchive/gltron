@@ -82,6 +82,7 @@ void nebu_Input_Ungrab(void) {
 }
 
 void nebu_Input_HidePointer(void) {
+    nebu_Log("[nebu] hiding pointer\n");
 	int result = SDL_ShowCursor(SDL_DISABLE);
     if(result < 0)
         fprintf(stderr, "[error] %s\n", SDL_GetError());
@@ -92,6 +93,7 @@ void nebu_Input_HidePointer(void) {
 }
 
 void nebu_Input_UnhidePointer(void) {
+    nebu_Log("[nebu] showing pointer\n");
 	int result = SDL_ShowCursor(SDL_ENABLE);
 
     if(result < 0)

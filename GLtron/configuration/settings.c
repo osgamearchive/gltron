@@ -18,7 +18,7 @@
 void checkSettings(void) {
   /* sanity check: speed */
   if(getSettingf("speed") <= 0) {
-    fprintf(stderr, "[gltron] sanity check failed: speed = %.2ff\n",
+    fprintf(stderr, "[gltron] sanity check failed: speed = %.2f\n",
 	    getSettingf("speed"));
     setSettingf("speed", 6.0);
     fprintf(stderr, "[gltron] reset speed: speed = %.2f\n",
@@ -27,6 +27,7 @@ void checkSettings(void) {
 }
 
 void saveSettings(void) {
+#ifndef NO_SAVE
 	char *script;
 	script = getPath(PATH_SCRIPTS, "save.lua");
 	scripting_RunFile(script);
@@ -49,6 +50,7 @@ void saveSettings(void) {
 	scripting_Run("save()");
 	scripting_Run("io.write \"save_completed = 1\\n\"");
 	scripting_Run("io.output(io.stdout)"); // select stdout again
+#endif // NO_SAVE
 }
 
 int getSettingi(const char *name) {

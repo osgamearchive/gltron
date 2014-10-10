@@ -15,9 +15,6 @@
 void goto_installpath(const char *argv0)
 {
     NSString *resourceDir = [NSString stringWithFormat:@"%@/Resources", [[NSBundle mainBundle] resourcePath]];
-    NSLog(@"%@", resourceDir);
-    NSLog(@"%@", [NSString stringWithContentsOfFile:@"basics.lua"
-                                           encoding:NSUTF8StringEncoding
-                                              error:NULL]);
+    NSLog(@"resource dir: %@", resourceDir);
     chdir([resourceDir cStringUsingEncoding:NSUTF8StringEncoding]);
 }

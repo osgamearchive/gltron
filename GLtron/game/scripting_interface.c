@@ -17,6 +17,7 @@
 #include "filesystem/nebu_filesystem.h"
 #include "input/nebu_input_system.h"
 #include "audio/audio.h"
+#include "game/camera.h"
 
 #include "base/nebu_debug_memory.h"
 
@@ -39,6 +40,9 @@ int c_drawHUDSurface(lua_State* l);
 int c_drawHUDMask(lua_State* l);
 
 int c_quitGame(lua_State *L) {
+    // TODO: remove camera save hack
+    camera_ResetAll();
+    
 	saveSettings();
 	nebu_System_ExitLoop(eSRC_Credits);
 	return 0;

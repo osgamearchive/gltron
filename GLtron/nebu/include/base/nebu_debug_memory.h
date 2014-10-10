@@ -15,6 +15,6 @@
 
 void nebu_debug_memory_CheckLeaksOnExit(void);
 
-void nebu_Log(const char *message);
+void nebu_Log(const char *format, ...);
 
 #endif

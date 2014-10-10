@@ -113,13 +113,9 @@ void goto_installpath(const char *argv0)
 #endif
     
     char buf[1024];
-    fprintf(stderr, "current directory: %s\n", getwd(buf));
-
     getwd(buf);
-    char logmessage[1024];
-    snprintf(logmessage, 1024, "current directory: %s\n", buf);
-    nebu_Log(logmessage);
     
+    nebu_Log("current directory: %s\n", buf);
 }
 #endif
 

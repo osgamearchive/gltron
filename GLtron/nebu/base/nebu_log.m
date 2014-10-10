@@ -14,9 +14,14 @@
 #include "UIKit/UIKit.h"
 #endif
 
-void nebu_Log(const char* message)
+void nebu_Log(const char* format, ...)
 {
-    NSLog(@"NSLog: %s", message);
+    char buf[4096];
+    va_list ap;
+    va_start(ap, format);
+    vsprintf(buf, format, ap);
+    va_end(ap);
+    NSLog(@"NSLog: %s", buf);
 }
 
 

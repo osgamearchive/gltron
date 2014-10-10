@@ -1,3 +1,5 @@
+-- OS X & PC Config.lua
+
 -- global tables
 tmp = {}
 
@@ -7,7 +9,7 @@ tracks = { }
 app_version = 0.718
 version = app_version
 
--- debugginb
+-- debugging
 settings.debug_output = 1
 
 -- game
@@ -127,7 +129,6 @@ settings.musicVolume = 0.5
 
 -- input
 
-settings.mouse_lock_ingame = 0
 settings.mouse_invert_x = 0
 settings.mouse_invert_y = 0
 
@@ -153,11 +154,31 @@ PI = 3.141592654
 
 settings.Camera = {
     CIRCLE_DIST = 17,
-    Circling = { r = 17, phi = PI / 3, chi = 0, phi_offset = 0 },
-    Follow = { r = 18, phi = PI / 4, chi = PI / 72, phi_offset = 0 },
-    Cockpit = { r = 4, phi = PI / 8, chi = 0, phi_offset = 0 },
-    Free = { r = 17, phi = PI / 3, chi = 0, phi_offset = 0 },
-    Offset = { r = 17, phi = PI / 4, chi = PI / 72, phi_offset = 0 }
+    Circling = {
+        r = 17, phi = - PI / 8, chi = 0, phi_offset = 0,
+        free_r = 1, free_phi = 0, free_chi = 1,
+        interpolated_cam = 0, interpolated_target = 0, coupled = 0
+    },
+    Follow = {
+        r = 18, phi = - PI / 8, chi = PI / 3, phi_offset = 0,
+        free_r = 1, free_phi = 1, free_chi = 1,
+        interpolated_cam = 1, interpolated_target = 0, coupled = 1
+    },
+    Cockpit = {
+        r = 4, phi = PI, chi = 0, phi_offset = 0,
+        free_r = 0, free_phi = 1, free_chi = 0,
+        interpolated_cam = 0, interpolated_target = 1, coupled = 1
+    },
+    Manual = {
+        r = 17, phi = - PI / 8, chi = 0, phi_offset = 0,
+        free_r = 1, free_phi = 1, free_chi = 1,
+        interpolated_cam = 0, interpolated_target = 0, coupled = 0
+    },
+    Offset = {
+        r = 17, phi = - PI / 8, chi = PI / 3, phi_offset = 0,
+        free_r = 1, free_phi = 1, free_chi = 1,
+        interpolated_cam = 0, interpolated_target = 0, coupled = 0
+    }
 }
 -- camera
 settings.clamp_cam_r_min = 6
@@ -165,6 +186,7 @@ settings.clamp_cam_r_max =  45
 settings.clamp_cam_chi_min =  PI / 8
 settings.clamp_cam_chi_max =  3 * PI / 8 -- PI/3 in the C code
 
+settings.camIsLocked = 0
 
 settings.keys = { 
    { -- player 1

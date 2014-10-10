@@ -93,7 +93,7 @@ MainGameMenu = {
    },
    CameraMode = {    
       type = MenuC.type.list, caption = "Camera mode",
-      labels = { "circling", "behind", "cockpit", "mouse", "offset" },
+      labels = { "Circling", "Follow", "Cockpit", "Manual", "Offset" },
       values = { 0, 1, 2, 3, 4 },
       read = function() return settings.camType; end,
       store = function(value) settings.camType = value; c_resetCamera(); end
@@ -175,12 +175,12 @@ MainGameMenu = {
       read = function() return settings.ai_player4; end,
       store = function(value) settings.ai_player4 = value; c_invalidateGame(); end
    },
-   MouseLockIngame = {
-	type = MenuC.type.list, caption = "Lock Mouse in Game",
-	labels = { "off", "on" },
-	values = { 0, 1 },
-	read = function() return settings.mouse_lock_ingame; end,
-	store = function(value) settings.mouse_lock_ingame = value; end
+   LockCamera = {
+       type = MenuC.type.list, caption = "Lock Camera",
+       labels = { "off", "on" },
+       values = { 0, 1 },
+       read = function() return settings.camIsLocked; end,
+       store = function(value) settings.camIsLocked = value; end
    },
    MouseInvertY = {
      type = MenuC.type.list, caption = "Invert Mouse (Y)",
@@ -590,7 +590,7 @@ MainGameMenu = {
 MainGameMenu.RootMenu.items = { "GameMenu", "VideoMenu", "AudioMenu", "ControlsMenu", "Quit" }
 
 MainGameMenu.ControlsMenu.items = {
-	"KeyConfigMenu", "JoyConfigMenu", "MouseLockIngame",
+	"KeyConfigMenu", "JoyConfigMenu", "LockCamera",
 	"MouseInvertX", "MouseInvertY"
 }
 

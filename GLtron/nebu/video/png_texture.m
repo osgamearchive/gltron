@@ -28,7 +28,7 @@ png_texture* load_png_texture(const char *filename) {
     CGImageRef imageRef = [image CGImage];
     int width = CGImageGetWidth(imageRef);
     int height = CGImageGetHeight(imageRef);
-    NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
+    // NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
 #else
 
     CIImage* image = [CIImage imageWithData:[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename]]];
@@ -36,7 +36,7 @@ png_texture* load_png_texture(const char *filename) {
     int width = (int) image.extent.size.width;
     int height = (int) image.extent.size.height;
     
-    NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
+    // NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
 #endif
     
     

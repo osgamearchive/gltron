@@ -252,9 +252,7 @@ int run(const char *command, int crlf)
 int scripting_RunFile(const char *name) {
 	int status;
     
-    char buf[1024];
-    sprintf(buf, "[script] %s\n", name);
-    nebu_Log(name);
+    nebu_Log("[script] %s\n", name);
     
 	if(scripting_debug)
 	{

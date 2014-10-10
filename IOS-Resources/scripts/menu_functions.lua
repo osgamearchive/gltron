@@ -166,9 +166,9 @@ MenuFunctions.SetNames = function (menu)
 end
 
 MenuFunctions.GotoParent = function ()
-	io.write("Going to Parent menu of '", Menu.current, "'")
+	io.write("Going to Parent menu of '", Menu.current, "'\n")
 	Menu.current = Menu[Menu.current].parent
-	io.write("Menu.current is '", Menu.current, "'"); io.flush();
+	io.write("Menu.current is '", Menu.current, "'\n"); io.flush();
 	Menu.active = 1
 end
 

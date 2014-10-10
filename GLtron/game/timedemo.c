@@ -99,7 +99,7 @@ void initTimedemo(void) {
 	gSettingsCache.ai_level = 2;
 	gSettingsCache.show_ai_status = 0;
 	gSettingsCache.show_fps = 0;
-	gSettingsCache.camType = CAM_CIRCLE;
+	gSettingsCache.camType = 0; // circling cam
 	gSettingsCache.show_console = 0;
 
 	saveRules.speed = getSettingf("speed");
