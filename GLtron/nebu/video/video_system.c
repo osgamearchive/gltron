@@ -196,10 +196,6 @@ void nebu_Video_Destroy(int id) {
   window_id = 0;
 }
 
-void SystemReshapeFunc(void(*reshape)(int w, int h)) {
-	fprintf(stderr, "can't set reshape function (%p) - feature not supported\n", reshape);
-}
-
 void nebu_Video_WarpPointer(int x, int y) {
 #ifndef SDL2
     SDL_WarpMouse( (Uint16)x, (Uint16)y);

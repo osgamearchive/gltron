@@ -82,17 +82,6 @@ int initWindow(void) {
 	return win_id;
 }
 
-void reshape(int x, int y) {
-	if(x < getSettingi("height") || x < getSettingi("width"))
-		initGameScreen();
-	if(x > getSettingi("width") )
-		gScreen->vp_x = (x - getSettingi("width")) / 2;
-	if(y > getSettingi("height") )
-		gScreen->vp_y = (y - getSettingi("height")) / 2;
-	if(game)
-		changeDisplay(-1);
-}
-
 void shutdownDisplay() {
 	resource_ReleaseType(eRT_Font);
 	resource_ReleaseType(eRT_Texture);
@@ -110,8 +99,6 @@ void setupDisplay() {
 	// printRendererInfo();
 	// printf("win_id is %d\n", d->win_id);
 	// fprintf(stderr, "[status] loading art\n");
-
-	SystemReshapeFunc(reshape);
 }
 
 void loadModels(void)
