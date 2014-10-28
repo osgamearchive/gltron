@@ -553,6 +553,11 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
 
 void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
 {
+    static float *vertices = NULL;
+    static float *normals = NULL;
+    
+    static int nBufferPrimitives = 0;
+    
 #define EXP_VECTORS 10
 	float vectors[EXP_VECTORS][3] =
 	{
@@ -577,8 +582,21 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
         if(nMaxPrimitives < pMesh->ppIB[i]->nPrimitives)
             nMaxPrimitives = pMesh->ppIB[i]->nPrimitives;
     }
-    float *vertices = malloc( 9 * nMaxPrimitives * sizeof(float) );
-    float *normals = malloc( 9 * nMaxPrimitives * sizeof(float) );
+    
+    if(nMaxPrimitives > nBufferPrimitives)
+    {
+        if(vertices)
+            free(vertices);
+        if(normals)
+            free(normals);
+        
+        // TODO: handle this allocation better
+        vertices = malloc( 9 * nMaxPrimitives * sizeof(float) );
+        normals = malloc( 9 * nMaxPrimitives * sizeof(float) );
+        
+        nBufferPrimitives = nMaxPrimitives;
+        nebu_Log("[explosion] allocating space for %d primitives\n", nMaxPrimitives);
+    }
 	
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glNormalPointer(GL_FLOAT, 0, normals);
@@ -625,9 +643,6 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
     
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-    
-    free(vertices);
-    free(normals);
 }
 
 void gltron_Mesh_ComputeBBox(gltron_Mesh *pMesh) {
