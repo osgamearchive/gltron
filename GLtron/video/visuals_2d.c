@@ -119,6 +119,7 @@ void draw2D( nebu_Rect *pRect )
         glDrawArrays(GL_POINTS, 0, 1);
         glDisableClientState(GL_VERTEX_ARRAY);
 
+        glEnableClientState(GL_VERTEX_ARRAY);
         float *vertices = (float*)malloc(p->data.nTrails * 4 * sizeof(float));
 		for(i = 0; i < p->data.nTrails; i++)
 		{
@@ -128,6 +129,7 @@ void draw2D( nebu_Rect *pRect )
             vertices[4 * i + 2] = trail->vStart.v[0] + trail->vDirection.v[0];
             vertices[4 * i + 3] = trail->vStart.v[1] + trail->vDirection.v[1];
 		}
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
         glDrawArrays(GL_LINES, 0, 2 * p->data.nTrails);
         glDisableClientState(GL_VERTEX_ARRAY);
         
