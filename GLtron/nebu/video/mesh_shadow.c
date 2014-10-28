@@ -227,14 +227,14 @@ void nebu_Mesh_Shadow_SetLight(nebu_Mesh_ShadowInfo* pSI, const vec3* pvLight)
 			if(pSI->pDotsigns[i] == 1)
 			{
 				nebu_assert(iFrontPos < nFront);
-				memcpy(pSI->pFrontfaces->pIndices + 3 * iFrontPos, pSI->pIB->pIndices + 3 * i, 3 * sizeof(int));
+				memcpy(pSI->pFrontfaces->pIndices + 3 * iFrontPos, pSI->pIB->pIndices + 3 * i, 3 * sizeof(unsigned short));
 				iFrontPos++;
 			}
 			else
 			{
 				int j;
 				nebu_assert(iBackPos < nBack);
-				// memcpy(pSI->pBackfaces->pIndices[3 * iBackPos], pSI->pIB->pIndices[i], 3 * sizeof(int));
+				// memcpy(pSI->pBackfaces->pIndices[3 * iBackPos], pSI->pIB->pIndices[i], 3 * sizeof(unsigned short));
 				for(j = 0; j < 3; j++)
 				{
 					// pSI->pBackfaces->pIndices[3 * iBackPos + j] = pSI->pIB->pIndices[3 * i + j] + pSI->pVB->nVertices;
