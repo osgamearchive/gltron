@@ -134,6 +134,62 @@ settings.musicVolume = 0.5
 settings.mouse_invert_x = 0
 settings.mouse_invert_y = 0
 
+-- #define CAM_CIRCLE_DIST 17
+-- #define CAM_CIRCLE_Z 8.0f
+--
+-- #define CAM_FOLLOW_DIST 18
+-- #define CAM_FOLLOW_Z 6.0f
+-- #define CAM_FOLLOW_SPEED 0.05f
+-- #define CAM_FOLLOW_SPEED_FACTOR 1.0f / 82.0f
+-- #define CAM_SPEED 0.000349f
+--
+-- #define CAM_COCKPIT_Z 4
+--
+-- #define CAM_R_MIN 2.0
+-- #define CAM_R_MAX 100
+-- #define CAM_CHI_MIN PI / 6
+-- #define CAM_CHI_MAX PI / 2 - PI / 6
+--
+-- #define CAM_DR 6.4f
+
+PI = 3.141592654
+
+settings.Camera = {
+    CIRCLE_DIST = 17,
+    Circling = {
+        r = 17, phi = - PI / 8, chi = 0, phi_offset = 0,
+        free_r = 1, free_phi = 0, free_chi = 1,
+        interpolated_cam = 0, interpolated_target = 0, coupled = 0
+    },
+    Follow = {
+        r = 18, phi = - PI / 8, chi = PI / 3, phi_offset = 0,
+        free_r = 1, free_phi = 1, free_chi = 1,
+        interpolated_cam = 1, interpolated_target = 0, coupled = 1
+    },
+    Cockpit = {
+        r = 4, phi = PI, chi = 0, phi_offset = 0,
+        free_r = 0, free_phi = 1, free_chi = 0,
+        interpolated_cam = 0, interpolated_target = 1, coupled = 1
+    },
+    Manual = {
+        r = 17, phi = - PI / 8, chi = 0, phi_offset = 0,
+        free_r = 1, free_phi = 1, free_chi = 1,
+        interpolated_cam = 0, interpolated_target = 0, coupled = 0
+    },
+    Offset = {
+        r = 17, phi = - PI / 8, chi = PI / 3, phi_offset = 0,
+        free_r = 1, free_phi = 1, free_chi = 1,
+        interpolated_cam = 0, interpolated_target = 0, coupled = 0
+    }
+}
+-- camera
+settings.clamp_cam_r_min = 6
+settings.clamp_cam_r_max =  45
+settings.clamp_cam_chi_min =  PI / 8
+settings.clamp_cam_chi_max =  3 * PI / 8 -- PI/3 in the C code
+
+settings.camIsLocked = 0
+
 settings.keys = { 
    { -- player 1
       left = 97, -- lower case 'a'
@@ -168,12 +224,6 @@ settings.keys = {
 			bust = 259, -- keypad 3
    }
 }
-
--- camera
-settings.clamp_cam_r_min = 6
-settings.clamp_cam_r_max =  45
-settings.clamp_cam_chi_min =  3.141 / 8
-settings.clamp_cam_chi_max =  3 * 3.141 / 8
 
 settings.wireframe = 0
 -- these tables are not serialized to RCNAME (yet)
