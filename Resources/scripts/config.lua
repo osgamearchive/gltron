@@ -223,8 +223,6 @@ settings.keys = {
    }
 }
 
-
-
 settings.wireframe = 0
 -- these tables are not serialized to RCNAME (yet)
 -- some values are set in artpack.lua
