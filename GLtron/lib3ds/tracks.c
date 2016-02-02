@@ -23,7 +23,7 @@
 #include "lib3ds/tracks.h"
 #include "lib3ds/io.h"
 #include "lib3ds/chunk.h"
-#include "lib3ds/float.h"
+#include "lib3ds/float3ds.h"
 #include "lib3ds/vector.h"
 #include "lib3ds/quat.h"
 #include <stdlib.h>

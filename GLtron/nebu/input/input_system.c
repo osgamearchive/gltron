@@ -72,16 +72,15 @@ void nebu_Input_Init(void) {
 }
 
 void nebu_Input_Grab(void) {
-    // TODO SDL2
-	// SDL_WM_GrabInput(SDL_GRAB_ON);
+    nebu_Input_HidePointer();
 }
 
 void nebu_Input_Ungrab(void) {
-	// TODO SDL2
-    // SDL_WM_GrabInput(SDL_GRAB_OFF);
+    nebu_Input_UnhidePointer();
 }
 
 void nebu_Input_HidePointer(void) {
+    // SDL_SetRelativeMouseMode(SDL_TRUE);
     nebu_Log("[nebu] hiding pointer\n");
 	int result = SDL_ShowCursor(SDL_DISABLE);
     if(result < 0)
@@ -93,6 +92,7 @@ void nebu_Input_HidePointer(void) {
 }
 
 void nebu_Input_UnhidePointer(void) {
+    // SDL_SetRelativeMouseMode(SDL_FALSE);
     nebu_Log("[nebu] showing pointer\n");
 	int result = SDL_ShowCursor(SDL_ENABLE);
 
@@ -146,10 +146,12 @@ void nebu_Input_Mouse_GetDelta(int *x, int *y)
 		*x = 0;
 		*y = 0;
 	}
-	
-	nebu_Video_GetDimension(&wx, &wy);
-	*x = mouse_x - wx / 2;
-	*y = mouse_y - wy / 2;
+	else
+    {
+        nebu_Video_GetDimension(&wx, &wy);
+        *x = mouse_x - wx / 2;
+        *y = mouse_y - wy / 2;
+    }
 
 	// printf("[input] returned delta %d,%d\n", *x, *y);
 }

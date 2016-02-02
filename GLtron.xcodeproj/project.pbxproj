@@ -7,15 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E10839201C5EB1C500A66E97 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E108391F1C5EB1C500A66E97 /* AudioToolbox.framework */; };
+		E10839221C5EB1D300A66E97 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10839211C5EB1D300A66E97 /* CoreAudio.framework */; };
+		E10839231C5EB20700A66E97 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E170A62B19A69B0F00E4EA7F /* CoreGraphics.framework */; };
+		E10839241C5EB20F00A66E97 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E170A62919A69B0F00E4EA7F /* Foundation.framework */; };
+		E10839261C5EB2CB00A66E97 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10839251C5EB2CB00A66E97 /* AudioUnit.framework */; };
+		E10839281C5EB31100A66E97 /* ForceFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10839271C5EB31100A66E97 /* ForceFeedback.framework */; };
+		E108392A1C5EB39000A66E97 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10839291C5EB39000A66E97 /* CoreServices.framework */; };
+		E108392C1C5EB39C00A66E97 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E108392B1C5EB39C00A66E97 /* Carbon.framework */; };
+		E10839301C5EB42300A66E97 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E108392F1C5EB42300A66E97 /* OpenGL.framework */; };
+		E10839321C5EB43100A66E97 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10839311C5EB43100A66E97 /* CoreFoundation.framework */; };
 		E11F61E31986A20D0067F6C3 /* nebu_log.m in Sources */ = {isa = PBXBuildFile; fileRef = E11F61E21986A20D0067F6C3 /* nebu_log.m */; };
-		E13D33A01987E53F001147F0 /* SDL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E17BC6DD1985620B00CF73CE /* SDL.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E1439ED119AE790B00394363 /* png_texture.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F8822419A8C9BC00512665 /* png_texture.m */; };
+		E16EE7AD1C6149FE009B9135 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EE96131C61177F002B77B9 /* SDL2.framework */; };
 		E170A62A19A69B0F00E4EA7F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E170A62919A69B0F00E4EA7F /* Foundation.framework */; };
 		E170A62C19A69B0F00E4EA7F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E170A62B19A69B0F00E4EA7F /* CoreGraphics.framework */; };
-		E170A62E19A69B0F00E4EA7F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E170A62D19A69B0F00E4EA7F /* UIKit.framework */; };
 		E170A63419A69B0F00E4EA7F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E170A63219A69B0F00E4EA7F /* InfoPlist.strings */; };
 		E170A63C19A69B0F00E4EA7F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E170A63B19A69B0F00E4EA7F /* Images.xcassets */; };
-		E170A65719A69BDE00E4EA7F /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E170A65619A69BDE00E4EA7F /* libSDL2.a */; };
 		E170A65819A69C3900E4EA7F /* gltron.c in Sources */ = {isa = PBXBuildFile; fileRef = E183FFFB1984315600774FBC /* gltron.c */; };
 		E170A65919A69C4100E4EA7F /* input.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC481198437A600CF73CE /* input.c */; };
 		E170A65A19A69C5600E4EA7F /* artpack.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC485198437B800CF73CE /* artpack.c */; };
@@ -268,8 +276,6 @@
 		E17BC67119850C9800CF73CE /* surface.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC5031984383700CF73CE /* surface.c */; };
 		E17BC67219850D5000CF73CE /* timedemo.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC4D3198437F700CF73CE /* timedemo.c */; };
 		E17BC6DC1985231C00CF73CE /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = E17BC6DB1985231C00CF73CE /* Resources */; };
-		E17BC6DE1985620B00CF73CE /* SDL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E17BC6DD1985620B00CF73CE /* SDL.framework */; };
-		E17BC6E31985650000CF73CE /* SDLMain.m in Sources */ = {isa = PBXBuildFile; fileRef = E17BC6E11985650000CF73CE /* SDLMain.m */; };
 		E17BC6E41985650000CF73CE /* SDLMain.nib in Resources */ = {isa = PBXBuildFile; fileRef = E17BC6E21985650000CF73CE /* SDLMain.nib */; };
 		E17BC6E519858F8100CF73CE /* music_rwop.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC4F31984383700CF73CE /* music_rwop.c */; };
 		E17BC6E619858F8100CF73CE /* SoundSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E17BC4F41984383700CF73CE /* SoundSystem.cpp */; };
@@ -283,7 +289,6 @@
 		E17BC6EE1985914200CF73CE /* sound_glue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E17BC4B5198437F700CF73CE /* sound_glue.cpp */; };
 		E183FFD1198430DD00774FBC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E183FFCF198430DD00774FBC /* InfoPlist.strings */; };
 		E183FFD7198430DD00774FBC /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E183FFD5198430DD00774FBC /* Credits.rtf */; };
-		E183FFDA198430DD00774FBC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E183FFD9198430DD00774FBC /* AppDelegate.m */; };
 		E183FFFC1984315600774FBC /* gltron.c in Sources */ = {isa = PBXBuildFile; fileRef = E183FFFB1984315600774FBC /* gltron.c */; };
 		E1A7976C19AAFCEA00BF50D9 /* findpath.m in Sources */ = {isa = PBXBuildFile; fileRef = E1E3A8C31986B8CF001ED45F /* findpath.m */; };
 		E1A79AD319AB514D00BF50D9 /* data in Resources */ = {isa = PBXBuildFile; fileRef = E1A79AD219AB514D00BF50D9 /* data */; };
@@ -309,11 +314,11 @@
 		E1CE883319C1F23F00259899 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = E1CE882319C1F23F00259899 /* zutil.c */; };
 		E1E3A8C41986B8CF001ED45F /* findpath.m in Sources */ = {isa = PBXBuildFile; fileRef = E1E3A8C31986B8CF001ED45F /* findpath.m */; };
 		E1E3A8CC1986BD47001ED45F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E1E3A8CB1986BD47001ED45F /* Images.xcassets */; };
-		E1F37BE519AE7B25009BABE8 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F37BE419AE7B25009BABE8 /* CoreImage.framework */; };
-		E1F37BE919AF1EF8009BABE8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F37BE819AF1EF8009BABE8 /* QuartzCore.framework */; };
-		E1F881F119A8C5BF00512665 /* libSDL_sound-IOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F881F019A8C5BF00512665 /* libSDL_sound-IOS.a */; };
-		E1F881F319A8C5DE00512665 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F881F219A8C5DE00512665 /* AudioToolbox.framework */; };
-		E1F881F519A8C5E800512665 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F881F419A8C5E800512665 /* CoreAudio.framework */; };
+		E1EE96141C61177F002B77B9 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EE96131C61177F002B77B9 /* SDL2.framework */; };
+		E1EE96391C611F82002B77B9 /* liblibSDL_sound-OSX.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EE96381C611F82002B77B9 /* liblibSDL_sound-OSX.dylib */; };
+		E1F7F81D1C5E51250067D81E /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F7F81C1C5E51250067D81E /* CoreAudio.framework */; };
+		E1F7F8211C5E51FB0067D81E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F7F8201C5E51FB0067D81E /* AudioToolbox.framework */; };
+		E1F7F8221C5E53060067D81E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E183FFD9198430DD00774FBC /* AppDelegate.m */; };
 		E1F8822219A8C86B00512665 /* dirsetup.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC4BF198437F700CF73CE /* dirsetup.c */; };
 		E1F8822319A8C88B00512665 /* path.c in Sources */ = {isa = PBXBuildFile; fileRef = E17BC4C0198437F700CF73CE /* path.c */; };
 		E1F8822519A8C9BC00512665 /* png_texture.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F8822419A8C9BC00512665 /* png_texture.m */; };
@@ -326,13 +331,20 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				E13D33A01987E53F001147F0 /* SDL.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E108391F1C5EB1C500A66E97 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E10839211C5EB1D300A66E97 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		E10839251C5EB2CB00A66E97 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		E10839271C5EB31100A66E97 /* ForceFeedback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ForceFeedback.framework; path = System/Library/Frameworks/ForceFeedback.framework; sourceTree = SDKROOT; };
+		E10839291C5EB39000A66E97 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		E108392B1C5EB39C00A66E97 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		E108392F1C5EB42300A66E97 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		E10839311C5EB43100A66E97 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		E11F61E21986A20D0067F6C3 /* nebu_log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nebu_log.m; sourceTree = "<group>"; };
 		E12F860E1987CC2A008D28CB /* 32bit_warning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 32bit_warning.h; sourceTree = "<group>"; };
 		E12F860F1987CC2A008D28CB /* ai.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ai.h; sourceTree = "<group>"; };
@@ -353,12 +365,10 @@
 		E170A62819A69B0F00E4EA7F /* GLtronIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GLtronIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E170A62919A69B0F00E4EA7F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E170A62B19A69B0F00E4EA7F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E170A62D19A69B0F00E4EA7F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		E170A63119A69B0F00E4EA7F /* GLtronIOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GLtronIOS-Info.plist"; sourceTree = "<group>"; };
 		E170A63319A69B0F00E4EA7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E170A63719A69B0F00E4EA7F /* GLtronIOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GLtronIOS-Prefix.pch"; sourceTree = "<group>"; };
 		E170A63B19A69B0F00E4EA7F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		E170A65619A69BDE00E4EA7F /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = "../SDL2-2.0.3/Xcode-iOS/SDL/build/Debug-iphoneos/libSDL2.a"; sourceTree = "<group>"; };
 		E17BC481198437A600CF73CE /* input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = input.c; sourceTree = "<group>"; };
 		E17BC485198437B800CF73CE /* artpack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = artpack.c; sourceTree = "<group>"; };
 		E17BC486198437B800CF73CE /* explosion.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = explosion.c; sourceTree = "<group>"; };
@@ -576,7 +586,7 @@
 		E17BC5F5198439AF00CF73CE /* file.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = file.c; sourceTree = "<group>"; };
 		E17BC5F6198439AF00CF73CE /* file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = file.h; sourceTree = "<group>"; };
 		E17BC5F7198439AF00CF73CE /* float.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = float.c; sourceTree = "<group>"; };
-		E17BC5F8198439AF00CF73CE /* float.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = float.h; sourceTree = "<group>"; };
+		E17BC5F8198439AF00CF73CE /* float3ds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = float3ds.h; sourceTree = "<group>"; };
 		E17BC5F9198439AF00CF73CE /* io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = io.c; sourceTree = "<group>"; };
 		E17BC5FA198439AF00CF73CE /* io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = io.h; sourceTree = "<group>"; };
 		E17BC5FB198439AF00CF73CE /* light.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = light.c; sourceTree = "<group>"; };
@@ -603,7 +613,6 @@
 		E17BC610198439AF00CF73CE /* viewport.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = viewport.c; sourceTree = "<group>"; };
 		E17BC611198439AF00CF73CE /* viewport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = viewport.h; sourceTree = "<group>"; };
 		E17BC6DB1985231C00CF73CE /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
-		E17BC6DD1985620B00CF73CE /* SDL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL.framework; sourceTree = "<group>"; };
 		E17BC6E01985650000CF73CE /* SDLMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDLMain.h; sourceTree = "<group>"; };
 		E17BC6E11985650000CF73CE /* SDLMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDLMain.m; sourceTree = "<group>"; };
 		E17BC6E21985650000CF73CE /* SDLMain.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SDLMain.nib; sourceTree = "<group>"; };
@@ -689,12 +698,11 @@
 		E1CE882419C1F23F00259899 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zutil.h; path = zlib/zutil.h; sourceTree = "<group>"; };
 		E1E3A8C31986B8CF001ED45F /* findpath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = findpath.m; sourceTree = "<group>"; };
 		E1E3A8CB1986BD47001ED45F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		E1F37BE419AE7B25009BABE8 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/CoreImage.framework; sourceTree = DEVELOPER_DIR; };
-		E1F37BE619AF1EE4009BABE8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		E1EE96131C61177F002B77B9 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = "../../Library/Developer/Xcode/DerivedData/GLtron-gdkaxoscguuxyldhkeyjckvzqpfr/Build/Products/Debug/SDL2.framework"; sourceTree = "<group>"; };
+		E1EE96381C611F82002B77B9 /* liblibSDL_sound-OSX.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "liblibSDL_sound-OSX.dylib"; path = "SDL_sound-OSX/libSDL_sound-OSX/build/Debug/liblibSDL_sound-OSX.dylib"; sourceTree = "<group>"; };
 		E1F37BE819AF1EF8009BABE8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		E1F881F019A8C5BF00512665 /* libSDL_sound-IOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libSDL_sound-IOS.a"; path = "../SDL_sound-IOS/build/Debug-iphoneos/libSDL_sound-IOS.a"; sourceTree = "<group>"; };
-		E1F881F219A8C5DE00512665 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
-		E1F881F419A8C5E800512665 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		E1F7F81C1C5E51250067D81E /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		E1F7F8201C5E51FB0067D81E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.2.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		E1F8822419A8C9BC00512665 /* png_texture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = png_texture.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -703,13 +711,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1F37BE519AE7B25009BABE8 /* CoreImage.framework in Frameworks */,
-				E1F881F519A8C5E800512665 /* CoreAudio.framework in Frameworks */,
-				E1F881F319A8C5DE00512665 /* AudioToolbox.framework in Frameworks */,
-				E1F881F119A8C5BF00512665 /* libSDL_sound-IOS.a in Frameworks */,
-				E170A65719A69BDE00E4EA7F /* libSDL2.a in Frameworks */,
+				E16EE7AD1C6149FE009B9135 /* SDL2.framework in Frameworks */,
+				E1F7F8211C5E51FB0067D81E /* AudioToolbox.framework in Frameworks */,
+				E1F7F81D1C5E51250067D81E /* CoreAudio.framework in Frameworks */,
 				E170A62C19A69B0F00E4EA7F /* CoreGraphics.framework in Frameworks */,
-				E170A62E19A69B0F00E4EA7F /* UIKit.framework in Frameworks */,
 				E170A62A19A69B0F00E4EA7F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -718,8 +723,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1F37BE919AF1EF8009BABE8 /* QuartzCore.framework in Frameworks */,
-				E17BC6DE1985620B00CF73CE /* SDL.framework in Frameworks */,
+				E1EE96391C611F82002B77B9 /* liblibSDL_sound-OSX.dylib in Frameworks */,
+				E1EE96141C61177F002B77B9 /* SDL2.framework in Frameworks */,
+				E10839321C5EB43100A66E97 /* CoreFoundation.framework in Frameworks */,
+				E10839301C5EB42300A66E97 /* OpenGL.framework in Frameworks */,
+				E108392C1C5EB39C00A66E97 /* Carbon.framework in Frameworks */,
+				E108392A1C5EB39000A66E97 /* CoreServices.framework in Frameworks */,
+				E10839281C5EB31100A66E97 /* ForceFeedback.framework in Frameworks */,
+				E10839261C5EB2CB00A66E97 /* AudioUnit.framework in Frameworks */,
+				E10839241C5EB20F00A66E97 /* Foundation.framework in Frameworks */,
+				E10839231C5EB20700A66E97 /* CoreGraphics.framework in Frameworks */,
+				E10839221C5EB1D300A66E97 /* CoreAudio.framework in Frameworks */,
+				E10839201C5EB1C500A66E97 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1182,7 +1197,7 @@
 				E17BC5F5198439AF00CF73CE /* file.c */,
 				E17BC5F6198439AF00CF73CE /* file.h */,
 				E17BC5F7198439AF00CF73CE /* float.c */,
-				E17BC5F8198439AF00CF73CE /* float.h */,
+				E17BC5F8198439AF00CF73CE /* float3ds.h */,
 				E17BC5F9198439AF00CF73CE /* io.c */,
 				E17BC5FA198439AF00CF73CE /* io.h */,
 				E17BC5FB198439AF00CF73CE /* light.c */,
@@ -1322,17 +1337,21 @@
 		E183FFC5198430DD00774FBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E1EE96381C611F82002B77B9 /* liblibSDL_sound-OSX.dylib */,
+				E1EE96131C61177F002B77B9 /* SDL2.framework */,
+				E10839311C5EB43100A66E97 /* CoreFoundation.framework */,
+				E108392F1C5EB42300A66E97 /* OpenGL.framework */,
+				E108392B1C5EB39C00A66E97 /* Carbon.framework */,
+				E10839291C5EB39000A66E97 /* CoreServices.framework */,
+				E10839271C5EB31100A66E97 /* ForceFeedback.framework */,
+				E10839251C5EB2CB00A66E97 /* AudioUnit.framework */,
+				E10839211C5EB1D300A66E97 /* CoreAudio.framework */,
+				E108391F1C5EB1C500A66E97 /* AudioToolbox.framework */,
+				E1F7F8201C5E51FB0067D81E /* AudioToolbox.framework */,
+				E1F7F81C1C5E51250067D81E /* CoreAudio.framework */,
 				E1F37BE819AF1EF8009BABE8 /* QuartzCore.framework */,
-				E1F37BE619AF1EE4009BABE8 /* QuartzCore.framework */,
-				E1F37BE419AE7B25009BABE8 /* CoreImage.framework */,
-				E1F881F419A8C5E800512665 /* CoreAudio.framework */,
-				E1F881F219A8C5DE00512665 /* AudioToolbox.framework */,
-				E1F881F019A8C5BF00512665 /* libSDL_sound-IOS.a */,
-				E170A65619A69BDE00E4EA7F /* libSDL2.a */,
-				E17BC6DD1985620B00CF73CE /* SDL.framework */,
 				E170A62919A69B0F00E4EA7F /* Foundation.framework */,
 				E170A62B19A69B0F00E4EA7F /* CoreGraphics.framework */,
-				E170A62D19A69B0F00E4EA7F /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1508,7 +1527,7 @@
 		E183FFBB198430DD00774FBC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Andreas Umbach";
 			};
 			buildConfigurationList = E183FFBE198430DD00774FBC /* Build configuration list for PBXProject "GLtron" */;
@@ -1735,7 +1754,6 @@
 				E17BC5DF198439A000CF73CE /* lparser.c in Sources */,
 				E17BC5881984383800CF73CE /* console.c in Sources */,
 				E17BC5E2198439A000CF73CE /* ltable.c in Sources */,
-				E17BC6E31985650000CF73CE /* SDLMain.m in Sources */,
 				E17BC4AF198437B800CF73CE /* trail_render.c in Sources */,
 				E17BC4E9198437F700CF73CE /* init.c in Sources */,
 				E17BC61D198439AF00CF73CE /* mesh.c in Sources */,
@@ -1766,7 +1784,6 @@
 				E17BC5781984383800CF73CE /* system.c in Sources */,
 				E17BC57A1984383800CF73CE /* vector.c in Sources */,
 				E17BC4A4198437B800CF73CE /* graphics_world.c in Sources */,
-				E183FFDA198430DD00774FBC /* AppDelegate.m in Sources */,
 				E17BC49C198437B800CF73CE /* artpack.c in Sources */,
 				E17BC621198439AF00CF73CE /* tcb.c in Sources */,
 				E17BC615198439AF00CF73CE /* chunk.c in Sources */,
@@ -1839,6 +1856,7 @@
 				E17BC4DE198437F700CF73CE /* 32bit_warning.c in Sources */,
 				E17BC66F19850C7100CF73CE /* screenshot.c in Sources */,
 				E17BC614198439AF00CF73CE /* camera.c in Sources */,
+				E1F7F8221C5E53060067D81E /* AppDelegate.m in Sources */,
 				E17BC5CF198439A000CF73CE /* ldo.c in Sources */,
 				E17BC6E719858F8100CF73CE /* Source.cpp in Sources */,
 				E17BC4E0198437F700CF73CE /* computer.c in Sources */,
@@ -1910,7 +1928,10 @@
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = YES;
 				INFOPLIST_FILE = "GLtronIOS/GLtronIOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				OTHER_CFLAGS = (
 					"-DRC_NAME=\"\\\".gltronrc\\\"\"",
 					"-DPATH_SEPARATOR=\"'/'\"",
@@ -1921,6 +1942,7 @@
 					"-DSDL2",
 					"-DOPENGL_ES",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "umbach.ch.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "/Users/andreas/Developer/GLtron/GLtron/include /Users/andreas/Developer/GLtron/GLtron/nebu/include /Users/andreas/Developer/GLtron/GLtron /usr/local/include/libpng16 /Users/andreas/Developer/SDL2-2.0.3/include /Users/andreas/Developer/SDL_sound";
@@ -1941,8 +1963,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "GLtronIOS/GLtronIOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				OTHER_CFLAGS = "-D__IPHONEOS__";
+				PRODUCT_BUNDLE_IDENTIFIER = "umbach.ch.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				"USER_HEADER_SEARCH_PATHS[arch=*]" = "/Users/andreas/Developer/GLtron/GLtron/include /Users/andreas/Developer/GLtron/GLtron/nebu/include /Users/andreas/Developer/GLtron/GLtron /usr/local/include/libpng16";
@@ -1955,8 +1981,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1968,7 +1994,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1985,7 +2012,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1993,8 +2020,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -2008,7 +2035,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2017,14 +2044,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				SDKROOT = macosx10.9;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
 		E183FFF5198430DD00774FBC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2034,38 +2061,30 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					src/include,
-				);
-				"HEADER_SEARCH_PATHS[arch=*]" = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-				);
 				INFOPLIST_FILE = "GLtron/GLtron-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SDL_sound-OSX/libSDL_sound-OSX/build/Debug",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CFLAGS = (
 					"-DRC_NAME=\"\\\".gltronrc\\\"\"",
 					"-DPATH_SEPARATOR=\"'/'\"",
 					"-DPREF_DIR=\"\\\"~\\\"\"",
 					"-DSNAP_DIR=\"\\\"~\\\"\"",
 					"-DLOCAL_DATA",
+					"-DSDL2",
 				);
 				OTHER_CPLUSPLUSFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-lz",
 					/usr/local/lib/libpng.a,
-					/usr/local/lib/libmikmod.a,
-					/usr/local/lib/libogg.a,
-					/usr/local/lib/libSDL_sound.a,
-					/usr/local/lib/libvorbis.a,
-					/usr/local/lib/libvorbisfile.a,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "umbach.ch.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
-				"USER_HEADER_SEARCH_PATHS[arch=*]" = "/Users/andreas/Developer/GLtron/GLtron/include /Users/andreas/Developer/GLtron/GLtron/nebu/include /Users/andreas/Developer/GLtron/GLtron /usr/local/include/libpng16 /usr/local/include/SDL";
+				USER_HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL_sound /Users/andreas/Developer/GLtron/GLtron/nebu/include /Users/andreas/Developer/GLtron/GLtron/include /Users/andreas/Developer/GLtron/GLtron/ /usr/local/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2073,7 +2092,7 @@
 		E183FFF6198430DD00774FBC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2083,33 +2102,29 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					src/include,
-				);
 				INFOPLIST_FILE = "GLtron/GLtron-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SDL_sound-OSX/libSDL_sound-OSX/build/Debug",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_CFLAGS = (
 					"-DRC_NAME=\"\\\".gltronrc\\\"\"",
 					"-DPATH_SEPARATOR=\"'/'\"",
 					"-DPREF_DIR=\"\\\"~\\\"\"",
 					"-DSNAP_DIR=\"\\\"~\\\"\"",
 					"-DLOCAL_DATA",
+					"-DSDL2",
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
 					/usr/local/lib/libpng.a,
-					/usr/local/lib/libmikmod.a,
-					/usr/local/lib/libogg.a,
-					/usr/local/lib/libSDL_sound.a,
-					/usr/local/lib/libvorbis.a,
-					/usr/local/lib/libvorbisfile.a,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "umbach.ch.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
-				USER_HEADER_SEARCH_PATHS = "/Users/andreas/Developer/GLtron/GLtron/include /Users/andreas/Developer/GLtron/GLtron/nebu/include /Users/andreas/Developer/GLtron/GLtron /usr/local/include/libpng16 /usr/local/include/SDL";
+				USER_HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL_sound /Users/andreas/Developer/GLtron/GLtron/nebu/include /Users/andreas/Developer/GLtron/GLtron/include /Users/andreas/Developer/GLtron/GLtron/ /usr/local/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

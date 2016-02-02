@@ -376,8 +376,11 @@ void drawCycle(int player, int lod, int drawTurn) {
 		glEnable(GL_NORMALIZE);
 
 		/* draw spoke animation */
-		if (gSpoke_time > 140 - (p->data.speed * 10) 
-			&& game->pauseflag == PAUSE_GAME_RUNNING) {
+		if (
+            gSpoke_time > 140 - (p->data.speed * 10)
+			// && game->pauseflag == PAUSE_GAME_RUNNING
+            )
+        {
 			if (gSpoke_state == 1) {
 			gSpoke_state = 0;
 			gltron_Mesh_Material_SetColor(cycle, "Spoke", eSpecular, SpokeColor);

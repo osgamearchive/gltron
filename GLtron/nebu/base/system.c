@@ -123,7 +123,7 @@ void nebu_Time_FrameDelay(unsigned int delay)
 	// nebu_Time_SetCurrentFrameTime( nebu_Time_GetElapsed() );
 }
 
-#ifdef SDL2
+#ifdef __IPHONEOS__
 
 int nebu_HandleAppEvent(SDL_Event* event)
 {
@@ -189,7 +189,7 @@ int nebu_System_MainLoop() {
                     nebu_System_Exit(); // shut down
                     nebu_System_ExitLoop(0); // exit mainloop
                     break;
-#ifdef SDL2
+#ifdef __IPHONEOS__
                 case SDL_APP_TERMINATING:
                 case SDL_APP_LOWMEMORY:
                 case SDL_APP_WILLENTERBACKGROUND:

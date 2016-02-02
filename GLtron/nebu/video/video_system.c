@@ -197,13 +197,11 @@ void nebu_Video_Destroy(int id) {
 }
 
 void nebu_Video_WarpPointer(int x, int y) {
-#ifndef SDL2
-    SDL_WarpMouse( (Uint16)x, (Uint16)y);
-#endif
+    SDL_WarpMouseInWindow(screen, (Uint16)x, (Uint16)y);
 }
 
 void nebu_Video_CheckErrors(const char *where) {
-	int error;
+	GLenum error;
 	error = glGetError();
 	if(error != GL_NO_ERROR)
 	{

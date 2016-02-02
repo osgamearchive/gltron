@@ -12,7 +12,7 @@ extern "C" {
 
 #include "Nebu_audio.h"
 
-#include "SDL.h"
+#include "SDL2/SDL.h"
 #include "SDL_sound.h"
 
 #include "base/nebu_debug_memory.h"

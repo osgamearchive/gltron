@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:SDL_sound-OSX/libSDL_sound-OSX/libSDL_sound-OSX.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../SDL2-2.0.3/Xcode/SDL/SDL.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../SDL_sound-IOS/SDL_sound-IOS.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:GLtron.xcodeproj">
+   </FileRef>
+</Workspace>
