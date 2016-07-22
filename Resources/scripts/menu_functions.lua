@@ -173,6 +173,7 @@ MenuFunctions.GotoParent = function ()
 end
 
 MenuFunctions.Action = function ()
+    script_print("current menu is '" .. Menu.current .. "', active is '" .. Menu.active .. "'")
 	local menu = Menu[Menu.current].items[Menu.active]
 	local type = Menu[ menu  ].type
 	script_print("calling action of '" .. menu .. "', type " .. type )

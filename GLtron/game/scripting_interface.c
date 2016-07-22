@@ -170,8 +170,9 @@ int c_configureKeyboard(lua_State *L) {
 
 int c_getKeyName(lua_State *L) {
 	int top = lua_gettop(L);
-	if(lua_isnumber(L, top)) {
-		lua_pushstring(L, nebu_Input_GetKeyname( (int) lua_tonumber(L, top) ));
+	if(lua_isstring(L, top)) {
+        int scanCode = nebu_Input_GetScanCodeFromScanName( lua_tostring(L, top));
+        lua_pushstring(L, nebu_Input_GetKeyNameFromScanCode( scanCode ));
 	} else {
 		lua_pushstring(L, "error");
 	}

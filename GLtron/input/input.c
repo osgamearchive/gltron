@@ -14,85 +14,76 @@
 
 #include "base/nebu_debug_memory.h"
 
-int isAltLeftPressed = 0;
-int isAltRightPressed = 0;
-int isCapsLockPressed = 0;
-
-int ReservedKeyCodes[eReservedKeys] = {
-  27,
-  ' ',
-  SYSTEM_KEY_F1,
-  SYSTEM_KEY_F2,
-  SYSTEM_KEY_F3,
-  SYSTEM_KEY_F4,
-  SYSTEM_KEY_F5,
-  SYSTEM_KEY_F6,
-  SYSTEM_KEY_F7,
-  SYSTEM_KEY_F8,
-  SYSTEM_KEY_F9,
-  SYSTEM_KEY_F10,
-  SYSTEM_KEY_F11,
-  SYSTEM_KEY_F12,
-  SYSTEM_KEY_ALT_LEFT
+int ReservedScanCodes[eReservedKeys] = {
+  SYSTEM_SCANCODE_ESCAPE,
+  SYSTEM_SCANCODE_SPACE,
+  SYSTEM_SCANCODE_F1,
+  SYSTEM_SCANCODE_F2,
+  SYSTEM_SCANCODE_F3,
+  SYSTEM_SCANCODE_F4,
+  SYSTEM_SCANCODE_F5,
+  SYSTEM_SCANCODE_F6,
+  SYSTEM_SCANCODE_F7,
+  SYSTEM_SCANCODE_F8,
+  SYSTEM_SCANCODE_F9,
+  SYSTEM_SCANCODE_F10,
+  SYSTEM_SCANCODE_F11,
+  SYSTEM_SCANCODE_F12,
 };
 
 
-void keyGame(int state, int k, int x, int y)
+int getScanCodeForAction(int player, char *actionName)
+{
+    char *keyName;
+    scripting_RunFormat("return settings.keys[%d].%s", player + 1, actionName);
+    scripting_GetStringResult(&keyName);
+    int result = nebu_Input_GetScanCodeFromScanName(keyName);
+    scripting_StringResult_Free(keyName);
+    return result;
+}
+
+void keyGame(int state, int scanCode)
 {
 	int i;
 
-	// detect modifier states (at least those we care about
-	switch (k)
-	{
-	case SYSTEM_KEY_ALT_LEFT:
-		isAltLeftPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 :0;
-		break;
-	case SYSTEM_KEY_ALT_RIGHT:
-		isAltRightPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 :0;
-		break;
-	case SYSTEM_KEY_CAPS_LOCK:
-		isCapsLockPressed = state == NEBU_INPUT_KEYSTATE_DOWN ? 1 : 0;
-		break;
-	}
-
 	if(state == NEBU_INPUT_KEYSTATE_DOWN)
 	{
-		switch (k)
+		switch (scanCode)
 		{
-		case 27:
+		case SYSTEM_SCANCODE_ESCAPE:
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
 			nebu_System_ExitLoop(eSRC_Game_Escape);
 			return;
-		case ' ':
+		case SYSTEM_SCANCODE_SPACE:
 			game->pauseflag = PAUSE_GAME_SUSPENDED;
 			nebu_System_ExitLoop(eSRC_Game_Pause);
 			return;
-		case SYSTEM_KEY_F1: changeDisplay(0); return;
-		case SYSTEM_KEY_F2: changeDisplay(1); return;
-		case SYSTEM_KEY_F3: changeDisplay(2); return;
-		case SYSTEM_KEY_F4: changeDisplay(3); return;
+		case SYSTEM_SCANCODE_F1: changeDisplay(0); return;
+		case SYSTEM_SCANCODE_F2: changeDisplay(1); return;
+		case SYSTEM_SCANCODE_F3: changeDisplay(2); return;
+		case SYSTEM_SCANCODE_F4: changeDisplay(3); return;
 
 		// somehow, this breaks the 'keys' array, and saving
 		// at the end of the game fails
-		// case SYSTEM_KEY_F5: saveSettings(); return;
+		// case SYSTEM_SCANCODE_F5: saveSettings(); return;
 
-        case SYSTEM_KEY_F6: toggleCameraLock(); return;
-		// case SYSTEM_KEY_F10: nextCameraType(); return;
-        case SYSTEM_KEY_F5: nextCameraType(); return;
+        case SYSTEM_SCANCODE_F6: toggleCameraLock(); return;
+		// case SYSTEM_SCANCODE_F10: nextCameraType(); return;
+        case SYSTEM_SCANCODE_F5: nextCameraType(); return;
             
-        case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); return;
-		case SYSTEM_KEY_F12: doPngScreenShot(gScreen); return;
+        case SYSTEM_SCANCODE_F11: doBmpScreenShot(gScreen); return;
+		case SYSTEM_SCANCODE_F12: doPngScreenShot(gScreen); return;
 
-		// case SYSTEM_KEY_F6: console_Seek(-1); return;
-		// case SYSTEM_KEY_F7: console_Seek(1); return;
+		// case SYSTEM_SCANCODE_F6: console_Seek(-1); return;
+		// case SYSTEM_SCANCODE_F7: console_Seek(1); return;
 
-		case SYSTEM_KEY_F8:
+		case SYSTEM_SCANCODE_F8:
 			// toggle wireframe setting
 			setSettingi("wireframe", getSettingi("wireframe") ? 0 : 1);
 			return;
 
     /* toggle lighting
-  case SYSTEM_KEY_F6: 
+  case SYSTEM_SCANCODE_F6: 
       setSettingi("light_cycles", !game->settings->light_cycles);
       return;
     */
@@ -106,28 +97,21 @@ void keyGame(int state, int k, int x, int y)
 		if(PLAYER_IS_ACTIVE(&game->player[i]) &&
 			 !game->player[i].ai.active)
 		{
-			int key;
 			if(state == NEBU_INPUT_KEYSTATE_DOWN)
-			{ 
-				scripting_RunFormat("return settings.keys[%d].left", i + 1);
-				scripting_GetIntegerResult( &key );
-				if(key == k)
+			{
+				if(scanCode == getScanCodeForAction(i, "left"))
 				{
 					createEvent(i, EVENT_TURN_LEFT);
 					return;
 				}
-				scripting_RunFormat("return settings.keys[%d].right", i + 1);
-				scripting_GetIntegerResult( &key );
-				if(key == k)
+				if(scanCode == getScanCodeForAction(i, "right"))
 				{
 					createEvent(i, EVENT_TURN_RIGHT);
 					return;
 				}
 			}
 			// deal with glance keys
-			scripting_RunFormat("return settings.keys[%d].glance_left", i + 1);
-			scripting_GetIntegerResult( &key );
-			if(key == k)
+			if(scanCode == getScanCodeForAction(i, "glance_left"))
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
@@ -142,9 +126,7 @@ void keyGame(int state, int k, int x, int y)
 				return;
 			}
 			// deal with glance keys
-			scripting_RunFormat("return settings.keys[%d].glance_right", i + 1);
-			scripting_GetIntegerResult( &key );
-			if(key == k)
+            if(scanCode == getScanCodeForAction(i, "glance_right"))
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
@@ -157,9 +139,7 @@ void keyGame(int state, int k, int x, int y)
 				return;
 			}
 			// boost
-			scripting_RunFormat("return settings.keys[%d].boost", i + 1);
-			scripting_GetIntegerResult( &key );
-			if(key == k)
+            if(scanCode == getScanCodeForAction(i, "boost"))
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
@@ -178,9 +158,7 @@ void keyGame(int state, int k, int x, int y)
 				return;
 			}
 			// wallbuster
-			scripting_RunFormat("return settings.keys[%d].bust", i + 1);
-			scripting_GetIntegerResult( &key );
-			if(key == k)
+            if(scanCode == getScanCodeForAction(i, "bust"))
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
@@ -202,7 +180,7 @@ void keyGame(int state, int k, int x, int y)
 	}
 	if(state == NEBU_INPUT_KEYSTATE_DOWN) {
 		displayMessage(TO_STDERR, "key '%s' (%d) is not bound", 
-									 nebu_Input_GetKeyname(k), k);
+									 nebu_Input_GetKeyNameFromScanCode(scanCode), scanCode);
 	}
 }
 

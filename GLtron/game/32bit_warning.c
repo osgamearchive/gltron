@@ -73,22 +73,8 @@ void _32bit_warning_Idle(void)
 	nebu_System_PostRedisplay(); /* animate menu */
 }
 
-void _32bit_warning_Key(int state, int key, int x, int y)
+void _32bit_warning_Key(int state, int scanCode)
 {
-	if(state != NEBU_INPUT_KEYSTATE_DOWN)
-		return;
-    switch (key)
-	{
-	case SYSTEM_KEY_ESCAPE:
-		// exit callback to gui
-		break;
-	case SYSTEM_KEY_DOWN:
-		// next menu
-		break;
-	case SYSTEM_KEY_UP:
-		// prev menu
-		break;
-	}
 }
 
 void _32bit_warning_Init(void)

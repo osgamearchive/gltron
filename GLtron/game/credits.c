@@ -49,7 +49,7 @@ void mouseCredits (int buttons, int state, int x, int y)
 	}
 }
 
-void keyCredits(int state, int k, int x, int y)
+void keyCredits(int state, int scanCode)
 {
 	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;

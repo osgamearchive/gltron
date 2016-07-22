@@ -6,7 +6,7 @@ tmp = {}
 settings = { }
 tracks = { }
 
-app_version = 0.718
+app_version = 0.719
 version = app_version
 
 -- debugging
@@ -188,38 +188,38 @@ settings.clamp_cam_chi_max =  3 * PI / 8 -- PI/3 in the C code
 
 settings.camIsLocked = 0
 
-settings.keys = { 
-   { -- player 1
-      left = 97, -- lower case 'a'
-      right = 115, -- lower case 's'
-      glance_left = 113, -- lower case 'q'
-      glance_right = 119, -- lower case 'w'
-      boost = 101, -- lower case 'e'
-      bust = 100, -- lower case 'd'
-   },
-   { -- player 2
-      left = 106, -- lower case 'j'
-      right = 107, -- lower case 'k'
-      glance_left = 117, -- lower case 'u'
-      glance_right = 105, -- lower case 'i'
-			boost = 108, -- lower case 'l'
-			bust = 111, -- lower case 'o'
+settings.keys = {
+    { -- player 1
+        left = "A",
+        right = "S",
+        glance_left = "Q",
+        glance_right = "W",
+        boost = "E",
+        bust = "D"
+    },
+    { -- player 2
+       left = "J",
+       right = "K",
+       glance_left = "U",
+       glance_right = "I",
+       boost = "O",
+       bust = "L"
    },
    { -- player 3
-      left = 276, -- cursor left
-      right = 275, -- cursor right
-      glance_left = 127, -- 'del'
-      glance_right = 279, -- 'end'
-			boost = 274, -- cursor down
-			bust = 273, -- cursor up
+       left = "Left",
+       right = "Right",
+       glance_left = "Delete",
+       glance_right = "End",
+       boost = "Up",
+       bust = "Down"
    },
    { -- player 4
-      left = 260, -- keypad 4
-      right = 262, -- keypad 6
-      glance_left = 263, -- keypad 7
-      glance_right = 265, -- keypad 9
-			boost = 261, -- keypad h
-			bust = 259, -- keypad 3
+       left = "Keypad 4",
+       right = "Keypad 5",
+       glance_left = "Keypad 7",
+       glance_right = "Keypad 8",
+       boost = "Keypad 9",
+       bust = "Keypad 6"
    }
 }
 

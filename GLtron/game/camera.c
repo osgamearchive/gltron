@@ -196,6 +196,8 @@ void observerCamera(PlayerVisual *pV) {
 float getAngle(int dir)
 {
 	float fAngle;
+    
+    nebu_assert(dir < game2->level->nAxis);
 	vec2 *v = &game2->level->pAxis[dir];
 
 	fAngle = (float) atan2(- v->v[1], - v->v[0]);

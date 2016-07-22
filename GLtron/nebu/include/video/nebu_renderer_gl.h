@@ -13,7 +13,7 @@
 #define GLdouble GLfloat
 
 #else
-#include "SDL2/SDL_opengl.h"
+#include "SDL_opengl.h"
 #include "OpenGL/glu.h"
 #endif
 

@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/andreas/Developer/SDL2-2.0.3/Xcode-iOS/SDL/SDLios.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:SDL_sound-OSX/libSDL_sound-OSX/libSDL_sound-OSX.xcodeproj">
    </FileRef>
    <FileRef

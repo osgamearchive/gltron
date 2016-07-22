@@ -15,14 +15,44 @@ boundary = {
 	{ { x = .5, y = sqrt3/2 }, { x = 0, y = 0 } }
 },
 
+axis = {
+    { x = -0.5, y = -0.86 },
+    { x = -0.5, y = 0.86 },
+    { x = 1, y = 0 },
+},
+
 -- spawn points
 -- (they don't have to be sorted, they will be randomized anyway)
 
 spawn = {
-	{ x = .25, y = sqrt3/6, dir = directions.up },
-	{ x = .5, y = 2*sqrt3/6, dir = directions.down },
-	{ x = .5, y = sqrt3/6, dir = directions.up },
-	{ x = .75, y = sqrt3/6, dir = directions.up }
+    {
+        type = "list",
+        set =
+        {
+            { x = .25, y = sqrt3/6, dir = directions.up },
+            { x = .5, y = 2*sqrt3/6, dir = directions.down },
+            { x = .5, y = sqrt3/6, dir = directions.up },
+            { x = .75, y = sqrt3/6, dir = directions.up }
+        }
+    },
+    {
+        type = "lines",
+        set =
+        {
+            {
+                vStart = { x = .25, y = .25 },
+                vEnd = { x = .75, y = .25 },
+                n = 999,
+                dir = directions.up
+            },
+            {
+                vStart = { x = .25, y = .75 },
+                vEnd = { x = .75, y = .75 },
+                n = 999,
+                dir = directions.down
+            },
+        }
+    },
 },
 
 -- floor geometry is used to generate reflections, etc.

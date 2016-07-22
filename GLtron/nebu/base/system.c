@@ -238,7 +238,7 @@ void nebu_System_SetCallback_Display( void(*display)(void) ) {
 	current->display = display;
 }
 
-void nebu_System_SetCallback_Key( void(*keyboard)(int, int, int, int) ) {
+void nebu_System_SetCallback_Key( void(*keyboard)(int, int) ) {
 	current->keyboard = keyboard;
 }
 
