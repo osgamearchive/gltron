@@ -178,8 +178,10 @@ void initConfiguration(int argc, const char *argv[])
 void initVideo(void) {
 	nebu_Video_Init();
 	// this requuires the player data
-	initVideoData();
+    gScreen = (Visual*) malloc(sizeof(Visual));
+
 	setupDisplay();
+    initVideoData();
 
 	loadArt();
 	loadModels();

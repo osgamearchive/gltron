@@ -19,7 +19,8 @@ void nebu_Video_SetDisplayMode(int flags); // test ok
 void nebu_Video_GetDisplayDepth(int *r, int *g, int *b, int *a);
 int nebu_Video_Create(char *name); // test ok
 void nebu_Video_Destroy(int id); // test ok
-void nebu_Video_GetDimension(int *x, int *y);
+void nebu_Video_GetPointDimension(int *x, int *y);
+void nebu_Video_GetPixelDimension(int *x, int *y);
 void nebu_Video_WarpPointer(int x, int y);
 
 void nebu_Video_CheckErrors(const char *where);

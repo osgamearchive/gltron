@@ -112,16 +112,25 @@ void SystemMouse(int buttons, int state, int x, int y) {
     if(state == 0)
         return;
     
-    if(x < 100)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, 97, 0, 0);
-    else if(x > 800)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, 115, 0, 0);
-    else if(y > 540)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_DOWN, 0, 0);
-    else if(y < 100)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_UP, 0, 0);
+    nebu_Log("mouse: (%d, %d)\n", x, y);
+    int w, h;
+    nebu_Video_GetPointDimension(&w, &h);
+    float u = (float) x / (float) w;
+    float v = (float) (h - y) / (float) h;
+    nebu_Log("scaled to [0,1]x[0,1] with origin in the lower left: (%.2f, %.2f)\n", u, v);
+    
+    if(u < 0.2 && v  > 0.8)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_ESCAPE);
+    else if(u < 0.2)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_A);
+    else if(u > 0.8)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_S);
+    else if(v < 0.2)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_DOWN);
+    else if(v > 0.8)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_DOWN);
     else
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_BUTTON_0, 0, 0);
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_RETURN);
 #endif
 
 }
@@ -147,7 +156,7 @@ void nebu_Input_Mouse_GetDelta(int *x, int *y)
 	}
 	else
     {
-        nebu_Video_GetDimension(&wx, &wy);
+        nebu_Video_GetPointDimension(&wx, &wy);
         *x = mouse_x - wx / 2;
         *y = mouse_y - wy / 2;
     }
@@ -158,7 +167,7 @@ void nebu_Input_Mouse_GetDelta(int *x, int *y)
 void nebu_Input_Mouse_WarpToOrigin(void)
 {
 	int wx, wy;
-	nebu_Video_GetDimension(&wx, &wy);
+	nebu_Video_GetPointDimension(&wx, &wy);
 	nebu_Video_WarpPointer(wx / 2, wy / 2);
 	// printf("[input] warped to %d,%d\n", wx / 2, wy /2);
 }

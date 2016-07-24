@@ -14,6 +14,9 @@ static SDL_Surface *screen;
 
 static int width = 0;
 static int height = 0;
+static int pointWidth = 0;
+static int pointHeight = 0;
+
 static int bitdepth = 0;
 static int flags = 0;
 static int video_initialized = 0;
@@ -33,10 +36,16 @@ void nebu_Video_SetWindowMode(int x, int y, int w, int h) {
   height = h;
 }
 
-void nebu_Video_GetDimension(int *x, int *y)
+void nebu_Video_GetPixelDimension(int *x, int *y)
 {
 	*x = width;
 	*y = height;
+}
+
+void nebu_Video_GetPointDimension(int *x, int *y)
+{
+    *x = pointWidth;
+    *y = pointHeight;
 }
 
 void nebu_Video_SetDisplayMode(int f) {
@@ -88,6 +97,7 @@ void printOpenGLDebugInfo(void)
 	fprintf(stderr, "  Green: %d\n", g);
 	fprintf(stderr, "  Blue: %d\n", b);
 	fprintf(stderr, "  Alpha: %d\n", a);
+
 }
 
 void SystemSetGamma(float red, float green, float blue) {
@@ -97,32 +107,44 @@ void SystemSetGamma(float red, float green, float blue) {
 
 void createWindow(char *name)
 {
-#ifdef SDL2
-    // TODO: where did bitdepth go?
 #ifdef __IPHONEOS__
     SDL_DisplayMode mode = { SDL_PIXELFORMAT_UNKNOWN, 0, 0, 0, 0 };
     SDL_GetDisplayMode(0, 0, &mode);
-    fprintf(stderr, "[window size] (%d, %d)\n", mode.w, mode.h);
-#endif
+    nebu_Log("[window size (in points)] (%d, %d)\n", mode.w, mode.h);
+    pointWidth = mode.w;
+    pointHeight = mode.h;
     
-  if( (screen = SDL_CreateWindow( name,
-                                 SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED,
-                                 width, height,
-	  ((flags & SYSTEM_FULLSCREEN) ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL)) == NULL ) {
-    fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
-    nebu_assert(0); exit(1); /* OK: critical, no visual */
-  }
-    nebu_Log("window size: (%d, %d)\n", width, height);
-    SDL_GLContext glcontext = SDL_GL_CreateContext(screen);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_EGL, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    
+    
+    if( (screen = SDL_CreateWindow( name,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   mode.w, mode.h,
+                                   ((flags & SYSTEM_FULLSCREEN) ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI)) == NULL ) {
+        fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
+        nebu_assert(0); exit(1); /* OK: critical, no visual */
+    }
 #else
-    if( (screen = SDL_SetVideoMode(width, height, bitdepth,
-                                   ((flags & SYSTEM_FULLSCREEN) ? SDL_FULLSCREEN : 0) | SDL_OPENGL)) == NULL ) {
+    pointWidth = width;
+    pointHeight = height;
+    if( (screen = SDL_CreateWindow( name,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   width, height,
+                                   ((flags & SYSTEM_FULLSCREEN) ? SDL_WINDOW_FULLSCREEN : 0) | SDL_WINDOW_OPENGL )) == NULL ) {
         fprintf(stderr, "[system] Couldn't set GL mode: %s\n", SDL_GetError());
         nebu_assert(0); exit(1); /* OK: critical, no visual */
     }
 #endif
-        
+    SDL_GLContext glcontext = SDL_GL_CreateContext(screen);
+    {
+        SDL_GL_GetDrawableSize(screen, &width, &height);
+        nebu_Log("actual drawable size (in pixels): (%d, %d)\n", width, height);
+    }
   window_id = 1;
 }
 

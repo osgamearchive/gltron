@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E1828EC01D420C7400EC10FB /* libSDL_sound_OSX_static.h in Headers */ = {isa = PBXBuildFile; fileRef = E1828EBF1D420C7400EC10FB /* libSDL_sound_OSX_static.h */; };
-		E1828EC21D420C7400EC10FB /* libSDL_sound_OSX_static.m in Sources */ = {isa = PBXBuildFile; fileRef = E1828EC11D420C7400EC10FB /* libSDL_sound_OSX_static.m */; };
 		E1828EC61D420CA200EC10FB /* coreaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962B1C611DE2002B77B9 /* coreaudio.c */; };
 		E1828EC71D420CA600EC10FB /* extra_rwops.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962C1C611DE2002B77B9 /* extra_rwops.c */; };
 		E1828EC81D420CA900EC10FB /* SDL_sound.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962E1C611DE2002B77B9 /* SDL_sound.c */; };
@@ -25,8 +23,6 @@
 
 /* Begin PBXFileReference section */
 		E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "liblibSDL_sound-OSX-static.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1828EBF1D420C7400EC10FB /* libSDL_sound_OSX_static.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libSDL_sound_OSX_static.h; sourceTree = "<group>"; };
-		E1828EC11D420C7400EC10FB /* libSDL_sound_OSX_static.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libSDL_sound_OSX_static.m; sourceTree = "<group>"; };
 		E1A83ADA1D4003DC009E6DFF /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = "../../../SDL2-2.0.3/Xcode/SDL/build/Debug/libSDL2.a"; sourceTree = "<group>"; };
 		E1A83ADC1D400414009E6DFF /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = "../../../SDL2-2.0.3/Xcode/SDL/build/Debug/SDL2.framework"; sourceTree = "<group>"; };
 		E1EE961E1C611C10002B77B9 /* liblibSDL_sound-OSX.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "liblibSDL_sound-OSX.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,22 +54,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E1828EBE1D420C7400EC10FB /* libSDL_sound-OSX-static */ = {
-			isa = PBXGroup;
-			children = (
-				E1828EBF1D420C7400EC10FB /* libSDL_sound_OSX_static.h */,
-				E1828EC11D420C7400EC10FB /* libSDL_sound_OSX_static.m */,
-			);
-			path = "libSDL_sound-OSX-static";
-			sourceTree = "<group>";
-		};
 		E1EE96151C611C10002B77B9 = {
 			isa = PBXGroup;
 			children = (
 				E1A83ADC1D400414009E6DFF /* SDL2.framework */,
 				E1A83ADA1D4003DC009E6DFF /* libSDL2.a */,
 				E1EE96201C611C10002B77B9 /* libSDL_sound-OSX */,
-				E1828EBE1D420C7400EC10FB /* libSDL_sound-OSX-static */,
 				E1EE961F1C611C10002B77B9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,7 +94,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1828EC01D420C7400EC10FB /* libSDL_sound_OSX_static.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +184,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E1828EC21D420C7400EC10FB /* libSDL_sound_OSX_static.m in Sources */,
 				E1828EC91D420CAC00EC10FB /* audio_convert.c in Sources */,
 				E1828EC61D420CA200EC10FB /* coreaudio.c in Sources */,
 				E1828EC71D420CA600EC10FB /* extra_rwops.c in Sources */,
@@ -277,7 +261,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DSOUND_SUPPORTS_COREAUDIO";
@@ -315,7 +299,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-DSOUND_SUPPORTS_COREAUDIO";
 				SDKROOT = macosx;
@@ -354,6 +338,7 @@
 				E1828EC41D420C7400EC10FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E1EE96191C611C10002B77B9 /* Build configuration list for PBXProject "libSDL_sound-OSX" */ = {
 			isa = XCConfigurationList;
