@@ -6,7 +6,7 @@ tmp = {}
 settings = { }
 tracks = { }
 
-app_version = 0.719
+app_version = 0.7191
 version = app_version
 
 -- debugging
