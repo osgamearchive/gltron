@@ -1087,6 +1087,9 @@ void drawCam(PlayerVisual *pV) {
 		glDisable(GL_CLIP_PLANE0);
 		glCullFace(GL_BACK);
 		glPopMatrix();
+        
+
+        
 		gIsRenderingReflection = 0; // hack: normal lighting
 
 		/* then blend the skybox into the scene, where stencil is set */
@@ -1097,7 +1100,9 @@ void drawCam(PlayerVisual *pV) {
 		drawSkybox( box2_Diameter( & game2->level->boundingBox ) * 2.5f );
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
-		
+
+
+        
 		/* then blend reflector into the scene */
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
@@ -1111,12 +1116,13 @@ void drawCam(PlayerVisual *pV) {
 		video_Shader_Setup(& gWorld->floor_shader, 0);
 		gltron_Mesh_Draw( gWorld->floor, TRI_MESH );
 		video_Shader_Cleanup(& gWorld->floor_shader, 0);
-
+        
 		glDisable(GL_STENCIL_TEST);
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 	}
 	/* floor done */
+
 
 	/* planar shadows */
 	glDepthMask(GL_FALSE);
@@ -1153,6 +1159,7 @@ void drawCam(PlayerVisual *pV) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // TODO: this looks buggy for all player viewports except player 0, because there will be no glow around player 0 in these, and possible errornous glows on the viewport's players
 		for (i = 0; i < game->players; i++)
 		{
 			if (PLAYER_IS_ACTIVE(game->player + i))

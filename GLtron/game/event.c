@@ -84,12 +84,10 @@ int crashTestPlayers(int i, const segment2 *movement) {
 			wall = game->player[j].data.trails + k;
 						
 			if(segment2_Intersect(&v, &t1, &t2, movement, wall)) {
-#if 0
-				printf("(%.2f, %.2f), (%.2f, %.2f), %.2f, %.2f\n",
-							 data->posx, data->posy,
-							 v.v[0], v.v[1],
-							 t1, t2); 
-#endif
+//				printf("(%.2f, %.2f), (%.2f, %.2f), %.2f, %.2f\n",
+//							 data->posx, data->posy,
+//							 v.v[0], v.v[1],
+//							 t1, t2);
 				if(t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1) {
 					// set current trail end to crash location
 					data->trails[data->nTrails - 1].vDirection.v[0] = v.v[0] - data->trails[data->nTrails - 1].vStart.v[0];

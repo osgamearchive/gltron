@@ -6,11 +6,7 @@
 
 #include "base/nebu_debug_memory.h"
 
-#ifdef SDL2
 static SDL_Window *screen;
-#else
-static SDL_Surface *screen;
-#endif
 
 static int width = 0;
 static int height = 0;
@@ -100,11 +96,6 @@ void printOpenGLDebugInfo(void)
 
 }
 
-void SystemSetGamma(float red, float green, float blue) {
-    // TODO: find SDL2 equivalent
-  // SDL_SetGamma(red, green, blue);
-}
-
 void createWindow(char *name)
 {
 #ifdef __IPHONEOS__
@@ -150,12 +141,7 @@ void createWindow(char *name)
 
 void nebu_Video_SwapBuffers() {
     nebu_Time_Update();
-#ifdef SDL2
     SDL_GL_SwapWindow(screen);
-#else
-    SDL_GL_SwapBuffers();
-#endif
-    
 }
 
 void nebu_Video_GetDisplayDepth(int *r, int *g, int *b, int *a)

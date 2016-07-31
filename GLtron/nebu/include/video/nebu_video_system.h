@@ -10,8 +10,6 @@
 #define SYSTEM_ALPHA 64
 #define SYSTEM_RGBA (SYSTEM_RGB | SYSTEM_ALPHA)
 
-extern void SystemSetGamma(float r, float g, float b);
-
 void nebu_Video_Init(void); // test ok
 
 void nebu_Video_SetWindowMode(int x, int y, int w, int h); // test ok

@@ -25,8 +25,9 @@ void nebu_Input_Init(void) {
 	int i;
 
 	/* keyboard */
-    // TODO SDL2
 	// SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
+    // not needed anymore (not present in SDL2 either),
+    // since we can check event.key.repeat == 0 now
   
 	/* joystick */
 	if(SDL_Init(SDL_INIT_JOYSTICK) >= 0) {
@@ -208,6 +209,9 @@ void nebu_Intern_HandleInput(SDL_Event *event) {
 	switch(event->type) {
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
+        // ignore key repeats
+        if(event->key.repeat != 0)
+            break;
             
 		if(event->type == SDL_KEYDOWN) {
 			state = NEBU_INPUT_KEYSTATE_DOWN;

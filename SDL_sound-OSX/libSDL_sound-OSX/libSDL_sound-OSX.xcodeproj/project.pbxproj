@@ -11,21 +11,12 @@
 		E1828EC71D420CA600EC10FB /* extra_rwops.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962C1C611DE2002B77B9 /* extra_rwops.c */; };
 		E1828EC81D420CA900EC10FB /* SDL_sound.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962E1C611DE2002B77B9 /* SDL_sound.c */; };
 		E1828EC91D420CAC00EC10FB /* audio_convert.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962F1C611DE2002B77B9 /* audio_convert.c */; };
-		E1A83ADD1D400414009E6DFF /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1A83ADC1D400414009E6DFF /* SDL2.framework */; };
-		E1EE96311C611DE2002B77B9 /* SDL_sound.h in Headers */ = {isa = PBXBuildFile; fileRef = E1EE962A1C611DE2002B77B9 /* SDL_sound.h */; };
-		E1EE96321C611DE2002B77B9 /* coreaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962B1C611DE2002B77B9 /* coreaudio.c */; };
-		E1EE96331C611DE2002B77B9 /* extra_rwops.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962C1C611DE2002B77B9 /* extra_rwops.c */; };
-		E1EE96341C611DE2002B77B9 /* extra_rwops.h in Headers */ = {isa = PBXBuildFile; fileRef = E1EE962D1C611DE2002B77B9 /* extra_rwops.h */; };
-		E1EE96351C611DE2002B77B9 /* SDL_sound.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962E1C611DE2002B77B9 /* SDL_sound.c */; };
-		E1EE96361C611DE2002B77B9 /* audio_convert.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962F1C611DE2002B77B9 /* audio_convert.c */; };
-		E1EE96371C611DE2002B77B9 /* SDL_sound_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = E1EE96301C611DE2002B77B9 /* SDL_sound_internal.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "liblibSDL_sound-OSX-static.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1A83ADA1D4003DC009E6DFF /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = "../../../SDL2-2.0.3/Xcode/SDL/build/Debug/libSDL2.a"; sourceTree = "<group>"; };
 		E1A83ADC1D400414009E6DFF /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = "../../../SDL2-2.0.3/Xcode/SDL/build/Debug/SDL2.framework"; sourceTree = "<group>"; };
-		E1EE961E1C611C10002B77B9 /* liblibSDL_sound-OSX.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "liblibSDL_sound-OSX.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1EE962A1C611DE2002B77B9 /* SDL_sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_sound.h; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/SDL_sound.h"; sourceTree = "<absolute>"; };
 		E1EE962B1C611DE2002B77B9 /* coreaudio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = coreaudio.c; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/decoders/coreaudio.c"; sourceTree = "<absolute>"; };
 		E1EE962C1C611DE2002B77B9 /* extra_rwops.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = extra_rwops.c; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/extra_rwops.c"; sourceTree = "<absolute>"; };
@@ -40,14 +31,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E1EE961B1C611C10002B77B9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E1A83ADD1D400414009E6DFF /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,7 +50,6 @@
 		E1EE961F1C611C10002B77B9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1EE961E1C611C10002B77B9 /* liblibSDL_sound-OSX.dylib */,
 				E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */,
 			);
 			name = Products;
@@ -97,16 +79,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E1EE961C1C611C10002B77B9 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E1EE96311C611DE2002B77B9 /* SDL_sound.h in Headers */,
-				E1EE96341C611DE2002B77B9 /* extra_rwops.h in Headers */,
-				E1EE96371C611DE2002B77B9 /* SDL_sound_internal.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -127,23 +99,6 @@
 			productReference = E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		E1EE961D1C611C10002B77B9 /* libSDL_sound-OSX */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E1EE96271C611C10002B77B9 /* Build configuration list for PBXNativeTarget "libSDL_sound-OSX" */;
-			buildPhases = (
-				E1EE961A1C611C10002B77B9 /* Sources */,
-				E1EE961B1C611C10002B77B9 /* Frameworks */,
-				E1EE961C1C611C10002B77B9 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "libSDL_sound-OSX";
-			productName = "libSDL_sound-OSX";
-			productReference = E1EE961E1C611C10002B77B9 /* liblibSDL_sound-OSX.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -155,9 +110,6 @@
 				TargetAttributes = {
 					E1828EBC1D420C7400EC10FB = {
 						CreatedOnToolsVersion = 7.3.1;
-					};
-					E1EE961D1C611C10002B77B9 = {
-						CreatedOnToolsVersion = 7.2;
 					};
 				};
 			};
@@ -173,7 +125,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E1EE961D1C611C10002B77B9 /* libSDL_sound-OSX */,
 				E1828EBC1D420C7400EC10FB /* libSDL_sound-OSX-static */,
 			);
 		};
@@ -191,17 +142,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E1EE961A1C611C10002B77B9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E1EE96351C611DE2002B77B9 /* SDL_sound.c in Sources */,
-				E1EE96331C611DE2002B77B9 /* extra_rwops.c in Sources */,
-				E1EE96361C611DE2002B77B9 /* audio_convert.c in Sources */,
-				E1EE96321C611DE2002B77B9 /* coreaudio.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -212,6 +152,7 @@
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL2-2.0.3/include";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -222,6 +163,7 @@
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL2-2.0.3/include";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -306,28 +248,6 @@
 			};
 			name = Release;
 		};
-		E1EE96281C611C10002B77B9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL2-2.0.3/include";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		E1EE96291C611C10002B77B9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL2-2.0.3/include";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -345,15 +265,6 @@
 			buildConfigurations = (
 				E1EE96251C611C10002B77B9 /* Debug */,
 				E1EE96261C611C10002B77B9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		E1EE96271C611C10002B77B9 /* Build configuration list for PBXNativeTarget "libSDL_sound-OSX" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E1EE96281C611C10002B77B9 /* Debug */,
-				E1EE96291C611C10002B77B9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

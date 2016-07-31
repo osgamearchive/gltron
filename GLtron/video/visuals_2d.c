@@ -153,31 +153,31 @@ void draw2D( nebu_Rect *pRect )
 		}
 		*/
 			
-	#if 0
+
 		// draw AI debug lines
-		glColor4f(1,1,1, 1.0f);
-		glVertex2f(p->ai.front.vStart.v[0],
-			p->ai.front.vStart.v[1]);
-		glVertex2f(p->ai.front.vStart.v[0] + p->ai.front.vDirection.v[0],
-			p->ai.front.vStart.v[1] + p->ai.front.vDirection.v[1]);
-		glColor4f(0,1,0, 1.0f);
-		glVertex2f(p->ai.left.vStart.v[0],
-			p->ai.left.vStart.v[1]);
-		glVertex2f(p->ai.left.vStart.v[0] + p->ai.left.vDirection.v[0],
-			p->ai.left.vStart.v[1] + p->ai.left.vDirection.v[1]);
-		glColor4f(0,0,1, 1.0f);
-		glVertex2f(p->ai.right.vStart.v[0],
-			p->ai.right.vStart.v[1]);
-		glVertex2f(p->ai.right.vStart.v[0] + p->ai.right.vDirection.v[0],
-			p->ai.right.vStart.v[1] + p->ai.right.vDirection.v[1]);
-		glColor4f(0,1,1, 1.0f);
-		glVertex2f(p->ai.backleft.vStart.v[0],
-			p->ai.backleft.vStart.v[1]);
-		glVertex2f(p->ai.backleft.vStart.v[0] + 
-			p->ai.backleft.vDirection.v[0],
-			p->ai.backleft.vStart.v[1] + 
-			p->ai.backleft.vDirection.v[1]);
-	#endif
+//		glColor4f(1,1,1, 1.0f);
+//		glVertex2f(p->ai.front.vStart.v[0],
+//			p->ai.front.vStart.v[1]);
+//		glVertex2f(p->ai.front.vStart.v[0] + p->ai.front.vDirection.v[0],
+//			p->ai.front.vStart.v[1] + p->ai.front.vDirection.v[1]);
+//		glColor4f(0,1,0, 1.0f);
+//		glVertex2f(p->ai.left.vStart.v[0],
+//			p->ai.left.vStart.v[1]);
+//		glVertex2f(p->ai.left.vStart.v[0] + p->ai.left.vDirection.v[0],
+//			p->ai.left.vStart.v[1] + p->ai.left.vDirection.v[1]);
+//		glColor4f(0,0,1, 1.0f);
+//		glVertex2f(p->ai.right.vStart.v[0],
+//			p->ai.right.vStart.v[1]);
+//		glVertex2f(p->ai.right.vStart.v[0] + p->ai.right.vDirection.v[0],
+//			p->ai.right.vStart.v[1] + p->ai.right.vDirection.v[1]);
+//		glColor4f(0,1,1, 1.0f);
+//		glVertex2f(p->ai.backleft.vStart.v[0],
+//			p->ai.backleft.vStart.v[1]);
+//		glVertex2f(p->ai.backleft.vStart.v[0] + 
+//			p->ai.backleft.vDirection.v[0],
+//			p->ai.backleft.vStart.v[1] + 
+//			p->ai.backleft.vDirection.v[1]);
+
 	}
 	glDisable(GL_BLEND);
 
