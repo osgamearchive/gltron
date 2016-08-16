@@ -1,0 +1,320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLtron\include\audio\audio.h" />
+    <ClInclude Include="GLtron\include\audio\sound_glue.h" />
+    <ClInclude Include="GLtron\include\base\switchCallbacks.h" />
+    <ClInclude Include="GLtron\include\base\util.h" />
+    <ClInclude Include="GLtron\include\configuration\configuration.h" />
+    <ClInclude Include="GLtron\include\configuration\settings.h" />
+    <ClInclude Include="GLtron\include\filesystem\dirsetup.h" />
+    <ClInclude Include="GLtron\include\filesystem\path.h" />
+    <ClInclude Include="GLtron\include\game\32bit_warning.h" />
+    <ClInclude Include="GLtron\include\game\ai.h" />
+    <ClInclude Include="GLtron\include\game\camera.h" />
+    <ClInclude Include="GLtron\include\game\client_data.h" />
+    <ClInclude Include="GLtron\include\game\data.h" />
+    <ClInclude Include="GLtron\include\game\engine.h" />
+    <ClInclude Include="GLtron\include\game\event.h" />
+    <ClInclude Include="GLtron\include\game\game.h" />
+    <ClInclude Include="GLtron\include\game\game_data.h" />
+    <ClInclude Include="GLtron\include\game\game_level.h" />
+    <ClInclude Include="GLtron\include\game\gltron.h" />
+    <ClInclude Include="GLtron\include\game\init.h" />
+    <ClInclude Include="GLtron\include\game\menu.h" />
+    <ClInclude Include="GLtron\include\game\resource.h" />
+    <ClInclude Include="GLtron\include\game\timedemo.h" />
+    <ClInclude Include="GLtron\include\game\timesystem.h" />
+    <ClInclude Include="GLtron\include\input\input.h" />
+    <ClInclude Include="GLtron\include\scripting\scripting.h" />
+    <ClInclude Include="GLtron\include\video\explosion.h" />
+    <ClInclude Include="GLtron\include\video\fonttex.h" />
+    <ClInclude Include="GLtron\include\video\graphics_fx.h" />
+    <ClInclude Include="GLtron\include\video\graphics_hud.h" />
+    <ClInclude Include="GLtron\include\video\graphics_lights.h" />
+    <ClInclude Include="GLtron\include\video\graphics_utility.h" />
+    <ClInclude Include="GLtron\include\video\graphics_world.h" />
+    <ClInclude Include="GLtron\include\video\hud.h" />
+    <ClInclude Include="GLtron\include\video\model.h" />
+    <ClInclude Include="GLtron\include\video\recognizer.h" />
+    <ClInclude Include="GLtron\include\video\skybox.h" />
+    <ClInclude Include="GLtron\include\video\texture.h" />
+    <ClInclude Include="GLtron\include\video\trail_geometry.h" />
+    <ClInclude Include="GLtron\include\video\video.h" />
+    <ClInclude Include="GLtron\include\video\video_level.h" />
+    <ClInclude Include="GLtron\zlib\crc32.h" />
+    <ClInclude Include="GLtron\zlib\deflate.h" />
+    <ClInclude Include="GLtron\zlib\gzguts.h" />
+    <ClInclude Include="GLtron\zlib\inffast.h" />
+    <ClInclude Include="GLtron\zlib\inffixed.h" />
+    <ClInclude Include="GLtron\zlib\inflate.h" />
+    <ClInclude Include="GLtron\zlib\inftrees.h" />
+    <ClInclude Include="GLtron\zlib\trees.h" />
+    <ClInclude Include="GLtron\zlib\zconf.h" />
+    <ClInclude Include="GLtron\zlib\zlib.h" />
+    <ClInclude Include="GLtron\zlib\zutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="gltron.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GLtron\audio\sound.c" />
+    <ClCompile Include="GLtron\audio\sound_glue.cpp" />
+    <ClCompile Include="GLtron\base\util.c" />
+    <ClCompile Include="GLtron\configuration\settings.c" />
+    <ClCompile Include="GLtron\filesystem\dirsetup.c" />
+    <ClCompile Include="GLtron\filesystem\path.c" />
+    <ClCompile Include="GLtron\game\32bit_warning.c" />
+    <ClCompile Include="GLtron\game\camera.c" />
+    <ClCompile Include="GLtron\game\computer.c" />
+    <ClCompile Include="GLtron\game\computer_utilities.c" />
+    <ClCompile Include="GLtron\game\credits.c" />
+    <ClCompile Include="GLtron\game\engine.c" />
+    <ClCompile Include="GLtron\game\event.c" />
+    <ClCompile Include="GLtron\game\game.c" />
+    <ClCompile Include="GLtron\game\globals.c" />
+    <ClCompile Include="GLtron\game\gui.c" />
+    <ClCompile Include="GLtron\game\init.c" />
+    <ClCompile Include="GLtron\game\level.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)game_level.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)game_level.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)game_level.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)game_level.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\pause.c" />
+    <ClCompile Include="GLtron\game\resource.c" />
+    <ClCompile Include="GLtron\game\scripting_interface.c" />
+    <ClCompile Include="GLtron\game\switchCallbacks.c" />
+    <ClCompile Include="GLtron\game\timedemo.c" />
+    <ClCompile Include="GLtron\gltron.c" />
+    <ClCompile Include="GLtron\input\input.c" />
+    <ClCompile Include="GLtron\video\artpack.c" />
+    <ClCompile Include="GLtron\video\explosion.c" />
+    <ClCompile Include="GLtron\video\fonts.c" />
+    <ClCompile Include="GLtron\video\gamegraphics.c" />
+    <ClCompile Include="GLtron\video\graphics_fx.c" />
+    <ClCompile Include="GLtron\video\graphics_hud.c" />
+    <ClCompile Include="GLtron\video\graphics_lights.c" />
+    <ClCompile Include="GLtron\video\graphics_utility.c" />
+    <ClCompile Include="GLtron\video\graphics_world.c" />
+    <ClCompile Include="GLtron\video\hud.c" />
+    <ClCompile Include="GLtron\video\level.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)video_level.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)video_level.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)video_level.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)video_level.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\material.c" />
+    <ClCompile Include="GLtron\video\model.c" />
+    <ClCompile Include="GLtron\video\recognizer.c" />
+    <ClCompile Include="GLtron\video\screenshot.c" />
+    <ClCompile Include="GLtron\video\skybox.c" />
+    <ClCompile Include="GLtron\video\texture.c" />
+    <ClCompile Include="GLtron\video\trail.c" />
+    <ClCompile Include="GLtron\video\trail_geometry.c" />
+    <ClCompile Include="GLtron\video\trail_render.c" />
+    <ClCompile Include="GLtron\video\video.c" />
+    <ClCompile Include="GLtron\video\visuals_2d.c" />
+    <ClCompile Include="GLtron\zlib\adler32.c" />
+    <ClCompile Include="GLtron\zlib\compress.c" />
+    <ClCompile Include="GLtron\zlib\crc32.c" />
+    <ClCompile Include="GLtron\zlib\deflate.c" />
+    <ClCompile Include="GLtron\zlib\gzclose.c" />
+    <ClCompile Include="GLtron\zlib\gzlib.c" />
+    <ClCompile Include="GLtron\zlib\gzread.c" />
+    <ClCompile Include="GLtron\zlib\gzwrite.c" />
+    <ClCompile Include="GLtron\zlib\infback.c" />
+    <ClCompile Include="GLtron\zlib\inffast.c" />
+    <ClCompile Include="GLtron\zlib\inflate.c" />
+    <ClCompile Include="GLtron\zlib\inftrees.c" />
+    <ClCompile Include="GLtron\zlib\trees.c" />
+    <ClCompile Include="GLtron\zlib\uncompr.c" />
+    <ClCompile Include="GLtron\zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\levels\4squares.lua" />
+    <None Include="Resources\levels\arena.lua" />
+    <None Include="Resources\levels\movie.lua" />
+    <None Include="Resources\levels\ring.lua" />
+    <None Include="Resources\levels\simple.lua" />
+    <None Include="Resources\levels\square.lua" />
+    <None Include="Resources\levels\tri.lua" />
+    <None Include="Resources\scripts\artpack.lua" />
+    <None Include="Resources\scripts\audio.lua" />
+    <None Include="Resources\scripts\basics.lua" />
+    <None Include="Resources\scripts\config.lua" />
+    <None Include="Resources\scripts\console.lua" />
+    <None Include="Resources\scripts\game.lua" />
+    <None Include="Resources\scripts\gauge.lua" />
+    <None Include="Resources\scripts\hud-config.lua" />
+    <None Include="Resources\scripts\hud.lua" />
+    <None Include="Resources\scripts\joystick.lua" />
+    <None Include="Resources\scripts\layout.lua" />
+    <None Include="Resources\scripts\main.lua" />
+    <None Include="Resources\scripts\menu.lua" />
+    <None Include="Resources\scripts\menu_functions.lua" />
+    <None Include="Resources\scripts\path.lua" />
+    <None Include="Resources\scripts\save.lua" />
+    <None Include="Resources\scripts\video.lua" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A4A4E24A-371E-461B-8629-EA5105E64049}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>GLtron</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>nebu.lib;SDLmain.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(Platform)\$(Configuration);$(Configuration);SDL\VisualC\SDLmain\$(Platform)\$(Configuration);SDL\VisualC\SDLmain\$(Configuration)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(Platform)\$(Configuration);$(Configuration);SDL\VisualC\SDLmain\$(Platform)\$(Configuration);SDL\VisualC\SDLmain\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nebu.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4996;4703</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>nebu.lib;SDLmain.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
+      <AdditionalLibraryDirectories>$(Platform)\$(Configuration);$(Configuration);SDL\VisualC\SDLmain\$(Platform)\$(Configuration);SDL\VisualC\SDLmain\$(Configuration)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4996;4703</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(Platform)\$(Configuration);$(Configuration);SDL\VisualC\SDLmain\$(Platform)\$(Configuration);SDL\VisualC\SDLmain\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nebu.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

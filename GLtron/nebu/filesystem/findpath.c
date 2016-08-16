@@ -108,6 +108,7 @@ void goto_installpath(const char *argv0)
 #else
 void goto_installpath(const char *argv0)
 {
+#ifndef WIN32
 #ifndef __IPHONEOS__
     chdir("GLtron.app/Contents/Resources/Resources");
 #endif
@@ -116,6 +117,7 @@ void goto_installpath(const char *argv0)
     getwd(buf);
     
     nebu_Log("current directory: %s\n", buf);
+#endif
 }
 #endif
 
