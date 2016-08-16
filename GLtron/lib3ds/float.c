@@ -20,7 +20,7 @@
  * $Id: float.c 1651 2004-05-31 08:01:30Z andi75 $
  */
 #define LIB3DS_EXPORT
-#include "lib3ds/float.h"
+#include "lib3ds/float3ds.h"
 
 
 /*!

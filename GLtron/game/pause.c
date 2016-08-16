@@ -36,33 +36,31 @@ void idlePause(void) {
 	nebu_System_PostRedisplay();
 }
 
-void keyboardPause(int state, int key, int x, int y) {
+void keyboardPause(int state, int scanCode) {
 	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
-	switch(key) {
-	case 27:
+	switch(scanCode) {
+	case SYSTEM_SCANCODE_ESCAPE:
 		nebu_System_ExitLoop(eSRC_Pause_Escape);
 		break;
-	case SYSTEM_KEY_F1: changeDisplay(0); break;
-	case SYSTEM_KEY_F2: changeDisplay(1); break;
-	case SYSTEM_KEY_F3: changeDisplay(2); break;
-	case SYSTEM_KEY_F4: changeDisplay(3); break;
+	case SYSTEM_SCANCODE_F1: changeDisplay(0); break;
+	case SYSTEM_SCANCODE_F2: changeDisplay(1); break;
+	case SYSTEM_SCANCODE_F3: changeDisplay(2); break;
+	case SYSTEM_SCANCODE_F4: changeDisplay(3); break;
 
 		// somehow, this breaks the 'keys' array, and saving
 		// at the end of the game fails
-		// case SYSTEM_KEY_F5: saveSettings(); return;
+		// case SYSTEM_SCANCODE_F5: saveSettings(); return;
 
-	case SYSTEM_KEY_F10: nextCameraType(); break;
+	case SYSTEM_SCANCODE_F10: nextCameraType(); break;
 
-	case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
-	case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;
+	case SYSTEM_SCANCODE_F11: doBmpScreenShot(gScreen); break;
+	case SYSTEM_SCANCODE_F12: doPngScreenShot(gScreen); break;
 	    
-	case SYSTEM_KEY_UP: console_Seek(-1); break;
-	case SYSTEM_KEY_DOWN: console_Seek(1); break;
+	case SYSTEM_SCANCODE_UP: console_Seek(-1); break;
+	case SYSTEM_SCANCODE_DOWN: console_Seek(1); break;
 
-	case SYSTEM_KEY_TAB: 
-		// nebu_System_ExitLoop(RETURN_MENU_PROMPT);
 		break;
 
 	default:
@@ -105,17 +103,13 @@ Callbacks pauseCallbacks = {
 	initPause, exitPause, gameMouse, NULL, "pause"
 };
 
-void keyboardPrompt(int state, int key, int x, int y) {
+void keyboardPrompt(int state, int scanCode) {
 	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
-	switch(key) {
-	case 27:
-	case SYSTEM_KEY_TAB:
+	switch(scanCode) {
+	case SYSTEM_SCANCODE_ESCAPE:
 		nebu_System_ExitLoop(eSRC_Pause_Escape);
-		break;
-	case SYSTEM_KEY_RETURN:
-		/* promptEvaluate(); */
 		break;
 	}
 }

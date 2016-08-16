@@ -1,0 +1,275 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E1828EC61D420CA200EC10FB /* coreaudio.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962B1C611DE2002B77B9 /* coreaudio.c */; };
+		E1828EC71D420CA600EC10FB /* extra_rwops.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962C1C611DE2002B77B9 /* extra_rwops.c */; };
+		E1828EC81D420CA900EC10FB /* SDL_sound.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962E1C611DE2002B77B9 /* SDL_sound.c */; };
+		E1828EC91D420CAC00EC10FB /* audio_convert.c in Sources */ = {isa = PBXBuildFile; fileRef = E1EE962F1C611DE2002B77B9 /* audio_convert.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "liblibSDL_sound-OSX-static.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1A83ADA1D4003DC009E6DFF /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = "../../../SDL2-2.0.3/Xcode/SDL/build/Debug/libSDL2.a"; sourceTree = "<group>"; };
+		E1A83ADC1D400414009E6DFF /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = "../../../SDL2-2.0.3/Xcode/SDL/build/Debug/SDL2.framework"; sourceTree = "<group>"; };
+		E1EE962A1C611DE2002B77B9 /* SDL_sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_sound.h; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/SDL_sound.h"; sourceTree = "<absolute>"; };
+		E1EE962B1C611DE2002B77B9 /* coreaudio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = coreaudio.c; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/decoders/coreaudio.c"; sourceTree = "<absolute>"; };
+		E1EE962C1C611DE2002B77B9 /* extra_rwops.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = extra_rwops.c; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/extra_rwops.c"; sourceTree = "<absolute>"; };
+		E1EE962D1C611DE2002B77B9 /* extra_rwops.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = extra_rwops.h; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/extra_rwops.h"; sourceTree = "<absolute>"; };
+		E1EE962E1C611DE2002B77B9 /* SDL_sound.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SDL_sound.c; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/SDL_sound.c"; sourceTree = "<absolute>"; };
+		E1EE962F1C611DE2002B77B9 /* audio_convert.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = audio_convert.c; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/audio_convert.c"; sourceTree = "<absolute>"; };
+		E1EE96301C611DE2002B77B9 /* SDL_sound_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDL_sound_internal.h; path = "/Users/andreas/Developer/SDL_sound-IOS/SDL_sound-IOS/../../SDL_sound/SDL_sound_internal.h"; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E1828EBA1D420C7400EC10FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E1EE96151C611C10002B77B9 = {
+			isa = PBXGroup;
+			children = (
+				E1A83ADC1D400414009E6DFF /* SDL2.framework */,
+				E1A83ADA1D4003DC009E6DFF /* libSDL2.a */,
+				E1EE96201C611C10002B77B9 /* libSDL_sound-OSX */,
+				E1EE961F1C611C10002B77B9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E1EE961F1C611C10002B77B9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E1EE96201C611C10002B77B9 /* libSDL_sound-OSX */ = {
+			isa = PBXGroup;
+			children = (
+				E1EE962A1C611DE2002B77B9 /* SDL_sound.h */,
+				E1EE962B1C611DE2002B77B9 /* coreaudio.c */,
+				E1EE962C1C611DE2002B77B9 /* extra_rwops.c */,
+				E1EE962D1C611DE2002B77B9 /* extra_rwops.h */,
+				E1EE962E1C611DE2002B77B9 /* SDL_sound.c */,
+				E1EE962F1C611DE2002B77B9 /* audio_convert.c */,
+				E1EE96301C611DE2002B77B9 /* SDL_sound_internal.h */,
+			);
+			path = "libSDL_sound-OSX";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E1828EBB1D420C7400EC10FB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E1828EBC1D420C7400EC10FB /* libSDL_sound-OSX-static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E1828EC51D420C7400EC10FB /* Build configuration list for PBXNativeTarget "libSDL_sound-OSX-static" */;
+			buildPhases = (
+				E1828EB91D420C7400EC10FB /* Sources */,
+				E1828EBA1D420C7400EC10FB /* Frameworks */,
+				E1828EBB1D420C7400EC10FB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "libSDL_sound-OSX-static";
+			productName = "libSDL_sound-OSX-static";
+			productReference = E1828EBD1D420C7400EC10FB /* liblibSDL_sound-OSX-static.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E1EE96161C611C10002B77B9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Andreas Umbach";
+				TargetAttributes = {
+					E1828EBC1D420C7400EC10FB = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = E1EE96191C611C10002B77B9 /* Build configuration list for PBXProject "libSDL_sound-OSX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E1EE96151C611C10002B77B9;
+			productRefGroup = E1EE961F1C611C10002B77B9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E1828EBC1D420C7400EC10FB /* libSDL_sound-OSX-static */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E1828EB91D420C7400EC10FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1828EC91D420CAC00EC10FB /* audio_convert.c in Sources */,
+				E1828EC61D420CA200EC10FB /* coreaudio.c in Sources */,
+				E1828EC71D420CA600EC10FB /* extra_rwops.c in Sources */,
+				E1828EC81D420CA900EC10FB /* SDL_sound.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E1828EC31D420C7400EC10FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL2-2.0.3/include";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		E1828EC41D420C7400EC10FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "/Users/andreas/Developer/SDL2-2.0.3/include";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		E1EE96251C611C10002B77B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DSOUND_SUPPORTS_COREAUDIO";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E1EE96261C611C10002B77B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "-DSOUND_SUPPORTS_COREAUDIO";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E1828EC51D420C7400EC10FB /* Build configuration list for PBXNativeTarget "libSDL_sound-OSX-static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1828EC31D420C7400EC10FB /* Debug */,
+				E1828EC41D420C7400EC10FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E1EE96191C611C10002B77B9 /* Build configuration list for PBXProject "libSDL_sound-OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E1EE96251C611C10002B77B9 /* Debug */,
+				E1EE96261C611C10002B77B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E1EE96161C611C10002B77B9 /* Project object */;
+}

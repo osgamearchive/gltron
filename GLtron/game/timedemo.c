@@ -68,11 +68,11 @@ void idleTimedemo(void) {
 	game2->time.lastFrame += 20;
 }
 
-void keyTimedemo(int state, int key, int x, int y) {
+void keyTimedemo(int state, int scanCode) {
 	if(state == NEBU_INPUT_KEYSTATE_UP)
 		return;
 
-	if(key == 27)
+	if(scanCode == SYSTEM_SCANCODE_ESCAPE)
 		nebu_System_ExitLoop(eSRC_Timedemo_Abort);
 }
 

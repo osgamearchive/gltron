@@ -105,6 +105,7 @@ extern "C" {
 					 V * game2->level->pAxis[p->data.dir].v[1], 
 					 0);
 				}
+          // TODO: why should this be only for player 1?
 				if(i == 0) {
 					if(p->data.boost_enabled) {
 						p3d->_speedShift = 1.2f;
@@ -113,21 +114,22 @@ extern "C" {
 					}
 					p3d->_pitchShift = p->data.speed / getSettingf("speed");
 				}
-						
-#if 0
-				if(i == 0) {
-					if( dt < TURNLENGTH ) {
-						float t = (float)dt / TURNLENGTH;
-						float speedShift = ( 1 - t ) * 0.4 + t * 0.3;
-						float pitchShift = ( 1 - t ) * 0.9 + t * 1.0;
-						( (Sound::SourceEngine*) p3d )->_speedShift = speedShift;
-						( (Sound::SourceEngine*) p3d )->_pitchShift = pitchShift;
-					} else {
-						( (Sound::SourceEngine*) p3d )->_speedShift = 0.3;
-						( (Sound::SourceEngine*) p3d )->_pitchShift = 1.0;
-					}
-				}
-#endif
+					
+          // TODO: try reenabling that, maybe even for all players
+
+//				if(i == 0) {
+//					if( dt < TURNLENGTH ) {
+//						float t = (float)dt / TURNLENGTH;
+//						float speedShift = ( 1 - t ) * 0.4 + t * 0.3;
+//						float pitchShift = ( 1 - t ) * 0.9 + t * 1.0;
+//						( (Sound::SourceEngine*) p3d )->_speedShift = speedShift;
+//						( (Sound::SourceEngine*) p3d )->_pitchShift = pitchShift;
+//					} else {
+//						( (Sound::SourceEngine*) p3d )->_speedShift = 0.3;
+//						( (Sound::SourceEngine*) p3d )->_pitchShift = 1.0;
+//					}
+//				}
+
       }
     }
 

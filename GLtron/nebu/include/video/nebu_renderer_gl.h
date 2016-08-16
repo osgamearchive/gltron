@@ -16,6 +16,7 @@
 #define NO_SDL_GLEXT
 #include <GL/glew.h>
 #include "SDL_opengl.h"
+#include "OpenGL/glu.h"
 #endif
 
 #include <stdio.h>

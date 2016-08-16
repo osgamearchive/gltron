@@ -76,8 +76,10 @@ void video_Shader_Setup(video_level_shader* shader, int pass) {
 		{
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, shader->idTexture);
-			// glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+            // setting this to GL_REPLACE breaks reflection, so I'm setting it back to GL_MODULATE
+            // and try to find out, what the reason for the original change was
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			// glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 			glMatrixMode(GL_TEXTURE);
 			glLoadIdentity();
 			glScalef(shader->fDiffuseTextureScale, shader->fDiffuseTextureScale, shader->fDiffuseTextureScale);

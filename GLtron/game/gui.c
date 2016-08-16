@@ -81,32 +81,27 @@ void idleGui(void) {
 	nebu_System_PostRedisplay(); /* animate menu */
 }
 
-void keyboardConfigure(int state, int key, int x, int y) {
+void keyboardConfigure(int state, int scanCode) {
 	if(state != NEBU_INPUT_KEYSTATE_DOWN)
 		return;
 
-	if(key != 27) /* don't allow escape */
-	{
-		int i;
-		int isReserved = 0;
-		for(i = 0; i < eReservedKeys; i++)
-		{
-			if(key == ReservedKeyCodes[i])
-			{
-				isReserved = 1;
-				break;
-			}
-		}
-		if(!isReserved)
-		{
-			scripting_RunFormat("settings.keys[ configure_player ]"
-												"[ configure_event ] = %d", key);
-		}
-	}
+    for(int i = 0; i < eReservedKeys; i++)
+    {
+        if(scanCode == ReservedScanCodes[i])
+        {
+            if(scanCode == SYSTEM_SCANCODE_ESCAPE)
+                nebu_System_ExitLoop(eSRC_GUI_Prompt_Escape);
+            return;
+        }
+    }
+    // we store the scanName in the lua settings
+    scripting_RunFormat("settings.keys[ configure_player ]"
+                        "[ configure_event ] = \"%s\"", nebu_Input_GetScanNameFromScanCode(scanCode));
+    
 	nebu_System_ExitLoop(eSRC_GUI_Prompt_Escape);
 }
 
-void keyboardGui(int state, int key, int x, int y) {
+void keyboardGui(int state, int scanCode) {
   char *pMenuName;
 
 	if(state == NEBU_INPUT_KEYSTATE_UP)
@@ -115,16 +110,17 @@ void keyboardGui(int state, int key, int x, int y) {
   scripting_Run("return Menu.current");
   scripting_GetStringResult(&pMenuName);
 
-  switch(key) {
-  case 27:
+  switch(scanCode) {
+  case SYSTEM_SCANCODE_ESCAPE:
     if(strcmp(pMenuName, "RootMenu")) {
       scripting_Run("MenuFunctions.GotoParent()");
     } else {
 		nebu_System_ExitLoop(eSRC_GUI_Escape);
     }
     break;
-  case ' ': 
-  case SYSTEM_KEY_RETURN:
+  case SYSTEM_SCANCODE_SPACE:
+  case SYSTEM_SCANCODE_RETURN:
+#if 0
 	case SYSTEM_JOY_BUTTON_0:
 	case SYSTEM_JOY_BUTTON_1:
 	case SYSTEM_JOY_BUTTON_2:
@@ -145,30 +141,39 @@ void keyboardGui(int state, int key, int x, int y) {
 	case SYSTEM_JOY_BUTTON_7 + SYSTEM_JOY_OFFSET:
 	case SYSTEM_JOY_BUTTON_8 + SYSTEM_JOY_OFFSET:
 	case SYSTEM_JOY_BUTTON_9 + SYSTEM_JOY_OFFSET:
+#endif
     scripting_Run("MenuFunctions.Action()");
     break;
-  case SYSTEM_KEY_UP:
+  case SYSTEM_SCANCODE_UP:
+#if 0
 	case SYSTEM_JOY_UP:
 	case SYSTEM_JOY_UP + SYSTEM_JOY_OFFSET:
+#endif
     scripting_Run("MenuFunctions.Previous()");
     break;
-  case SYSTEM_KEY_DOWN:
+  case SYSTEM_SCANCODE_DOWN:
+#if 0
 	case SYSTEM_JOY_DOWN:
 	case SYSTEM_JOY_DOWN + SYSTEM_JOY_OFFSET:
+#endif
     scripting_Run("MenuFunctions.Next()");
     break;
-  case SYSTEM_KEY_RIGHT:
+  case SYSTEM_SCANCODE_RIGHT:
+#if 0
 	case SYSTEM_JOY_RIGHT:
 		case SYSTEM_JOY_RIGHT + SYSTEM_JOY_OFFSET:
+#endif
     scripting_Run("MenuFunctions.Right()");
     break;
-  case SYSTEM_KEY_LEFT:
+  case SYSTEM_SCANCODE_LEFT:
+#if 0
 	case SYSTEM_JOY_LEFT:
 		case SYSTEM_JOY_LEFT + SYSTEM_JOY_OFFSET:
+#endif
     scripting_Run("MenuFunctions.Left()");
     break;
-  case SYSTEM_KEY_F11: doBmpScreenShot(gScreen); break;
-  case SYSTEM_KEY_F12: doPngScreenShot(gScreen); break;
+  case SYSTEM_SCANCODE_F11: doBmpScreenShot(gScreen); break;
+  case SYSTEM_SCANCODE_F12: doPngScreenShot(gScreen); break;
   default: 
     // printf("got key %d\n", key);
 		break;

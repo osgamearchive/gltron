@@ -27,13 +27,12 @@ typedef enum ReservedKeys {
   eF10,
   eF11,
   eF12,
-  eAltLeft,
   eReservedKeys,
 } ReservedKeys;
 
-extern int ReservedKeyCodes[eReservedKeys];
+extern int ReservedScanCodes[eReservedKeys];
 
-void keyGame(int state, int key, int x, int y);
+void keyGame(int state, int scanCode);
 void Input_Idle();
 
 extern int joy_threshold;

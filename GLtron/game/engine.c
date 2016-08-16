@@ -115,6 +115,11 @@ void game_CreatePlayers(int players, Game **ppGame, Game2 **ppGame2)
 	*ppGame2 = game_CreateGame2();
 }
 
+int getSpawnPositionCount(int spawnSet)
+{
+    return game2->level->ppSpawnSets[spawnSet]->nPoints;
+}
+
 int getSpawnPosition(int iPlayer, int iTeamSize, int iBaseset, float *x, float *y, int *dir)
 {
 	/* randomize position on the grid */
@@ -126,7 +131,7 @@ int getSpawnPosition(int iPlayer, int iTeamSize, int iBaseset, float *x, float *
 		if(game2->level->ppSpawnSets[i]->type == eGameSpawnPoint)
 		{
 			iSubPos = iPlayer;
-			if(iTeamSize < game2->level->ppSpawnSets[i]->nPoints)
+			if(iTeamSize <= game2->level->ppSpawnSets[i]->nPoints)
 				goto setIsFound; // break
 		}
 		else if(game2->level->ppSpawnSets[i]->type == eGameSpawnLine)
@@ -182,7 +187,7 @@ setIsFound:
 
 	*dir = game2->level->ppSpawnSets[i]->pSpawnPoints[ iSubPos ].dir;
 	if(*dir == -1) 
-		*dir = nebu_rand() & game2->level->nAxis;
+		*dir = nebu_rand() % game2->level->nAxis;
 
 	return i;
 }
@@ -231,16 +236,29 @@ void resetPlayerData(void) {
 		ai = &game->player[i].ai;
 		/* init ai */
 
-		if(i < nHumans)
-		{
-			spawnSet = getSpawnPosition(pIndicesHumans[i], nHumans, 0, &x, &y, &data->dir);
-			ai->active = AI_HUMAN;
-		}
-		else
-		{
-			getSpawnPosition(pIndicesAI[i - nHumans], nAI, spawnSet + 1, &x, &y, &data->dir);
-			ai->active = AI_COMPUTER;
-		}
+        // find out how many spawn Positions the set supports.
+        // if all players fit, put them all on the first set
+        // otherwise, put the AI on the 2nd set
+        
+        if(getSpawnPositionCount(0) >= game->players)
+        {
+            getSpawnPosition(i, game->players, 0, &x, &y, &data->dir);
+        }
+        else
+        {
+            if(i < nHumans)
+            {
+                spawnSet = getSpawnPosition(pIndicesHumans[i], nHumans, 0, &x, &y, &data->dir);
+            }
+            else
+            {
+                getSpawnPosition(pIndicesAI[i - nHumans], nAI, spawnSet + 1, &x, &y, &data->dir);
+            }
+        }
+        
+        ai->active = (i < nHumans) ? AI_HUMAN : AI_COMPUTER;
+        
+
 		ai->tdiff = 0;
         // make sure AI is ready
         ai->lasttime = 0;

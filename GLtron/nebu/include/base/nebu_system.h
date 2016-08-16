@@ -13,7 +13,7 @@ void nebu_System_SetCallbacks(Callbacks* callbacks);
 void nebu_System_SetCallback_Display( void(*display)(void) ); // test ok
 void nebu_System_SetCallback_MouseMotion( void(*mouseMotion)(int, int) );
 void nebu_System_SetCallback_Idle( void(*idle)(void) ); // test ok
-void nebu_System_SetCallback_Key( void(*key)(int, int, int, int) );
+void nebu_System_SetCallback_Key( void(*key)(int, int) );
 void nebu_System_ExitLoop(int return_code); // test ok
 int nebu_System_MainLoop(void); // test ok
 void nebu_System_Exit(void); // test ok

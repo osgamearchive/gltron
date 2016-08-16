@@ -13,6 +13,9 @@ void drawWalls(void) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
+    // since we're using GL_MODULATE in the Shader
+    glColor4f(1, 1, 1, 1);
+    
 	for(i = 0; i < gWorld->arena_shader.passes; i++)
 	{
 		video_Shader_Setup(& gWorld->arena_shader, i);

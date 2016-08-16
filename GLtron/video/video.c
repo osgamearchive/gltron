@@ -35,9 +35,11 @@ int initWindow(void) {
 	int flags;
 	/* char buf[20]; */
 
-	nebu_Video_SetWindowMode(0, 0, getSettingi("width"), getSettingi("height"));
+    int width = getSettingi("width");
+    int height = getSettingi("height");
+	nebu_Video_SetWindowMode(0, 0, width, height);
 
-	flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH | SYSTEM_STENCIL; 
+	flags = SYSTEM_RGBA | SYSTEM_DOUBLE | SYSTEM_DEPTH | SYSTEM_STENCIL;
 	if(getSettingi("bitdepth_32"))
 		flags |= SYSTEM_32_BIT;
 	if(getSettingi("windowMode") == 0)
@@ -45,7 +47,14 @@ int initWindow(void) {
 
 	nebu_Video_SetDisplayMode(flags);
 
-	win_id = nebu_Video_Create("gltron");      
+	win_id = nebu_Video_Create("gltron");
+    
+#ifdef __IPHONEOS__
+    nebu_Video_GetPixelDimension(&width, &height);
+    setSettingi("width", width);
+    setSettingi("height", height);
+#endif
+    
 	// check if we have destination alpha,
 	// if not, display warning
 	{
@@ -163,7 +172,6 @@ void freeVideoData(void)
 void initVideoData(void) {
 	int i;
 
-	gScreen = (Visual*) malloc(sizeof(Visual));
 	gViewportType = getSettingi("display_type"); 
 
 	{

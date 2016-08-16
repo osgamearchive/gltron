@@ -1,5 +1,4 @@
 #include "input/nebu_input_system.h"
-#include "input/nebu_system_keynames.h"
 #include "base/nebu_system.h"
 #include "video/nebu_video_system.h"
 #include "scripting/nebu_scripting.h"
@@ -13,21 +12,22 @@ static float joystick_threshold = 0;
 static int mouse_x = -1;
 static int mouse_y = -1;
 
-enum { eMaxKeyState = 1024 };
+enum { eMaxKeyState = SDL_NUM_SCANCODES };
 static int keyState[eMaxKeyState];
 
-static void setKeyState(int key, int state)
+static void setKeyState(int scanCode, int state)
 {
-	if(key < eMaxKeyState)
-		keyState[key] = state;
+	if(scanCode < eMaxKeyState)
+		keyState[scanCode] = state;
 }
 
 void nebu_Input_Init(void) {
 	int i;
 
 	/* keyboard */
-    // TODO SDL2
 	// SDL_EnableKeyRepeat(0, 0); /* turn keyrepeat off */
+    // not needed anymore (not present in SDL2 either),
+    // since we can check event.key.repeat == 0 now
   
 	/* joystick */
 	if(SDL_Init(SDL_INIT_JOYSTICK) >= 0) {
@@ -72,16 +72,15 @@ void nebu_Input_Init(void) {
 }
 
 void nebu_Input_Grab(void) {
-    // TODO SDL2
-	// SDL_WM_GrabInput(SDL_GRAB_ON);
+    nebu_Input_HidePointer();
 }
 
 void nebu_Input_Ungrab(void) {
-	// TODO SDL2
-    // SDL_WM_GrabInput(SDL_GRAB_OFF);
+    nebu_Input_UnhidePointer();
 }
 
 void nebu_Input_HidePointer(void) {
+    // SDL_SetRelativeMouseMode(SDL_TRUE);
     nebu_Log("[nebu] hiding pointer\n");
 	int result = SDL_ShowCursor(SDL_DISABLE);
     if(result < 0)
@@ -93,6 +92,7 @@ void nebu_Input_HidePointer(void) {
 }
 
 void nebu_Input_UnhidePointer(void) {
+    // SDL_SetRelativeMouseMode(SDL_FALSE);
     nebu_Log("[nebu] showing pointer\n");
 	int result = SDL_ShowCursor(SDL_ENABLE);
 
@@ -113,16 +113,25 @@ void SystemMouse(int buttons, int state, int x, int y) {
     if(state == 0)
         return;
     
-    if(x < 100)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, 97, 0, 0);
-    else if(x > 800)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, 115, 0, 0);
-    else if(y > 540)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_DOWN, 0, 0);
-    else if(y < 100)
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_UP, 0, 0);
+    nebu_Log("mouse: (%d, %d)\n", x, y);
+    int w, h;
+    nebu_Video_GetPointDimension(&w, &h);
+    float u = (float) x / (float) w;
+    float v = (float) (h - y) / (float) h;
+    nebu_Log("scaled to [0,1]x[0,1] with origin in the lower left: (%.2f, %.2f)\n", u, v);
+    
+    if(u < 0.2 && v  > 0.8)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_ESCAPE);
+    else if(u < 0.2)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_A);
+    else if(u > 0.8)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_S);
+    else if(v < 0.2)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_DOWN);
+    else if(v > 0.8)
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_DOWN);
     else
-        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_JOY_BUTTON_0, 0, 0);
+        current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, SYSTEM_SCANCODE_RETURN);
 #endif
 
 }
@@ -146,10 +155,12 @@ void nebu_Input_Mouse_GetDelta(int *x, int *y)
 		*x = 0;
 		*y = 0;
 	}
-	
-	nebu_Video_GetDimension(&wx, &wy);
-	*x = mouse_x - wx / 2;
-	*y = mouse_y - wy / 2;
+	else
+    {
+        nebu_Video_GetPointDimension(&wx, &wy);
+        *x = mouse_x - wx / 2;
+        *y = mouse_y - wy / 2;
+    }
 
 	// printf("[input] returned delta %d,%d\n", *x, *y);
 }
@@ -157,7 +168,7 @@ void nebu_Input_Mouse_GetDelta(int *x, int *y)
 void nebu_Input_Mouse_WarpToOrigin(void)
 {
 	int wx, wy;
-	nebu_Video_GetDimension(&wx, &wy);
+	nebu_Video_GetPointDimension(&wx, &wy);
 	nebu_Video_WarpPointer(wx / 2, wy / 2);
 	// printf("[input] warped to %d,%d\n", wx / 2, wy /2);
 }
@@ -171,51 +182,49 @@ void SystemMouseMotion(int x, int y) {
 		current->mouseMotion(x, y);
 }
 
-const char* nebu_Input_GetKeyname(int key) {
-	if(key < SYSTEM_CUSTOM_KEYS)
-		return SDL_GetKeyName(key);
-	else {
-		int i;
-		
-		for(i = 0; i < CUSTOM_KEY_COUNT; i++) {
-			if(custom_keys.key[i].key == key)
-				return custom_keys.key[i].name;
-		}
-		return "unknown custom key";
-	}
-}  
+const char* nebu_Input_GetKeyNameFromScanCode(int scanCode) {
+    const char *name =  SDL_GetKeyName(SDL_GetKeyFromScancode(scanCode));
+    return (name[0] != 0) ? name : "unknown custom key";
+}
+
+const char* nebu_Input_GetScanNameFromScanCode(int scanCode) {
+    const char *name =  SDL_GetScancodeName(scanCode);
+    return (name[0] != 0) ? name : "unknown custom key";
+}
+
+int nebu_Input_GetScanCodeFromScanName(const char *name)
+{
+    return SDL_GetScancodeFromName(name);
+}
 
 void nebu_Intern_HandleInput(SDL_Event *event) {
-	const char *keyname;
-	int key, state;
-	// int skip_axis_event = 0;
+    int state;
+
+#if 0
+    // int skip_axis_event = 0;
 	static int joy_axis_state[2] = { 0, 0 };
 	static int joy_lastaxis[2] = { 0, 0 };
-
+#endif
+    
 	switch(event->type) {
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
+        // ignore key repeats
+        if(event->key.repeat != 0)
+            break;
+            
 		if(event->type == SDL_KEYDOWN) {
 			state = NEBU_INPUT_KEYSTATE_DOWN;
 		} else {
 			state = NEBU_INPUT_KEYSTATE_UP;
 		}
  
-		keyname = SDL_GetKeyName(event->key.keysym.sym);
-		key = 0;
-		switch(event->key.keysym.sym) {
-		case SDLK_SPACE: key = ' '; break;
-		case SDLK_ESCAPE: key = 27; break;
-		case SDLK_RETURN: key = 13; break;
-		default:
-			if(keyname[1] == 0) key = keyname[0];
-			break;
-		}
 		/* check: is that translation necessary? */
-		setKeyState(key, state);
+		setKeyState(event->key.keysym.scancode, state);
 		if(current && current->keyboard)
-			current->keyboard(state, key ? key : event->key.keysym.sym, 0, 0);
+			current->keyboard(state, event->key.keysym.scancode);
 		break;
+#if 0
 	case SDL_JOYAXISMOTION:
 		if( abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
 			// axis returned to origin, only generate event if it was set before
@@ -257,6 +266,7 @@ void nebu_Intern_HandleInput(SDL_Event *event) {
 			}
 		}
 		break;
+#endif
 				 
 #if 0
 		if (abs(event->jaxis.value) <= joystick_threshold * SYSTEM_JOY_AXIS_MAX) {
@@ -276,6 +286,8 @@ void nebu_Intern_HandleInput(SDL_Event *event) {
 			current->keyboard(NEBU_INPUT_KEYSTATE_DOWN, key, 0, 0);
 		break;
 #endif
+            
+#if 0
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
 		if(event->type == SDL_JOYBUTTONDOWN)
@@ -289,6 +301,7 @@ void nebu_Intern_HandleInput(SDL_Event *event) {
 		if(current && current->keyboard)
 			current->keyboard(state, key, 0, 0);
 		break;
+#endif
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
 		SystemMouse(event->button.button, event->button.state, 
