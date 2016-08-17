@@ -2,6 +2,7 @@
 #define NEBU_SYSTEM_H
 
 #include "SDL.h"
+#include <stdio.h>
 
 #include "nebu_callbacks.h"
 extern Callbacks* current;

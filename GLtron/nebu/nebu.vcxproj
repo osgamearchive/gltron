@@ -44,7 +44,6 @@
     <ClCompile Include="filesystem\file_io.c" />
     <ClCompile Include="filesystem\findpath.c" />
     <ClCompile Include="input\input_system.c" />
-    <ClCompile Include="input\system_keynames.c" />
     <ClCompile Include="scripting\scripting.c" />
     <ClCompile Include="video\2d.c" />
     <ClCompile Include="video\camera.c" />
@@ -183,14 +182,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;..;..\lua5\include;..\libpng;..\..\SDL\include;..\..\SDL_sound;..\glew\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..;..\lua5\include;..\libpng;..\..\SDL2\include;..\..\SDL_sound;..\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\..\$(Platform)\$(Configuration);..\..\$(Configuration);..\glew\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua5.lib;libpng.lib;SDL.lib;opengl32.lib;glu32.lib;glew.lib;sdl_sound_static_d.lib</AdditionalDependencies>
+      <AdditionalDependencies>lua5.lib;libpng.lib;SDL2.lib;opengl32.lib;glu32.lib;glew.lib;sdl_sound_static_d.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -221,7 +220,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>include;..;..\lua5\include;..\libpng;..\..\SDL\include;..\..\SDL_sound;..\glew\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..;..\lua5\include;..\libpng;..\..\SDL2\include;..\..\SDL_sound;..\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -229,7 +228,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>lua5.lib;libpng.lib;SDL.lib;opengl32.lib;glu32.lib;glew.lib;sdl_sound_static.lib</AdditionalDependencies>
+      <AdditionalDependencies>lua5.lib;libpng.lib;SDL2.lib;opengl32.lib;glu32.lib;glew.lib;sdl_sound_static.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\$(Platform)\$(Configuration);..\..\$(Configuration);..\glew\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>

@@ -178,7 +178,6 @@ int nebu_Video_Create(char *name) {
 			nebu_assert(0); exit(1);
 		}
 	}
-	SDL_WM_SetCaption(name, NULL);
 
 	printOpenGLDebugInfo();
 

@@ -105,9 +105,6 @@
     <ClCompile Include="input\input_system.c">
       <Filter>Source Files\input</Filter>
     </ClCompile>
-    <ClCompile Include="input\system_keynames.c">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
     <ClCompile Include="scripting\scripting.c">
       <Filter>Source Files\scripting</Filter>
     </ClCompile>
