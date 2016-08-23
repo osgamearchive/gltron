@@ -259,16 +259,16 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL2\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(Platform)\$(Configuration);$(Configuration);SDL\VisualC\SDLmain\$(Platform)\$(Configuration);SDL\VisualC\SDLmain\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nebu.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nebu.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -299,10 +299,10 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC;PATH_SEPARATOR=%27\\%27;RC_NAME="gltron.ini";PREF_DIR="";SNAP_DIR="";LOCAL_DATA;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <DisableSpecificWarnings>4996;4703</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GLtron\include;GLtron\nebu\include;SDL2\include;GLtron\lua5\include;GLtron\libpng;GLtron\zlib;GLtron\glew\include;SDL_sound</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -310,7 +310,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(Platform)\$(Configuration);$(Configuration);SDL\VisualC\SDLmain\$(Platform)\$(Configuration);SDL\VisualC\SDLmain\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nebu.lib;SDLmain.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nebu.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
