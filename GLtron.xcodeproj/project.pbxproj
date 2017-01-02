@@ -17,7 +17,6 @@
 		E108392C1C5EB39C00A66E97 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E108392B1C5EB39C00A66E97 /* Carbon.framework */; };
 		E10839301C5EB42300A66E97 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E108392F1C5EB42300A66E97 /* OpenGL.framework */; };
 		E10839321C5EB43100A66E97 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E10839311C5EB43100A66E97 /* CoreFoundation.framework */; };
-		E111989B1D43ABB300010393 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E111989A1D43ABB300010393 /* libSDL2.a */; };
 		E11198A51D43AC5B00010393 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E11198A41D43AC5B00010393 /* GameController.framework */; };
 		E11198A61D43AC6900010393 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E11198A21D43ABFD00010393 /* CoreMotion.framework */; };
 		E11F61E31986A20D0067F6C3 /* nebu_log.m in Sources */ = {isa = PBXBuildFile; fileRef = E11F61E21986A20D0067F6C3 /* nebu_log.m */; };
@@ -293,6 +292,7 @@
 		E183FFD1198430DD00774FBC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E183FFCF198430DD00774FBC /* InfoPlist.strings */; };
 		E183FFD7198430DD00774FBC /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E183FFD5198430DD00774FBC /* Credits.rtf */; };
 		E183FFFC1984315600774FBC /* gltron.c in Sources */ = {isa = PBXBuildFile; fileRef = E183FFFB1984315600774FBC /* gltron.c */; };
+		E18706FE1E17CD0C007C923C /* libSDLios2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E18706FD1E17CD0C007C923C /* libSDLios2.a */; };
 		E1A7976C19AAFCEA00BF50D9 /* findpath.m in Sources */ = {isa = PBXBuildFile; fileRef = E1E3A8C31986B8CF001ED45F /* findpath.m */; };
 		E1A79AD319AB514D00BF50D9 /* data in Resources */ = {isa = PBXBuildFile; fileRef = E1A79AD219AB514D00BF50D9 /* data */; };
 		E1A79AD519AB51B400BF50D9 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = E1A79AD419AB51B400BF50D9 /* scripts */; };
@@ -335,40 +335,12 @@
 			remoteGlobalIDString = E1828EBD1D420C7400EC10FB;
 			remoteInfo = "libSDL_sound-OSX-static";
 		};
-		E1A83AC91D4002C5009E6DFF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E1A83AC51D4002C5009E6DFF /* libSDL_sound-OSX.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E1EE961E1C611C10002B77B9;
-			remoteInfo = "libSDL_sound-OSX";
-		};
-		E1A83AD21D400365009E6DFF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E1A83ACB1D400365009E6DFF /* SDL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BECDF66C0761BA81005FE872;
-			remoteInfo = Framework;
-		};
 		E1A83AD41D400365009E6DFF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E1A83ACB1D400365009E6DFF /* SDL.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = BECDF6B30761BA81005FE872;
 			remoteInfo = "Static Library";
-		};
-		E1A83AD61D400365009E6DFF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E1A83ACB1D400365009E6DFF /* SDL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DB31407717554B71006C0E22;
-			remoteInfo = "Shared Library";
-		};
-		E1A83AD81D400365009E6DFF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E1A83ACB1D400365009E6DFF /* SDL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = BECDF6BE0761BA81005FE872;
-			remoteInfo = "Standard DMG";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -714,6 +686,7 @@
 		E183FFD9198430DD00774FBC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		E183FFFB1984315600774FBC /* gltron.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gltron.c; sourceTree = "<group>"; };
 		E183FFFF198431BE00774FBC /* 32bit_warning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = 32bit_warning.h; sourceTree = "<group>"; };
+		E18706FD1E17CD0C007C923C /* libSDLios2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDLios2.a; path = "../SDL2-2.0.3/Xcode-iOS/SDL/build/Debug-iphoneos/libSDLios2.a"; sourceTree = "<group>"; };
 		E1A79AD219AB514D00BF50D9 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = "IOS-Resources/data"; sourceTree = "<group>"; };
 		E1A79AD419AB51B400BF50D9 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = scripts; path = "IOS-Resources/scripts"; sourceTree = "<group>"; };
 		E1A79AD619AB51EC00BF50D9 /* art */ = {isa = PBXFileReference; lastKnownFileType = folder; name = art; path = "IOS-Resources/art"; sourceTree = "<group>"; };
@@ -765,9 +738,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E18706FE1E17CD0C007C923C /* libSDLios2.a in Frameworks */,
 				E11198A61D43AC6900010393 /* CoreMotion.framework in Frameworks */,
 				E11198A51D43AC5B00010393 /* GameController.framework in Frameworks */,
-				E111989B1D43ABB300010393 /* libSDL2.a in Frameworks */,
 				E1BB4D341C6351CF002E09F4 /* libSDL_sound-IOS.a in Frameworks */,
 				E1F7F8211C5E51FB0067D81E /* AudioToolbox.framework in Frameworks */,
 				E1F7F81D1C5E51250067D81E /* CoreAudio.framework in Frameworks */,
@@ -1404,6 +1377,7 @@
 		E183FFC5198430DD00774FBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E18706FD1E17CD0C007C923C /* libSDLios2.a */,
 				E11198A41D43AC5B00010393 /* GameController.framework */,
 				E11198A21D43ABFD00010393 /* CoreMotion.framework */,
 				E111989A1D43ABB300010393 /* libSDL2.a */,
@@ -1524,7 +1498,6 @@
 		E1A83AC61D4002C5009E6DFF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1A83ACA1D4002C5009E6DFF /* liblibSDL_sound-OSX.dylib */,
 				E1828ECC1D420CD200EC10FB /* liblibSDL_sound-OSX-static.a */,
 			);
 			name = Products;
@@ -1533,10 +1506,7 @@
 		E1A83ACC1D400365009E6DFF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1A83AD31D400365009E6DFF /* SDL2.framework */,
 				E1A83AD51D400365009E6DFF /* libSDL2.a */,
-				E1A83AD71D400365009E6DFF /* libSDL2.dylib */,
-				E1A83AD91D400365009E6DFF /* Standard DMG */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1618,9 +1588,12 @@
 		E183FFBB198430DD00774FBC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Andreas Umbach";
 				TargetAttributes = {
+					E170A62719A69B0F00E4EA7F = {
+						DevelopmentTeam = DL48X3MAU5;
+					};
 					E183FFC2198430DD00774FBC = {
 						DevelopmentTeam = DL48X3MAU5;
 					};
@@ -1663,39 +1636,11 @@
 			remoteRef = E1828ECB1D420CD200EC10FB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		E1A83ACA1D4002C5009E6DFF /* liblibSDL_sound-OSX.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = "liblibSDL_sound-OSX.dylib";
-			remoteRef = E1A83AC91D4002C5009E6DFF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		E1A83AD31D400365009E6DFF /* SDL2.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SDL2.framework;
-			remoteRef = E1A83AD21D400365009E6DFF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		E1A83AD51D400365009E6DFF /* libSDL2.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libSDL2.a;
 			remoteRef = E1A83AD41D400365009E6DFF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		E1A83AD71D400365009E6DFF /* libSDL2.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = libSDL2.dylib;
-			remoteRef = E1A83AD61D400365009E6DFF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		E1A83AD91D400365009E6DFF /* Standard DMG */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Standard DMG";
-			remoteRef = E1A83AD81D400365009E6DFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2141,14 +2086,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = DL48X3MAU5;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2180,14 +2131,20 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = DL48X3MAU5;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -2205,7 +2162,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2244,7 +2201,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
