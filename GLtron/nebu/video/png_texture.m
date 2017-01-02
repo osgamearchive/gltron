@@ -26,15 +26,15 @@ png_texture* load_png_texture(const char *filename) {
 #ifdef __IPHONEOS__
     UIImage* image = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:filename]];
     CGImageRef imageRef = [image CGImage];
-    int width = CGImageGetWidth(imageRef);
-    int height = CGImageGetHeight(imageRef);
+    size_t width = CGImageGetWidth(imageRef);
+    size_t height = CGImageGetHeight(imageRef);
     // NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
 #else
 
     CIImage* image = [CIImage imageWithData:[NSData dataWithContentsOfFile:[NSString stringWithUTF8String:filename]]];
     
-    int width = (int) image.extent.size.width;
-    int height = (int) image.extent.size.height;
+    size_t width = (int) image.extent.size.width;
+    size_t height = (int) image.extent.size.height;
     
     // NSLog(@"[image] %s has size (%d,%d)\n", filename, width, height);
 #endif
@@ -67,8 +67,8 @@ png_texture* load_png_texture(const char *filename) {
     
     png_texture* tex = (png_texture*) malloc(sizeof(png_texture));
     tex->data = textureData;
-    tex->width = width;
-    tex->height = height;
+    tex->width = (int)width;
+    tex->height = (int)height;
     tex->channels = 4;
     
     return tex;

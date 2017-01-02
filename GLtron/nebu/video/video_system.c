@@ -131,7 +131,8 @@ void createWindow(char *name)
         nebu_assert(0); exit(1); /* OK: critical, no visual */
     }
 #endif
-    SDL_GLContext glcontext = SDL_GL_CreateContext(screen);
+    // SDL_GLContext glcontext = SDL_GL_CreateContext(screen);
+    SDL_GL_CreateContext(screen);
     {
         SDL_GL_GetDrawableSize(screen, &width, &height);
         nebu_Log("actual drawable size (in pixels): (%d, %d)\n", width, height);

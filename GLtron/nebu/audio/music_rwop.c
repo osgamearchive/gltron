@@ -5,7 +5,7 @@ SDL_RWops* bs_RWop;
 #define BUFSIZE 65536
 #define LOW_WATER 16384
 
-static int bs_read(SDL_RWops *context, void *ptr, int size, int maxnum)
+static long bs_read(SDL_RWops *context, void *ptr, long size, long maxnum)
 {
     return 0;
 }
