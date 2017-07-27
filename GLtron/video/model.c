@@ -43,14 +43,14 @@ void readVector(char *buf, float *pVec, int iLength )
 	case 2:
 		if( sscanf(buf, " %f %f", pVec, pVec + 1) != 2)
 		{
-			fprintf(stderr, "*** failed reading Vector(2) from %s\n", buf);
+			nebu_Log("*** failed reading Vector(2) from %s\n", buf);
 			nebu_assert(0);
 		}
 		break;
 	case 3:
 		if( sscanf(buf, " %f %f %f ", pVec, pVec + 1, pVec + 2) != 3)
 		{
-			fprintf(stderr, "*** failed reading Vector(3) from %s\n", buf);
+			nebu_Log("*** failed reading Vector(3) from %s\n", buf);
 			nebu_assert(0);
 		}
 		break;
@@ -84,7 +84,7 @@ void readTriFace(char *buf, face *pFace, int *iFace, int iGroup) {
 	}
 	else
 	{
-		fprintf(stderr, "*** failed parsing face %s\n", buf);
+		nebu_Log("*** failed parsing face %s\n", buf);
 	}
 }
 
@@ -99,7 +99,7 @@ void readQuadFace(char *buf, quadFace *pFace, int *iFace, int iGroup) {
     pFace[ *iFace ].material = iGroup;
     (*iFace)++;
   } else {
-    fprintf(stderr, "*** failed parsing face %s\n", buf);
+    nebu_Log("*** failed parsing face %s\n", buf);
   }
 }
 
@@ -346,13 +346,13 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 		iFaceSize = 4;
 		break;
 	default:
-		fprintf(stderr, "[fatal]: illegal mesh type\n");
+		nebu_Log("[fatal]: illegal mesh type\n");
 		nebu_assert(0); exit(1);
 	}
 
 	if((f = gzopen(filename, "r")) == 0)
 	{
-		fprintf(stderr, "*** could not open file '%s'\n", filename);
+		nebu_Log("*** could not open file '%s'\n", filename);
 		return NULL;
 	}
 
@@ -399,7 +399,7 @@ gltron_Mesh* gltron_Mesh_LoadFromFile(const char *filename, gltron_MeshType iTyp
 	  
 	gzclose(f);
 
-	// printf("vertices: %d, normals: %d, faces: %d\n", iVertex, iNormal, iFace);
+	// nebu_Log("vertices: %d, normals: %d, faces: %d\n", iVertex, iNormal, iFace);
 
 	// make sure there's a default material
 	if(pMesh->nMaterials == 0)
@@ -530,7 +530,7 @@ void gltron_Mesh_Draw(gltron_Mesh *pMesh, gltron_MeshType iType) {
     break;
 #endif
   default:
-    fprintf(stderr, "[fatal]: illegal mesh type\n");
+    nebu_Log("[fatal]: illegal mesh type\n");
     nebu_assert(0); exit(1);
   }
 
@@ -638,7 +638,7 @@ void gltron_Mesh_DrawExplosion(gltron_Mesh *pMesh, float fRadius)
         glDrawArrays(GL_TRIANGLES, 0, 3 * pMesh->ppIB[i]->nPrimitives);
         
         // glEnable(GL_LIGHTING);
-        // fprintf(stderr, "explosion triangles: %d\n", pMesh->ppIB[i]->nPrimitives);
+        // nebu_Log("explosion triangles: %d\n", pMesh->ppIB[i]->nPrimitives);
     }
     
 	glDisableClientState(GL_VERTEX_ARRAY);

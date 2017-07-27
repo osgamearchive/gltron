@@ -17,7 +17,7 @@ namespace Sound {
   }
 	
   Source::~Source() {
-    // fprintf(stderr, "nebu_Source destructor called\n");
+    // nebu_Log("nebu_Source destructor called\n");
 	if(_name)
 		delete[] _name;
 	SDL_DestroyMutex(_mutex);

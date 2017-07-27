@@ -43,7 +43,7 @@ void initTexture(Visual *d) {
 		mag_filter = GL_NEAREST;
 	}
 
-	printf("using min_filter: %d (setting: %d)\n", min_filter,
+	nebu_Log("using min_filter: %d (setting: %d)\n", min_filter,
 		getSettingi("mipmap_filter"));
 
 	for(i = 0; i < TEX_COUNT; i++)

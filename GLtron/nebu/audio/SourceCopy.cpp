@@ -1,6 +1,9 @@
 #include "audio/nebu_SourceCopy.h"
 
+extern "C" {
 #include "base/nebu_assert.h"
+#include "base/nebu_debug_memory.h"
+}
 
 namespace Sound {
   int SourceCopy::Mix(Uint8 *data, int len) {
@@ -21,7 +24,7 @@ namespace Sound {
 		   volume);
       len -= buffersize - _position;
 
-      printf("end of sample reached!\n");
+      nebu_Log("end of sample reached!\n");
       if(_loop) {
 	if(_loop != 255) 
 	  _loop--;

@@ -158,7 +158,7 @@ int nebu_Video_Create(char *name) {
 	nebu_assert (width != 0 && height != 0);
 
 	createWindow(name);
-    /* no GLEW atm.
+
 	glewInit();
 		
 	if(!GLEW_ARB_multitexture)
@@ -170,7 +170,7 @@ int nebu_Video_Create(char *name) {
 		// try without alpha
 		fprintf(stderr, "trying without destination alpha\n");
 		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0);
-		createWindow();
+		createWindow(name);
 		glewInit();
 		if(!GLEW_ARB_multitexture)
 		{
@@ -179,8 +179,7 @@ int nebu_Video_Create(char *name) {
 			nebu_assert(0); exit(1);
 		}
 	}
-	SDL_WM_SetCaption(name, NULL);
-     */
+
 	printOpenGLDebugInfo();
 
 	glClearColor(0,0,0,0);

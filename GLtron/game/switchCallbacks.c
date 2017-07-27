@@ -38,7 +38,7 @@ void setCallback(const char *name) {
 			break;
 	}
 	if(i == N_CALLBACKS) {
-		fprintf(stderr, "fatal: no callback named '%s' found\n", name);
+		nebu_Log("fatal: no callback named '%s' found\n", name);
 		nebu_assert(0); exit(1); // OK: programmer error, critical
 	}
 

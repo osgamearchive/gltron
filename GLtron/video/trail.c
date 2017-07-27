@@ -113,10 +113,10 @@ void drawTrailLines(Camera *pCamera, Player *p) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    float normals[3 * 2 * data->nTrails];
-    float vertices[3 * 2 * data->nTrails];
-    float colors[4 * 2 * data->nTrails];
-    
+	float *normals = (float *)alloca(sizeof(float) * 3 * 2 * data->nTrails);
+	float *vertices = (float *)alloca(sizeof(float) * 3 * 2 * data->nTrails);
+	float *colors = (float *)alloca(sizeof(float) * 4 * 2 * data->nTrails);
+
     // TODO: Buffer data
     glVertexPointer(3, GL_FLOAT, 0, vertices);
     glNormalPointer(GL_FLOAT, 0, normals);

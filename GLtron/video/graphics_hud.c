@@ -83,7 +83,7 @@ int getFPS(void)
 			}
 			fps_min = min;
 			fps_avg = sum / FPS_HSIZE;
-			// printf("FPS: min = %d, avg = %d\n", fps_min, fps_avg);
+			// nebu_Log("FPS: min = %d, avg = %d\n", fps_min, fps_avg);
 		}
 	}
 	return fps_avg;
@@ -133,7 +133,7 @@ void drawHUD(Player *p, PlayerVisual *pV)
 		);
 
 	glScalef(pV->display.vp_w / 1024.0f, pV->display.vp_w / 1024.0f, 1.0f);
-	// fprintf(stderr, "%s\n", temp);
+	// nebu_Log("%s\n", temp);
 	scripting_Run(temp);
 
 	glDisable(GL_BLEND);
@@ -153,7 +153,7 @@ void getPauseString(char *buf, float* color) {
   now = nebu_Time_GetElapsed();
   d += (now - lt) / 500.0f;
   lt = now;
-  /* printf("%.5f\n", delta); */
+  /* nebu_Log("%.5f\n", delta); */
   
   if (d > 2 * PI) { 
     d -= 2 * PI;
@@ -369,7 +369,7 @@ int c_drawHUDMask(lua_State* l)
 		
 void rgb_interpolate(float *color, float t, float *c1, float *c2) {
 	int i;
-	// printf("%.2f\n", t);
+	// nebu_Log("%.2f\n", t);
 	for(i = 0; i < 3; i++) {
 		color[i] = c1[i] * (1 - t) + c2[i] * t;
 	}

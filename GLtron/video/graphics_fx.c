@@ -27,7 +27,7 @@ void drawGlow(PlayerVisual *pV, Player *pTarget, float dim)
 		return;
 	if(dist > fMax) alpha = 1.0f;
 	else alpha = (dist - fMin) / (fMax - fMin);
-	// printf("dist: %.2f, alpha: %.2f\n", dist, alpha);
+	// nebu_Log("dist: %.2f, alpha: %.2f\n", dist, alpha);
 
 	glPushMatrix();
 	

@@ -688,7 +688,7 @@ int playerVisible(Camera *pCamera, Player *pTarget)
 	/* maybe that's not exactly correct, but I didn't notice anything */
 	d = cosf( (gSettingsCache.fov / 2 + fSafety) * 2 * PI / 360.0 );
 	/*
-		printf("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
+		nebu_Log("v1: %.2f %.2f %.2f\nv2: %.2f %.2f %.2f\ns: %.2f d: %.2f\n\n",
 		v1[0], v1[1], v1[2], v2[0], v2[1], v2[2],
 		s, d);
 	*/

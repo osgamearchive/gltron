@@ -67,7 +67,7 @@ static void initCamDefaults()
                 scripting_RunFormat("return settings.Camera.%s.%s", eCamTypeNames[i], eCamAxisNames[j]);
                 scripting_GetFloatResult(&cam_defaults[i][j]);
             }
-            // fprintf(stderr, "[camera] %s.%s: %.4f\n", eCamTypeNames[i], eCamAxisNames[j], cam_defaults[i][j]);
+            // nebu_Log("[camera] %s.%s: %.4f\n", eCamTypeNames[i], eCamAxisNames[j], cam_defaults[i][j]);
         }
     }
     camDefaultsNeedWriting = 0;

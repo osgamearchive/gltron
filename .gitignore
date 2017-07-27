@@ -1,0 +1,5 @@
+x64
+.vs
+SDL_sound/VisualC/sdl_sound_static___Win32_Debug
+SDL_sound/VisualC/sdl_sound_static___Win32_Release
+GLtron.vcxproj.user

@@ -175,7 +175,7 @@ void keyboardGui(int state, int scanCode) {
   case SYSTEM_SCANCODE_F11: doBmpScreenShot(gScreen); break;
   case SYSTEM_SCANCODE_F12: doPngScreenShot(gScreen); break;
   default: 
-    // printf("got key %d\n", key);
+    // nebu_Log("got key %d\n", key);
 		break;
   }
   scripting_StringResult_Free(pMenuName);
@@ -201,7 +201,7 @@ void gui_LoadResources(void)
 	}
 	else
 	{
-		fprintf(stderr, "[fata]: can't find babbage.ftx!\n");
+		nebu_Log("[fata]: can't find babbage.ftx!\n");
 		// installation corrupt
 		nebu_assert(0); exit(1);
 	}
@@ -214,7 +214,7 @@ void gui_LoadResources(void)
 	}
 	else
 	{
-		fprintf(stderr, "[fata]: can't gui.png!\n");
+		nebu_Log("[fata]: can't gui.png!\n");
 		// installation corrupt
 		nebu_assert(0); exit(1);
 	}
@@ -240,10 +240,10 @@ void exitGui(void) {
 }
 
 void guiMouse(int buttons, int state, int x, int y) {
-  fprintf(stderr, "Mouse buttons: %d, State %d, Position (%d, %d)\n",
+  nebu_Log("Mouse buttons: %d, State %d, Position (%d, %d)\n",
 	  buttons, state, x, y); 
 
-  /* fprintf(stderr, "testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
+  /* nebu_Log("testing for state == %d\n", SYSTEM_MOUSEPRESSED); */
 }
 
 void guiMouseMotion(int mx, int my) {
@@ -310,7 +310,7 @@ void drawMenu(Visual *d) {
 
   lineheight = (int)( (float) size * MENU_TEXT_LINEHEIGHT);  
 
-  /* printf("%d %d %d %d %d\n", x, y, size, maxw, pCurrent->nEntries); */
+  /* nebu_Log("%d %d %d %d %d\n", x, y, size, maxw, pCurrent->nEntries); */
   /* draw the entries */
 
   scripting_Run("return Menu.active");

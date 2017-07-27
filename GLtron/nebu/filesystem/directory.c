@@ -5,10 +5,15 @@
 #include <string.h>
 
 #include <sys/types.h>
-#include <dirent.h>
+#include "filesystem/nebu_dirent.h"
 #include <sys/stat.h>
 #include <errno.h>
+#ifndef WIN32
 #include <unistd.h>
+#else
+#include <io.h>
+#include <direct.h>
+#endif
 
 nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
   DIR *dir;
@@ -21,7 +26,7 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 
   dir = opendir(dirname);
   if(dir == NULL) {
-    fprintf(stderr, "warning: cannot open directory '%s'\n", dirname);
+    nebu_Log("warning: cannot open directory '%s'\n", dirname);
     return l;
   }
   while((entry = readdir(dir)) != NULL) {
@@ -44,13 +49,14 @@ nebu_List* readDirectoryContents(const char *dirname, const char *prefix) {
 
 void makeDirectory(const char *name) {
   int result;
-  if(access(name, R_OK)) {
 #ifndef WIN32
+  if(access(name, R_OK)) {
     result = mkdir(name, 0x1ff);
 #else
-    result = mkdir(name);
+  if(_access(name, 4)) {
+    result = _mkdir(name);
 #endif
     if(result)
-      printf("cannot create dir '%s': %s\n", name, strerror(errno));
+      nebu_Log("cannot create dir '%s': %s\n", name, strerror(errno));
   }
 }

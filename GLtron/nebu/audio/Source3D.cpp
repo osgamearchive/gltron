@@ -1,6 +1,10 @@
 #include "audio/nebu_Source3D.h"
 
+extern "C" {
 #include "base/nebu_assert.h"
+#include "base/nebu_debug_memory.h"
+}
+
 #include <string.h>
 
 Uint8 tmp[65536];
@@ -152,11 +156,11 @@ namespace Sound {
       (USOUND + ( vListenerVelocity * vTarget ) / vTarget.Length() ) / 
       (USOUND + ( vSourceVelocity * vTarget ) / vTarget.Length() );
 		if(fShift < 0.5) {
-			printf("clamping fShift from %.2f to 0.5\n", fShift);
+			nebu_Log("clamping fShift from %.2f to 0.5\n", fShift);
 			fShift = 0.5f;
 		}
 		if(fShift > 1.5) {
-			printf("clamping fShift from %.2f to 1.5\n", fShift);
+			nebu_Log("clamping fShift from %.2f to 1.5\n", fShift);
 			fShift = 1.5f;
 		}
 
@@ -173,7 +177,7 @@ namespace Sound {
       int clen, shifted_len;
 
       GetModifiers(pan, vol, shift);
-      // printf("received: volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
+      // nebu_Log("received: volume: %.4f, panning: %.4f, shift: %.4f\n", vol, pan, shift);
 
       shifted_len = 4 * fxComputeShiftLen( shift, len / 4 );
       clen = MAX(len, shifted_len) + 32; // safety distance

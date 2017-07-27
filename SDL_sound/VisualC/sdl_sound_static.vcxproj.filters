@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{1a7fdde3-ca09-47ea-bd5e-0e083c40bdd7}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Source Files\decoders">
+      <UniqueIdentifier>{8327c354-c034-4224-8b0b-99e487cf477e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\decoders\timidity">
+      <UniqueIdentifier>{2bef2bfb-d1d8-4e6d-a953-abcf0fc2142d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{face0923-e53c-4c6b-a0af-212d866b5383}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Source Files\decoders\libmpg123">
+      <UniqueIdentifier>{b78cc4eb-92ac-4419-8eec-c2991bac7ded}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\decoders\timidity\common.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\instrum.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\mix.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\output.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\playmidi.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\readmidi.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\resample.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\tables.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\timidity.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\audio_convert.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extra_rwops.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SDL_sound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\aiff.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\au.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\flac.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\midi.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\mikmod.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\modplug.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\ogg.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\raw.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\shn.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\speex.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\voc.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\wav.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\timidity\instrum_dls.c">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\compat.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\dct64.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\dct64_i386.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\decode.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\decode_2to1.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\decode_4to1.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\decode_i386.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\decode_ntom.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\equalizer.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\format.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\frame.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\icy.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\icy2utf8.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\id3.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\index.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\layer1.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\layer2.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\layer3.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\libmpg123.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\optimize.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\parse.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\readers.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\stringbuf.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\tabinit.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\libmpg123\testcpu.c">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClCompile>
+    <ClCompile Include="..\decoders\mpg123.c">
+      <Filter>Source Files\decoders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\decoders\timidity\common.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\instrum.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\mix.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\options.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\output.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\playmidi.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\readmidi.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\resample.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\tables.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\timidity.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\acconfig.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extra_rwops.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDL_sound.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SDL_sound_internal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\timidity\instrum_dls.h">
+      <Filter>Source Files\decoders\timidity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\compat.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\debug.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\decode.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\decode_sse3d.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\frame.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\getbits.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\getcpuflags.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\huffman.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\icy.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\icy2utf8.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\id3.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\index.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\l2tables.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\mangle.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\mpg123.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\mpg123lib_intern.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\optimize.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\parse.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\reader.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\true.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+    <ClInclude Include="..\decoders\libmpg123\config.h">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\decoders\libmpg123\dct36_3dnow.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\dct36_3dnowext.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\dct64_3dnow.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\dct64_3dnowext.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\dct64_mmx.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\dct64_sse.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\decode_3dnow.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\decode_3dnowext.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\decode_i586.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\decode_i586_dither.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\decode_mmx.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\decode_sse.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\dnoise.dat">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\equalizer_3dnow.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\getcpuflags.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+    <None Include="..\decoders\libmpg123\tabinit_mmx.S">
+      <Filter>Source Files\decoders\libmpg123</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -49,7 +49,7 @@ int c_quitGame(lua_State *L) {
 }
 
 int c_invalidateGame(lua_State *L) {
-    // fprintf(stderr, "[callback] c_invalidateGame\n");
+    // nebu_Log("[callback] c_invalidateGame\n");
     
     // TODO: Is it a good idea to guard here against this?
     if(game != NULL) // don't reset anything if it doesn't exist yet
@@ -190,10 +190,10 @@ int c_SetCallback(lua_State *L) {
 	if(lua_isstring(L, top)) {
 		name = lua_tostring(L, top);
 		setCallback(name);
-		// printf("enabling callback-set '%s'\n", name);
+		// nebu_Log("enabling callback-set '%s'\n", name);
 	}
 	else {
-		fprintf(stderr, "[fatal] invalid callback set\n");
+		nebu_Log("[fatal] invalid callback set\n");
 		nebu_assert(0); exit(1);
 	}
 	return 0;
@@ -252,7 +252,7 @@ int c_setArtPath(lua_State *l)
 	char *artpack;
 	scripting_GetGlobal("settings", "current_artpack", NULL);
 	scripting_GetStringResult(&artpack);
-	fprintf(stderr, "[status] loading artpack '%s'\n", artpack);
+	nebu_Log("[status] loading artpack '%s'\n", artpack);
 
 	sprintf(art_dir_default, "%s%c%s", getDirectory(PATH_ART), PATH_SEPARATOR, "default");
 	sprintf(art_dir_artpack, "%s%c%s", getDirectory(PATH_ART), PATH_SEPARATOR, artpack);

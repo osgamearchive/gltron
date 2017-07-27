@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\audio">
+      <UniqueIdentifier>{cab80876-abe1-44d8-8cbc-de3cde004820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\base">
+      <UniqueIdentifier>{12b5db09-177a-4e8e-883d-60789f7d5c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\filesystem">
+      <UniqueIdentifier>{789b7c22-7847-49ae-a6ae-24eada82e228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{f6dfcc3d-1e83-418d-8529-fa5a0a4aa480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scripting">
+      <UniqueIdentifier>{2c602e4d-30ba-4941-9fef-606688e12428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\video">
+      <UniqueIdentifier>{1462aea6-5343-425b-bfee-bb2088d668ec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="audio\audio_system.c">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\music_rwop.c">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\SoundSystem.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Source.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\Source3D.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\SourceCopy.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\SourceEngine.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\SourceMusic.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="audio\SourceSample.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="base\debug_memory.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\matrix.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\quat.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\random.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\resource.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\spline.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\surface.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\system.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\util.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\vector.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem\filesystem.c">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem\file_io.c">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem\findpath.c">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="input\input_system.c">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="scripting\scripting.c">
+      <Filter>Source Files\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="video\2d.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\camera.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\console.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\font.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\geometry.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\mesh.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\mesh_3ds.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\mesh_shadow.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\pixels.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\png_texture.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\scene.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\texture2d.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\video_system.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="video\video_utility.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="base\nebu_log.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem\directory.c">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="filesystem\findpath.m">
+      <Filter>Source Files\filesystem</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Nebu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_filesystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_scripting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Nebu_video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_SourceSample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_audio_system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_SoundSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_Source.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_Source3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_SourceCopy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_SourceEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\audio\nebu_SourceMusic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_argv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_assert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_callbacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_debug_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_png_texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_quat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_spline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_surface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\nebu_Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\filesystem\nebu_file_io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\filesystem\nebu_filesystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input\nebu_system_keynames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\input\nebu_input_system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scripting\nebu_scripting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_video_utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_extgl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_gl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_mesh_3ds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_png_texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_quad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_renderer_gl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_texture2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_video_system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\video\nebu_video_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

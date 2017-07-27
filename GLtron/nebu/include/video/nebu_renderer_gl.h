@@ -13,8 +13,12 @@
 #define GLdouble GLfloat
 
 #else
+#define NO_SDL_GLEXT
+#include <GL/glew.h>
 #include "SDL_opengl.h"
+#ifndef WIN32
 #include "OpenGL/glu.h"
+#endif
 #endif
 
 #include <stdio.h>

@@ -33,11 +33,11 @@ void Sound_loadFX(void) {
   for(i = 0; i < NUM_GAME_FX; i++) {
     path = getPath(PATH_DATA, game_fx_names[i]);
     if(path) {
-      fprintf(stderr, "[sound] loaded %s\n", game_fx_names[i]);
+      nebu_Log("[sound] loaded %s\n", game_fx_names[i]);
       Audio_LoadSample(path, i);
       free(path);
     } else {
-      fprintf(stderr, "[error] can't load sound fx file %s\n",
+      nebu_Log("[error] can't load sound fx file %s\n",
 	     game_fx_names[i]);
       nebu_assert(0); exit(1); // TODO: handle missing fx somewhere else
     }
@@ -49,11 +49,11 @@ void Sound_reloadTrack(void) {
   char *path;
 	scripting_GetGlobal("settings", "current_track", NULL);
   scripting_GetStringResult(&song);
-  fprintf(stderr, "[sound] loading song %s\n", song);
+  nebu_Log("[sound] loading song %s\n", song);
   path = getPath( PATH_MUSIC, song );
   scripting_StringResult_Free(song);
   if(path == NULL) {
-    fprintf(stderr, "[sound] can't find song...exiting\n");
+    nebu_Log("[sound] can't find song...exiting\n");
     nebu_assert(0); exit(1); // TODO: handle missing song somewhere else
   }
   Sound_load(path);
@@ -107,7 +107,7 @@ void Sound_initTracks(void) {
   music_path = getDirectory( PATH_MUSIC );
 	soundList = readDirectoryContents(music_path, NULL);
   if(soundList->next == NULL) {
-    fprintf(stderr, "[sound] no music files found...exiting\n");
+    nebu_Log("[sound] no music files found...exiting\n");
     nebu_assert(0); exit(1); // TODO: handle missing songs somewhere else
   }
     
@@ -129,7 +129,7 @@ void Sound_initTracks(void) {
 }
 
 void Sound_setup(void) {
-  printf("[sound] initializing sound\n");
+  nebu_Log("[sound] initializing sound\n");
 
   Audio_Init();
   Sound_loadFX();

@@ -131,7 +131,7 @@ void ai_getDistances(int player, AI_Distances *distances) {
 		vec2_Scale(&ai->backleft.vDirection,*backleft);
 	}
 		
-	// printf("%.2f, %.2f, %.2f\n", *front, *right, *left);
+	// nebu_Log("%.2f, %.2f, %.2f\n", *front, *right, *left);
 	return;
 }
 
@@ -214,7 +214,7 @@ void ai_getConfig(int player, int target,
 }
 
 void ai_left(int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
-	// printf("trying left turn...");
+	// nebu_Log("trying left turn...");
 	AI *ai = &game->player[player].ai;
 	Data *pData = &game->player[player].data;
 	float save_distance;
@@ -229,14 +229,14 @@ void ai_left(int player, AI_Distances *distances, AI_Parameters *pAIParameters) 
 		createEvent(player, EVENT_TURN_LEFT);
 		ai->tdiff++;
 		ai->lasttime = game2->time.current;
-		// printf("succeeded\n");
+		// nebu_Log("succeeded\n");
 	} else {
-		// printf("failed\n");
+		// nebu_Log("failed\n");
 	}
 }
 
 void ai_right(int player, AI_Distances *distances, AI_Parameters *pAIParameters) {
-	// printf("trying right turn...");
+	// nebu_Log("trying right turn...");
 	AI *ai = &game->player[player].ai;
 	Data *pData = &game->player[player].data;
 	float save_distance;
@@ -251,9 +251,9 @@ void ai_right(int player, AI_Distances *distances, AI_Parameters *pAIParameters)
 		createEvent(player, EVENT_TURN_RIGHT);
 		ai->tdiff--;
 		ai->lasttime = game2->time.current;
-		// printf("succeeded\n");
+		// nebu_Log("succeeded\n");
 	} else {
-		// printf("failed\n");
+		// nebu_Log("failed\n");
 	}
 }
 
@@ -294,7 +294,7 @@ void ai_aggressive(int player, int target, int location,
 		game->player[player].data.dir -
 		game->player[target].data.dir) % game2->level->nAxis;
 	
-	// printf("aggressive mode (%d, %d)\n", player, target, location, dirdiff);
+	// nebu_Log("aggressive mode (%d, %d)\n", player, target, location, dirdiff);
 	if(dirdiff < 4)
 		ai_action(agressive_action[location][dirdiff], player, distances, pAIParameters);
 }
@@ -304,7 +304,7 @@ void ai_evasive(int player, int target, int location,
 	int dirdiff = (game2->level->nAxis + 
 		game->player[player].data.dir -
 		game->player[target].data.dir) % game2->level->nAxis;
-	// printf("evasive mode (%d,%d,%d)\n", player, target, location);
+	// nebu_Log("evasive mode (%d,%d,%d)\n", player, target, location);
 	if(dirdiff < 4)
 		ai_action(evasive_action[location][dirdiff], player, distances, pAIParameters);
 }

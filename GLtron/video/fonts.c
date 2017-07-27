@@ -16,7 +16,7 @@ void initFonts(void) {
 		gTokenGameFont = resource_GetToken(path, eRT_Font);
 	if(!gTokenGameFont)
 	{
-		fprintf(stderr, "can't load font %s\n", path);
+		nebu_Log("can't load font %s\n", path);
 		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	free(path);

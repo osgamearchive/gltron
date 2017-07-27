@@ -84,7 +84,7 @@ struct saveRules {
 void initTimedemo(void) {
 	int i = 0;
 
-	printf("-- initializing timedemo\n");
+	nebu_Log("-- initializing timedemo\n");
 
 	frames = 0;
 	startTime = nebu_Time_GetElapsed();

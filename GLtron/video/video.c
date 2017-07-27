@@ -77,7 +77,7 @@ int initWindow(void) {
 				goto SKIP;
 			}
 		}
-		printf("[fatal] could not create window...exiting\n");
+		nebu_Log("[fatal] could not create window...exiting\n");
 		nebu_assert(0); exit(1); /* OK: critical, no visual */
 	}
 
@@ -97,17 +97,17 @@ void shutdownDisplay() {
 	resource_ReleaseType(eRT_2d);
 	gui_ReleaseResources();
 	nebu_Video_Destroy(gScreen->win_id);
-	// printf("[video] window destroyed\n");
+	// nebu_Log("[video] window destroyed\n");
 }
 
 void setupDisplay() {
-	// fprintf(stderr, "[video] trying to create window\n");
+	// nebu_Log("[video] trying to create window\n");
 	gScreen->win_id = initWindow();
-	// fprintf(stderr, "[video] window created\n");
+	// nebu_Log("[video] window created\n");
 	// initRenderer();
 	// printRendererInfo();
-	// printf("win_id is %d\n", d->win_id);
-	// fprintf(stderr, "[status] loading art\n");
+	// nebu_Log("win_id is %d\n", d->win_id);
+	// nebu_Log("[status] loading art\n");
 }
 
 void loadModels(void)
@@ -128,7 +128,7 @@ void loadModels(void)
 	gTokenRecognizer = resource_GetToken(path, eRT_GLtronTriMesh);
 	if(!gTokenRecognizer)
 	{
-		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
+		nebu_Log("fatal: could not load %s - exiting...\n", path);
 		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	free(path);
@@ -138,7 +138,7 @@ void loadModels(void)
 	gTokenRecognizerQuad = resource_GetToken(path, eRT_GLtronQuadMesh);
 	if(!gTokenRecognizerQuad)
 	{
-		fprintf(stderr, "fatal: could not load %s - exiting...\n", path);
+		nebu_Log("fatal: could not load %s - exiting...\n", path);
 		nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 	free(path);
@@ -149,7 +149,7 @@ void loadModels(void)
 		gpTokenLightcycles[i] = resource_GetToken(path, eRT_GLtronTriMesh);
 		if(!gpTokenLightcycles[i])
 		{
-			fprintf(stderr, "fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
+			nebu_Log("fatal: could not load model %s - exiting...\n", lc_lod_names[i]);
 			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
 		free(path);
@@ -220,7 +220,7 @@ void video_UnloadLevel(void)
 }
 
 void video_LoadLevel(void) {
-	printf("[status] load/reload video data\n");
+	nebu_Log("[status] load/reload video data\n");
 
 	nebu_assert(!gWorld);
 	gWorld = video_CreateLevel();
@@ -229,7 +229,7 @@ void video_LoadLevel(void) {
 void video_ResetData(void) {
 	int i;
 
-	printf("[status] reset video data\n");
+	nebu_Log("[status] reset video data\n");
 
 	for(i = 0; i < game->players; i++) {
 		Player *p = game->player + i;

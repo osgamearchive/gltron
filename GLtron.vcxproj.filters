@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\audio">
+      <UniqueIdentifier>{f8e1099e-976a-455c-aa5d-ceb0c4322655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\base">
+      <UniqueIdentifier>{856d4117-0e66-4e54-a4ed-88e73c208b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\configuration">
+      <UniqueIdentifier>{6aaa0fe8-2f8a-44aa-af50-468e13da3309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\filesystem">
+      <UniqueIdentifier>{f85aed9a-da0e-49c6-93e5-9aac7c91a629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{9361cf30-9d24-42fd-b65b-759264a2cdd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\input">
+      <UniqueIdentifier>{0a3b96a3-d769-414f-a201-a57f1c9006e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\video">
+      <UniqueIdentifier>{ff7b6fa9-42f2-401c-8f3b-fce55e2ce4a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scripting">
+      <UniqueIdentifier>{173af7da-b1fb-4ae5-a8de-942fbf6a99e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="levels">
+      <UniqueIdentifier>{132477bc-6468-4122-a500-a357d503d9db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{90193cf3-0f72-4449-9d65-8178f85b5f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zlib">
+      <UniqueIdentifier>{119ed7ca-fc69-4961-a0d8-1d337875e2bd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLtron\include\audio\audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\audio\sound_glue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\base\switchCallbacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\base\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\configuration\configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\configuration\settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\filesystem\dirsetup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\filesystem\path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\32bit_warning.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\ai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\client_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\game_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\game_level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\gltron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\init.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\timedemo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\game\timesystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\input\input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\scripting\scripting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\explosion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\fonttex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\graphics_fx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\graphics_hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\graphics_lights.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\graphics_utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\graphics_world.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\recognizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\trail_geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\include\video\video_level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\crc32.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\deflate.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\gzguts.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\inffast.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\inffixed.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\inflate.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\inftrees.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\trees.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\zconf.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\zlib.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="GLtron\zlib\zutil.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="gltron.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GLtron\audio\sound.c">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\audio\sound_glue.cpp">
+      <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\base\util.c">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\configuration\settings.c">
+      <Filter>Source Files\configuration</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\filesystem\dirsetup.c">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\filesystem\path.c">
+      <Filter>Source Files\filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\32bit_warning.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\camera.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\computer.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\computer_utilities.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\credits.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\engine.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\event.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\game.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\globals.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\gui.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\init.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\level.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\pause.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\resource.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\scripting_interface.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\switchCallbacks.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\game\timedemo.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\input\input.c">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\artpack.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\explosion.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\fonts.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\gamegraphics.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\graphics_fx.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\graphics_hud.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\graphics_lights.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\graphics_utility.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\graphics_world.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\hud.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\level.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\material.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\model.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\recognizer.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\screenshot.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\skybox.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\texture.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\trail.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\trail_geometry.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\trail_render.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\video.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\video\visuals_2d.c">
+      <Filter>Source Files\video</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\gltron.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\adler32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\compress.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\crc32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\deflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\gzclose.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\gzlib.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\gzread.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\gzwrite.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\infback.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\inffast.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\inflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\inftrees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\trees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\uncompr.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="GLtron\zlib\zutil.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\levels\4squares.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\levels\arena.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\levels\movie.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\levels\ring.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\levels\simple.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\levels\square.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\levels\tri.lua">
+      <Filter>levels</Filter>
+    </None>
+    <None Include="Resources\scripts\artpack.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\audio.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\basics.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\config.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\console.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\game.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\gauge.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\hud.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\hud-config.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\joystick.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\layout.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\main.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\menu.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\menu_functions.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\path.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\save.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="Resources\scripts\video.lua">
+      <Filter>Scripts</Filter>
+    </None>
+  </ItemGroup>
+</Project>

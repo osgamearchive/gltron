@@ -43,13 +43,13 @@ void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh)
 	path = getPath(PATH_DATA, filename);
 	if(path == NULL)
 	{
-		fprintf(stderr, "** could not optain path to file '%s'\n", filename);
+		nebu_Log("** could not optain path to file '%s'\n", filename);
 		return;
 	}
 
 	if((f = gzopen(path, "r")) == 0)
 	{
-		fprintf(stderr, "** could not open file '%s'\n", filename);
+		nebu_Log("** could not open file '%s'\n", filename);
 		free(path);
 		return;
 	}
@@ -67,7 +67,7 @@ void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh)
 			iMaterial++;
 			if(iMaterial >= MAX_MATERIALS)
 			{
-				fprintf(stderr, "Overflowing material buffer\n");
+				nebu_Log("Overflowing material buffer\n");
 				nebu_assert(0); exit(1); /* OK: critical, can't parse material (probably shouldn't be fatal) */
 			}
 
@@ -100,7 +100,7 @@ void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh)
 			// nothing
 			} else {
 				/* TODO: "disabled error message" */
-				/* fprintf(stderr, "+++ unparsed material property: %s", buf); */
+				/* nebu_Log("+++ unparsed material property: %s", buf); */
 			}
 		}
 	}
@@ -121,7 +121,7 @@ void readMaterialLibraryFromFile(char *filename, gltron_Mesh *pMesh)
 void readMaterialLibrary(char *buf, gltron_Mesh *pMesh) {
   char filename[BUF_SIZE];
   if(sscanf(buf, " mtllib %s ", filename) != 1) {
-    fprintf(stderr, "*** failing parsing filename from %s\n", buf);
+    nebu_Log("*** failing parsing filename from %s\n", buf);
     return;
   }
   readMaterialLibraryFromFile(filename, pMesh);
@@ -140,9 +140,9 @@ void setMaterial(char *buf, gltron_Mesh *pMesh, int *iGroup) {
 	return;
       }
     }
-    fprintf(stderr, "*** error: material %s not found\n", name);
+    nebu_Log("*** error: material %s not found\n", name);
   } else {
-    fprintf(stderr, "*** error: can't parse material line %s\n", buf);
+    nebu_Log("*** error: can't parse material line %s\n", buf);
   }
 }
 
