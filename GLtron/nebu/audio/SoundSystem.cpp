@@ -31,7 +31,7 @@ namespace Sound {
   }
 
   void System::Callback(Uint8* data, int len) {
-    // printf("callback got called for %d bytes of data\n", len);
+    // nebu_Log("callback got called for %d bytes of data\n", len);
 
     // ensure silence
     memset(data, 0, len);
@@ -44,7 +44,7 @@ namespace Sound {
     for(p = _sources; p->next != NULL; p = p->next) {
       Source* s = (Source*) p->data;
       if(s->IsPlaying()) {
-				// fprintf(stderr, "mixing source\n");
+				// nebu_Log("mixing source\n");
 				if(!(
 						 (s->GetType() & eSoundFX && ! _mix_fx ) ||
 						 (s->GetType() & eSoundMusic && ! _mix_music) )
@@ -53,7 +53,7 @@ namespace Sound {
 						if( s->Mix(data, len) )
 							sources_mixed++;
 					}
-				// fprintf(stderr, "done mixing %d sources\n", sources_mixed);
+				// nebu_Log("done mixing %d sources\n", sources_mixed);
       }
     }
   }
@@ -108,7 +108,7 @@ namespace Sound {
 
 	extern "C" {
     void c_callback(void *userdata, Uint8 *stream, int len) { 
-      // printf("c_callback got called for %d bytes of data\n", len);
+      // nebu_Log("c_callback got called for %d bytes of data\n", len);
       ((System*)userdata)->Callback(stream, len);
     }
   }

@@ -139,7 +139,7 @@ int game_LoadLevel(void)
 
 	scripting_GetGlobal("settings", "current_level", NULL);
 	scripting_GetStringResult(&pFilename);
-	fprintf(stderr, "[status] loading level '%s'\n", pFilename);
+	nebu_Log("[status] loading level '%s'\n", pFilename);
 	path = getPath(PATH_LEVEL, pFilename);
 	scripting_StringResult_Free(pFilename);
 
@@ -371,7 +371,7 @@ game_level* game_CreateLevel(void)
 		if(!gpTokenCurrentFloor)
 		{
 			// needs either floor mesh or boundary description
-			fprintf(stderr, "fatal: arena incomplete - exiting...\n");
+			nebu_Log("fatal: arena incomplete - exiting...\n");
 			nebu_assert(0); exit(1); // OK (somewhat): the level is unplayable. could be handled better
 		}
 		// compute boundaries from level model

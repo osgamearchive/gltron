@@ -301,14 +301,14 @@ void resetPlayerData(void) {
 		} else {
 			data->exp_radius = EXP_RADIUS_MAX;
 		}
-        // fprintf(stderr, "[player %d] ai: active=%d\n", i, ai->active);
+        // nebu_Log("[player %d] ai: active=%d\n", i, ai->active);
 	}
 
 	free(pIndicesAI);
 	free(pIndicesHumans);
 
 	game->running = game->players - not_playing; /* not everyone is alive */
-	/* printf("starting game with %d players\n", game->running); */
+	/* nebu_Log("starting game with %d players\n", game->running); */
 	game->winner = -1;
 }
 
@@ -338,7 +338,7 @@ void Time_Idle(void) {
 	game2->time.lastFrame = game2->time.current;
 	game2->time.current = nebu_Time_GetElapsed() - game2->time.offset;
 	game2->time.dt = game2->time.current - game2->time.lastFrame;
-	/* fprintf(stderr, "dt: %d\n", game2->time.dt); */
+	/* nebu_Log("dt: %d\n", game2->time.dt); */
 }
 
 void resetScores(void) {
@@ -374,7 +374,7 @@ void newTrail(Data* data) {
 	{
 		data->trails = (segment2*) realloc(data->trails, data->maxTrails * 2 * sizeof(segment2));
 		data->maxTrails *= 2;
-		printf("reallocating trails, new maxtrails: %d\n", data->maxTrails);
+		nebu_Log("reallocating trails, new maxtrails: %d\n", data->maxTrails);
 	}
 
 	s = data->trails + data->nTrails;

@@ -254,14 +254,14 @@ void loadModel(gltron_Mesh **ppMesh, int *pToken)
 		scripting_StringResult_Free(pFilename);
 		if(!path)
 		{
-			fprintf(stderr, "fatal: could not find model - exiting...\n");
+			nebu_Log("fatal: could not find model - exiting...\n");
 			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
 		*pToken = resource_GetToken(path, eRT_GLtronTriMesh);
 		free(path);
 		if(!*pToken)
 		{
-			fprintf(stderr, "fatal: could not load arena - exiting...\n");
+			nebu_Log("fatal: could not load arena - exiting...\n");
 			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
 		*ppMesh = resource_Get(*pToken, eRT_GLtronTriMesh);

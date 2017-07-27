@@ -67,7 +67,7 @@ void initSubsystems(int argc, const char *argv[]) {
 	initAudio();
 	initInput();
 
-	fprintf(stderr, "[status] done loading level...\n");
+	nebu_Log("[status] done loading level...\n");
 }
 
 void initFilesystem(int argc, const char *argv[]) {
@@ -77,7 +77,8 @@ void initFilesystem(int argc, const char *argv[]) {
 }
 
 void initScripting(void) {
-	scripting_Init(NEBU_SCRIPTING_DEBUG);
+	// scripting_Init(NEBU_SCRIPTING_DEBUG);
+	scripting_Init(0);
 	init_c_interface();
 
   /* load basic scripting services */
@@ -103,15 +104,15 @@ void initConfiguration(int argc, const char *argv[])
 		path = getPossiblePath(PATH_PREFERENCES, RC_NAME);
 		if (path != NULL) {
 		if (nebu_FS_Test(path)) {
-			printf("[status] loading settings from %s\n", path);
+			nebu_Log("[status] loading settings from %s\n", path);
 			scripting_RunFile(path);
 		} else {
-			printf("[error] cannot load config file %s from %s\n", RC_NAME, path);
+			nebu_Log("[error] cannot load config file %s from %s\n", RC_NAME, path);
 		}
 			free(path);
 		}
 		else {
-			printf("[fatal] can't get valid pref path for %s\n", RC_NAME);
+			nebu_Log("[fatal] can't get valid pref path for %s\n", RC_NAME);
 			nebu_assert(0); exit(1); // something is seriously wrong
 		}
 	}
@@ -129,7 +130,7 @@ void initConfiguration(int argc, const char *argv[])
 			/* load some more defaults from config file */
 			runScript(PATH_SCRIPTS, "config.lua");
 			runScript(PATH_SCRIPTS, "artpack.lua");
-			printf("[warning] old config file version %f found, app version is %f, overriding using defaults\n",
+			nebu_Log("[warning] old config file version %f found, app version is %f, overriding using defaults\n",
 				ini_version, app_version);
 			setSettingf("version", app_version);
 		}
@@ -139,20 +140,20 @@ void initConfiguration(int argc, const char *argv[])
 		int isValid = 1;
 		scripting_GetGlobal("save_completed", NULL);
 		if(scripting_IsNil()) {
-            printf("[warning] defunct config file (save_completed missing)\n");
+            nebu_Log("[warning] defunct config file (save_completed missing)\n");
 			isValid = 0;
 		}
 		scripting_Pop();
 		scripting_GetGlobal("settings", "keys", NULL);
 		if(!scripting_IsTable())
 		{
-            printf("[warning] defunct config file (keys table missing)\n");
+            nebu_Log("[warning] defunct config file (keys table missing)\n");
 			isValid = 0;
 		}
 		scripting_Pop();
 		if(!isValid)
 		{
-			printf("[warning] defunct config file found, overriding using defaults\n");
+			nebu_Log("[warning] defunct config file found, overriding using defaults\n");
 			runScript(PATH_SCRIPTS, "config.lua");
 			runScript(PATH_SCRIPTS, "artpack.lua");
 

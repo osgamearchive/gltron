@@ -22,7 +22,7 @@ void scripting_Init(int flags) {
   luaopen_string(L);
   luaopen_io(L);
 
-  if(flags | NEBU_SCRIPTING_DEBUG)
+  if(flags & NEBU_SCRIPTING_DEBUG)
   {
 	  scripting_debug = fopen("scripting.txt", "w");
   }
@@ -37,16 +37,16 @@ void scripting_Quit() {
 
 void showStack() {
 	int i;
-	printf("dumping stack with %d elements\n", lua_gettop(L));
+	nebu_Log("dumping stack with %d elements\n", lua_gettop(L));
 	for(i = 0; i < lua_gettop(L); i++) {
 		int type = lua_type(L, - (i+1));
 		switch(type) {
-		case LUA_TNIL: printf("nil\n"); break;
-		case LUA_TNUMBER: printf("number\n"); break;
-		case LUA_TSTRING: printf("string\n"); break;
-		case LUA_TTABLE: printf("table\n"); break;
-		case LUA_TFUNCTION: printf("function\n"); break;
-		case LUA_TUSERDATA: printf("userdata\n"); break;
+		case LUA_TNIL: nebu_Log("nil\n"); break;
+		case LUA_TNUMBER: nebu_Log("number\n"); break;
+		case LUA_TSTRING: nebu_Log("string\n"); break;
+		case LUA_TTABLE: nebu_Log("table\n"); break;
+		case LUA_TFUNCTION: nebu_Log("function\n"); break;
+		case LUA_TUSERDATA: nebu_Log("userdata\n"); break;
 		}
 	}
 }
@@ -153,7 +153,7 @@ void scripting_GetFloatArrayResult(float *f, int n) {
     if(lua_isnumber(L, -1)) {
       *(f + i) = (float)lua_tonumber(L, -1);
     } else {
-      fprintf(stderr, "element %d is not number!\n", i);
+      nebu_Log("element %d is not number!\n", i);
     }
     lua_pop(L, 1); /* remove number from stack */
   }
@@ -175,7 +175,7 @@ int scripting_GetStringResult(scripting_StringResult *s)
     size = (int) lua_strlen(L, -1) + 1;
     *s = malloc( size );
     memcpy( *s, lua_tostring(L, -1), size );
-    /* printf("allocated string '%s' of size %d\n", *s, size); */
+    /* nebu_Log("allocated string '%s' of size %d\n", *s, size); */
   } else
     status = 1;
 
@@ -317,7 +317,7 @@ static int iStackGuardPosition = -1;
 
 int scripting_StackGuardStart(void)
 {
-    // fprintf(stderr, "[stackguard] start %d\n", iStackGuardPosition);
+    // nebu_Log("[stackguard] start %d\n", iStackGuardPosition);
     
 	if(iStackGuardPosition == 255)
 	{
@@ -343,7 +343,7 @@ void scripting_StackGuardEnd(int iPos)
 	nebu_assert(piStackGuard[iPos] == lua_gettop(L));
 	iStackGuardPosition--;
     
-    // fprintf(stderr, "[stackguard] end %d\n", iStackGuardPosition);
+    // nebu_Log("[stackguard] end %d\n", iStackGuardPosition);
 }
 
 int scripting_GetOptional_Float(const char *name, float *f, float fValue)

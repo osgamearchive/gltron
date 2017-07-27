@@ -63,7 +63,7 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 		 ai_params.maxSegLength[level] * criticalDistance())
 		return;
 		
-	// printf("%.2f, %.2f, %.2f\n", distances->front, 
+	// nebu_Log("%.2f, %.2f, %.2f\n", distances->front, 
 	// distances->left, distances->right);
 	/* decide where to turn */
 	if(distances->front > distances->right && 
@@ -80,22 +80,22 @@ void doComputerSimple(int player, int target, AI_Distances *distances) {
 						ai->tdiff > - ai_params.spiral[level] ) {
 		createEvent(player, EVENT_TURN_RIGHT);
 		ai->tdiff--;
-		// printf("turn right\n");
+		// nebu_Log("turn right\n");
 	} else if(distances->right < distances->left && 
 						ai->tdiff < ai_params.spiral[level] ) {
 		createEvent(player, EVENT_TURN_LEFT);
 		ai->tdiff++;
-		// printf("turn left\n");
+		// nebu_Log("turn left\n");
 	} else {
-		printf("tdiff decision\n");
+		nebu_Log("tdiff decision\n");
 		if(ai->tdiff > 0) { 
 			createEvent(player, EVENT_TURN_RIGHT);
 			ai->tdiff--; 
-			// printf("turn right\n");
+			// nebu_Log("turn right\n");
 		} else { 
 			createEvent(player, EVENT_TURN_LEFT);
 			ai->tdiff++; 
-			// printf("turn left\n");
+			// nebu_Log("turn left\n");
 		}
 	}
 	ai->lasttime = game2->time.current;
@@ -114,14 +114,14 @@ void doComputerActive(int player, int target, AI_Distances *distances) {
 	ai_getConfig(player, target, &config);
 	
 	// who's going to reach the intersection point first?
-	// printf("active, location %d (direction: %d)\n", 
+	// nebu_Log("active, location %d (direction: %d)\n", 
 	// config.location, data->dir);
 	
 	switch(config.location) {
 	case 0: case 7: 
 	case 1: case 6:
 		if(config.t_player < config.t_opponent) {
-			// printf("I'm ahead: %.2f, %.2f\n", config.t_player, config.t_opponent);
+			// nebu_Log("I'm ahead: %.2f, %.2f\n", config.t_player, config.t_opponent);
 			if(config.t_player - config.t_opponent < SAVE_T_DIFF)
 				data->boost_enabled = 1;
 			if(game->player[player].data.speed -
@@ -130,7 +130,7 @@ void doComputerActive(int player, int target, AI_Distances *distances) {
 			// aggressive
 			ai_aggressive(player, target, config.location, distances, &ai_params);
 		} else {
-			// printf("I'm behind: %.2f, %.2f\n", 
+			// nebu_Log("I'm behind: %.2f, %.2f\n", 
 			// config.t_player, config.t_opponent);
 			// check speed, adjust or evasive
 			if(config.t_opponent < HOPELESS_T) {
@@ -164,7 +164,7 @@ void doComputer(int player, int target) {
 		 game->player[opponent].ai.active == 1 ||
 		 gSettingsCache.ai_level == 0 /* dumb setting */) { 
 		// only fight humans
-		// printf("inactive, closest opponent: %d, distance %.2f, front %.2f\n", 
+		// nebu_Log("inactive, closest opponent: %d, distance %.2f, front %.2f\n", 
 		//	 opponent, d, distances.front);
 		doComputerSimple(player, target, &distances);
 	} else {

@@ -29,7 +29,7 @@ void initArtpacks(void)
 	art_path = getDirectory( PATH_ART );
 	artList = readDirectoryContents(art_path, NULL);
 	if(artList->next == NULL) {
-	fprintf(stderr, "[fatal] no art files found...exiting\n");
+	nebu_Log("[fatal] no art files found...exiting\n");
 	nebu_assert(0); exit(1); // OK: critical, installation corrupt
 	}
 
@@ -67,7 +67,7 @@ void artpack_LoadSurfaces(void)
 		gpTokenHUD[i] = resource_GetToken(pHUDNames[i], eRT_2d);
 		if(!gpTokenHUD[i])
 		{
-			fprintf(stderr, "fatal: failed loading %s, exiting...\n", pHUDNames[i]);
+			nebu_Log("fatal: failed loading %s, exiting...\n", pHUDNames[i]);
 			nebu_assert(0); exit(1); // OK: critical, installation corrupt
 		}
 	}
@@ -91,9 +91,9 @@ void loadArt(void) {
 	}
 
 	initTexture(gScreen); // load skybox, trail & crash texture
-	fprintf(stderr, "[status] done loading textures...\n");
+	nebu_Log("[status] done loading textures...\n");
 	initFonts();
-	fprintf(stderr, "[status] done loading fonts...\n");
+	nebu_Log("[status] done loading fonts...\n");
 	
 	artpack_LoadSurfaces();
 }

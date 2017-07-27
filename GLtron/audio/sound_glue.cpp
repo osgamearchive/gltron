@@ -8,6 +8,7 @@ extern "C" {
 #include "game/game_data.h"
 #include "configuration/settings.h"
 #include "base/nebu_assert.h"
+#include "base/nebu_debug_memory.h"
 }
 
 #include "Nebu_audio.h"
@@ -37,21 +38,21 @@ static void output_decoders(void)
     const Sound_DecoderInfo **i;
     const char **ext;
 
-    printf("Supported sound formats:\n");
+    nebu_Log("Supported sound formats:\n");
     if (rc == NULL)
-        printf(" * Apparently, NONE!\n");
+        nebu_Log(" * Apparently, NONE!\n");
     else
     {
         for (i = rc; *i != NULL; i++)
         {
-            printf(" * %s\n", (*i)->description);
+            nebu_Log(" * %s\n", (*i)->description);
             for (ext = (*i)->extensions; *ext != NULL; ext++)
-                printf("   File extension \"%s\"\n", *ext);
-            printf("   Written by %s.\n   %s\n\n", (*i)->author, (*i)->url);
+                nebu_Log("   File extension \"%s\"\n", *ext);
+            nebu_Log("   Written by %s.\n   %s\n\n", (*i)->author, (*i)->url);
         } /* for */
     } /* else */
 
-    printf("\n");
+    nebu_Log("\n");
 } /* output_decoders */
 
 #pragma GCC diagnostic warn "-Wunused-function"
@@ -67,13 +68,13 @@ extern "C" {
     sample_engine->Start();
     if (gSettingsCache.show_recognizer)
       sample_recognizer->Start();
-    // printf("[audio] turning on engine sound\n");
+    // nebu_Log("[audio] turning on engine sound\n");
   }
 
   void Audio_DisableEngine(void) {
     sample_engine->Stop();
     sample_recognizer->Stop();
-    // printf("[audio] turning off engine sound\n");
+    // nebu_Log("[audio] turning off engine sound\n");
   }
 
   void Audio_Idle(void) { 
@@ -212,17 +213,17 @@ extern "C" {
 	SDL_AudioSpec obtained;
 
     if(SDL_OpenAudio( spec, &obtained ) != 0) {
-      fprintf(stderr, "[error] %s\n", SDL_GetError());
+      nebu_Log("[error] %s\n", SDL_GetError());
       sound->SetStatus(Sound::eUninitialized);
     } else {
       sound->SetStatus(Sound::eInitialized);
 			/*
-			fprintf(stderr, "[sound] frequency: %d\n", obtained.freq);
-			fprintf(stderr, "[sound] format: %d\n", obtained.format);
-			fprintf(stderr, "[sound] channels: %d\n", obtained.channels);
-			fprintf(stderr, "[sound] silence: %d\n", obtained.silence);
-			fprintf(stderr, "[sound] buffer in samples: %d\n", obtained.samples);
-			fprintf(stderr, "[sound] buffer in bytes: %d\n", obtained.size);
+			nebu_Log("[sound] frequency: %d\n", obtained.freq);
+			nebu_Log("[sound] format: %d\n", obtained.format);
+			nebu_Log("[sound] channels: %d\n", obtained.channels);
+			nebu_Log("[sound] silence: %d\n", obtained.silence);
+			nebu_Log("[sound] buffer in samples: %d\n", obtained.samples);
+			nebu_Log("[sound] buffer in bytes: %d\n", obtained.size);
 			*/
     }
     sound->SetMixMusic(gSettingsCache.playMusic);
@@ -380,7 +381,7 @@ extern "C" {
       break;
     default:
       /* programmer error, but non-critical */
-      fprintf(stderr, "[error] unkown sample %d: '%s'\n", number, name);
+      nebu_Log("[error] unkown sample %d: '%s'\n", number, name);
     }
   }
 }

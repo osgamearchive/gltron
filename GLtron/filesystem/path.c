@@ -24,11 +24,14 @@ static char scripts_dir[PATH_MAX];
 static char level_dir[PATH_MAX];
 
 void initDirectories(void) {
+#ifndef WIN32
   if(PREF_DIR[0] != '~')
     sprintf(preferences_dir, PREF_DIR);
   else
     sprintf(preferences_dir, "%s%s", getHome(), PREF_DIR + 1);
-
+#else
+	sprintf(preferences_dir, ".");
+#endif
   if(SNAP_DIR[0] != '~')
     sprintf(snapshots_dir, SNAP_DIR);
   else
@@ -49,7 +52,7 @@ void initDirectories(void) {
 #endif
 
 	/*
-  printf("directories:\n"
+  nebu_Log("directories:\n"
 	 "\tprefs: %s\n"
 	 "\tsnaps: %s\n"
 	 "\tdata:  %s\n"
@@ -60,9 +63,10 @@ void initDirectories(void) {
 	 data_dir, art_dir, scripts_dir, 
 	 music_dir);
 	*/
-
+#ifndef WIN32
   makeDirectory(preferences_dir);
   makeDirectory(snapshots_dir);
+#endif
 }
 
 char* getPath( ePathLocation eLocation, const char *filename) {
@@ -71,7 +75,7 @@ char* getPath( ePathLocation eLocation, const char *filename) {
     return path;
 
 
-  fprintf(stderr, "*** failed to locate file '%s' at '%s' (type %d)\n",
+  nebu_Log("*** failed to locate file '%s' at '%s' (type %d)\n",
 	  filename, path, eLocation);
   nebu_assert(0);
 
@@ -95,7 +99,7 @@ const char* getDirectory( ePathLocation eLocation ) {
   case PATH_ART: return art_dir; break;
 	case PATH_LEVEL: return level_dir; break;
   default:
-    fprintf(stderr, "invalid path type\n");
+    nebu_Log("invalid path type\n");
     nebu_assert(0);
   }
   return NULL;

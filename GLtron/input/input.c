@@ -115,12 +115,12 @@ void keyGame(int state, int scanCode)
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
-					// printf("glance left down\n");
+					// nebu_Log("glance left down\n");
 					gppPlayerVisuals[i]->camera.bIsGlancing = 1;
 				}
 				else
 				{
-					// printf("glance left up\n");
+					// nebu_Log("glance left up\n");
 					gppPlayerVisuals[i]->camera.bIsGlancing = 0;
 				}
 				return;
@@ -130,10 +130,10 @@ void keyGame(int state, int scanCode)
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
-					// printf("glance right down\n");
+					// nebu_Log("glance right down\n");
 					gppPlayerVisuals[i]->camera.bIsGlancing = -1;
 				} else {
-					// printf("glance right up\n");
+					// nebu_Log("glance right up\n");
 					gppPlayerVisuals[i]->camera.bIsGlancing = 0;
 				}
 				return;
@@ -143,7 +143,7 @@ void keyGame(int state, int scanCode)
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
-					// printf("boost down\n");
+					// nebu_Log("boost down\n");
 					if(getSettingi("booster_on") &&
 						game->player[i].data.energy > getSettingf("booster_min"))
 					{
@@ -152,7 +152,7 @@ void keyGame(int state, int scanCode)
 				}
 				else
 				{
-					// printf("boost up\n");
+					// nebu_Log("boost up\n");
 					game->player[i].data.boost_enabled = 0;
 				}
 				return;
@@ -162,7 +162,7 @@ void keyGame(int state, int scanCode)
 			{
 				if(state == NEBU_INPUT_KEYSTATE_DOWN)
 				{
-					// printf("wall_buster down\n");
+					// nebu_Log("wall_buster down\n");
 					if(getSettingi("wall_buster_on") &&
 						game->player[i].data.energy > getSettingf("wall_buster_min"))
 					{
@@ -171,7 +171,7 @@ void keyGame(int state, int scanCode)
 				}
 				else
 				{
-					// printf("wall_buster up\n");
+					// nebu_Log("wall_buster up\n");
 					game->player[i].data.wall_buster_enabled = 0;
 				}
 				return;

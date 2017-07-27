@@ -18,10 +18,10 @@
 void checkSettings(void) {
   /* sanity check: speed */
   if(getSettingf("speed") <= 0) {
-    fprintf(stderr, "[gltron] sanity check failed: speed = %.2f\n",
+    nebu_Log("[gltron] sanity check failed: speed = %.2f\n",
 	    getSettingf("speed"));
     setSettingf("speed", 6.0);
-    fprintf(stderr, "[gltron] reset speed: speed = %.2f\n",
+    nebu_Log("[gltron] reset speed: speed = %.2f\n",
 	    getSettingf("speed"));
   }
 }
@@ -65,12 +65,12 @@ float getSettingf(const char *name) {
   float value;
   if( scripting_GetGlobal("settings", name, NULL) ) {
     /* does not exit, return default */
-    fprintf(stderr, "error accessing setting '%s'!\n", name);
+    nebu_Log("error accessing setting '%s'!\n", name);
     nebu_assert(0);
     return 0;
   }
 	if( scripting_GetFloatResult(&value) ) {
-		fprintf(stderr, "error reading setting '%s'!\n", name);
+		nebu_Log("error reading setting '%s'!\n", name);
 		nebu_assert(0);
 		return 0;
 	}
@@ -81,12 +81,12 @@ float getVideoSettingf(const char *name) {
   float value;
   if( scripting_GetGlobal("video", "settings", name, NULL) ) {
     /* does not exit, return default */
-    fprintf(stderr, "error accessing setting '%s'!\n", name);
+    nebu_Log("error accessing setting '%s'!\n", name);
     nebu_assert(0);
     return 0;
   }
 	if( scripting_GetFloatResult(&value) ) {
-		fprintf(stderr, "error reading setting '%s'!\n", name);
+		nebu_Log("error reading setting '%s'!\n", name);
 		nebu_assert(0);
 		return 0;
 	}

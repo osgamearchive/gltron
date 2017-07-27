@@ -72,13 +72,13 @@ void enterGame(void) { /* called when game mode is entered */
 			game->player[i].data.wall_buster_enabled = 0;
 		}
 	}
-	/* fprintf(stderr, "init game\n"); */
+	/* nebu_Log("init game\n"); */
 	nebu_Video_CheckErrors("after enterGame");
 }
 
 void exitGame(void) {
   Audio_DisableEngine();
-  /* fprintf(stderr, "exit game\n"); */
+  /* nebu_Log("exit game\n"); */
 }
 
 void gameMouse(int buttons, int state, int x, int y) {
@@ -102,7 +102,7 @@ void gameMouse(int buttons, int state, int x, int y) {
       }
     }
   */
-  /* fprintf(stderr, "new cam_r: %.2f\n", cam_r); */
+  /* nebu_Log("new cam_r: %.2f\n", cam_r); */
 }
 
 Callbacks gameCallbacks = { 

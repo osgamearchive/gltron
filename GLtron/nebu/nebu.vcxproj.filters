@@ -90,9 +90,6 @@
     <ClCompile Include="base\vector.c">
       <Filter>Source Files\base</Filter>
     </ClCompile>
-    <ClCompile Include="filesystem\directory.c">
-      <Filter>Source Files\filesystem</Filter>
-    </ClCompile>
     <ClCompile Include="filesystem\filesystem.c">
       <Filter>Source Files\filesystem</Filter>
     </ClCompile>
@@ -152,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="base\nebu_log.c">
       <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem\directory.c">
+      <Filter>Source Files\filesystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

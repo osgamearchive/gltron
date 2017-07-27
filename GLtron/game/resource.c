@@ -40,7 +40,7 @@ void* get2d(char *filename, void *dummy)
 	}
 	else
 	{
-		fprintf(stderr, "failed to locate %s", filename);
+		nebu_Log("failed to locate %s", filename);
 		nebu_assert(0); exit(1); // installation corrupt
 	}
 }
@@ -72,7 +72,7 @@ void* getTexture(char *filename, void *meta)
 	}
 	else
 	{
-		fprintf(stderr, "failed to locate %s", filename);
+		nebu_Log("failed to locate %s", filename);
 		nebu_assert(0); exit(1); // installation corrupt
 	}
 }

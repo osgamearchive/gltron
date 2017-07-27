@@ -84,7 +84,7 @@ int crashTestPlayers(int i, const segment2 *movement) {
 			wall = game->player[j].data.trails + k;
 						
 			if(segment2_Intersect(&v, &t1, &t2, movement, wall)) {
-//				printf("(%.2f, %.2f), (%.2f, %.2f), %.2f, %.2f\n",
+//				nebu_Log("(%.2f, %.2f), (%.2f, %.2f), %.2f, %.2f\n",
 //							 data->posx, data->posy,
 //							 v.v[0], v.v[1],
 //							 t1, t2);
@@ -291,7 +291,7 @@ void doMovement(int dt)
 
 			if(getSettingf("wall_buster_on") == 1)
 			{ // wall buster
-				// printf("applying wallbuster for player %i\n");
+				// nebu_Log("applying wallbuster for player %i\n");
 				applyWallBuster(i, dt);
 			} // wall buster
 
@@ -312,7 +312,7 @@ void doMovement(int dt)
 				applyDecceleration(i, dt, deccel);
 
 			// if(i == 0)
-			// printf("speed: %.2f, boost: %.2f\n", pData->speed, pData->energy);
+			// nebu_Log("speed: %.2f, boost: %.2f\n", pData->speed, pData->energy);
 
 			fs = 1.0f - SPEED_OZ_FACTOR + SPEED_OZ_FACTOR * 
 				cosf(i * PI / 4.0f + 
@@ -341,8 +341,8 @@ void doMovement(int dt)
 					crash = crashTestPlayers(i, &movement);
 					if(crash)
 					{
-						printf("player %d crashed into other players \n", i);
-						printf("%f %f %f %f\n",
+						nebu_Log("player %d crashed into other players \n", i);
+						nebu_Log("%f %f %f %f\n",
 							movement.vStart.v[0],
 							movement.vStart.v[1],
 							movement.vDirection.v[0],
@@ -360,8 +360,8 @@ void doMovement(int dt)
                         movement.vDirection.v[0] = x - movement.vStart.v[0];
                         movement.vDirection.v[1] = y - movement.vStart.v[1];
                         
-						printf("player %d crashed into the walls\n", i);
-						printf("%f %f %f %f\n",
+						nebu_Log("player %d crashed into the walls\n", i);
+						nebu_Log("%f %f %f %f\n",
 							movement.vStart.v[0],
 							movement.vStart.v[1],
 							movement.vDirection.v[0],
