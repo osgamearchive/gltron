@@ -157,9 +157,10 @@ int nebu_Video_Create(char *name) {
 	nebu_assert (window_id == 0);  // only single window allowed for now
 	nebu_assert (width != 0 && height != 0);
 
-	createWindow(name);
+    createWindow(name);
 
-	glewInit();
+#ifdef WIN32
+    glewInit();
 		
 	if(!GLEW_ARB_multitexture)
 	{
@@ -179,6 +180,8 @@ int nebu_Video_Create(char *name) {
 			nebu_assert(0); exit(1);
 		}
 	}
+#endif
+    
 
 	printOpenGLDebugInfo();
 

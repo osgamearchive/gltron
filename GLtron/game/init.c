@@ -1,3 +1,5 @@
+#include "base/nebu_debug_memory.h"
+
 #include "filesystem/path.h"
 #include "filesystem/dirsetup.h"
 #include "game/engine.h"

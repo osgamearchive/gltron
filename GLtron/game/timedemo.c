@@ -1,3 +1,5 @@
+#include "base/nebu_debug_memory.h"
+
 #include "game/gltron.h"
 #include "game/camera.h"
 #include "game/event.h"

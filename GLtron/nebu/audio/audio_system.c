@@ -1,3 +1,5 @@
+#include "base/nebu_debug_memory.h"
+
 #include "audio/nebu_audio_system.h"
 
 #include "base/nebu_system.h"

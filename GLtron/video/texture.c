@@ -1,3 +1,5 @@
+#include "base/nebu_debug_memory.h"
+
 #include "video/video.h"
 #include "configuration/settings.h"
 #include "game/resource.h"

@@ -1,11 +1,18 @@
 #include "base/nebu_util.h"
+#include "base/nebu_debug_memory.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <sys/types.h>
+
+#ifdef WIN32
 #include "filesystem/nebu_dirent.h"
+#else
+#include <dirent.h>
+#endif
+
 #include <sys/stat.h>
 #include <errno.h>
 #ifndef WIN32
